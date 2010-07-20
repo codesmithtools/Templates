@@ -39,12 +39,12 @@ Namespace PetShop.Business
     
 #End Region
     
-    #If Not SILVERLIGHT Then
+#If Not SILVERLIGHT Then
 #Region "Method Overrides"
     
         Protected Overrides Function AddNewCore() As Profile
             Dim item As Profile = PetShop.Business.Profile.NewProfile()
-    
+
             Dim cancel As Boolean = False
             OnAddNewCore(item, cancel)
             If Not (cancel) Then
@@ -54,7 +54,7 @@ Namespace PetShop.Business
                 End If
                 Add(item)
             End If
-    
+
             Return item
         End Function
     
@@ -86,30 +86,28 @@ Namespace PetShop.Business
         End Function
     
 #End Region
-    
-    
-    #Else       
-    
+#Else
+
 #Region "Method Overrides"
     
         Protected Overrides Sub AddNewCore() 
-            Dim item As Profile = PetShop.Business.Profile.NewProfile()
-    
-            Dim cancel As Boolean = False
-            OnAddNewCore(item, cancel)
-            If Not (cancel) Then
-                ' Check to see if someone set the item to null in the OnAddNewCore.
-                If(item Is Nothing) Then
-                    item = PetShop.Business.Profile.NewProfile()
-                End If
-                Add(item)
-            End If
+            PetShop.Business.Profile.NewProfileAsync(Sub(o, e)
+                    Dim item As Profile = e.Object
+        
+                    Dim cancel As Boolean = False
+                    OnAddNewCore(item, cancel)
+                    If Not (cancel) Then
+                        ' Check to see if someone set the item to null in the OnAddNewCore.
+                        If(item Is Nothing) Then
+                            Return
+                        End If
+                        Add(item)
+                    End If
+                End Sub)
         End Sub
     
 #End Region
-    
-    #End If
-    
+
 #Region "Asynchronous Factory Methods"
             
         Public Shared Sub NewListAsync(ByVal handler As EventHandler(Of DataPortalResult(Of ProfileList)))
@@ -146,8 +144,7 @@ Namespace PetShop.Business
         End Sub
     
 #End Region
-    
-    
+#End If
 #Region "DataPortal partial methods"
     
     #If Not SILVERLIGHT Then
@@ -174,14 +171,11 @@ Namespace PetShop.Business
 #End Region
 
 #Region "Exists Command"
-    
-    #If Not SILVERLIGHT Then
+
         Public Shared Function Exists(ByVal criteria As ProfileCriteria) As Boolean
             Return PetShop.Business.Profile.Exists(criteria)
         End Function
-    #End If
-    
-#End Region
 
+#End Region
     End Class
 End Namespace

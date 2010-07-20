@@ -273,7 +273,6 @@ Namespace PetShop.Business
         Private Shared ReadOnly _profileMemberProperty As PropertyInfo(Of Profile) = RegisterProperty(Of Profile)(Function(p As Account) p.ProfileMember, Csla.RelationshipTypes.Child)
         Public ReadOnly Property ProfileMember() As Profile
             Get
-    #If Not SILVERLIGHT Then
 				If(False) Then
 					Return Nothing
 				End If
@@ -281,11 +280,26 @@ Namespace PetShop.Business
                 If Not(FieldManager.FieldExists(_profileMemberProperty))
                     Dim criteria As New PetShop.Business.ProfileCriteria()
                     criteria.UniqueID = UniqueID
-    
+
+#If SILVERLIGHT Then
+                    MarkBusy()
+                    If (PetShop.Business.Profile.Exists(criteria)) Then
+                        PetShop.Business.Profile.GetByUniqueIDAsync(UniqueID, Sub(o, e)
+                                If Not (e.Error Is Nothing) Then
+                                    Throw e.Error
+                                End If
+
+                                Me.LoadProperty(_profileMemberProperty, e.Object)
+
+                                MarkIdle()
+                                OnPropertyChanged(_profileMemberProperty)
+                            End Sub)
+                    End If
+#Else
                     If (PetShop.Business.Profile.Exists(criteria)) Then
                         LoadProperty(_profileMemberProperty, PetShop.Business.Profile.GetByUniqueID(UniqueID))
                     End If
-    #End If
+#End If
                 End If
                 
                 Return GetProperty(_profileMemberProperty) 
@@ -370,14 +384,11 @@ Namespace PetShop.Business
 #End Region
 
 #Region "Exists Command"
-    
-    #If Not SILVERLIGHT Then
+
         Public Shared Function Exists(ByVal criteria As AccountCriteria ) As Boolean
             Return ExistsCommand.Execute(criteria)
         End Function
-    #End If
-    
-#End Region
 
+#End Region
     End Class
 End Namespace

@@ -69,7 +69,6 @@ Namespace PetShop.Business
         End Sub
     
 #End Region
-    
 
 #Region "Properties"
     
@@ -166,7 +165,6 @@ Namespace PetShop.Business
         Private Shared ReadOnly _categoryMemberProperty As PropertyInfo(Of Category) = RegisterProperty(Of Category)(Function(p As Product) p.CategoryMember, Csla.RelationshipTypes.Child)
         Public ReadOnly Property CategoryMember() As Category
             Get
-    #If Not SILVERLIGHT Then
 				If(False) Then
 					Return Nothing
 				End If
@@ -174,11 +172,26 @@ Namespace PetShop.Business
                 If Not(FieldManager.FieldExists(_categoryMemberProperty))
                     Dim criteria As New PetShop.Business.CategoryCriteria()
                     criteria.CategoryId = CategoryId
-    
+
+#If SILVERLIGHT Then
+                    MarkBusy()
+                    If (PetShop.Business.Category.Exists(criteria)) Then
+                        PetShop.Business.Category.GetByCategoryIdAsync(CategoryId, Sub(o, e)
+                                If Not (e.Error Is Nothing) Then
+                                    Throw e.Error
+                                End If
+
+                                Me.LoadProperty(_categoryMemberProperty, e.Object)
+
+                                MarkIdle()
+                                OnPropertyChanged(_categoryMemberProperty)
+                            End Sub)
+                    End If
+#Else
                     If (PetShop.Business.Category.Exists(criteria)) Then
                         LoadProperty(_categoryMemberProperty, PetShop.Business.Category.GetByCategoryId(CategoryId))
                     End If
-    #End If
+#End If
                 End If
                 
                 Return GetProperty(_categoryMemberProperty) 
@@ -189,8 +202,37 @@ Namespace PetShop.Business
         Private Shared ReadOnly _itemsProperty As PropertyInfo(Of ItemList) = RegisterProperty(Of ItemList)(Function(p As Product) p.Items, Csla.RelationshipTypes.Child)
     Public ReadOnly Property Items() As ItemList
             Get
-    #If Not SILVERLIGHT Then
                 If Not (FieldManager.FieldExists(_itemsProperty)) Then
+#If SILVERLIGHT Then
+                    MarkBusy()
+                    
+                    Dim criteria As New PetShop.Business.ItemCriteria()
+                    criteria.ProductId = ProductId
+
+                    If (Me.IsNew OrElse Not PetShop.Business.ItemList.Exists(criteria)) Then
+                        PetShop.Business.ItemList.NewListAsync(Sub(o, e)
+                                If Not (e.Error Is Nothing) Then
+                                    Throw e.Error
+                                End If
+
+                                Me.LoadProperty(_itemsProperty, e.Object)
+
+                                MarkIdle()
+                                OnPropertyChanged(_itemsProperty)
+                            End Sub)
+                    Else
+                        PetShop.Business.ItemList.GetByProductIdAsync(ProductId, Sub(o, e)
+                                If Not (e.Error Is Nothing) Then
+                                    Throw e.Error
+                                End If
+
+                                Me.LoadProperty(_itemsProperty, e.Object)
+
+                                MarkIdle()
+                                OnPropertyChanged(_itemsProperty)
+                            End Sub)
+                    End If
+#Else
                     Dim criteria As New PetShop.Business.ItemCriteria()
                     criteria.ProductId = ProductId
     
@@ -258,7 +300,6 @@ Namespace PetShop.Business
         End Sub
     
 #End Region
-    
     #End If        
     
 #Region "Asynchronous Root Factory Methods"
@@ -322,17 +363,16 @@ Namespace PetShop.Business
             dp.BeginFetch(criteria)
         End Sub
     
-        Public Shared Sub DeleteProductDeleteProductAsync(ByVal productId As System.String, ByVal handler As EventHandler(Of DataPortalResult(Of Product)))
+        Public Shared Sub DeleteProductAsync(ByVal productId As System.String, ByVal handler As EventHandler(Of DataPortalResult(Of Product)))
             Dim dp As New DataPortal(Of Product)()
-            dp.DeleteCompleted += handler
+            AddHandler dp.DeleteCompleted, handler
             dp.BeginDelete(New ProductCriteria (productId))
         End Sub
     
             
     #End Region
     
-    #If Not SILVERLIGHT Then
-    
+#If Not SILVERLIGHT Then
 #Region "Synchronous Child Factory Methods"
     
         Friend Shared Function NewProductChild() As Product
@@ -378,11 +418,9 @@ Namespace PetShop.Business
         End Function
     
 #End Region
+#End If        
     
-    
-    #End If        
-    
-    #Region "Asynchronous Child Factory Methods"
+#Region "Asynchronous Child Factory Methods"
     
         Friend Shared Sub NewProductChildAsync(ByVal handler As EventHandler(Of DataPortalResult(Of Product)))
             Dim dp As New DataPortal(Of Product)()
@@ -394,10 +432,8 @@ Namespace PetShop.Business
     
     ' Child objects do not expose asynchronous delete methods.
     
-    #End Region
-    
-    
-        
+#End Region
+
 #Region "DataPortal partial methods"
     
     #If Not SILVERLIGHT Then
@@ -461,14 +497,11 @@ Namespace PetShop.Business
 #End Region
 
 #Region "Exists Command"
-    
-    #If Not SILVERLIGHT Then
+
         Public Shared Function Exists(ByVal criteria As ProductCriteria ) As Boolean
             Return ExistsCommand.Execute(criteria)
         End Function
-    #End If
-    
-#End Region
 
+#End Region
     End Class
 End Namespace

@@ -159,7 +159,6 @@ Namespace PetShop.Business
         Private Shared ReadOnly _orderMemberProperty As PropertyInfo(Of Order) = RegisterProperty(Of Order)(Function(p As OrderStatus) p.OrderMember, Csla.RelationshipTypes.Child)
         Public ReadOnly Property OrderMember() As Order
             Get
-    #If Not SILVERLIGHT Then
 				If(False) Then
 					Return Nothing
 				End If
@@ -167,11 +166,26 @@ Namespace PetShop.Business
                 If Not(FieldManager.FieldExists(_orderMemberProperty))
                     Dim criteria As New PetShop.Business.OrderCriteria()
                     criteria.OrderId = OrderId
-    
+
+#If SILVERLIGHT Then
+                    MarkBusy()
+                    If (PetShop.Business.Order.Exists(criteria)) Then
+                        PetShop.Business.Order.GetByOrderIdAsync(OrderId, Sub(o, e)
+                                If Not (e.Error Is Nothing) Then
+                                    Throw e.Error
+                                End If
+
+                                Me.LoadProperty(_orderMemberProperty, e.Object)
+
+                                MarkIdle()
+                                OnPropertyChanged(_orderMemberProperty)
+                            End Sub)
+                    End If
+#Else
                     If (PetShop.Business.Order.Exists(criteria)) Then
                         LoadProperty(_orderMemberProperty, PetShop.Business.Order.GetByOrderId(OrderId))
                     End If
-    #End If
+#End If
                 End If
                 
                 Return GetProperty(_orderMemberProperty) 
@@ -283,15 +297,12 @@ Namespace PetShop.Business
 #End Region
 
 #Region "Exists Command"
-    
-    #If Not SILVERLIGHT Then
+
         Public Shared Function Exists(ByVal criteria As OrderStatusCriteria ) As Boolean
             Return ExistsCommand.Execute(criteria)
         End Function
-    #End If
-    
-#End Region
 
+#End Region
 
 #Region "Protected Overriden Method(s)"
         

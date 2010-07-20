@@ -17,66 +17,17 @@ Imports Csla
 
 Namespace PetShop.Business
     Public Partial Class CartList
-        #Region "Authorization Rules"
+#Region "Authorization Rules"
     
+    #If Not SILVERLIGHT Then
         Private Sub AddAuthorizationRules()
-            ''More information on these rules can be found here (http://www.devx.com/codemag/Article/40663/1763/page/2).
-    
-            'Dim canWrite As String() = { "AdminUser", "RegularUser" }
-            'Dim canRead As String() = { "AdminUser", "RegularUser", "ReadOnlyUser" }
-            'Dim admin As String() = { "AdminUser" }
-    
-            'AuthorizationRules.AllowCreate(GetType(CartList), admin)
-            'AuthorizationRules.AllowDelete(GetType(CartList), admin)
-            'AuthorizationRules.AllowEdit(GetType(CartList), canWrite)
-            'AuthorizationRules.AllowGet(GetType(CartList), canRead)
-    
-            ''CartId
-            'AuthorizationRules.AllowRead(_cartIdProperty, canRead)
-    
-            ''UniqueID
-            'AuthorizationRules.AllowWrite(_uniqueIDProperty, canWrite)
-            'AuthorizationRules.AllowRead(_uniqueIDProperty, canRead)
-    
-            ''ItemId
-            'AuthorizationRules.AllowWrite(_itemIdProperty, canWrite)
-            'AuthorizationRules.AllowRead(_itemIdProperty, canRead)
-    
-            ''Name
-            'AuthorizationRules.AllowWrite(_nameProperty, canWrite)
-            'AuthorizationRules.AllowRead(_nameProperty, canRead)
-    
-            ''Type
-            'AuthorizationRules.AllowWrite(_typeProperty, canWrite)
-            'AuthorizationRules.AllowRead(_typeProperty, canRead)
-    
-            ''Price
-            'AuthorizationRules.AllowWrite(_priceProperty, canWrite)
-            'AuthorizationRules.AllowRead(_priceProperty, canRead)
-    
-            ''CategoryId
-            'AuthorizationRules.AllowWrite(_categoryIdProperty, canWrite)
-            'AuthorizationRules.AllowRead(_categoryIdProperty, canRead)
-    
-            ''ProductId
-            'AuthorizationRules.AllowWrite(_productIdProperty, canWrite)
-            'AuthorizationRules.AllowRead(_productIdProperty, canRead)
-    
-            ''IsShoppingCart
-            'AuthorizationRules.AllowWrite(_isShoppingCartProperty, canWrite)
-            'AuthorizationRules.AllowRead(_isShoppingCartProperty, canRead)
-    
-            ''Quantity
-            'AuthorizationRules.AllowWrite(_quantityProperty, canWrite)
-            'AuthorizationRules.AllowRead(_quantityProperty, canRead)
-    
-            ''ProfileMember
-            'AuthorizationRules.AllowRead(_profileMemberProperty, canRead)
-    
-    ' NOTE: Many-To-Many support coming soon.
+            'Csla.Rules.BusinessRules.AddRule(GetType(CartList), New Csla.Rules.CommonRules.IsInRole(Csla.Rules.AuthorizationActions.CreateObject, "SomeRole"))
+            'Csla.Rules.BusinessRules.AddRule(GetType(CartList), New Csla.Rules.CommonRules.IsInRole(Csla.Rules.AuthorizationActions.EditObject, "SomeRole"))
+            'Csla.Rules.BusinessRules.AddRule(GetType(CartList), New Csla.Rules.CommonRules.IsInRole(Csla.Rules.AuthorizationActions.DeleteObject, "SomeRole", "SomeAdminRole"))
         End Sub
+    #End If
     
-        #End Region
+#End Region
 
 #Region "Custom Factory Methods"
 

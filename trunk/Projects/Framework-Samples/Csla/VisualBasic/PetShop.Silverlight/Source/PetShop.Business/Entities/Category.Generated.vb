@@ -137,8 +137,37 @@ Namespace PetShop.Business
         Private Shared ReadOnly _productsProperty As PropertyInfo(Of ProductList) = RegisterProperty(Of ProductList)(Function(p As Category) p.Products, Csla.RelationshipTypes.Child)
     Public ReadOnly Property Products() As ProductList
             Get
-    #If Not SILVERLIGHT Then
                 If Not (FieldManager.FieldExists(_productsProperty)) Then
+#If SILVERLIGHT Then
+                    MarkBusy()
+                    
+                    Dim criteria As New PetShop.Business.ProductCriteria()
+                    criteria.CategoryId = CategoryId
+
+                    If (Me.IsNew OrElse Not PetShop.Business.ProductList.Exists(criteria)) Then
+                        PetShop.Business.ProductList.NewListAsync(Sub(o, e)
+                                If Not (e.Error Is Nothing) Then
+                                    Throw e.Error
+                                End If
+
+                                Me.LoadProperty(_productsProperty, e.Object)
+
+                                MarkIdle()
+                                OnPropertyChanged(_productsProperty)
+                            End Sub)
+                    Else
+                        PetShop.Business.ProductList.GetByCategoryIdAsync(CategoryId, Sub(o, e)
+                                If Not (e.Error Is Nothing) Then
+                                    Throw e.Error
+                                End If
+
+                                Me.LoadProperty(_productsProperty, e.Object)
+
+                                MarkIdle()
+                                OnPropertyChanged(_productsProperty)
+                            End Sub)
+                    End If
+#Else
                     Dim criteria As New PetShop.Business.ProductCriteria()
                     criteria.CategoryId = CategoryId
     
@@ -240,14 +269,11 @@ Namespace PetShop.Business
 #End Region
 
 #Region "Exists Command"
-    
-    #If Not SILVERLIGHT Then
+
         Public Shared Function Exists(ByVal criteria As CategoryCriteria ) As Boolean
             Return ExistsCommand.Execute(criteria)
         End Function
-    #End If
-    
-#End Region
 
+#End Region
     End Class
 End Namespace

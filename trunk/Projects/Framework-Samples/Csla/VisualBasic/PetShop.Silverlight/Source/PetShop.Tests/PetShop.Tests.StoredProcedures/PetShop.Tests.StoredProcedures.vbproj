@@ -12,7 +12,7 @@
     <AssemblyName>PetShop.Tests.StoredProcedures</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <MyType>Windows</MyType>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <OptionExplicit>On</OptionExplicit>
     <OptionCompare>Binary</OptionCompare>
     <OptionStrict>Off</OptionStrict>
@@ -36,6 +36,7 @@
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -58,9 +59,8 @@
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Csla, Version=3.8.2.0, Culture=neutral, PublicKeyToken=93be5fdc093e4c30, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\..\..\..\Templates\Frameworks\Csla\Common\Csla\3.8.2\Client\Csla.dll</HintPath>
+    <Reference Include="Csla">
+      <HintPath>..\..\..\..\..\..\CodeSmith.Google.Code.CSLA.Trunk\Common\Csla\4.0\Client\Csla.dll</HintPath>
     </Reference>
     <Reference Include="nunit.framework, Version=2.5.3.9345, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -271,27 +271,6 @@
       <DependentUpon>SupplierList.vb</DependentUpon>
     </None>
     <None Include="Generated\Entities.csp" />
-    <None Include="Generated\Entities\Category.StoredProcedures.sql">
-      <DependentUpon>Category.vb</DependentUpon>
-    </None>
-    <None Include="Generated\Entities\Item.StoredProcedures.sql">
-      <DependentUpon>Item.vb</DependentUpon>
-    </None>
-    <None Include="Generated\Entities\LineItem.StoredProcedures.sql">
-      <DependentUpon>LineItem.vb</DependentUpon>
-    </None>
-    <None Include="Generated\Entities\Order.StoredProcedures.sql">
-      <DependentUpon>Order.vb</DependentUpon>
-    </None>
-    <None Include="Generated\Entities\OrderStatus.StoredProcedures.sql">
-      <DependentUpon>OrderStatus.vb</DependentUpon>
-    </None>
-    <None Include="Generated\Entities\Product.StoredProcedures.sql">
-      <DependentUpon>Product.vb</DependentUpon>
-    </None>
-    <None Include="Generated\Entities\Supplier.StoredProcedures.sql">
-      <DependentUpon>Supplier.vb</DependentUpon>
-    </None>
     <None Include="My Project\Application.myapp">
       <Generator>MyApplicationCodeGenerator</Generator>
       <LastGenOutput>Application.Designer.vb</LastGenOutput>
@@ -324,6 +303,32 @@
       <ProductName>Windows Installer 3.1</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\PetShop.Tests.ParameterizedSQL\Entities\OrderStatus.StoredProcedures.sql">
+      <Link>OrderStatus.StoredProcedures.sql</Link>
+    </Content>
+    <Content Include="Generated\Entities\Category.StoredProcedures.sql">
+      <DependentUpon>Category.vb</DependentUpon>
+    </Content>
+    <Content Include="Generated\Entities\Item.StoredProcedures.sql">
+      <DependentUpon>Item.vb</DependentUpon>
+    </Content>
+    <Content Include="Generated\Entities\LineItem.StoredProcedures.sql">
+      <DependentUpon>LineItem.vb</DependentUpon>
+    </Content>
+    <Content Include="Generated\Entities\Order.StoredProcedures.sql">
+      <DependentUpon>Order.vb</DependentUpon>
+    </Content>
+    <Content Include="Generated\Entities\OrderStatus.StoredProcedures.sql">
+      <DependentUpon>OrderStatus.vb</DependentUpon>
+    </Content>
+    <Content Include="Generated\Entities\Product.StoredProcedures.sql">
+      <DependentUpon>Product.vb</DependentUpon>
+    </Content>
+    <Content Include="Generated\Entities\Supplier.StoredProcedures.sql">
+      <DependentUpon>Supplier.vb</DependentUpon>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

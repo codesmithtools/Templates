@@ -65,7 +65,6 @@ Namespace PetShop.Business
         End Sub
     
 #End Region
-    
 
 #Region "Properties"
     
@@ -176,7 +175,6 @@ Namespace PetShop.Business
         Private Shared ReadOnly _orderMemberProperty As PropertyInfo(Of Order) = RegisterProperty(Of Order)(Function(p As LineItem) p.OrderMember, Csla.RelationshipTypes.Child)
         Public ReadOnly Property OrderMember() As Order
             Get
-    #If Not SILVERLIGHT Then
 				If(False) Then
 					Return Nothing
 				End If
@@ -184,11 +182,26 @@ Namespace PetShop.Business
                 If Not(FieldManager.FieldExists(_orderMemberProperty))
                     Dim criteria As New PetShop.Business.OrderCriteria()
                     criteria.OrderId = OrderId
-    
+
+#If SILVERLIGHT Then
+                    MarkBusy()
+                    If (PetShop.Business.Order.Exists(criteria)) Then
+                        PetShop.Business.Order.GetByOrderIdAsync(OrderId, Sub(o, e)
+                                If Not (e.Error Is Nothing) Then
+                                    Throw e.Error
+                                End If
+
+                                Me.LoadProperty(_orderMemberProperty, e.Object)
+
+                                MarkIdle()
+                                OnPropertyChanged(_orderMemberProperty)
+                            End Sub)
+                    End If
+#Else
                     If (PetShop.Business.Order.Exists(criteria)) Then
                         LoadProperty(_orderMemberProperty, PetShop.Business.Order.GetByOrderId(OrderId))
                     End If
-    #End If
+#End If
                 End If
                 
                 Return GetProperty(_orderMemberProperty) 
@@ -224,7 +237,6 @@ Namespace PetShop.Business
         End Sub
     
 #End Region
-    
     #End If        
     
 #Region "Asynchronous Root Factory Methods"
@@ -256,17 +268,16 @@ Namespace PetShop.Business
             dp.BeginFetch(criteria)
         End Sub
     
-        Public Shared Sub DeleteLineItemDeleteLineItemAsync(ByVal orderId As System.Int32, ByVal lineNum As System.Int32, ByVal handler As EventHandler(Of DataPortalResult(Of LineItem)))
+        Public Shared Sub DeleteLineItemAsync(ByVal orderId As System.Int32, ByVal lineNum As System.Int32, ByVal handler As EventHandler(Of DataPortalResult(Of LineItem)))
             Dim dp As New DataPortal(Of LineItem)()
-            dp.DeleteCompleted += handler
+            AddHandler dp.DeleteCompleted, handler
             dp.BeginDelete(New LineItemCriteria (orderId, lineNum))
         End Sub
     
             
     #End Region
     
-    #If Not SILVERLIGHT Then
-    
+#If Not SILVERLIGHT Then
 #Region "Synchronous Child Factory Methods"
     
         Friend Shared Function NewLineItemChild() As LineItem
@@ -289,11 +300,9 @@ Namespace PetShop.Business
         End Function
     
 #End Region
+#End If        
     
-    
-    #End If        
-    
-    #Region "Asynchronous Child Factory Methods"
+#Region "Asynchronous Child Factory Methods"
     
         Friend Shared Sub NewLineItemChildAsync(ByVal handler As EventHandler(Of DataPortalResult(Of LineItem)))
             Dim dp As New DataPortal(Of LineItem)()
@@ -305,10 +314,8 @@ Namespace PetShop.Business
     
     ' Child objects do not expose asynchronous delete methods.
     
-    #End Region
-    
-    
-        
+#End Region
+
 #Region "DataPortal partial methods"
     
     #If Not SILVERLIGHT Then
@@ -372,15 +379,12 @@ Namespace PetShop.Business
 #End Region
 
 #Region "Exists Command"
-    
-    #If Not SILVERLIGHT Then
+
         Public Shared Function Exists(ByVal criteria As LineItemCriteria ) As Boolean
             Return ExistsCommand.Execute(criteria)
         End Function
-    #End If
-    
-#End Region
 
+#End Region
 
 #Region "Protected Overriden Method(s)"
         

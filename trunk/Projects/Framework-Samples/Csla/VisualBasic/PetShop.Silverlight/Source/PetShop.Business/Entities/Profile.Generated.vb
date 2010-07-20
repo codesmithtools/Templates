@@ -66,7 +66,6 @@ Namespace PetShop.Business
         End Sub
     
 #End Region
-    
 
 #Region "Properties"
     
@@ -165,8 +164,37 @@ Namespace PetShop.Business
         Private Shared ReadOnly _accountsProperty As PropertyInfo(Of AccountList) = RegisterProperty(Of AccountList)(Function(p As Profile) p.Accounts, Csla.RelationshipTypes.Child)
     Public ReadOnly Property Accounts() As AccountList
             Get
-    #If Not SILVERLIGHT Then
                 If Not (FieldManager.FieldExists(_accountsProperty)) Then
+#If SILVERLIGHT Then
+                    MarkBusy()
+                    
+                    Dim criteria As New PetShop.Business.AccountCriteria()
+                    criteria.UniqueID = UniqueID
+
+                    If (Me.IsNew OrElse Not PetShop.Business.AccountList.Exists(criteria)) Then
+                        PetShop.Business.AccountList.NewListAsync(Sub(o, e)
+                                If Not (e.Error Is Nothing) Then
+                                    Throw e.Error
+                                End If
+
+                                Me.LoadProperty(_accountsProperty, e.Object)
+
+                                MarkIdle()
+                                OnPropertyChanged(_accountsProperty)
+                            End Sub)
+                    Else
+                        PetShop.Business.AccountList.GetByUniqueIDAsync(UniqueID, Sub(o, e)
+                                If Not (e.Error Is Nothing) Then
+                                    Throw e.Error
+                                End If
+
+                                Me.LoadProperty(_accountsProperty, e.Object)
+
+                                MarkIdle()
+                                OnPropertyChanged(_accountsProperty)
+                            End Sub)
+                    End If
+#Else
                     Dim criteria As New PetShop.Business.AccountCriteria()
                     criteria.UniqueID = UniqueID
     
@@ -186,8 +214,37 @@ Namespace PetShop.Business
         Private Shared ReadOnly _cartsProperty As PropertyInfo(Of CartList) = RegisterProperty(Of CartList)(Function(p As Profile) p.Carts, Csla.RelationshipTypes.Child)
     Public ReadOnly Property Carts() As CartList
             Get
-    #If Not SILVERLIGHT Then
                 If Not (FieldManager.FieldExists(_cartsProperty)) Then
+#If SILVERLIGHT Then
+                    MarkBusy()
+                    
+                    Dim criteria As New PetShop.Business.CartCriteria()
+                    criteria.UniqueID = UniqueID
+
+                    If (Me.IsNew OrElse Not PetShop.Business.CartList.Exists(criteria)) Then
+                        PetShop.Business.CartList.NewListAsync(Sub(o, e)
+                                If Not (e.Error Is Nothing) Then
+                                    Throw e.Error
+                                End If
+
+                                Me.LoadProperty(_cartsProperty, e.Object)
+
+                                MarkIdle()
+                                OnPropertyChanged(_cartsProperty)
+                            End Sub)
+                    Else
+                        PetShop.Business.CartList.GetByUniqueIDAsync(UniqueID, Sub(o, e)
+                                If Not (e.Error Is Nothing) Then
+                                    Throw e.Error
+                                End If
+
+                                Me.LoadProperty(_cartsProperty, e.Object)
+
+                                MarkIdle()
+                                OnPropertyChanged(_cartsProperty)
+                            End Sub)
+                    End If
+#Else
                     Dim criteria As New PetShop.Business.CartCriteria()
                     criteria.UniqueID = UniqueID
     
@@ -232,7 +289,6 @@ Namespace PetShop.Business
         End Sub
     
 #End Region
-    
     #End If        
     
 #Region "Asynchronous Root Factory Methods"
@@ -264,17 +320,16 @@ Namespace PetShop.Business
             dp.BeginFetch(criteria)
         End Sub
     
-        Public Shared Sub DeleteProfileDeleteProfileAsync(ByVal uniqueID As System.Int32, ByVal handler As EventHandler(Of DataPortalResult(Of Profile)))
+        Public Shared Sub DeleteProfileAsync(ByVal uniqueID As System.Int32, ByVal handler As EventHandler(Of DataPortalResult(Of Profile)))
             Dim dp As New DataPortal(Of Profile)()
-            dp.DeleteCompleted += handler
+            AddHandler dp.DeleteCompleted, handler
             dp.BeginDelete(New ProfileCriteria (uniqueID))
         End Sub
     
             
     #End Region
     
-    #If Not SILVERLIGHT Then
-    
+#If Not SILVERLIGHT Then
 #Region "Synchronous Child Factory Methods"
     
         Friend Shared Function NewProfileChild() As Profile
@@ -297,11 +352,9 @@ Namespace PetShop.Business
         End Function
     
 #End Region
+#End If        
     
-    
-    #End If        
-    
-    #Region "Asynchronous Child Factory Methods"
+#Region "Asynchronous Child Factory Methods"
     
         Friend Shared Sub NewProfileChildAsync(ByVal handler As EventHandler(Of DataPortalResult(Of Profile)))
             Dim dp As New DataPortal(Of Profile)()
@@ -313,10 +366,8 @@ Namespace PetShop.Business
     
     ' Child objects do not expose asynchronous delete methods.
     
-    #End Region
-    
-    
-        
+#End Region
+
 #Region "DataPortal partial methods"
     
     #If Not SILVERLIGHT Then
@@ -380,14 +431,11 @@ Namespace PetShop.Business
 #End Region
 
 #Region "Exists Command"
-    
-    #If Not SILVERLIGHT Then
+
         Public Shared Function Exists(ByVal criteria As ProfileCriteria ) As Boolean
             Return ExistsCommand.Execute(criteria)
         End Function
-    #End If
-    
-#End Region
 
+#End Region
     End Class
 End Namespace
