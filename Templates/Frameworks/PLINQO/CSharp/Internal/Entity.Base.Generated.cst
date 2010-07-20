@@ -15,6 +15,10 @@
 <%@ Property Category="2.Class" Name="IncludeDataContract"
      Type="System.Boolean" Default="true" Optional="False"
      Description="Include WCF DataContract attributes." %>
+    
+<%@ Property Category="2.Class" Name="IncludeXmlSerialization"
+    Type="System.Boolean" Default="false" Optional="False"
+    Description="Include Xml serialization support." %>
 
 <%@ Property Category="2.Class" Name="Framework"
     Type="FrameworkEnum" Default="v35_SP1" Optional="False"
