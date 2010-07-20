@@ -180,11 +180,7 @@ namespace <%= BusinessProjectName %>
         
         // Child objects do not expose asynchronous delete methods.
         #endregion
-
 <% } %>
-
-<% RenderHelper(new IsDirty()); %>
-
 <% RenderHelper(new PartialMethods()); %>
 
         #region ChildPortal partial methods
@@ -206,6 +202,7 @@ namespace <%= BusinessProjectName %>
 #endif
 <% } %>
         #endregion
+<% RenderHelper(new IsDirty()); %>
 <% RenderHelper(new Exists()); %>
 <% RenderHelper(new CompositeKeyMethods()); %>
     }

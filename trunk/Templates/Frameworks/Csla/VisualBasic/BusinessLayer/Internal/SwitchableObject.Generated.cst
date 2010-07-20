@@ -60,7 +60,6 @@ Namespace <%= BusinessProjectName %>
     <% RenderHelper(New Constructor()) %>
     
     <% RenderHelper(New ValidationRules()) %>
-    
     <% RenderHelper(New Properties()) %>
     
     <% If(IncludeSilverlightSupport) Then %>
@@ -93,7 +92,6 @@ Namespace <%= BusinessProjectName %>
     
 #End Region
     <% If(IncludeSilverlightSupport) Then %>
-    
     #End If        
     
 #Region "Asynchronous Root Factory Methods"
@@ -119,14 +117,15 @@ Namespace <%= BusinessProjectName %>
     <% Next %> 
     
     <% If (UseDeferredDeletion) Then %>
-        'Public Shared Sub Delete<%= BusinessClassName %>Delete<%= BusinessClassName %>(<%= Entity.PrimaryKey.KeyMembers.BuildParametersVariables() %>)
+        'Public Shared Sub Delete<%= BusinessClassName %>Async<%= Entity.PrimaryKey.KeyMembers.BuildParametersVariables() %>)
             'Dim dp As New DataPortal(Of <%= BusinessClassName %><%= Entity.GenericProperty %>)()
+            'AddHandler dp.DeleteCompleted, handler
             'dp.BeginDelete(New <%= CriteriaClassName %><%= Entity.GenericProperty %> (<%= Entity.PrimaryKey.KeyMembers.BuildVariableArguments() %>))
         'End Sub
     <% Else %>
-        Public Shared Sub Delete<%= BusinessClassName %>Delete<%= BusinessClassName %>Async(<%= Entity.PrimaryKey.KeyMembers.BuildParametersVariables()%>, ByVal handler As EventHandler(Of DataPortalResult(Of <%= BusinessClassName %><%= Entity.GenericProperty %>)))
+        Public Shared Sub Delete<%= BusinessClassName %>Async(<%= Entity.PrimaryKey.KeyMembers.BuildParametersVariables()%>, ByVal handler As EventHandler(Of DataPortalResult(Of <%= BusinessClassName %><%= Entity.GenericProperty %>)))
             Dim dp As New DataPortal(Of <%= BusinessClassName %><%= Entity.GenericProperty %>)()
-            dp.DeleteCompleted += handler
+            AddHandler dp.DeleteCompleted, handler
             dp.BeginDelete(New <%= CriteriaClassName %><%= Entity.GenericProperty %> (<%= Entity.PrimaryKey.KeyMembers.BuildVariableArguments() %>))
         End Sub
     
@@ -134,9 +133,8 @@ Namespace <%= BusinessProjectName %>
             
     #End Region
     
-    #If Not SILVERLIGHT Then
+#If Not SILVERLIGHT Then
     <% End If %>
-    
 #Region "Synchronous Child Factory Methods"
     
         Friend Shared Function New<%= BusinessClassName %>Child() As <%= BusinessClassName %><%= Entity.GenericProperty %>
@@ -155,12 +153,10 @@ Namespace <%= BusinessProjectName %>
     <% Next %>
     
 #End Region
+<% If(IncludeSilverlightSupport) Then %>
+#End If        
     
-    <% If(IncludeSilverlightSupport) Then %>
-    
-    #End If        
-    
-    #Region "Asynchronous Child Factory Methods"
+#Region "Asynchronous Child Factory Methods"
     
         Friend Shared Sub New<%= BusinessClassName %>ChildAsync(ByVal handler As EventHandler(Of DataPortalResult(Of <%= ChildBusinessClassName %><%= Entity.GenericProperty %>)))
             Dim dp As New DataPortal(Of <%= ChildBusinessClassName %><%= Entity.GenericProperty %>)()
@@ -172,12 +168,9 @@ Namespace <%= BusinessProjectName %>
     
     ' Child objects do not expose asynchronous delete methods.
     
-    #End Region
-    
+#End Region
+
     <% End If %>
-    
-    <% RenderHelper(New IsDirty()) %>
-        
     <% RenderHelper(New PartialMethods()) %>
     
 #Region "ChildPortal partial methods"
@@ -211,6 +204,7 @@ Namespace <%= BusinessProjectName %>
     
 #End Region
     <% RenderHelper(New Exists()) %>
+    <% RenderHelper(New IsDirty()) %>
     <% RenderHelper(New CompositeKeyMethods()) %>
     End Class
 End Namespace
