@@ -70,7 +70,7 @@ Namespace <%= BusinessProjectName %>
     <% End If %>
 #Region "Method Overrides"
         
-        Protected Overrides Function AddNewCore() As <% if(IsCSLA40) { %><%= ChildBusinessClassName %><%= Entity.GenericProperty %><% } else { %>Object<% } %>
+        Protected Overrides Function AddNewCore() As <% if(IsCSLA40) Then %><%= ChildBusinessClassName %><%= Entity.GenericProperty %><% Else %>Object<% End If %>
     <% RenderHelper(new AddNewCore()) %>
         End Function
         
