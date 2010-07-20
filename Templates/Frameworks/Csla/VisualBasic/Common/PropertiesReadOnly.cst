@@ -96,11 +96,10 @@
                             End Sub)
                     End If
 #Else
-<% Else %>
+<% End If %>
                     If(<%= association.BuildNullCheckStatement(true, false, false, false) %><%= BusinessProjectName %>.<%= associationClassName %>.Exists(criteria)) Then
                         LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= associationClassName %><%= association.GenericProperty %>.<%= association.SearchCriteria.MethodName%>(<%= association.SearchCriteria.Members.BuildPropertyVariableArguments() %>))
                     End If
-<% End If %>
 <% If(IncludeSilverlightSupport) Then %>
 #End If
 <% End If %>
@@ -152,11 +151,10 @@
                             End Sub)
                     End If
 #Else
-<% Else %>  
+<% End If %>
                     If(<%= BusinessProjectName %>.<%= associationClassName %>.Exists(criteria)) Then
                         LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= BusinessProjectName %>.<%= associationClassName %><%= association.GenericProperty %>.<%= association.SearchCriteria.MethodName%>(<%= association.SearchCriteria.Members.BuildPropertyVariableArguments() %>))
                     End If
-<% End If %>
 <% If(IncludeSilverlightSupport) Then %>
 #End If
 <% End If %>
@@ -218,7 +216,7 @@
                     End If
     <% End If %>
 #Else
-<% Else %>
+<% End If %>
     <% If(IsNameValueListBusinessObject(association, "NameValueList")) Then %>
                     LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= BusinessProjectName %>.<%= associationClassName %>List.GetAll())
     <% Else %>
@@ -229,7 +227,6 @@
                         LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= BusinessProjectName %>.<%= associationClassName %>List.<%= association.SearchCriteria.MethodName%>(<%= association.SearchCriteria.Members.BuildPropertyVariableArguments() %>))
                     End If
     <% End If %>
-<% End If %>
 <% If(IncludeSilverlightSupport) Then %>
 #End If
 <% End If %>
