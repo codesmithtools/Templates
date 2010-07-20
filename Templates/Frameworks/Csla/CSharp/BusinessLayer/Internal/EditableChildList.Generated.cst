@@ -130,9 +130,9 @@ namespace <%= BusinessProjectName %>
 			dp.BeginFetch(new <%= CriteriaClassName %><%= Entity.GenericProperty %>());
         }
  
-        #endregion
-        
+        #endregion  
 <% } %>   
+
         #region Method Overrides
         
 <% if(IncludeSilverlightSupport) { %>
@@ -149,14 +149,15 @@ namespace <%= BusinessProjectName %>
 <% RenderHelper(new AddNewCore(), IncludeSilverlightSupport); %>
         }
 #endif
-		protected void AddNewCoreAsync(EventHandler<DataPortalResult<object>> handler)
+
+		protected void AddNewCoreAsync(EventHandler<DataPortalResult<<%= ChildBusinessClassName %><%= Entity.GenericProperty %>>> handler)
 		{
 			<%= BusinessProjectName %>.<%= ChildBusinessClassName %><%= Entity.GenericProperty %>.New<%= ChildBusinessClassName %>Async((o, e) =>
 			{
 				if(e.Error == null)
 				{
 					Add(e.Object);
-					handler.Invoke(this, new DataPortalResult<object>(e.Object, null, null));
+					handler.Invoke(this, new DataPortalResult<<%= ChildBusinessClassName %><%= Entity.GenericProperty %>>(e.Object, null, null));
 				}
 			});
 		}
