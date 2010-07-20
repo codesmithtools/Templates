@@ -469,7 +469,11 @@ namespace <%= QueryNamespace %>
         LinqToSqlShared.Generator.DbmlEnum.Enum enumType = EnumDatabase != null
             ? EnumDatabase.Enums.FirstOrDefault(e => e.Name == column.Type) : null;
 
-        if (column.CanBeNull == true && (CommonUtility.IsNullableType(column.Type) || enumType != null))
+        bool isEnum = enumType != null;
+        if (isEnum && !dataType.StartsWith(Database.EntityNamespace + "."))
+            dataType = Database.EntityNamespace + "." + dataType;
+        
+        if (column.CanBeNull == true && (CommonUtility.IsNullableType(column.Type) || isEnum))
             dataType = string.Format("{0}?", CSharpAlias[dataType]);
         else
             dataType = CSharpAlias[dataType];
