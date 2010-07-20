@@ -134,15 +134,13 @@ Namespace <%= BusinessProjectName %>
         End Function
     <% If(IncludeSilverlightSupport) Then %>
     #Else
-    
         Protected Overrides Sub AddNewCore() 
     <% RenderHelper(new AddNewCore(), IncludeSilverlightSupport) %>
         End Sub
-    
     #End If
     
         Protected Sub AddNewCoreAsync(ByVal handler As EventHandler(Of DataPortalResult(Of <%= ChildBusinessClassName %><%= Entity.GenericProperty %>)))
-            <%= BusinessClassName %><%= Entity.GenericProperty %>.New<%= BusinessClassName %>Async(Sub(o, e)
+            <%= BusinessProjectName %>.<%= ChildBusinessClassName %><%= Entity.GenericProperty %>.New<%= ChildBusinessClassName %>Async(Sub(o, e)
                     If e.Error Is Nothing Then
                         Add(e.Object)
                         handler.Invoke(Me, New DataPortalResult(Of <%= ChildBusinessClassName %><%= Entity.GenericProperty %>)(e.Object, Nothing, Nothing))
