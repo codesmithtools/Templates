@@ -14,6 +14,7 @@
 
 <%@ Register Name="CommandObjectTemplate" Template="CommandObject.cst" %>
 <%@ Register Name="CriteriaTemplate" Template="Criteria.cst" %>
+<%@ Register Name="DynamicListBaseTemplate" Template="DynamicListBase.cst" %>
 <%@ Register Name="DynamicRootTemplate" Template="DynamicRoot.cst" %>
 <%@ Register Name="DynamicRootListTemplate" Template="DynamicRootList.cst" %>
 <%@ Register Name="EditableChildTemplate" Template="EditableChild.cst" %>
@@ -55,6 +56,14 @@ Public Overrides Sub Generate()
         Next
     End If
     
+    ' DynamicListBase
+    
+    If Not Me.DynamicListBase Is Nothing Then
+        For Each table As TableSchema In Me.DynamicListBase
+            Dim template As DynamicListBaseTemplate = Me.Create(Of DynamicListBaseTemplate)()
+            RenderHelper(template, table)
+        Next
+    End If
     
     ' DynamicRootTemplate
     

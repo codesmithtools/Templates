@@ -41,6 +41,7 @@ namespace QuickStart
         private TableSchemaCollection _readOnlyChild = new TableSchemaCollection();
         private TableSchemaCollection _readOnlyRoot = new TableSchemaCollection();
         private TableSchemaCollection _switchableObject = new TableSchemaCollection();
+        private TableSchemaCollection _dynamicListBase = new TableSchemaCollection();
         private TableSchemaCollection _dynamicRootList = new TableSchemaCollection();
         private TableSchemaCollection _editableRootList = new TableSchemaCollection();
         private TableSchemaCollection _editableChildList = new TableSchemaCollection();
@@ -150,6 +151,22 @@ namespace QuickStart
         #endregion
 
         #region 6b. List Entities
+
+        [Category("6b. List Entities")]
+        [Description("DynamicListBase")]
+        [Optional]
+        public TableSchemaCollection DynamicListBase
+        {
+            get { return this._dynamicListBase; }
+            set
+            {
+                if (value != null)
+                {
+                    this._dynamicListBase = value;
+                    OnDynamicListBaseChanged();
+                }
+            }
+        }
 
         [Category("6b. List Entities")]
         [Description("DynamicRootList")]
@@ -490,6 +507,7 @@ namespace QuickStart
                     ContextData.Remove(key);
 
                 EditableRootList.Remove(entity.Table);
+                DynamicListBase.Remove(entity.Table);
                 EditableChildList.Remove(entity.Table);
 
                 ContextData.Add(key, Constants.DynamicRootList);
@@ -514,11 +532,35 @@ namespace QuickStart
                     ContextData.Remove(key);
 
                 DynamicRootList.Remove(entity.Table);
+                DynamicListBase.Remove(entity.Table);
                 EditableChildList.Remove(entity.Table);
-                ReadOnlyList.Remove(entity.Table);
-                ReadOnlyChildList.Remove(entity.Table);
 
                 ContextData.Add(key, Constants.EditableRootList);
+
+                if (this.State == TemplateState.RestoringProperties || SourceDatabase == null)
+                    continue;
+
+                AddChildEntity(entity.Table, false, true);
+            }
+        }
+
+        private void OnDynamicListBaseChanged()
+        {
+            CleanTemplateContextByValue(Constants.DynamicListBase);
+
+            EntityManager em = new EntityManager(DynamicListBase);
+            foreach (Entity entity in em.Entities)
+            {
+                string key = string.Format(Constants.ListFormat, entity.Table.Name);
+
+                if (ContextData.Get(key) != null)
+                    ContextData.Remove(key);
+
+                DynamicRootList.Remove(entity.Table);
+                EditableRootList.Remove(entity.Table);
+                EditableChildList.Remove(entity.Table);
+
+                ContextData.Add(key, Constants.DynamicListBase);
 
                 if (this.State == TemplateState.RestoringProperties || SourceDatabase == null)
                     continue;
@@ -540,8 +582,9 @@ namespace QuickStart
                 if (ContextData.Get(key) != null)
                     ContextData.Remove(key);
 
-                EditableRootList.Remove(entity.Table);
                 DynamicRootList.Remove(entity.Table);
+                EditableRootList.Remove(entity.Table);
+                DynamicListBase.Remove(entity.Table);
 
                 ContextData.Add(key, Constants.EditableChildList);
 
@@ -613,6 +656,7 @@ namespace QuickStart
             if (ReadOnlyRoot == null) ReadOnlyRoot = new TableSchemaCollection();
             if (SwitchableObject == null) SwitchableObject = new TableSchemaCollection();
 
+            if (DynamicListBase == null) DynamicListBase = new TableSchemaCollection(); 
             if (DynamicRootList == null) DynamicRootList = new TableSchemaCollection();
             if (EditableRootList == null) EditableRootList = new TableSchemaCollection();
             if (EditableChildList == null) EditableChildList = new TableSchemaCollection();

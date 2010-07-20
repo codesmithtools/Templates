@@ -14,6 +14,7 @@
 
 <%@ Register Name="CommandObjectTemplate" Template="CommandObject.cst" %>
 <%@ Register Name="CriteriaTemplate" Template="Criteria.cst" %>
+<%@ Register Name="DynamicListBaseTemplate" Template="DynamicListBase.cst" %>
 <%@ Register Name="DynamicRootTemplate" Template="DynamicRoot.cst" %>
 <%@ Register Name="DynamicRootListTemplate" Template="DynamicRootList.cst" %>
 <%@ Register Name="EditableChildTemplate" Template="EditableChild.cst" %>
@@ -134,6 +135,19 @@ public override void Generate()
         foreach(TableSchema table in this.EditableRootList)
         {
             EditableRootListTemplate template = this.Create<EditableRootListTemplate>();
+            RenderHelper(template, table);
+        }
+    }
+
+    #endregion
+     
+    #region DynamicListBase
+
+    if(this.DynamicListBase != null)
+    {
+        foreach(TableSchema table in this.DynamicListBase)
+        {
+            DynamicListBaseTemplate template = this.Create<DynamicListBaseTemplate>();
             RenderHelper(template, table);
         }
     }

@@ -17,6 +17,7 @@ namespace QuickStart
 
         public const string DynamicRootList = "DynamicRootList";
         public const string EditableRootList = "EditableRootList";
+        public const string DynamicListBase = "DynamicListBase";
         public const string EditableChildList = "EditableChildList";
         public const string ReadOnlyList = "ReadOnlyList";
         public const string ReadOnlyChildList = "ReadOnlyChildList";
