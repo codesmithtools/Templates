@@ -45,7 +45,7 @@ Namespace <%= BusinessProjectName %>
     <Csla.Server.ObjectFactory(FactoryNames.<%= Entity.ClassName %>ListFactoryName)> _
     <% End If %>
     Public Partial Class <%= BusinessClassName %><%= Entity.GenericProperty %>
-        Inherits EditableRootListBase(Of <%= ChildBusinessClassName %><%= Entity.GenericProperty %>)
+        Inherits <% If(IsCSLA40) Then %>DynamicBindingListBase<% Else %>EditableRootListBase<% End If %>(Of <%= ChildBusinessClassName %><%= Entity.GenericProperty %>)
     
 #Region "Constructor(s)"
         
@@ -70,7 +70,7 @@ Namespace <%= BusinessProjectName %>
     <% End If %>
 #Region "Method Overrides"
         
-        Protected Overrides Function AddNewCore() As <% if(IsCSLA40) Then %><%= ChildBusinessClassName %><%= Entity.GenericProperty %><% Else %>Object<% End If %>
+        Protected Overrides Function AddNewCore() As Object
     <% RenderHelper(new AddNewCore()) %>
         End Function
         
