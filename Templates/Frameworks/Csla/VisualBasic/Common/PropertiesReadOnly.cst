@@ -26,10 +26,10 @@
     #If Not SILVERLIGHT Then
     <% End If %>
         <%If member.IsPrimaryKey Then %><%= member.BuildDataObjectField(IncludeSilverlightSupport) %><% End If %>
-        Public Property <%= member.PropertyName %>() As <%= member.SystemType %>
+        Public Readonly Property <%= member.PropertyName %>() As <%= member.SystemType %>
     <%If IncludeSilverlightSupport Then %>
     #Else
-        Public Property <%= member.PropertyName %>() As <%= member.SystemType %>
+        Public Readonly Property <%= member.PropertyName %>() As <%= member.SystemType %>
     #End If
     <% End If %>
             Get 
@@ -46,7 +46,7 @@
     #If Not SILVERLIGHT Then
     <% End If %>
         <%If member.IsPrimaryKey Then %><%= member.BuildDataObjectField(IncludeSilverlightSupport) %><% End If %>
-        Public Property <%= member.PropertyName %>() As <%= member.SystemType %>
+        Public Readonly Property <%= member.PropertyName %>() As <%= member.SystemType %>
     <%If IncludeSilverlightSupport Then %>
     #Else
         Public ReadOnly Property <%= member.PropertyName %>() As <%= member.SystemType %>
