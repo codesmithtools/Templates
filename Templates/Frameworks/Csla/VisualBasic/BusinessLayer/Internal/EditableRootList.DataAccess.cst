@@ -47,6 +47,7 @@ Namespace <%= BusinessProjectName %>
             RaiseListChangedEvents = True
         End Sub
         
+        <Transactional(TransactionalTypes.TransactionScope)> _
         Protected Overrides Sub DataPortal_Update()
             'Child_Update()
         End Sub

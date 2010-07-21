@@ -44,7 +44,8 @@ Namespace <%= BusinessProjectName %>
         Private Shadows Sub DataPortal_Fetch(ByVal criteria As <%= CriteriaClassName %><%= Entity.GenericProperty %>)
     <% RenderHelper(New DataPortalFetchList()) %>
         End Sub
-    
+
+        <Transactional(TransactionalTypes.TransactionScope)> _
         Protected Overrides Sub DataPortal_Update()
     <% RenderHelper(New DataPortalUpdateList()) %>
         End Sub

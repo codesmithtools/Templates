@@ -52,6 +52,7 @@ namespace <%= BusinessProjectName %>
             RaiseListChangedEvents = true;
         }
 
+        [Transactional(TransactionalTypes.TransactionScope)]
         protected override void DataPortal_Update()
         {
             //Child_Update();

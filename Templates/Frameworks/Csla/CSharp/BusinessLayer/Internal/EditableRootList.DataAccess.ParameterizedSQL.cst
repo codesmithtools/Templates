@@ -49,6 +49,7 @@ namespace <%= BusinessProjectName %>
 <% RenderHelper(new DataPortalFetchList()); %>
         }
 
+        [Transactional(TransactionalTypes.TransactionScope)]
         protected override void DataPortal_Update()
         {
 <% RenderHelper(new DataPortalUpdateList()); %>
