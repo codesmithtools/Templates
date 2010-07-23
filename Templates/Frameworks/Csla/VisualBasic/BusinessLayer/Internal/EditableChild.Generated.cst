@@ -93,12 +93,23 @@ Namespace <%= BusinessProjectName %>
             AddHandler dp.CreateCompleted, handler
             dp.BeginCreate()
         End Sub
+    <% For Each sc As SearchCriteria In  Entity.SearchCriteria() %>
     
-    ' Child objects do not expose asynchronous factory get methods.
-    
-    ' Child objects do not expose asynchronous delete methods.
-    
-    #End Region
+        Friend Shared Sub <%= sc.MethodName %>Async(<%= sc.Members.BuildParametersVariables() %>, ByVal handler As EventHandler(Of DataPortalResult(Of <%= BusinessClassName %><%= Entity.GenericProperty %>)))
+            Dim dp As New DataPortal(Of <%= BusinessClassName %><%= Entity.GenericProperty %>)()
+            AddHandler dp.FetchCompleted, handler
+        
+            Dim criteria As New <%= CriteriaClassName %><%= Entity.GenericProperty %>()
+    <%For Each member As Member in sc.Members %>
+            criteria.<%= member.PropertyName %> = <%= member.VariableName %>
+    <% Next %>
+
+            ' Mark as child?
+            dp.BeginFetch(criteria)
+        End Sub
+    <% Next %>
+
+#End Region
     <% End If %>
     
     <% RenderHelper(New IsDirty()) %>

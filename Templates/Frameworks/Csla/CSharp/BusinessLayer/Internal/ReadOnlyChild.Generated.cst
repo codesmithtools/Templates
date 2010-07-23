@@ -58,14 +58,13 @@ namespace <%= BusinessProjectName %>
 #if !SILVERLIGHT
 <% } %>
         #region Synchronous Factory Methods 
-
 <% foreach(SearchCriteria sc in Entity.SearchCriteria()) { %>
 
         internal static <%= ChildBusinessClassName %><%= Entity.GenericProperty %> <%= sc.MethodName %>(<%= sc.Members.BuildParametersVariables() %>)
         {
-			var criteria = new <%= CriteriaClassName %><%= Entity.GenericProperty %> {<%= sc.Members.BuildObjectInitializer() %>};
-			<%= sc.Members.BuildNullableObjectInitializer()%>
-			
+            var criteria = new <%= CriteriaClassName %><%= Entity.GenericProperty %> {<%= sc.Members.BuildObjectInitializer() %>};
+            <%= sc.Members.BuildNullableObjectInitializer()%>
+
             return DataPortal.FetchChild< <%= ChildBusinessClassName %><%= Entity.GenericProperty %> >(criteria);
         }
 <% } %>
@@ -75,7 +74,20 @@ namespace <%= BusinessProjectName %>
 #endif
 
         #region Asynchronous Factory Methods
-        // Child objects do not expose asynchronous factory get methods.
+<% foreach(SearchCriteria sc in Entity.SearchCriteria()) { %>
+
+        internal static void <%= sc.MethodName %>Async(<%= sc.Members.BuildParametersVariables() %>, EventHandler<DataPortalResult<<%= BusinessClassName %><%= Entity.GenericProperty %>>> handler)
+        {
+            var criteria = new <%= CriteriaClassName %><%= Entity.GenericProperty %>{<%= Entity.PrimaryKey.KeyMembers.BuildObjectInitializer() %>};
+            <%=Entity.PrimaryKey.KeyMembers.BuildNullableObjectInitializer()%>
+            
+            // Mark as child?
+            var dp = new DataPortal< <%= BusinessClassName %><%= Entity.GenericProperty %> >();
+            AddHandler dp.FetchCompleted, handler
+            dp.BeginFetch(criteria)
+        }
+<% } %>
+
         #endregion
 
 <% } %>

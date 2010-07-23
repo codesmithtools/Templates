@@ -121,7 +121,7 @@ Namespace <%= BusinessProjectName %>
             dp.BeginFetch(New <%= CriteriaClassName %><%= Entity.GenericProperty %>())
         End Sub
     
-    #End Region
+#End Region
 <% End If %>
     
 #Region "Method Overrides"

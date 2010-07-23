@@ -30,7 +30,7 @@ Namespace <%= BusinessProjectName %>
     Public Partial Class <%= BusinessClassName %>
         Inherits CommandBase
         
-#Region "Factory Methods"
+#Region "Synchronous Factory Methods"
         
         Public Shared Function Execute() As Boolean
             If Not CanExecuteCommand() Then

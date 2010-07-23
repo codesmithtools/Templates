@@ -53,13 +53,13 @@ Public Overloads Overrides Sub Render(writer As System.IO.TextWriter)
 
     nameValueListDataAccess.RenderToFile(fileName, parentFileName, True)
     If DataAccessImplementation = DataAccessMethod.StoredProcedures Then
-	'StoredProcedures
-	fileName = System.IO.Path.Combine(Location, String.Format("Collections\{0}.StoredProcedures.sql", nameValueList.BusinessClassName))
-	Dim sqlStoredProcedures As SqlStoredProcedures = Me.Create(Of SqlStoredProcedures)()
-	Me.CopyPropertiesTo(sqlStoredProcedures)
-	sqlStoredProcedures.DataProjectName = "Not needed for sql stored procedures."
+    'StoredProcedures
+    fileName = System.IO.Path.Combine(Location, String.Format("Collections\{0}.StoredProcedures.sql", nameValueList.BusinessClassName))
+    Dim sqlStoredProcedures As SqlStoredProcedures = Me.Create(Of SqlStoredProcedures)()
+    Me.CopyPropertiesTo(sqlStoredProcedures)
+    sqlStoredProcedures.DataProjectName = "Not needed for sql stored procedures."
 
-	sqlStoredProcedures.RenderToFile(fileName, parentFileName, True)
+    sqlStoredProcedures.RenderToFile(fileName, parentFileName, True)
     End If
 End Sub
 

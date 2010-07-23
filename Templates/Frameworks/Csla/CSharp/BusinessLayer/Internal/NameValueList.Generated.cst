@@ -52,22 +52,22 @@ namespace <%= BusinessProjectName %>
                 
             return _list;
         }
-	
+    
         #endregion
 
 <% if(IncludeSilverlightSupport) { %>
 #endif
- 	#region Asynchronous Factory Methods
+     #region Asynchronous Factory Methods
         
-	public static void GetAllAsync(EventHandler<DataPortalResult<<%= BusinessClassName %><%= Entity.GenericProperty %>>> handler)
+    public static void GetAllAsync(EventHandler<DataPortalResult<<%= BusinessClassName %><%= Entity.GenericProperty %>>> handler)
         {
             DataPortal<<%= BusinessClassName %><%= Entity.GenericProperty %>> dp = new DataPortal<<%= BusinessClassName %><%= Entity.GenericProperty %>>();
             dp.FetchCompleted += handler;
             dp.BeginFetch();
         }
         
-	#endregion
-	
+    #endregion
+    
 <% } %>
         
         public static void InvalidateCache()
