@@ -50,17 +50,17 @@ Namespace <%= BusinessProjectName %>
 #Region "Constructor(s)"
         
     <% If(IncludeSilverlightSupport) Then %>
-    #If Not SILVERLIGHT Then
+#If Not SILVERLIGHT Then
     <% End If %>
         Private Sub New()
             AllowNew = True
         End Sub
     <% If(IncludeSilverlightSupport) Then %>
-    #Else
+#Else
         public Sub New()
             AllowNew = True
         End Sub
-    #End If
+#End If
     <% End If %>
     
 #End Region
@@ -111,7 +111,8 @@ Namespace <%= BusinessProjectName %>
 #End If 
 
 #Region "Asynchronous Factory Methods"
-            
+
+#If SILVERLIGHT Then
         Public Shared Sub NewListAsync(ByVal handler As EventHandler(Of DataPortalResult(Of <%= BusinessClassName %><%= Entity.GenericProperty %>)))
             Dim dp As New DataPortal(Of <%= BusinessClassName %><%= Entity.GenericProperty %>)()
             AddHandler dp.CreateCompleted, handler
@@ -136,7 +137,8 @@ Namespace <%= BusinessProjectName %>
             Dim dp As New DataPortal(Of <%= BusinessClassName %><%= Entity.GenericProperty %>)()
             AddHandler dp.FetchCompleted, handler
             dp.BeginFetch(New <%= CriteriaClassName %><%= Entity.GenericProperty %>())
-        End Function
+        End Function 
+#End If
 
 #End Region
     

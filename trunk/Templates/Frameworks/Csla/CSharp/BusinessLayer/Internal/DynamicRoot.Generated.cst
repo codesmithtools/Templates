@@ -87,7 +87,8 @@ namespace <%= BusinessProjectName %>
 #endif
 
         #region Asynchronous Factory Methods
-        
+
+#if SILVERLIGHT
         public static void New<%= BusinessClassName %>Async(EventHandler<DataPortalResult<<%= BusinessClassName %><%= Entity.GenericProperty %>>> handler)
         {
             var dp = new DataPortal<<%= BusinessClassName %><%= Entity.GenericProperty %>>();
@@ -108,6 +109,7 @@ namespace <%= BusinessProjectName %>
         }
 
 <% } %> 
+#endif
 
         #endregion
 <% } %>
