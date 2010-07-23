@@ -11,7 +11,7 @@ namespace QuickStart
         [Category("6. Test Project")]
         [Description("The namespace for the test project.")]
         public string TestProjectName { get; set; }
-				
+                
         #endregion
 
         public override void RegisterReferences()

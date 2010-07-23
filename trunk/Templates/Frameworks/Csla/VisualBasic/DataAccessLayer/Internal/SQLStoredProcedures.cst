@@ -116,7 +116,7 @@ Next %>
 
 <%-- If the primary key is an identity column, then capture the newly assigned identity using SCOPE_IDENTITY(). --%>
 <% For Each column As ColumnSchema In SourceTable.PrimaryKey.MemberColumns
-	If (IsIdentityColumn(column)) Then %>
+    If (IsIdentityColumn(column)) Then %>
 SET <%= ParameterPrefix %><%= column.Name %> = SCOPE_IDENTITY()
 <% End If
 Next %>

@@ -11,12 +11,12 @@ namespace CodeSmith.SchemaHelper
         {
             return member.BuildDataObjectField(false);
         }
-		
-		public static string BuildDataObjectField(this Member member, bool isSilverlight)
+        
+        public static string BuildDataObjectField(this Member member, bool isSilverlight)
         {
             if (member.IsPrimaryKey)
             {
-				if(isSilverlight)
+                if(isSilverlight)
                     return string.Format("{1}#if !SILVERLIGHT{1}\t\t[System.ComponentModel.DataObjectField(true, {0})]{1}#endif", member.IsIdentity.ToString().ToLower(), Environment.NewLine);
 
                 return string.Format("{1}\t\t[System.ComponentModel.DataObjectField(true, {0})]", member.IsIdentity.ToString().ToLower(), Environment.NewLine);

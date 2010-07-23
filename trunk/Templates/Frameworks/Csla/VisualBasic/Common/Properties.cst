@@ -211,9 +211,9 @@
         Public ReadOnly Property <%= association.PropertyName %>() As <%= associationClassName %>
             Get
     <% If UseLazyLoading Then %>
-				If<%= association.BuildNullCheckStatement(true, true, false, true, false) %> Then
-					Return Nothing
-				End If
+                If<%= association.BuildNullCheckStatement(true, true, false, true, false) %> Then
+                    Return Nothing
+                End If
     
                 If Not(FieldManager.FieldExists(<%= association.PrivateMemberVariableName %>Property))
                     Dim criteria As New <%= BusinessProjectName %>.<%= association.ClassName %>Criteria<%= association.GenericProperty %>()

@@ -31,7 +31,7 @@ namespace <%= BusinessProjectName %>
     [Serializable]
     public partial class <%= BusinessClassName %> : CommandBase
     {
-        #region Factory Methods 
+        #region Synchronous Factory Methods 
         
         public static bool Execute()
         {

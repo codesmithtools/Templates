@@ -63,7 +63,7 @@ namespace <%= BusinessProjectName %>
 <% } %>
 
         #endregion
-	
+    
 <% if(IncludeSilverlightSupport) { %>
 #if !SILVERLIGHT
 <% } %>
@@ -74,9 +74,9 @@ namespace <%= BusinessProjectName %>
 
         public static <%= BusinessClassName %> <%= sc.MethodName %>(<%= sc.Members.BuildParametersVariables() %>)
         {
-			var criteria = new <%= CriteriaClassName %>{<%= sc.Members.BuildObjectInitializer() %>};
-			<%= sc.Members.BuildNullableObjectInitializer()%>
-			
+            var criteria = new <%= CriteriaClassName %>{<%= sc.Members.BuildObjectInitializer() %>};
+            <%= sc.Members.BuildNullableObjectInitializer()%>
+            
             return DataPortal.Fetch< <%= BusinessClassName %> >(criteria);
         }
         
@@ -95,9 +95,9 @@ namespace <%= BusinessProjectName %>
 
         public static void <%= sc.MethodName %>Async(<%= sc.Members.BuildParametersVariables() %>, EventHandler<DataPortalResult<<%= BusinessClassName %><%= Entity.GenericProperty %>>> handler)
         {
-			var criteria = new <%= CriteriaClassName %>{<%= sc.Members.BuildObjectInitializer() %>};
-			<%= sc.Members.BuildNullableObjectInitializer()%>
-			
+            var criteria = new <%= CriteriaClassName %>{<%= sc.Members.BuildObjectInitializer() %>};
+            <%= sc.Members.BuildNullableObjectInitializer()%>
+            
             var dp = new DataPortal< <%= BusinessClassName %><%= Entity.GenericProperty %>>();
             dp.FetchCompleted += handler;
             dp.BeginFetch(criteria);

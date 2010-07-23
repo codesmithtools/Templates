@@ -8,7 +8,7 @@ namespace QuickStart
 {
     public class DataProjectCreator : ProjectCreator
     {
-	    public DataProjectCreator(ProjectBuilderSettings projectBuilder)
+        public DataProjectCreator(ProjectBuilderSettings projectBuilder)
             : base(projectBuilder) { }
 
         public override string ProjectTemplateFile
@@ -41,11 +41,11 @@ namespace QuickStart
                 .Replace("$frameworkEnum$", ProjectBuilder.FrameworkVersion == FrameworkVersion.v40 ? "v40" : "v35_SP1")
                 .Replace("$languageExtension$", ProjectBuilder.LanguageAppendage);
 
-			if (ProjectBuilder.Language == LanguageEnum.VB)
+            if (ProjectBuilder.Language == LanguageEnum.VB)
             {
-				 content = content.Replace("CSharp\\BusinessLayer\\", "VisualBasic\\BusinessLayer\\");
-				 content = content.Replace("CSharp\\DataAccessLayer\\", "VisualBasic\\DataAccessLayer\\");
-			}
+                 content = content.Replace("CSharp\\BusinessLayer\\", "VisualBasic\\BusinessLayer\\");
+                 content = content.Replace("CSharp\\DataAccessLayer\\", "VisualBasic\\DataAccessLayer\\");
+            }
 
             File.WriteAllText(
                 Path.Combine(ProjectDirectory, CspFileName),

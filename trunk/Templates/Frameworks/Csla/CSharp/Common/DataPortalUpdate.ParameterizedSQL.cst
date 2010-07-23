@@ -18,7 +18,7 @@
             if(<%= Entity.PrimaryKey.KeyMembers.BuildIdentityKeyEqualityStatements()%>)
             {
                 // Insert new child.
-				<%= BusinessClassName %> item = new <%= BusinessClassName %> {<%= Entity.MembersNoRowVersion.BuildObjectInitializer(false, true) %>};
+                <%= BusinessClassName %> item = new <%= BusinessClassName %> {<%= Entity.MembersNoRowVersion.BuildObjectInitializer(false, true) %>};
                 <%= Entity.MembersNoRowVersion.BuildNullableObjectInitializer(false, true, false, "item.")%>
                 item = item.Save();
 
@@ -38,8 +38,8 @@
                 }
 
                 // Delete the old.
-				var criteria = new <%= CriteriaClassName %> {<%= Entity.PrimaryKey.KeyMembers.BuildObjectInitializer(false, false, true) %>};
-				<%= Entity.PrimaryKey.KeyMembers.BuildNullableObjectInitializer(false, false, true)%>
+                var criteria = new <%= CriteriaClassName %> {<%= Entity.PrimaryKey.KeyMembers.BuildObjectInitializer(false, false, true) %>};
+                <%= Entity.PrimaryKey.KeyMembers.BuildNullableObjectInitializer(false, false, true)%>
                 DataPortal_Delete(criteria);
 
                 // Mark the original as the new one.

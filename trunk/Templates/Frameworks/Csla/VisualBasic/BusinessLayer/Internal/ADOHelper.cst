@@ -262,7 +262,7 @@ Namespace <%= BusinessProjectName %>
             End If
         End Function
     
-    #End Region
+#End Region
         
     End Class
 End Namespace

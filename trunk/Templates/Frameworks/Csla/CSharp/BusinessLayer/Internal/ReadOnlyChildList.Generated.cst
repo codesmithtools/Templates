@@ -50,7 +50,7 @@ namespace <%= BusinessProjectName %>
     public partial class <%= BusinessClassName %><%= Entity.GenericProperty %> : ReadOnlyListBase< <%= BusinessClassName %><%= Entity.GenericProperty %>, <%= ResolveTargetClassName(ChildBusinessClassName, "Info", IsReadOnlyBusinessObject("Info")) %><%= Entity.GenericProperty %> >
     {
     
-    	#region Constructor(s)
+        #region Constructor(s)
 
 <% if(IncludeSilverlightSupport) { %>
 #if SILVERLIGHT
@@ -74,25 +74,46 @@ namespace <%= BusinessProjectName %>
 
         internal static <%= BusinessClassName %> <%= sc.MethodName %>(<%= sc.Members.BuildParametersVariables() %>)
         {
-			var criteria = new <%= CriteriaClassName %>{<%= sc.Members.BuildObjectInitializer() %>};
-			<%= sc.Members.BuildNullableObjectInitializer()%>
-			
+            var criteria = new <%= CriteriaClassName %>{<%= sc.Members.BuildObjectInitializer() %>};
+            <%= sc.Members.BuildNullableObjectInitializer()%>
+            
             return DataPortal.FetchChild< <%= BusinessClassName %> >(criteria);
         }
-        
 <% } %>
 
-	internal static <%= BusinessClassName %> GetAll()
+        internal static <%= BusinessClassName %> GetAll()
         {
             return DataPortal.FetchChild< <%= BusinessClassName %> >(new <%= CriteriaClassName %>());
         }
-	
+    
         #endregion
 <% if(IncludeSilverlightSupport) { %>
 #endif
 
         #region Asynchronous Factory Methods
-        // Child objects do not expose asynchronous factory get methods.
+
+<% foreach(SearchCriteria sc in Entity.SearchCriteria()) { %>
+
+        internal static void <%= sc.MethodName %>Async(<%= sc.Members.BuildParametersVariables() %>, EventHandler<DataPortalResult<<%= BusinessClassName %><%= Entity.GenericProperty %>>> handler)
+        {
+            var criteria = new <%= CriteriaClassName %><%= Entity.GenericProperty %>{ <%= sc.Members.BuildObjectInitializer() %>};
+            <%= sc.Members.BuildNullableObjectInitializer()%>
+            
+            // Mark as child?
+            var dp = new DataPortal< <%= BusinessClassName %><%= Entity.GenericProperty %> >();
+            dp.FetchCompleted += handler;
+            dp.BeginFetch(criteria);
+        }
+<% } %>
+
+        internal static void GetAllAsync(EventHandler<DataPortalResult<<%= BusinessClassName %><%= Entity.GenericProperty %>>> handler)
+        {
+            // Mark as child?
+            var dp = new DataPortal< <%= BusinessClassName %><%= Entity.GenericProperty %> >();
+            dp.FetchCompleted += handler;
+            dp.BeginFetch(new <%= CriteriaClassName %>());
+        }
+
         #endregion
 
 <% } %>

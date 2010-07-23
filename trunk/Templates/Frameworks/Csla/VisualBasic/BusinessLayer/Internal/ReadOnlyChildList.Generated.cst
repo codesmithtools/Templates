@@ -89,9 +89,30 @@ Namespace <%= BusinessProjectName %>
     #End If
     
 #Region "Asynchronous Factory Methods"
+    <% For Each sc As SearchCriteria In  Entity.SearchCriteria() %>
     
-        ' Child objects do not expose asynchronous factory get methods.
-    
+        Friend Shared Sub <%= sc.MethodName %>Async(<%= sc.Members.BuildParametersVariables() %>, ByVal handler As EventHandler(Of DataPortalResult(Of <%= BusinessClassName %><%= Entity.GenericProperty %>)))
+            Dim dp As New DataPortal(Of <%= BusinessClassName %><%= Entity.GenericProperty %>)()
+            AddHandler dp.FetchCompleted, handler
+        
+            Dim criteria As New <%= CriteriaClassName %><%= Entity.GenericProperty %>()
+    <%For Each member As Member in sc.Members %>
+            criteria.<%= member.PropertyName %> = <%= member.VariableName %>
+    <% Next %>
+
+            ' Mark as child?
+            dp.BeginFetch(criteria)
+        End Sub
+    <% Next %>
+
+        Friend Shared Sub GetAllAsync(ByVal handler As EventHandler(Of DataPortalResult(Of <%= BusinessClassName %><%= Entity.GenericProperty %>)))
+            Dim dp As New DataPortal(Of <%= BusinessClassName %><%= Entity.GenericProperty %>)()
+            AddHandler dp.FetchCompleted, handler
+
+            ' Mark as child?
+            dp.BeginFetch(New <%= CriteriaClassName %><%= Entity.GenericProperty %>())
+        End Sub
+
 #End Region
     
     <% End If %>

@@ -19,7 +19,7 @@
         { /* Require use of factory methods */ }
 <% if(IncludeSilverlightSupport) { %>
 #else
-	public <%= BusinessClassName %>()
+    public <%= BusinessClassName %>()
         { /* Require use of factory methods */ }
 #endif
 <% } %>
