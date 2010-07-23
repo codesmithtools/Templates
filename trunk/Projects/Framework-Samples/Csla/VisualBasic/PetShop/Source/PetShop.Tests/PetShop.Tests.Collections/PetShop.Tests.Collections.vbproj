@@ -37,9 +37,13 @@
     <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Csla, Version=3.8.2.0, Culture=neutral, PublicKeyToken=93be5fdc093e4c30, processorArchitecture=MSIL">
+    <Reference Include="Csla, Version=3.8.4.0, Culture=neutral, PublicKeyToken=93be5fdc093e4c30, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\..\..\..\Templates\Frameworks\Csla\Common\Csla\3.8.2\Client\Csla.dll</HintPath>
+      <HintPath>..\..\..\Libraries\Csla\Csla.dll</HintPath>
+    </Reference>
+    <Reference Include="nunit.framework, Version=2.5.5.10112, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\Libraries\nunit.framework.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
@@ -73,6 +77,7 @@
       <DependentUpon>CategoryList.vb</DependentUpon>
     </Compile>
     <Compile Include="Generated\DynamicRoot\Collections\CategoryList.vb" />
+    <Compile Include="Generated\DynamicRoot\Commands\ExistsCommand.vb" />
     <Compile Include="Generated\DynamicRoot\Criteria\CategoryCriteria.Generated.vb">
       <DependentUpon>CategoryCriteria.vb</DependentUpon>
     </Compile>
@@ -85,6 +90,7 @@
       <DependentUpon>Category.vb</DependentUpon>
     </Compile>
     <Compile Include="Generated\DynamicRoot\Entities\Category.vb" />
+    <Compile Include="Generated\DynamicRoot\Utility\ADOHelper.vb" />
     <Compile Include="Generated\EditableChild\Collections\CategoryList.DataAccess.vb">
       <DependentUpon>CategoryList.vb</DependentUpon>
     </Compile>
@@ -92,6 +98,7 @@
       <DependentUpon>CategoryList.vb</DependentUpon>
     </Compile>
     <Compile Include="Generated\EditableChild\Collections\CategoryList.vb" />
+    <Compile Include="Generated\EditableChild\Commands\ExistsCommand.vb" />
     <Compile Include="Generated\EditableChild\Criteria\CategoryCriteria.Generated.vb">
       <DependentUpon>CategoryCriteria.vb</DependentUpon>
     </Compile>
@@ -104,6 +111,7 @@
       <DependentUpon>Category.vb</DependentUpon>
     </Compile>
     <Compile Include="Generated\EditableChild\Entities\Category.vb" />
+    <Compile Include="Generated\EditableChild\Utility\ADOHelper.vb" />
     <Compile Include="Generated\EditableRoot\Collections\CategoryList.DataAccess.vb">
       <DependentUpon>CategoryList.vb</DependentUpon>
     </Compile>
@@ -111,6 +119,7 @@
       <DependentUpon>CategoryList.vb</DependentUpon>
     </Compile>
     <Compile Include="Generated\EditableRoot\Collections\CategoryList.vb" />
+    <Compile Include="Generated\EditableRoot\Commands\ExistsCommand.vb" />
     <Compile Include="Generated\EditableRoot\Criteria\CategoryCriteria.Generated.vb">
       <DependentUpon>CategoryCriteria.vb</DependentUpon>
     </Compile>
@@ -123,6 +132,7 @@
       <DependentUpon>Category.vb</DependentUpon>
     </Compile>
     <Compile Include="Generated\EditableRoot\Entities\Category.vb" />
+    <Compile Include="Generated\EditableRoot\Utility\ADOHelper.vb" />
     <Compile Include="Generated\ReadOnlyChild\Collections\CategoryInfoList.DataAccess.vb">
       <DependentUpon>CategoryInfoList.vb</DependentUpon>
     </Compile>
@@ -130,6 +140,7 @@
       <DependentUpon>CategoryInfoList.vb</DependentUpon>
     </Compile>
     <Compile Include="Generated\ReadOnlyChild\Collections\CategoryInfoList.vb" />
+    <Compile Include="Generated\ReadOnlyChild\Commands\ExistsCommand.vb" />
     <Compile Include="Generated\ReadOnlyChild\Criteria\CategoryCriteria.Generated.vb">
       <DependentUpon>CategoryCriteria.vb</DependentUpon>
     </Compile>
@@ -142,6 +153,7 @@
       <DependentUpon>CategoryInfo.vb</DependentUpon>
     </Compile>
     <Compile Include="Generated\ReadOnlyChild\Entities\CategoryInfo.vb" />
+    <Compile Include="Generated\ReadOnlyChild\Utility\ADOHelper.vb" />
     <Compile Include="Generated\ReadOnlyRoot\Collections\CategoryInfoList.DataAccess.vb">
       <DependentUpon>CategoryInfoList.vb</DependentUpon>
     </Compile>
@@ -149,6 +161,7 @@
       <DependentUpon>CategoryInfoList.vb</DependentUpon>
     </Compile>
     <Compile Include="Generated\ReadOnlyRoot\Collections\CategoryInfoList.vb" />
+    <Compile Include="Generated\ReadOnlyRoot\Commands\ExistsCommand.vb" />
     <Compile Include="Generated\ReadOnlyRoot\Criteria\CategoryCriteria.Generated.vb">
       <DependentUpon>CategoryCriteria.vb</DependentUpon>
     </Compile>
@@ -161,6 +174,7 @@
       <DependentUpon>CategoryInfo.vb</DependentUpon>
     </Compile>
     <Compile Include="Generated\ReadOnlyRoot\Entities\CategoryInfo.vb" />
+    <Compile Include="Generated\ReadOnlyRoot\Utility\ADOHelper.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
       <AutoGen>True</AutoGen>
@@ -191,21 +205,18 @@
     <None Include="Generated\DynamicRoot\Collections\CategoryList.StoredProcedures.sql">
       <DependentUpon>CategoryList.vb</DependentUpon>
     </None>
-    <Generate Include="Generated\DynamicRoot\Entities.csp" />
     <None Include="Generated\DynamicRoot\Entities\Category.StoredProcedures.sql">
       <DependentUpon>Category.vb</DependentUpon>
     </None>
     <None Include="Generated\EditableChild\Collections\CategoryList.StoredProcedures.sql">
       <DependentUpon>CategoryList.vb</DependentUpon>
     </None>
-    <Generate Include="Generated\EditableChild\Entities.csp" />
     <None Include="Generated\EditableChild\Entities\Category.StoredProcedures.sql">
       <DependentUpon>Category.vb</DependentUpon>
     </None>
     <None Include="Generated\EditableRoot\Collections\CategoryList.StoredProcedures.sql">
       <DependentUpon>CategoryList.vb</DependentUpon>
     </None>
-    <Generate Include="Generated\EditableRoot\Entities.csp" />
     <None Include="Generated\EditableRoot\Entities\Category.StoredProcedures.sql">
       <DependentUpon>Category.vb</DependentUpon>
     </None>
@@ -213,14 +224,12 @@
     <None Include="Generated\ReadOnlyChild\Collections\CategoryInfoList.StoredProcedures.sql">
       <DependentUpon>CategoryInfoList.vb</DependentUpon>
     </None>
-    <Generate Include="Generated\ReadOnlyChild\Entities.csp" />
     <None Include="Generated\ReadOnlyChild\Entities\CategoryInfo.StoredProcedures.sql">
       <DependentUpon>CategoryInfo.vb</DependentUpon>
     </None>
     <None Include="Generated\ReadOnlyRoot\Collections\CategoryInfoList.StoredProcedures.sql">
       <DependentUpon>CategoryInfoList.vb</DependentUpon>
     </None>
-    <Generate Include="Generated\ReadOnlyRoot\Entities.csp" />
     <None Include="Generated\ReadOnlyRoot\Entities\CategoryInfo.StoredProcedures.sql">
       <DependentUpon>CategoryInfo.vb</DependentUpon>
     </None>
