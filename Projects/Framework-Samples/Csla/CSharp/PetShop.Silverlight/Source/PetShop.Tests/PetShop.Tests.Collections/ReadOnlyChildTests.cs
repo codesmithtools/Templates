@@ -94,7 +94,7 @@ namespace PetShop.Tests.Collections
             Console.WriteLine("2. Selects all Category entitys.");
             Stopwatch watch = Stopwatch.StartNew();
 
-            CategoryList list = CategoryList.GetByCategoryId(TestCategoryID);
+            CategoryInfoList list = CategoryInfoList.GetByCategoryId(TestCategoryID);
             Assert.IsTrue(list.Count == 1);
 
             Console.WriteLine("Time: {0} ms", watch.ElapsedMilliseconds);
