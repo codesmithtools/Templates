@@ -134,8 +134,8 @@ namespace PetShop.Tests.ObjF.ParameterizedSQL
             {
                 if(!FieldManager.FieldExists(_itemsProperty))
                 {
-					var criteria = new PetShop.Tests.ObjF.ParameterizedSQL.ItemCriteria {Supplier = SuppId};
-					
+                    var criteria = new PetShop.Tests.ObjF.ParameterizedSQL.ItemCriteria {Supplier = SuppId};
+                    
 
                     if(IsNew || !PetShop.Tests.ObjF.ParameterizedSQL.ItemList.Exists(criteria))
                         LoadProperty(_itemsProperty, PetShop.Tests.ObjF.ParameterizedSQL.ItemList.NewList());
@@ -157,17 +157,17 @@ namespace PetShop.Tests.ObjF.ParameterizedSQL
 
         public static Supplier GetBySuppId(System.Int32 suppId)
         {
-			var criteria = new SupplierCriteria {SuppId = suppId};
-			
-			
+            var criteria = new SupplierCriteria {SuppId = suppId};
+            
+            
             return DataPortal.Fetch< Supplier >(criteria);
         }
 
         public static void DeleteSupplier(System.Int32 suppId)
         {
-			var criteria = new SupplierCriteria {SuppId = suppId};
-			
-			
+            var criteria = new SupplierCriteria {SuppId = suppId};
+            
+            
             DataPortal.Delete< Supplier >(criteria);
         }
 
@@ -214,7 +214,7 @@ namespace PetShop.Tests.ObjF.ParameterizedSQL
 
         public static bool Exists(SupplierCriteria criteria)
         {
-            return ExistsCommand.Execute(criteria);
+            return PetShop.Tests.ObjF.ParameterizedSQL.ExistsCommand.Execute(criteria);
         }
 
         #endregion

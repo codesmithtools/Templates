@@ -42,32 +42,32 @@ namespace PetShop.Tests.StoredProcedures
 
         internal static ItemList GetByItemId(System.String itemId)
         {
-			var criteria = new ItemCriteria{ItemId = itemId};
-			
+            var criteria = new ItemCriteria{ItemId = itemId};
+            
             
             return DataPortal.FetchChild< ItemList >(criteria);
         }
 
         internal static ItemList GetByProductIdItemIdListPriceName(System.String productId, System.String itemId, System.Decimal? listPrice, System.String name)
         {
-			var criteria = new ItemCriteria{ProductId = productId, ItemId = itemId, Name = name};
-			if(listPrice.HasValue) criteria.ListPrice = listPrice.Value;
+            var criteria = new ItemCriteria{ProductId = productId, ItemId = itemId, Name = name};
+            if(listPrice.HasValue) criteria.ListPrice = listPrice.Value;
             
             return DataPortal.FetchChild< ItemList >(criteria);
         }
 
         internal static ItemList GetByProductId(System.String productId)
         {
-			var criteria = new ItemCriteria{ProductId = productId};
-			
+            var criteria = new ItemCriteria{ProductId = productId};
+            
             
             return DataPortal.FetchChild< ItemList >(criteria);
         }
 
         internal static ItemList GetBySupplier(System.Int32? supplier)
         {
-			var criteria = new ItemCriteria{};
-			if(supplier.HasValue) criteria.Supplier = supplier.Value;
+            var criteria = new ItemCriteria{};
+            if(supplier.HasValue) criteria.Supplier = supplier.Value;
             
             return DataPortal.FetchChild< ItemList >(criteria);
         }
@@ -77,7 +77,8 @@ namespace PetShop.Tests.StoredProcedures
             return DataPortal.FetchChild< ItemList >(new ItemCriteria());
         }
 
-		#endregion
+        #endregion
+
 
         #region Method Overrides
         
@@ -105,7 +106,7 @@ namespace PetShop.Tests.StoredProcedures
 
 
                 Add(item);
-            }        
+            }
 
             return item;
         }

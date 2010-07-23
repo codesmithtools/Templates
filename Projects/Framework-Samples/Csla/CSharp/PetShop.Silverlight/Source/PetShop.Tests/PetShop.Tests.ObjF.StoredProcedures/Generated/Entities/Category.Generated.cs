@@ -55,12 +55,6 @@ namespace PetShop.Tests.ObjF.StoredProcedures
 
         #region Properties
 
-        /// <summary>
-        /// Used for optimistic concurrency.
-        /// </summary>
-        [NotUndoable]
-        internal System.Byte[] TheVersion = new System.Byte[8];
-
         private static readonly PropertyInfo< System.String > _categoryIdProperty = RegisterProperty< System.String >(p => p.CategoryId, string.Empty);
 		[System.ComponentModel.DataObjectField(true, false)]
         public System.String CategoryId
@@ -99,8 +93,8 @@ namespace PetShop.Tests.ObjF.StoredProcedures
             {
                 if(!FieldManager.FieldExists(_productsProperty))
                 {
-					var criteria = new PetShop.Tests.ObjF.StoredProcedures.ProductCriteria {CategoryId = CategoryId};
-					
+                    var criteria = new PetShop.Tests.ObjF.StoredProcedures.ProductCriteria {CategoryId = CategoryId};
+                    
 
                     if(IsNew || !PetShop.Tests.ObjF.StoredProcedures.ProductList.Exists(criteria))
                         LoadProperty(_productsProperty, PetShop.Tests.ObjF.StoredProcedures.ProductList.NewList());
@@ -122,17 +116,17 @@ namespace PetShop.Tests.ObjF.StoredProcedures
 
         public static Category GetByCategoryId(System.String categoryId)
         {
-			var criteria = new CategoryCriteria {CategoryId = categoryId};
-			
-			
+            var criteria = new CategoryCriteria {CategoryId = categoryId};
+            
+            
             return DataPortal.Fetch< Category >(criteria);
         }
 
         public static void DeleteCategory(System.String categoryId)
         {
-			var criteria = new CategoryCriteria {CategoryId = categoryId};
-			
-			
+            var criteria = new CategoryCriteria {CategoryId = categoryId};
+            
+            
             DataPortal.Delete< Category >(criteria);
         }
 
@@ -179,7 +173,7 @@ namespace PetShop.Tests.ObjF.StoredProcedures
 
         public static bool Exists(CategoryCriteria criteria)
         {
-            return ExistsCommand.Execute(criteria);
+            return PetShop.Tests.ObjF.StoredProcedures.ExistsCommand.Execute(criteria);
         }
 
         #endregion

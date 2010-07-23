@@ -41,7 +41,7 @@ namespace PetShop.Tests.StoredProcedures
 
         #region Synchronous Factory Methods 
 
-        public static bool Execute<T>(T criteria) where T : IGeneratedCriteria
+        public static bool Execute<T>(T criteria) where T : PetShop.Tests.StoredProcedures.IGeneratedCriteria
         {
             if (!CanExecuteCommand())
                 throw new System.Security.SecurityException("Not authorized to execute command");
@@ -58,10 +58,10 @@ namespace PetShop.Tests.StoredProcedures
 
         #region Client-side Code
 
-        private IGeneratedCriteria Criteria { get; set; }
+        private PetShop.Tests.StoredProcedures.IGeneratedCriteria Criteria { get; set; }
         private bool Result { get; set; }
 
-        private void BeforeServer(IGeneratedCriteria criteria)
+        private void BeforeServer(PetShop.Tests.StoredProcedures.IGeneratedCriteria criteria)
         {
             Criteria = criteria;
             Result = false;

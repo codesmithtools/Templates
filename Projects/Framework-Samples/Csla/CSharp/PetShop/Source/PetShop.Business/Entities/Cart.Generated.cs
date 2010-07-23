@@ -211,7 +211,7 @@ namespace PetShop.Business
 
         public static bool Exists(CartCriteria criteria)
         {
-            return ExistsCommand.Execute(criteria);
+            return PetShop.Business.ExistsCommand.Execute(criteria);
         }
 
         #endregion

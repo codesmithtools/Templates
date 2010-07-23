@@ -138,7 +138,7 @@ namespace PetShop.Tests.ObjF.ParameterizedSQL
                 if(!FieldManager.FieldExists(_profileMemberProperty))
                 {
                     var criteria = new PetShop.Tests.ObjF.ParameterizedSQL.ProfileCriteria {UniqueID = UniqueID};
-					
+                    
                     if(PetShop.Tests.ObjF.ParameterizedSQL.Profile.Exists(criteria))
                         LoadProperty(_profileMemberProperty, PetShop.Tests.ObjF.ParameterizedSQL.Profile.GetByUniqueID(UniqueID));
                 }
@@ -157,24 +157,24 @@ namespace PetShop.Tests.ObjF.ParameterizedSQL
 
         internal static Cart GetByCartId(System.Int32 cartId)
         {
-			var criteria = new CartCriteria {CartId = cartId};
-			
+            var criteria = new CartCriteria {CartId = cartId};
+            
         
             return DataPortal.FetchChild< Cart >(criteria);
         }
 
         internal static Cart GetByUniqueID(System.Int32 uniqueID)
         {
-			var criteria = new CartCriteria {UniqueID = uniqueID};
-			
+            var criteria = new CartCriteria {UniqueID = uniqueID};
+            
         
             return DataPortal.FetchChild< Cart >(criteria);
         }
 
         internal static Cart GetByIsShoppingCart(System.Boolean isShoppingCart)
         {
-			var criteria = new CartCriteria {IsShoppingCart = isShoppingCart};
-			
+            var criteria = new CartCriteria {IsShoppingCart = isShoppingCart};
+            
         
             return DataPortal.FetchChild< Cart >(criteria);
         }
@@ -223,7 +223,7 @@ namespace PetShop.Tests.ObjF.ParameterizedSQL
 
         public static bool Exists(CartCriteria criteria)
         {
-            return ExistsCommand.Execute(criteria);
+            return PetShop.Tests.ObjF.ParameterizedSQL.ExistsCommand.Execute(criteria);
         }
 
         #endregion

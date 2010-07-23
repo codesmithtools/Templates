@@ -134,8 +134,8 @@ namespace PetShop.Tests.ObjF.StoredProcedures
             {
                 if(!FieldManager.FieldExists(_itemsProperty))
                 {
-					var criteria = new PetShop.Tests.ObjF.StoredProcedures.ItemCriteria {Supplier = SuppId};
-					
+                    var criteria = new PetShop.Tests.ObjF.StoredProcedures.ItemCriteria {Supplier = SuppId};
+                    
 
                     if(IsNew || !PetShop.Tests.ObjF.StoredProcedures.ItemList.Exists(criteria))
                         LoadProperty(_itemsProperty, PetShop.Tests.ObjF.StoredProcedures.ItemList.NewList());
@@ -157,17 +157,17 @@ namespace PetShop.Tests.ObjF.StoredProcedures
 
         public static Supplier GetBySuppId(System.Int32 suppId)
         {
-			var criteria = new SupplierCriteria {SuppId = suppId};
-			
-			
+            var criteria = new SupplierCriteria {SuppId = suppId};
+            
+            
             return DataPortal.Fetch< Supplier >(criteria);
         }
 
         public static void DeleteSupplier(System.Int32 suppId)
         {
-			var criteria = new SupplierCriteria {SuppId = suppId};
-			
-			
+            var criteria = new SupplierCriteria {SuppId = suppId};
+            
+            
             DataPortal.Delete< Supplier >(criteria);
         }
 
@@ -214,7 +214,7 @@ namespace PetShop.Tests.ObjF.StoredProcedures
 
         public static bool Exists(SupplierCriteria criteria)
         {
-            return ExistsCommand.Execute(criteria);
+            return PetShop.Tests.ObjF.StoredProcedures.ExistsCommand.Execute(criteria);
         }
 
         #endregion

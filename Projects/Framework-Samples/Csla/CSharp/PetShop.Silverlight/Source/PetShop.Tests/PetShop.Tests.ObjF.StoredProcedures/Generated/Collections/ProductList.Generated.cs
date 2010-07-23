@@ -46,7 +46,7 @@ namespace PetShop.Tests.ObjF.StoredProcedures
                     item = PetShop.Tests.ObjF.StoredProcedures.Product.NewProduct();
 
                 Add(item);
-            }      
+            }
 
             return item;
         }
@@ -68,40 +68,40 @@ namespace PetShop.Tests.ObjF.StoredProcedures
 
         public static ProductList GetByProductId(System.String productId)
         {
-			var criteria = new ProductCriteria{ProductId = productId};
-			
+            var criteria = new ProductCriteria{ProductId = productId};
+            
         
             return DataPortal.Fetch< ProductList >(criteria);
         }
 
         public static ProductList GetByName(System.String name)
         {
-			var criteria = new ProductCriteria{Name = name};
-			
+            var criteria = new ProductCriteria{Name = name};
+            
         
             return DataPortal.Fetch< ProductList >(criteria);
         }
 
         public static ProductList GetByCategoryId(System.String categoryId)
         {
-			var criteria = new ProductCriteria{CategoryId = categoryId};
-			
+            var criteria = new ProductCriteria{CategoryId = categoryId};
+            
         
             return DataPortal.Fetch< ProductList >(criteria);
         }
 
         public static ProductList GetByCategoryIdName(System.String categoryId, System.String name)
         {
-			var criteria = new ProductCriteria{CategoryId = categoryId, Name = name};
-			
+            var criteria = new ProductCriteria{CategoryId = categoryId, Name = name};
+            
         
             return DataPortal.Fetch< ProductList >(criteria);
         }
 
         public static ProductList GetByCategoryIdProductIdName(System.String categoryId, System.String productId, System.String name)
         {
-			var criteria = new ProductCriteria{CategoryId = categoryId, ProductId = productId, Name = name};
-			
+            var criteria = new ProductCriteria{CategoryId = categoryId, ProductId = productId, Name = name};
+            
         
             return DataPortal.Fetch< ProductList >(criteria);
         }

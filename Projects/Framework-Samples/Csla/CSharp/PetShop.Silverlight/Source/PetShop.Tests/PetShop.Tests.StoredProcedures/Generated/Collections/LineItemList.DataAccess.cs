@@ -51,7 +51,7 @@ namespace PetShop.Tests.StoredProcedures
                         {
                             do
                             {
-                                this.Add(new LineItem(reader));
+                                this.Add(new PetShop.Tests.StoredProcedures.LineItem(reader));
                             } while(reader.Read());
                         }
                     }
@@ -63,6 +63,7 @@ namespace PetShop.Tests.StoredProcedures
             OnFetched();
         }
 
+        [Transactional(TransactionalTypes.TransactionScope)]
         protected override void DataPortal_Update()
         {
             bool cancel = false;

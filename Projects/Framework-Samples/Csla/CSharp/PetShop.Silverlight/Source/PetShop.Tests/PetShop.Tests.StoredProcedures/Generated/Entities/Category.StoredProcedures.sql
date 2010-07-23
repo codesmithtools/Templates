@@ -218,7 +218,6 @@ IF EXISTS(SELECT 1 FROM fn_listextendedproperty (NULL, 'SCHEMA', 'dbo', 'PROCEDU
 GO
 
 CREATE PROCEDURE [dbo].[CSLA_Category_Insert]
-	@p_TheVersion timestamp OUTPUT,
 	@p_CategoryId varchar(10),
 	@p_Name varchar(80),
 	@p_Descn varchar(255)
@@ -235,8 +234,6 @@ INSERT INTO [dbo].[Category] (
 	@p_Name,
 	@p_Descn)
 
-SET @p_TheVersion = (SELECT [TheVersion] FROM [dbo].[Category] WHERE 	[CategoryId] = @p_CategoryId
-)
 
 GO
 IF @@ERROR!=0 AND @@TRANCOUNT>0 ROLLBACK TRANSACTION
@@ -294,7 +291,6 @@ IF EXISTS(SELECT 1 FROM fn_listextendedproperty (NULL, 'SCHEMA', 'dbo', 'PROCEDU
 GO
 
 CREATE PROCEDURE [dbo].[CSLA_Category_Update]
-	@p_TheVersion timestamp OUTPUT,
 	@p_CategoryId varchar(10),
 	@p_OriginalCategoryId varchar(10),
 	@p_Name varchar(80),
@@ -307,10 +303,7 @@ UPDATE [dbo].[Category] SET
 	[Descn] = @p_Descn
 WHERE
 	[CategoryId] = @p_OriginalCategoryId
-	AND [TheVersion] = @p_TheVersion
 
-SET @p_TheVersion = (SELECT [TheVersion] FROM [dbo].[Category] WHERE 	[CategoryId] = @p_CategoryId
-)
 
 GO
 IF @@ERROR!=0 AND @@TRANCOUNT>0 ROLLBACK TRANSACTION
@@ -442,8 +435,7 @@ SET TRANSACTION ISOLATION LEVEL READ COMMITTED
 SELECT
 	[CategoryId],
 	[Name],
-	[Descn],
-	[TheVersion]
+	[Descn]
 FROM
     [dbo].[Category]
 WHERE

@@ -123,8 +123,8 @@ namespace PetShop.Tests.StoredProcedures
                 }
 
                 // Delete the old.
-				var criteria = new LineItemCriteria {OrderId = OriginalOrderId, LineNum = OriginalLineNum};
-				
+                var criteria = new LineItemCriteria {OrderId = OriginalOrderId, LineNum = OriginalLineNum};
+                
                 DataPortal_Delete(criteria);
 
                 // Mark the original as the new one.

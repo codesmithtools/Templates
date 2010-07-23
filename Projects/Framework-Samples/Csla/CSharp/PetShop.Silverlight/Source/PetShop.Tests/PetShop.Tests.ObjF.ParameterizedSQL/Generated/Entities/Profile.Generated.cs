@@ -102,8 +102,8 @@ namespace PetShop.Tests.ObjF.ParameterizedSQL
             {
                 if(!FieldManager.FieldExists(_accountsProperty))
                 {
-					var criteria = new PetShop.Tests.ObjF.ParameterizedSQL.AccountCriteria {UniqueID = UniqueID};
-					
+                    var criteria = new PetShop.Tests.ObjF.ParameterizedSQL.AccountCriteria {UniqueID = UniqueID};
+                    
 
                     if(IsNew || !PetShop.Tests.ObjF.ParameterizedSQL.AccountList.Exists(criteria))
                         LoadProperty(_accountsProperty, PetShop.Tests.ObjF.ParameterizedSQL.AccountList.NewList());
@@ -123,8 +123,8 @@ namespace PetShop.Tests.ObjF.ParameterizedSQL
             {
                 if(!FieldManager.FieldExists(_cartsProperty))
                 {
-					var criteria = new PetShop.Tests.ObjF.ParameterizedSQL.CartCriteria {UniqueID = UniqueID};
-					
+                    var criteria = new PetShop.Tests.ObjF.ParameterizedSQL.CartCriteria {UniqueID = UniqueID};
+                    
 
                     if(IsNew || !PetShop.Tests.ObjF.ParameterizedSQL.CartList.Exists(criteria))
                         LoadProperty(_cartsProperty, PetShop.Tests.ObjF.ParameterizedSQL.CartList.NewList());
@@ -146,17 +146,17 @@ namespace PetShop.Tests.ObjF.ParameterizedSQL
 
         public static Profile GetByUniqueID(System.Int32 uniqueID)
         {
-			var criteria = new ProfileCriteria {UniqueID = uniqueID};
-			
-			
+            var criteria = new ProfileCriteria {UniqueID = uniqueID};
+            
+            
             return DataPortal.Fetch< Profile >(criteria);
         }
 
         public static Profile GetByUsernameApplicationName(System.String username, System.String applicationName)
         {
-			var criteria = new ProfileCriteria {Username = username, ApplicationName = applicationName};
-			
-			
+            var criteria = new ProfileCriteria {Username = username, ApplicationName = applicationName};
+            
+            
             return DataPortal.Fetch< Profile >(criteria);
         }
 
@@ -173,43 +173,24 @@ namespace PetShop.Tests.ObjF.ParameterizedSQL
         {
             return DataPortal.CreateChild< Profile >();
         }
+
         internal static Profile GetByUniqueIDChild(System.Int32 uniqueID)
         {
-			var criteria = new ProfileCriteria {UniqueID = uniqueID};
-			
+            var criteria = new ProfileCriteria {UniqueID = uniqueID};
+            
 
             return DataPortal.FetchChild< Profile >(criteria);
         }
+
         internal static Profile GetByUsernameApplicationNameChild(System.String username, System.String applicationName)
         {
-			var criteria = new ProfileCriteria {Username = username, ApplicationName = applicationName};
-			
+            var criteria = new ProfileCriteria {Username = username, ApplicationName = applicationName};
+            
 
             return DataPortal.FetchChild< Profile >(criteria);
         }
 
         #endregion
-
-        #region Overridden properties
-
-        /// <summary>
-        /// Returns true if the business object or any of its children properties are dirty.
-        /// </summary>
-        public override bool IsDirty
-        {
-            get
-            {
-                if (base.IsDirty) return true;
-                if (FieldManager.FieldExists(_accountsProperty) && Accounts.IsDirty) return true;
-                if (FieldManager.FieldExists(_cartsProperty) && Carts.IsDirty) return true;
-
-                return false;
-            }
-        }
-
-        #endregion
-
-
         #region DataPortal partial methods
 
         partial void OnCreating(ref bool cancel);
@@ -242,12 +223,31 @@ namespace PetShop.Tests.ObjF.ParameterizedSQL
         partial void OnChildSelfDeleting(ref bool cancel);
         partial void OnChildSelfDeleted();
         #endregion
+        #region Overridden properties
+
+        /// <summary>
+        /// Returns true if the business object or any of its children properties are dirty.
+        /// </summary>
+        public override bool IsDirty
+        {
+            get
+            {
+                if (base.IsDirty) return true;
+                if (FieldManager.FieldExists(_accountsProperty) && Accounts.IsDirty) return true;
+                if (FieldManager.FieldExists(_cartsProperty) && Carts.IsDirty) return true;
+
+                return false;
+            }
+        }
+
+        #endregion
+
 
         #region Exists Command
 
         public static bool Exists(ProfileCriteria criteria)
         {
-            return ExistsCommand.Execute(criteria);
+            return PetShop.Tests.ObjF.ParameterizedSQL.ExistsCommand.Execute(criteria);
         }
 
         #endregion

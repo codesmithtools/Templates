@@ -47,7 +47,7 @@ namespace PetShop.Tests.StoredProcedures
 
 
                 Add(item);
-            }        
+            }
 
             return item;
         }
@@ -63,11 +63,11 @@ namespace PetShop.Tests.StoredProcedures
 
         public static OrderList GetByOrderId(System.Int32 orderId)
         {
-			var criteria = new OrderCriteria{OrderId = orderId};
-			
-			
+            var criteria = new OrderCriteria{OrderId = orderId};
+            
+            
             return DataPortal.Fetch< OrderList >(criteria);
-        }  
+        }
 
         public static OrderList GetAll()
         {

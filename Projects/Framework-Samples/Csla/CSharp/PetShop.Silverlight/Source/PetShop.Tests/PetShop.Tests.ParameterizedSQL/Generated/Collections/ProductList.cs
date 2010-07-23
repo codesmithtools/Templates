@@ -29,5 +29,13 @@ namespace PetShop.Tests.ParameterizedSQL
         }
         #endregion
 
+        #region Custom Overrides
+
+        partial void OnAddNewCore(ref Product item, ref bool cancel)
+        {
+            item.SetChild();
+        }
+
+        #endregion
     }
 }

@@ -158,7 +158,7 @@ namespace PetShop.Tests.ObjF.StoredProcedures
                 if(!FieldManager.FieldExists(_profileMemberProperty))
                 {
                     var criteria = new PetShop.Tests.ObjF.StoredProcedures.ProfileCriteria {UniqueID = UniqueID};
-					
+                    
                     if(PetShop.Tests.ObjF.StoredProcedures.Profile.Exists(criteria))
                         LoadProperty(_profileMemberProperty, PetShop.Tests.ObjF.StoredProcedures.Profile.GetByUniqueID(UniqueID));
                 }
@@ -177,16 +177,16 @@ namespace PetShop.Tests.ObjF.StoredProcedures
 
         internal static Account GetByAccountId(System.Int32 accountId)
         {
-			var criteria = new AccountCriteria {AccountId = accountId};
-			
+            var criteria = new AccountCriteria {AccountId = accountId};
+            
         
             return DataPortal.FetchChild< Account >(criteria);
         }
 
         internal static Account GetByUniqueID(System.Int32 uniqueID)
         {
-			var criteria = new AccountCriteria {UniqueID = uniqueID};
-			
+            var criteria = new AccountCriteria {UniqueID = uniqueID};
+            
         
             return DataPortal.FetchChild< Account >(criteria);
         }
@@ -235,7 +235,7 @@ namespace PetShop.Tests.ObjF.StoredProcedures
 
         public static bool Exists(AccountCriteria criteria)
         {
-            return ExistsCommand.Execute(criteria);
+            return PetShop.Tests.ObjF.StoredProcedures.ExistsCommand.Execute(criteria);
         }
 
         #endregion

@@ -128,7 +128,7 @@ namespace PetShop.Tests.ObjF.ParameterizedSQL
                 if(!FieldManager.FieldExists(_productMemberProperty))
                 {
                     var criteria = new PetShop.Tests.ObjF.ParameterizedSQL.ProductCriteria {ProductId = ProductId};
-					
+                    
                     if(PetShop.Tests.ObjF.ParameterizedSQL.Product.Exists(criteria))
                         LoadProperty(_productMemberProperty, PetShop.Tests.ObjF.ParameterizedSQL.Product.GetByProductId(ProductId));
                 }
@@ -149,7 +149,7 @@ namespace PetShop.Tests.ObjF.ParameterizedSQL
                 if(!FieldManager.FieldExists(_supplierMemberProperty))
                 {
                     var criteria = new PetShop.Tests.ObjF.ParameterizedSQL.SupplierCriteria {};
-					if(Supplier.HasValue) criteria.SuppId = Supplier.Value;
+                    if(Supplier.HasValue) criteria.SuppId = Supplier.Value;
                     if(PetShop.Tests.ObjF.ParameterizedSQL.Supplier.Exists(criteria))
                         LoadProperty(_supplierMemberProperty, PetShop.Tests.ObjF.ParameterizedSQL.Supplier.GetBySuppId(Supplier.Value));
                 }
@@ -168,33 +168,33 @@ namespace PetShop.Tests.ObjF.ParameterizedSQL
 
         public static Item GetByItemId(System.String itemId)
         {
-			var criteria = new ItemCriteria {ItemId = itemId};
-			
-			
+            var criteria = new ItemCriteria {ItemId = itemId};
+            
+            
             return DataPortal.Fetch< Item >(criteria);
         }
 
         public static Item GetByProductIdItemIdListPriceName(System.String productId, System.String itemId, System.Decimal? listPrice, System.String name)
         {
-			var criteria = new ItemCriteria {ProductId = productId, ItemId = itemId, Name = name};
-			if(listPrice.HasValue) criteria.ListPrice = listPrice.Value;
-			
+            var criteria = new ItemCriteria {ProductId = productId, ItemId = itemId, Name = name};
+            if(listPrice.HasValue) criteria.ListPrice = listPrice.Value;
+            
             return DataPortal.Fetch< Item >(criteria);
         }
 
         public static Item GetByProductId(System.String productId)
         {
-			var criteria = new ItemCriteria {ProductId = productId};
-			
-			
+            var criteria = new ItemCriteria {ProductId = productId};
+            
+            
             return DataPortal.Fetch< Item >(criteria);
         }
 
         public static Item GetBySupplier(System.Int32? supplier)
         {
-			var criteria = new ItemCriteria {};
-			if(supplier.HasValue) criteria.Supplier = supplier.Value;
-			
+            var criteria = new ItemCriteria {};
+            if(supplier.HasValue) criteria.Supplier = supplier.Value;
+            
             return DataPortal.Fetch< Item >(criteria);
         }
 
@@ -211,57 +211,40 @@ namespace PetShop.Tests.ObjF.ParameterizedSQL
         {
             return DataPortal.CreateChild< Item >();
         }
+
         internal static Item GetByItemIdChild(System.String itemId)
         {
-			var criteria = new ItemCriteria {ItemId = itemId};
-			
+            var criteria = new ItemCriteria {ItemId = itemId};
+            
 
             return DataPortal.FetchChild< Item >(criteria);
         }
+
         internal static Item GetByProductIdItemIdListPriceNameChild(System.String productId, System.String itemId, System.Decimal? listPrice, System.String name)
         {
-			var criteria = new ItemCriteria {ProductId = productId, ItemId = itemId, Name = name};
-			if(listPrice.HasValue) criteria.ListPrice = listPrice.Value;
+            var criteria = new ItemCriteria {ProductId = productId, ItemId = itemId, Name = name};
+            if(listPrice.HasValue) criteria.ListPrice = listPrice.Value;
 
             return DataPortal.FetchChild< Item >(criteria);
         }
+
         internal static Item GetByProductIdChild(System.String productId)
         {
-			var criteria = new ItemCriteria {ProductId = productId};
-			
+            var criteria = new ItemCriteria {ProductId = productId};
+            
 
             return DataPortal.FetchChild< Item >(criteria);
         }
+
         internal static Item GetBySupplierChild(System.Int32? supplier)
         {
-			var criteria = new ItemCriteria {};
-			if(supplier.HasValue) criteria.Supplier = supplier.Value;
+            var criteria = new ItemCriteria {};
+            if(supplier.HasValue) criteria.Supplier = supplier.Value;
 
             return DataPortal.FetchChild< Item >(criteria);
         }
 
         #endregion
-
-        #region Overridden properties
-
-        /// <summary>
-        /// Returns true if the business object or any of its children properties are dirty.
-        /// </summary>
-        public override bool IsDirty
-        {
-            get
-            {
-                if (base.IsDirty) return true;
-                if (FieldManager.FieldExists(_productMemberProperty) && ProductMember.IsDirty) return true;
-                if (FieldManager.FieldExists(_supplierMemberProperty) && SupplierMember.IsDirty) return true;
-
-                return false;
-            }
-        }
-
-        #endregion
-
-
         #region DataPortal partial methods
 
         partial void OnCreating(ref bool cancel);
@@ -294,12 +277,31 @@ namespace PetShop.Tests.ObjF.ParameterizedSQL
         partial void OnChildSelfDeleting(ref bool cancel);
         partial void OnChildSelfDeleted();
         #endregion
+        #region Overridden properties
+
+        /// <summary>
+        /// Returns true if the business object or any of its children properties are dirty.
+        /// </summary>
+        public override bool IsDirty
+        {
+            get
+            {
+                if (base.IsDirty) return true;
+                if (FieldManager.FieldExists(_productMemberProperty) && ProductMember.IsDirty) return true;
+                if (FieldManager.FieldExists(_supplierMemberProperty) && SupplierMember.IsDirty) return true;
+
+                return false;
+            }
+        }
+
+        #endregion
+
 
         #region Exists Command
 
         public static bool Exists(ItemCriteria criteria)
         {
-            return ExistsCommand.Execute(criteria);
+            return PetShop.Tests.ObjF.ParameterizedSQL.ExistsCommand.Execute(criteria);
         }
 
         #endregion

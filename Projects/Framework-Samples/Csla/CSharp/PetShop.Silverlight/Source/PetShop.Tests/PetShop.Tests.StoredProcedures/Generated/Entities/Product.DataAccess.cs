@@ -129,8 +129,8 @@ namespace PetShop.Tests.StoredProcedures
                 }
 
                 // Delete the old.
-				var criteria = new ProductCriteria {ProductId = OriginalProductId};
-				
+                var criteria = new ProductCriteria {ProductId = OriginalProductId};
+                
                 DataPortal_Delete(criteria);
 
                 // Mark the original as the new one.

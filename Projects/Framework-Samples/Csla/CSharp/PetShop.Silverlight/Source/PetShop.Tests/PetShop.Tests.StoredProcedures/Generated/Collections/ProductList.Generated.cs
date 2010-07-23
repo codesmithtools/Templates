@@ -42,40 +42,40 @@ namespace PetShop.Tests.StoredProcedures
 
         internal static ProductList GetByProductId(System.String productId)
         {
-			var criteria = new ProductCriteria{ProductId = productId};
-			
+            var criteria = new ProductCriteria{ProductId = productId};
+            
             
             return DataPortal.FetchChild< ProductList >(criteria);
         }
 
         internal static ProductList GetByName(System.String name)
         {
-			var criteria = new ProductCriteria{Name = name};
-			
+            var criteria = new ProductCriteria{Name = name};
+            
             
             return DataPortal.FetchChild< ProductList >(criteria);
         }
 
         internal static ProductList GetByCategoryId(System.String categoryId)
         {
-			var criteria = new ProductCriteria{CategoryId = categoryId};
-			
+            var criteria = new ProductCriteria{CategoryId = categoryId};
+            
             
             return DataPortal.FetchChild< ProductList >(criteria);
         }
 
         internal static ProductList GetByCategoryIdName(System.String categoryId, System.String name)
         {
-			var criteria = new ProductCriteria{CategoryId = categoryId, Name = name};
-			
+            var criteria = new ProductCriteria{CategoryId = categoryId, Name = name};
+            
             
             return DataPortal.FetchChild< ProductList >(criteria);
         }
 
         internal static ProductList GetByCategoryIdProductIdName(System.String categoryId, System.String productId, System.String name)
         {
-			var criteria = new ProductCriteria{CategoryId = categoryId, ProductId = productId, Name = name};
-			
+            var criteria = new ProductCriteria{CategoryId = categoryId, ProductId = productId, Name = name};
+            
             
             return DataPortal.FetchChild< ProductList >(criteria);
         }
@@ -85,7 +85,8 @@ namespace PetShop.Tests.StoredProcedures
             return DataPortal.FetchChild< ProductList >(new ProductCriteria());
         }
 
-		#endregion
+        #endregion
+
 
         #region Method Overrides
         
@@ -108,7 +109,7 @@ namespace PetShop.Tests.StoredProcedures
 
 
                 Add(item);
-            }        
+            }
 
             return item;
         }

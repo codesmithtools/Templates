@@ -42,8 +42,8 @@ namespace PetShop.Tests.StoredProcedures
 
         internal static SupplierList GetBySuppId(System.Int32 suppId)
         {
-			var criteria = new SupplierCriteria{SuppId = suppId};
-			
+            var criteria = new SupplierCriteria{SuppId = suppId};
+            
             
             return DataPortal.FetchChild< SupplierList >(criteria);
         }
@@ -53,7 +53,8 @@ namespace PetShop.Tests.StoredProcedures
             return DataPortal.FetchChild< SupplierList >(new SupplierCriteria());
         }
 
-		#endregion
+        #endregion
+
 
         #region Method Overrides
         
@@ -71,7 +72,7 @@ namespace PetShop.Tests.StoredProcedures
 
 
                 Add(item);
-            }        
+            }
 
             return item;
         }

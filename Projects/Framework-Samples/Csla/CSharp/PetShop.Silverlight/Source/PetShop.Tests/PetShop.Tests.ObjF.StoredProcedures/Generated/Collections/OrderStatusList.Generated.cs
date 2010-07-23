@@ -43,16 +43,16 @@ namespace PetShop.Tests.ObjF.StoredProcedures
 
         internal static OrderStatusList GetByOrderIdLineNum(System.Int32 orderId, System.Int32 lineNum)
         {
-			var criteria = new OrderStatusCriteria{OrderId = orderId, LineNum = lineNum};
-			
+            var criteria = new OrderStatusCriteria{OrderId = orderId, LineNum = lineNum};
+            
             
             return DataPortal.FetchChild< OrderStatusList >(criteria);
         }
 
         internal static OrderStatusList GetByOrderId(System.Int32 orderId)
         {
-			var criteria = new OrderStatusCriteria{OrderId = orderId};
-			
+            var criteria = new OrderStatusCriteria{OrderId = orderId};
+            
             
             return DataPortal.FetchChild< OrderStatusList >(criteria);
         }
@@ -62,7 +62,8 @@ namespace PetShop.Tests.ObjF.StoredProcedures
             return DataPortal.FetchChild< OrderStatusList >(new OrderStatusCriteria());
         }
 
-		#endregion
+        #endregion
+
 
         #region Method Overrides
         
@@ -85,7 +86,7 @@ namespace PetShop.Tests.ObjF.StoredProcedures
 
 
                 Add(item);
-            }        
+            }
 
             return item;
         }

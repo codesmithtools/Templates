@@ -40,6 +40,7 @@ namespace PetShop.Business
         internal Order(SafeDataReader reader)
         {
             Map(reader);
+            MarkAsChild();  
         }
         #endregion
 
@@ -350,7 +351,7 @@ namespace PetShop.Business
 
         public static bool Exists(OrderCriteria criteria)
         {
-            return ExistsCommand.Execute(criteria);
+            return PetShop.Business.ExistsCommand.Execute(criteria);
         }
 
         #endregion
