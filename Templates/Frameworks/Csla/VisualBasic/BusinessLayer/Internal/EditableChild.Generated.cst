@@ -65,7 +65,7 @@ Namespace <%= BusinessProjectName %>
 #Region "Synchronous Factory Methods"
 
     <% If(IncludeSilverlightSupport) Then %>
-    #If Not SILVERLIGHT Then
+#If Not SILVERLIGHT Then
     <% End If %>
         Friend Shared Function New<%= ChildBusinessClassName %><%= Entity.GenericProperty %>() As <%= ChildBusinessClassName %> 
             Return DataPortal.Create(Of <%= BusinessClassName %>)()
@@ -80,14 +80,15 @@ Namespace <%= BusinessProjectName %>
         End Function
     <% Next %>
     <% If(IncludeSilverlightSupport) Then %>
-    #End If
+#End If
     <% End If %>
     
 #End Region
     <% If(IncludeSilverlightSupport) Then %>     
     
 #Region "Asynchronous Factory Methods"
-    
+
+#If SILVERLIGHT Then
         Friend Shared Sub New<%= BusinessClassName %>Async(ByVal handler As EventHandler(Of DataPortalResult(Of <%= ChildBusinessClassName %><%= Entity.GenericProperty %>)))
             Dim dp As New DataPortal(Of <%= ChildBusinessClassName %><%= Entity.GenericProperty %>)()
             AddHandler dp.CreateCompleted, handler
@@ -107,7 +108,8 @@ Namespace <%= BusinessProjectName %>
             ' Mark as child?
             dp.BeginFetch(criteria)
         End Sub
-    <% Next %>
+    <% Next %> 
+#End If
 
 #End Region
     <% End If %>

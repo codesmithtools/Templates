@@ -51,25 +51,25 @@ Namespace <%= BusinessProjectName %>
     
 #Region "Contructor(s)"
     <% If(IncludeSilverlightSupport) Then %>
-    #If Not SILVERLIGHT Then
+#If Not SILVERLIGHT Then
     <% End If %>
         Private Sub New()
             AllowNew = true
             MarkAsChild()
         End Sub
     <% If(IncludeSilverlightSupport) Then %>
-    #Else
+#Else
         public Sub New()
             AllowNew = true
             MarkAsChild()
         End Sub
-    #End If
+#End If
     <% End If %>
     
 #End Region
     
     <% If(IncludeSilverlightSupport) Then %>
-    #If Not SILVERLIGHT Then
+#If Not SILVERLIGHT Then
     <% End If %>
 #Region "Synchronous Factory Methods" 
     
@@ -92,10 +92,11 @@ Namespace <%= BusinessProjectName %>
     
 #End Region
     <% If(IncludeSilverlightSupport) Then %>
-    #End If        
+#End If        
     
 #Region "Asynchronous Factory Methods"
-    
+
+#If SILVERLIGHT Then
         Friend Shared Sub NewListAsync(ByVal handler As EventHandler(Of DataPortalResult(Of <%= ChildBusinessClassName %><%= Entity.GenericProperty %>)))
             Dim dp As New DataPortal(Of <%= ChildBusinessClassName %><%= Entity.GenericProperty %>)()
             AddHandler dp.CreateCompleted, handler
@@ -119,25 +120,26 @@ Namespace <%= BusinessProjectName %>
             Dim dp As New DataPortal(Of <%= ChildBusinessClassName %><%= Entity.GenericProperty %>)()
             AddHandler dp.FetchCompleted, handler
             dp.BeginFetch(New <%= CriteriaClassName %><%= Entity.GenericProperty %>())
-        End Sub
-    
+        End Sub 
+#End If
+
 #End Region
 <% End If %>
     
 #Region "Method Overrides"
     
     <% If(IncludeSilverlightSupport) Then %>
-    #If Not SILVERLIGHT Then
+#If Not SILVERLIGHT Then
     <% End If %>
         Protected Overrides Function AddNewCore() As <% If (IsCSLA40) Then %><%= ChildBusinessClassName %><%= Entity.GenericProperty %><% Else %>Object<% End If %>
     <% RenderHelper(new AddNewCore()) %>
         End Function
     <% If(IncludeSilverlightSupport) Then %>
-    #Else
+#Else
         Protected Overrides Sub AddNewCore() 
     <% RenderHelper(new AddNewCore(), IncludeSilverlightSupport) %>
         End Sub
-    #End If
+#End If
     
         Protected Sub AddNewCoreAsync(ByVal handler As EventHandler(Of DataPortalResult(Of <%= ChildBusinessClassName %><%= Entity.GenericProperty %>)))
             <%= BusinessProjectName %>.<%= ChildBusinessClassName %><%= Entity.GenericProperty %>.New<%= ChildBusinessClassName %>Async(Sub(o, e)

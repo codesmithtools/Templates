@@ -12,7 +12,7 @@
 #Region "Authorization Rules"
     
     <% If(IncludeSilverlightSupport) Then %>
-    #If Not SILVERLIGHT Then
+#If Not SILVERLIGHT Then
     <% End If %>
     <% If(IsCSLA40) Then %>
         Protected Shared Sub AddObjectAuthorizationRules()
@@ -64,6 +64,6 @@
         End Sub
     
     <% If(IncludeSilverlightSupport) Then %>
-    #End If
+#End If
     <% End If %>
 #End Region

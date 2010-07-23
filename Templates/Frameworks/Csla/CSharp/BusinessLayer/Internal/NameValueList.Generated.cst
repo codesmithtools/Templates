@@ -58,13 +58,15 @@ namespace <%= BusinessProjectName %>
 <% if(IncludeSilverlightSupport) { %>
 #endif
      #region Asynchronous Factory Methods
-        
+
+#if SILVERLIGHT
     public static void GetAllAsync(EventHandler<DataPortalResult<<%= BusinessClassName %><%= Entity.GenericProperty %>>> handler)
         {
             DataPortal<<%= BusinessClassName %><%= Entity.GenericProperty %>> dp = new DataPortal<<%= BusinessClassName %><%= Entity.GenericProperty %>>();
             dp.FetchCompleted += handler;
             dp.BeginFetch();
         }
+#endif
         
     #endregion
     

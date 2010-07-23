@@ -91,6 +91,8 @@ namespace <%= BusinessProjectName %>
 <% if(IncludeSilverlightSupport) { %>
 #endif
         #region Asynchronous Factory Methods
+
+#if SILVERLIGHT
 <% foreach(SearchCriteria sc in Entity.SearchCriteria()) { %>
 
         public static void <%= sc.MethodName %>Async(<%= sc.Members.BuildParametersVariables() %>, EventHandler<DataPortalResult<<%= BusinessClassName %><%= Entity.GenericProperty %>>> handler)
@@ -102,8 +104,8 @@ namespace <%= BusinessProjectName %>
             dp.FetchCompleted += handler;
             dp.BeginFetch(criteria);
         }
-        
 <% } %>
+#endif
 
         #endregion
 <% } %>

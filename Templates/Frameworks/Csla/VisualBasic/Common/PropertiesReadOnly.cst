@@ -23,14 +23,14 @@
         ''' </summary>
     <% End If %>
     <%If IncludeSilverlightSupport Then %>
-    #If Not SILVERLIGHT Then
+#If Not SILVERLIGHT Then
     <% End If %>
         <%If member.IsPrimaryKey Then %><%= member.BuildDataObjectField(IncludeSilverlightSupport) %><% End If %>
         Public Readonly Property <%= member.PropertyName %>() As <%= member.SystemType %>
     <%If IncludeSilverlightSupport Then %>
-    #Else
+#Else
         Public Readonly Property <%= member.PropertyName %>() As <%= member.SystemType %>
-    #End If
+#End If
     <% End If %>
             Get 
                 Return GetProperty(<%= member.PrivateMemberVariableName %>Property, <%= member.PrivateMemberVariableName %>) 
@@ -43,14 +43,14 @@
         ''' </summary>
     <% End If %>
     <%If IncludeSilverlightSupport Then %>
-    #If Not SILVERLIGHT Then
+#If Not SILVERLIGHT Then
     <% End If %>
         <%If member.IsPrimaryKey Then %><%= member.BuildDataObjectField(IncludeSilverlightSupport) %><% End If %>
         Public Readonly Property <%= member.PropertyName %>() As <%= member.SystemType %>
     <%If IncludeSilverlightSupport Then %>
-    #Else
+#Else
         Public ReadOnly Property <%= member.PropertyName %>() As <%= member.SystemType %>
-    #End If
+#End If
     <% End If %>
             Get 
                 Return GetProperty(<%= member.PrivateMemberVariableName %>Property)
