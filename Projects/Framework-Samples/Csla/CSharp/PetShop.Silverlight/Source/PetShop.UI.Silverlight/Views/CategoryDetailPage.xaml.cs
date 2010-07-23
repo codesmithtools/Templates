@@ -12,9 +12,9 @@ using System.Windows.Shapes;
 
 namespace PetShop.UI.Silverlight
 {
-    public partial class MainPage : UserControl
+    public partial class CategoryDetailPage : UserControl
     {
-        public MainPage()
+        public CategoryDetailPage()
         {
             InitializeComponent();
         }
