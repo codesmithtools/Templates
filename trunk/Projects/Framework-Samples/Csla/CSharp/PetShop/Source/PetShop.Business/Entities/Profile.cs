@@ -10,8 +10,9 @@
 #region Using declarations
 
 using System;
-
+using System.Data.SqlClient;
 using Csla;
+using Csla.Data;
 using Csla.Security;
 using Csla.Validation;
 
@@ -80,12 +81,35 @@ namespace PetShop.Business
 
         }
         #endregion
+
         #region Custom Factory Methods
 
         public static Profile GetProfile(string username)
         {
             return DataPortal.Fetch<Profile>(
                 new ProfileCriteria { Username = username });
+        }
+
+        partial void OnFetching(ProfileCriteria criteria, ref bool cancel)
+        {
+            string commandText = string.Format("SELECT [UniqueID], [Username], [ApplicationName], [IsAnonymous], [LastActivityDate], [LastUpdatedDate] FROM [dbo].[Profiles] {0}", ADOHelper.BuildWhereStatement(criteria.StateBag));
+            using (SqlConnection connection = new SqlConnection(ADOHelper.ConnectionString))
+            {
+                connection.Open();
+                using (SqlCommand command = new SqlCommand(commandText, connection))
+                {
+                    command.Parameters.AddRange(ADOHelper.SqlParameters(criteria.StateBag));
+                    using (var reader = new SafeDataReader(command.ExecuteReader()))
+                    {
+                        if (reader.Read())
+                            Map(reader);
+                    }
+                }
+            }
+
+            OnFetched();
+
+            cancel = true;
         }
 
         #endregion

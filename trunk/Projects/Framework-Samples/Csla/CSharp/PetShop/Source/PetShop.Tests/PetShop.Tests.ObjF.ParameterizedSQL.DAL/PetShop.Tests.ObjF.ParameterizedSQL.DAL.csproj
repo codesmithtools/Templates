@@ -35,7 +35,7 @@
   <ItemGroup>
     <Reference Include="Csla, Version=3.8.4.0, Culture=neutral, PublicKeyToken=93be5fdc093e4c30, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\..\CodeSmith.Google.Code.CSLA.Trunk\Common\Csla\3.8\Client\Csla.dll</HintPath>
+      <HintPath>..\..\..\Libraries\Csla\Csla.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
