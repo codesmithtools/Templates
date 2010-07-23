@@ -146,6 +146,7 @@ namespace <%= BusinessProjectName %>
         #endregion
 #endif
 <% } %>
+
 <% RenderHelper(new IsDirty()); %>
 <% RenderHelper(new PartialMethods()); %>
 <% RenderHelper(new Exists()); %>

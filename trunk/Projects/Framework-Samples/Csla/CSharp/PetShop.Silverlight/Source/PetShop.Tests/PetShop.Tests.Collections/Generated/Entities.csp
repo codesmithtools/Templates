@@ -219,8 +219,8 @@
     <propertySet name="EditableRoot" template="..\..\..\..\..\..\..\..\..\Templates\Frameworks\Csla\CSharp\BusinessLayer\EditableRoot.cst">
       <property name="CleanExpressions">
         <stringList>
-          <string>^\w+_</string>
-        </stringList>
+      <string>^\w+_</string>
+    </stringList>
       </property>
       <property name="UseMemberVariables">False</property>
       <property name="ParameterPrefix">@p_</property>
@@ -235,16 +235,16 @@
         <connectionString>$(ConnectionString1)</connectionString>
         <providerType>SchemaExplorer.SqlSchemaProvider,SchemaExplorer.SqlSchemaProvider</providerType>
         <table>
-          <owner>dbo</owner>
-          <name>Category</name>
-        </table>
+      <owner>dbo</owner>
+      <name>Category</name>
+    </table>
       </property>
       <property name="IgnoreExpressions">
         <stringList>
-          <string>sysdiagrams$</string>
-          <string>^dbo.aspnet</string>
-          <string>^dbo.Product</string>
-        </stringList>
+      <string>sysdiagrams$</string>
+      <string>^dbo.aspnet</string>
+      <string>^dbo.Product</string>
+    </stringList>
       </property>
       <property name="Location">.\EditableRoot\</property>
       <property name="FrameworkVersion">v40</property>
@@ -252,11 +252,11 @@
       <property name="CriteriaClassName">CategoryCriteria</property>
       <property name="IncludeSilverlightSupport">False</property>
     </propertySet>
-    <propertySet name="EditableRootList" template="..\..\..\..\..\..\..\..\..\Templates\Frameworks\Csla\CSharp\BusinessLayer\EditableRootList.cst">
+    <propertySet name="DynamicListBase" template="..\..\..\..\..\..\..\..\..\Templates\Frameworks\Csla\CSharp\BusinessLayer\DynamicListBase.cst">
       <property name="CleanExpressions">
         <stringList>
-          <string>^\w+_</string>
-        </stringList>
+      <string>^\w+_</string>
+    </stringList>
       </property>
       <property name="UseMemberVariables">False</property>
       <property name="ParameterPrefix">@p_</property>
@@ -270,17 +270,22 @@
         <connectionString>$(ConnectionString1)</connectionString>
         <providerType>SchemaExplorer.SqlSchemaProvider,SchemaExplorer.SqlSchemaProvider</providerType>
         <table>
-          <owner>dbo</owner>
-          <name>Category</name>
-        </table>
+      <owner>dbo</owner>
+      <name>Category</name>
+    </table>
       </property>
       <property name="IgnoreExpressions">
         <stringList>
-          <string>sysdiagrams$</string>
-          <string>^dbo.aspnet</string>
-        </stringList>
+      <string>sysdiagrams$</string>
+      <string>^dbo.aspnet</string>
+    </stringList>
       </property>
       <property name="Location">.\EditableRoot\</property>
+      <property name="FrameworkVersion">v40</property>
+      <property name="BusinessClassName">Category</property>
+      <property name="CriteriaClassName">CategoryCriteria</property>
+      <property name="UseDeferredDeletion">False</property>
+      <property name="IncludeSilverlightSupport">False</property>
     </propertySet>
     <propertySet name="EditableRootCriteria" template="..\..\..\..\..\..\..\..\..\Templates\Frameworks\Csla\CSharp\BusinessLayer\Criteria.cst">
       <property name="CleanExpressions">
