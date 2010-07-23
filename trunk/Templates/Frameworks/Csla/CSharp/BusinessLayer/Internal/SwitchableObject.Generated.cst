@@ -58,7 +58,7 @@ namespace <%= BusinessProjectName %>
 <% } %>
     public partial class <%= BusinessClassName %><%= Entity.GenericProperty %> : BusinessBase< <%= BusinessClassName %><%= Entity.GenericProperty %> >
     {
-<% RenderHelper(new Constructor()); %>
+<% RenderHelper(new Constructor(), true); %>
 
 <% RenderHelper(new ValidationRules()); %>
 

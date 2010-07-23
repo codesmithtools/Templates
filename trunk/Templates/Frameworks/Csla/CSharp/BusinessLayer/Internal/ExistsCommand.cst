@@ -65,7 +65,7 @@ namespace <%= BusinessProjectName %>
 <% if(IncludeSilverlightSupport) { %>
 #if !SILVERLIGHT
 <% } %>
-        public static bool Execute<T>(T criteria) where T : IGeneratedCriteria
+        public static bool Execute<T>(T criteria) where T : <%= BusinessProjectName %>.IGeneratedCriteria
         {
             if (!CanExecuteCommand())
                 throw new System.Security.SecurityException("Not authorized to execute command");
@@ -87,7 +87,7 @@ namespace <%= BusinessProjectName %>
         #region Asynchronous Factory Methods
 
 #if SILVERLIGHT
-        public static bool Execute<T>(T criteria) where T : IGeneratedCriteria
+        public static bool Execute<T>(T criteria) where T : <%= BusinessProjectName %>.IGeneratedCriteria
         {
             if (!CanExecuteCommand())
                 throw new System.Security.SecurityException("Not authorized to execute command");
@@ -121,10 +121,10 @@ namespace <%= BusinessProjectName %>
 <% } %>
         #region Client-side Code
 
-        private IGeneratedCriteria Criteria { get; set; }
+        private <%= BusinessProjectName %>.IGeneratedCriteria Criteria { get; set; }
         private bool Result { get; set; }
 
-        private void BeforeServer(IGeneratedCriteria criteria)
+        private void BeforeServer(<%= BusinessProjectName %>.IGeneratedCriteria criteria)
         {
             Criteria = criteria;
             Result = false;

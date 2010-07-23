@@ -59,9 +59,9 @@ namespace <%= BusinessProjectName %>
         
         #region Constructors
 
-        public <%= BusinessClassName %>()<% if(!IsCSLA40) { %> : base(typeof(<%= ChildBusinessClassName %><%= Entity.GenericProperty %>))<% } %>{}
+        public <%= BusinessClassName %>()<% if(!IsCSLA40) { %> : base(typeof(<%= BusinessProjectName %>.<%= ResolveTargetClassName(ChildBusinessClassName, "Info", IsReadOnlyBusinessObject("Info")) %><%= Entity.GenericProperty %>))<% } %>{}
 
-        public <%= BusinessClassName %>(<%= Entity.PrimaryKey.KeyMembers.BuildParametersVariables() %>)<% if(!IsCSLA40) { %> : base(typeof(<%= ChildBusinessClassName %><%= Entity.GenericProperty %>))<% } %>
+        public <%= BusinessClassName %>(<%= Entity.PrimaryKey.KeyMembers.BuildParametersVariables() %>)<% if(!IsCSLA40) { %> : base(typeof(<%= BusinessProjectName %>.<%= ResolveTargetClassName(ChildBusinessClassName, "Info", IsReadOnlyBusinessObject("Info")) %><%= Entity.GenericProperty %>))<% } %>
         {
 <%  foreach(Member member in Entity.PrimaryKey.KeyMembers){ %>
             <%= member.PropertyName %> = <%= member.VariableName %>;

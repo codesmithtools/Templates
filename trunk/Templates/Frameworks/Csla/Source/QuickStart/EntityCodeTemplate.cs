@@ -188,7 +188,7 @@ namespace QuickStart
                 if (BusinessClassNameExists("Criteria", 8))
                     return BusinessClassName.Substring(0, BusinessClassName.Length - 8);
 
-                return BusinessClassName;
+                return ResolveTargetClassName(BusinessClassName, string.Empty);
             }
         }
 
@@ -255,15 +255,19 @@ namespace QuickStart
                     temp.Equals("infolist", StringComparison.InvariantCultureIgnoreCase))
                 {
                     // Try to detect double endings.
-                    if (suffix.Equals("info", StringComparison.InvariantCultureIgnoreCase)) return string.Format("{0}Info", Entity.ClassName);
+                    if (suffix.Equals("info", StringComparison.InvariantCultureIgnoreCase)) 
+                        return string.Format("{0}Info", Entity.ClassName);
 
                     //isReadOnly = true;
                     className = string.Format("{0}Info", Entity.ClassName);
+
+                    if (BusinessClassName.Contains("Info"))
+                        return className;
                 }
             }
 
             // If the keys are 0 then that means they are not generating from the entities.csp.
-            if ((BusinessObjectExists(suffix) && expression) || ContextData.Keys.Count == 0)
+            if ((BusinessObjectExists(suffix) && expression) || ContextData.Keys.Count == 0 && expression)
                 return string.Concat(className, suffix);
 
             return expression ? string.Concat(className, suffix.Trim()) : className;

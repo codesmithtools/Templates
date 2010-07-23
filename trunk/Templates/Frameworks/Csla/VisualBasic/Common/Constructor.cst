@@ -45,6 +45,9 @@
         Friend Sub New(Byval reader As SafeDataReader)
     <%If(DataAccessImplementation = DataAccessMethod.ParameterizedSQL Or DataAccessImplementation = DataAccessMethod.StoredProcedures) Then %>
             Map(reader)
+<% If(RenderOptionalContent) Then %>
+            MarkAsChild()   
+<% End If %>
     <% End If %>
         End Sub
     <% If(IncludeSilverlightSupport) Then %>

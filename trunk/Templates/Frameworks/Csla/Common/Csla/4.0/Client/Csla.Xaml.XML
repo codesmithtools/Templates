@@ -4,6 +4,257 @@
         <name>Csla.Xaml</name>
     </assembly>
     <members>
+        <member name="T:Csla.Xaml.PropertyStatus">
+            <summary>
+            Displays validation information for a business
+            object property, and manipulates an associated
+            UI control based on the business object's
+            authorization rules.
+            </summary>
+        </member>
+        <member name="M:Csla.Xaml.PropertyStatus.#ctor">
+            <summary>
+            Creates an instance of the object.
+            </summary>
+        </member>
+        <member name="M:Csla.Xaml.PropertyStatus.OnApplyTemplate">
+            <summary>
+            Applies the visual template.
+            </summary>
+        </member>
+        <member name="F:Csla.Xaml.PropertyStatus.PropertyProperty">
+            <summary>
+            Gets or sets the source business
+            property to which this control is bound.
+            </summary>
+        </member>
+        <member name="M:Csla.Xaml.PropertyStatus.SetSource">
+            <summary>
+            Sets the source binding and updates status.
+            </summary>
+        </member>
+        <member name="M:Csla.Xaml.PropertyStatus.GetRealSource(System.Object,System.String)">
+            <summary>
+            Gets the real source helper method.
+            </summary>
+            <param name="source">The source.</param>
+            <param name="bindingPath">The binding path.</param>
+            <returns></returns>
+        </member>
+        <member name="F:Csla.Xaml.PropertyStatus.BrokenRulesProperty">
+            <summary>
+            Gets the broken rules collection from the
+            business object.
+            </summary>
+        </member>
+        <member name="M:Csla.Xaml.PropertyStatus.UpdateState">
+            <summary>
+            Updates the state on control Property.
+            </summary>
+        </member>
+        <member name="M:Csla.Xaml.PropertyStatus.GoToState(System.Boolean)">
+            <summary>
+            Updates the status of the Property in UI
+            </summary>
+            <param name="useTransitions">if set to <c>true</c> then use transitions.</param>
+        </member>
+        <member name="M:Csla.Xaml.PropertyStatus.FindChild(System.Windows.DependencyObject,System.String)">
+            <summary>
+            Find child dependency property.
+            </summary>
+            <param name="parent">The parent.</param>
+            <param name="name">The name.</param>
+            <returns>DependencyObject child</returns>
+        </member>
+        <member name="M:Csla.Xaml.PropertyStatus.OnPropertyChanged(System.String)">
+            <summary>
+            Raises the PropertyChanged event.
+            </summary>
+            <param name="propertyName">Name of the changed property.</param>
+        </member>
+        <member name="P:Csla.Xaml.PropertyStatus.IsReadOnly">
+            <summary>
+            Gets or sets a value indicating whether this DependencyProperty field is read only.
+            </summary>
+            <value>
+            <c>true</c> if this DependencyProperty is read only; otherwise, <c>false</c>.
+            </value>
+        </member>
+        <member name="P:Csla.Xaml.PropertyStatus.Property">
+            <summary>
+            Gets or sets the source business
+            property to which this control is bound.
+            </summary>
+        </member>
+        <member name="P:Csla.Xaml.PropertyStatus.Source">
+            <summary>
+            Gets or sets the Source.
+            </summary>
+            <value>The source.</value>
+        </member>
+        <member name="P:Csla.Xaml.PropertyStatus.BindingPath">
+            <summary>
+            Gets or sets the binding path.
+            </summary>
+            <value>The binding path.</value>
+        </member>
+        <member name="P:Csla.Xaml.PropertyStatus.BrokenRules">
+            <summary>
+            Gets the broken rules collection from the
+            business object.
+            </summary>
+        </member>
+        <member name="P:Csla.Xaml.PropertyStatus.CanRead">
+            <summary>
+            Gets a value indicating whether the user
+            is authorized to read the property.
+            </summary>
+        </member>
+        <member name="P:Csla.Xaml.PropertyStatus.CanWrite">
+            <summary>
+            Gets a value indicating whether the user
+            is authorized to write the property.
+            </summary>
+        </member>
+        <member name="P:Csla.Xaml.PropertyStatus.IsBusy">
+            <summary>
+            Gets a value indicating whether the property
+            is busy with an asynchronous operation.
+            </summary>
+        </member>
+        <member name="P:Csla.Xaml.PropertyStatus.IsValid">
+            <summary>
+            Gets a value indicating whether the 
+            property is valid.
+            </summary>
+        </member>
+        <member name="P:Csla.Xaml.PropertyStatus.RuleSeverity">
+            <summary>
+            Gets a valud indicating the worst
+            severity of all broken rules
+            for this property (if IsValid is
+            false).
+            </summary>
+        </member>
+        <member name="P:Csla.Xaml.PropertyStatus.RuleDescription">
+            <summary>
+            Gets the description of the most severe
+            broken rule for this property.
+            </summary>
+        </member>
+        <member name="E:Csla.Xaml.PropertyStatus.PropertyChanged">
+            <summary>
+            Event raised when a property has changed.
+            </summary>
+        </member>
+        <member name="T:Csla.Xaml.IsNotConverter">
+            <summary>
+            Converts a Boolean value into its inverse.
+            </summary>
+        </member>
+        <member name="M:Csla.Xaml.IsNotConverter.Convert(System.Object,System.Type,System.Object,System.Globalization.CultureInfo)">
+            <summary>
+            Converts a value.
+            </summary>
+            <param name="value">Original value.</param>
+            <param name="targetType">Desired output type (ignored).</param>
+            <param name="parameter">Extra parameter (ignored).</param>
+            <param name="culture">Desired culture (ignored).</param>
+        </member>
+        <member name="M:Csla.Xaml.IsNotConverter.ConvertBack(System.Object,System.Type,System.Object,System.Globalization.CultureInfo)">
+            <summary>
+            Converts a value.
+            </summary>
+            <param name="value">Original value.</param>
+            <param name="targetType">Desired output type (ignored).</param>
+            <param name="parameter">Extra parameter (ignored).</param>
+            <param name="culture">Desired culture (ignored).</param>
+        </member>
+        <member name="T:Csla.Xaml.BusyAnimation">
+            <summary>
+            Displays a busy animation.
+            </summary>
+        </member>
+        <member name="F:Csla.Xaml.BusyAnimation.StepIntervalProperty">
+            <summary>
+            StepInterval property to control speed of animation.
+            </summary>
+        </member>
+        <member name="F:Csla.Xaml.BusyAnimation.IsRunningProperty">
+            <summary>
+            IsRunning property to control whether the 
+            animation is running.
+            </summary>
+        </member>
+        <member name="M:Csla.Xaml.BusyAnimation.#ctor">
+            <summary>
+            Creates an instance of the control.
+            </summary>
+        </member>
+        <member name="P:Csla.Xaml.BusyAnimation.StepInterval">
+            <summary>
+            Gets or sets a property controlling
+            the speed of the animation.
+            </summary>
+        </member>
+        <member name="P:Csla.Xaml.BusyAnimation.IsRunning">
+            <summary>
+            Gets or sets a property controlling
+            whether the animation is running.
+            </summary>
+        </member>
+        <member name="T:Csla.Xaml.BrokenRuleSeverityConverter">
+            <summary>
+            Converts validation severity values into corresponding
+            images.
+            </summary>
+        </member>
+        <member name="M:Csla.Xaml.BrokenRuleSeverityConverter.Convert(System.Object,System.Type,System.Object,System.Globalization.CultureInfo)">
+            <summary>
+            Converts validation severity values into corresponding
+            images.
+            </summary>
+            <param name="value">Original value.</param>
+            <param name="targetType">Desired output type (ignored).</param>
+            <param name="parameter">Extra parameter (ignored).</param>
+            <param name="culture">Desired culture (ignored).</param>
+            <returns></returns>
+        </member>
+        <member name="M:Csla.Xaml.BrokenRuleSeverityConverter.ConvertBack(System.Object,System.Type,System.Object,System.Globalization.CultureInfo)">
+            <summary>
+            Returns the original value.
+            </summary>
+            <param name="value">Original value.</param>
+            <param name="targetType">Desired output type (ignored).</param>
+            <param name="parameter">Extra parameter (ignored).</param>
+            <param name="culture">Desired culture (ignored).</param>
+        </member>
+        <member name="T:Csla.Xaml.VisibilityMode">
+            <summary>
+            Options controlling how the Authorizer
+            control alters the visibility of a control
+            when read access to the property is not allowed.
+            </summary>
+        </member>
+        <member name="F:Csla.Xaml.VisibilityMode.Collapsed">
+            <summary>
+            Specifies that the non-readable control
+            should be collapsed.
+            </summary>
+        </member>
+        <member name="F:Csla.Xaml.VisibilityMode.Hidden">
+            <summary>
+            Specifies that the non-readable control
+            should be hidden.
+            </summary>
+        </member>
+        <member name="F:Csla.Xaml.VisibilityMode.Ignore">
+            <summary>
+            Specifies that the visibility of the 
+            non-readable control should not be
+            altered by the Authorizer control.
+            </summary>
+        </member>
         <member name="T:Csla.Xaml.ViewModelBase`1">
             <summary>
             Base class used to create ViewModel objects that
@@ -280,6 +531,145 @@
             Event raised when a property changes.
             </summary>
         </member>
+        <member name="T:Csla.Xaml.IdentityConverter">
+            <summary>
+            Provides the functionality of a WPF
+            value converter without affecting the
+            value as it flows to and from the UI.
+            </summary>
+        </member>
+        <member name="M:Csla.Xaml.IdentityConverter.Convert(System.Object,System.Type,System.Object,System.Globalization.CultureInfo)">
+            <summary>
+            Returns the unchanged value.
+            </summary>
+            <param name="value">Value to be converted.</param>
+            <param name="targetType">Desired value type.</param>
+            <param name="parameter">Conversion parameter.</param>
+            <param name="culture">Conversion culture.</param>
+        </member>
+        <member name="M:Csla.Xaml.IdentityConverter.ConvertBack(System.Object,System.Type,System.Object,System.Globalization.CultureInfo)">
+            <summary>
+            Returns the unchanged value.
+            </summary>
+            <param name="value">Value to be converted.</param>
+            <param name="targetType">Desired value type.</param>
+            <param name="parameter">Conversion parameter.</param>
+            <param name="culture">Conversion culture.</param>
+        </member>
+        <member name="T:Csla.Xaml.ExecuteEventArgs">
+            <summary>
+            Arguments passed to a method invoked
+            by the Execute trigger action.
+            </summary>
+        </member>
+        <member name="P:Csla.Xaml.ExecuteEventArgs.TriggerSource">
+            <summary>
+            The control that raised the event that
+            triggered invocation of this method.
+            </summary>
+        </member>
+        <member name="P:Csla.Xaml.ExecuteEventArgs.MethodParameter">
+            <summary>
+            The MethodParameter value provided by
+            the designer.
+            </summary>
+        </member>
+        <member name="P:Csla.Xaml.ExecuteEventArgs.TriggerParameter">
+            <summary>
+            The EventArgs parameter from the event
+            that triggered invocation of this method.
+            </summary>
+        </member>
+        <member name="T:Csla.Xaml.ErrorDialog">
+            <summary>
+            Displays an error dialog for any exceptions
+            that occur in a CslaDataProvider.
+            </summary>
+        </member>
+        <member name="T:Csla.Xaml.IErrorDialog">
+            <summary>
+            Interface defining the interaction between
+            a CslaDataSource and an error dialog control.
+            </summary>
+        </member>
+        <member name="M:Csla.Xaml.IErrorDialog.Register(System.Object)">
+            <summary>
+            Method called by the CslaDataProvider when the
+            error dialog should register any events it
+            wishes to handle from the CslaDataProvider.
+            </summary>
+            <param name="source">Data provider control.</param>
+        </member>
+        <member name="M:Csla.Xaml.ErrorDialog.#ctor">
+            <summary>
+            Creates a new instance of the control.
+            </summary>
+        </member>
+        <member name="F:Csla.Xaml.ErrorDialog.DialogTitleProperty">
+            <summary>
+            Gets or sets the title of the error
+            dialog.
+            </summary>
+        </member>
+        <member name="F:Csla.Xaml.ErrorDialog.DialogFirstLineProperty">
+            <summary>
+            Gets or sets the first line of text displayed
+            within the error dialog (before the
+            exception message).
+            </summary>
+        </member>
+        <member name="F:Csla.Xaml.ErrorDialog.ShowExceptionDetailProperty">
+            <summary>
+            Gets or sets a value indicating whether
+            the dialog should include exception details
+            or just the exception summary message.
+            </summary>
+        </member>
+        <member name="F:Csla.Xaml.ErrorDialog.DialogIconProperty">
+            <summary>
+            Gets or sets a value indicating whether
+            the dialog should include exception details
+            or just the exception summary message.
+            </summary>
+        </member>
+        <member name="P:Csla.Xaml.ErrorDialog.DialogTitle">
+            <summary>
+            Gets or sets the title of the error
+            dialog.
+            </summary>
+        </member>
+        <member name="P:Csla.Xaml.ErrorDialog.DialogFirstLine">
+            <summary>
+            Gets or sets the first line of text displayed
+            within the error dialog (before the
+            exception message).
+            </summary>
+        </member>
+        <member name="P:Csla.Xaml.ErrorDialog.ShowExceptionDetail">
+            <summary>
+            Gets or sets the first line of text displayed
+            within the error dialog (before the
+            exception message).
+            </summary>
+        </member>
+        <member name="P:Csla.Xaml.ErrorDialog.DialogIcon">
+            <summary>
+            Gets or sets the icon displayed in
+            the dialog.
+            </summary>
+        </member>
+        <member name="T:Csla.Xaml.ErrorEventArgs">
+            <summary>
+            Contains information about the error that
+            has occurred.
+            </summary>
+        </member>
+        <member name="P:Csla.Xaml.ErrorEventArgs.Error">
+            <summary>
+            Gets the Exception object for the error
+            that occurred.
+            </summary>
+        </member>
         <member name="T:Csla.Xaml.ObjectStatus">
             <summary>
             Container for other UI controls that exposes
@@ -472,133 +862,119 @@
             DataContext business object.
             </summary>
         </member>
-        <member name="T:Csla.Xaml.IErrorDialog">
+        <member name="T:Csla.Xaml.TriggerAction">
             <summary>
-            Interface defining the interaction between
-            a CslaDataSource and an error dialog control.
+            Control used to invoke a method on the DataContext
+            based on an event being raised by a UI control.
             </summary>
         </member>
-        <member name="M:Csla.Xaml.IErrorDialog.Register(System.Object)">
+        <member name="M:Csla.Xaml.TriggerAction.#ctor">
             <summary>
-            Method called by the CslaDataProvider when the
-            error dialog should register any events it
-            wishes to handle from the CslaDataProvider.
-            </summary>
-            <param name="source">Data provider control.</param>
-        </member>
-        <member name="T:Csla.Xaml.ExecuteEventArgs">
-            <summary>
-            Arguments passed to a method invoked
-            by the Execute trigger action.
+            Creates an instance of the object.
             </summary>
         </member>
-        <member name="P:Csla.Xaml.ExecuteEventArgs.TriggerSource">
+        <member name="M:Csla.Xaml.TriggerAction.CallMethod(System.Object,System.EventArgs)">
             <summary>
-            The control that raised the event that
-            triggered invocation of this method.
+            Invokes target method.
             </summary>
         </member>
-        <member name="P:Csla.Xaml.ExecuteEventArgs.MethodParameter">
+        <member name="F:Csla.Xaml.TriggerAction.TargetControlProperty">
             <summary>
-            The MethodParameter value provided by
-            the designer.
+            Gets or sets the target UI control.
             </summary>
         </member>
-        <member name="P:Csla.Xaml.ExecuteEventArgs.TriggerParameter">
+        <member name="F:Csla.Xaml.TriggerAction.TriggerEventProperty">
             <summary>
-            The EventArgs parameter from the event
-            that triggered invocation of this method.
+            Gets or sets the name of the event
+            that will trigger the action.
             </summary>
         </member>
-        <member name="T:Csla.Xaml.ErrorDialog">
+        <member name="F:Csla.Xaml.TriggerAction.MethodNameProperty">
             <summary>
-            Displays an error dialog for any exceptions
-            that occur in a CslaDataProvider.
+            Gets or sets the name of the method
+            to be invoked.
             </summary>
         </member>
-        <member name="M:Csla.Xaml.ErrorDialog.#ctor">
+        <member name="F:Csla.Xaml.TriggerAction.MethodParameterProperty">
             <summary>
-            Creates a new instance of the control.
+            Gets or sets the value of a parameter to
+            be passed to the invoked method.
             </summary>
         </member>
-        <member name="F:Csla.Xaml.ErrorDialog.DialogTitleProperty">
+        <member name="F:Csla.Xaml.TriggerAction.RebindParameterDynamicallyProperty">
             <summary>
-            Gets or sets the title of the error
-            dialog.
+            Gets or sets a value indicating whether the
+            MethodParameter value should be dynamically rebound
+            before invoking the target method.
             </summary>
         </member>
-        <member name="F:Csla.Xaml.ErrorDialog.DialogFirstLineProperty">
+        <member name="P:Csla.Xaml.TriggerAction.TargetControl">
             <summary>
-            Gets or sets the first line of text displayed
-            within the error dialog (before the
-            exception message).
+            Gets or sets the target UI control.
             </summary>
         </member>
-        <member name="F:Csla.Xaml.ErrorDialog.ShowExceptionDetailProperty">
+        <member name="P:Csla.Xaml.TriggerAction.TriggerEvent">
             <summary>
-            Gets or sets a value indicating whether
-            the dialog should include exception details
-            or just the exception summary message.
+            Gets or sets the name of the event
+            that will trigger the action.
             </summary>
         </member>
-        <member name="F:Csla.Xaml.ErrorDialog.DialogIconProperty">
+        <member name="P:Csla.Xaml.TriggerAction.MethodName">
             <summary>
-            Gets or sets a value indicating whether
-            the dialog should include exception details
-            or just the exception summary message.
+            Gets or sets the name of the method
+            to be invoked.
             </summary>
         </member>
-        <member name="P:Csla.Xaml.ErrorDialog.DialogTitle">
+        <member name="P:Csla.Xaml.TriggerAction.MethodParameter">
             <summary>
-            Gets or sets the title of the error
-            dialog.
+            Gets or sets the value of a parameter to
+            be passed to the invoked method.
             </summary>
         </member>
-        <member name="P:Csla.Xaml.ErrorDialog.DialogFirstLine">
+        <member name="P:Csla.Xaml.TriggerAction.RebindParameterDynamically">
             <summary>
-            Gets or sets the first line of text displayed
-            within the error dialog (before the
-            exception message).
+            Gets or sets a value indicating whether the
+            MethodParameter value should be dynamically rebound
+            before invoking the target method.
             </summary>
         </member>
-        <member name="P:Csla.Xaml.ErrorDialog.ShowExceptionDetail">
+        <member name="T:Csla.Xaml.ViewModel`1">
             <summary>
-            Gets or sets the first line of text displayed
-            within the error dialog (before the
-            exception message).
+            Base class used to create ViewModel objects,
+            with pre-existing verbs for use by
+            InvokeMethod or Invoke.
+            </summary>
+            <typeparam name="T">Type of the Model object.</typeparam>
+        </member>
+        <member name="M:Csla.Xaml.ViewModel`1.Save(System.Object,Csla.Xaml.ExecuteEventArgs)">
+            <summary>
+            Saves the Model, first committing changes
+            if ManagedObjectLifetime is true.
             </summary>
         </member>
-        <member name="P:Csla.Xaml.ErrorDialog.DialogIcon">
+        <member name="M:Csla.Xaml.ViewModel`1.Cancel(System.Object,Csla.Xaml.ExecuteEventArgs)">
             <summary>
-            Gets or sets the icon displayed in
-            the dialog.
+            Cancels changes made to the model 
+            if ManagedObjectLifetime is true.
             </summary>
         </member>
-        <member name="T:Csla.Xaml.BrokenRuleSeverityConverter">
+        <member name="M:Csla.Xaml.ViewModel`1.AddNew(System.Object,Csla.Xaml.ExecuteEventArgs)">
             <summary>
-            Converts validation severity values into corresponding
-            images.
+            Adds a new item to the Model (if it
+            is a collection).
             </summary>
         </member>
-        <member name="M:Csla.Xaml.BrokenRuleSeverityConverter.Convert(System.Object,System.Type,System.Object,System.Globalization.CultureInfo)">
+        <member name="M:Csla.Xaml.ViewModel`1.Remove(System.Object,Csla.Xaml.ExecuteEventArgs)">
             <summary>
-            Converts validation severity values into corresponding
-            images.
+            Removes an item from the Model (if it
+            is a collection).
             </summary>
-            <param name="value">Original value.</param>
-            <param name="targetType">Desired output type (ignored).</param>
-            <param name="parameter">Extra parameter (ignored).</param>
-            <param name="culture">Desired culture (ignored).</param>
-            <returns></returns>
         </member>
-        <member name="M:Csla.Xaml.BrokenRuleSeverityConverter.ConvertBack(System.Object,System.Type,System.Object,System.Globalization.CultureInfo)">
+        <member name="M:Csla.Xaml.ViewModel`1.Delete(System.Object,Csla.Xaml.ExecuteEventArgs)">
             <summary>
-            Returns the original value.
+            Marks the Model for deletion (if it is an
+            editable root object).
             </summary>
-            <param name="value">Original value.</param>
-            <param name="targetType">Desired output type (ignored).</param>
-            <param name="parameter">Extra parameter (ignored).</param>
-            <param name="culture">Desired culture (ignored).</param>
         </member>
         <member name="T:Csla.Xaml.InvokeMethod">
             <summary>
@@ -688,274 +1064,6 @@
             property values have been set.
             </summary>
             <param name="ctrl">Attached UI control</param>
-        </member>
-        <member name="T:Csla.Xaml.PropertyStatus">
-            <summary>
-            Displays validation information for a business
-            object property, and manipulates an associated
-            UI control based on the business object's
-            authorization rules.
-            </summary>
-        </member>
-        <member name="M:Csla.Xaml.PropertyStatus.#ctor">
-            <summary>
-            Creates an instance of the object.
-            </summary>
-        </member>
-        <member name="M:Csla.Xaml.PropertyStatus.OnApplyTemplate">
-            <summary>
-            Applies the visual template.
-            </summary>
-        </member>
-        <member name="F:Csla.Xaml.PropertyStatus.PropertyProperty">
-            <summary>
-            Gets or sets the source business
-            property to which this control is bound.
-            </summary>
-        </member>
-        <member name="M:Csla.Xaml.PropertyStatus.SetSource">
-            <summary>
-            Sets the source binding and updates status.
-            </summary>
-        </member>
-        <member name="M:Csla.Xaml.PropertyStatus.GetRealSource(System.Object,System.String)">
-            <summary>
-            Gets the real source helper method.
-            </summary>
-            <param name="source">The source.</param>
-            <param name="bindingPath">The binding path.</param>
-            <returns></returns>
-        </member>
-        <member name="F:Csla.Xaml.PropertyStatus.BrokenRulesProperty">
-            <summary>
-            Gets the broken rules collection from the
-            business object.
-            </summary>
-        </member>
-        <member name="M:Csla.Xaml.PropertyStatus.UpdateState">
-            <summary>
-            Updates the state on control Property.
-            </summary>
-        </member>
-        <member name="M:Csla.Xaml.PropertyStatus.GoToState(System.Boolean)">
-            <summary>
-            Updates the status of the Property in UI
-            </summary>
-            <param name="useTransitions">if set to <c>true</c> then use transitions.</param>
-        </member>
-        <member name="M:Csla.Xaml.PropertyStatus.FindChild(System.Windows.DependencyObject,System.String)">
-            <summary>
-            Find child dependency property.
-            </summary>
-            <param name="parent">The parent.</param>
-            <param name="name">The name.</param>
-            <returns>DependencyObject child</returns>
-        </member>
-        <member name="M:Csla.Xaml.PropertyStatus.OnPropertyChanged(System.String)">
-            <summary>
-            Raises the PropertyChanged event.
-            </summary>
-            <param name="propertyName">Name of the changed property.</param>
-        </member>
-        <member name="P:Csla.Xaml.PropertyStatus.IsReadOnly">
-            <summary>
-            Gets or sets a value indicating whether this DependencyProperty field is read only.
-            </summary>
-            <value>
-            <c>true</c> if this DependencyProperty is read only; otherwise, <c>false</c>.
-            </value>
-        </member>
-        <member name="P:Csla.Xaml.PropertyStatus.Property">
-            <summary>
-            Gets or sets the source business
-            property to which this control is bound.
-            </summary>
-        </member>
-        <member name="P:Csla.Xaml.PropertyStatus.Source">
-            <summary>
-            Gets or sets the Source.
-            </summary>
-            <value>The source.</value>
-        </member>
-        <member name="P:Csla.Xaml.PropertyStatus.BindingPath">
-            <summary>
-            Gets or sets the binding path.
-            </summary>
-            <value>The binding path.</value>
-        </member>
-        <member name="P:Csla.Xaml.PropertyStatus.BrokenRules">
-            <summary>
-            Gets the broken rules collection from the
-            business object.
-            </summary>
-        </member>
-        <member name="P:Csla.Xaml.PropertyStatus.CanRead">
-            <summary>
-            Gets a value indicating whether the user
-            is authorized to read the property.
-            </summary>
-        </member>
-        <member name="P:Csla.Xaml.PropertyStatus.CanWrite">
-            <summary>
-            Gets a value indicating whether the user
-            is authorized to write the property.
-            </summary>
-        </member>
-        <member name="P:Csla.Xaml.PropertyStatus.IsBusy">
-            <summary>
-            Gets a value indicating whether the property
-            is busy with an asynchronous operation.
-            </summary>
-        </member>
-        <member name="P:Csla.Xaml.PropertyStatus.IsValid">
-            <summary>
-            Gets a value indicating whether the 
-            property is valid.
-            </summary>
-        </member>
-        <member name="P:Csla.Xaml.PropertyStatus.RuleSeverity">
-            <summary>
-            Gets a valud indicating the worst
-            severity of all broken rules
-            for this property (if IsValid is
-            false).
-            </summary>
-        </member>
-        <member name="P:Csla.Xaml.PropertyStatus.RuleDescription">
-            <summary>
-            Gets the description of the most severe
-            broken rule for this property.
-            </summary>
-        </member>
-        <member name="E:Csla.Xaml.PropertyStatus.PropertyChanged">
-            <summary>
-            Event raised when a property has changed.
-            </summary>
-        </member>
-        <member name="T:Csla.Xaml.IsNotConverter">
-            <summary>
-            Converts a Boolean value into its inverse.
-            </summary>
-        </member>
-        <member name="M:Csla.Xaml.IsNotConverter.Convert(System.Object,System.Type,System.Object,System.Globalization.CultureInfo)">
-            <summary>
-            Converts a value.
-            </summary>
-            <param name="value">Original value.</param>
-            <param name="targetType">Desired output type (ignored).</param>
-            <param name="parameter">Extra parameter (ignored).</param>
-            <param name="culture">Desired culture (ignored).</param>
-        </member>
-        <member name="M:Csla.Xaml.IsNotConverter.ConvertBack(System.Object,System.Type,System.Object,System.Globalization.CultureInfo)">
-            <summary>
-            Converts a value.
-            </summary>
-            <param name="value">Original value.</param>
-            <param name="targetType">Desired output type (ignored).</param>
-            <param name="parameter">Extra parameter (ignored).</param>
-            <param name="culture">Desired culture (ignored).</param>
-        </member>
-        <member name="T:Csla.Xaml.VisibilityMode">
-            <summary>
-            Options controlling how the Authorizer
-            control alters the visibility of a control
-            when read access to the property is not allowed.
-            </summary>
-        </member>
-        <member name="F:Csla.Xaml.VisibilityMode.Collapsed">
-            <summary>
-            Specifies that the non-readable control
-            should be collapsed.
-            </summary>
-        </member>
-        <member name="F:Csla.Xaml.VisibilityMode.Hidden">
-            <summary>
-            Specifies that the non-readable control
-            should be hidden.
-            </summary>
-        </member>
-        <member name="F:Csla.Xaml.VisibilityMode.Ignore">
-            <summary>
-            Specifies that the visibility of the 
-            non-readable control should not be
-            altered by the Authorizer control.
-            </summary>
-        </member>
-        <member name="T:Csla.Xaml.TriggerAction">
-            <summary>
-            Control used to invoke a method on the DataContext
-            based on an event being raised by a UI control.
-            </summary>
-        </member>
-        <member name="M:Csla.Xaml.TriggerAction.#ctor">
-            <summary>
-            Creates an instance of the object.
-            </summary>
-        </member>
-        <member name="M:Csla.Xaml.TriggerAction.CallMethod(System.Object,System.EventArgs)">
-            <summary>
-            Invokes target method.
-            </summary>
-        </member>
-        <member name="F:Csla.Xaml.TriggerAction.TargetControlProperty">
-            <summary>
-            Gets or sets the target UI control.
-            </summary>
-        </member>
-        <member name="F:Csla.Xaml.TriggerAction.TriggerEventProperty">
-            <summary>
-            Gets or sets the name of the event
-            that will trigger the action.
-            </summary>
-        </member>
-        <member name="F:Csla.Xaml.TriggerAction.MethodNameProperty">
-            <summary>
-            Gets or sets the name of the method
-            to be invoked.
-            </summary>
-        </member>
-        <member name="F:Csla.Xaml.TriggerAction.MethodParameterProperty">
-            <summary>
-            Gets or sets the value of a parameter to
-            be passed to the invoked method.
-            </summary>
-        </member>
-        <member name="F:Csla.Xaml.TriggerAction.RebindParameterDynamicallyProperty">
-            <summary>
-            Gets or sets a value indicating whether the
-            MethodParameter value should be dynamically rebound
-            before invoking the target method.
-            </summary>
-        </member>
-        <member name="P:Csla.Xaml.TriggerAction.TargetControl">
-            <summary>
-            Gets or sets the target UI control.
-            </summary>
-        </member>
-        <member name="P:Csla.Xaml.TriggerAction.TriggerEvent">
-            <summary>
-            Gets or sets the name of the event
-            that will trigger the action.
-            </summary>
-        </member>
-        <member name="P:Csla.Xaml.TriggerAction.MethodName">
-            <summary>
-            Gets or sets the name of the method
-            to be invoked.
-            </summary>
-        </member>
-        <member name="P:Csla.Xaml.TriggerAction.MethodParameter">
-            <summary>
-            Gets or sets the value of a parameter to
-            be passed to the invoked method.
-            </summary>
-        </member>
-        <member name="P:Csla.Xaml.TriggerAction.RebindParameterDynamically">
-            <summary>
-            Gets or sets a value indicating whether the
-            MethodParameter value should be dynamically rebound
-            before invoking the target method.
-            </summary>
         </member>
         <member name="T:Csla.Xaml.CslaDataProvider">
             <summary>
@@ -1119,69 +1227,6 @@
             Gets a value indicating if this object is busy.
             </summary>
         </member>
-        <member name="T:Csla.Xaml.ViewModel`1">
-            <summary>
-            Base class used to create ViewModel objects,
-            with pre-existing verbs for use by
-            InvokeMethod or Invoke.
-            </summary>
-            <typeparam name="T">Type of the Model object.</typeparam>
-        </member>
-        <member name="M:Csla.Xaml.ViewModel`1.Save(System.Object,Csla.Xaml.ExecuteEventArgs)">
-            <summary>
-            Saves the Model, first committing changes
-            if ManagedObjectLifetime is true.
-            </summary>
-        </member>
-        <member name="M:Csla.Xaml.ViewModel`1.Cancel(System.Object,Csla.Xaml.ExecuteEventArgs)">
-            <summary>
-            Cancels changes made to the model 
-            if ManagedObjectLifetime is true.
-            </summary>
-        </member>
-        <member name="M:Csla.Xaml.ViewModel`1.AddNew(System.Object,Csla.Xaml.ExecuteEventArgs)">
-            <summary>
-            Adds a new item to the Model (if it
-            is a collection).
-            </summary>
-        </member>
-        <member name="M:Csla.Xaml.ViewModel`1.Remove(System.Object,Csla.Xaml.ExecuteEventArgs)">
-            <summary>
-            Removes an item from the Model (if it
-            is a collection).
-            </summary>
-        </member>
-        <member name="M:Csla.Xaml.ViewModel`1.Delete(System.Object,Csla.Xaml.ExecuteEventArgs)">
-            <summary>
-            Marks the Model for deletion (if it is an
-            editable root object).
-            </summary>
-        </member>
-        <member name="T:Csla.Xaml.IdentityConverter">
-            <summary>
-            Provides the functionality of a WPF
-            value converter without affecting the
-            value as it flows to and from the UI.
-            </summary>
-        </member>
-        <member name="M:Csla.Xaml.IdentityConverter.Convert(System.Object,System.Type,System.Object,System.Globalization.CultureInfo)">
-            <summary>
-            Returns the unchanged value.
-            </summary>
-            <param name="value">Value to be converted.</param>
-            <param name="targetType">Desired value type.</param>
-            <param name="parameter">Conversion parameter.</param>
-            <param name="culture">Conversion culture.</param>
-        </member>
-        <member name="M:Csla.Xaml.IdentityConverter.ConvertBack(System.Object,System.Type,System.Object,System.Globalization.CultureInfo)">
-            <summary>
-            Returns the unchanged value.
-            </summary>
-            <param name="value">Value to be converted.</param>
-            <param name="targetType">Desired value type.</param>
-            <param name="parameter">Conversion parameter.</param>
-            <param name="culture">Conversion culture.</param>
-        </member>
         <member name="T:Csla.Xaml.CslaDataProviderCommandManager">
             <summary>
             Implements support for RoutedCommands that can
@@ -1192,51 +1237,6 @@
             source objects when you want the CslaDataProvider
             to execute the command.
             </remarks>
-        </member>
-        <member name="T:Csla.Xaml.ErrorEventArgs">
-            <summary>
-            Contains information about the error that
-            has occurred.
-            </summary>
-        </member>
-        <member name="P:Csla.Xaml.ErrorEventArgs.Error">
-            <summary>
-            Gets the Exception object for the error
-            that occurred.
-            </summary>
-        </member>
-        <member name="T:Csla.Xaml.BusyAnimation">
-            <summary>
-            Displays a busy animation.
-            </summary>
-        </member>
-        <member name="F:Csla.Xaml.BusyAnimation.StepIntervalProperty">
-            <summary>
-            StepInterval property to control speed of animation.
-            </summary>
-        </member>
-        <member name="F:Csla.Xaml.BusyAnimation.IsRunningProperty">
-            <summary>
-            IsRunning property to control whether the 
-            animation is running.
-            </summary>
-        </member>
-        <member name="M:Csla.Xaml.BusyAnimation.#ctor">
-            <summary>
-            Creates an instance of the control.
-            </summary>
-        </member>
-        <member name="P:Csla.Xaml.BusyAnimation.StepInterval">
-            <summary>
-            Gets or sets a property controlling
-            the speed of the animation.
-            </summary>
-        </member>
-        <member name="P:Csla.Xaml.BusyAnimation.IsRunning">
-            <summary>
-            Gets or sets a property controlling
-            whether the animation is running.
-            </summary>
         </member>
     </members>
 </doc>

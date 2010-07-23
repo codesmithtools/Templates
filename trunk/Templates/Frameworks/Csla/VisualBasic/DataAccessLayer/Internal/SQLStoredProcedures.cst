@@ -3,7 +3,7 @@
 * Modified By: Blake Niemyjski
 * Description: This template will generate standard CRUD stored procedures for a given database table.
 --------------------------------------------------------------------------------------------------------------%>
-<%@ CodeTemplate Debug="True" Language="VB"  TargetLanguage="T-SQL"  Inherits="QuickStart.DataCodeTemplate" CompilerVersion="v3.5" Encoding="UTF-8" Description="Generates standard CRUD procedures based on a database table schema." %>
+<%@ CodeTemplate Debug="False" Language="VB"  TargetLanguage="T-SQL"  Inherits="QuickStart.DataCodeTemplate" CompilerVersion="v3.5" Encoding="UTF-8" Description="Generates standard CRUD procedures based on a database table schema." %>
 <%@ Assembly Name="CodeSmith.BaseTemplates" %>
 <%@ Assembly Name="CodeSmith.CustomProperties" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\..\Common" %>

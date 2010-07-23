@@ -13,7 +13,7 @@
 #Region "Exists Command"
 
         Public Shared Function Exists(ByVal criteria As <%= CriteriaClassName %> ) As Boolean
-            Return ExistsCommand.Execute(criteria)
+            Return <%= BusinessProjectName %>.ExistsCommand.Execute(criteria)
         End Function
 
 #End Region
