@@ -146,7 +146,7 @@ namespace PetShop.Business
 
         #endregion
 
-        #region Properties
+        #region Custom Properties
 
         private static readonly PropertyInfo<LineItemList> _itemsProperty = RegisterProperty<LineItemList>(p => p.Items, Csla.RelationshipTypes.LazyLoad);
         public LineItemList Items

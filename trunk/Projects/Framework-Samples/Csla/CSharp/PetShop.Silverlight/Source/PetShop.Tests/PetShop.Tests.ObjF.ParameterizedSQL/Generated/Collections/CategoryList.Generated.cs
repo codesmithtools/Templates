@@ -48,7 +48,7 @@ namespace PetShop.Tests.ObjF.ParameterizedSQL
 
 
                 Add(item);
-            }        
+            }
 
             return item;
         }
@@ -64,11 +64,11 @@ namespace PetShop.Tests.ObjF.ParameterizedSQL
 
         public static CategoryList GetByCategoryId(System.String categoryId)
         {
-			var criteria = new CategoryCriteria{CategoryId = categoryId};
-			
-			
+            var criteria = new CategoryCriteria{CategoryId = categoryId};
+            
+            
             return DataPortal.Fetch< CategoryList >(criteria);
-        }  
+        }
 
         public static CategoryList GetAll()
         {

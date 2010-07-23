@@ -87,17 +87,17 @@ namespace PetShop.Tests.ObjF.StoredProcedures
 
         public static Inventory GetByItemId(System.String itemId)
         {
-			var criteria = new InventoryCriteria {ItemId = itemId};
-			
-			
+            var criteria = new InventoryCriteria {ItemId = itemId};
+            
+            
             return DataPortal.Fetch< Inventory >(criteria);
         }
 
         public static void DeleteInventory(System.String itemId)
         {
-			var criteria = new InventoryCriteria {ItemId = itemId};
-			
-			
+            var criteria = new InventoryCriteria {ItemId = itemId};
+            
+            
             DataPortal.Delete< Inventory >(criteria);
         }
 
@@ -143,7 +143,7 @@ namespace PetShop.Tests.ObjF.StoredProcedures
 
         public static bool Exists(InventoryCriteria criteria)
         {
-            return ExistsCommand.Execute(criteria);
+            return PetShop.Tests.ObjF.StoredProcedures.ExistsCommand.Execute(criteria);
         }
 
         #endregion

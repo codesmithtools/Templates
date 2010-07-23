@@ -24,15 +24,15 @@ namespace PetShop.Tests.StoredProcedures
 {
     public partial class ItemList
     {
-    	protected override void Child_Create()
-		{
+        protected override void Child_Create()
+        {
             bool cancel = false;
             OnCreating(ref cancel);
             if (cancel) return;
-	    
-			OnCreated();
-		}
-	
+        
+            OnCreated();
+        }
+    
         private void Child_Fetch(ItemCriteria criteria)
         {
             bool cancel = false;
@@ -61,7 +61,7 @@ namespace PetShop.Tests.StoredProcedures
                         {
                             do
                             {
-                                this.Add(new Item(reader));
+                                this.Add(new PetShop.Tests.StoredProcedures.Item(reader));
                             } while(reader.Read());
                         }
                     }

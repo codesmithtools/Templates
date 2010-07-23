@@ -43,16 +43,16 @@ namespace PetShop.Tests.ObjF.ParameterizedSQL
 
         internal static AccountList GetByAccountId(System.Int32 accountId)
         {
-			var criteria = new AccountCriteria{AccountId = accountId};
-			
+            var criteria = new AccountCriteria{AccountId = accountId};
+            
             
             return DataPortal.FetchChild< AccountList >(criteria);
         }
 
         internal static AccountList GetByUniqueID(System.Int32 uniqueID)
         {
-			var criteria = new AccountCriteria{UniqueID = uniqueID};
-			
+            var criteria = new AccountCriteria{UniqueID = uniqueID};
+            
             
             return DataPortal.FetchChild< AccountList >(criteria);
         }
@@ -62,7 +62,8 @@ namespace PetShop.Tests.ObjF.ParameterizedSQL
             return DataPortal.FetchChild< AccountList >(new AccountCriteria());
         }
 
-		#endregion
+        #endregion
+
 
         #region Method Overrides
         
@@ -85,7 +86,7 @@ namespace PetShop.Tests.ObjF.ParameterizedSQL
 
 
                 Add(item);
-            }        
+            }
 
             return item;
         }

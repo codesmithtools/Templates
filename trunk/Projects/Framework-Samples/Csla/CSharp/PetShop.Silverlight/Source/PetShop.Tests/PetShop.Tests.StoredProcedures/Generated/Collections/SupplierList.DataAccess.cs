@@ -24,15 +24,15 @@ namespace PetShop.Tests.StoredProcedures
 {
     public partial class SupplierList
     {
-    	protected override void Child_Create()
-		{
+        protected override void Child_Create()
+        {
             bool cancel = false;
             OnCreating(ref cancel);
             if (cancel) return;
-	    
-			OnCreated();
-		}
-	
+        
+            OnCreated();
+        }
+    
         private void Child_Fetch(SupplierCriteria criteria)
         {
             bool cancel = false;
@@ -62,7 +62,7 @@ namespace PetShop.Tests.StoredProcedures
                         {
                             do
                             {
-                                this.Add(new Supplier(reader));
+                                this.Add(new PetShop.Tests.StoredProcedures.Supplier(reader));
                             } while(reader.Read());
                         }
                     }

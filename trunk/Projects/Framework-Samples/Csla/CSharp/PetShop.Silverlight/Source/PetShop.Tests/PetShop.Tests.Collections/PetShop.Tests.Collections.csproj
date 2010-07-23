@@ -54,10 +54,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Csla">
-      <HintPath>..\..\..\..\..\..\..\..\Templates\Frameworks\Csla\Common\Csla\4.0\Client\Csla.dll</HintPath>
+      <HintPath>..\..\..\Libraries\Csla\Client\Csla.dll</HintPath>
     </Reference>
-    <Reference Include="nunit.framework, Version=2.5.3.9345, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="nunit.framework">
       <HintPath>..\..\..\Libraries\nunit.framework.dll</HintPath>
     </Reference>
     <Reference Include="System" />
@@ -82,6 +81,7 @@
     <Compile Include="Generated\DynamicRoot\Collections\CategoryList.Generated.cs">
       <DependentUpon>CategoryList.cs</DependentUpon>
     </Compile>
+    <Compile Include="Generated\DynamicRoot\Commands\ExistsCommand.cs" />
     <Compile Include="Generated\DynamicRoot\Criteria\CategoryCriteria.cs" />
     <Compile Include="Generated\DynamicRoot\Criteria\CategoryCriteria.Generated.cs">
       <DependentUpon>CategoryCriteria.cs</DependentUpon>
@@ -94,6 +94,7 @@
     <Compile Include="Generated\DynamicRoot\Entities\Category.Generated.cs">
       <DependentUpon>Category.cs</DependentUpon>
     </Compile>
+    <Compile Include="Generated\DynamicRoot\Utility\ADOHelper.cs" />
     <Compile Include="Generated\EditableChild\Collections\CategoryList.cs" />
     <Compile Include="Generated\EditableChild\Collections\CategoryList.DataAccess.cs">
       <DependentUpon>CategoryList.cs</DependentUpon>
@@ -101,6 +102,7 @@
     <Compile Include="Generated\EditableChild\Collections\CategoryList.Generated.cs">
       <DependentUpon>CategoryList.cs</DependentUpon>
     </Compile>
+    <Compile Include="Generated\EditableChild\Commands\ExistsCommand.cs" />
     <Compile Include="Generated\EditableChild\Criteria\CategoryCriteria.cs" />
     <Compile Include="Generated\EditableChild\Criteria\CategoryCriteria.Generated.cs">
       <DependentUpon>CategoryCriteria.cs</DependentUpon>
@@ -113,6 +115,7 @@
     <Compile Include="Generated\EditableChild\Entities\Category.Generated.cs">
       <DependentUpon>Category.cs</DependentUpon>
     </Compile>
+    <Compile Include="Generated\EditableChild\Utility\ADOHelper.cs" />
     <Compile Include="Generated\EditableRoot\Collections\CategoryList.cs" />
     <Compile Include="Generated\EditableRoot\Collections\CategoryList.DataAccess.cs">
       <DependentUpon>CategoryList.cs</DependentUpon>
@@ -120,6 +123,7 @@
     <Compile Include="Generated\EditableRoot\Collections\CategoryList.Generated.cs">
       <DependentUpon>CategoryList.cs</DependentUpon>
     </Compile>
+    <Compile Include="Generated\EditableRoot\Commands\ExistsCommand.cs" />
     <Compile Include="Generated\EditableRoot\Criteria\CategoryCriteria.cs" />
     <Compile Include="Generated\EditableRoot\Criteria\CategoryCriteria.Generated.cs">
       <DependentUpon>CategoryCriteria.cs</DependentUpon>
@@ -132,95 +136,60 @@
     <Compile Include="Generated\EditableRoot\Entities\Category.Generated.cs">
       <DependentUpon>Category.cs</DependentUpon>
     </Compile>
-    <Compile Include="Generated\DynamicRoot\ExistsCommand.cs" />
-    <Compile Include="Generated\EditableChild\ExistsCommand.cs" />
-    <Compile Include="Generated\EditableRoot\ExistsCommand.cs" />
-    <Compile Include="Generated\ReadOnlyRoot\ExistsCommand.cs" />
-    <Compile Include="Generated\ReadOnlyChild\ExistsCommand.cs" />
-    <Compile Include="Generated\ReadOnlyChild\Collections\CategoryList.cs" />
-    <Compile Include="Generated\ReadOnlyChild\Collections\CategoryList.DataAccess.cs">
-      <DependentUpon>CategoryList.cs</DependentUpon>
+    <Compile Include="Generated\EditableRoot\Utility\ADOHelper.cs" />
+    <Compile Include="Generated\ReadOnlyChild\Collections\CategoryInfoList.cs" />
+    <Compile Include="Generated\ReadOnlyChild\Collections\CategoryInfoList.DataAccess.cs">
+      <DependentUpon>CategoryInfoList.cs</DependentUpon>
     </Compile>
-    <Compile Include="Generated\ReadOnlyChild\Collections\CategoryList.Generated.cs">
-      <DependentUpon>CategoryList.cs</DependentUpon>
+    <Compile Include="Generated\ReadOnlyChild\Collections\CategoryInfoList.Generated.cs">
+      <DependentUpon>CategoryInfoList.cs</DependentUpon>
     </Compile>
+    <Compile Include="Generated\ReadOnlyChild\Commands\ExistsCommand.cs" />
     <Compile Include="Generated\ReadOnlyChild\Criteria\CategoryCriteria.cs" />
     <Compile Include="Generated\ReadOnlyChild\Criteria\CategoryCriteria.Generated.cs">
       <DependentUpon>CategoryCriteria.cs</DependentUpon>
     </Compile>
     <Compile Include="Generated\ReadOnlyChild\Criteria\Interfaces\IGeneratedCriteria.cs" />
-    <Compile Include="Generated\ReadOnlyChild\Entities\Category.cs" />
-    <Compile Include="Generated\ReadOnlyChild\Entities\Category.DataAccess.cs">
-      <DependentUpon>Category.cs</DependentUpon>
+    <Compile Include="Generated\ReadOnlyChild\Entities\CategoryInfo.cs" />
+    <Compile Include="Generated\ReadOnlyChild\Entities\CategoryInfo.DataAccess.cs">
+      <DependentUpon>CategoryInfo.cs</DependentUpon>
     </Compile>
-    <Compile Include="Generated\ReadOnlyChild\Entities\Category.Generated.cs">
-      <DependentUpon>Category.cs</DependentUpon>
+    <Compile Include="Generated\ReadOnlyChild\Entities\CategoryInfo.Generated.cs">
+      <DependentUpon>CategoryInfo.cs</DependentUpon>
     </Compile>
-    <Compile Include="Generated\ReadOnlyRoot\Collections\CategoryList.cs" />
-    <Compile Include="Generated\ReadOnlyRoot\Collections\CategoryList.DataAccess.cs">
-      <DependentUpon>CategoryList.cs</DependentUpon>
+    <Compile Include="Generated\ReadOnlyChild\Utility\ADOHelper.cs" />
+    <Compile Include="Generated\ReadOnlyRoot\Collections\CategoryInfoList.cs" />
+    <Compile Include="Generated\ReadOnlyRoot\Collections\CategoryInfoList.DataAccess.cs">
+      <DependentUpon>CategoryInfoList.cs</DependentUpon>
     </Compile>
-    <Compile Include="Generated\ReadOnlyRoot\Collections\CategoryList.Generated.cs">
-      <DependentUpon>CategoryList.cs</DependentUpon>
+    <Compile Include="Generated\ReadOnlyRoot\Collections\CategoryInfoList.Generated.cs">
+      <DependentUpon>CategoryInfoList.cs</DependentUpon>
     </Compile>
+    <Compile Include="Generated\ReadOnlyRoot\Commands\ExistsCommand.cs" />
     <Compile Include="Generated\ReadOnlyRoot\Criteria\CategoryCriteria.cs" />
     <Compile Include="Generated\ReadOnlyRoot\Criteria\CategoryCriteria.Generated.cs">
       <DependentUpon>CategoryCriteria.cs</DependentUpon>
     </Compile>
     <Compile Include="Generated\ReadOnlyRoot\Criteria\Interfaces\IGeneratedCriteria.cs" />
-    <Compile Include="Generated\ReadOnlyRoot\Entities\Category.cs" />
-    <Compile Include="Generated\ReadOnlyRoot\Entities\Category.DataAccess.cs">
-      <DependentUpon>Category.cs</DependentUpon>
+    <Compile Include="Generated\ReadOnlyRoot\Entities\CategoryInfo.cs" />
+    <Compile Include="Generated\ReadOnlyRoot\Entities\CategoryInfo.DataAccess.cs">
+      <DependentUpon>CategoryInfo.cs</DependentUpon>
     </Compile>
-    <Compile Include="Generated\ReadOnlyRoot\Entities\Category.Generated.cs">
-      <DependentUpon>Category.cs</DependentUpon>
+    <Compile Include="Generated\ReadOnlyRoot\Entities\CategoryInfo.Generated.cs">
+      <DependentUpon>CategoryInfo.cs</DependentUpon>
     </Compile>
+    <Compile Include="Generated\ReadOnlyRoot\Utility\ADOHelper.cs" />
     <Compile Include="ReadOnlyRootTests.cs" />
     <Compile Include="EditableChildTests.cs" />
     <Compile Include="EditableRootTests.cs" />
     <Compile Include="ReadOnlyChildTests.cs" />
     <Compile Include="DynamicRootTests.cs" />
-    <Compile Include="Generated\ReadOnlyRoot\ADOHelper.cs" />
-    <Compile Include="Generated\ReadOnlyChild\ADOHelper.cs" />
-    <Compile Include="Generated\EditableRoot\ADOHelper.cs" />
-    <Compile Include="Generated\EditableChild\ADOHelper.cs" />
-    <Compile Include="Generated\DynamicRoot\ADOHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestUtility.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <None Include="Generated\DynamicRoot\Collections\CategoryList.StoredProcedures.sql">
-      <DependentUpon>CategoryList.cs</DependentUpon>
-    </None>
-    <None Include="Generated\DynamicRoot\Entities\Category.StoredProcedures.sql">
-      <DependentUpon>Category.cs</DependentUpon>
-    </None>
-    <None Include="Generated\EditableChild\Collections\CategoryList.StoredProcedures.sql">
-      <DependentUpon>CategoryList.cs</DependentUpon>
-    </None>
-    <None Include="Generated\EditableChild\Entities\Category.StoredProcedures.sql">
-      <DependentUpon>Category.cs</DependentUpon>
-    </None>
-    <None Include="Generated\EditableRoot\Collections\CategoryList.StoredProcedures.sql">
-      <DependentUpon>CategoryList.cs</DependentUpon>
-    </None>
-    <None Include="Generated\EditableRoot\Entities\Category.StoredProcedures.sql">
-      <DependentUpon>Category.cs</DependentUpon>
-    </None>
     <None Include="Generated\Entities.csp" />
-    <None Include="Generated\ReadOnlyChild\Collections\CategoryList.StoredProcedures.sql">
-      <DependentUpon>CategoryList.cs</DependentUpon>
-    </None>
-    <None Include="Generated\ReadOnlyChild\Entities\Category.StoredProcedures.sql">
-      <DependentUpon>Category.cs</DependentUpon>
-    </None>
-    <None Include="Generated\ReadOnlyRoot\Collections\CategoryList.StoredProcedures.sql">
-      <DependentUpon>CategoryList.cs</DependentUpon>
-    </None>
-    <None Include="Generated\ReadOnlyRoot\Entities\Category.StoredProcedures.sql">
-      <DependentUpon>Category.cs</DependentUpon>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
@@ -238,6 +207,39 @@
       <ProductName>Windows Installer 3.1</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <Content Include="Generated\DynamicRoot\Collections\CategoryList.StoredProcedures.sql">
+      <DependentUpon>CategoryList.cs</DependentUpon>
+    </Content>
+    <Content Include="Generated\DynamicRoot\Entities\Category.StoredProcedures.sql">
+      <DependentUpon>Category.cs</DependentUpon>
+    </Content>
+    <Content Include="Generated\EditableChild\Collections\CategoryList.StoredProcedures.sql">
+      <DependentUpon>CategoryList.cs</DependentUpon>
+    </Content>
+    <Content Include="Generated\EditableChild\Entities\Category.StoredProcedures.sql">
+      <DependentUpon>Category.cs</DependentUpon>
+    </Content>
+    <Content Include="Generated\EditableRoot\Collections\CategoryList.StoredProcedures.sql">
+      <DependentUpon>CategoryList.cs</DependentUpon>
+    </Content>
+    <Content Include="Generated\EditableRoot\Entities\Category.StoredProcedures.sql">
+      <DependentUpon>Category.cs</DependentUpon>
+    </Content>
+    <Content Include="Generated\ReadOnlyChild\Collections\CategoryInfoList.StoredProcedures.sql">
+      <DependentUpon>CategoryInfoList.cs</DependentUpon>
+    </Content>
+    <Content Include="Generated\ReadOnlyChild\Entities\CategoryInfo.StoredProcedures.sql">
+      <DependentUpon>CategoryInfo.cs</DependentUpon>
+    </Content>
+    <Content Include="Generated\ReadOnlyRoot\Collections\CategoryInfoList.StoredProcedures.sql">
+      <DependentUpon>CategoryInfoList.cs</DependentUpon>
+    </Content>
+    <Content Include="Generated\ReadOnlyRoot\Entities\CategoryInfo.StoredProcedures.sql">
+      <DependentUpon>CategoryInfo.cs</DependentUpon>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

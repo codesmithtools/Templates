@@ -40,6 +40,7 @@ namespace PetShop.Tests.StoredProcedures
         internal Order(SafeDataReader reader)
         {
             Map(reader);
+            MarkAsChild();  
         }
         #endregion
 
@@ -240,8 +241,8 @@ namespace PetShop.Tests.StoredProcedures
             {
                 if(!FieldManager.FieldExists(_lineItemsProperty))
                 {
-					var criteria = new PetShop.Tests.StoredProcedures.LineItemCriteria {OrderId = OrderId};
-					
+                    var criteria = new PetShop.Tests.StoredProcedures.LineItemCriteria {OrderId = OrderId};
+                    
 
                     if(IsNew || !PetShop.Tests.StoredProcedures.LineItemList.Exists(criteria))
                         LoadProperty(_lineItemsProperty, PetShop.Tests.StoredProcedures.LineItemList.NewList());
@@ -261,8 +262,8 @@ namespace PetShop.Tests.StoredProcedures
             {
                 if(!FieldManager.FieldExists(_orderStatusesProperty))
                 {
-					var criteria = new PetShop.Tests.StoredProcedures.OrderStatusCriteria {OrderId = OrderId};
-					
+                    var criteria = new PetShop.Tests.StoredProcedures.OrderStatusCriteria {OrderId = OrderId};
+                    
 
                     if(IsNew || !PetShop.Tests.StoredProcedures.OrderStatusList.Exists(criteria))
                         LoadProperty(_orderStatusesProperty, PetShop.Tests.StoredProcedures.OrderStatusList.NewList());
@@ -284,9 +285,9 @@ namespace PetShop.Tests.StoredProcedures
 
         public static Order GetByOrderId(System.Int32 orderId)
         {
-			var criteria = new OrderCriteria {OrderId = orderId};
-			
-			
+            var criteria = new OrderCriteria {OrderId = orderId};
+            
+            
             return DataPortal.Fetch< Order >(criteria);
         }
 
@@ -303,17 +304,16 @@ namespace PetShop.Tests.StoredProcedures
         {
             return DataPortal.CreateChild< Order >();
         }
+
         internal static Order GetByOrderIdChild(System.Int32 orderId)
         {
-			var criteria = new OrderCriteria {OrderId = orderId};
-			
+            var criteria = new OrderCriteria {OrderId = orderId};
+            
 
             return DataPortal.FetchChild< Order >(criteria);
         }
 
         #endregion
-
-
         #region DataPortal partial methods
 
         partial void OnCreating(ref bool cancel);
@@ -351,7 +351,7 @@ namespace PetShop.Tests.StoredProcedures
 
         public static bool Exists(OrderCriteria criteria)
         {
-            return ExistsCommand.Execute(criteria);
+            return PetShop.Tests.StoredProcedures.ExistsCommand.Execute(criteria);
         }
 
         #endregion

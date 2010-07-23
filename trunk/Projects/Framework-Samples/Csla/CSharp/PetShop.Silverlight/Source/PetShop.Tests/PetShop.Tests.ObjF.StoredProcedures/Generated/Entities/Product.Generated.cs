@@ -110,7 +110,7 @@ namespace PetShop.Tests.ObjF.StoredProcedures
                 if(!FieldManager.FieldExists(_categoryMemberProperty))
                 {
                     var criteria = new PetShop.Tests.ObjF.StoredProcedures.CategoryCriteria {CategoryId = CategoryId};
-					
+                    
                     if(PetShop.Tests.ObjF.StoredProcedures.Category.Exists(criteria))
                         LoadProperty(_categoryMemberProperty, PetShop.Tests.ObjF.StoredProcedures.Category.GetByCategoryId(CategoryId));
                 }
@@ -127,8 +127,8 @@ namespace PetShop.Tests.ObjF.StoredProcedures
             {
                 if(!FieldManager.FieldExists(_itemsProperty))
                 {
-					var criteria = new PetShop.Tests.ObjF.StoredProcedures.ItemCriteria {ProductId = ProductId};
-					
+                    var criteria = new PetShop.Tests.ObjF.StoredProcedures.ItemCriteria {ProductId = ProductId};
+                    
 
                     if(IsNew || !PetShop.Tests.ObjF.StoredProcedures.ItemList.Exists(criteria))
                         LoadProperty(_itemsProperty, PetShop.Tests.ObjF.StoredProcedures.ItemList.NewList());
@@ -150,41 +150,41 @@ namespace PetShop.Tests.ObjF.StoredProcedures
 
         public static Product GetByProductId(System.String productId)
         {
-			var criteria = new ProductCriteria {ProductId = productId};
-			
-			
+            var criteria = new ProductCriteria {ProductId = productId};
+            
+            
             return DataPortal.Fetch< Product >(criteria);
         }
 
         public static Product GetByName(System.String name)
         {
-			var criteria = new ProductCriteria {Name = name};
-			
-			
+            var criteria = new ProductCriteria {Name = name};
+            
+            
             return DataPortal.Fetch< Product >(criteria);
         }
 
         public static Product GetByCategoryId(System.String categoryId)
         {
-			var criteria = new ProductCriteria {CategoryId = categoryId};
-			
-			
+            var criteria = new ProductCriteria {CategoryId = categoryId};
+            
+            
             return DataPortal.Fetch< Product >(criteria);
         }
 
         public static Product GetByCategoryIdName(System.String categoryId, System.String name)
         {
-			var criteria = new ProductCriteria {CategoryId = categoryId, Name = name};
-			
-			
+            var criteria = new ProductCriteria {CategoryId = categoryId, Name = name};
+            
+            
             return DataPortal.Fetch< Product >(criteria);
         }
 
         public static Product GetByCategoryIdProductIdName(System.String categoryId, System.String productId, System.String name)
         {
-			var criteria = new ProductCriteria {CategoryId = categoryId, ProductId = productId, Name = name};
-			
-			
+            var criteria = new ProductCriteria {CategoryId = categoryId, ProductId = productId, Name = name};
+            
+            
             return DataPortal.Fetch< Product >(criteria);
         }
 
@@ -201,64 +201,48 @@ namespace PetShop.Tests.ObjF.StoredProcedures
         {
             return DataPortal.CreateChild< Product >();
         }
+
         internal static Product GetByProductIdChild(System.String productId)
         {
-			var criteria = new ProductCriteria {ProductId = productId};
-			
+            var criteria = new ProductCriteria {ProductId = productId};
+            
 
             return DataPortal.FetchChild< Product >(criteria);
         }
+
         internal static Product GetByNameChild(System.String name)
         {
-			var criteria = new ProductCriteria {Name = name};
-			
+            var criteria = new ProductCriteria {Name = name};
+            
 
             return DataPortal.FetchChild< Product >(criteria);
         }
+
         internal static Product GetByCategoryIdChild(System.String categoryId)
         {
-			var criteria = new ProductCriteria {CategoryId = categoryId};
-			
+            var criteria = new ProductCriteria {CategoryId = categoryId};
+            
 
             return DataPortal.FetchChild< Product >(criteria);
         }
+
         internal static Product GetByCategoryIdNameChild(System.String categoryId, System.String name)
         {
-			var criteria = new ProductCriteria {CategoryId = categoryId, Name = name};
-			
+            var criteria = new ProductCriteria {CategoryId = categoryId, Name = name};
+            
 
             return DataPortal.FetchChild< Product >(criteria);
         }
+
         internal static Product GetByCategoryIdProductIdNameChild(System.String categoryId, System.String productId, System.String name)
         {
-			var criteria = new ProductCriteria {CategoryId = categoryId, ProductId = productId, Name = name};
-			
+            var criteria = new ProductCriteria {CategoryId = categoryId, ProductId = productId, Name = name};
+            
 
             return DataPortal.FetchChild< Product >(criteria);
         }
 
         #endregion
-
-        #region Overridden properties
-
-        /// <summary>
-        /// Returns true if the business object or any of its children properties are dirty.
-        /// </summary>
-        public override bool IsDirty
-        {
-            get
-            {
-                if (base.IsDirty) return true;
-                if (FieldManager.FieldExists(_categoryMemberProperty) && CategoryMember.IsDirty) return true;
-                if (FieldManager.FieldExists(_itemsProperty) && Items.IsDirty) return true;
-
-                return false;
-            }
-        }
-
-        #endregion
-
-
         #region DataPortal partial methods
 
         partial void OnCreating(ref bool cancel);
@@ -291,12 +275,31 @@ namespace PetShop.Tests.ObjF.StoredProcedures
         partial void OnChildSelfDeleting(ref bool cancel);
         partial void OnChildSelfDeleted();
         #endregion
+        #region Overridden properties
+
+        /// <summary>
+        /// Returns true if the business object or any of its children properties are dirty.
+        /// </summary>
+        public override bool IsDirty
+        {
+            get
+            {
+                if (base.IsDirty) return true;
+                if (FieldManager.FieldExists(_categoryMemberProperty) && CategoryMember.IsDirty) return true;
+                if (FieldManager.FieldExists(_itemsProperty) && Items.IsDirty) return true;
+
+                return false;
+            }
+        }
+
+        #endregion
+
 
         #region Exists Command
 
         public static bool Exists(ProductCriteria criteria)
         {
-            return ExistsCommand.Execute(criteria);
+            return PetShop.Tests.ObjF.StoredProcedures.ExistsCommand.Execute(criteria);
         }
 
         #endregion

@@ -90,6 +90,10 @@ namespace PetShop.Business
                 new ProfileCriteria { Username = username });
         }
 
+        #endregion
+
+        #region Custom Data Access
+
         partial void OnFetching(ProfileCriteria criteria, ref bool cancel)
         {
             string commandText = string.Format("SELECT [UniqueID], [Username], [ApplicationName], [IsAnonymous], [LastActivityDate], [LastUpdatedDate] FROM [dbo].[Profiles] {0}", ADOHelper.BuildWhereStatement(criteria.StateBag));

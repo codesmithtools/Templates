@@ -48,7 +48,7 @@ namespace PetShop.Tests.ObjF.ParameterizedSQL
 
 
                 Add(item);
-            }        
+            }
 
             return item;
         }
@@ -64,19 +64,19 @@ namespace PetShop.Tests.ObjF.ParameterizedSQL
 
         public static ProfileList GetByUniqueID(System.Int32 uniqueID)
         {
-			var criteria = new ProfileCriteria{UniqueID = uniqueID};
-			
-			
+            var criteria = new ProfileCriteria{UniqueID = uniqueID};
+            
+            
             return DataPortal.Fetch< ProfileList >(criteria);
-        }  
+        }
 
         public static ProfileList GetByUsernameApplicationName(System.String username, System.String applicationName)
         {
-			var criteria = new ProfileCriteria{Username = username, ApplicationName = applicationName};
-			
-			
+            var criteria = new ProfileCriteria{Username = username, ApplicationName = applicationName};
+            
+            
             return DataPortal.Fetch< ProfileList >(criteria);
-        }  
+        }
 
         public static ProfileList GetAll()
         {

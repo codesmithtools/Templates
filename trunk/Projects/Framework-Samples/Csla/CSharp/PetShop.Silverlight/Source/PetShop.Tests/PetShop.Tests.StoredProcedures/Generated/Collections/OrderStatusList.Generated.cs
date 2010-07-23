@@ -52,7 +52,7 @@ namespace PetShop.Tests.StoredProcedures
 
 
                 Add(item);
-            }        
+            }
 
             return item;
         }
@@ -68,19 +68,19 @@ namespace PetShop.Tests.StoredProcedures
 
         public static OrderStatusList GetByOrderIdLineNum(System.Int32 orderId, System.Int32 lineNum)
         {
-			var criteria = new OrderStatusCriteria{OrderId = orderId, LineNum = lineNum};
-			
-			
+            var criteria = new OrderStatusCriteria{OrderId = orderId, LineNum = lineNum};
+            
+            
             return DataPortal.Fetch< OrderStatusList >(criteria);
-        }  
+        }
 
         public static OrderStatusList GetByOrderId(System.Int32 orderId)
         {
-			var criteria = new OrderStatusCriteria{OrderId = orderId};
-			
-			
+            var criteria = new OrderStatusCriteria{OrderId = orderId};
+            
+            
             return DataPortal.Fetch< OrderStatusList >(criteria);
-        }  
+        }
 
         public static OrderStatusList GetAll()
         {

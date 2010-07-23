@@ -48,5 +48,149 @@ namespace PetShop.Business
         }
 #endif
         #endregion
+
+        #region Custom Factory Methods
+
+#if !SILVERLIGHT
+        public static Profile GetByUsername(System.String username)
+        {
+            var criteria = new ProfileCriteria { Username = username };
+
+            return DataPortal.Fetch<Profile>(criteria);
+        }
+#else
+        public static void GetByUsername(System.String username, EventHandler<DataPortalResult<Profile>> handler)
+        {
+            var criteria = new ProfileCriteria{Username = username};
+        
+            var dp = new DataPortal< Profile >();
+            dp.FetchCompleted += handler;
+            dp.BeginFetch(criteria);
+        }
+#endif
+
+        #endregion
+
+        #region Custom Data Access
+
+#if !SILVERLIGHT
+        partial void OnFetching(ProfileCriteria criteria, ref bool cancel)
+        {
+            string commandText = string.Format("SELECT [UniqueID], [Username], [ApplicationName], [IsAnonymous], [LastActivityDate], [LastUpdatedDate] FROM [dbo].[Profiles] {0}", ADOHelper.BuildWhereStatement(criteria.StateBag));
+            using (System.Data.SqlClient.SqlConnection connection = new System.Data.SqlClient.SqlConnection(ADOHelper.ConnectionString))
+            {
+                connection.Open();
+                using (System.Data.SqlClient.SqlCommand command = new System.Data.SqlClient.SqlCommand(commandText, connection))
+                {
+                    command.Parameters.AddRange(ADOHelper.SqlParameters(criteria.StateBag));
+                    using (var reader = new Csla.Data.SafeDataReader(command.ExecuteReader()))
+                    {
+                        if (reader.Read())
+                            Map(reader);
+                    }
+                }
+            }
+
+            OnFetched();
+
+            cancel = true;
+        }
+#endif
+
+        #endregion
+
+        #region Custom Business Methods
+
+        private static readonly PropertyInfo<CartList> _shoppingCart = RegisterProperty<CartList>(p => p.ShoppingCart, Csla.RelationshipTypes.LazyLoad);
+        public CartList ShoppingCart
+        {
+            get
+            {
+                if (!FieldManager.FieldExists(_shoppingCart))
+                {
+#if SILVERLIGHT
+                    MarkBusy();
+                    
+                    if(IsNew)
+                        PetShop.Business.CartList.NewListAsync((o, e) =>
+                            {
+                                if (e.Error != null)
+                                    throw e.Error; 
+
+                                this.LoadProperty(_shoppingCart, e.Object);
+
+                                MarkIdle();
+                                OnPropertyChanged(_shoppingCart);
+                            });
+                    else
+                        PetShop.Business.CartList.GetCartAsync(UniqueID, true, (o, e) =>
+                            {
+                                if (e.Error != null)
+                                    throw e.Error; 
+
+                                this.LoadProperty(_shoppingCart, e.Object);
+
+                                MarkIdle();
+                                OnPropertyChanged(_shoppingCart);
+                            });
+#else
+                    if (IsNew)
+                        LoadProperty(_shoppingCart, PetShop.Business.CartList.NewList());
+                    else
+
+                        LoadProperty(_shoppingCart, PetShop.Business.CartList.GetCart(UniqueID, true));
+#endif
+                }
+
+                return GetProperty(_shoppingCart);
+            }
+        }
+
+        private static readonly PropertyInfo<CartList> _wishList = RegisterProperty<CartList>(p => p.WishList, Csla.RelationshipTypes.LazyLoad);
+        public CartList WishList
+        {
+            get
+            {
+                if (!FieldManager.FieldExists(_wishList))
+                {
+#if SILVERLIGHT
+                    MarkBusy();
+                    
+                    if(IsNew)
+                        PetShop.Business.CartList.NewListAsync((o, e) =>
+                            {
+                                if (e.Error != null)
+                                    throw e.Error; 
+
+                                this.LoadProperty(_wishList, e.Object);
+
+                                MarkIdle();
+                                OnPropertyChanged(_wishList);
+                            });
+                    else
+                        PetShop.Business.CartList.GetCartAsync(UniqueID, false, (o, e) =>
+                            {
+                                if (e.Error != null)
+                                    throw e.Error; 
+
+                                this.LoadProperty(_wishList, e.Object);
+
+                                MarkIdle();
+                                OnPropertyChanged(_wishList);
+                            });
+#else
+                    if (IsNew)
+                        LoadProperty(_wishList, PetShop.Business.CartList.NewList());
+                    else
+
+                        LoadProperty(_wishList, PetShop.Business.CartList.GetCart(UniqueID, false));
+#endif
+                }
+
+                return GetProperty(_wishList);
+            }
+        }
+
+        #endregion
     }
 }

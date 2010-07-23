@@ -110,7 +110,7 @@ namespace PetShop.Tests.ObjF.ParameterizedSQL
                 if(!FieldManager.FieldExists(_orderMemberProperty))
                 {
                     var criteria = new PetShop.Tests.ObjF.ParameterizedSQL.OrderCriteria {OrderId = OrderId};
-					
+                    
                     if(PetShop.Tests.ObjF.ParameterizedSQL.Order.Exists(criteria))
                         LoadProperty(_orderMemberProperty, PetShop.Tests.ObjF.ParameterizedSQL.Order.GetByOrderId(OrderId));
                 }
@@ -129,25 +129,25 @@ namespace PetShop.Tests.ObjF.ParameterizedSQL
 
         public static OrderStatus GetByOrderIdLineNum(System.Int32 orderId, System.Int32 lineNum)
         {
-			var criteria = new OrderStatusCriteria {OrderId = orderId, LineNum = lineNum};
-			
-			
+            var criteria = new OrderStatusCriteria {OrderId = orderId, LineNum = lineNum};
+            
+            
             return DataPortal.Fetch< OrderStatus >(criteria);
         }
 
         public static OrderStatus GetByOrderId(System.Int32 orderId)
         {
-			var criteria = new OrderStatusCriteria {OrderId = orderId};
-			
-			
+            var criteria = new OrderStatusCriteria {OrderId = orderId};
+            
+            
             return DataPortal.Fetch< OrderStatus >(criteria);
         }
 
         public static void DeleteOrderStatus(System.Int32 orderId, System.Int32 lineNum)
         {
-			var criteria = new OrderStatusCriteria {OrderId = orderId, LineNum = lineNum};
-			
-			
+            var criteria = new OrderStatusCriteria {OrderId = orderId, LineNum = lineNum};
+            
+            
             DataPortal.Delete< OrderStatus >(criteria);
         }
 
@@ -194,7 +194,7 @@ namespace PetShop.Tests.ObjF.ParameterizedSQL
 
         public static bool Exists(OrderStatusCriteria criteria)
         {
-            return ExistsCommand.Execute(criteria);
+            return PetShop.Tests.ObjF.ParameterizedSQL.ExistsCommand.Execute(criteria);
         }
 
         #endregion

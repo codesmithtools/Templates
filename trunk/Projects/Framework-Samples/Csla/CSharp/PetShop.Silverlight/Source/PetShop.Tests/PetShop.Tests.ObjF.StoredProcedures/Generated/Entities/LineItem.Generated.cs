@@ -117,7 +117,7 @@ namespace PetShop.Tests.ObjF.StoredProcedures
                 if(!FieldManager.FieldExists(_orderMemberProperty))
                 {
                     var criteria = new PetShop.Tests.ObjF.StoredProcedures.OrderCriteria {OrderId = OrderId};
-					
+                    
                     if(PetShop.Tests.ObjF.StoredProcedures.Order.Exists(criteria))
                         LoadProperty(_orderMemberProperty, PetShop.Tests.ObjF.StoredProcedures.Order.GetByOrderId(OrderId));
                 }
@@ -136,17 +136,17 @@ namespace PetShop.Tests.ObjF.StoredProcedures
 
         public static LineItem GetByOrderIdLineNum(System.Int32 orderId, System.Int32 lineNum)
         {
-			var criteria = new LineItemCriteria {OrderId = orderId, LineNum = lineNum};
-			
-			
+            var criteria = new LineItemCriteria {OrderId = orderId, LineNum = lineNum};
+            
+            
             return DataPortal.Fetch< LineItem >(criteria);
         }
 
         public static LineItem GetByOrderId(System.Int32 orderId)
         {
-			var criteria = new LineItemCriteria {OrderId = orderId};
-			
-			
+            var criteria = new LineItemCriteria {OrderId = orderId};
+            
+            
             return DataPortal.Fetch< LineItem >(criteria);
         }
 
@@ -163,42 +163,24 @@ namespace PetShop.Tests.ObjF.StoredProcedures
         {
             return DataPortal.CreateChild< LineItem >();
         }
+
         internal static LineItem GetByOrderIdLineNumChild(System.Int32 orderId, System.Int32 lineNum)
         {
-			var criteria = new LineItemCriteria {OrderId = orderId, LineNum = lineNum};
-			
+            var criteria = new LineItemCriteria {OrderId = orderId, LineNum = lineNum};
+            
 
             return DataPortal.FetchChild< LineItem >(criteria);
         }
+
         internal static LineItem GetByOrderIdChild(System.Int32 orderId)
         {
-			var criteria = new LineItemCriteria {OrderId = orderId};
-			
+            var criteria = new LineItemCriteria {OrderId = orderId};
+            
 
             return DataPortal.FetchChild< LineItem >(criteria);
         }
 
         #endregion
-
-        #region Overridden properties
-
-        /// <summary>
-        /// Returns true if the business object or any of its children properties are dirty.
-        /// </summary>
-        public override bool IsDirty
-        {
-            get
-            {
-                if (base.IsDirty) return true;
-                if (FieldManager.FieldExists(_orderMemberProperty) && OrderMember.IsDirty) return true;
-
-                return false;
-            }
-        }
-
-        #endregion
-
-
         #region DataPortal partial methods
 
         partial void OnCreating(ref bool cancel);
@@ -231,12 +213,30 @@ namespace PetShop.Tests.ObjF.StoredProcedures
         partial void OnChildSelfDeleting(ref bool cancel);
         partial void OnChildSelfDeleted();
         #endregion
+        #region Overridden properties
+
+        /// <summary>
+        /// Returns true if the business object or any of its children properties are dirty.
+        /// </summary>
+        public override bool IsDirty
+        {
+            get
+            {
+                if (base.IsDirty) return true;
+                if (FieldManager.FieldExists(_orderMemberProperty) && OrderMember.IsDirty) return true;
+
+                return false;
+            }
+        }
+
+        #endregion
+
 
         #region Exists Command
 
         public static bool Exists(LineItemCriteria criteria)
         {
-            return ExistsCommand.Execute(criteria);
+            return PetShop.Tests.ObjF.StoredProcedures.ExistsCommand.Execute(criteria);
         }
 
         #endregion

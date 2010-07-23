@@ -53,7 +53,7 @@ namespace PetShop.Tests.ObjF.ParameterizedSQL
 
 
                 Add(item);
-            }        
+            }
 
             return item;
         }
@@ -69,19 +69,19 @@ namespace PetShop.Tests.ObjF.ParameterizedSQL
 
         public static LineItemList GetByOrderIdLineNum(System.Int32 orderId, System.Int32 lineNum)
         {
-			var criteria = new LineItemCriteria{OrderId = orderId, LineNum = lineNum};
-			
-			
+            var criteria = new LineItemCriteria{OrderId = orderId, LineNum = lineNum};
+            
+            
             return DataPortal.Fetch< LineItemList >(criteria);
-        }  
+        }
 
         public static LineItemList GetByOrderId(System.Int32 orderId)
         {
-			var criteria = new LineItemCriteria{OrderId = orderId};
-			
-			
+            var criteria = new LineItemCriteria{OrderId = orderId};
+            
+            
             return DataPortal.Fetch< LineItemList >(criteria);
-        }  
+        }
 
         public static LineItemList GetAll()
         {

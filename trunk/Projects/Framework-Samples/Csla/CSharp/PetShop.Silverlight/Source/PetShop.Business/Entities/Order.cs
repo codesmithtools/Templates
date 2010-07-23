@@ -48,5 +48,66 @@ namespace PetShop.Business
         }
 #endif
         #endregion
+
+        #region Custom Factory Methods
+
+#if !SILVERLIGHT
+        /// <summary>
+        /// Uses the profile's uniqueID to look up the order.
+        /// </summary>
+        /// <param name="uniqueId">assumes UserId == Profile.UniqueId</param>
+        /// <returns>an Order.</returns>
+        public static Order GetOrder(string uniqueId)
+        {
+            return DataPortal.Fetch<Order>(new OrderCriteria { UserId = uniqueId });
+        }
+#else
+        public static void GetOrder(string uniqueId, EventHandler<DataPortalResult<Order>> handler)
+        {
+            var criteria = new OrderCriteria{UserId = uniqueId};
+            
+
+            var dp = new DataPortal< Order >();
+            dp.FetchCompleted += handler;
+            dp.BeginFetch(criteria);
+        }
+#endif
+
+        #endregion
+
+        #region Custom Properties
+
+        private static readonly PropertyInfo<LineItemList> _itemsProperty = RegisterProperty<LineItemList>(p => p.Items, Csla.RelationshipTypes.LazyLoad);
+        public LineItemList Items
+        {
+            get
+            {
+                if (!FieldManager.FieldExists(_itemsProperty))
+                {
+#if SILVERLIGHT
+                    MarkBusy();
+                    
+                    PetShop.Business.LineItemList.GetByOrderIdAsync(OrderId, (o, e) =>
+                        {
+                            if (e.Error != null)
+                                throw e.Error; 
+
+                            this.LoadProperty(_itemsProperty, e.Object);
+
+                            MarkIdle();
+                            OnPropertyChanged(_itemsProperty);
+                        });
+#else
+                    SetProperty(_itemsProperty, LineItemList.GetByOrderId(OrderId));
+#endif
+                }
+
+                return GetProperty(_itemsProperty);
+            }
+        }
+
+        public CreditCard CreditCard { get; set; }
+
+        #endregion
     }
 }

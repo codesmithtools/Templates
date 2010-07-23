@@ -40,6 +40,7 @@ namespace PetShop.Tests.StoredProcedures
         internal Product(SafeDataReader reader)
         {
             Map(reader);
+            MarkAsChild();  
         }
         #endregion
 
@@ -114,7 +115,7 @@ namespace PetShop.Tests.StoredProcedures
                 if(!FieldManager.FieldExists(_categoryMemberProperty))
                 {
                     var criteria = new PetShop.Tests.StoredProcedures.CategoryCriteria {CategoryId = CategoryId};
-					
+                    
                     if(PetShop.Tests.StoredProcedures.Category.Exists(criteria))
                         LoadProperty(_categoryMemberProperty, PetShop.Tests.StoredProcedures.Category.GetByCategoryId(CategoryId));
                 }
@@ -131,8 +132,8 @@ namespace PetShop.Tests.StoredProcedures
             {
                 if(!FieldManager.FieldExists(_itemsProperty))
                 {
-					var criteria = new PetShop.Tests.StoredProcedures.ItemCriteria {ProductId = ProductId};
-					
+                    var criteria = new PetShop.Tests.StoredProcedures.ItemCriteria {ProductId = ProductId};
+                    
 
                     if(IsNew || !PetShop.Tests.StoredProcedures.ItemList.Exists(criteria))
                         LoadProperty(_itemsProperty, PetShop.Tests.StoredProcedures.ItemList.NewList());
@@ -154,41 +155,41 @@ namespace PetShop.Tests.StoredProcedures
 
         public static Product GetByProductId(System.String productId)
         {
-			var criteria = new ProductCriteria {ProductId = productId};
-			
-			
+            var criteria = new ProductCriteria {ProductId = productId};
+            
+            
             return DataPortal.Fetch< Product >(criteria);
         }
 
         public static Product GetByName(System.String name)
         {
-			var criteria = new ProductCriteria {Name = name};
-			
-			
+            var criteria = new ProductCriteria {Name = name};
+            
+            
             return DataPortal.Fetch< Product >(criteria);
         }
 
         public static Product GetByCategoryId(System.String categoryId)
         {
-			var criteria = new ProductCriteria {CategoryId = categoryId};
-			
-			
+            var criteria = new ProductCriteria {CategoryId = categoryId};
+            
+            
             return DataPortal.Fetch< Product >(criteria);
         }
 
         public static Product GetByCategoryIdName(System.String categoryId, System.String name)
         {
-			var criteria = new ProductCriteria {CategoryId = categoryId, Name = name};
-			
-			
+            var criteria = new ProductCriteria {CategoryId = categoryId, Name = name};
+            
+            
             return DataPortal.Fetch< Product >(criteria);
         }
 
         public static Product GetByCategoryIdProductIdName(System.String categoryId, System.String productId, System.String name)
         {
-			var criteria = new ProductCriteria {CategoryId = categoryId, ProductId = productId, Name = name};
-			
-			
+            var criteria = new ProductCriteria {CategoryId = categoryId, ProductId = productId, Name = name};
+            
+            
             return DataPortal.Fetch< Product >(criteria);
         }
 
@@ -205,45 +206,48 @@ namespace PetShop.Tests.StoredProcedures
         {
             return DataPortal.CreateChild< Product >();
         }
+
         internal static Product GetByProductIdChild(System.String productId)
         {
-			var criteria = new ProductCriteria {ProductId = productId};
-			
+            var criteria = new ProductCriteria {ProductId = productId};
+            
 
             return DataPortal.FetchChild< Product >(criteria);
         }
+
         internal static Product GetByNameChild(System.String name)
         {
-			var criteria = new ProductCriteria {Name = name};
-			
+            var criteria = new ProductCriteria {Name = name};
+            
 
             return DataPortal.FetchChild< Product >(criteria);
         }
+
         internal static Product GetByCategoryIdChild(System.String categoryId)
         {
-			var criteria = new ProductCriteria {CategoryId = categoryId};
-			
+            var criteria = new ProductCriteria {CategoryId = categoryId};
+            
 
             return DataPortal.FetchChild< Product >(criteria);
         }
+
         internal static Product GetByCategoryIdNameChild(System.String categoryId, System.String name)
         {
-			var criteria = new ProductCriteria {CategoryId = categoryId, Name = name};
-			
+            var criteria = new ProductCriteria {CategoryId = categoryId, Name = name};
+            
 
             return DataPortal.FetchChild< Product >(criteria);
         }
+
         internal static Product GetByCategoryIdProductIdNameChild(System.String categoryId, System.String productId, System.String name)
         {
-			var criteria = new ProductCriteria {CategoryId = categoryId, ProductId = productId, Name = name};
-			
+            var criteria = new ProductCriteria {CategoryId = categoryId, ProductId = productId, Name = name};
+            
 
             return DataPortal.FetchChild< Product >(criteria);
         }
 
         #endregion
-
-
         #region DataPortal partial methods
 
         partial void OnCreating(ref bool cancel);
@@ -281,7 +285,7 @@ namespace PetShop.Tests.StoredProcedures
 
         public static bool Exists(ProductCriteria criteria)
         {
-            return ExistsCommand.Execute(criteria);
+            return PetShop.Tests.StoredProcedures.ExistsCommand.Execute(criteria);
         }
 
         #endregion

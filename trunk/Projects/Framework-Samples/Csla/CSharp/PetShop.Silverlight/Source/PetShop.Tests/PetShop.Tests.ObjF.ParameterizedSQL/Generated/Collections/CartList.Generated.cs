@@ -43,24 +43,24 @@ namespace PetShop.Tests.ObjF.ParameterizedSQL
 
         internal static CartList GetByCartId(System.Int32 cartId)
         {
-			var criteria = new CartCriteria{CartId = cartId};
-			
+            var criteria = new CartCriteria{CartId = cartId};
+            
             
             return DataPortal.FetchChild< CartList >(criteria);
         }
 
         internal static CartList GetByUniqueID(System.Int32 uniqueID)
         {
-			var criteria = new CartCriteria{UniqueID = uniqueID};
-			
+            var criteria = new CartCriteria{UniqueID = uniqueID};
+            
             
             return DataPortal.FetchChild< CartList >(criteria);
         }
 
         internal static CartList GetByIsShoppingCart(System.Boolean isShoppingCart)
         {
-			var criteria = new CartCriteria{IsShoppingCart = isShoppingCart};
-			
+            var criteria = new CartCriteria{IsShoppingCart = isShoppingCart};
+            
             
             return DataPortal.FetchChild< CartList >(criteria);
         }
@@ -70,7 +70,8 @@ namespace PetShop.Tests.ObjF.ParameterizedSQL
             return DataPortal.FetchChild< CartList >(new CartCriteria());
         }
 
-		#endregion
+        #endregion
+
 
         #region Method Overrides
         
@@ -93,7 +94,7 @@ namespace PetShop.Tests.ObjF.ParameterizedSQL
 
 
                 Add(item);
-            }        
+            }
 
             return item;
         }

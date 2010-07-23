@@ -60,7 +60,7 @@ namespace PetShop.UI
         protected void Application_Error(object sender, EventArgs e)
         {
             Exception exception = Server.GetLastError().GetBaseException();
-            EventLog.WriteEntry(".NET Pet Shop 4.0", exception.ToString(), EventLogEntryType.Error);
+            //EventLog.WriteEntry(".NET Pet Shop 4.0", exception.ToString(), EventLogEntryType.Error);
         }
 
         protected void Session_End(object sender, EventArgs e)

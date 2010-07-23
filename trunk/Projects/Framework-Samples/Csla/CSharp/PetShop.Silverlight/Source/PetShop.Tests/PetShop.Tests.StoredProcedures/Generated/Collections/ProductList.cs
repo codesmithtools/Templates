@@ -28,6 +28,14 @@ namespace PetShop.Tests.StoredProcedures
             //Csla.Rules.BusinessRules.AddRule(typeof(ProductList), new Csla.Rules.CommonRules.IsInRole(Csla.Rules.AuthorizationActions.DeleteObject, "SomeRole", "SomeAdminRole"));
         }
         #endregion
+        
+        #region Custom Overrides
 
+        partial void OnAddNewCore(ref Product item, ref bool cancel)
+        {
+            item.SetChild();
+        }
+
+        #endregion
     }
 }

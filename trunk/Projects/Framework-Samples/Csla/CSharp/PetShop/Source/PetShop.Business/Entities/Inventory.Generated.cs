@@ -130,7 +130,7 @@ namespace PetShop.Business
 
         public static bool Exists(InventoryCriteria criteria)
         {
-            return ExistsCommand.Execute(criteria);
+            return PetShop.Business.ExistsCommand.Execute(criteria);
         }
 
         #endregion

@@ -11,6 +11,8 @@ namespace PetShop.UI.Silverlight
 {
     public class CategoryListViewModel : ViewModel<CategoryList>
     {
+        #region Constructor
+
         public CategoryListViewModel()
         {
             if (System.ComponentModel.DesignerProperties.GetIsInDesignMode(this)) return;
@@ -26,9 +28,18 @@ namespace PetShop.UI.Silverlight
             Load();
         }
 
+        #endregion
+
+        #region Methods
+
         public void Load()
         {
             BeginRefresh("GetAllAsync");
+        }
+
+        public void LoadByID(string id)
+        {
+            BeginRefresh("GetByCategoryIdAsync", id);
         }
 
         public void ShowItem(object sender, ExecuteEventArgs e)
@@ -69,6 +80,10 @@ namespace PetShop.UI.Silverlight
             }
         }
 
+        #endregion
+
+        #region Properties
+
         /// <summary>
         /// Gets or sets the SelectedData object.
         /// </summary>
@@ -96,5 +111,15 @@ namespace PetShop.UI.Silverlight
             get { return (System.Collections.ObjectModel.ObservableCollection<object>)GetValue(SelectedItemsProperty); }
             set { SetValue(SelectedItemsProperty, value); OnPropertyChanged("SelectedItems"); }
         }
+
+
+        public static readonly DependencyProperty FilterProperty = DependencyProperty.Register("Filter", typeof(string), typeof(CategoryDetailModel), null);
+        public string Filter
+        {
+            get { return (string)GetValue(FilterProperty); }
+            set { SetValue(FilterProperty, value); }
+        }
+
+        #endregion
     }
 }

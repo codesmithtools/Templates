@@ -59,7 +59,7 @@ namespace PetShop.Business
             var userNotFound = false;
             try
             {
-                profile = Profile.GetProfile(username);
+                profile = Profile.GetByUsername(username);
             }
             catch (Exception)
             {

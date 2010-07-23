@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="PetShop.UI.Silverlight.CategoryListPage"
+﻿<UserControl xmlns:sdk="http://schemas.microsoft.com/winfx/2006/xaml/presentation/sdk"  x:Class="PetShop.UI.Silverlight.CategoryListPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -17,9 +17,10 @@
     <Grid x:Name="LayoutRoot" Background="White">
         <StackPanel>
         	<StackPanel DataContext="{Binding Source={StaticResource CategoryListModel}}">
-        		<TextBox x:Name="NewIdTextBox" Width="150" Margin="5"/>
-        		<Button Content="Refresh" x:Name="RefreshButton" Tag="{Binding Text, ElementName=NewIdTextBox}" />
-        		<csla:TriggerAction x:Name="ProcessRefresh" TargetControl="{Binding ElementName=RefreshButton}" TriggerEvent="Click" MethodName="Load" />
+                <!--<sdk:Label Margin="10,10,0,0" FontSize="16">Filter by the following ID:</sdk:Label>
+                <TextBox x:Name="txtFilter" Width="150" Margin="5" DataContext="{Binding Model.Filter, Mode=TwoWay}" />
+                <Button Content="Refresh List" x:Name="RefreshButton" Tag="{Binding Text, ElementName=txtFilter}"  />
+                <csla:TriggerAction x:Name="ProcessRefresh" TargetControl="{Binding ElementName=RefreshButton}" TriggerEvent="Click" MethodName="LoadByID" />-->
         		<ListBox ItemsSource="{Binding Model}"
         			ItemTemplate="{StaticResource DataList}"
         			SelectionMode="Multiple"
@@ -37,16 +38,23 @@
         			MethodParameter="{Binding SelectedItems, ElementName=DataListBox}" RebindParameterDynamically="True" />
         	</StackPanel>
         	<StackPanel DataContext="{Binding Source={StaticResource CategoryDetailModel}}">
-
-        		<StackPanel Orientation="Horizontal" x:Name="testpanel">
-        			<TextBox Width="150" x:Name="IdTextBox" Text="{Binding Model.CategoryId, Mode=TwoWay}"/>
+                <sdk:Label Margin="10" FontSize="22" >Current Selected Item:</sdk:Label>
+                <StackPanel Orientation="Horizontal" x:Name="testpanel">
+                    <sdk:Label>ID:</sdk:Label>
+                    <TextBox Width="150" x:Name="IdTextBox" Text="{Binding Model.CategoryId, Mode=TwoWay}"/>
         			<csla:PropertyStatus Margin="5" Property="{Binding Model.CategoryId}"/>
         		</StackPanel>
         		<StackPanel Orientation="Horizontal">
+                    <sdk:Label>Name:</sdk:Label>
         			<TextBox Width="150" Text="{Binding Model.Name, Mode=TwoWay}"/>
         			<csla:PropertyStatus Margin="5" Property="{Binding Model.Name}"/>
-        		</StackPanel>
-        	</StackPanel>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <sdk:Label>Description:</sdk:Label>
+                    <TextBox Width="150" Text="{Binding Model.Name, Mode=TwoWay}"/>
+                    <csla:PropertyStatus Margin="5" Property="{Binding Model.Description}"/>
+                </StackPanel>
+            </StackPanel>
         </StackPanel>
     </Grid>
 </UserControl>

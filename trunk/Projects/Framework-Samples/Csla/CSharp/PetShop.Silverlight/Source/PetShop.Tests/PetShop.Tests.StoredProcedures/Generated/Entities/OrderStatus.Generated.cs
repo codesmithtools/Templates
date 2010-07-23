@@ -122,7 +122,7 @@ namespace PetShop.Tests.StoredProcedures
                 if(!FieldManager.FieldExists(_orderMemberProperty))
                 {
                     var criteria = new PetShop.Tests.StoredProcedures.OrderCriteria {OrderId = OrderId};
-					
+                    
                     if(PetShop.Tests.StoredProcedures.Order.Exists(criteria))
                         LoadProperty(_orderMemberProperty, PetShop.Tests.StoredProcedures.Order.GetByOrderId(OrderId));
                 }
@@ -141,16 +141,16 @@ namespace PetShop.Tests.StoredProcedures
 
         internal static OrderStatus GetByOrderIdLineNum(System.Int32 orderId, System.Int32 lineNum)
         {
-			var criteria = new OrderStatusCriteria {OrderId = orderId, LineNum = lineNum};
-			
+            var criteria = new OrderStatusCriteria {OrderId = orderId, LineNum = lineNum};
+            
         
             return DataPortal.FetchChild< OrderStatus >(criteria);
         }
 
         internal static OrderStatus GetByOrderId(System.Int32 orderId)
         {
-			var criteria = new OrderStatusCriteria {OrderId = orderId};
-			
+            var criteria = new OrderStatusCriteria {OrderId = orderId};
+            
         
             return DataPortal.FetchChild< OrderStatus >(criteria);
         }
@@ -181,7 +181,7 @@ namespace PetShop.Tests.StoredProcedures
 
         public static bool Exists(OrderStatusCriteria criteria)
         {
-            return ExistsCommand.Execute(criteria);
+            return PetShop.Tests.StoredProcedures.ExistsCommand.Execute(criteria);
         }
 
         #endregion
