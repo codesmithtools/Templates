@@ -31,7 +31,7 @@
                         {
                             do
                             {
-                                this.Add(new <%= ResolveTargetClassName(ChildBusinessClassName, "Info", BusinessClassName.Contains("InfoList") && IsReadOnlyBusinessObject("Info")) %>(reader));
+                                this.Add(new <%= BusinessProjectName %>.<%= ResolveTargetClassName(ChildBusinessClassName, "Info", BusinessClassName.Contains("InfoList") && IsReadOnlyBusinessObject("Info")) %>(reader));
                             } while(reader.Read());
                         }
                     }

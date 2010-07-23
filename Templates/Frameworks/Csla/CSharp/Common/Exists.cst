@@ -14,7 +14,7 @@
 
         public static bool Exists(<%= CriteriaClassName %><%= Entity.GenericProperty %> criteria)
         {
-            return ExistsCommand.Execute(criteria);
+            return <%= BusinessProjectName %>.ExistsCommand.Execute(criteria);
         }
 
         #endregion

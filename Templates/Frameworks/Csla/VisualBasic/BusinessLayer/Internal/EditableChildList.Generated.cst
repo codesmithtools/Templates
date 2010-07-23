@@ -140,7 +140,9 @@ Namespace <%= BusinessProjectName %>
     <% RenderHelper(new AddNewCore(), IncludeSilverlightSupport) %>
         End Sub
 #End If
-    
+<% If(IncludeSilverlightSupport) Then %>
+#If SILVERLIGHT Then
+<% End If %>
         Protected Sub AddNewCoreAsync(ByVal handler As EventHandler(Of DataPortalResult(Of <%= ChildBusinessClassName %><%= Entity.GenericProperty %>)))
             <%= BusinessProjectName %>.<%= ChildBusinessClassName %><%= Entity.GenericProperty %>.New<%= ChildBusinessClassName %>Async(Sub(o, e)
                     If e.Error Is Nothing Then
@@ -149,7 +151,9 @@ Namespace <%= BusinessProjectName %>
                     End If
                 End Sub)
         End Sub
-    
+<% If(IncludeSilverlightSupport) Then %>
+#End If
+<% End If %>
     <% End If %>
     
 #End Region

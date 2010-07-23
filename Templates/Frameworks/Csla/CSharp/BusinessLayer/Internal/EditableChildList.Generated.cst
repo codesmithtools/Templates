@@ -152,6 +152,9 @@ namespace <%= BusinessProjectName %>
         }
 #endif
 
+<% if(IncludeSilverlightSupport) { %>
+#if SILVERLIGHT
+<% } %>
         protected void AddNewCoreAsync(EventHandler<DataPortalResult<<%= ChildBusinessClassName %><%= Entity.GenericProperty %>>> handler)
         {
             <%= BusinessProjectName %>.<%= ChildBusinessClassName %><%= Entity.GenericProperty %>.New<%= ChildBusinessClassName %>Async((o, e) =>
@@ -163,6 +166,9 @@ namespace <%= BusinessProjectName %>
                 }
             });
         }
+<% if(IncludeSilverlightSupport) { %>
+#endif
+<% } %>
 
 <% } %>
         

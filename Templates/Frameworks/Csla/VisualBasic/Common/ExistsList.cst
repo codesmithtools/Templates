@@ -13,7 +13,7 @@
 #Region "Exists Command"
 
         Public Shared Function Exists(ByVal criteria As <%= CriteriaClassName %>) As Boolean
-            Return <%= BusinessProjectName %>.<%= ResolveTargetClassName(ChildBusinessClassName, "Info", IsReadOnlyBusinessObject("Info")) %>.Exists(criteria)
+            Return <%= BusinessProjectName %>.<%= ResolveTargetClassName(ChildBusinessClassName, "Info", BusinessClassName.Contains("InfoList") AndAlso IsReadOnlyBusinessObject("Info")) %>.Exists(criteria)
         End Function
 
 #End Region
