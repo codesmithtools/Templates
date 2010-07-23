@@ -2,10 +2,9 @@
 <codeSmith xmlns="http://www.codesmithtools.com/schema/csp.xsd">
   <variables>
     <add key="ConnectionString1" value="Data Source=.;Integrated Security=True;Database=PetShop;" />
-    <add key="ConnectionString2" value="Data Source=.;Initial Catalog=PetShop;Integrated Security=True" />
   </variables>
   <propertySets>
-    <propertySet name="Entities.cs" output="Entities.cs" template="A:\CodeSmith.Google.Code.CSLA.Trunk\CSharp\BusinessLayer\Entities.cst">
+    <propertySet name="Entities.cs" output="Entities.cs" template="..\..\..\..\..\..\..\Templates\Frameworks\Csla\CSharp\BusinessLayer\Entities.cst">
       <property name="Criteria">
         <connectionString>$(ConnectionString1)</connectionString>
         <providerType>SchemaExplorer.SqlSchemaProvider,SchemaExplorer.SqlSchemaProvider</providerType>
@@ -150,7 +149,7 @@
     </tableList>
       </property>
       <property name="EditableChildList">
-        <connectionString>$(ConnectionString2)</connectionString>
+        <connectionString>$(ConnectionString1)</connectionString>
         <providerType>SchemaExplorer.SqlSchemaProvider,SchemaExplorer.SqlSchemaProvider</providerType>
         <tableList>
       <table>
@@ -207,6 +206,8 @@
       <property name="FrameworkVersion">v35</property>
       <property name="IncludeSilverlightSupport">False</property>
       <property name="TestProjectName">PetShop.Test</property>
+      <property name="CommandObject" />
+      <property name="DynamicListBase" />
     </propertySet>
   </propertySets>
 </codeSmith>
