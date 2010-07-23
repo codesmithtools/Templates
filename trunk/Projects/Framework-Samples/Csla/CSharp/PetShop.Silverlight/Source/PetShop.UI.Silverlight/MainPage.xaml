@@ -4,41 +4,12 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:this="clr-namespace:PetShop.UI.Silverlight"
-    xmlns:csla="clr-namespace:Csla.Xaml;assembly=Csla.Xaml"
     mc:Ignorable="d"
-    d:DesignHeight="360" d:DesignWidth="700" xmlns:sdk="http://schemas.microsoft.com/winfx/2006/xaml/presentation/sdk" DataContext="{Binding}" xmlns:riaControls="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.DomainServices" xmlns:my="clr-namespace:PetShop.Business;assembly=PetShop.Business.Silverlight" xmlns:system="clr-namespace:System;assembly=mscorlib">
-   <UserControl.Resources>
+    d:DesignHeight="300" d:DesignWidth="400">
+    <UserControl.Resources>
         <this:MainPageModel x:Key="MainModel" />
     </UserControl.Resources>
     <Grid x:Name="LayoutRoot" Background="White" DataContext="{Binding Source={StaticResource MainModel}}">
         <ContentControl Content="{Binding Path=CurrentControl}" />
     </Grid>
-
-
-    <!--xmlns:csla="clr-namespace:Csla.Xaml;assembly=Csla.Xaml"
-    xmlns:data="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Data"
-    mc:Ignorable="d"
-    d:DesignHeight="360" d:DesignWidth="700" xmlns:sdk="http://schemas.microsoft.com/winfx/2006/xaml/presentation/sdk" DataContext="{Binding}" xmlns:riaControls="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.DomainServices" xmlns:my="clr-namespace:PetShop.Business;assembly=PetShop.Business.Silverlight" xmlns:system="clr-namespace:System;assembly=mscorlib">
-    <UserControl.Resources>
-        <csla:CslaDataProvider x:Name="CategoryData"
-                           ManageObjectLifetime="True"
-                           IsInitialLoadEnabled="True"
-                           ObjectType="PetShop.Business.CategoryList, PetShop.Business"
-                           FactoryMethod="GetAllAsync">
-        </csla:CslaDataProvider>
-    </UserControl.Resources>
-    <Grid x:Name="LayoutRoot" Background="White">
-        <Button Content="Import Data" Height="23" HorizontalAlignment="Right" Margin="0,325,613,0" Name="ImportData" VerticalAlignment="Top" Width="75" Click="ImportData_Click" />
-        <Button Content="Delete" Height="23" HorizontalAlignment="Left" Margin="532,325,0,0" Name="Delete" VerticalAlignment="Top" Width="75" Click="Delete_Click" />
-        <Button Content="Create" Height="23" HorizontalAlignment="Left" Margin="451,325,0,0" Name="Create" VerticalAlignment="Top" Width="75" Click="Create_Click" />
-        <Button Content="Save" Height="23" HorizontalAlignment="Left" Margin="613,325,0,0" Name="Save" VerticalAlignment="Top" Width="75" Click="Save_Click" />
-        <csla:BusyAnimation Name="BusyAnimation" Grid.Row="1" />
-        <sdk:DataGrid AutoGenerateColumns="False" Height="307" HorizontalAlignment="Left" ItemsSource="{Binding Source={StaticResource CategoryData}, Path=Data}" Margin="12,12,0,0" Name="categoryListDataGrid" RowDetailsVisibilityMode="VisibleWhenSelected" VerticalAlignment="Top" Width="676" >
-            <sdk:DataGrid.Columns>
-                <sdk:DataGridTextColumn x:Name="categoryIdColumn" Binding="{Binding Path=CategoryId}" Header="Category Id" Width="SizeToHeader" />
-                <sdk:DataGridTextColumn x:Name="descriptionColumn" Binding="{Binding Path=Description}" Header="Description" Width="SizeToHeader" />
-                <sdk:DataGridTextColumn x:Name="nameColumn" Binding="{Binding Path=Name}" Header="Name" Width="SizeToHeader" />
-            </sdk:DataGrid.Columns>
-        </sdk:DataGrid>
-    </Grid>-->
 </UserControl>

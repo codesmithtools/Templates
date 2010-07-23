@@ -6,14 +6,14 @@
     <ProductVersion>
     </ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{3B7DFFD5-AC85-4014-B44B-EC641C3F827D}</ProjectGuid>
+    <ProjectGuid>{D58BF9C9-A4B6-41A2-825B-7006AC417ABF}</ProjectGuid>
     <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>PetShop.UI.Silverlight.Web</RootNamespace>
     <AssemblyName>PetShop.UI.Silverlight.Web</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <SilverlightApplicationList>{56CA55D0-CFEB-492B-9E86-9B6F504F4533}|..\PetShop.UI.Silverlight\PetShop.UI.Silverlight.csproj|ClientBin|False</SilverlightApplicationList>
+    <SilverlightApplicationList>{75F9A631-2A1E-4545-A5A3-D397DB790180}|..\Petshop.UI.Silverlight\Petshop.UI.Silverlight.csproj|ClientBin|False</SilverlightApplicationList>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -34,6 +34,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
@@ -51,10 +52,13 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="ClientBin\PetShop.UI.Silverlight.xap" />
+    <Content Include="clientaccesspolicy.xml" />
+    <Content Include="ClientBin\Petshop.UI.Silverlight.xap" />
+    <Content Include="crossdomain.xml" />
     <Content Include="PetShop.UI.SilverlightTestPage.aspx" />
     <Content Include="PetShop.UI.SilverlightTestPage.html" />
     <Content Include="Silverlight.js" />
+    <Content Include="WcfSlPortal.svc" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -64,7 +68,17 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IWcfSlPortal.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="App_Data\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\PetShop.Business\PetShop.Business.csproj">
+      <Project>{AC433AE0-A1DF-4D32-98C4-168D6DA1DF38}</Project>
+      <Name>PetShop.Business</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />
@@ -74,7 +88,7 @@
         <WebProjectProperties>
           <UseIIS>False</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
-          <DevelopmentServerPort>52205</DevelopmentServerPort>
+          <DevelopmentServerPort>51524</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
           <IISUrl>
           </IISUrl>
