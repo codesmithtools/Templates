@@ -86,7 +86,7 @@ Namespace PetShop.Tests.StoredProcedures
                     End Using
                 End Using
                 
-                _originalCategoryId = Me.CategoryId
+                LoadProperty(_originalCategoryIdProperty, Me.CategoryId)
     
                 FieldManager.UpdateChildren(Me, connection)
             End Using
@@ -149,7 +149,7 @@ Namespace PetShop.Tests.StoredProcedures
                         throw new DBConcurrencyException("The entity is out of date on the client. Please update the entity and try again. This could also be thrown if the sql statement failed to execute.")
                     End If
     
-                _originalCategoryId = Me.CategoryId
+                LoadProperty(_originalCategoryIdProperty, Me.CategoryId)
                 End Using
     
                 FieldManager.UpdateChildren(Me, connection)
@@ -165,7 +165,7 @@ Namespace PetShop.Tests.StoredProcedures
                 Return
             End If
         
-            DataPortal_Delete(New CategoryCriteria (_categoryId))
+            DataPortal_Delete(New CategoryCriteria (CategoryId))
         
             OnSelfDeleted()
         End Sub
@@ -282,7 +282,7 @@ Namespace PetShop.Tests.StoredProcedures
     
     
                 ' Update the original non-identity primary key value.
-                _originalCategoryId = Me.CategoryId
+                LoadProperty(_originalCategoryIdProperty, Me.CategoryId)
     
             End Using
     
@@ -317,9 +317,9 @@ Namespace PetShop.Tests.StoredProcedures
                 End If
     
                 ' Update non-identity primary key value.
-                _categoryId = DirectCast(command.Parameters("@p_CategoryId").Value, System.String)
+                LoadProperty(_categoryIdProperty, DirectCast(command.Parameters("@p_CategoryId").Value, System.String))
                 ' Update non-identity primary key value.
-                _originalCategoryId = Me.CategoryId
+                LoadProperty(_originalCategoryIdProperty, Me.CategoryId)
             End Using
             FieldManager.UpdateChildren(Me, connection)
     
@@ -335,7 +335,7 @@ Namespace PetShop.Tests.StoredProcedures
                 Return
             End If
         
-            DataPortal_Delete(New CategoryCriteria (_categoryId))
+            DataPortal_Delete(New CategoryCriteria (CategoryId))
         
             OnChildSelfDeleted()
         End Sub
@@ -352,7 +352,7 @@ Namespace PetShop.Tests.StoredProcedures
                 Return
             End If
         
-            DataPortal_Delete(New CategoryCriteria (_categoryId), connection)
+            DataPortal_Delete(New CategoryCriteria (CategoryId), connection)
         
             OnChildSelfDeleted()
         End Sub
@@ -367,10 +367,10 @@ Namespace PetShop.Tests.StoredProcedures
             End If
     
             Using(BypassPropertyChecks)
-                _categoryId = reader.GetString("CategoryId")
-                _originalCategoryId = reader.GetString("CategoryId")
-                _name = reader.GetString("Name")
-                _description = reader.GetString("Descn")
+                LoadProperty(_categoryIdProperty, reader.Item("CategoryId"))
+                LoadProperty(_originalCategoryIdProperty, reader.Item("CategoryId"))
+                LoadProperty(_nameProperty, reader.Item("Name"))
+                LoadProperty(_descriptionProperty, reader.Item("Descn"))
             End Using
     
             OnMapped()

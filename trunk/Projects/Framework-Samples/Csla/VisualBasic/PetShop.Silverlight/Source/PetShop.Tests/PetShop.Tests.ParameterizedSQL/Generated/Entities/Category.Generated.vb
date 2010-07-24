@@ -30,7 +30,7 @@ Namespace PetShop.Tests.ParameterizedSQL
     
         Friend Sub New(ByVal categoryId As System.String)
             Using(BypassPropertyChecks)
-                _categoryId = categoryId
+            LoadProperty(_categoryIdProperty, categoryId)
             End Using
         End Sub
     
@@ -57,53 +57,49 @@ Namespace PetShop.Tests.ParameterizedSQL
 #Region "Properties"
     
         Private Shared ReadOnly _categoryIdProperty As PropertyInfo(Of System.String) = RegisterProperty(Of System.String)(Function(p As Category) p.CategoryId, String.Empty)
-        Private _categoryId As System.String = _categoryIdProperty.DefaultValue
         
 		<System.ComponentModel.DataObjectField(true, false)> _
         Public Property CategoryId() As System.String
             Get 
-                Return GetProperty(_categoryIdProperty, _categoryId) 
+                Return GetProperty(_categoryIdProperty)
             End Get
-            Set (value As System.String)
-                SetProperty(_categoryIdProperty, _categoryId, value)
+            Set (ByVal value As System.String)
+                SetProperty(_categoryIdProperty, value)
             End Set
         End Property
 
         Private Shared ReadOnly _originalCategoryIdProperty As PropertyInfo(Of System.String) = RegisterProperty(Of System.String)(Function(p As Category) p.OriginalCategoryId, String.Empty)
-        Private _originalCategoryId As System.String = _originalCategoryIdProperty.DefaultValue
         ''' <summary>
         ''' Holds the original value for CategoryId. This is used for non identity primary keys.
         ''' </summary>
         Friend Property OriginalCategoryId() As System.String
             Get 
-                Return GetProperty(_originalCategoryIdProperty, _originalCategoryId) 
+                Return GetProperty(_originalCategoryIdProperty) 
             End Get
             Set (value As System.String)
-                SetProperty(_originalCategoryIdProperty, _originalCategoryId, value)
+                SetProperty(_originalCategoryIdProperty, value)
             End Set
         End Property
 
         Private Shared ReadOnly _nameProperty As PropertyInfo(Of System.String) = RegisterProperty(Of System.String)(Function(p As Category) p.Name, String.Empty, vbNullString)
-        Private _name As System.String = _nameProperty.DefaultValue
         
         Public Property Name() As System.String
             Get 
-                Return GetProperty(_nameProperty, _name) 
+                Return GetProperty(_nameProperty)
             End Get
-            Set (value As System.String)
-                SetProperty(_nameProperty, _name, value)
+            Set (ByVal value As System.String)
+                SetProperty(_nameProperty, value)
             End Set
         End Property
 
         Private Shared ReadOnly _descriptionProperty As PropertyInfo(Of System.String) = RegisterProperty(Of System.String)(Function(p As Category) p.Description, String.Empty, vbNullString)
-        Private _description As System.String = _descriptionProperty.DefaultValue
         
         Public Property Description() As System.String
             Get 
-                Return GetProperty(_descriptionProperty, _description) 
+                Return GetProperty(_descriptionProperty)
             End Get
-            Set (value As System.String)
-                SetProperty(_descriptionProperty, _description, value)
+            Set (ByVal value As System.String)
+                SetProperty(_descriptionProperty, value)
             End Set
         End Property
 

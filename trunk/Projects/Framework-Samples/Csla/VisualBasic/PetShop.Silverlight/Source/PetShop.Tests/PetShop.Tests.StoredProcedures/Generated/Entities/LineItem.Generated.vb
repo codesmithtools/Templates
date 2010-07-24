@@ -31,8 +31,8 @@ Namespace PetShop.Tests.StoredProcedures
     
         Friend Sub New(ByVal orderId As System.Int32, ByVal lineNum As System.Int32)
             Using(BypassPropertyChecks)
-                _orderId = orderId
-                _lineNum = lineNum
+            LoadProperty(_orderIdProperty, orderId)
+            LoadProperty(_lineNumProperty, lineNum)
             End Using
         End Sub
     
@@ -58,92 +58,85 @@ Namespace PetShop.Tests.StoredProcedures
 #Region "Properties"
     
         Private Shared ReadOnly _orderIdProperty As PropertyInfo(Of System.Int32) = RegisterProperty(Of System.Int32)(Function(p As LineItem) p.OrderId, String.Empty)
-        Private _orderId As System.Int32 = _orderIdProperty.DefaultValue
         
 		<System.ComponentModel.DataObjectField(true, false)> _
         Public Property OrderId() As System.Int32
             Get 
-                Return GetProperty(_orderIdProperty, _orderId) 
+                Return GetProperty(_orderIdProperty)
             End Get
-            Set (value As System.Int32)
-                SetProperty(_orderIdProperty, _orderId, value)
+            Set (ByVal value As System.Int32)
+                SetProperty(_orderIdProperty, value)
             End Set
         End Property
 
         Private Shared ReadOnly _originalOrderIdProperty As PropertyInfo(Of System.Int32) = RegisterProperty(Of System.Int32)(Function(p As LineItem) p.OriginalOrderId, String.Empty)
-        Private _originalOrderId As System.Int32 = _originalOrderIdProperty.DefaultValue
         ''' <summary>
         ''' Holds the original value for OrderId. This is used for non identity primary keys.
         ''' </summary>
         Friend Property OriginalOrderId() As System.Int32
             Get 
-                Return GetProperty(_originalOrderIdProperty, _originalOrderId) 
+                Return GetProperty(_originalOrderIdProperty) 
             End Get
             Set (value As System.Int32)
-                SetProperty(_originalOrderIdProperty, _originalOrderId, value)
+                SetProperty(_originalOrderIdProperty, value)
             End Set
         End Property
 
         Private Shared ReadOnly _lineNumProperty As PropertyInfo(Of System.Int32) = RegisterProperty(Of System.Int32)(Function(p As LineItem) p.LineNum, String.Empty)
-        Private _lineNum As System.Int32 = _lineNumProperty.DefaultValue
         
 		<System.ComponentModel.DataObjectField(true, false)> _
         Public Property LineNum() As System.Int32
             Get 
-                Return GetProperty(_lineNumProperty, _lineNum) 
+                Return GetProperty(_lineNumProperty)
             End Get
-            Set (value As System.Int32)
-                SetProperty(_lineNumProperty, _lineNum, value)
+            Set (ByVal value As System.Int32)
+                SetProperty(_lineNumProperty, value)
             End Set
         End Property
 
         Private Shared ReadOnly _originalLineNumProperty As PropertyInfo(Of System.Int32) = RegisterProperty(Of System.Int32)(Function(p As LineItem) p.OriginalLineNum, String.Empty)
-        Private _originalLineNum As System.Int32 = _originalLineNumProperty.DefaultValue
         ''' <summary>
         ''' Holds the original value for LineNum. This is used for non identity primary keys.
         ''' </summary>
         Friend Property OriginalLineNum() As System.Int32
             Get 
-                Return GetProperty(_originalLineNumProperty, _originalLineNum) 
+                Return GetProperty(_originalLineNumProperty) 
             End Get
             Set (value As System.Int32)
-                SetProperty(_originalLineNumProperty, _originalLineNum, value)
+                SetProperty(_originalLineNumProperty, value)
             End Set
         End Property
 
         Private Shared ReadOnly _itemIdProperty As PropertyInfo(Of System.String) = RegisterProperty(Of System.String)(Function(p As LineItem) p.ItemId, String.Empty)
-        Private _itemId As System.String = _itemIdProperty.DefaultValue
         
         Public Property ItemId() As System.String
             Get 
-                Return GetProperty(_itemIdProperty, _itemId) 
+                Return GetProperty(_itemIdProperty)
             End Get
-            Set (value As System.String)
-                SetProperty(_itemIdProperty, _itemId, value)
+            Set (ByVal value As System.String)
+                SetProperty(_itemIdProperty, value)
             End Set
         End Property
 
         Private Shared ReadOnly _quantityProperty As PropertyInfo(Of System.Int32) = RegisterProperty(Of System.Int32)(Function(p As LineItem) p.Quantity, String.Empty)
-        Private _quantity As System.Int32 = _quantityProperty.DefaultValue
         
         Public Property Quantity() As System.Int32
             Get 
-                Return GetProperty(_quantityProperty, _quantity) 
+                Return GetProperty(_quantityProperty)
             End Get
-            Set (value As System.Int32)
-                SetProperty(_quantityProperty, _quantity, value)
+            Set (ByVal value As System.Int32)
+                SetProperty(_quantityProperty, value)
             End Set
         End Property
 
         Private Shared ReadOnly _unitPriceProperty As PropertyInfo(Of System.Decimal) = RegisterProperty(Of System.Decimal)(Function(p As LineItem) p.UnitPrice, String.Empty)
-        Private _unitPrice As System.Decimal = _unitPriceProperty.DefaultValue
         
         Public Property UnitPrice() As System.Decimal
             Get 
-                Return GetProperty(_unitPriceProperty, _unitPrice) 
+                Return GetProperty(_unitPriceProperty)
             End Get
-            Set (value As System.Decimal)
-                SetProperty(_unitPriceProperty, _unitPrice, value)
+            Set (ByVal value As System.Decimal)
+                SetProperty(_unitPriceProperty, value)
             End Set
         End Property
 

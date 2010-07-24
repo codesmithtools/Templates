@@ -80,10 +80,10 @@ Namespace PetShop.Tests.StoredProcedures
     
     
                 ' Update the original non-identity primary key value.
-                _originalOrderId = Me.OrderId
+                LoadProperty(_originalOrderIdProperty, Me.OrderId)
     
                 ' Update the original non-identity primary key value.
-                _originalLineNum = Me.LineNum
+                LoadProperty(_originalLineNumProperty, Me.LineNum)
     
             End Using
     
@@ -111,10 +111,10 @@ Namespace PetShop.Tests.StoredProcedures
     
     
                 ' Update the original non-identity primary key value.
-                _originalOrderId = Me.OrderId
+                LoadProperty(_originalOrderIdProperty, Me.OrderId)
     
                 ' Update the original non-identity primary key value.
-                _originalLineNum = Me.LineNum
+                LoadProperty(_originalLineNumProperty, Me.LineNum)
     
             End Using
     
@@ -154,13 +154,13 @@ Namespace PetShop.Tests.StoredProcedures
                 End If
     
                 ' Update non-identity primary key value.
-                _orderId = DirectCast(command.Parameters("@p_OrderId").Value, System.Int32)
+                LoadProperty(_orderIdProperty, DirectCast(command.Parameters("@p_OrderId").Value, System.Int32))
                 ' Update non-identity primary key value.
-                _lineNum = DirectCast(command.Parameters("@p_LineNum").Value, System.Int32)
+                LoadProperty(_lineNumProperty, DirectCast(command.Parameters("@p_LineNum").Value, System.Int32))
                 ' Update non-identity primary key value.
-                _originalOrderId = Me.OrderId
+                LoadProperty(_originalOrderIdProperty, Me.OrderId)
                 ' Update non-identity primary key value.
-                _originalLineNum = Me.LineNum
+                LoadProperty(_originalLineNumProperty, Me.LineNum)
             End Using
             FieldManager.UpdateChildren(Me, connection)
     
@@ -191,18 +191,18 @@ Namespace PetShop.Tests.StoredProcedures
                 End If
     
                 ' Update non-identity primary key value.
-                _orderId = DirectCast(command.Parameters("@p_OrderId").Value, System.Int32)
+                LoadProperty(_orderIdProperty, DirectCast(command.Parameters("@p_OrderId").Value, System.Int32))
                 ' Update non-identity primary key value.
-                _lineNum = DirectCast(command.Parameters("@p_LineNum").Value, System.Int32)
+                LoadProperty(_lineNumProperty, DirectCast(command.Parameters("@p_LineNum").Value, System.Int32))
     
                 'Update foreign keys values. This code will update the values passed in from the parent only if no errors occurred after executing the query.
                 If(Not IsNothing(order) AndAlso Not order.OrderId = Me.OrderId) Then
-                        _orderId = order.OrderId
+                        LoadProperty(_orderIdProperty, order.OrderId)
                 End If
                 ' Update non-identity primary key value.
-                _originalOrderId = Me.OrderId
+                LoadProperty(_originalOrderIdProperty, Me.OrderId)
                 ' Update non-identity primary key value.
-                _originalLineNum = Me.LineNum
+                LoadProperty(_originalLineNumProperty, Me.LineNum)
             End Using
             ' A child relationship exists on this Business Object but its type is not a child type (E.G. EditableChild). 
             ' TODO: Please override OnChildUpdated() and update this child manually.
@@ -222,7 +222,7 @@ Namespace PetShop.Tests.StoredProcedures
                 Return
             End If
         
-            DataPortal_Delete(New OrderStatusCriteria (_orderId, _lineNum), connection)
+            DataPortal_Delete(New OrderStatusCriteria (OrderId, LineNum), connection)
         
             OnChildSelfDeleted()
         End Sub
@@ -257,12 +257,12 @@ Namespace PetShop.Tests.StoredProcedures
             End If
     
             Using(BypassPropertyChecks)
-                _orderId = reader.GetInt32("OrderId")
-                _originalOrderId = reader.GetInt32("OrderId")
-                _lineNum = reader.GetInt32("LineNum")
-                _originalLineNum = reader.GetInt32("LineNum")
-                _timestamp = reader.GetDateTime("Timestamp")
-                _status = reader.GetString("Status")
+                LoadProperty(_orderIdProperty, reader.Item("OrderId"))
+                LoadProperty(_originalOrderIdProperty, reader.Item("OrderId"))
+                LoadProperty(_lineNumProperty, reader.Item("LineNum"))
+                LoadProperty(_originalLineNumProperty, reader.Item("LineNum"))
+                LoadProperty(_timestampProperty, reader.Item("Timestamp"))
+                LoadProperty(_statusProperty, reader.Item("Status"))
             End Using
     
             OnMapped()

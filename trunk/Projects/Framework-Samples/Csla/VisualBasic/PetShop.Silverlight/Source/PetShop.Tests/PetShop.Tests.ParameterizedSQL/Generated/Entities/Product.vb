@@ -42,5 +42,14 @@ Namespace PetShop.Tests.ParameterizedSQL
         End Sub
     
 #End Region
+
+#Region "Custom Methods"
+
+        Public Sub SetChild()
+            MarkAsChild()
+        End Sub
+
+#End Region
+
     End Class
 End Namespace

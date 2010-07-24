@@ -31,7 +31,7 @@ Namespace PetShop.Tests.StoredProcedures
     
         Friend Sub New(ByVal orderId As System.Int32)
             Using(BypassPropertyChecks)
-                _orderId = orderId
+            LoadProperty(_orderIdProperty, orderId)
             End Using
         End Sub
     
@@ -91,279 +91,256 @@ Namespace PetShop.Tests.StoredProcedures
 #Region "Properties"
     
         Private Shared ReadOnly _orderIdProperty As PropertyInfo(Of System.Int32) = RegisterProperty(Of System.Int32)(Function(p As Order) p.OrderId, String.Empty)
-        Private _orderId As System.Int32 = _orderIdProperty.DefaultValue
         
 		<System.ComponentModel.DataObjectField(true, true)> _
         Public Property OrderId() As System.Int32
             Get 
-                Return GetProperty(_orderIdProperty, _orderId) 
+                Return GetProperty(_orderIdProperty)
             End Get
-            Friend Set (value As System.Int32)
-                SetProperty(_orderIdProperty, _orderId, value)
+            Friend Set (ByVal value As System.Int32)
+                SetProperty(_orderIdProperty, value)
             End Set
         End Property
 
         Private Shared ReadOnly _userIdProperty As PropertyInfo(Of System.String) = RegisterProperty(Of System.String)(Function(p As Order) p.UserId, String.Empty)
-        Private _userId As System.String = _userIdProperty.DefaultValue
         
         Public Property UserId() As System.String
             Get 
-                Return GetProperty(_userIdProperty, _userId) 
+                Return GetProperty(_userIdProperty)
             End Get
-            Set (value As System.String)
-                SetProperty(_userIdProperty, _userId, value)
+            Set (ByVal value As System.String)
+                SetProperty(_userIdProperty, value)
             End Set
         End Property
 
         Private Shared ReadOnly _orderDateProperty As PropertyInfo(Of System.DateTime) = RegisterProperty(Of System.DateTime)(Function(p As Order) p.OrderDate, String.Empty)
-        Private _orderDate As System.DateTime = _orderDateProperty.DefaultValue
         
         Public Property OrderDate() As System.DateTime
             Get 
-                Return GetProperty(_orderDateProperty, _orderDate) 
+                Return GetProperty(_orderDateProperty)
             End Get
-            Set (value As System.DateTime)
-                SetProperty(_orderDateProperty, _orderDate, value)
+            Set (ByVal value As System.DateTime)
+                SetProperty(_orderDateProperty, value)
             End Set
         End Property
 
         Private Shared ReadOnly _shipAddr1Property As PropertyInfo(Of System.String) = RegisterProperty(Of System.String)(Function(p As Order) p.ShipAddr1, String.Empty)
-        Private _shipAddr1 As System.String = _shipAddr1Property.DefaultValue
         
         Public Property ShipAddr1() As System.String
             Get 
-                Return GetProperty(_shipAddr1Property, _shipAddr1) 
+                Return GetProperty(_shipAddr1Property)
             End Get
-            Set (value As System.String)
-                SetProperty(_shipAddr1Property, _shipAddr1, value)
+            Set (ByVal value As System.String)
+                SetProperty(_shipAddr1Property, value)
             End Set
         End Property
 
         Private Shared ReadOnly _shipAddr2Property As PropertyInfo(Of System.String) = RegisterProperty(Of System.String)(Function(p As Order) p.ShipAddr2, String.Empty, vbNullString)
-        Private _shipAddr2 As System.String = _shipAddr2Property.DefaultValue
         
         Public Property ShipAddr2() As System.String
             Get 
-                Return GetProperty(_shipAddr2Property, _shipAddr2) 
+                Return GetProperty(_shipAddr2Property)
             End Get
-            Set (value As System.String)
-                SetProperty(_shipAddr2Property, _shipAddr2, value)
+            Set (ByVal value As System.String)
+                SetProperty(_shipAddr2Property, value)
             End Set
         End Property
 
         Private Shared ReadOnly _shipCityProperty As PropertyInfo(Of System.String) = RegisterProperty(Of System.String)(Function(p As Order) p.ShipCity, String.Empty)
-        Private _shipCity As System.String = _shipCityProperty.DefaultValue
         
         Public Property ShipCity() As System.String
             Get 
-                Return GetProperty(_shipCityProperty, _shipCity) 
+                Return GetProperty(_shipCityProperty)
             End Get
-            Set (value As System.String)
-                SetProperty(_shipCityProperty, _shipCity, value)
+            Set (ByVal value As System.String)
+                SetProperty(_shipCityProperty, value)
             End Set
         End Property
 
         Private Shared ReadOnly _shipStateProperty As PropertyInfo(Of System.String) = RegisterProperty(Of System.String)(Function(p As Order) p.ShipState, String.Empty)
-        Private _shipState As System.String = _shipStateProperty.DefaultValue
         
         Public Property ShipState() As System.String
             Get 
-                Return GetProperty(_shipStateProperty, _shipState) 
+                Return GetProperty(_shipStateProperty)
             End Get
-            Set (value As System.String)
-                SetProperty(_shipStateProperty, _shipState, value)
+            Set (ByVal value As System.String)
+                SetProperty(_shipStateProperty, value)
             End Set
         End Property
 
         Private Shared ReadOnly _shipZipProperty As PropertyInfo(Of System.String) = RegisterProperty(Of System.String)(Function(p As Order) p.ShipZip, String.Empty)
-        Private _shipZip As System.String = _shipZipProperty.DefaultValue
         
         Public Property ShipZip() As System.String
             Get 
-                Return GetProperty(_shipZipProperty, _shipZip) 
+                Return GetProperty(_shipZipProperty)
             End Get
-            Set (value As System.String)
-                SetProperty(_shipZipProperty, _shipZip, value)
+            Set (ByVal value As System.String)
+                SetProperty(_shipZipProperty, value)
             End Set
         End Property
 
         Private Shared ReadOnly _shipCountryProperty As PropertyInfo(Of System.String) = RegisterProperty(Of System.String)(Function(p As Order) p.ShipCountry, String.Empty)
-        Private _shipCountry As System.String = _shipCountryProperty.DefaultValue
         
         Public Property ShipCountry() As System.String
             Get 
-                Return GetProperty(_shipCountryProperty, _shipCountry) 
+                Return GetProperty(_shipCountryProperty)
             End Get
-            Set (value As System.String)
-                SetProperty(_shipCountryProperty, _shipCountry, value)
+            Set (ByVal value As System.String)
+                SetProperty(_shipCountryProperty, value)
             End Set
         End Property
 
         Private Shared ReadOnly _billAddr1Property As PropertyInfo(Of System.String) = RegisterProperty(Of System.String)(Function(p As Order) p.BillAddr1, String.Empty)
-        Private _billAddr1 As System.String = _billAddr1Property.DefaultValue
         
         Public Property BillAddr1() As System.String
             Get 
-                Return GetProperty(_billAddr1Property, _billAddr1) 
+                Return GetProperty(_billAddr1Property)
             End Get
-            Set (value As System.String)
-                SetProperty(_billAddr1Property, _billAddr1, value)
+            Set (ByVal value As System.String)
+                SetProperty(_billAddr1Property, value)
             End Set
         End Property
 
         Private Shared ReadOnly _billAddr2Property As PropertyInfo(Of System.String) = RegisterProperty(Of System.String)(Function(p As Order) p.BillAddr2, String.Empty, vbNullString)
-        Private _billAddr2 As System.String = _billAddr2Property.DefaultValue
         
         Public Property BillAddr2() As System.String
             Get 
-                Return GetProperty(_billAddr2Property, _billAddr2) 
+                Return GetProperty(_billAddr2Property)
             End Get
-            Set (value As System.String)
-                SetProperty(_billAddr2Property, _billAddr2, value)
+            Set (ByVal value As System.String)
+                SetProperty(_billAddr2Property, value)
             End Set
         End Property
 
         Private Shared ReadOnly _billCityProperty As PropertyInfo(Of System.String) = RegisterProperty(Of System.String)(Function(p As Order) p.BillCity, String.Empty)
-        Private _billCity As System.String = _billCityProperty.DefaultValue
         
         Public Property BillCity() As System.String
             Get 
-                Return GetProperty(_billCityProperty, _billCity) 
+                Return GetProperty(_billCityProperty)
             End Get
-            Set (value As System.String)
-                SetProperty(_billCityProperty, _billCity, value)
+            Set (ByVal value As System.String)
+                SetProperty(_billCityProperty, value)
             End Set
         End Property
 
         Private Shared ReadOnly _billStateProperty As PropertyInfo(Of System.String) = RegisterProperty(Of System.String)(Function(p As Order) p.BillState, String.Empty)
-        Private _billState As System.String = _billStateProperty.DefaultValue
         
         Public Property BillState() As System.String
             Get 
-                Return GetProperty(_billStateProperty, _billState) 
+                Return GetProperty(_billStateProperty)
             End Get
-            Set (value As System.String)
-                SetProperty(_billStateProperty, _billState, value)
+            Set (ByVal value As System.String)
+                SetProperty(_billStateProperty, value)
             End Set
         End Property
 
         Private Shared ReadOnly _billZipProperty As PropertyInfo(Of System.String) = RegisterProperty(Of System.String)(Function(p As Order) p.BillZip, String.Empty)
-        Private _billZip As System.String = _billZipProperty.DefaultValue
         
         Public Property BillZip() As System.String
             Get 
-                Return GetProperty(_billZipProperty, _billZip) 
+                Return GetProperty(_billZipProperty)
             End Get
-            Set (value As System.String)
-                SetProperty(_billZipProperty, _billZip, value)
+            Set (ByVal value As System.String)
+                SetProperty(_billZipProperty, value)
             End Set
         End Property
 
         Private Shared ReadOnly _billCountryProperty As PropertyInfo(Of System.String) = RegisterProperty(Of System.String)(Function(p As Order) p.BillCountry, String.Empty)
-        Private _billCountry As System.String = _billCountryProperty.DefaultValue
         
         Public Property BillCountry() As System.String
             Get 
-                Return GetProperty(_billCountryProperty, _billCountry) 
+                Return GetProperty(_billCountryProperty)
             End Get
-            Set (value As System.String)
-                SetProperty(_billCountryProperty, _billCountry, value)
+            Set (ByVal value As System.String)
+                SetProperty(_billCountryProperty, value)
             End Set
         End Property
 
         Private Shared ReadOnly _courierProperty As PropertyInfo(Of System.String) = RegisterProperty(Of System.String)(Function(p As Order) p.Courier, String.Empty)
-        Private _courier As System.String = _courierProperty.DefaultValue
         
         Public Property Courier() As System.String
             Get 
-                Return GetProperty(_courierProperty, _courier) 
+                Return GetProperty(_courierProperty)
             End Get
-            Set (value As System.String)
-                SetProperty(_courierProperty, _courier, value)
+            Set (ByVal value As System.String)
+                SetProperty(_courierProperty, value)
             End Set
         End Property
 
         Private Shared ReadOnly _totalPriceProperty As PropertyInfo(Of System.Decimal) = RegisterProperty(Of System.Decimal)(Function(p As Order) p.TotalPrice, String.Empty)
-        Private _totalPrice As System.Decimal = _totalPriceProperty.DefaultValue
         
         Public Property TotalPrice() As System.Decimal
             Get 
-                Return GetProperty(_totalPriceProperty, _totalPrice) 
+                Return GetProperty(_totalPriceProperty)
             End Get
-            Set (value As System.Decimal)
-                SetProperty(_totalPriceProperty, _totalPrice, value)
+            Set (ByVal value As System.Decimal)
+                SetProperty(_totalPriceProperty, value)
             End Set
         End Property
 
         Private Shared ReadOnly _billToFirstNameProperty As PropertyInfo(Of System.String) = RegisterProperty(Of System.String)(Function(p As Order) p.BillToFirstName, String.Empty)
-        Private _billToFirstName As System.String = _billToFirstNameProperty.DefaultValue
         
         Public Property BillToFirstName() As System.String
             Get 
-                Return GetProperty(_billToFirstNameProperty, _billToFirstName) 
+                Return GetProperty(_billToFirstNameProperty)
             End Get
-            Set (value As System.String)
-                SetProperty(_billToFirstNameProperty, _billToFirstName, value)
+            Set (ByVal value As System.String)
+                SetProperty(_billToFirstNameProperty, value)
             End Set
         End Property
 
         Private Shared ReadOnly _billToLastNameProperty As PropertyInfo(Of System.String) = RegisterProperty(Of System.String)(Function(p As Order) p.BillToLastName, String.Empty)
-        Private _billToLastName As System.String = _billToLastNameProperty.DefaultValue
         
         Public Property BillToLastName() As System.String
             Get 
-                Return GetProperty(_billToLastNameProperty, _billToLastName) 
+                Return GetProperty(_billToLastNameProperty)
             End Get
-            Set (value As System.String)
-                SetProperty(_billToLastNameProperty, _billToLastName, value)
+            Set (ByVal value As System.String)
+                SetProperty(_billToLastNameProperty, value)
             End Set
         End Property
 
         Private Shared ReadOnly _shipToFirstNameProperty As PropertyInfo(Of System.String) = RegisterProperty(Of System.String)(Function(p As Order) p.ShipToFirstName, String.Empty)
-        Private _shipToFirstName As System.String = _shipToFirstNameProperty.DefaultValue
         
         Public Property ShipToFirstName() As System.String
             Get 
-                Return GetProperty(_shipToFirstNameProperty, _shipToFirstName) 
+                Return GetProperty(_shipToFirstNameProperty)
             End Get
-            Set (value As System.String)
-                SetProperty(_shipToFirstNameProperty, _shipToFirstName, value)
+            Set (ByVal value As System.String)
+                SetProperty(_shipToFirstNameProperty, value)
             End Set
         End Property
 
         Private Shared ReadOnly _shipToLastNameProperty As PropertyInfo(Of System.String) = RegisterProperty(Of System.String)(Function(p As Order) p.ShipToLastName, String.Empty)
-        Private _shipToLastName As System.String = _shipToLastNameProperty.DefaultValue
         
         Public Property ShipToLastName() As System.String
             Get 
-                Return GetProperty(_shipToLastNameProperty, _shipToLastName) 
+                Return GetProperty(_shipToLastNameProperty)
             End Get
-            Set (value As System.String)
-                SetProperty(_shipToLastNameProperty, _shipToLastName, value)
+            Set (ByVal value As System.String)
+                SetProperty(_shipToLastNameProperty, value)
             End Set
         End Property
 
         Private Shared ReadOnly _authorizationNumberProperty As PropertyInfo(Of System.Int32) = RegisterProperty(Of System.Int32)(Function(p As Order) p.AuthorizationNumber, String.Empty)
-        Private _authorizationNumber As System.Int32 = _authorizationNumberProperty.DefaultValue
         
         Public Property AuthorizationNumber() As System.Int32
             Get 
-                Return GetProperty(_authorizationNumberProperty, _authorizationNumber) 
+                Return GetProperty(_authorizationNumberProperty)
             End Get
-            Set (value As System.Int32)
-                SetProperty(_authorizationNumberProperty, _authorizationNumber, value)
+            Set (ByVal value As System.Int32)
+                SetProperty(_authorizationNumberProperty, value)
             End Set
         End Property
 
         Private Shared ReadOnly _localeProperty As PropertyInfo(Of System.String) = RegisterProperty(Of System.String)(Function(p As Order) p.Locale, String.Empty)
-        Private _locale As System.String = _localeProperty.DefaultValue
         
         Public Property Locale() As System.String
             Get 
-                Return GetProperty(_localeProperty, _locale) 
+                Return GetProperty(_localeProperty)
             End Get
-            Set (value As System.String)
-                SetProperty(_localeProperty, _locale, value)
+            Set (ByVal value As System.String)
+                SetProperty(_localeProperty, value)
             End Set
         End Property
 

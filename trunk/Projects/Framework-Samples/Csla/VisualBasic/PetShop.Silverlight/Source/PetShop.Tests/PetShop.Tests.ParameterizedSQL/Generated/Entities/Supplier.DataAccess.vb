@@ -88,7 +88,7 @@ Namespace PetShop.Tests.ParameterizedSQL
                     End If
                 End Using
     
-                _originalSuppId = Me.SuppId
+                LoadProperty(_originalSuppIdProperty, Me.SuppId)
     
     
                 FieldManager.UpdateChildren(Me, connection)
@@ -163,7 +163,7 @@ Namespace PetShop.Tests.ParameterizedSQL
                     throw new DBConcurrencyException("The entity is out of date on the client. Please update the entity and try again. This could also be thrown if the sql statement failed to execute.")
                 End If
                 End Using
-                _originalSuppId = Me.SuppId
+                LoadProperty(_originalSuppIdProperty, Me.SuppId)
     
     
                 FieldManager.UpdateChildren(Me, connection)
@@ -179,7 +179,7 @@ Namespace PetShop.Tests.ParameterizedSQL
                 Return
             End If
         
-            DataPortal_Delete(New SupplierCriteria (_suppId))
+            DataPortal_Delete(New SupplierCriteria (SuppId))
         
             OnSelfDeleted()
         End Sub
@@ -217,16 +217,16 @@ Namespace PetShop.Tests.ParameterizedSQL
             End If
     
             Using(BypassPropertyChecks)
-                _suppId = reader.GetInt32("SuppId")
-                _originalSuppId = reader.GetInt32("SuppId")
-                _name = reader.GetString("Name")
-                _status = reader.GetString("Status")
-                _addr1 = reader.GetString("Addr1")
-                _addr2 = reader.GetString("Addr2")
-                _city = reader.GetString("City")
-                _state = reader.GetString("State")
-                _zip = reader.GetString("Zip")
-                _phone = reader.GetString("Phone")
+                LoadProperty(_suppIdProperty, reader.Item("SuppId"))
+                LoadProperty(_originalSuppIdProperty, reader.Item("SuppId"))
+                LoadProperty(_nameProperty, reader.Item("Name"))
+                LoadProperty(_statusProperty, reader.Item("Status"))
+                LoadProperty(_addr1Property, reader.Item("Addr1"))
+                LoadProperty(_addr2Property, reader.Item("Addr2"))
+                LoadProperty(_cityProperty, reader.Item("City"))
+                LoadProperty(_stateProperty, reader.Item("State"))
+                LoadProperty(_zipProperty, reader.Item("Zip"))
+                LoadProperty(_phoneProperty, reader.Item("Phone"))
             End Using
     
             OnMapped()

@@ -26,5 +26,11 @@ Namespace PetShop.Tests.StoredProcedures
         End Sub
     
 #End Region
+
+#Region "Custom Factory Methods"
+        Private Sub OnAddNewCore(ByVal item As Product, ByRef cancel As Boolean)
+            item.SetChild()
+        End Sub
+#End Region
     End Class
 End Namespace

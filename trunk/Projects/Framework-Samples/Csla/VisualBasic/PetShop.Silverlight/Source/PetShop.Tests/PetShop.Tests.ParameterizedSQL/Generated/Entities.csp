@@ -152,7 +152,7 @@
       <property name="Location">.\</property>
       <property name="SolutionName">PetShop</property>
       <property name="BusinessProjectName">PetShop.Tests.ParameterizedSQL</property>
-      <property name="UseMemberVariables">True</property>
+      <property name="UseMemberVariables">False</property>
       <property name="DataAccessImplementation">ParameterizedSQL</property>
       <property name="DataProjectName">PetShop.Tests.ParameterizedSQL</property>
       <property name="ParameterPrefix">@p_</property>
@@ -166,7 +166,6 @@
       <property name="AutoExecuteStoredProcedures">True</property>
       <property name="IsolationLevel">ReadCommitted</property>
       <property name="TestProjectName">PetShop.Test</property>
-      <property name="CommandObject" />
     </propertySet>
   </propertySets>
 </codeSmith>

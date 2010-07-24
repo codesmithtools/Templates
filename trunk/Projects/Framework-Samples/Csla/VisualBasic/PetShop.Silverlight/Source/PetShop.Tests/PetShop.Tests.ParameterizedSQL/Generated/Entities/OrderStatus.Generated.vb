@@ -32,8 +32,8 @@ Namespace PetShop.Tests.ParameterizedSQL
     
         Friend Sub New(ByVal orderId As System.Int32, ByVal lineNum As System.Int32)
             Using(BypassPropertyChecks)
-                _orderId = orderId
-                _lineNum = lineNum
+            LoadProperty(_orderIdProperty, orderId)
+            LoadProperty(_lineNumProperty, lineNum)
             End Using
     
             MarkAsChild()
@@ -61,80 +61,74 @@ Namespace PetShop.Tests.ParameterizedSQL
 #Region "Properties"
     
         Private Shared ReadOnly _orderIdProperty As PropertyInfo(Of System.Int32) = RegisterProperty(Of System.Int32)(Function(p As OrderStatus) p.OrderId, String.Empty)
-        Private _orderId As System.Int32 = _orderIdProperty.DefaultValue
         
 		<System.ComponentModel.DataObjectField(true, false)> _
         Public Property OrderId() As System.Int32
             Get 
-                Return GetProperty(_orderIdProperty, _orderId) 
+                Return GetProperty(_orderIdProperty)
             End Get
-            Set (value As System.Int32)
-                SetProperty(_orderIdProperty, _orderId, value)
+            Set (ByVal value As System.Int32)
+                SetProperty(_orderIdProperty, value)
             End Set
         End Property
 
         Private Shared ReadOnly _originalOrderIdProperty As PropertyInfo(Of System.Int32) = RegisterProperty(Of System.Int32)(Function(p As OrderStatus) p.OriginalOrderId, String.Empty)
-        Private _originalOrderId As System.Int32 = _originalOrderIdProperty.DefaultValue
         ''' <summary>
         ''' Holds the original value for OrderId. This is used for non identity primary keys.
         ''' </summary>
         Friend Property OriginalOrderId() As System.Int32
             Get 
-                Return GetProperty(_originalOrderIdProperty, _originalOrderId) 
+                Return GetProperty(_originalOrderIdProperty) 
             End Get
             Set (value As System.Int32)
-                SetProperty(_originalOrderIdProperty, _originalOrderId, value)
+                SetProperty(_originalOrderIdProperty, value)
             End Set
         End Property
 
         Private Shared ReadOnly _lineNumProperty As PropertyInfo(Of System.Int32) = RegisterProperty(Of System.Int32)(Function(p As OrderStatus) p.LineNum, String.Empty)
-        Private _lineNum As System.Int32 = _lineNumProperty.DefaultValue
         
 		<System.ComponentModel.DataObjectField(true, false)> _
         Public Property LineNum() As System.Int32
             Get 
-                Return GetProperty(_lineNumProperty, _lineNum) 
+                Return GetProperty(_lineNumProperty)
             End Get
-            Set (value As System.Int32)
-                SetProperty(_lineNumProperty, _lineNum, value)
+            Set (ByVal value As System.Int32)
+                SetProperty(_lineNumProperty, value)
             End Set
         End Property
 
         Private Shared ReadOnly _originalLineNumProperty As PropertyInfo(Of System.Int32) = RegisterProperty(Of System.Int32)(Function(p As OrderStatus) p.OriginalLineNum, String.Empty)
-        Private _originalLineNum As System.Int32 = _originalLineNumProperty.DefaultValue
         ''' <summary>
         ''' Holds the original value for LineNum. This is used for non identity primary keys.
         ''' </summary>
         Friend Property OriginalLineNum() As System.Int32
             Get 
-                Return GetProperty(_originalLineNumProperty, _originalLineNum) 
+                Return GetProperty(_originalLineNumProperty) 
             End Get
             Set (value As System.Int32)
-                SetProperty(_originalLineNumProperty, _originalLineNum, value)
+                SetProperty(_originalLineNumProperty, value)
             End Set
         End Property
 
         Private Shared ReadOnly _timestampProperty As PropertyInfo(Of System.DateTime) = RegisterProperty(Of System.DateTime)(Function(p As OrderStatus) p.Timestamp, String.Empty)
-        Private _timestamp As System.DateTime = _timestampProperty.DefaultValue
         
         Public Property Timestamp() As System.DateTime
             Get 
-                Return GetProperty(_timestampProperty, _timestamp) 
+                Return GetProperty(_timestampProperty)
             End Get
-            Set (value As System.DateTime)
-                SetProperty(_timestampProperty, _timestamp, value)
+            Set (ByVal value As System.DateTime)
+                SetProperty(_timestampProperty, value)
             End Set
         End Property
 
         Private Shared ReadOnly _statusProperty As PropertyInfo(Of System.String) = RegisterProperty(Of System.String)(Function(p As OrderStatus) p.Status, String.Empty)
-        Private _status As System.String = _statusProperty.DefaultValue
         
         Public Property Status() As System.String
             Get 
-                Return GetProperty(_statusProperty, _status) 
+                Return GetProperty(_statusProperty)
             End Get
-            Set (value As System.String)
-                SetProperty(_statusProperty, _status, value)
+            Set (ByVal value As System.String)
+                SetProperty(_statusProperty, value)
             End Set
         End Property
 

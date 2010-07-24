@@ -30,7 +30,7 @@ Namespace PetShop.Tests.ParameterizedSQL
     
         Friend Sub New(ByVal suppId As System.Int32)
             Using(BypassPropertyChecks)
-                _suppId = suppId
+            LoadProperty(_suppIdProperty, suppId)
             End Using
         End Sub
     
@@ -62,125 +62,115 @@ Namespace PetShop.Tests.ParameterizedSQL
 #Region "Properties"
     
         Private Shared ReadOnly _suppIdProperty As PropertyInfo(Of System.Int32) = RegisterProperty(Of System.Int32)(Function(p As Supplier) p.SuppId, String.Empty)
-        Private _suppId As System.Int32 = _suppIdProperty.DefaultValue
         
 		<System.ComponentModel.DataObjectField(true, false)> _
         Public Property SuppId() As System.Int32
             Get 
-                Return GetProperty(_suppIdProperty, _suppId) 
+                Return GetProperty(_suppIdProperty)
             End Get
-            Set (value As System.Int32)
-                SetProperty(_suppIdProperty, _suppId, value)
+            Set (ByVal value As System.Int32)
+                SetProperty(_suppIdProperty, value)
             End Set
         End Property
 
         Private Shared ReadOnly _originalSuppIdProperty As PropertyInfo(Of System.Int32) = RegisterProperty(Of System.Int32)(Function(p As Supplier) p.OriginalSuppId, String.Empty)
-        Private _originalSuppId As System.Int32 = _originalSuppIdProperty.DefaultValue
         ''' <summary>
         ''' Holds the original value for SuppId. This is used for non identity primary keys.
         ''' </summary>
         Friend Property OriginalSuppId() As System.Int32
             Get 
-                Return GetProperty(_originalSuppIdProperty, _originalSuppId) 
+                Return GetProperty(_originalSuppIdProperty) 
             End Get
             Set (value As System.Int32)
-                SetProperty(_originalSuppIdProperty, _originalSuppId, value)
+                SetProperty(_originalSuppIdProperty, value)
             End Set
         End Property
 
         Private Shared ReadOnly _nameProperty As PropertyInfo(Of System.String) = RegisterProperty(Of System.String)(Function(p As Supplier) p.Name, String.Empty, vbNullString)
-        Private _name As System.String = _nameProperty.DefaultValue
         
         Public Property Name() As System.String
             Get 
-                Return GetProperty(_nameProperty, _name) 
+                Return GetProperty(_nameProperty)
             End Get
-            Set (value As System.String)
-                SetProperty(_nameProperty, _name, value)
+            Set (ByVal value As System.String)
+                SetProperty(_nameProperty, value)
             End Set
         End Property
 
         Private Shared ReadOnly _statusProperty As PropertyInfo(Of System.String) = RegisterProperty(Of System.String)(Function(p As Supplier) p.Status, String.Empty)
-        Private _status As System.String = _statusProperty.DefaultValue
         
         Public Property Status() As System.String
             Get 
-                Return GetProperty(_statusProperty, _status) 
+                Return GetProperty(_statusProperty)
             End Get
-            Set (value As System.String)
-                SetProperty(_statusProperty, _status, value)
+            Set (ByVal value As System.String)
+                SetProperty(_statusProperty, value)
             End Set
         End Property
 
         Private Shared ReadOnly _addr1Property As PropertyInfo(Of System.String) = RegisterProperty(Of System.String)(Function(p As Supplier) p.Addr1, String.Empty, vbNullString)
-        Private _addr1 As System.String = _addr1Property.DefaultValue
         
         Public Property Addr1() As System.String
             Get 
-                Return GetProperty(_addr1Property, _addr1) 
+                Return GetProperty(_addr1Property)
             End Get
-            Set (value As System.String)
-                SetProperty(_addr1Property, _addr1, value)
+            Set (ByVal value As System.String)
+                SetProperty(_addr1Property, value)
             End Set
         End Property
 
         Private Shared ReadOnly _addr2Property As PropertyInfo(Of System.String) = RegisterProperty(Of System.String)(Function(p As Supplier) p.Addr2, String.Empty, vbNullString)
-        Private _addr2 As System.String = _addr2Property.DefaultValue
         
         Public Property Addr2() As System.String
             Get 
-                Return GetProperty(_addr2Property, _addr2) 
+                Return GetProperty(_addr2Property)
             End Get
-            Set (value As System.String)
-                SetProperty(_addr2Property, _addr2, value)
+            Set (ByVal value As System.String)
+                SetProperty(_addr2Property, value)
             End Set
         End Property
 
         Private Shared ReadOnly _cityProperty As PropertyInfo(Of System.String) = RegisterProperty(Of System.String)(Function(p As Supplier) p.City, String.Empty, vbNullString)
-        Private _city As System.String = _cityProperty.DefaultValue
         
         Public Property City() As System.String
             Get 
-                Return GetProperty(_cityProperty, _city) 
+                Return GetProperty(_cityProperty)
             End Get
-            Set (value As System.String)
-                SetProperty(_cityProperty, _city, value)
+            Set (ByVal value As System.String)
+                SetProperty(_cityProperty, value)
             End Set
         End Property
 
         Private Shared ReadOnly _stateProperty As PropertyInfo(Of System.String) = RegisterProperty(Of System.String)(Function(p As Supplier) p.State, String.Empty, vbNullString)
-        Private _state As System.String = _stateProperty.DefaultValue
         
         Public Property State() As System.String
             Get 
-                Return GetProperty(_stateProperty, _state) 
+                Return GetProperty(_stateProperty)
             End Get
-            Set (value As System.String)
-                SetProperty(_stateProperty, _state, value)
+            Set (ByVal value As System.String)
+                SetProperty(_stateProperty, value)
             End Set
         End Property
 
         Private Shared ReadOnly _zipProperty As PropertyInfo(Of System.String) = RegisterProperty(Of System.String)(Function(p As Supplier) p.Zip, String.Empty, vbNullString)
-        Private _zip As System.String = _zipProperty.DefaultValue
         
         Public Property Zip() As System.String
             Get 
-                Return GetProperty(_zipProperty, _zip) 
+                Return GetProperty(_zipProperty)
             End Get
-            Set (value As System.String)
-                SetProperty(_zipProperty, _zip, value)
+            Set (ByVal value As System.String)
+                SetProperty(_zipProperty, value)
             End Set
         End Property
 
         Private Shared ReadOnly _phoneProperty As PropertyInfo(Of System.String) = RegisterProperty(Of System.String)(Function(p As Supplier) p.Phone, String.Empty, vbNullString)
-        Private _phone As System.String = _phoneProperty.DefaultValue
         
         Public Property Phone() As System.String
             Get 
-                Return GetProperty(_phoneProperty, _phone) 
+                Return GetProperty(_phoneProperty)
             End Get
-            Set (value As System.String)
-                SetProperty(_phoneProperty, _phone, value)
+            Set (ByVal value As System.String)
+                SetProperty(_phoneProperty, value)
             End Set
         End Property
 

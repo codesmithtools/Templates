@@ -100,7 +100,7 @@ Namespace PetShop.Tests.ParameterizedSQL
                     Using reader As SafeDataReader = New SafeDataReader(command.ExecuteReader())
                         If reader.Read() Then
                 Using(BypassPropertyChecks)
-                                _orderId = reader.GetInt32("OrderId")
+                                LoadProperty(_orderIdProperty, reader.GetInt32("OrderId"))
                 End Using
                         End If
                     End Using
@@ -177,7 +177,7 @@ Namespace PetShop.Tests.ParameterizedSQL
                 Return
             End If
         
-            DataPortal_Delete(New OrderCriteria (_orderId))
+            DataPortal_Delete(New OrderCriteria (OrderId))
         
             OnSelfDeleted()
         End Sub
@@ -312,7 +312,7 @@ Namespace PetShop.Tests.ParameterizedSQL
                     If reader.Read() Then
     
                         ' Update identity or guid primary key value.
-                        _orderId = reader.GetInt32("OrderId")
+                        LoadProperty(_orderIdProperty, reader.GetInt32("OrderId"))
                     End If
                 End Using
             End Using
@@ -380,7 +380,7 @@ Namespace PetShop.Tests.ParameterizedSQL
                 Return
             End If
         
-            DataPortal_Delete(New OrderCriteria (_orderId))
+            DataPortal_Delete(New OrderCriteria (OrderId))
         
             OnChildSelfDeleted()
         End Sub
@@ -397,7 +397,7 @@ Namespace PetShop.Tests.ParameterizedSQL
                 Return
             End If
         
-            DataPortal_Delete(New OrderCriteria (_orderId), connection)
+            DataPortal_Delete(New OrderCriteria (OrderId), connection)
         
             OnChildSelfDeleted()
         End Sub
@@ -412,29 +412,29 @@ Namespace PetShop.Tests.ParameterizedSQL
             End If
     
             Using(BypassPropertyChecks)
-                _orderId = reader.GetInt32("OrderId")
-                _userId = reader.GetString("UserId")
-                _orderDate = reader.GetDateTime("OrderDate")
-                _shipAddr1 = reader.GetString("ShipAddr1")
-                _shipAddr2 = reader.GetString("ShipAddr2")
-                _shipCity = reader.GetString("ShipCity")
-                _shipState = reader.GetString("ShipState")
-                _shipZip = reader.GetString("ShipZip")
-                _shipCountry = reader.GetString("ShipCountry")
-                _billAddr1 = reader.GetString("BillAddr1")
-                _billAddr2 = reader.GetString("BillAddr2")
-                _billCity = reader.GetString("BillCity")
-                _billState = reader.GetString("BillState")
-                _billZip = reader.GetString("BillZip")
-                _billCountry = reader.GetString("BillCountry")
-                _courier = reader.GetString("Courier")
-                _totalPrice = reader.GetDecimal("TotalPrice")
-                _billToFirstName = reader.GetString("BillToFirstName")
-                _billToLastName = reader.GetString("BillToLastName")
-                _shipToFirstName = reader.GetString("ShipToFirstName")
-                _shipToLastName = reader.GetString("ShipToLastName")
-                _authorizationNumber = reader.GetInt32("AuthorizationNumber")
-                _locale = reader.GetString("Locale")
+                LoadProperty(_orderIdProperty, reader.Item("OrderId"))
+                LoadProperty(_userIdProperty, reader.Item("UserId"))
+                LoadProperty(_orderDateProperty, reader.Item("OrderDate"))
+                LoadProperty(_shipAddr1Property, reader.Item("ShipAddr1"))
+                LoadProperty(_shipAddr2Property, reader.Item("ShipAddr2"))
+                LoadProperty(_shipCityProperty, reader.Item("ShipCity"))
+                LoadProperty(_shipStateProperty, reader.Item("ShipState"))
+                LoadProperty(_shipZipProperty, reader.Item("ShipZip"))
+                LoadProperty(_shipCountryProperty, reader.Item("ShipCountry"))
+                LoadProperty(_billAddr1Property, reader.Item("BillAddr1"))
+                LoadProperty(_billAddr2Property, reader.Item("BillAddr2"))
+                LoadProperty(_billCityProperty, reader.Item("BillCity"))
+                LoadProperty(_billStateProperty, reader.Item("BillState"))
+                LoadProperty(_billZipProperty, reader.Item("BillZip"))
+                LoadProperty(_billCountryProperty, reader.Item("BillCountry"))
+                LoadProperty(_courierProperty, reader.Item("Courier"))
+                LoadProperty(_totalPriceProperty, reader.Item("TotalPrice"))
+                LoadProperty(_billToFirstNameProperty, reader.Item("BillToFirstName"))
+                LoadProperty(_billToLastNameProperty, reader.Item("BillToLastName"))
+                LoadProperty(_shipToFirstNameProperty, reader.Item("ShipToFirstName"))
+                LoadProperty(_shipToLastNameProperty, reader.Item("ShipToLastName"))
+                LoadProperty(_authorizationNumberProperty, reader.Item("AuthorizationNumber"))
+                LoadProperty(_localeProperty, reader.Item("Locale"))
             End Using
     
             OnMapped()

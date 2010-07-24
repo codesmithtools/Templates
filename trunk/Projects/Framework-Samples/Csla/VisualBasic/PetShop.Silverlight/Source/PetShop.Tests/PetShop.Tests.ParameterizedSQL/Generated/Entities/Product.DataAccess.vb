@@ -32,7 +32,7 @@ Namespace PetShop.Tests.ParameterizedSQL
                 Return
             End If
     
-            CategoryId = "BN"
+            LoadProperty(_categoryIdProperty, "BN")
             BusinessRules.CheckRules()
     
             OnCreated()
@@ -88,7 +88,7 @@ Namespace PetShop.Tests.ParameterizedSQL
                     End If
                 End Using
     
-                _originalProductId = Me.ProductId
+                LoadProperty(_originalProductIdProperty, Me.ProductId)
     
     
                 FieldManager.UpdateChildren(Me, connection)
@@ -155,7 +155,7 @@ Namespace PetShop.Tests.ParameterizedSQL
                     throw new DBConcurrencyException("The entity is out of date on the client. Please update the entity and try again. This could also be thrown if the sql statement failed to execute.")
                 End If
                 End Using
-                _originalProductId = Me.ProductId
+                LoadProperty(_originalProductIdProperty, Me.ProductId)
     
     
                 FieldManager.UpdateChildren(Me, connection)
@@ -171,7 +171,7 @@ Namespace PetShop.Tests.ParameterizedSQL
                 Return
             End If
         
-            DataPortal_Delete(New ProductCriteria (_productId))
+            DataPortal_Delete(New ProductCriteria (ProductId))
         
             OnSelfDeleted()
         End Sub
@@ -235,7 +235,7 @@ Namespace PetShop.Tests.ParameterizedSQL
                 Return
             End If
     
-            CategoryId = "BN"
+            LoadProperty(_categoryIdProperty, "BN")
             BusinessRules.CheckRules()
     
             OnChildCreated()
@@ -294,7 +294,7 @@ Namespace PetShop.Tests.ParameterizedSQL
             End Using
     
         ' Update non-identity primary key value.
-        _originalProductId = Me.ProductId
+        LoadProperty(_originalProductIdProperty, Me.ProductId)
     
             FieldManager.UpdateChildren(Me, connection)
     
@@ -326,11 +326,11 @@ Namespace PetShop.Tests.ParameterizedSQL
     
             ' Update foreign keys values. This code will update the values passed in from the parent only if no errors occurred after executing the query.
             If(Not IsNothing(category) AndAlso Not category.CategoryId = Me.CategoryId) Then
-                _categoryId = category.CategoryId
+                LoadProperty(_categoryIdProperty, category.CategoryId)
             End If
     
         ' Update non-identity primary key value.
-        _originalProductId = Me.ProductId
+        LoadProperty(_originalProductIdProperty, Me.ProductId)
     
             ' A child relationship exists on this Business Object but its type is not a child type (E.G. EditableChild). 
             ' TODO: Please override OnChildInserted() and insert this child manually.
@@ -368,7 +368,7 @@ Namespace PetShop.Tests.ParameterizedSQL
                 End If
     
                 ' Update non-identity primary key value.
-                _originalProductId = Me.ProductId
+                LoadProperty(_originalProductIdProperty, Me.ProductId)
             End Using
             FieldManager.UpdateChildren(Me, connection)
     
@@ -400,11 +400,11 @@ Namespace PetShop.Tests.ParameterizedSQL
     
                 ' Update foreign keys values. This code will update the values passed in from the parent only if no errors occurred after executing the query.
                 If(Not IsNothing(category) AndAlso Not category.CategoryId = Me.CategoryId) Then
-                    _categoryId = category.CategoryId
+                    LoadProperty(_categoryIdProperty, category.CategoryId)
                 End If
     
                 ' Update non-identity primary key value.
-                _originalProductId = Me.ProductId
+                LoadProperty(_originalProductIdProperty, Me.ProductId)
             End Using
             ' A child relationship exists on this Business Object but its type is not a child type (E.G. EditableChild). 
             ' TODO: Please override OnChildUpdated() and update this child manually.
@@ -423,7 +423,7 @@ Namespace PetShop.Tests.ParameterizedSQL
                 Return
             End If
         
-            DataPortal_Delete(New ProductCriteria (_productId))
+            DataPortal_Delete(New ProductCriteria (ProductId))
         
             OnChildSelfDeleted()
         End Sub
@@ -440,7 +440,7 @@ Namespace PetShop.Tests.ParameterizedSQL
                 Return
             End If
         
-            DataPortal_Delete(New ProductCriteria (_productId), connection)
+            DataPortal_Delete(New ProductCriteria (ProductId), connection)
         
             OnChildSelfDeleted()
         End Sub
@@ -455,12 +455,12 @@ Namespace PetShop.Tests.ParameterizedSQL
             End If
     
             Using(BypassPropertyChecks)
-                _productId = reader.GetString("ProductId")
-                _originalProductId = reader.GetString("ProductId")
-                _categoryId = reader.GetString("CategoryId")
-                _name = reader.GetString("Name")
-                _description = reader.GetString("Descn")
-                _image = reader.GetString("Image")
+                LoadProperty(_productIdProperty, reader.Item("ProductId"))
+                LoadProperty(_originalProductIdProperty, reader.Item("ProductId"))
+                LoadProperty(_categoryIdProperty, reader.Item("CategoryId"))
+                LoadProperty(_nameProperty, reader.Item("Name"))
+                LoadProperty(_descriptionProperty, reader.Item("Descn"))
+                LoadProperty(_imageProperty, reader.Item("Image"))
             End Using
     
             OnMapped()
