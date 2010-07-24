@@ -2,6 +2,7 @@
 Imports System.Diagnostics
 Imports NUnit.Framework
 Imports PetShop.Tests.ParameterizedSQL
+Imports PetShop.Tests.StoredProcedures
 
 <TestFixture()> _
 Public Class CategoryTests

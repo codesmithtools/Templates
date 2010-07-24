@@ -17,7 +17,6 @@
     <OldToolsVersion>3.5</OldToolsVersion>
     <UpgradeBackupLocation />
     <TargetFrameworkProfile />
-    <SilverlightApplicationList>{1C4493DC-E680-427D-A159-0C55B52DB1FF}|..\PetShop.UI.Silverlight\PetShop.UI.Silverlight.csproj|ClientBin|False</SilverlightApplicationList>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -41,7 +40,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Csla">
-      <HintPath>..\..\..\..\..\CodeSmith.Google.Code.CSLA.Trunk\Common\Csla\4.0\Client\Csla.dll</HintPath>
+      <HintPath>..\..\Libraries\Csla\Client\Csla.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -86,10 +85,6 @@
     <Content Include="App_Data\PetShop.mdf">
     </Content>
     <Content Include="App_Themes\PetShop\StyleSheet.css" />
-    <Content Include="ClientBin\PetShop.UI.Silverlight.xap" />
-    <Content Include="PetShop.UI.SilverlightTestPage.aspx" />
-    <Content Include="PetShop.UI.SilverlightTestPage.html" />
-    <Content Include="Silverlight.js" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
@@ -470,7 +465,8 @@
       <Name>PetShop.Controls</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

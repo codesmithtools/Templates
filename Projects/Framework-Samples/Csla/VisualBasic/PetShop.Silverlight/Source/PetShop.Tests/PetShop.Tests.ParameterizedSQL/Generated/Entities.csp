@@ -4,7 +4,7 @@
     <add key="ConnectionString1" value="Data Source=.;Initial Catalog=PetShop;Integrated Security=True" />
   </variables>
   <propertySets>
-    <propertySet name="Entities.cs" output="Entities.cs" template="..\..\..\..\..\..\..\CodeSmith.Google.Code.CSLA.Trunk\VisualBasic\BusinessLayer\Entities.cst">
+    <propertySet name="Entities.cs" output="Entities.cs" template="..\..\..\..\..\..\..\..\..\Templates\Frameworks\Csla\VisualBasic\BusinessLayer\Entities.cst">
       <property name="Criteria">
         <connectionString>$(ConnectionString1)</connectionString>
         <providerType>SchemaExplorer.SqlSchemaProvider,SchemaExplorer.SqlSchemaProvider</providerType>
@@ -158,14 +158,15 @@
       <property name="ParameterPrefix">@p_</property>
       <property name="UseLazyLoading">True</property>
       <property name="InterfaceProjectName">PetShop.UI</property>
+      <property name="NameValueList" />
+      <property name="DynamicListBase" />
+      <property name="FrameworkVersion">v40</property>
+      <property name="IncludeSilverlightSupport">False</property>
       <property name="ProcedurePrefix">CSLA_</property>
       <property name="AutoExecuteStoredProcedures">True</property>
       <property name="IsolationLevel">ReadCommitted</property>
-      <property name="NameValueList" />
-      <property name="FrameworkVersion">v40</property>
-      <property name="IncludeSilverlightSupport">False</property>
       <property name="TestProjectName">PetShop.Test</property>
-      <property name="DynamicListBase" />
+      <property name="CommandObject" />
     </propertySet>
   </propertySets>
 </codeSmith>
