@@ -1,11 +1,10 @@
 <?xml version="1.0"?>
 <codeSmith xmlns="http://www.codesmithtools.com/schema/csp.xsd">
   <variables>
-    <add key="ConnectionString1" value="Data Source=.;Integrated Security=True;Database=PetShop;" />
-    <add key="ConnectionString2" value="Data Source=.;Initial Catalog=PetShop;Integrated Security=True" />
+    <add key="ConnectionString1" value="Data Source=.;Initial Catalog=PetShop;Integrated Security=True" />
   </variables>
   <propertySets>
-    <propertySet name="DataAccessLayer.cs" output="DataAccessLayer.cs" template="..\..\..\..\..\..\CodeSmith.Google.Code.CSLA.Trunk\VisualBasic\DataAccessLayer\DataAccessLayer.cst">
+    <propertySet name="DataAccessLayer.cs" output="DataAccessLayer.cs" template="..\..\..\..\..\..\..\..\Templates\Frameworks\Csla\VisualBasic\DataAccessLayer\DataAccessLayer.cst">
       <property name="DataAccessImplementation">ObjectFactoryParameterizedSQL</property>
       <property name="DataProjectName">PetShop.Tests.OF.ParameterizedSQL.DAL</property>
       <property name="ParameterPrefix">@p_</property>
@@ -26,7 +25,7 @@
       <property name="BusinessProjectName">PetShop.Tests.OF.ParameterizedSQL</property>
       <property name="DynamicRoot" />
       <property name="EditableChild">
-        <connectionString>$(ConnectionString2)</connectionString>
+        <connectionString>$(ConnectionString1)</connectionString>
         <providerType>SchemaExplorer.SqlSchemaProvider,SchemaExplorer.SqlSchemaProvider</providerType>
         <tableList>
       <table>
@@ -36,7 +35,7 @@
     </tableList>
       </property>
       <property name="EditableRoot">
-        <connectionString>$(ConnectionString2)</connectionString>
+        <connectionString>$(ConnectionString1)</connectionString>
         <providerType>SchemaExplorer.SqlSchemaProvider,SchemaExplorer.SqlSchemaProvider</providerType>
         <tableList>
       <table>
@@ -52,7 +51,7 @@
       <property name="ReadOnlyChild" />
       <property name="ReadOnlyRoot" />
       <property name="SwitchableObject">
-        <connectionString>$(ConnectionString2)</connectionString>
+        <connectionString>$(ConnectionString1)</connectionString>
         <providerType>SchemaExplorer.SqlSchemaProvider,SchemaExplorer.SqlSchemaProvider</providerType>
         <tableList>
       <table>
@@ -75,7 +74,7 @@
       </property>
       <property name="DynamicRootList" />
       <property name="EditableRootList">
-        <connectionString>$(ConnectionString2)</connectionString>
+        <connectionString>$(ConnectionString1)</connectionString>
         <providerType>SchemaExplorer.SqlSchemaProvider,SchemaExplorer.SqlSchemaProvider</providerType>
         <tableList>
       <table>
@@ -97,7 +96,7 @@
     </tableList>
       </property>
       <property name="EditableChildList">
-        <connectionString>$(ConnectionString2)</connectionString>
+        <connectionString>$(ConnectionString1)</connectionString>
         <providerType>SchemaExplorer.SqlSchemaProvider,SchemaExplorer.SqlSchemaProvider</providerType>
         <tableList>
       <table>

@@ -12,13 +12,29 @@
     <AssemblyName>PetShop.Tests.Collections</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <MyType>Windows</MyType>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <OptionExplicit>On</OptionExplicit>
-    <OptionCompare>Binary</OptionCompare>
+    <OptionCompare>Text</OptionCompare>
     <OptionStrict>Off</OptionStrict>
     <OptionInfer>On</OptionInfer>
     <FileUpgradeFlags>0</FileUpgradeFlags>
-    <OldToolsVersion>3.5</OldToolsVersion>
+    <OldToolsVersion>4.0</OldToolsVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <TargetFrameworkProfile />
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -28,6 +44,7 @@
     <OutputPath>bin\Debug\</OutputPath>
     <DocumentationFile>PetShop.Tests.Collections.xml</DocumentationFile>
     <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022,42353,42354,42355</NoWarn>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -37,11 +54,14 @@
     <OutputPath>bin\Release\</OutputPath>
     <DocumentationFile>PetShop.Tests.Collections.xml</DocumentationFile>
     <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022,42353,42354,42355</NoWarn>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Csla, Version=3.8.2.0, Culture=neutral, PublicKeyToken=93be5fdc093e4c30, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\..\..\..\Templates\Frameworks\Csla\Common\Csla\3.8.2\Client\Csla.dll</HintPath>
+    <Reference Include="Csla">
+      <HintPath>..\..\..\Libraries\Csla\Client\Csla.dll</HintPath>
+    </Reference>
+    <Reference Include="nunit.framework">
+      <HintPath>..\..\..\Libraries\nunit.framework.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
@@ -75,6 +95,7 @@
       <DependentUpon>CategoryList.vb</DependentUpon>
     </Compile>
     <Compile Include="Generated\DynamicRoot\Collections\CategoryList.vb" />
+    <Compile Include="Generated\DynamicRoot\Commands\ExistsCommand.vb" />
     <Compile Include="Generated\DynamicRoot\Criteria\CategoryCriteria.Generated.vb">
       <DependentUpon>CategoryCriteria.vb</DependentUpon>
     </Compile>
@@ -87,6 +108,7 @@
       <DependentUpon>Category.vb</DependentUpon>
     </Compile>
     <Compile Include="Generated\DynamicRoot\Entities\Category.vb" />
+    <Compile Include="Generated\DynamicRoot\Utility\ADOHelper.vb" />
     <Compile Include="Generated\EditableChild\Collections\CategoryList.DataAccess.vb">
       <DependentUpon>CategoryList.vb</DependentUpon>
     </Compile>
@@ -94,6 +116,7 @@
       <DependentUpon>CategoryList.vb</DependentUpon>
     </Compile>
     <Compile Include="Generated\EditableChild\Collections\CategoryList.vb" />
+    <Compile Include="Generated\EditableChild\Commands\ExistsCommand.vb" />
     <Compile Include="Generated\EditableChild\Criteria\CategoryCriteria.Generated.vb">
       <DependentUpon>CategoryCriteria.vb</DependentUpon>
     </Compile>
@@ -106,6 +129,7 @@
       <DependentUpon>Category.vb</DependentUpon>
     </Compile>
     <Compile Include="Generated\EditableChild\Entities\Category.vb" />
+    <Compile Include="Generated\EditableChild\Utility\ADOHelper.vb" />
     <Compile Include="Generated\EditableRoot\Collections\CategoryList.DataAccess.vb">
       <DependentUpon>CategoryList.vb</DependentUpon>
     </Compile>
@@ -113,6 +137,7 @@
       <DependentUpon>CategoryList.vb</DependentUpon>
     </Compile>
     <Compile Include="Generated\EditableRoot\Collections\CategoryList.vb" />
+    <Compile Include="Generated\EditableRoot\Commands\ExistsCommand.vb" />
     <Compile Include="Generated\EditableRoot\Criteria\CategoryCriteria.Generated.vb">
       <DependentUpon>CategoryCriteria.vb</DependentUpon>
     </Compile>
@@ -125,6 +150,7 @@
       <DependentUpon>Category.vb</DependentUpon>
     </Compile>
     <Compile Include="Generated\EditableRoot\Entities\Category.vb" />
+    <Compile Include="Generated\EditableRoot\Utility\ADOHelper.vb" />
     <Compile Include="Generated\ReadOnlyChild\Collections\CategoryInfoList.DataAccess.vb">
       <DependentUpon>CategoryInfoList.vb</DependentUpon>
     </Compile>
@@ -132,6 +158,7 @@
       <DependentUpon>CategoryInfoList.vb</DependentUpon>
     </Compile>
     <Compile Include="Generated\ReadOnlyChild\Collections\CategoryInfoList.vb" />
+    <Compile Include="Generated\ReadOnlyChild\Commands\ExistsCommand.vb" />
     <Compile Include="Generated\ReadOnlyChild\Criteria\CategoryCriteria.Generated.vb">
       <DependentUpon>CategoryCriteria.vb</DependentUpon>
     </Compile>
@@ -144,6 +171,7 @@
       <DependentUpon>CategoryInfo.vb</DependentUpon>
     </Compile>
     <Compile Include="Generated\ReadOnlyChild\Entities\CategoryInfo.vb" />
+    <Compile Include="Generated\ReadOnlyChild\Utility\ADOHelper.vb" />
     <Compile Include="Generated\ReadOnlyRoot\Collections\CategoryInfoList.DataAccess.vb">
       <DependentUpon>CategoryInfoList.vb</DependentUpon>
     </Compile>
@@ -151,6 +179,7 @@
       <DependentUpon>CategoryInfoList.vb</DependentUpon>
     </Compile>
     <Compile Include="Generated\ReadOnlyRoot\Collections\CategoryInfoList.vb" />
+    <Compile Include="Generated\ReadOnlyRoot\Commands\ExistsCommand.vb" />
     <Compile Include="Generated\ReadOnlyRoot\Criteria\CategoryCriteria.Generated.vb">
       <DependentUpon>CategoryCriteria.vb</DependentUpon>
     </Compile>
@@ -163,6 +192,7 @@
       <DependentUpon>CategoryInfo.vb</DependentUpon>
     </Compile>
     <Compile Include="Generated\ReadOnlyRoot\Entities\CategoryInfo.vb" />
+    <Compile Include="Generated\ReadOnlyRoot\Utility\ADOHelper.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
       <AutoGen>True</AutoGen>
@@ -190,42 +220,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <None Include="Generated\DynamicRoot\Collections\CategoryList.StoredProcedures.sql">
-      <DependentUpon>CategoryList.vb</DependentUpon>
-    </None>
-    <Generate Include="Generated\DynamicRoot\Entities.csp" />
-    <None Include="Generated\DynamicRoot\Entities\Category.StoredProcedures.sql">
-      <DependentUpon>Category.vb</DependentUpon>
-    </None>
-    <None Include="Generated\EditableChild\Collections\CategoryList.StoredProcedures.sql">
-      <DependentUpon>CategoryList.vb</DependentUpon>
-    </None>
-    <Generate Include="Generated\EditableChild\Entities.csp" />
-    <None Include="Generated\EditableChild\Entities\Category.StoredProcedures.sql">
-      <DependentUpon>Category.vb</DependentUpon>
-    </None>
-    <None Include="Generated\EditableRoot\Collections\CategoryList.StoredProcedures.sql">
-      <DependentUpon>CategoryList.vb</DependentUpon>
-    </None>
-    <Generate Include="Generated\EditableRoot\Entities.csp" />
-    <None Include="Generated\EditableRoot\Entities\Category.StoredProcedures.sql">
-      <DependentUpon>Category.vb</DependentUpon>
-    </None>
     <None Include="Generated\Entities.csp" />
-    <None Include="Generated\ReadOnlyChild\Collections\CategoryInfoList.StoredProcedures.sql">
-      <DependentUpon>CategoryInfoList.vb</DependentUpon>
-    </None>
-    <Generate Include="Generated\ReadOnlyChild\Entities.csp" />
-    <None Include="Generated\ReadOnlyChild\Entities\CategoryInfo.StoredProcedures.sql">
-      <DependentUpon>CategoryInfo.vb</DependentUpon>
-    </None>
-    <None Include="Generated\ReadOnlyRoot\Collections\CategoryInfoList.StoredProcedures.sql">
-      <DependentUpon>CategoryInfoList.vb</DependentUpon>
-    </None>
-    <Generate Include="Generated\ReadOnlyRoot\Entities.csp" />
-    <None Include="Generated\ReadOnlyRoot\Entities\CategoryInfo.StoredProcedures.sql">
-      <DependentUpon>CategoryInfo.vb</DependentUpon>
-    </None>
     <None Include="My Project\Application.myapp">
       <Generator>MyApplicationCodeGenerator</Generator>
       <LastGenOutput>Application.Designer.vb</LastGenOutput>
@@ -235,6 +230,62 @@
       <CustomToolNamespace>My</CustomToolNamespace>
       <LastGenOutput>Settings.Designer.vb</LastGenOutput>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="DynamicRootTests.vb" />
+    <Compile Include="EditableChildTests.vb" />
+    <Compile Include="EditableRootTests.vb" />
+    <Compile Include="ReadOnlyChildTests.vb" />
+    <Compile Include="ReadOnlyRootTests.vb" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 3.1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Generated\DynamicRoot\Collections\CategoryList.StoredProcedures.sql">
+      <DependentUpon>CategoryList.vb</DependentUpon>
+    </Content>
+    <Content Include="Generated\DynamicRoot\Entities\Category.StoredProcedures.sql">
+      <DependentUpon>Category.vb</DependentUpon>
+    </Content>
+    <Content Include="Generated\EditableChild\Collections\CategoryList.StoredProcedures.sql">
+      <DependentUpon>CategoryList.vb</DependentUpon>
+    </Content>
+    <Content Include="Generated\EditableChild\Entities\Category.StoredProcedures.sql">
+      <DependentUpon>Category.vb</DependentUpon>
+    </Content>
+    <Content Include="Generated\EditableRoot\Collections\CategoryList.StoredProcedures.sql">
+      <DependentUpon>CategoryList.vb</DependentUpon>
+    </Content>
+    <Content Include="Generated\EditableRoot\Entities\Category.StoredProcedures.sql">
+      <DependentUpon>Category.vb</DependentUpon>
+    </Content>
+    <Content Include="Generated\ReadOnlyChild\Collections\CategoryInfoList.StoredProcedures.sql">
+      <DependentUpon>CategoryInfoList.vb</DependentUpon>
+    </Content>
+    <Content Include="Generated\ReadOnlyChild\Entities\CategoryInfo.StoredProcedures.sql">
+      <DependentUpon>CategoryInfo.vb</DependentUpon>
+    </Content>
+    <Content Include="Generated\ReadOnlyRoot\Collections\CategoryInfoList.StoredProcedures.sql">
+      <DependentUpon>CategoryInfoList.vb</DependentUpon>
+    </Content>
+    <Content Include="Generated\ReadOnlyRoot\Entities\CategoryInfo.StoredProcedures.sql">
+      <DependentUpon>CategoryInfo.vb</DependentUpon>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -2,7 +2,7 @@
 <%@ Import Namespace="PetShop.Business"%>
 
 <div class="paging">
-    <a href='Products.aspx?categoryId=<%=Request.QueryString("categoryId") %>&productId=<%=Request.QueryString("productId") %>'>
+    <a href='ProductMembers.aspx?categoryId=<%=Request.QueryString("categoryId") %>&ProductMemberId=<%=Request.QueryString("ProductMemberId") %>'>
         &#060;&nbsp;Back to list</a></div>
     <div class="itemsPosition" align="center">
     <PC:CustomGrid ID="itemsGrid" runat="server" EmptyText="No items found." OnPageIndexChanged="PageChanged"
@@ -19,11 +19,11 @@
                 <table cellspacing="0" cellpadding="0" border="0">
 		            <tr>
 			            <td class="itemText">Name:</td>
-			            <td class="itemName"><%# string.Format("{0} {1}", Eval("Product.Name"), Eval("Name")) %></td>
+			            <td class="itemName"><%# string.Format("{0} {1}", Eval("ProductMember.Name"), Eval("Name")) %></td>
 		            </tr>
 		            <tr class="itemText">
 			            <td>Quantity:</td>
-			            <td><%# Inventory.GetInventory(Eval("ItemId").ToString()).Qty %></td>
+			            <td><%# Inventory.GetByItemId(Eval("ItemId").ToString()).Qty %></td>
 		            </tr>
 		            <tr class="itemText">
 			            <td>Price:</td>

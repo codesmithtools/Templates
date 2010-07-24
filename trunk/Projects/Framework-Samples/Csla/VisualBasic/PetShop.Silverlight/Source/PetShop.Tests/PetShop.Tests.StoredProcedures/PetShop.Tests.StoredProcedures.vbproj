@@ -21,6 +21,8 @@
     </FileUpgradeFlags>
     <OldToolsVersion>3.5</OldToolsVersion>
     <UpgradeBackupLocation />
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <TargetFrameworkProfile />
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -33,10 +35,8 @@
     <MapFileExtensions>true</MapFileExtensions>
     <ApplicationRevision>0</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
-    <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
-    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -60,10 +60,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Csla">
-      <HintPath>..\..\..\..\..\..\CodeSmith.Google.Code.CSLA.Trunk\Common\Csla\4.0\Client\Csla.dll</HintPath>
+      <HintPath>..\..\..\Libraries\Csla\Client\Csla.dll</HintPath>
     </Reference>
-    <Reference Include="nunit.framework, Version=2.5.3.9345, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="nunit.framework">
       <HintPath>..\..\..\Libraries\nunit.framework.dll</HintPath>
     </Reference>
     <Reference Include="System" />
@@ -249,27 +248,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <None Include="Generated\Collections\CategoryList.StoredProcedures.sql">
-      <DependentUpon>CategoryList.vb</DependentUpon>
-    </None>
-    <None Include="Generated\Collections\ItemList.StoredProcedures.sql">
-      <DependentUpon>ItemList.vb</DependentUpon>
-    </None>
-    <None Include="Generated\Collections\LineItemList.StoredProcedures.sql">
-      <DependentUpon>LineItemList.vb</DependentUpon>
-    </None>
-    <None Include="Generated\Collections\OrderList.StoredProcedures.sql">
-      <DependentUpon>OrderList.vb</DependentUpon>
-    </None>
-    <None Include="Generated\Collections\OrderStatusList.StoredProcedures.sql">
-      <DependentUpon>OrderStatusList.vb</DependentUpon>
-    </None>
-    <None Include="Generated\Collections\ProductList.StoredProcedures.sql">
-      <DependentUpon>ProductList.vb</DependentUpon>
-    </None>
-    <None Include="Generated\Collections\SupplierList.StoredProcedures.sql">
-      <DependentUpon>SupplierList.vb</DependentUpon>
-    </None>
     <None Include="Generated\Entities.csp" />
     <None Include="My Project\Application.myapp">
       <Generator>MyApplicationCodeGenerator</Generator>
@@ -280,12 +258,6 @@
       <CustomToolNamespace>My</CustomToolNamespace>
       <LastGenOutput>Settings.Designer.vb</LastGenOutput>
     </None>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\PetShop.Tests.ParameterizedSQL\PetShop.Tests.ParameterizedSQL.vbproj">
-      <Project>{B5772F1F-5418-4C85-8C83-1BC333F19884}</Project>
-      <Name>PetShop.Tests.ParameterizedSQL</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
@@ -305,8 +277,26 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\PetShop.Tests.ParameterizedSQL\Entities\OrderStatus.StoredProcedures.sql">
-      <Link>OrderStatus.StoredProcedures.sql</Link>
+    <Content Include="Generated\Collections\CategoryList.StoredProcedures.sql">
+      <DependentUpon>CategoryList.vb</DependentUpon>
+    </Content>
+    <Content Include="Generated\Collections\ItemList.StoredProcedures.sql">
+      <DependentUpon>ItemList.vb</DependentUpon>
+    </Content>
+    <Content Include="Generated\Collections\LineItemList.StoredProcedures.sql">
+      <DependentUpon>LineItemList.vb</DependentUpon>
+    </Content>
+    <Content Include="Generated\Collections\OrderList.StoredProcedures.sql">
+      <DependentUpon>OrderList.vb</DependentUpon>
+    </Content>
+    <Content Include="Generated\Collections\OrderStatusList.StoredProcedures.sql">
+      <DependentUpon>OrderStatusList.vb</DependentUpon>
+    </Content>
+    <Content Include="Generated\Collections\ProductList.StoredProcedures.sql">
+      <DependentUpon>ProductList.vb</DependentUpon>
+    </Content>
+    <Content Include="Generated\Collections\SupplierList.StoredProcedures.sql">
+      <DependentUpon>SupplierList.vb</DependentUpon>
     </Content>
     <Content Include="Generated\Entities\Category.StoredProcedures.sql">
       <DependentUpon>Category.vb</DependentUpon>
