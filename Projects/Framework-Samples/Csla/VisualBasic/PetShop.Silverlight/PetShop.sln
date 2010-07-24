@@ -27,6 +27,15 @@ Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "PetShop.Tests.OF.Parameteri
 EndProject
 Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "PetShop.Tests.Collections", "Source\PetShop.Tests\PetShop.Tests.Collections\PetShop.Tests.Collections.vbproj", "{F6C60C74-C106-4E26-8C59-73D92D3168BB}"
 EndProject
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "PetShop.Business.Silverlight", "Source\PetShop.Business.Silverlight\PetShop.Business.Silverlight.vbproj", "{57578FD7-3C92-4234-813C-7BCC837C940C}"
+	ProjectSection(ProjectDependencies) = postProject
+		{E10044C4-3AC7-447A-9A53-5233058C11E7} = {E10044C4-3AC7-447A-9A53-5233058C11E7}
+	EndProjectSection
+EndProject
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "PetShop.UI.Silverlight", "Source\PetShop.UI.Silverlight\PetShop.UI.Silverlight.vbproj", "{8ED67CD0-7081-480D-855E-32942C738C46}"
+EndProject
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "PetShop.UI.Silverlight.Web", "Source\PetShop.UI.Silverlight.Web\PetShop.UI.Silverlight.Web.vbproj", "{5640806A-97F1-4E60-930F-704FFBBD04E0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -86,6 +95,24 @@ Global
 		{F6C60C74-C106-4E26-8C59-73D92D3168BB}.Release|Any CPU.Build.0 = Release|Any CPU
 		{F6C60C74-C106-4E26-8C59-73D92D3168BB}.Testing|Any CPU.ActiveCfg = Release|Any CPU
 		{F6C60C74-C106-4E26-8C59-73D92D3168BB}.Testing|Any CPU.Build.0 = Release|Any CPU
+		{57578FD7-3C92-4234-813C-7BCC837C940C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{57578FD7-3C92-4234-813C-7BCC837C940C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{57578FD7-3C92-4234-813C-7BCC837C940C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{57578FD7-3C92-4234-813C-7BCC837C940C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{57578FD7-3C92-4234-813C-7BCC837C940C}.Testing|Any CPU.ActiveCfg = Release|Any CPU
+		{57578FD7-3C92-4234-813C-7BCC837C940C}.Testing|Any CPU.Build.0 = Release|Any CPU
+		{8ED67CD0-7081-480D-855E-32942C738C46}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8ED67CD0-7081-480D-855E-32942C738C46}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8ED67CD0-7081-480D-855E-32942C738C46}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8ED67CD0-7081-480D-855E-32942C738C46}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8ED67CD0-7081-480D-855E-32942C738C46}.Testing|Any CPU.ActiveCfg = Release|Any CPU
+		{8ED67CD0-7081-480D-855E-32942C738C46}.Testing|Any CPU.Build.0 = Release|Any CPU
+		{5640806A-97F1-4E60-930F-704FFBBD04E0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5640806A-97F1-4E60-930F-704FFBBD04E0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5640806A-97F1-4E60-930F-704FFBBD04E0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5640806A-97F1-4E60-930F-704FFBBD04E0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5640806A-97F1-4E60-930F-704FFBBD04E0}.Testing|Any CPU.ActiveCfg = Release|Any CPU
+		{5640806A-97F1-4E60-930F-704FFBBD04E0}.Testing|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
