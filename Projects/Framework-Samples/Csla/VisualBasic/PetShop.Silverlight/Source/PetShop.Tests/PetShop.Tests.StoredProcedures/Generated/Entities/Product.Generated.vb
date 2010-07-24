@@ -31,7 +31,7 @@ Namespace PetShop.Tests.StoredProcedures
     
         Friend Sub New(ByVal productId As System.String)
             Using(BypassPropertyChecks)
-                _productId = productId
+            LoadProperty(_productIdProperty, productId)
             End Using
         End Sub
     
@@ -62,77 +62,71 @@ Namespace PetShop.Tests.StoredProcedures
 #Region "Properties"
     
         Private Shared ReadOnly _productIdProperty As PropertyInfo(Of System.String) = RegisterProperty(Of System.String)(Function(p As Product) p.ProductId, String.Empty)
-        Private _productId As System.String = _productIdProperty.DefaultValue
         
 		<System.ComponentModel.DataObjectField(true, false)> _
         Public Property ProductId() As System.String
             Get 
-                Return GetProperty(_productIdProperty, _productId) 
+                Return GetProperty(_productIdProperty)
             End Get
-            Set (value As System.String)
-                SetProperty(_productIdProperty, _productId, value)
+            Set (ByVal value As System.String)
+                SetProperty(_productIdProperty, value)
             End Set
         End Property
 
         Private Shared ReadOnly _originalProductIdProperty As PropertyInfo(Of System.String) = RegisterProperty(Of System.String)(Function(p As Product) p.OriginalProductId, String.Empty)
-        Private _originalProductId As System.String = _originalProductIdProperty.DefaultValue
         ''' <summary>
         ''' Holds the original value for ProductId. This is used for non identity primary keys.
         ''' </summary>
         Friend Property OriginalProductId() As System.String
             Get 
-                Return GetProperty(_originalProductIdProperty, _originalProductId) 
+                Return GetProperty(_originalProductIdProperty) 
             End Get
             Set (value As System.String)
-                SetProperty(_originalProductIdProperty, _originalProductId, value)
+                SetProperty(_originalProductIdProperty, value)
             End Set
         End Property
 
         Private Shared ReadOnly _categoryIdProperty As PropertyInfo(Of System.String) = RegisterProperty(Of System.String)(Function(p As Product) p.CategoryId, String.Empty)
-        Private _categoryId As System.String = _categoryIdProperty.DefaultValue
         
         Public Property CategoryId() As System.String
             Get 
-                Return GetProperty(_categoryIdProperty, _categoryId) 
+                Return GetProperty(_categoryIdProperty)
             End Get
-            Set (value As System.String)
-                SetProperty(_categoryIdProperty, _categoryId, value)
+            Set (ByVal value As System.String)
+                SetProperty(_categoryIdProperty, value)
             End Set
         End Property
 
         Private Shared ReadOnly _nameProperty As PropertyInfo(Of System.String) = RegisterProperty(Of System.String)(Function(p As Product) p.Name, String.Empty, vbNullString)
-        Private _name As System.String = _nameProperty.DefaultValue
         
         Public Property Name() As System.String
             Get 
-                Return GetProperty(_nameProperty, _name) 
+                Return GetProperty(_nameProperty)
             End Get
-            Set (value As System.String)
-                SetProperty(_nameProperty, _name, value)
+            Set (ByVal value As System.String)
+                SetProperty(_nameProperty, value)
             End Set
         End Property
 
         Private Shared ReadOnly _descriptionProperty As PropertyInfo(Of System.String) = RegisterProperty(Of System.String)(Function(p As Product) p.Description, String.Empty, vbNullString)
-        Private _description As System.String = _descriptionProperty.DefaultValue
         
         Public Property Description() As System.String
             Get 
-                Return GetProperty(_descriptionProperty, _description) 
+                Return GetProperty(_descriptionProperty)
             End Get
-            Set (value As System.String)
-                SetProperty(_descriptionProperty, _description, value)
+            Set (ByVal value As System.String)
+                SetProperty(_descriptionProperty, value)
             End Set
         End Property
 
         Private Shared ReadOnly _imageProperty As PropertyInfo(Of System.String) = RegisterProperty(Of System.String)(Function(p As Product) p.Image, String.Empty, vbNullString)
-        Private _image As System.String = _imageProperty.DefaultValue
         
         Public Property Image() As System.String
             Get 
-                Return GetProperty(_imageProperty, _image) 
+                Return GetProperty(_imageProperty)
             End Get
-            Set (value As System.String)
-                SetProperty(_imageProperty, _image, value)
+            Set (ByVal value As System.String)
+                SetProperty(_imageProperty, value)
             End Set
         End Property
 

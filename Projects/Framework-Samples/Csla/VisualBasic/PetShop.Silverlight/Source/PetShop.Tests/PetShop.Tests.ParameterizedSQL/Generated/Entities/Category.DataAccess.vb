@@ -82,7 +82,7 @@ Namespace PetShop.Tests.ParameterizedSQL
                     End If
                 End Using
     
-                _originalCategoryId = Me.CategoryId
+                LoadProperty(_originalCategoryIdProperty, Me.CategoryId)
     
     
                 FieldManager.UpdateChildren(Me, connection)
@@ -145,7 +145,7 @@ Namespace PetShop.Tests.ParameterizedSQL
                     throw new DBConcurrencyException("The entity is out of date on the client. Please update the entity and try again. This could also be thrown if the sql statement failed to execute.")
                 End If
                 End Using
-                _originalCategoryId = Me.CategoryId
+                LoadProperty(_originalCategoryIdProperty, Me.CategoryId)
     
     
                 FieldManager.UpdateChildren(Me, connection)
@@ -161,7 +161,7 @@ Namespace PetShop.Tests.ParameterizedSQL
                 Return
             End If
         
-            DataPortal_Delete(New CategoryCriteria (_categoryId))
+            DataPortal_Delete(New CategoryCriteria (CategoryId))
         
             OnSelfDeleted()
         End Sub
@@ -199,10 +199,10 @@ Namespace PetShop.Tests.ParameterizedSQL
             End If
     
             Using(BypassPropertyChecks)
-                _categoryId = reader.GetString("CategoryId")
-                _originalCategoryId = reader.GetString("CategoryId")
-                _name = reader.GetString("Name")
-                _description = reader.GetString("Descn")
+                LoadProperty(_categoryIdProperty, reader.Item("CategoryId"))
+                LoadProperty(_originalCategoryIdProperty, reader.Item("CategoryId"))
+                LoadProperty(_nameProperty, reader.Item("Name"))
+                LoadProperty(_descriptionProperty, reader.Item("Descn"))
             End Using
     
             OnMapped()

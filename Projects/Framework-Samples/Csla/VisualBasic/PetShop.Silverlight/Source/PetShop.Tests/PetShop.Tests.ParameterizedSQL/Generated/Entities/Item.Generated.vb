@@ -31,7 +31,7 @@ Namespace PetShop.Tests.ParameterizedSQL
     
         Friend Sub New(ByVal itemId As System.String)
             Using(BypassPropertyChecks)
-                _itemId = itemId
+            LoadProperty(_itemIdProperty, itemId)
             End Using
         End Sub
     
@@ -62,113 +62,104 @@ Namespace PetShop.Tests.ParameterizedSQL
 #Region "Properties"
     
         Private Shared ReadOnly _itemIdProperty As PropertyInfo(Of System.String) = RegisterProperty(Of System.String)(Function(p As Item) p.ItemId, String.Empty)
-        Private _itemId As System.String = _itemIdProperty.DefaultValue
         
 		<System.ComponentModel.DataObjectField(true, false)> _
         Public Property ItemId() As System.String
             Get 
-                Return GetProperty(_itemIdProperty, _itemId) 
+                Return GetProperty(_itemIdProperty)
             End Get
-            Set (value As System.String)
-                SetProperty(_itemIdProperty, _itemId, value)
+            Set (ByVal value As System.String)
+                SetProperty(_itemIdProperty, value)
             End Set
         End Property
 
         Private Shared ReadOnly _originalItemIdProperty As PropertyInfo(Of System.String) = RegisterProperty(Of System.String)(Function(p As Item) p.OriginalItemId, String.Empty)
-        Private _originalItemId As System.String = _originalItemIdProperty.DefaultValue
         ''' <summary>
         ''' Holds the original value for ItemId. This is used for non identity primary keys.
         ''' </summary>
         Friend Property OriginalItemId() As System.String
             Get 
-                Return GetProperty(_originalItemIdProperty, _originalItemId) 
+                Return GetProperty(_originalItemIdProperty) 
             End Get
             Set (value As System.String)
-                SetProperty(_originalItemIdProperty, _originalItemId, value)
+                SetProperty(_originalItemIdProperty, value)
             End Set
         End Property
 
         Private Shared ReadOnly _productIdProperty As PropertyInfo(Of System.String) = RegisterProperty(Of System.String)(Function(p As Item) p.ProductId, String.Empty)
-        Private _productId As System.String = _productIdProperty.DefaultValue
         
         Public Property ProductId() As System.String
             Get 
-                Return GetProperty(_productIdProperty, _productId) 
+                Return GetProperty(_productIdProperty)
             End Get
-            Set (value As System.String)
-                SetProperty(_productIdProperty, _productId, value)
+            Set (ByVal value As System.String)
+                SetProperty(_productIdProperty, value)
             End Set
         End Property
 
         Private Shared ReadOnly _listPriceProperty As PropertyInfo(Of System.Nullable(Of System.Decimal)) = RegisterProperty(Of System.Nullable(Of System.Decimal))(Function(p As Item) p.ListPrice, String.Empty, CType(Nothing, System.Nullable(Of System.Decimal)))
-        Private _listPrice As System.Nullable(Of System.Decimal) = _listPriceProperty.DefaultValue
         
         Public Property ListPrice() As System.Nullable(Of System.Decimal)
             Get 
-                Return GetProperty(_listPriceProperty, _listPrice) 
+                Return GetProperty(_listPriceProperty)
             End Get
-            Set (value As System.Nullable(Of System.Decimal))
-                SetProperty(_listPriceProperty, _listPrice, value)
+            Set (ByVal value As System.Nullable(Of System.Decimal))
+                SetProperty(_listPriceProperty, value)
             End Set
         End Property
 
         Private Shared ReadOnly _unitCostProperty As PropertyInfo(Of System.Nullable(Of System.Decimal)) = RegisterProperty(Of System.Nullable(Of System.Decimal))(Function(p As Item) p.UnitCost, String.Empty, CType(Nothing, System.Nullable(Of System.Decimal)))
-        Private _unitCost As System.Nullable(Of System.Decimal) = _unitCostProperty.DefaultValue
         
         Public Property UnitCost() As System.Nullable(Of System.Decimal)
             Get 
-                Return GetProperty(_unitCostProperty, _unitCost) 
+                Return GetProperty(_unitCostProperty)
             End Get
-            Set (value As System.Nullable(Of System.Decimal))
-                SetProperty(_unitCostProperty, _unitCost, value)
+            Set (ByVal value As System.Nullable(Of System.Decimal))
+                SetProperty(_unitCostProperty, value)
             End Set
         End Property
 
         Private Shared ReadOnly _supplierProperty As PropertyInfo(Of System.Nullable(Of System.Int32)) = RegisterProperty(Of System.Nullable(Of System.Int32))(Function(p As Item) p.Supplier, String.Empty, CType(Nothing, System.Nullable(Of System.Int32)))
-        Private _supplier As System.Nullable(Of System.Int32) = _supplierProperty.DefaultValue
         
         Public Property Supplier() As System.Nullable(Of System.Int32)
             Get 
-                Return GetProperty(_supplierProperty, _supplier) 
+                Return GetProperty(_supplierProperty)
             End Get
-            Set (value As System.Nullable(Of System.Int32))
-                SetProperty(_supplierProperty, _supplier, value)
+            Set (ByVal value As System.Nullable(Of System.Int32))
+                SetProperty(_supplierProperty, value)
             End Set
         End Property
 
         Private Shared ReadOnly _statusProperty As PropertyInfo(Of System.String) = RegisterProperty(Of System.String)(Function(p As Item) p.Status, String.Empty, vbNullString)
-        Private _status As System.String = _statusProperty.DefaultValue
         
         Public Property Status() As System.String
             Get 
-                Return GetProperty(_statusProperty, _status) 
+                Return GetProperty(_statusProperty)
             End Get
-            Set (value As System.String)
-                SetProperty(_statusProperty, _status, value)
+            Set (ByVal value As System.String)
+                SetProperty(_statusProperty, value)
             End Set
         End Property
 
         Private Shared ReadOnly _nameProperty As PropertyInfo(Of System.String) = RegisterProperty(Of System.String)(Function(p As Item) p.Name, String.Empty, vbNullString)
-        Private _name As System.String = _nameProperty.DefaultValue
         
         Public Property Name() As System.String
             Get 
-                Return GetProperty(_nameProperty, _name) 
+                Return GetProperty(_nameProperty)
             End Get
-            Set (value As System.String)
-                SetProperty(_nameProperty, _name, value)
+            Set (ByVal value As System.String)
+                SetProperty(_nameProperty, value)
             End Set
         End Property
 
         Private Shared ReadOnly _imageProperty As PropertyInfo(Of System.String) = RegisterProperty(Of System.String)(Function(p As Item) p.Image, String.Empty, vbNullString)
-        Private _image As System.String = _imageProperty.DefaultValue
         
         Public Property Image() As System.String
             Get 
-                Return GetProperty(_imageProperty, _image) 
+                Return GetProperty(_imageProperty)
             End Get
-            Set (value As System.String)
-                SetProperty(_imageProperty, _image, value)
+            Set (ByVal value As System.String)
+                SetProperty(_imageProperty, value)
             End Set
         End Property
 

@@ -32,7 +32,7 @@ Namespace PetShop.Tests.StoredProcedures
                 Return
             End If
     
-            ProductId = "BN"
+            LoadProperty(_productIdProperty, "BN")
             BusinessRules.CheckRules()
     
             OnCreated()
@@ -96,7 +96,7 @@ Namespace PetShop.Tests.StoredProcedures
                     End Using
                 End Using
                 
-                _originalItemId = Me.ItemId
+                LoadProperty(_originalItemIdProperty, Me.ItemId)
     
                 FieldManager.UpdateChildren(Me, connection)
             End Using
@@ -166,7 +166,7 @@ Namespace PetShop.Tests.StoredProcedures
                         throw new DBConcurrencyException("The entity is out of date on the client. Please update the entity and try again. This could also be thrown if the sql statement failed to execute.")
                     End If
     
-                _originalItemId = Me.ItemId
+                LoadProperty(_originalItemIdProperty, Me.ItemId)
                 End Using
     
                 FieldManager.UpdateChildren(Me, connection)
@@ -182,7 +182,7 @@ Namespace PetShop.Tests.StoredProcedures
                 Return
             End If
         
-            DataPortal_Delete(New ItemCriteria (_itemId))
+            DataPortal_Delete(New ItemCriteria (ItemId))
         
             OnSelfDeleted()
         End Sub
@@ -246,7 +246,7 @@ Namespace PetShop.Tests.StoredProcedures
                 Return
             End If
     
-            ProductId = "BN"
+            LoadProperty(_productIdProperty, "BN")
             BusinessRules.CheckRules()
     
             OnChildCreated()
@@ -309,7 +309,7 @@ Namespace PetShop.Tests.StoredProcedures
     
     
                 ' Update the original non-identity primary key value.
-                _originalItemId = Me.ItemId
+                LoadProperty(_originalItemIdProperty, Me.ItemId)
     
             End Using
     
@@ -349,20 +349,20 @@ Namespace PetShop.Tests.StoredProcedures
     
     
                 ' Update the original non-identity primary key value.
-                _originalItemId = Me.ItemId
+                LoadProperty(_originalItemIdProperty, Me.ItemId)
     
             End Using
     
             ' Update foreign keys values. This code will update the values passed in from the parent only if no errors occurred after executing the query.
             '   BLAKE: Parent objects in VB require a different syntax check [Please Use IsNothing(ParentObjectParameter)]            
             If(Not IsNothing(product) AndAlso Not product.ProductId = Me.ProductId) Then
-                _productId = product.ProductId
+                LoadProperty(_productIdProperty, product.ProductId)
             End If
     
             ' Update foreign keys values. This code will update the values passed in from the parent only if no errors occurred after executing the query.
             '   BLAKE: Parent objects in VB require a different syntax check [Please Use IsNothing(ParentObjectParameter)]            
             If(Not IsNothing(supplier) AndAlso Not supplier.SuppId = Me.Supplier) Then
-                _supplier = supplier.SuppId
+                LoadProperty(_supplierProperty, supplier.SuppId)
             End If
     
             ' A child relationship exists on this Business Object but its type is not a child type (E.G. EditableChild). 
@@ -404,9 +404,9 @@ Namespace PetShop.Tests.StoredProcedures
                 End If
     
                 ' Update non-identity primary key value.
-                _itemId = DirectCast(command.Parameters("@p_ItemId").Value, System.String)
+                LoadProperty(_itemIdProperty, DirectCast(command.Parameters("@p_ItemId").Value, System.String))
                 ' Update non-identity primary key value.
-                _originalItemId = Me.ItemId
+                LoadProperty(_originalItemIdProperty, Me.ItemId)
             End Using
             FieldManager.UpdateChildren(Me, connection)
     
@@ -448,19 +448,19 @@ Namespace PetShop.Tests.StoredProcedures
                 End If
     
                 ' Update non-identity primary key value.
-                _itemId = DirectCast(command.Parameters("@p_ItemId").Value, System.String)
+                LoadProperty(_itemIdProperty, DirectCast(command.Parameters("@p_ItemId").Value, System.String))
     
                 'Update foreign keys values. This code will update the values passed in from the parent only if no errors occurred after executing the query.
                 If(Not IsNothing(product) AndAlso Not product.ProductId = Me.ProductId) Then
-                        _productId = product.ProductId
+                        LoadProperty(_productIdProperty, product.ProductId)
                 End If
     
                 'Update foreign keys values. This code will update the values passed in from the parent only if no errors occurred after executing the query.
                 If(Not IsNothing(supplier) AndAlso Not supplier.SuppId = Me.Supplier) Then
-                        _supplier = supplier.SuppId
+                        LoadProperty(_supplierProperty, supplier.SuppId)
                 End If
                 ' Update non-identity primary key value.
-                _originalItemId = Me.ItemId
+                LoadProperty(_originalItemIdProperty, Me.ItemId)
             End Using
             ' A child relationship exists on this Business Object but its type is not a child type (E.G. EditableChild). 
             ' TODO: Please override OnChildUpdated() and update this child manually.
@@ -479,7 +479,7 @@ Namespace PetShop.Tests.StoredProcedures
                 Return
             End If
         
-            DataPortal_Delete(New ItemCriteria (_itemId))
+            DataPortal_Delete(New ItemCriteria (ItemId))
         
             OnChildSelfDeleted()
         End Sub
@@ -496,7 +496,7 @@ Namespace PetShop.Tests.StoredProcedures
                 Return
             End If
         
-            DataPortal_Delete(New ItemCriteria (_itemId), connection)
+            DataPortal_Delete(New ItemCriteria (ItemId), connection)
         
             OnChildSelfDeleted()
         End Sub
@@ -511,15 +511,15 @@ Namespace PetShop.Tests.StoredProcedures
             End If
     
             Using(BypassPropertyChecks)
-                _itemId = reader.GetString("ItemId")
-                _originalItemId = reader.GetString("ItemId")
-                _productId = reader.GetString("ProductId")
-                _listPrice = If(reader.IsDBNull("ListPrice"), Nothing, reader.GetDecimal("ListPrice"))
-                _unitCost = If(reader.IsDBNull("UnitCost"), Nothing, reader.GetDecimal("UnitCost"))
-                _supplier = If(reader.IsDBNull("Supplier"), Nothing, reader.GetInt32("Supplier"))
-                _status = reader.GetString("Status")
-                _name = reader.GetString("Name")
-                _image = reader.GetString("Image")
+                LoadProperty(_itemIdProperty, reader.Item("ItemId"))
+                LoadProperty(_originalItemIdProperty, reader.Item("ItemId"))
+                LoadProperty(_productIdProperty, reader.Item("ProductId"))
+                LoadProperty(_listPriceProperty, reader.Item("ListPrice"))
+                LoadProperty(_unitCostProperty, reader.Item("UnitCost"))
+                LoadProperty(_supplierProperty, reader.Item("Supplier"))
+                LoadProperty(_statusProperty, reader.Item("Status"))
+                LoadProperty(_nameProperty, reader.Item("Name"))
+                LoadProperty(_imageProperty, reader.Item("Image"))
             End Using
     
             OnMapped()
