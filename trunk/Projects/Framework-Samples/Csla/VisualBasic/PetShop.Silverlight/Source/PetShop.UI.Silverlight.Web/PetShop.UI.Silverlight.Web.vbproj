@@ -25,6 +25,7 @@
     <OutputPath>bin\</OutputPath>
     <DocumentationFile>PetShop.UI.Silverlight.Web.xml</DocumentationFile>
     <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -34,6 +35,7 @@
     <OutputPath>bin\</OutputPath>
     <DocumentationFile>PetShop.UI.Silverlight.Web.xml</DocumentationFile>
     <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup>
     <OptionExplicit>On</OptionExplicit>
@@ -88,7 +90,10 @@
     <Import Include="System.Web.UI.HtmlControls" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="clientaccesspolicy.xml" />
+    <Content Include="clientaccesspolicy.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="ClientBin\PetShop.UI.Silverlight.xap" />
     <Content Include="crossdomain.xml" />
     <Content Include="IWcfSlPortal.vb" />
     <Content Include="PetShop.UI.SilverlightTestPage.aspx" />
@@ -144,7 +149,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="ClientBin\" />
+    <ProjectReference Include="..\PetShop.Business\PetShop.Business.vbproj">
+      <Project>{E10044C4-3AC7-447A-9A53-5233058C11E7}</Project>
+      <Name>PetShop.Business</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.VisualBasic.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />

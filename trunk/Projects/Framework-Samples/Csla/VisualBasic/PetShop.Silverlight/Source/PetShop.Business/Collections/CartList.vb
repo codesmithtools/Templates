@@ -97,36 +97,66 @@ Namespace PetShop.Business
     ''' <param name="isShoppingCart">Cart is a shopping cart.</param>
     ''' <param name="quantity">Item Quanitity</param>
     Public Overloads Sub Add(ByVal itemId As String, ByVal uniqueID As Integer, ByVal isShoppingCart As Boolean, ByVal quantity As Integer)
-        Dim index As Integer = 0
-        Dim found As Boolean = False
+            Dim index As Integer = 0
+            Dim found As Boolean = False
 
-        For Each cart As Cart In Me
-            If cart.ItemId = itemId Then
-                found = True
-                Exit For
-            End If
+            For Each cart As Cart In Me
+                If cart.ItemId = itemId Then
+                    found = True
+                    Exit For
+                End If
 
-            System.Math.Max(System.Threading.Interlocked.Increment(index), index - 1)
-        Next
+                index += 1
+            Next
 
-        If found Then
-            Items(index).Quantity += quantity
-        Else
-            Dim item As Item = item.GetByItemId(itemId)
-            Dim product As Product = product.GetByProductId(item.ProductId)
-            Dim cart As Cart = cart.NewCart()
-            cart.UniqueID = uniqueID
-            cart.ItemId = itemId
-            cart.Name = item.Name
-            cart.ProductId = item.ProductId
-            cart.IsShoppingCart = isShoppingCart
-            cart.Price = If(item.ListPrice, If(item.UnitCost, 0))
-            cart.Type = product.Name
-            cart.CategoryId = product.CategoryId
-            cart.Quantity = quantity
+            If found Then
+                Items(index).Quantity += quantity
+            Else
+#If Not Silverlight Then
+                Dim item2 As Item = PetShop.Business.Item.GetByItemId(itemId)
+                Dim product3 As Product = Product.GetByProductId(item2.ProductId)
+                Dim cart1 As Cart = Cart.NewCart()
+                cart1.UniqueID = uniqueID
+                cart1.ItemId = itemId
+                cart1.Name = item2.Name
+                cart1.ProductId = item2.ProductId
+                cart1.IsShoppingCart = isShoppingCart
+                cart1.Price = If(item2.ListPrice, If(item2.UnitCost, 0))
+                cart1.Type = product3.Name
+                cart1.CategoryId = product3.CategoryId
+                cart1.Quantity = quantity
 
-            Add(cart)
-        End If
+                Add(cart1)
+#Else
+                PetShop.Business.Item.GetByItemIdAsync(itemId, Sub(o, e)
+                                                                   If e.[Error] Is Nothing Then
+                                                                       Return
+                                                                   End If
+
+                                                                   Dim item2 As Item = e.[Object]
+                                                                   Product.GetByProductIdAsync(item2.ProductId, Sub(o1, e1)
+                                                                                                                    Dim product3 As Product = e1.[Object]
+
+                                                                                                                    Cart.NewCartAsync(Sub(o2, e2)
+                                                                                                                                          Dim cart1 As Cart = e2.[Object]
+
+                                                                                                                                          cart1.UniqueID = uniqueID
+                                                                                                                                          cart1.ItemId = itemId
+                                                                                                                                          cart1.Name = item2.Name
+                                                                                                                                          cart1.ProductId = item2.ProductId
+                                                                                                                                          cart1.IsShoppingCart = isShoppingCart
+                                                                                                                                          cart1.Price = If(item2.ListPrice, If(item2.UnitCost, 0))
+                                                                                                                                          cart1.Type = product3.Name
+                                                                                                                                          cart1.CategoryId = product3.CategoryId
+                                                                                                                                          cart1.Quantity = quantity
+
+                                                                                                                                          Add(cart1)
+
+                                                                                                                                      End Sub)
+                                                                                                                End Sub)
+                                                               End Sub)
+#End If
+End If
     End Sub
 
     ''' <summary>
@@ -150,18 +180,36 @@ Namespace PetShop.Business
     ''' Method to convert all cart items to order line items
     ''' </summary>
     Public Sub SaveOrderLineItems(ByVal orderId As Integer)
-        Dim lineNum As Integer = 0
+            Dim lineNum As Integer = 0
 
-        For Each item As Cart In Me
-            Dim lineItem As LineItem = lineItem.NewLineItem()
-            lineItem.OrderId = orderId
-            lineItem.ItemId = item.ItemId
-            lineItem.LineNum = System.Threading.Interlocked.Increment(lineNum)
-            lineItem.Quantity = item.Quantity
-            lineItem.UnitPrice = item.Price
+            For Each item As Cart In Me
+#If Not Silverlight Then
+	Dim lineItem As LineItem = LineItem.NewLineItem()
+	lineItem.OrderId = orderId
+	lineItem.ItemId = item.ItemId
+	lineItem.LineNum = System.Threading.Interlocked.Increment(lineNum)
+	lineItem.Quantity = item.Quantity
+	lineItem.UnitPrice = item.Price
 
-            lineItem = lineItem.Save()
-        Next
+	lineItem = lineItem.Save()
+
+#Else
+                LineItem.NewLineItemAsync(Sub(o, e)
+                                              If e.Error Is Nothing Then
+                                                  Return
+                                              End If
+
+                                              Dim lineItem As LineItem = e.[Object]
+                                              lineItem.OrderId = orderId
+                                              lineItem.ItemId = item.ItemId
+                                              lineItem.LineNum = System.Threading.Interlocked.Increment(lineNum)
+                                              lineItem.Quantity = item.Quantity
+                                              lineItem.UnitPrice = item.Price
+
+                                              item.BeginSave()
+                                          End Sub)
+#End If
+            Next
     End Sub
 
 #End Region

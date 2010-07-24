@@ -1,7 +1,7 @@
 ﻿Partial Public Class CategoryDetailPage
     Inherits UserControl
 
-    Public Sub New 
+    Public Sub New()
         InitializeComponent()
     End Sub
 

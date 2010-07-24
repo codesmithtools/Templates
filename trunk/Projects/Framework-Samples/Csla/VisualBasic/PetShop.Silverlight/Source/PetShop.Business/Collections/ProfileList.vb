@@ -32,13 +32,24 @@ Namespace PetShop.Business
 
 #Region "Custom Factory Methods"
 
+#If Not Silverlight Then
         Public Shared Function GetByUsername(ByVal username As System.String) As ProfileList
             Dim criteria As New ProfileCriteria()
             criteria.Username = username
 
             Return DataPortal.Fetch(Of ProfileList)(criteria)
         End Function
+#Else
+        Public Shared Sub GetByUsername(ByVal username As System.String, ByVal handler As EventHandler(Of DataPortalResult(Of ProfileList)))
+            Dim dp As New DataPortal(Of ProfileList)()
+            AddHandler dp.FetchCompleted, handler
 
+            Dim criteria As New ProfileCriteria()
+            criteria.Username = username
+
+            dp.BeginFetch(criteria)
+        End Sub
+#End If
 #End Region
     End Class
 End Namespace

@@ -54,10 +54,10 @@ Public Class CategoryTests
 
     <SetUp()> _
     Public Sub Setup()
-        TestCategoryID = TestUtility.Instance.RandomString(10, False)
-        TestCategoryID2 = TestUtility.Instance.RandomString(10, False)
-        TestProductID = TestUtility.Instance.RandomString(10, False)
-        TestProductID2 = TestUtility.Instance.RandomString(10, False)
+        TestCategoryID = TestUtility.Instance.RandomString(9, False)
+        TestCategoryID2 = TestUtility.Instance.RandomString(9, False)
+        TestProductID = TestUtility.Instance.RandomString(9, False)
+        TestProductID2 = TestUtility.Instance.RandomString(9, False)
 
         CreateCategory(TestCategoryID)
     End Sub
