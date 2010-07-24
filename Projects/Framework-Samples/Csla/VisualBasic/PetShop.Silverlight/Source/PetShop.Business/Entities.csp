@@ -76,10 +76,6 @@
         <tableList>
       <table>
         <owner>dbo</owner>
-        <name>Category</name>
-      </table>
-      <table>
-        <owner>dbo</owner>
         <name>Inventory</name>
       </table>
       <table>
@@ -98,6 +94,10 @@
         <connectionString>$(ConnectionString1)</connectionString>
         <providerType>SchemaExplorer.SqlSchemaProvider,SchemaExplorer.SqlSchemaProvider</providerType>
         <tableList>
+      <table>
+        <owner>dbo</owner>
+        <name>Category</name>
+      </table>
       <table>
         <owner>dbo</owner>
         <name>Item</name>
@@ -207,7 +207,6 @@
       <property name="AutoExecuteStoredProcedures">False</property>
       <property name="IsolationLevel">ReadCommitted</property>
       <property name="TestProjectName">PetShop.Test</property>
-      <property name="CommandObject" />
     </propertySet>
   </propertySets>
 </codeSmith>

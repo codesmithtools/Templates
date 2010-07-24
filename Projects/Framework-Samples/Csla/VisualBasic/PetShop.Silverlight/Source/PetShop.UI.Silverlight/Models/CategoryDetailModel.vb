@@ -11,21 +11,19 @@ Imports System.Windows.Shapes
 
 Imports PetShop.Business
 
-Namespace PetShop.UI.Silverlight
-    Public Class CategoryDetailModel
-        Inherits FrameworkElement
-        Public Shared ReadOnly SelectedItemsProperty As DependencyProperty = DependencyProperty.Register("SelectedItems", GetType(List(Of Category)), GetType(CategoryDetailModel), Nothing)
-        Public Property SelectedItems() As List(Of Category)
-            Get
-                Return DirectCast(GetValue(SelectedItemsProperty), List(Of Category))
-            End Get
-            Set(ByVal value As List(Of Category))
-                SetValue(SelectedItemsProperty, value)
-            End Set
-        End Property
+Public Class CategoryDetailModel
+    Inherits FrameworkElement
+    Public Shared ReadOnly SelectedItemsProperty As DependencyProperty = DependencyProperty.Register("SelectedItems", GetType(List(Of Category)), GetType(CategoryDetailModel), Nothing)
+    Public Property SelectedItems() As List(Of Category)
+        Get
+            Return DirectCast(GetValue(SelectedItemsProperty), List(Of Category))
+        End Get
+        Set(ByVal value As List(Of Category))
+            SetValue(SelectedItemsProperty, value)
+        End Set
+    End Property
 
-        Public Sub Home()
-            MainPageModel.ShowForm(New CategoryListPage())
-        End Sub
-    End Class
-End Namespace
+    Public Sub Home()
+        MainPageModel.ShowForm(New CategoryListPage())
+    End Sub
+End Class

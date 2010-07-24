@@ -47,6 +47,7 @@ Namespace PetShop.Business
 
 #Region "Custom Factory Methods"
 
+#If Not Silverlight Then
     ''' <summary>
     ''' Uses the profile's uniqueID to look up the order.
     ''' </summary>
@@ -58,6 +59,17 @@ Namespace PetShop.Business
 
         Return DataPortal.Fetch(Of Order)(criteria)
     End Function
+#Else
+        Public Shared Sub GetOrder(ByVal uniqueId As String, ByVal handler As EventHandler(Of DataPortalResult(Of Order)))
+            Dim dp As New DataPortal(Of Order)()
+            AddHandler dp.FetchCompleted, handler
+
+            Dim criteria As New OrderCriteria()
+            criteria.UserId = uniqueId
+
+            dp.BeginFetch(criteria)
+        End Sub
+#End If
 
 #End Region
 
@@ -66,15 +78,29 @@ Namespace PetShop.Business
     Private Shared ReadOnly _itemsProperty As PropertyInfo(Of LineItemList) = RegisterProperty(Of LineItemList)(Function(p As Order) p.Items, Csla.RelationshipTypes.LazyLoad)
     Public ReadOnly Property Items() As LineItemList
         Get
-            If Not FieldManager.FieldExists(_itemsProperty) Then
-                SetProperty(_itemsProperty, LineItemList.GetLineItemList(OrderId))
-            End If
+                If Not FieldManager.FieldExists(_itemsProperty) Then
+#If Not Silverlight Then
+                    SetProperty(_itemsProperty, LineItemList.GetLineItemList(OrderId))
+#Else
+                    PetShop.Business.LineItemList.GetLineItemList(OrderId, Sub(o, e)
+                                                                               If Not (e.Error Is Nothing) Then
+                                                                                   Throw e.Error
+                                                                               End If
+
+                                                                               Me.LoadProperty(_itemsProperty, e.Object)
+
+                                                                               MarkIdle()
+                                                                               OnPropertyChanged(_itemsProperty)
+                                                                           End Sub)
+#End If
+                 End If
 
             Return GetProperty(_itemsProperty)
         End Get
     End Property
 
-    Private _creditCard As CreditCard
+#If Not Silverlight Then
+        Private _creditCard As CreditCard
     Public Property CreditCard() As CreditCard
         Get
             Return _creditCard
@@ -83,6 +109,7 @@ Namespace PetShop.Business
             _creditCard = value
         End Set
     End Property
+#End If
 
 #End Region
 

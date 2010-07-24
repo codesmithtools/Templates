@@ -32,9 +32,21 @@ Namespace PetShop.Business
 
 #Region "Custom Factory Method(s)"
 
-    Public Shared Function GetLineItemList(ByVal orderId As Integer) As LineItemList
-        Return DataPortal.Fetch(Of LineItemList)(New LineItemCriteria())
-    End Function
+#If Not Silverlight Then
+        Public Shared Function GetLineItemList(ByVal orderId As Integer) As LineItemList
+            Return DataPortal.Fetch(Of LineItemList)(New LineItemCriteria())
+        End Function
+#Else
+        Public Shared Sub GetLineItemList(ByVal orderId As System.Int32, ByVal handler As EventHandler(Of DataPortalResult(Of LineItemList)))
+            Dim dp As New DataPortal(Of LineItemList)()
+            AddHandler dp.FetchCompleted, handler
+
+            Dim criteria As New LineItemCriteria()
+            criteria.OrderId = orderId
+
+            dp.BeginFetch(criteria)
+        End Sub
+#End If
 
 #End Region
     End Class
