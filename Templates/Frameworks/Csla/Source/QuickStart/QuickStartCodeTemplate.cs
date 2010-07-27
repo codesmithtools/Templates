@@ -285,7 +285,25 @@ namespace QuickStart
             return entities;
         }
 
-        public IEnumerable<Entity> GetEntities()
+        public IEnumerable<Entity> GetRootEntities()
+        {
+            var entities = new Dictionary<string, Entity>();
+
+            foreach (var entity in Entities)
+            {
+                if (entity.AssociatedManyToOne.Count == 0)
+                {
+                    if (!entities.ContainsKey(entity.Table.FullName))
+                    {
+                        entities.Add(entity.Table.FullName, entity);
+                    }
+                }
+            }
+
+            return entities.Values;
+        }
+
+        public IEnumerable<Entity> GetExcludedEntities()
         {
             var excludedEntities = GetChildEntities();
 

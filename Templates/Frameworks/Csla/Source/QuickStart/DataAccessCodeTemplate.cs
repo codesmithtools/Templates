@@ -773,8 +773,22 @@ namespace QuickStart
 
         public void PopulateDefaultTables()
         {
+            //EditableRoot
+            foreach (Entity entity in GetRootEntities())
+            {
+                if (!EditableRoot.Contains(entity.Table.Owner, entity.Table.Name))
+                    EditableRoot.Add(entity.Table);
+            }
+
             //EditableChild
             foreach (Entity entity in GetChildEntities().Values)
+            {
+                if (!EditableChild.Contains(entity.Table.Owner, entity.Table.Name))
+                    EditableChild.Add(entity.Table);
+            }
+
+            //EditableChild
+            foreach (Entity entity in GetExcludedEntities())
             {
                 if (!EditableChild.Contains(entity.Table.Owner, entity.Table.Name))
                     EditableChild.Add(entity.Table);
@@ -785,13 +799,6 @@ namespace QuickStart
             {
                 if (!EditableChildList.Contains(entity.Table.Owner, entity.Table.Name))
                     EditableChildList.Add(entity.Table);
-            }
-
-            //EditableRoot
-            foreach (Entity entity in GetEntities())
-            {
-                if (!EditableRoot.Contains(entity.Table.Owner, entity.Table.Name))
-                    EditableRoot.Add(entity.Table);
             }
         }
 
