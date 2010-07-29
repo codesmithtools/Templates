@@ -21,7 +21,7 @@
 <% } %>
 
 <%  foreach(Member member in Entity.MembersNoRowVersion){ if (UseMemberVariables){ %>
-        private static readonly PropertyInfo< <%= member.SystemType %> > <%= member.PrivateMemberVariableName %>Property = RegisterProperty< <%= member.SystemType %> >(p => p.<%= member.PropertyName %>, string.Empty<% if(member.IsNullable) { %>, (<%= member.SystemType %>)null<% } %>);
+        private static readonly PropertyInfo< <%= member.SystemType %> > <%= member.PrivateMemberVariableName %>Property = RegisterProperty< <%= member.SystemType %> >(p => p.<%= member.PropertyName %>, string.Empty<% if(member.IsNullable) { %>, (<%= member.SystemType %>)null<% } %><%if (IsCSLA40) { %>, RelationshipTypes.PrivateField<% }%>);
         private <%= member.SystemType %> <%= member.PrivateMemberVariableName %> = <%= member.PrivateMemberVariableName %>Property.DefaultValue;<%= member.BuildDataObjectField(IncludeSilverlightSupport) %>
 <% if(member.HasDescription) { %>
         /// <summary>
@@ -35,7 +35,7 @@
         }
 
 <%if (member.IsPrimaryKey && !member.IsIdentity) { %>
-        private static readonly PropertyInfo< <%= member.SystemType %> > _original<%= member.PropertyName %>Property = RegisterProperty< <%= member.SystemType %> >(p => p.Original<%= member.PropertyName %>, string.Empty<% if(member.IsNullable) { %>, (<%= member.SystemType %>)null<% } %>);
+        private static readonly PropertyInfo< <%= member.SystemType %> > _original<%= member.PropertyName %>Property = RegisterProperty< <%= member.SystemType %> >(p => p.Original<%= member.PropertyName %>, string.Empty<% if(member.IsNullable) { %>, (<%= member.SystemType %>)null<% } %><%if (IsCSLA40) { %>, RelationshipTypes.PrivateField<% }%>);
         private <%= member.SystemType %> _original<%= member.PropertyName %> = _original<%= member.PropertyName %>Property.DefaultValue;
         /// <summary>
         /// Holds the original value for <%= member.PropertyName %>. This is used for non identity primary keys.
@@ -78,7 +78,6 @@
     if(!BusinessObjectExists(association) && IsReadOnlyBusinessObject( association, "Info")) {
         associationClassName = association.ClassName + "Info";
     } %>
-
         //AssociatedOneToZeroOrOne
         private static readonly PropertyInfo< <%= associationClassName %><%= association.GenericProperty %> > <%= association.PrivateMemberVariableName %>Property = RegisterProperty< <%= associationClassName %><%= association.GenericProperty %> >(p => p.<%= association.PropertyName %>, Csla.RelationshipTypes.Child);
 <% if(association.HasDescription) { %>
@@ -164,7 +163,6 @@
     if(!BusinessObjectExists(association) && IsReadOnlyBusinessObject(association, "Info")) {
         associationClassName = association.ClassName + "Info";
     } %>
-
         //AssociatedManyToOne
         private static readonly PropertyInfo< <%= associationClassName %><%= association.GenericProperty %> > <%= association.PrivateMemberVariableName %>Property = RegisterProperty< <%= associationClassName %><%= association.GenericProperty %> >(p => p.<%= association.PropertyName %>, Csla.RelationshipTypes.Child);
 <% if(association.HasDescription) { %>
@@ -214,6 +212,7 @@ if(!result.Equals("(true)", StringComparison.CurrentCultureIgnoreCase) && !resul
                 return GetProperty(<%= association.PrivateMemberVariableName %>Property); 
             }
         }
+
 <% } } %>
 <%-- One-To-Many & Many-To-Many --%>
 <% foreach(Association association in Entity.AssociatedOneToMany) { 
@@ -224,7 +223,6 @@ if(!result.Equals("(true)", StringComparison.CurrentCultureIgnoreCase) && !resul
         associationClassName = association.ClassName + "Info";
     }
     %>
-
         //AssociatedOneToMany
         private static readonly PropertyInfo< <%= associationClassName %>List<%= association.GenericProperty %> > <%= association.PrivateMemberVariableName %>Property = RegisterProperty<<%= associationClassName %>List<%= association.GenericProperty %>>(p => p.<%= association.PropertyName %>, Csla.RelationshipTypes.Child);
 <% if(association.HasDescription) { %>
@@ -319,5 +317,6 @@ if(!result.Equals("(true)", StringComparison.CurrentCultureIgnoreCase) && !resul
                 return GetProperty(<%= association.PrivateMemberVariableName %>Property);
             }
         }
+
 <% } } %>
         #endregion
