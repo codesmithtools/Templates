@@ -115,7 +115,7 @@ namespace Tracker.Core.Data
         /// Gets a query by an index.
         /// </summary>
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
-        public IQueryable<Tracker.Core.Data.Task> GetByAssignedIdStatus(int? assignedId, Status status)
+        public IQueryable<Tracker.Core.Data.Task> GetByAssignedIdStatus(int? assignedId, Tracker.Core.Data.Status status)
         {
             if (Context.LoadOptions == null) 
                 return Query.GetByAssignedIdStatus.Invoke(Context, assignedId, status);
@@ -127,7 +127,7 @@ namespace Tracker.Core.Data
         /// Gets a query by an index.
         /// </summary>
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
-        public IQueryable<Tracker.Core.Data.Task> GetByStatus(Status status)
+        public IQueryable<Tracker.Core.Data.Task> GetByStatus(Tracker.Core.Data.Status status)
         {
             if (Context.LoadOptions == null) 
                 return Query.GetByStatus.Invoke(Context, status);
@@ -138,7 +138,7 @@ namespace Tracker.Core.Data
         /// Gets a query by an index.
         /// </summary>
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
-        public IQueryable<Tracker.Core.Data.Task> GetByPriority(Priority priority)
+        public IQueryable<Tracker.Core.Data.Task> GetByPriority(Tracker.Core.Data.Priority? priority)
         {
             if (Context.LoadOptions == null) 
                 return Query.GetByPriority.Invoke(Context, priority);
@@ -188,22 +188,22 @@ namespace Tracker.Core.Data
                         db.Task.FirstOrDefault(t => t.Id == id));
 
             [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
-            internal static readonly Func<Tracker.Core.Data.TrackerDataContext, int?, Status, IQueryable<Tracker.Core.Data.Task>> GetByAssignedIdStatus = 
+            internal static readonly Func<Tracker.Core.Data.TrackerDataContext, int?, Tracker.Core.Data.Status, IQueryable<Tracker.Core.Data.Task>> GetByAssignedIdStatus = 
                 System.Data.Linq.CompiledQuery.Compile(
-                    (Tracker.Core.Data.TrackerDataContext db, int? assignedId, Status status) => 
+                    (Tracker.Core.Data.TrackerDataContext db, int? assignedId, Tracker.Core.Data.Status status) => 
                         db.Task.Where(t => t.AssignedId == assignedId 
 							&& t.Status == status));
 
             [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
-            internal static readonly Func<Tracker.Core.Data.TrackerDataContext, Status, IQueryable<Tracker.Core.Data.Task>> GetByStatus = 
+            internal static readonly Func<Tracker.Core.Data.TrackerDataContext, Tracker.Core.Data.Status, IQueryable<Tracker.Core.Data.Task>> GetByStatus = 
                 System.Data.Linq.CompiledQuery.Compile(
-                    (Tracker.Core.Data.TrackerDataContext db, Status status) => 
+                    (Tracker.Core.Data.TrackerDataContext db, Tracker.Core.Data.Status status) => 
                         db.Task.Where(t => t.Status == status));
 
             [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
-            internal static readonly Func<Tracker.Core.Data.TrackerDataContext, Priority, IQueryable<Tracker.Core.Data.Task>> GetByPriority = 
+            internal static readonly Func<Tracker.Core.Data.TrackerDataContext, Tracker.Core.Data.Priority?, IQueryable<Tracker.Core.Data.Task>> GetByPriority = 
                 System.Data.Linq.CompiledQuery.Compile(
-                    (Tracker.Core.Data.TrackerDataContext db, Priority priority) => 
+                    (Tracker.Core.Data.TrackerDataContext db, Tracker.Core.Data.Priority? priority) => 
                         db.Task.Where(t => t.Priority == priority));
 
             [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
