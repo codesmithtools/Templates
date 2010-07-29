@@ -23,7 +23,7 @@
     <% End If %>
     <%  For Each member As Member in Entity.MembersNoRowVersion
     If UseMemberVariables Then %>  
-        Private Shared ReadOnly <%= member.PrivateMemberVariableName %>Property As PropertyInfo(Of <%= member.SystemType %>) = RegisterProperty(Of <%= member.SystemType %>)(Function(p As <%= BusinessClassName %>) p.<%= member.PropertyName %>, String.Empty<% If(member.IsNullable And member.SystemType = "System.String") Then %>, vbNullString<% Else If(member.CanGenerateNullDefault()) Then %>, CType(Nothing, <%= member.SystemType %>)<%End If%>)
+        Private Shared ReadOnly <%= member.PrivateMemberVariableName %>Property As PropertyInfo(Of <%= member.SystemType %>) = RegisterProperty(Of <%= member.SystemType %>)(Function(p As <%= BusinessClassName %>) p.<%= member.PropertyName %>, String.Empty<% If(member.IsNullable And member.SystemType = "System.String") Then %>, vbNullString<% Else If(member.CanGenerateNullDefault()) Then %>, CType(Nothing, <%= member.SystemType %>)<%End If%><% If (IsCSLA40) Then %>, RelationshipTypes.PrivateField<% End If %>)
         Private <%= member.PrivateMemberVariableName %> As <%= member.SystemType %> = <%= member.PrivateMemberVariableName %>Property.DefaultValue
     <% If(member.HasDescription) Then %>
         ''' <summary>
@@ -49,7 +49,7 @@
         End Property
 
     <%If(member.IsPrimaryKey And Not member.IsIdentity) %>
-        Private Shared ReadOnly _original<%= member.PropertyName %>Property As PropertyInfo(Of <%= member.SystemType %>) = RegisterProperty(Of <%= member.SystemType %>)(Function(p As <%= BusinessClassName %>) p.Original<%= member.PropertyName %>, String.Empty<% If(member.IsNullable And member.SystemType = "System.String") Then %>, vbNullString<% Else If(member.CanGenerateNullDefault()) Then %>, CType(Nothing, <%= member.SystemType %>)<%End If%>)
+        Private Shared ReadOnly _original<%= member.PropertyName %>Property As PropertyInfo(Of <%= member.SystemType %>) = RegisterProperty(Of <%= member.SystemType %>)(Function(p As <%= BusinessClassName %>) p.Original<%= member.PropertyName %>, String.Empty<% If(member.IsNullable And member.SystemType = "System.String") Then %>, vbNullString<% Else If(member.CanGenerateNullDefault()) Then %>, CType(Nothing, <%= member.SystemType %>)<%End If%><% If (IsCSLA40) Then %>, RelationshipTypes.PrivateField<% End If %>)
         Private _original<%= member.PropertyName %> As <%= member.SystemType %> = _original<%= member.PropertyName %>Property.DefaultValue
         ''' <summary>
         ''' Holds the original value for <%= member.PropertyName %>. This is used for non identity primary keys.
