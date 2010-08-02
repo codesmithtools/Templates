@@ -1,13 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using Ionic.Zip;
-using Microsoft.Build.BuildEngine;
-using CodeSmith.SchemaHelper;
 
-namespace QuickStart
+namespace CodeSmith.QuickStart
 {
     public class WebSiteCreator : ProjectCreator
     {

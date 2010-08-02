@@ -3,7 +3,7 @@ using System.Linq;
 using System.IO;
 using System.Text.RegularExpressions;
 
-namespace QuickStart
+namespace CodeSmith.QuickStart
 {
     public class QuickStartUtils
     {

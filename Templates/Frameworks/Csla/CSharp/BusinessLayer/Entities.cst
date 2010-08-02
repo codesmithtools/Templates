@@ -1,14 +1,14 @@
 ﻿<%-- Author: Blake Niemyjski --%>
-<%@ CodeTemplate Language="C#" TargetLanguage="C#" OutputType="None" Debug="False" Inherits="QuickStart.EntityMasterCodeTemplate" CompilerVersion="v3.5" Encoding="UTF-8" Description="CSLA Entities" %>
+<%@ CodeTemplate Language="C#" TargetLanguage="C#" OutputType="None" Debug="False" Inherits="CodeSmith.QuickStart.EntityMasterCodeTemplate" CompilerVersion="v3.5" Encoding="UTF-8" Description="CSLA Entities" %>
 
 <%@ Assembly Name="CodeSmith.CustomProperties" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\Common" %>
-<%@ Assembly Name="QuickStart" Path="..\..\Common" %>
+<%@ Assembly Name="CodeSmith.QuickStart" Path="..\..\Common" %>
 <%@ Assembly Name="SchemaExplorer" %>
 
 <%@ Import Namespace="CodeSmith.CustomProperties" %>
 <%@ Import Namespace="CodeSmith.SchemaHelper" %>
-<%@ Import Namespace="QuickStart" %>
+<%@ Import Namespace="CodeSmith.QuickStart" %>
 <%@ Import Namespace="SchemaExplorer" %>
 <%@ Import Namespace="System.Collections.Generic" %>
 

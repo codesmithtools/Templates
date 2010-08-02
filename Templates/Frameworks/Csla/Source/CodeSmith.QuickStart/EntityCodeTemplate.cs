@@ -12,7 +12,7 @@ using SchemaExplorer;
 
 using Configuration=CodeSmith.SchemaHelper.Configuration;
 
-namespace QuickStart
+namespace CodeSmith.QuickStart
 {
     public class EntityCodeTemplate : CSLABaseTemplate
     {

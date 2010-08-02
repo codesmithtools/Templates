@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace QuickStart
+namespace CodeSmith.QuickStart
 {
     #region Enumeration(s)
 

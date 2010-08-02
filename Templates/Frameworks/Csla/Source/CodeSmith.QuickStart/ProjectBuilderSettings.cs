@@ -5,7 +5,7 @@ using CodeSmith.SchemaHelper;
 
 using SchemaExplorer;
 
-namespace QuickStart
+namespace CodeSmith.QuickStart
 {
     public class ProjectBuilderSettings
     {

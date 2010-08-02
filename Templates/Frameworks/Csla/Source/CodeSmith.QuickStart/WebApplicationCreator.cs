@@ -1,10 +1,6 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 
-using Ionic.Zip;
-using Microsoft.Build.BuildEngine;
-
-namespace QuickStart
+namespace CodeSmith.QuickStart
 {
     using CodeSmith.SchemaHelper;
 

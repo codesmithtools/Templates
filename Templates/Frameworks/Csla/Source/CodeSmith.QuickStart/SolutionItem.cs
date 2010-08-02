@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 
 using CodeSmith.SchemaHelper;
-namespace QuickStart
+namespace CodeSmith.QuickStart
 {
     public class SolutionItem
     {

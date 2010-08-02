@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace QuickStart
+namespace CodeSmith.QuickStart
 {
     public class EntitiesCodeTemplate : CSLAMasterTemplate
     {

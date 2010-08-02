@@ -13,7 +13,7 @@ using SchemaExplorer;
 using Configuration=CodeSmith.SchemaHelper.Configuration;
 using StringCollection=CodeSmith.CustomProperties.StringCollection;
 
-namespace QuickStart
+namespace CodeSmith.QuickStart
 {
     public class QuickStartCodeTemplate : CSLABaseTemplate
     {

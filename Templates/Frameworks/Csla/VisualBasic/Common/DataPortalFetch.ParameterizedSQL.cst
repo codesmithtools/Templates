@@ -1,15 +1,15 @@
 ﻿<%-- Author: Blake Niemyjski --%>
-<%@ CodeTemplate Language="VB" TargetLanguage="VB" Inherits="QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Encoding="UTF-8" Description="CSLA Map" %>
+<%@ CodeTemplate Language="VB" TargetLanguage="VB" Inherits="CodeSmith.QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Encoding="UTF-8" Description="CSLA Map" %>
 
 <%@ Assembly Name="SchemaExplorer" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\Common" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper.Extensions" Path="..\..\Common" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper.VisualBasicExtensions" Path="..\..\Common" %>
-<%@ Assembly Name="QuickStart" Path="..\..\Common" %>
+<%@ Assembly Name="CodeSmith.QuickStart" Path="..\..\Common" %>
 
 <%@ Import Namespace="SchemaExplorer" %>
 <%@ Import Namespace="CodeSmith.SchemaHelper" %>
-<%@ Import Namespace="QuickStart" %>
+<%@ Import Namespace="CodeSmith.QuickStart" %>
             Dim cancel As Boolean = False
             OnFetching(criteria, cancel)
             If (cancel) Then
