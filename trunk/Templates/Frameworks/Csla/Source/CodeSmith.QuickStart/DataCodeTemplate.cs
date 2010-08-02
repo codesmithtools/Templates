@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 
-namespace QuickStart
+namespace CodeSmith.QuickStart
 {
     public class DataCodeTemplate : EntityCodeTemplate
     {

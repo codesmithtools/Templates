@@ -1,19 +1,19 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
 
-using CodeSmith.SchemaHelper;
-
-namespace QuickStart
+namespace CodeSmith.QuickStart
 {
-    public class DataProjectCreator : ProjectCreator
+    using System.IO;
+
+    using CodeSmith.SchemaHelper;
+
+    public class TestProjectCreator : ProjectCreator
     {
-        public DataProjectCreator(ProjectBuilderSettings projectBuilder)
+        public TestProjectCreator(ProjectBuilderSettings projectBuilder)
             : base(projectBuilder) { }
 
         public override string ProjectTemplateFile
         {
-            get { return "DataProject.zip"; }
+            get { return "TestProject.zip"; }
         }
 
         protected override void AddFiles()
@@ -23,7 +23,7 @@ namespace QuickStart
 
         private void AddCspFile()
         {
-            string templateCspFile =  System.IO.Path.Combine("Common", CspFileName);
+            string templateCspFile = System.IO.Path.Combine("Common", CspFileName);
 
             string templatePath = CodeSmith.Engine.Utility.PathUtil.RelativePathTo(ProjectDirectory, ProjectBuilder.WorkingDirectory);
 
@@ -43,8 +43,7 @@ namespace QuickStart
 
             if (ProjectBuilder.Language == LanguageEnum.VB)
             {
-                 content = content.Replace("CSharp\\BusinessLayer\\", "VisualBasic\\BusinessLayer\\");
-                 content = content.Replace("CSharp\\DataAccessLayer\\", "VisualBasic\\DataAccessLayer\\");
+                content = content.Replace("CSharp\\NUnitTests\\", "VisualBasic\\NUnitTests\\");
             }
 
             File.WriteAllText(

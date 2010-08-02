@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 
-namespace QuickStart
+namespace CodeSmith.QuickStart
 {
     public static class PathHelper
     {

@@ -6,7 +6,7 @@ using Ionic.Zip;
 using Microsoft.Build.BuildEngine;
 using CodeSmith.SchemaHelper;
 
-namespace QuickStart
+namespace CodeSmith.QuickStart
 {
     public abstract class ProjectCreator
     {

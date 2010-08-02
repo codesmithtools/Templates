@@ -4,7 +4,7 @@ using System.ComponentModel;
 using CodeSmith.Engine;
 using CodeSmith.SchemaHelper;
 
-namespace QuickStart
+namespace CodeSmith.QuickStart
 {
     public class InterfaceCodeTemplate : CSLABaseTemplate
     {

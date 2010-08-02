@@ -1,14 +1,14 @@
 ﻿<%-- Author: Will Comeaux --%>
-<%@ CodeTemplate Language="C#" TargetLanguage="C#" Inherits="QuickStart.TestCodeTemplate" Debug="False" CompilerVersion="v3.5" Encoding="UTF-8" Description="Test CSLA Object Fetch" %>
+<%@ CodeTemplate Language="C#" TargetLanguage="C#" Inherits="CodeSmith.QuickStart.TestCodeTemplate" Debug="False" CompilerVersion="v3.5" Encoding="UTF-8" Description="Test CSLA Object Fetch" %>
 
 <%@ Assembly Name="SchemaExplorer" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\..\Common" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper.Extensions" Path="..\..\..\Common" %>
-<%@ Assembly Name="QuickStart" Path="..\..\..\Common" %>
+<%@ Assembly Name="CodeSmith.QuickStart" Path="..\..\..\Common" %>
 
 <%@ Import Namespace="SchemaExplorer" %>
 <%@ Import Namespace="CodeSmith.SchemaHelper" %>
-<%@ Import Namespace="QuickStart" %>
+<%@ Import Namespace="CodeSmith.QuickStart" %>
 <%@ Property Name="MainTemplateName" Type="System.String" Default="" Category="1. Main Template Name" Description="The name of the main template." %>
         #region Synchronous Fetch <%= BusinessClassName %> Tests
         

@@ -8,8 +8,8 @@
     <ProjectGuid>{2143D00C-842D-4B62-82E9-95D262A6F88E}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>QuickStart</RootNamespace>
-    <AssemblyName>QuickStart</AssemblyName>
+    <RootNamespace>CodeSmith.QuickStart</RootNamespace>
+    <AssemblyName>CodeSmith.QuickStart</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>

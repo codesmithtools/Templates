@@ -2,7 +2,7 @@
 using System.ComponentModel;
 using System.IO;
 
-namespace QuickStart
+namespace CodeSmith.QuickStart
 {
     public class TestCodeTemplate : EntityCodeTemplate
     {

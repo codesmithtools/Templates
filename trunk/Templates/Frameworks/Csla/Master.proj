@@ -5,7 +5,7 @@
   <PropertyGroup>
     <Major>3</Major>
     <Minor>0</Minor>
-    <Build>0</Build>
+    <Build>1</Build>
     <Revision>1</Revision>
 
     <BindMinor>0</BindMinor>
@@ -76,7 +76,7 @@
     <CommitFiles Include="Common\CodeSmith.SchemaHelper.Extensions.dll" />
     <CommitFiles Include="Common\CodeSmith.SchemaHelper.CSharpExtensions.dll" />
     <CommitFiles Include="Common\CodeSmith.SchemaHelper.VisualBasicExtensions.dll" />
-    <CommitFiles Include="Common\QuickStart.dll" />
+    <CommitFiles Include="Common\CodeSmith.QuickStart.dll" />
   </ItemGroup>
 
 
