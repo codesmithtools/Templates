@@ -1,10 +1,10 @@
 ﻿<%@ CodeTemplate Language="C#" TargetLanguage="Text" Src="" Encoding="UTF-8" Inherits="" Debug="True" Description="Template description here." CompilerVersion="v3.5" %>
 
 <%@ Assembly Name="CodeSmith.SchemaHelper" %>
-<%@ Assembly Name="QuickStart" %>
+<%@ Assembly Name="CodeSmith.QuickStart" %>
 
 <%@ Import Namespace="CodeSmith.SchemaHelper" %>
-<%@ Import Namespace="QuickStart" %>
+<%@ Import Namespace="CodeSmith.QuickStart" %>
 <%@ Import Namespace="System.Collections.Generic" %>
 
 <%@ Property Name="SolutionItems" Type="List<SolutionItem>" Optional="False" Category="1.Project" Description="" %>

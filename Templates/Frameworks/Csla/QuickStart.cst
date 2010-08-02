@@ -3,7 +3,7 @@ Name: Quick Start
 Author: Blake Niemyjski
 Description: Used to Quick Start Visual Studio Projects
 --%>
-<%@ CodeTemplate Language="C#" TargetLanguage="Text" Inherits="QuickStart.QuickStartCodeTemplate" Description="QuickStart for CSLA" CompilerVersion="v3.5" Encoding="UTF-8" %>
+<%@ CodeTemplate Language="C#" TargetLanguage="Text" Inherits="CodeSmith.QuickStart.QuickStartCodeTemplate" Description="QuickStart for CSLA" CompilerVersion="v3.5" Encoding="UTF-8" %>
 
 <%@ Register Name="QuickStartSolution" Template="Common\QuickStartSolution.cst" %>
 <%@ Register Name="Entities" Template="CSharp\BusinessLayer\Entities.cst" MergeProperties="False" ExcludeProperties="" %>
@@ -12,11 +12,11 @@ Description: Used to Quick Start Visual Studio Projects
 <%@ Register Name="NUnitTests" Template="CSharp\NUnitTests\NUnitTests.cst" MergeProperties="False" ExcludeProperties="" %>
 
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="Common" %>
-<%@ Assembly Name="QuickStart" Path="Common" %>
+<%@ Assembly Name="CodeSmith.QuickStart" Path="Common" %>
 <%@ Assembly Name="SchemaExplorer" %>
 
 <%@ Import Namespace="CodeSmith.SchemaHelper" %>
-<%@ Import Namespace="QuickStart" %>
+<%@ Import Namespace="CodeSmith.QuickStart" %>
 <%@ Import Namespace="SchemaExplorer" %>
 <%@ Import Namespace="System.IO" %>
 

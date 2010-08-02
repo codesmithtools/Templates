@@ -46,7 +46,6 @@ Public Overrides Sub Generate()
         Next
     End If
     
-    
     ' CriteriaTemplate
     
     If Not Me.Criteria Is Nothing Then
