@@ -348,8 +348,8 @@ namespace LinqToSqlShared.Generator
         {
             foreach (TableKeySchema tableKey in tableSchema.ForeignKeys)
             {
-                if (Settings.IsIgnored(tableKey.ForeignKeyTable.Name)
-                    || Settings.IsIgnored(tableKey.PrimaryKeyTable.Name)
+                if (Settings.IsIgnored(tableKey.ForeignKeyTable.FullName)
+                    || Settings.IsIgnored(tableKey.PrimaryKeyTable.FullName)
                     || Settings.IsEnum(tableKey.ForeignKeyTable)
                     || Settings.IsEnum(tableKey.PrimaryKeyTable))
                     continue;

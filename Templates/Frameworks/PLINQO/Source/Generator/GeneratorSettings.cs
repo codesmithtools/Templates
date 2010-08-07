@@ -112,7 +112,7 @@ namespace LinqToSqlShared.Generator
 
         public bool IsEnum(TableSchema table)
         {
-            return !IsIgnored(table.Name)                                       // 1) Is not ignored.
+            return !IsIgnored(table.FullName)                                   // 1) Is not ignored.
                 && IsRegexMatch(table.Name, EnumExpressions)                    // 2) Matches the enum regex.
                 && table.PrimaryKey != null                                     // 3) Has a Primary Key...
                 && table.PrimaryKey.MemberColumns.Count == 1                    // 4) ...that is a single column...
