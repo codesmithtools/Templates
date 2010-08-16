@@ -802,7 +802,7 @@ Public Function CreateAttribute(ByVal a As Association) As String
     If Not String.IsNullOrEmpty(a.OtherKey) Then
         s.AppendFormat(", OtherKey:=""{0}""", a.OtherKey)
     End If
-    If a.Cardinality.Value = Cardinality.One Then
+    If a.Cardinality.Value = Cardinality.One AndAlso a.IsForeignKey <> True Then
         s.Append(", IsUnique:=true")
     End If
     If a.IsForeignKey Then
