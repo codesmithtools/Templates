@@ -516,6 +516,44 @@ namespace CodeSmith.QuickStart
             return false;
         }
 
+        public bool IsSwitchableObject(string suffix)
+        {
+            string key = string.Format("{0}{1}", this._table.Name, suffix);
+            if (ContextData.Get(key) == null) return false;
+
+            var value = ContextData[key];
+            switch (value)
+            {
+                case Constants.SwitchableObject:
+                    return true;
+            }
+
+            return false;
+        }
+
+        public bool IsSwitchableObject(Association association)
+        {
+            return IsSwitchableObject(association, string.Empty);
+        }
+
+        public bool IsSwitchableObject(Association association, string suffix)
+        {
+            if (association.Count <= 0)
+                return false;
+
+            string key = string.Format("{0}{1}", association.TableKey, suffix);
+            if (ContextData.Get(key) == null) return false;
+
+            var value = ContextData[key];
+            switch (value)
+            {
+                case Constants.SwitchableObject:
+                    return true;
+            }
+
+            return false;
+        }
+
         public bool IsNameValueListBusinessObject(Association association)
         {
             return IsNameValueListBusinessObject(association, string.Empty);
