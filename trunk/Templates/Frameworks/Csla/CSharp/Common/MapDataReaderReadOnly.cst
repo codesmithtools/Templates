@@ -19,7 +19,7 @@
     <% } else {%>
             <%= member.PrivateMemberVariableName %> = <%if(!member.HasByteArrayColumn()) { %>reader.<%= member.GetReaderMethod() %>("<%= member.ColumnName %>");<% } else { %>ADOHelper.GetBytes(reader);<% } %>
 <% } } else { %>
-            LoadProperty(<%= member.PrivateMemberVariableName %>Property, <%if(!member.HasByteArrayColumn()) { %>reader["<%= member.ColumnName %>"]);<% } else { %>ADOHelper.GetBytes(reader," <%= member.ColumnName %>"));<% } %>
+            LoadProperty(<%= member.PrivateMemberVariableName %>Property, <%if(!member.HasByteArrayColumn()) { %>reader["<%= member.ColumnName %>"]);<% } else { %>ADOHelper.GetBytes(reader, "<%= member.ColumnName %>"));<% } %>
 <% } } %>
 
             OnMapped();
