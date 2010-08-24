@@ -121,33 +121,22 @@ namespace CodeSmith.SchemaHelper
                 }
             }
 
-            if (entity.HasIdentityMember && entity.HasRowVersionMember && entity.MembersNonIdentityPrimaryKeys.Count > 0)
+            if ((entity.MembersNonIdentityPrimaryKeys.Count > 0) && entity.HasRowVersionMember)
             {
-                return string.Format("; SELECT {0}, {1} FROM [{2}].[{3}] WHERE {4} = {5}{4}",
+                return string.Format("; SELECT {0}, {1} FROM [{2}].[{3}] {4}",
                                       entity.MembersNonIdentityPrimaryKeys.BuildDataBaseColumns(),
                                       entity.RowVersionMember.BuildDataBaseColumn(),
                                       entity.Table.Owner,
                                       entity.Table.Name,
-                                      entity.IdentityMember.ColumnName,
-                                      Configuration.Instance.ParameterPrefix);
+                                      entity.PrimaryKey.KeyMembers.BuildWhereStatements(true));
             }
-            if (entity.HasIdentityMember && entity.HasRowVersionMember)
+            if (entity.MembersNonIdentityPrimaryKeys.Count > 0)
             {
-                return string.Format("; SELECT {0} FROM [{1}].[{2}] WHERE {3} = {4}{3}",
-                                      entity.RowVersionMember.BuildDataBaseColumn(),
-                                      entity.Table.Owner,
-                                      entity.Table.Name,
-                                      entity.IdentityMember.ColumnName,
-                                      Configuration.Instance.ParameterPrefix);
-            }
-            if (entity.HasIdentityMember && entity.MembersNonIdentityPrimaryKeys.Count > 0)
-            {
-                return string.Format("; SELECT {0} FROM [{1}].[{2}] WHERE {3} = {4}{3}",
+                return string.Format("; SELECT {0} FROM [{1}].[{2}] {3}",
                     entity.MembersNonIdentityPrimaryKeys.BuildDataBaseColumns(),
                     entity.Table.Owner,
                     entity.Table.Name,
-                    entity.IdentityMember.ColumnName,
-                    Configuration.Instance.ParameterPrefix);
+                    entity.PrimaryKey.KeyMembers.BuildWhereStatements(true));
             }
             if (entity.HasGuidPrimaryKeyMember && entity.HasRowVersionMember)
             {
@@ -159,7 +148,7 @@ namespace CodeSmith.SchemaHelper
                                       Configuration.Instance.ParameterPrefix,
                                       guidColumn.ColumnName);
             }
-            if (entity.HasGuidPrimaryKeyMember && entity.PrimaryKey.KeyMembers.Count > 1)
+            if (entity.HasGuidPrimaryKeyMember && entity.PrimaryKey.KeyMembers.Count > 0)
             {
                 return string.Format("; SELECT {0} FROM [{1}].[{2}] WHERE {4} = {3}{4}",
                                       entity.PrimaryKey.KeyMembers.BuildDataBaseColumns(),
