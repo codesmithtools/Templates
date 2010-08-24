@@ -24,6 +24,10 @@ namespace CodeSmith.QuickStart
         private bool _silverlightSupport;
         private FrameworkVersion frameworkVersion;
 
+        private string _criteriaClassName = string.Empty;
+        private string _childBusinessClassName = string.Empty;
+        
+
         #endregion
 
         #region Constructor(s)
@@ -159,40 +163,23 @@ namespace CodeSmith.QuickStart
         [Description("The name of the business class.")]
         public string BusinessClassName { get; set; }
 
-        [Browsable(false)]
+        [Category("3. Business Project")]
+        [Description("The name of the child business class.")]
         public string ChildBusinessClassName
         {
             get
             {
-                if (string.IsNullOrEmpty(BusinessClassName))
-                    return BusinessClassName;
+                if (string.IsNullOrEmpty(_childBusinessClassName))
+                    _childBusinessClassName = ResolveChildBusinessClassName();
 
-                if (BusinessClassName.Equals(Entity.ClassName, StringComparison.InvariantCultureIgnoreCase))
-                    return BusinessClassName;
-
-                if (BusinessClassNameExists("ListList", 4))
-                    return BusinessClassName.Substring(0, BusinessClassName.Length - 4);
-
-                if (BusinessClassNameExists("InfoList", 8))
-                    return BusinessClassName.Substring(0, BusinessClassName.Length - 8);
-
-                if (BusinessClassNameExists("NameValueList", 13))
-                    return BusinessClassName.Substring(0, BusinessClassName.Length - 13);
-
-                if (BusinessClassNameExists("List", 4))
-                    return BusinessClassName.Substring(0, BusinessClassName.Length - 4);
-
-                if (BusinessClassNameExists("Info", 4))
-                    return BusinessClassName.Substring(0, BusinessClassName.Length - 4);
-
-                if (BusinessClassNameExists("Criteria", 8))
-                    return BusinessClassName.Substring(0, BusinessClassName.Length - 8);
-
-                return ResolveTargetClassName(BusinessClassName, string.Empty);
+                return _childBusinessClassName;
+            }
+            set
+            {
+                if (!string.IsNullOrEmpty(value))
+                    _childBusinessClassName = value;
             }
         }
-
-        private string _criteriaClassName = string.Empty;
 
         [Category("3. Business Project")]
         [Description("The name of the criteria business class.")]
@@ -211,6 +198,40 @@ namespace CodeSmith.QuickStart
                     _criteriaClassName = value;
             }
         }
+
+        /// <summary>
+        /// Attempts to resolve the best canidate for the child class name.
+        /// </summary>
+        /// <returns></returns>
+        private string ResolveChildBusinessClassName()
+        {
+            if (string.IsNullOrEmpty(BusinessClassName))
+                return BusinessClassName;
+
+            if (BusinessClassName.Equals(Entity.ClassName, StringComparison.InvariantCultureIgnoreCase))
+                return BusinessClassName;
+
+            if (BusinessClassNameExists("ListList", 4))
+                return BusinessClassName.Substring(0, BusinessClassName.Length - 4);
+
+            if (BusinessClassNameExists("InfoList", 8))
+                return BusinessClassName.Substring(0, BusinessClassName.Length - 8);
+
+            if (BusinessClassNameExists("NameValueList", 13))
+                return BusinessClassName.Substring(0, BusinessClassName.Length - 13);
+
+            if (BusinessClassNameExists("List", 4))
+                return BusinessClassName.Substring(0, BusinessClassName.Length - 4);
+
+            if (BusinessClassNameExists("Info", 4))
+                return BusinessClassName.Substring(0, BusinessClassName.Length - 4);
+
+            if (BusinessClassNameExists("Criteria", 8))
+                return BusinessClassName.Substring(0, BusinessClassName.Length - 8);
+
+            return ResolveTargetClassName(BusinessClassName, string.Empty);
+        }
+
 
         /// <summary>
         /// Gets the Root BusinessName + the suffix.
