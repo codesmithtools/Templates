@@ -80,7 +80,7 @@
         If (Not RenderOptionalContent) Then
         Dim childCount As Integer = 0
         For Each a As Association In Entity.AssociatedOneToMany
-            If IsChildBusinessObject(a) Then
+            If IsChildBusinessObject(a) Or IsSwitchableObject(a) Then
                 childCount += 1
             End If
         Next

@@ -63,7 +63,7 @@
 <% if(Entity.AssociatedToManyUnion.Count > 0 || Entity.AssociatedManyToOne.Count > 0 || Entity.AssociatedOneToZeroOrOne.Count > 0){ if(!RenderOptionalContent) { 
     int childCount = 0;
     foreach(Association a in Entity.AssociatedOneToMany) {
-        if(IsChildBusinessObject(a)) childCount++; 
+        if(IsChildBusinessObject(a) || IsSwitchableObject(a)) childCount++; 
     }
 
     if(childCount > 0) { %>
