@@ -34,9 +34,9 @@
     <% End If 
     End If %>
     <%  else  %>
-                LoadProperty(<%= [member].PrivateMemberVariableName %>Property, <%If not [member].HasByteArrayColumn() Then %>reader.Item("<%= [member].ColumnName %>"))<% else %>ADOHelper.GetBytes(reader," <%= [member].ColumnName %>"))<% End If %>
+                LoadProperty(<%= [member].PrivateMemberVariableName %>Property, <%If not [member].HasByteArrayColumn() Then %>reader.Item("<%= [member].ColumnName %>"))<% else %>ADOHelper.GetBytes(reader, "<%= [member].ColumnName %>"))<% End If %>
     <%If(member.IsPrimaryKey And Not member.IsIdentity) %>
-                LoadProperty(_original<%= member.PropertyName %>Property, <%If not [member].HasByteArrayColumn() Then %>reader.Item("<%= [member].ColumnName %>"))<% else %>ADOHelper.GetBytes(reader," <%= [member].ColumnName %>"))<% End If %>
+                LoadProperty(_original<%= member.PropertyName %>Property, <%If not [member].HasByteArrayColumn() Then %>reader.Item("<%= [member].ColumnName %>"))<% else %>ADOHelper.GetBytes(reader, "<%= [member].ColumnName %>"))<% End If %>
     <% End If %>
     <% End If 
     Next %>

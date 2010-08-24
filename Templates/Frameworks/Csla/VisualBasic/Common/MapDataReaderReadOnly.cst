@@ -23,7 +23,7 @@
             <%= [member].PrivateMemberVariableName %> = <%If not [member].HasByteArrayColumn() Then %>reader.<%= [member].GetReaderMethod() %>("<%= [member].ColumnName %>")<% else %>ADOHelper.GetBytes(reader)<% End If %>
         <% End If %>
     <%  else  %>
-            LoadProperty(<%= [member].PrivateMemberVariableName %>Property, <%If not [member].HasByteArrayColumn() Then %>reader.Item("<%= [member].ColumnName %>"))<% else %>ADOHelper.GetBytes(reader," <%= [member].ColumnName %>"))<% End If %>
+            LoadProperty(<%= [member].PrivateMemberVariableName %>Property, <%If not [member].HasByteArrayColumn() Then %>reader.Item("<%= [member].ColumnName %>"))<% else %>ADOHelper.GetBytes(reader, "<%= [member].ColumnName %>"))<% End If %>
     <% End If 
     Next %>
     
