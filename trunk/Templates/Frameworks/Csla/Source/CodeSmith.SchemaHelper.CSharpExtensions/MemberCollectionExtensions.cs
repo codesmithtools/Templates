@@ -228,7 +228,10 @@ namespace CodeSmith.SchemaHelper
 
                 if ((member.IsIdentity || (member.DataType == DbType.Guid.ToString() && member.IsPrimaryKey && !member.IsForeignKey)) && includeOutPutParameters)
                 {
-                    commandParameters += string.Format(Environment.NewLine + "\t\t\t\t\tcommand.Parameters[\"{0}{1}\"].Direction = ParameterDirection.Output;", Configuration.Instance.ParameterPrefix, member.ColumnName);
+                    if (isUpdateStatement)
+                        commandParameters += string.Format(Environment.NewLine + "\t\t\t\t\tcommand.Parameters[\"{0}{1}\"].Direction = ParameterDirection.Input;", Configuration.Instance.ParameterPrefix, member.ColumnName);
+                    else
+                        commandParameters += string.Format(Environment.NewLine + "\t\t\t\t\tcommand.Parameters[\"{0}{1}\"].Direction = ParameterDirection.Output;", Configuration.Instance.ParameterPrefix, member.ColumnName);
                 }
             }
 
