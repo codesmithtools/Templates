@@ -31,6 +31,7 @@
 <%@ Register Name="ADOHelperTemplate" Template="Internal\ADOHelper.cst" %>
 <%@ Register Name="FactoryNamesTemplate" Template="Internal\FactoryNames.cst" %>
 <%@ Register Name="ExistsCommandTemplate" Template="Internal\ExistsCommand.cst" %>
+<%@ Register Name="AsyncChildLoaderTemplate" Template="Internal\AsyncChildLoader.cst" %>
 
 <% Generate() %>
 
@@ -205,14 +206,19 @@ Public Overrides Sub Generate()
         factoryNames.RenderToFile(System.IO.Path.Combine(Me.Location, "Factory\FactoryNames.vb"), strategy)
     End If
     
-    
     ' ExistsCommandTemplate
     
     Dim ExistsCommand As ExistsCommandTemplate = Me.Create(Of ExistsCommandTemplate)()
     Me.CopyPropertiesTo(ExistsCommand)
     ExistsCommand.RenderToFile(System.IO.Path.Combine(Me.Location, "Commands\ExistsCommand.vb"), True)
     
+    ' AsyncChildLoaderTemplate
 
+    If IncludeSilverlightSupport Then
+	    Dim AsyncChildLoader As AsyncChildLoaderTemplate = Me.Create(Of AsyncChildLoaderTemplate)()
+	    Me.CopyPropertiesTo(AsyncChildLoader)
+	    AsyncChildLoader.RenderToFile(System.IO.Path.Combine(Me.Location, "Utility\AsyncChildLoader.vb"), True)
+    End If
 End Sub
 
 </script>

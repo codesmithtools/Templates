@@ -101,15 +101,12 @@ namespace <%= BusinessProjectName %>
         }
 <% foreach(SearchCriteria sc in Entity.SearchCriteria()) { %>
 
-        internal static void <%= sc.MethodName %>Async(<%= sc.Members.BuildParametersVariables() %>, EventHandler<DataPortalResult<<%= ChildBusinessClassName %><%= Entity.GenericProperty %>>> handler)
+        internal static void <%= sc.MethodName %>Async(<%= sc.Members.BuildParametersVariables() %>, EventHandler<DataPortalResult<AsyncChildLoader<<%= ChildBusinessClassName %><%= Entity.GenericProperty %>>>> handler)
         {
             var criteria = new <%= CriteriaClassName %><%= Entity.GenericProperty %>{ <%= sc.Members.BuildObjectInitializer() %>};
             <%= sc.Members.BuildNullableObjectInitializer()%>
 
-            // Mark as child?
-            var dp = new DataPortal< <%= BusinessClassName %><%= Entity.GenericProperty %> >();
-            dp.FetchCompleted += handler;
-            dp.BeginFetch(criteria);
+            DataPortal.BeginFetch<AsyncChildLoader<<%= ChildBusinessClassName %>>>(criteria, handler);
         }
 <% } %>
 #endif

@@ -18,6 +18,7 @@
         partial void OnChildCreated();
         partial void OnChildFetching(<%= CriteriaClassName %><%= Entity.GenericProperty %> criteria, ref bool cancel);
         partial void OnChildFetched();
+        partial void OnChildLoading(Csla.Core.IPropertyInfo childProperty, ref bool cancel);
         partial void OnMapping(SafeDataReader reader, ref bool cancel);
         partial void OnMapped();
         partial void OnChildInserting(SqlConnection connection, ref bool cancel);

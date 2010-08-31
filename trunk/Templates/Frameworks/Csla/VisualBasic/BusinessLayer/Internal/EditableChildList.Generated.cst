@@ -104,22 +104,16 @@ Namespace <%= BusinessProjectName %>
         End Sub
 <% For Each sc As SearchCriteria In  Entity.SearchCriteria() %>
     
-        Friend Shared Sub <%= sc.MethodName %>Async(<%= sc.Members.BuildParametersVariables() %>, ByVal handler As EventHandler(Of DataPortalResult(Of <%= ChildBusinessClassName %><%= Entity.GenericProperty %>)))
+        Friend Shared Sub <%= sc.MethodName %>Async(<%= sc.Members.BuildParametersVariables() %>, ByVal handler As EventHandler(Of DataPortalResult(Of AsyncChildLoader(Of <%= ChildBusinessClassName %><%= Entity.GenericProperty %>))))
             Dim criteria As New <%= CriteriaClassName %><%= Entity.GenericProperty %>()
             <%= sc.Members.BuildObjectInitializer() %>
 
-            'How should this be called? In the sync method we call FetchChild.
-            Dim dp As New DataPortal(Of <%= ChildBusinessClassName %><%= Entity.GenericProperty %>)()
-            AddHandler dp.FetchCompleted, handler
-            dp.BeginFetch(criteria)
+            DataPortal.BeginFetch(Of AsyncChildLoader(Of <%= ChildBusinessClassName %><%= Entity.GenericProperty %>))(criteria, handler)
         End Sub
 <% Next %>
     
-        Friend Shared Sub GetAllAsync(ByVal handler As EventHandler(Of DataPortalResult(Of <%= ChildBusinessClassName %><%= Entity.GenericProperty %>)))
-            'How should this be called? In the sync method we call FetchChild.
-            Dim dp As New DataPortal(Of <%= ChildBusinessClassName %><%= Entity.GenericProperty %>)()
-            AddHandler dp.FetchCompleted, handler
-            dp.BeginFetch(New <%= CriteriaClassName %><%= Entity.GenericProperty %>())
+        Friend Shared Sub GetAllAsync(ByVal handler As EventHandler(Of DataPortalResult(Of AsyncChildLoader(Of <%= ChildBusinessClassName %><%= Entity.GenericProperty %>))))
+            DataPortal.BeginFetch(Of AsyncChildLoader(Of <%= ChildBusinessClassName %><%= Entity.GenericProperty %>))(New <%= CriteriaClassName %><%= Entity.GenericProperty %>(), handler)
         End Sub 
 #End If
 
