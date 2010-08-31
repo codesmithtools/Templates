@@ -112,23 +112,17 @@ namespace <%= BusinessProjectName %>
         }
 <% foreach(SearchCriteria sc in Entity.SearchCriteria()) { %>
 
-        internal static void <%= sc.MethodName %>Async(<%= sc.Members.BuildParametersVariables() %>, EventHandler<DataPortalResult<<%= ChildBusinessClassName %><%= Entity.GenericProperty %>>> handler)
+        internal static void <%= sc.MethodName %>Async(<%= sc.Members.BuildParametersVariables() %>, EventHandler<DataPortalResult<AsyncChildLoader<<%= ChildBusinessClassName %><%= Entity.GenericProperty %>>>> handler)
         {
             var criteria = new <%= CriteriaClassName %><%= Entity.GenericProperty %>{<%= sc.Members.BuildObjectInitializer() %>};
             <%=sc.Members.BuildNullableObjectInitializer()%>
-            // How should this be called? In the sync method we call FetchChild.
-            var dp = new DataPortal<<%= ChildBusinessClassName %><%= Entity.GenericProperty %>>();
-            dp.FetchCompleted += handler;
-            dp.BeginFetch(criteria);
+            DataPortal.BeginFetch<AsyncChildLoader<<%= ChildBusinessClassName %><%= Entity.GenericProperty %>>>(criteria, handler);
         }
 <% } %>
 
-        internal static void GetAllAsync(EventHandler<DataPortalResult<<%= ChildBusinessClassName %><%= Entity.GenericProperty %>>> handler)
+        internal static void GetAllAsync(EventHandler<DataPortalResult<AsyncChildLoader<<%= ChildBusinessClassName %><%= Entity.GenericProperty %>>>> handler)
         {
-            // How should this be called? In the sync method we call FetchChild.
-            var dp = new DataPortal<<%= ChildBusinessClassName %><%= Entity.GenericProperty %>>();
-            dp.FetchCompleted += handler;
-            dp.BeginFetch(new <%= CriteriaClassName %><%= Entity.GenericProperty %>());
+            DataPortal.BeginFetch<AsyncChildLoader<<%= ChildBusinessClassName %><%= Entity.GenericProperty %>>>(new <%= CriteriaClassName %><%= Entity.GenericProperty %>(), handler);
         }
 #endif
  

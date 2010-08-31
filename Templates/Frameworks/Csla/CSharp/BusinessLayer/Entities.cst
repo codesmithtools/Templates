@@ -31,6 +31,8 @@
 <%@ Register Name="ADOHelperTemplate" Template="Internal\ADOHelper.cst" %>
 <%@ Register Name="FactoryNamesTemplate" Template="Internal\FactoryNames.cst" %>
 <%@ Register Name="ExistsCommandTemplate" Template="Internal\ExistsCommand.cst" %>
+<%@ Register Name="AsyncChildLoaderTemplate" Template="Internal\AsyncChildLoader.cst" %>
+
 <% Generate(); %>
 
 <script runat="template">
@@ -264,6 +266,18 @@ public override void Generate()
     ExistsCommand.RenderToFile(System.IO.Path.Combine(this.Location, "Commands\\ExistsCommand.cs"), true);
 
     #endregion
+
+    #region AsyncChildLoaderTemplate
+
+    if(IncludeSilverlightSupport)
+    {
+        AsyncChildLoaderTemplate AsyncChildLoader = this.Create<AsyncChildLoaderTemplate>();
+        this.CopyPropertiesTo(AsyncChildLoader);
+        AsyncChildLoader.RenderToFile(System.IO.Path.Combine(this.Location, "Utility\\AsyncChildLoader.cs"), true);
+    }
+
+    #endregion
+
 }
 
 </script>
