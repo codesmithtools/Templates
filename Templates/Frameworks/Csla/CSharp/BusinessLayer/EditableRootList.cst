@@ -1,4 +1,4 @@
-<%-- Author: Blake Niemyjski --%>
+﻿<%-- Author: Blake Niemyjski --%>
 <%@ CodeTemplate Language="C#" TargetLanguage="C#" OutputType="None" Inherits="CodeSmith.QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Encoding="UTF-8" Description="CSLA EditableRootList" %>
 
 <%@ Register Name="EditableRootList" Template="Internal\EditableRootList.cst" %>
@@ -29,7 +29,6 @@ public override void Render(System.IO.TextWriter writer)
     
     EditableRootList editableRootList = this.Create<EditableRootList>();
     this.CopyPropertiesTo(editableRootList);
-    editableRootList.BusinessClassName = string.Format("{0}List", editableRootList.BusinessClassName);
     
     string parentFileName = System.IO.Path.Combine(this.Location, string.Format("Collections\\{0}.cs", editableRootList.BusinessClassName));
     if (!System.IO.File.Exists(parentFileName))
@@ -43,7 +42,6 @@ public override void Render(System.IO.TextWriter writer)
     
     EditableRootListGenerated editableRootListGenerated = this.Create<EditableRootListGenerated>();
     this.CopyPropertiesTo(editableRootListGenerated);
-    editableRootListGenerated.BusinessClassName = string.Format("{0}List", editableRootListGenerated.BusinessClassName);
     
     editableRootListGenerated.RenderToFile(fileName, parentFileName, true);
     
@@ -56,7 +54,6 @@ public override void Render(System.IO.TextWriter writer)
     {
         EditableRootListDataAccess editableRootListDataAccess = this.Create<EditableRootListDataAccess>();
         this.CopyPropertiesTo(editableRootListDataAccess);
-        editableRootListDataAccess.BusinessClassName = string.Format("{0}List", editableRootListDataAccess.BusinessClassName);
         
         editableRootListDataAccess.RenderToFile(fileName, parentFileName, true);
     }
@@ -64,7 +61,6 @@ public override void Render(System.IO.TextWriter writer)
     {
         EditableRootListDataAccessParameterized editableRootListDataAccessParameterized = this.Create<EditableRootListDataAccessParameterized>();
         this.CopyPropertiesTo(editableRootListDataAccessParameterized);
-        editableRootListDataAccessParameterized.BusinessClassName = string.Format("{0}List", editableRootListDataAccessParameterized.BusinessClassName);
         
         editableRootListDataAccessParameterized.RenderToFile(fileName, parentFileName, true);
     }
@@ -72,7 +68,6 @@ public override void Render(System.IO.TextWriter writer)
     {
         EditableRootListDataAccessStoredProcedures editableRootListDataAccessStoredProcedures = this.Create<EditableRootListDataAccessStoredProcedures>();
         this.CopyPropertiesTo(editableRootListDataAccessStoredProcedures);
-        editableRootListDataAccessStoredProcedures.BusinessClassName = string.Format("{0}List", editableRootListDataAccessStoredProcedures.BusinessClassName);
 
         editableRootListDataAccessStoredProcedures.RenderToFile(fileName, parentFileName, true);
 
@@ -89,6 +84,20 @@ public override void Render(System.IO.TextWriter writer)
     
     #endregion
 
+}
+
+public override bool OnTableChanging()
+{
+    if (string.IsNullOrEmpty(BusinessClassName))
+    {
+        BusinessClassName = string.Concat(Entity.ClassName, "List");
+        ChildBusinessClassName = Entity.ClassName;
+    }
+
+    if (string.IsNullOrEmpty(CriteriaClassName) || CriteriaClassName.Equals("Criteria", StringComparison.InvariantCultureIgnoreCase))
+        CriteriaClassName = String.Concat(Entity.ClassName, "Criteria");
+
+    return false;
 }
 
 </script>

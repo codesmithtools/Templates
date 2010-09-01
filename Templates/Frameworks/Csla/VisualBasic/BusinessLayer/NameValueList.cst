@@ -30,7 +30,6 @@ Public Overloads Overrides Sub Render(writer As System.IO.TextWriter)
     'NameValueList
     Dim nameValueList As NameValueList = Me.Create(Of NameValueList)()
     Me.CopyPropertiesTo(nameValueList)
-    nameValueList.BusinessClassName = String.Format("{0}NameValueList", nameValueList.BusinessClassName)
 
     Dim parentFileName As String = System.IO.Path.Combine(Me.Location, String.Format("Collections\{0}.vb", nameValueList.BusinessClassName))
     nameValueList.RenderToFile(parentFileName, strategy)
@@ -40,7 +39,6 @@ Public Overloads Overrides Sub Render(writer As System.IO.TextWriter)
 
     Dim nameValueListGenerated As NameValueListGenerated = Me.Create(Of NameValueListGenerated)()
     Me.CopyPropertiesTo(nameValueListGenerated)
-    nameValueListGenerated.BusinessClassName = nameValueList.BusinessClassName
 
     nameValueListGenerated.RenderToFile(fileName, parentFileName, True)
 
@@ -49,7 +47,6 @@ Public Overloads Overrides Sub Render(writer As System.IO.TextWriter)
 
     Dim nameValueListDataAccess As NameValueListDataAccess = Me.Create(Of NameValueListDataAccess)()
     Me.CopyPropertiesTo(nameValueListDataAccess)
-    nameValueListDataAccess.BusinessClassName = nameValueList.BusinessClassName
 
     nameValueListDataAccess.RenderToFile(fileName, parentFileName, True)
     If DataAccessImplementation = DataAccessMethod.StoredProcedures Then
@@ -62,5 +59,18 @@ Public Overloads Overrides Sub Render(writer As System.IO.TextWriter)
     sqlStoredProcedures.RenderToFile(fileName, parentFileName, True)
     End If
 End Sub
+
+Public Overrides Function OnTableChanging() As Boolean
+	If String.IsNullOrEmpty(BusinessClassName) Then
+		BusinessClassName = String.Concat(Entity.ClassName, "NameValueList")
+		ChildBusinessClassName = Entity.ClassName
+	End If
+
+	If String.IsNullOrEmpty(CriteriaClassName) OrElse CriteriaClassName.Equals("Criteria", StringComparison.InvariantCultureIgnoreCase) Then
+		CriteriaClassName = [String].Concat(Entity.ClassName, "Criteria")
+	End If
+
+	Return False
+End Function
 
 </script>

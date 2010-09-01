@@ -46,7 +46,7 @@ Namespace <%= BusinessProjectName %>
     <Csla.Server.ObjectFactory(FactoryNames.<%= Entity.ClassName %>InfoListFactoryName)> _
     <% End If %>
     Public Partial Class <%= BusinessClassName %><%= Entity.GenericProperty %> 
-        Inherits ReadOnlyListBase(Of <%= BusinessClassName %><%= Entity.GenericProperty %>, <%= ResolveTargetClassName(ChildBusinessClassName, "Info", IsReadOnlyBusinessObject("Info")) %><%= Entity.GenericProperty %>)
+        Inherits ReadOnlyListBase(Of <%= BusinessClassName %><%= Entity.GenericProperty %>, <%= ChildBusinessClassName %><%= Entity.GenericProperty %>)
     
 #Region "Contructor(s)"
     

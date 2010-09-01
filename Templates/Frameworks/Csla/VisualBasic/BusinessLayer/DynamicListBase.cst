@@ -1,4 +1,4 @@
-<%-- Author: Blake Niemyjski --%>
+﻿<%-- Author: Blake Niemyjski --%>
 <%@ CodeTemplate Language="VB" TargetLanguage="VB" OutputType="None" Inherits="CodeSmith.QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Encoding="UTF-8" Description="CSLA DynamicListBase" %>
 
 <%@ Register Name="DynamicListBase" Template="Internal\DynamicListBase.cst" %>
@@ -28,7 +28,6 @@ Public Overloads Overrides Sub Render(writer As System.IO.TextWriter)
     'DynamicListBase
     Dim DynamicListBase As DynamicListBase = Me.Create(Of DynamicListBase)()
     Me.CopyPropertiesTo(DynamicListBase)
-    DynamicListBase.BusinessClassName = String.Format("{0}List", DynamicListBase.BusinessClassName)
 
     Dim parentFileName As String = System.IO.Path.Combine(Me.Location, String.Format("Collections\{0}.vb", DynamicListBase.BusinessClassName))
     If Not System.IO.File.Exists(parentFileName) Then
@@ -40,7 +39,6 @@ Public Overloads Overrides Sub Render(writer As System.IO.TextWriter)
 
     Dim DynamicListBaseGenerated As DynamicListBaseGenerated = Me.Create(Of DynamicListBaseGenerated)()
     Me.CopyPropertiesTo(DynamicListBaseGenerated)
-    DynamicListBaseGenerated.BusinessClassName = String.Format("{0}List", DynamicListBaseGenerated.BusinessClassName)
 
     DynamicListBaseGenerated.RenderToFile(fileName, parentFileName, True)
 
@@ -49,19 +47,16 @@ Public Overloads Overrides Sub Render(writer As System.IO.TextWriter)
     If DataAccessImplementation = DataAccessMethod.None Then
         Dim DynamicListBaseDataAccess As DynamicListBaseDataAccess = Me.Create(Of DynamicListBaseDataAccess)()
         Me.CopyPropertiesTo(DynamicListBaseDataAccess)
-        DynamicListBaseDataAccess.BusinessClassName = String.Format("{0}List", DynamicListBaseDataAccess.BusinessClassName)
 
         DynamicListBaseDataAccess.RenderToFile(fileName, parentFileName, True)
     ElseIf DataAccessImplementation = DataAccessMethod.ParameterizedSQL Then
         Dim DynamicListBaseDataAccessParameterized As DynamicListBaseDataAccessParameterized = Me.Create(Of DynamicListBaseDataAccessParameterized)()
         Me.CopyPropertiesTo(DynamicListBaseDataAccessParameterized)
-        DynamicListBaseDataAccessParameterized.BusinessClassName = String.Format("{0}List", DynamicListBaseDataAccessParameterized.BusinessClassName)
 
         DynamicListBaseDataAccessParameterized.RenderToFile(fileName, parentFileName, True)
     ElseIf DataAccessImplementation = DataAccessMethod.StoredProcedures Then
         Dim DynamicListBaseDataAccessStoredProcedures As DynamicListBaseDataAccessStoredProcedures = Me.Create(Of DynamicListBaseDataAccessStoredProcedures)()
         Me.CopyPropertiesTo(DynamicListBaseDataAccessStoredProcedures)
-        DynamicListBaseDataAccessStoredProcedures.BusinessClassName = String.Format("{0}List", DynamicListBaseDataAccessStoredProcedures.BusinessClassName)
         
         DynamicListBaseDataAccessStoredProcedures.RenderToFile(fileName, parentFileName, True)
         
@@ -74,5 +69,18 @@ Public Overloads Overrides Sub Render(writer As System.IO.TextWriter)
         sqlStoredProcedures.RenderToFile(fileName, parentFileName, True)
     End If
 End Sub
+
+Public Overrides Function OnTableChanging() As Boolean
+	If String.IsNullOrEmpty(BusinessClassName) Then
+		BusinessClassName = String.Concat(Entity.ClassName, "List")
+		ChildBusinessClassName = Entity.ClassName
+	End If
+
+	If String.IsNullOrEmpty(CriteriaClassName) OrElse CriteriaClassName.Equals("Criteria", StringComparison.InvariantCultureIgnoreCase) Then
+		CriteriaClassName = [String].Concat(Entity.ClassName, "Criteria")
+	End If
+
+	Return False
+End Function
 
 </script>

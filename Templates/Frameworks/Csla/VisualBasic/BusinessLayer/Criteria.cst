@@ -1,4 +1,4 @@
-<%-- Author: Blake Niemyjski --%>
+﻿<%-- Author: Blake Niemyjski --%>
 <%@ CodeTemplate Language="VB" TargetLanguage="VB" OutputType="None" Inherits="CodeSmith.QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Encoding="UTF-8" Description="CSLA Criteria" %>
 
 <%@ Register Name="Criteria" Template="Internal\Criteria.cst" %>
@@ -24,7 +24,6 @@ Public Overloads Overrides Sub Render(writer As System.IO.TextWriter)
     'Criteria
     Dim criteria As Criteria = Me.Create(Of Criteria)()
     Me.CopyPropertiesTo(criteria)
-    criteria.BusinessClassName = String.Format("{0}Criteria", criteria.BusinessClassName)
 
     Dim parentFileName As String = System.IO.Path.Combine(Me.Location, String.Format("Criteria\{0}.vb", criteria.BusinessClassName))
     
@@ -38,7 +37,6 @@ Public Overloads Overrides Sub Render(writer As System.IO.TextWriter)
 
     Dim criteriaGenerated As CriteriaGenerated = Me.Create(Of CriteriaGenerated)()
     Me.CopyPropertiesTo(criteriaGenerated)
-    criteriaGenerated.BusinessClassName = String.Format("{0}Criteria", criteriaGenerated.BusinessClassName)
 
     criteriaGenerated.RenderToFile(fileName, parentFileName, True)
     
@@ -47,5 +45,17 @@ Public Overloads Overrides Sub Render(writer As System.IO.TextWriter)
     IGeneratedCriteria.RenderToFile(System.IO.Path.Combine(Me.Location, "Criteria\Interfaces\IGeneratedCriteria.vb"), True)
 
 End Sub
+
+Public Overrides Function OnTableChanging() As Boolean
+	If String.IsNullOrEmpty(BusinessClassName) Then
+		BusinessClassName = String.Concat(Entity.ClassName, "Criteria")
+	End If
+
+	If String.IsNullOrEmpty(CriteriaClassName) OrElse CriteriaClassName.Equals("Criteria", StringComparison.InvariantCultureIgnoreCase) Then
+		CriteriaClassName = [String].Concat(Entity.ClassName, "Criteria")
+	End If
+
+	Return False
+End Function
 
 </script>

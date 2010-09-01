@@ -1,4 +1,4 @@
-<%-- Author: Blake Niemyjski --%>
+﻿<%-- Author: Blake Niemyjski --%>
 <%@ CodeTemplate Language="VB" TargetLanguage="VB" OutputType="None" Inherits="CodeSmith.QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Encoding="UTF-8" Description="CSLA ReadOnlyRoot" %>
 
 <%@ Register Name="ReadOnlyRoot" Template="Internal\ReadOnlyRoot.cst" %>
@@ -27,7 +27,6 @@ Public Overloads Overrides Sub Render(writer As System.IO.TextWriter)
     'ReadOnlyRoot
     Dim readOnlyRoot As ReadOnlyRoot = Me.Create(Of ReadOnlyRoot)()
     Me.CopyPropertiesTo(readOnlyRoot)
-    readOnlyRoot.BusinessClassName = String.Format("{0}Info", readOnlyRoot.BusinessClassName)
 
     Dim parentFileName As String = System.IO.Path.Combine(Me.Location, String.Format("Entities\{0}.vb", readOnlyRoot.BusinessClassName))
     If Not System.IO.File.Exists(parentFileName) Then
@@ -39,7 +38,6 @@ Public Overloads Overrides Sub Render(writer As System.IO.TextWriter)
 
     Dim readOnlyRootGenerated As ReadOnlyRootGenerated = Me.Create(Of ReadOnlyRootGenerated)()
     Me.CopyPropertiesTo(readOnlyRootGenerated)
-    readOnlyRootGenerated.BusinessClassName = String.Format("{0}Info", readOnlyRootGenerated.BusinessClassName)
 
     readOnlyRootGenerated.RenderToFile(fileName, parentFileName, True)
 
@@ -48,19 +46,16 @@ Public Overloads Overrides Sub Render(writer As System.IO.TextWriter)
     If DataAccessImplementation = DataAccessMethod.None Then
         Dim readOnlyRootDataAccess As ReadOnlyRootDataAccess = Me.Create(Of ReadOnlyRootDataAccess)()
         Me.CopyPropertiesTo(readOnlyRootDataAccess)
-        readOnlyRootDataAccess.BusinessClassName = String.Format("{0}Info", readOnlyRootDataAccess.BusinessClassName)
 
         readOnlyRootDataAccess.RenderToFile(fileName, parentFileName, True)
     ElseIf DataAccessImplementation = DataAccessMethod.ParameterizedSQL Then
         Dim readOnlyRootDataAccessParameterized As ReadOnlyRootDataAccessParameterized = Me.Create(Of ReadOnlyRootDataAccessParameterized)()
         Me.CopyPropertiesTo(readOnlyRootDataAccessParameterized)
-        readOnlyRootDataAccessParameterized.BusinessClassName = String.Format("{0}Info", readOnlyRootDataAccessParameterized.BusinessClassName)
 
         readOnlyRootDataAccessParameterized.RenderToFile(fileName, parentFileName, True)
     ElseIf DataAccessImplementation = DataAccessMethod.StoredProcedures Then
         Dim readOnlyRootDataAccessStoredProcedures As ReadOnlyRootDataAccessStoredProcedures = Me.Create(Of ReadOnlyRootDataAccessStoredProcedures)()
         Me.CopyPropertiesTo(readOnlyRootDataAccessStoredProcedures)
-        readOnlyRootDataAccessStoredProcedures.BusinessClassName = String.Format("{0}Info", readOnlyRootDataAccessStoredProcedures.BusinessClassName)
         
         readOnlyRootDataAccessStoredProcedures.RenderToFile(fileName, parentFileName, True)
         
@@ -73,5 +68,17 @@ Public Overloads Overrides Sub Render(writer As System.IO.TextWriter)
         sqlStoredProcedures.RenderToFile(fileName, parentFileName, True)
     End If
 End Sub
+
+Public Overrides Function OnTableChanging() As Boolean
+	If String.IsNullOrEmpty(BusinessClassName) Then
+		BusinessClassName = String.Concat(Entity.ClassName, "Info")
+	End If
+
+	If String.IsNullOrEmpty(CriteriaClassName) OrElse CriteriaClassName.Equals("Criteria", StringComparison.InvariantCultureIgnoreCase) Then
+		CriteriaClassName = [String].Concat(Entity.ClassName, "Criteria")
+	End If
+
+	Return False
+End Function
 
 </script>

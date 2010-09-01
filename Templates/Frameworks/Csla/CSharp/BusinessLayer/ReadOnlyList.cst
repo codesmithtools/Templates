@@ -1,4 +1,4 @@
-<%-- Author: Blake Niemyjski --%>
+﻿<%-- Author: Blake Niemyjski --%>
 <%@ CodeTemplate Language="C#" TargetLanguage="C#" OutputType="None" Inherits="CodeSmith.QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Encoding="UTF-8" Description="CSLA ReadOnlyList" %>
 
 <%@ Register Name="ReadOnlyList" Template="Internal\ReadOnlyList.cst" %>
@@ -29,7 +29,6 @@ public override void Render(System.IO.TextWriter writer)
     
     ReadOnlyList readOnlyList = this.Create<ReadOnlyList>();
     this.CopyPropertiesTo(readOnlyList);
-    readOnlyList.BusinessClassName = string.Format("{0}InfoList", readOnlyList.BusinessClassName);
     
     string parentFileName = System.IO.Path.Combine(Location, string.Format("Collections\\{0}.cs", readOnlyList.BusinessClassName));
     if (!System.IO.File.Exists(parentFileName))
@@ -43,7 +42,6 @@ public override void Render(System.IO.TextWriter writer)
     
     ReadOnlyListGenerated readOnlyListGenerated = this.Create<ReadOnlyListGenerated>();
     this.CopyPropertiesTo(readOnlyListGenerated);
-    readOnlyListGenerated.BusinessClassName = string.Format("{0}InfoList", readOnlyListGenerated.BusinessClassName);
     
     readOnlyListGenerated.RenderToFile(fileName, parentFileName, true);
     
@@ -56,7 +54,6 @@ public override void Render(System.IO.TextWriter writer)
     {
         ReadOnlyListDataAccess readOnlyListDataAccess = this.Create<ReadOnlyListDataAccess>();
         this.CopyPropertiesTo(readOnlyListDataAccess);
-        readOnlyListDataAccess.BusinessClassName = string.Format("{0}InfoList", readOnlyListDataAccess.BusinessClassName);
         
         readOnlyListDataAccess.RenderToFile(fileName, parentFileName, true);
     }
@@ -64,7 +61,6 @@ public override void Render(System.IO.TextWriter writer)
     {
         ReadOnlyListDataAccessParameterized readOnlyListDataAccessParameterized = this.Create<ReadOnlyListDataAccessParameterized>();
         this.CopyPropertiesTo(readOnlyListDataAccessParameterized);
-        readOnlyListDataAccessParameterized.BusinessClassName = string.Format("{0}InfoList", readOnlyListDataAccessParameterized.BusinessClassName);
         
         readOnlyListDataAccessParameterized.RenderToFile(fileName, parentFileName, true);
     }
@@ -72,7 +68,6 @@ public override void Render(System.IO.TextWriter writer)
     {
         ReadOnlyListDataAccessStoredProcedures readOnlyListDataAccessStoredProcedures = this.Create<ReadOnlyListDataAccessStoredProcedures>();
         this.CopyPropertiesTo(readOnlyListDataAccessStoredProcedures);
-        readOnlyListDataAccessStoredProcedures.BusinessClassName = string.Format("{0}InfoList", readOnlyListDataAccessStoredProcedures.BusinessClassName);
 
         readOnlyListDataAccessStoredProcedures.RenderToFile(fileName, parentFileName, true);
 
@@ -88,6 +83,20 @@ public override void Render(System.IO.TextWriter writer)
     #endregion
     
     #endregion
+}
+
+public override bool OnTableChanging()
+{
+    if (string.IsNullOrEmpty(BusinessClassName))
+    {
+        BusinessClassName = string.Concat(Entity.ClassName, "InfoList");
+        ChildBusinessClassName = string.Concat(Entity.ClassName, "Info");
+    }
+
+    if (string.IsNullOrEmpty(CriteriaClassName) || CriteriaClassName.Equals("Criteria", StringComparison.InvariantCultureIgnoreCase))
+        CriteriaClassName = String.Concat(Entity.ClassName, "Criteria");
+
+    return false;
 }
 
 </script>

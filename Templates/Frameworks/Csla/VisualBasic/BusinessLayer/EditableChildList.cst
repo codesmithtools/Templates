@@ -1,4 +1,4 @@
-<%-- Author: Blake Niemyjski --%>
+﻿<%-- Author: Blake Niemyjski --%>
 <%@ CodeTemplate Language="VB" TargetLanguage="VB" OutputType="None" Inherits="CodeSmith.QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Encoding="UTF-8" Description="CSLA EditableChildList" %>
 
 <%@ Register Name="EditableChildList" Template="Internal\EditableChildList.cst" %>
@@ -28,7 +28,6 @@ Public Overloads Overrides Sub Render(writer As System.IO.TextWriter)
     'EditableChildList
     Dim editableChildList As EditableChildList = Me.Create(Of EditableChildList)()
     Me.CopyPropertiesTo(editableChildList)
-    editableChildList.BusinessClassName = String.Format("{0}List", editableChildList.BusinessClassName)
 
     Dim parentFileName As String = System.IO.Path.Combine(Me.Location, String.Format("Collections\{0}.vb", editableChildList.BusinessClassName))
     If Not System.IO.File.Exists(parentFileName) Then
@@ -40,7 +39,6 @@ Public Overloads Overrides Sub Render(writer As System.IO.TextWriter)
 
     Dim editableChildListGenerated As EditableChildListGenerated = Me.Create(Of EditableChildListGenerated)()
     Me.CopyPropertiesTo(editableChildListGenerated)
-    editableChildListGenerated.BusinessClassName = String.Format("{0}List", editableChildListGenerated.BusinessClassName)
 
     editableChildListGenerated.RenderToFile(fileName, parentFileName, True)
 
@@ -49,19 +47,16 @@ Public Overloads Overrides Sub Render(writer As System.IO.TextWriter)
     If DataAccessImplementation = DataAccessMethod.None Then
         Dim editableChildListDataAccess As EditableChildListDataAccess = Me.Create(Of EditableChildListDataAccess)()
         Me.CopyPropertiesTo(editableChildListDataAccess)
-        editableChildListDataAccess.BusinessClassName = String.Format("{0}List", editableChildListDataAccess.BusinessClassName)
 
         editableChildListDataAccess.RenderToFile(fileName, parentFileName, True)
     ElseIf DataAccessImplementation = DataAccessMethod.ParameterizedSQL Then
         Dim editableChildListDataAccessParameterized As EditableChildListDataAccessParameterized = Me.Create(Of EditableChildListDataAccessParameterized)()
         Me.CopyPropertiesTo(editableChildListDataAccessParameterized)
-        editableChildListDataAccessParameterized.BusinessClassName = String.Format("{0}List", editableChildListDataAccessParameterized.BusinessClassName)
 
         editableChildListDataAccessParameterized.RenderToFile(fileName, parentFileName, True)
     ElseIf DataAccessImplementation = DataAccessMethod.StoredProcedures Then
         Dim editableChildListDataAccessStoredProcedures As EditableChildListDataAccessStoredProcedures = Me.Create(Of EditableChildListDataAccessStoredProcedures)()
         Me.CopyPropertiesTo(editableChildListDataAccessStoredProcedures)
-        editableChildListDataAccessStoredProcedures.BusinessClassName = String.Format("{0}List", editableChildListDataAccessStoredProcedures.BusinessClassName)
         
         editableChildListDataAccessStoredProcedures.RenderToFile(fileName, parentFileName, True)
         
@@ -74,5 +69,18 @@ Public Overloads Overrides Sub Render(writer As System.IO.TextWriter)
         sqlStoredProcedures.RenderToFile(fileName, parentFileName, True)
     End If
 End Sub
+
+Public Overrides Function OnTableChanging() As Boolean
+	If String.IsNullOrEmpty(BusinessClassName) Then
+		BusinessClassName = String.Concat(Entity.ClassName, "List")
+		ChildBusinessClassName = Entity.ClassName
+	End If
+
+	If String.IsNullOrEmpty(CriteriaClassName) OrElse CriteriaClassName.Equals("Criteria", StringComparison.InvariantCultureIgnoreCase) Then
+		CriteriaClassName = [String].Concat(Entity.ClassName, "Criteria")
+	End If
+
+	Return False
+End Function
 
 </script>

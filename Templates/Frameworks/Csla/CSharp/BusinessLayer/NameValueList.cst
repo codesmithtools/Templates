@@ -30,7 +30,6 @@ public override void Render(System.IO.TextWriter writer)
     
     NameValueList nameValueList = this.Create<NameValueList>();
     this.CopyPropertiesTo(nameValueList);
-    nameValueList.BusinessClassName = string.Format("{0}NameValueList", nameValueList.BusinessClassName);
     
     string parentFileName = System.IO.Path.Combine(this.Location, string.Format("Collections\\{0}.cs", nameValueList.BusinessClassName));
     nameValueList.RenderToFile(parentFileName, strategy);
@@ -41,7 +40,6 @@ public override void Render(System.IO.TextWriter writer)
     
     NameValueListGenerated nameValueListGenerated = this.Create<NameValueListGenerated>();
     this.CopyPropertiesTo(nameValueListGenerated);
-    nameValueListGenerated.BusinessClassName = nameValueList.BusinessClassName;
     
     nameValueListGenerated.RenderToFile(fileName, parentFileName, true);
     
@@ -53,7 +51,6 @@ public override void Render(System.IO.TextWriter writer)
     
     NameValueListDataAccess nameValueListDataAccess = this.Create<NameValueListDataAccess>();
     this.CopyPropertiesTo(nameValueListDataAccess);
-    nameValueListDataAccess.BusinessClassName = nameValueList.BusinessClassName;
     
     nameValueListDataAccess.RenderToFile(fileName, parentFileName, true);
     
@@ -71,6 +68,20 @@ public override void Render(System.IO.TextWriter writer)
     #endregion
     
     #endregion
+}
+
+public override bool OnTableChanging()
+{
+    if (string.IsNullOrEmpty(BusinessClassName))
+    {
+        BusinessClassName = string.Concat(Entity.ClassName, "NameValueList");
+        ChildBusinessClassName = Entity.ClassName;
+    }
+
+    if (string.IsNullOrEmpty(CriteriaClassName) || CriteriaClassName.Equals("Criteria", StringComparison.InvariantCultureIgnoreCase))
+        CriteriaClassName = String.Concat(Entity.ClassName, "Criteria");
+
+    return false;
 }
 
 </script>

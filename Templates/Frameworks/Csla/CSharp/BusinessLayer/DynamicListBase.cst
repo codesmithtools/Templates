@@ -1,4 +1,4 @@
-<%-- Author: Blake Niemyjski --%>
+﻿<%-- Author: Blake Niemyjski --%>
 <%@ CodeTemplate Language="C#" TargetLanguage="C#" OutputType="None" Inherits="CodeSmith.QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Encoding="UTF-8" Description="CSLA DynamicListBase" %>
 
 <%@ Register Name="DynamicListBase" Template="Internal\DynamicListBase.cst" %>
@@ -29,7 +29,6 @@ public override void Render(System.IO.TextWriter writer)
     
     DynamicListBase DynamicListBase = this.Create<DynamicListBase>();
     this.CopyPropertiesTo(DynamicListBase);
-    DynamicListBase.BusinessClassName = string.Format("{0}List", DynamicListBase.BusinessClassName);
     
     string parentFileName = System.IO.Path.Combine(this.Location, string.Format("Collections\\{0}.cs", DynamicListBase.BusinessClassName));
     if (!System.IO.File.Exists(parentFileName))
@@ -43,7 +42,6 @@ public override void Render(System.IO.TextWriter writer)
     
     DynamicListBaseGenerated DynamicListBaseGenerated = this.Create<DynamicListBaseGenerated>();
     this.CopyPropertiesTo(DynamicListBaseGenerated);
-    DynamicListBaseGenerated.BusinessClassName = string.Format("{0}List", DynamicListBaseGenerated.BusinessClassName);
     
     DynamicListBaseGenerated.RenderToFile(fileName, parentFileName, true);
     
@@ -56,7 +54,6 @@ public override void Render(System.IO.TextWriter writer)
     {
         DynamicListBaseDataAccess DynamicListBaseDataAccess = this.Create<DynamicListBaseDataAccess>();
         this.CopyPropertiesTo(DynamicListBaseDataAccess);
-        DynamicListBaseDataAccess.BusinessClassName = string.Format("{0}List", DynamicListBaseDataAccess.BusinessClassName);
         
         DynamicListBaseDataAccess.RenderToFile(fileName, parentFileName, true);
     }
@@ -64,7 +61,6 @@ public override void Render(System.IO.TextWriter writer)
     {
         DynamicListBaseDataAccessParameterized DynamicListBaseDataAccessParameterized = this.Create<DynamicListBaseDataAccessParameterized>();
         this.CopyPropertiesTo(DynamicListBaseDataAccessParameterized);
-        DynamicListBaseDataAccessParameterized.BusinessClassName = string.Format("{0}List", DynamicListBaseDataAccessParameterized.BusinessClassName);
         
         DynamicListBaseDataAccessParameterized.RenderToFile(fileName, parentFileName, true);
     }
@@ -72,7 +68,6 @@ public override void Render(System.IO.TextWriter writer)
     {
         DynamicListBaseDataAccessStoredProcedures DynamicListBaseDataAccessStoredProcedures = this.Create<DynamicListBaseDataAccessStoredProcedures>();
         this.CopyPropertiesTo(DynamicListBaseDataAccessStoredProcedures);
-        DynamicListBaseDataAccessStoredProcedures.BusinessClassName = string.Format("{0}List", DynamicListBaseDataAccessStoredProcedures.BusinessClassName);
 
         DynamicListBaseDataAccessStoredProcedures.RenderToFile(fileName, parentFileName, true);
 
@@ -89,6 +84,20 @@ public override void Render(System.IO.TextWriter writer)
     
     #endregion
 
+}
+
+public override bool OnTableChanging()
+{
+    if (string.IsNullOrEmpty(BusinessClassName))
+    {
+        BusinessClassName = string.Concat(Entity.ClassName, "List");
+        ChildBusinessClassName = Entity.ClassName;
+    }
+
+    if (string.IsNullOrEmpty(CriteriaClassName) || CriteriaClassName.Equals("Criteria", StringComparison.InvariantCultureIgnoreCase))
+        CriteriaClassName = String.Concat(Entity.ClassName, "Criteria");
+
+    return false;
 }
 
 </script>

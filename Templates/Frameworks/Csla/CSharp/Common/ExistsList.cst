@@ -14,7 +14,7 @@
 
         public static bool Exists(<%= CriteriaClassName %><%= Entity.GenericProperty %> criteria)
         {
-            return <%= BusinessProjectName %>.<%= ResolveTargetClassName(ChildBusinessClassName, "Info", BusinessClassName.Contains("InfoList") && IsReadOnlyBusinessObject("Info")) %>.Exists(criteria);
+            return <%= BusinessProjectName %>.<%= ChildBusinessClassName %>.Exists(criteria);
         }
 
         #endregion

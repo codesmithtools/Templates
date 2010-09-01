@@ -176,8 +176,7 @@ namespace CodeSmith.QuickStart
             }
             set
             {
-                if (!string.IsNullOrEmpty(value))
-                    _childBusinessClassName = value;
+                _childBusinessClassName = value;
             }
         }
 
@@ -194,7 +193,7 @@ namespace CodeSmith.QuickStart
             }
             set
             {
-                if(value.EndsWith("Criteria", StringComparison.InvariantCultureIgnoreCase))
+                if (!string.IsNullOrEmpty(value) && value.EndsWith("Criteria", StringComparison.InvariantCultureIgnoreCase)) 
                     _criteriaClassName = value;
             }
         }
@@ -257,7 +256,7 @@ namespace CodeSmith.QuickStart
         {
             // We will use these eventually..
             //bool isReadOnly;
-            //bool searchingForCriteriaObject = suffix.Equals("criteria", StringComparison.InvariantCultureIgnoreCase);
+            bool searchingForCriteriaObject = suffix.Equals("criteria", StringComparison.InvariantCultureIgnoreCase);
          
             if(string.IsNullOrEmpty(className))
                 className = Entity != null ? Entity.ClassName : string.Empty;
@@ -272,18 +271,17 @@ namespace CodeSmith.QuickStart
                 }
 
                 // Try to detect if we are generating a read only object..
-                if (temp.Equals("info", StringComparison.InvariantCultureIgnoreCase) ||
-                    temp.Equals("infolist", StringComparison.InvariantCultureIgnoreCase))
+                if (temp.Equals("info", StringComparison.InvariantCultureIgnoreCase) || temp.Equals("infolist", StringComparison.InvariantCultureIgnoreCase))
                 {
+                    if (searchingForCriteriaObject && expression)
+                        return string.Concat(Entity.ClassName, suffix.Trim());
+
                     // Try to detect double endings.
                     if (suffix.Equals("info", StringComparison.InvariantCultureIgnoreCase)) 
                         return string.Format("{0}Info", Entity.ClassName);
 
                     //isReadOnly = true;
                     className = string.Format("{0}Info", Entity.ClassName);
-
-                    if (BusinessClassName.Contains("Info"))
-                        return className;
                 }
             }
 
@@ -382,11 +380,13 @@ namespace CodeSmith.QuickStart
         {
             Entity = new Entity(SourceTable);
 
+            if (OnTableChanging()) return;
+            
             if (string.IsNullOrEmpty(BusinessClassName))
                 BusinessClassName = Entity.ClassName;
 
             if (string.IsNullOrEmpty(CriteriaClassName) || CriteriaClassName.Equals("Criteria", StringComparison.InvariantCultureIgnoreCase))
-                BusinessClassName = String.Concat(Entity.ClassName, "Criteria");
+                CriteriaClassName = String.Concat(Entity.ClassName, "Criteria");
 
             if (string.IsNullOrEmpty(BusinessProjectName))
                 BusinessProjectName = String.Concat(SourceTable.Namespace(), ".Business");
@@ -411,6 +411,16 @@ namespace CodeSmith.QuickStart
                            : string.Format("[{0}]", SourceTable.Owner);
 
             return string.Empty;
+        }
+
+        /// <summary>
+        /// This method is used if you don't want to overwrite the whole OnTableChanged() method, you just want to modify a property in the pipeline..
+        /// I only created this becuase I didn't want to duplicated a lot of code across templates or new up a new entity twice..
+        /// </summary>
+        /// <returns></returns>
+        public virtual bool OnTableChanging()
+        {
+            return false;
         }
 
         #endregion
