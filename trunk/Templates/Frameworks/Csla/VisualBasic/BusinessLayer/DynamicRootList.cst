@@ -1,4 +1,4 @@
-<%-- Author: Blake Niemyjski --%>
+﻿<%-- Author: Blake Niemyjski --%>
 <%@ CodeTemplate Language="VB" TargetLanguage="VB" OutputType="None" Inherits="CodeSmith.QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Encoding="UTF-8" Description="CSLA DynamicRootList" %>
 
 <%@ Register Name="DynamicRootList" Template="Internal\DynamicRootList.cst" %>
@@ -28,7 +28,6 @@ Public Overloads Overrides Sub Render(writer As System.IO.TextWriter)
     'DynamicRootList
     Dim dynamicRootList As DynamicRootList = Me.Create(Of DynamicRootList)()
     Me.CopyPropertiesTo(dynamicRootList)
-    dynamicRootList.BusinessClassName = String.Format("{0}List", dynamicRootList.BusinessClassName)
 
     Dim parentFileName As String = System.IO.Path.Combine(Me.Location, String.Format("Collections\{0}.vb", dynamicRootList.BusinessClassName))
     If Not System.IO.File.Exists(parentFileName) Then
@@ -40,7 +39,6 @@ Public Overloads Overrides Sub Render(writer As System.IO.TextWriter)
 
     Dim dynamicRootListGenerated As DynamicRootListGenerated = Me.Create(Of DynamicRootListGenerated)()
     Me.CopyPropertiesTo(dynamicRootListGenerated)
-    dynamicRootListGenerated.BusinessClassName = String.Format("{0}List", dynamicRootListGenerated.BusinessClassName)
 
     dynamicRootListGenerated.RenderToFile(fileName, parentFileName, True)
 
@@ -49,19 +47,16 @@ Public Overloads Overrides Sub Render(writer As System.IO.TextWriter)
     If DataAccessImplementation = DataAccessMethod.None Then
         Dim dynamicRootListDataAccess As DynamicRootListDataAccess = Me.Create(Of DynamicRootListDataAccess)()
         Me.CopyPropertiesTo(dynamicRootListDataAccess)
-        dynamicRootListDataAccess.BusinessClassName = String.Format("{0}List", dynamicRootListDataAccess.BusinessClassName)
 
         dynamicRootListDataAccess.RenderToFile(fileName, parentFileName, True)
     ElseIf DataAccessImplementation = DataAccessMethod.ParameterizedSQL Then
         Dim dynamicRootListDataAccessParameterized As DynamicRootListDataAccessParameterized = Me.Create(Of DynamicRootListDataAccessParameterized)()
         Me.CopyPropertiesTo(dynamicRootListDataAccessParameterized)
-        dynamicRootListDataAccessParameterized.BusinessClassName = String.Format("{0}List", dynamicRootListDataAccessParameterized.BusinessClassName)
 
         dynamicRootListDataAccessParameterized.RenderToFile(fileName, parentFileName, True)
     ElseIf DataAccessImplementation = DataAccessMethod.StoredProcedures Then
         Dim dynamicRootListDataAccessStoredProcedures As DynamicRootListDataAccessStoredProcedures = Me.Create(Of DynamicRootListDataAccessStoredProcedures)()
         Me.CopyPropertiesTo(dynamicRootListDataAccessStoredProcedures)
-        dynamicRootListDataAccessStoredProcedures.BusinessClassName = String.Format("{0}List", dynamicRootListDataAccessStoredProcedures.BusinessClassName)
         
         dynamicRootListDataAccessStoredProcedures.RenderToFile(fileName, parentFileName, True)
         
@@ -74,5 +69,18 @@ Public Overloads Overrides Sub Render(writer As System.IO.TextWriter)
         sqlStoredProcedures.RenderToFile(fileName, parentFileName, True)
     End If
 End Sub
+
+Public Overrides Function OnTableChanging() As Boolean
+	If String.IsNullOrEmpty(BusinessClassName) Then
+		BusinessClassName = String.Concat(Entity.ClassName, "List")
+		ChildBusinessClassName = Entity.ClassName
+	End If
+
+	If String.IsNullOrEmpty(CriteriaClassName) OrElse CriteriaClassName.Equals("Criteria", StringComparison.InvariantCultureIgnoreCase) Then
+		CriteriaClassName = [String].Concat(Entity.ClassName, "Criteria")
+	End If
+
+	Return False
+End Function
 
 </script>

@@ -1,4 +1,4 @@
-<%-- Author: Blake Niemyjski --%>
+﻿<%-- Author: Blake Niemyjski --%>
 <%@ CodeTemplate Language="C#" TargetLanguage="C#" OutputType="None" Inherits="CodeSmith.QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Encoding="UTF-8" Description="CSLA EditableChildList" %>
 
 <%@ Register Name="EditableChildList" Template="Internal\EditableChildList.cst" %>
@@ -29,7 +29,6 @@ public override void Render(System.IO.TextWriter writer)
     
     EditableChildList editableChildList = this.Create<EditableChildList>();
     this.CopyPropertiesTo(editableChildList);
-    editableChildList.BusinessClassName = string.Format("{0}List", editableChildList.BusinessClassName);
     
     string parentFileName = System.IO.Path.Combine(this.Location, string.Format("Collections\\{0}.cs", editableChildList.BusinessClassName));
     if (!System.IO.File.Exists(parentFileName))
@@ -43,7 +42,6 @@ public override void Render(System.IO.TextWriter writer)
     
     EditableChildListGenerated editableChildListGenerated = this.Create<EditableChildListGenerated>();
     this.CopyPropertiesTo(editableChildListGenerated);
-    editableChildListGenerated.BusinessClassName = string.Format("{0}List", editableChildListGenerated.BusinessClassName);
     
     editableChildListGenerated.RenderToFile(fileName, parentFileName, true);
     
@@ -56,7 +54,6 @@ public override void Render(System.IO.TextWriter writer)
     {
         EditableChildListDataAccess editableChildListDataAccess = this.Create<EditableChildListDataAccess>();
         this.CopyPropertiesTo(editableChildListDataAccess);
-        editableChildListDataAccess.BusinessClassName = string.Format("{0}List", editableChildListDataAccess.BusinessClassName);
         
         editableChildListDataAccess.RenderToFile(fileName, parentFileName, true);
     }
@@ -64,7 +61,6 @@ public override void Render(System.IO.TextWriter writer)
     {
         EditableChildListDataAccessParameterized editableChildListDataAccessParameterized = this.Create<EditableChildListDataAccessParameterized>();
         this.CopyPropertiesTo(editableChildListDataAccessParameterized);
-        editableChildListDataAccessParameterized.BusinessClassName = string.Format("{0}List", editableChildListDataAccessParameterized.BusinessClassName);
         
         editableChildListDataAccessParameterized.RenderToFile(fileName, parentFileName, true);
     }
@@ -72,7 +68,6 @@ public override void Render(System.IO.TextWriter writer)
     {
         EditableChildListDataAccessStoredProcedures editableChildListDataAccessStoredProcedures = this.Create<EditableChildListDataAccessStoredProcedures>();
         this.CopyPropertiesTo(editableChildListDataAccessStoredProcedures);
-        editableChildListDataAccessStoredProcedures.BusinessClassName = string.Format("{0}List", editableChildListDataAccessStoredProcedures.BusinessClassName);
         
         editableChildListDataAccessStoredProcedures.RenderToFile(fileName, parentFileName, true);
 
@@ -88,6 +83,20 @@ public override void Render(System.IO.TextWriter writer)
     #endregion
     
     #endregion
+}
+
+public override bool OnTableChanging()
+{
+    if (string.IsNullOrEmpty(BusinessClassName))
+    {
+        BusinessClassName = string.Concat(Entity.ClassName, "List");
+        ChildBusinessClassName = Entity.ClassName;
+    }
+
+    if (string.IsNullOrEmpty(CriteriaClassName) || CriteriaClassName.Equals("Criteria", StringComparison.InvariantCultureIgnoreCase))
+        CriteriaClassName = String.Concat(Entity.ClassName, "Criteria");
+
+    return false;
 }
 
 </script>

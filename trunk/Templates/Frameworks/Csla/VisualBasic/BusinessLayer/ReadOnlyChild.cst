@@ -1,4 +1,4 @@
-<%-- Author: Blake Niemyjski --%>
+﻿<%-- Author: Blake Niemyjski --%>
 <%@ CodeTemplate Language="VB" TargetLanguage="VB" OutputType="None" Inherits="CodeSmith.QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Encoding="UTF-8" Description="CSLA ReadOnlyChild" %>
 
 <%@ Register Name="ReadOnlyChild" Template="Internal\ReadOnlyChild.cst" %>
@@ -28,7 +28,6 @@ Public Overloads Overrides Sub Render(writer As System.IO.TextWriter)
     'ReadOnlyChild
     Dim readOnlyChild As ReadOnlyChild = Me.Create(Of ReadOnlyChild)()
     Me.CopyPropertiesTo(readOnlyChild)
-    readOnlyChild.BusinessClassName = String.Format("{0}Info", readOnlyChild.BusinessClassName)
 
     Dim parentFileName As String = System.IO.Path.Combine(Me.Location, String.Format("Entities\{0}.vb", readOnlyChild.BusinessClassName))
     If Not System.IO.File.Exists(parentFileName) Then
@@ -40,7 +39,6 @@ Public Overloads Overrides Sub Render(writer As System.IO.TextWriter)
 
     Dim readOnlyChildGenerated As ReadOnlyChildGenerated = Me.Create(Of ReadOnlyChildGenerated)()
     Me.CopyPropertiesTo(readOnlyChildGenerated)
-    readOnlyChildGenerated.BusinessClassName = String.Format("{0}Info", readOnlyChildGenerated.BusinessClassName)
 
     readOnlyChildGenerated.RenderToFile(fileName, parentFileName, True)
 
@@ -49,19 +47,16 @@ Public Overloads Overrides Sub Render(writer As System.IO.TextWriter)
     If DataAccessImplementation = DataAccessMethod.None Then
         Dim readOnlyChildDataAccess As ReadOnlyChildDataAccess = Me.Create(Of ReadOnlyChildDataAccess)()
         Me.CopyPropertiesTo(readOnlyChildDataAccess)
-        readOnlyChildDataAccess.BusinessClassName = String.Format("{0}Info", readOnlyChildDataAccess.BusinessClassName)
 
         readOnlyChildDataAccess.RenderToFile(fileName, parentFileName, True)
     ElseIf DataAccessImplementation = DataAccessMethod.ParameterizedSQL Then
         Dim readOnlyChildDataAccessParameterized As ReadOnlyChildDataAccessParameterized = Me.Create(Of ReadOnlyChildDataAccessParameterized)()
         Me.CopyPropertiesTo(readOnlyChildDataAccessParameterized)
-        readOnlyChildDataAccessParameterized.BusinessClassName = String.Format("{0}Info", readOnlyChildDataAccessParameterized.BusinessClassName)
 
         readOnlyChildDataAccessParameterized.RenderToFile(fileName, parentFileName, True)
     ElseIf DataAccessImplementation = DataAccessMethod.StoredProcedures Then
         Dim readOnlyChildDataAccessStoredProcedures As ReadOnlyChildDataAccessStoredProcedures = Me.Create(Of ReadOnlyChildDataAccessStoredProcedures)()
         Me.CopyPropertiesTo(readOnlyChildDataAccessStoredProcedures)
-        readOnlyChildDataAccessStoredProcedures.BusinessClassName = String.Format("{0}Info", readOnlyChildDataAccessStoredProcedures.BusinessClassName)
         
         readOnlyChildDataAccessStoredProcedures.RenderToFile(fileName, parentFileName, True)
         
@@ -74,5 +69,17 @@ Public Overloads Overrides Sub Render(writer As System.IO.TextWriter)
         sqlStoredProcedures.RenderToFile(fileName, parentFileName, True)
     End If
 End Sub
+
+Public Overrides Function OnTableChanging() As Boolean
+	If String.IsNullOrEmpty(BusinessClassName) Then
+		BusinessClassName = String.Concat(Entity.ClassName, "Info")
+	End If
+
+	If String.IsNullOrEmpty(CriteriaClassName) OrElse CriteriaClassName.Equals("Criteria", StringComparison.InvariantCultureIgnoreCase) Then
+		CriteriaClassName = [String].Concat(Entity.ClassName, "Criteria")
+	End If
+
+	Return False
+End Function
 
 </script>

@@ -1,4 +1,4 @@
-<%-- Author: Blake Niemyjski --%>
+﻿<%-- Author: Blake Niemyjski --%>
 <%@ CodeTemplate Language="C#" TargetLanguage="C#" OutputType="None" Inherits="CodeSmith.QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Encoding="UTF-8" Description="CSLA Criteria" %>
 
 <%@ Register Name="Criteria" Template="Internal\Criteria.cst" %>
@@ -25,7 +25,6 @@ public override void Render(System.IO.TextWriter writer)
     
     Criteria criteria = this.Create<Criteria>();
     this.CopyPropertiesTo(criteria);
-    criteria.BusinessClassName = string.Format("{0}Criteria", criteria.BusinessClassName);
     
     string parentFileName = System.IO.Path.Combine(this.Location, string.Format("Criteria\\{0}.cs", criteria.BusinessClassName));
     if (!System.IO.File.Exists(parentFileName))
@@ -39,7 +38,6 @@ public override void Render(System.IO.TextWriter writer)
     
     CriteriaGenerated criteriaGenerated = this.Create<CriteriaGenerated>();
     this.CopyPropertiesTo(criteriaGenerated);
-    criteriaGenerated.BusinessClassName = string.Format("{0}Criteria", criteriaGenerated.BusinessClassName);
 
     criteriaGenerated.RenderToFile(fileName, parentFileName, true);
     
@@ -54,6 +52,19 @@ public override void Render(System.IO.TextWriter writer)
     IGeneratedCriteria.RenderToFile(System.IO.Path.Combine(this.Location, "Criteria\\Interfaces\\IGeneratedCriteria.cs"), true);
 
     #endregion
+}
+
+public override bool OnTableChanging()
+{
+    if (string.IsNullOrEmpty(BusinessClassName))
+    {
+        BusinessClassName = string.Concat(Entity.ClassName, "Criteria");
+    }
+
+    if (string.IsNullOrEmpty(CriteriaClassName) || CriteriaClassName.Equals("Criteria", StringComparison.InvariantCultureIgnoreCase))
+        CriteriaClassName = String.Concat(Entity.ClassName, "Criteria");
+
+    return false;
 }
 
 </script>
