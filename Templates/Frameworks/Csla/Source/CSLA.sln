@@ -39,6 +39,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Internal", "Internal", "{670B086B-ECFC-4769-85FC-FA19DC00E5B9}"
 	ProjectSection(SolutionItems) = preProject
 		..\CSharp\BusinessLayer\Internal\ADOHelper.cst = ..\CSharp\BusinessLayer\Internal\ADOHelper.cst
+		..\CSharp\BusinessLayer\Internal\AsyncChildLoader.cst = ..\CSharp\BusinessLayer\Internal\AsyncChildLoader.cst
 		..\CSharp\BusinessLayer\Internal\CommandObject.cst = ..\CSharp\BusinessLayer\Internal\CommandObject.cst
 		..\CSharp\BusinessLayer\Internal\CommandObject.DataAccess.cst = ..\CSharp\BusinessLayer\Internal\CommandObject.DataAccess.cst
 		..\CSharp\BusinessLayer\Internal\CommandObject.Generated.cst = ..\CSharp\BusinessLayer\Internal\CommandObject.Generated.cst
@@ -137,6 +138,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Internal", "Internal", "{D033080D-12D9-4DC3-91CB-274675B2BC80}"
 	ProjectSection(SolutionItems) = preProject
 		..\VisualBasic\BusinessLayer\Internal\ADOHelper.cst = ..\VisualBasic\BusinessLayer\Internal\ADOHelper.cst
+		..\VisualBasic\BusinessLayer\Internal\AsyncChildLoader.cst = ..\VisualBasic\BusinessLayer\Internal\AsyncChildLoader.cst
 		..\VisualBasic\BusinessLayer\Internal\CommandObject.cst = ..\VisualBasic\BusinessLayer\Internal\CommandObject.cst
 		..\VisualBasic\BusinessLayer\Internal\CommandObject.DataAccess.cst = ..\VisualBasic\BusinessLayer\Internal\CommandObject.DataAccess.cst
 		..\VisualBasic\BusinessLayer\Internal\CommandObject.Generated.cst = ..\VisualBasic\BusinessLayer\Internal\CommandObject.Generated.cst
