@@ -70,7 +70,8 @@ namespace NHibernateHelper
         }
         protected void GetMember(ColumnSchema column)
         {
-            if (!_memberMap.ContainsKey(column) && !NHibernateHelper.IsExcludedColumn(column.Name))
+            var isSameTable = column.Table.FullName.Equals(_sourceTable.FullName, StringComparison.InvariantCultureIgnoreCase);
+            if (isSameTable && !_memberMap.ContainsKey(column) && !NHibernateHelper.IsExcludedColumn(column.Name))
             {
                 EntityMember em = new EntityMember(column);
                 _memberMap.Add(column, em);
