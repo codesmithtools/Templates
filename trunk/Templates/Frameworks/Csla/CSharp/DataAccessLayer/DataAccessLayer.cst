@@ -65,6 +65,11 @@ public override void Generate()
 
     #region Lists
 
+    foreach(Entity entity in new EntityManager(DynamicListBase).Entities)
+    {
+        RenderObjectFactoryListTemplates(entity, false, false);
+    }
+
     foreach(Entity entity in new EntityManager(DynamicRootList).Entities)
     {
         RenderObjectFactoryListTemplates(entity, false, false);

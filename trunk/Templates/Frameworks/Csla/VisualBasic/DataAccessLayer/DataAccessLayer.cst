@@ -55,6 +55,10 @@ Public Overloads Overrides Sub Generate()
     Next
 
     'Lists
+    For Each entity As Entity In New EntityManager(DynamicListBase).Entities
+        RenderObjectFactoryListTemplates(entity, False, False)
+    Next
+    
     For Each entity As Entity In New EntityManager(DynamicRootList).Entities
         RenderObjectFactoryListTemplates(entity, False, False)
     Next
