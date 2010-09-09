@@ -56,6 +56,9 @@ Namespace <%= BusinessProjectName %>
         Public Const <%= entity.ClassName %>FactoryName As String = "<%= DataProjectName %>.<%= entity.ClassName %>Factory, <%= DataProjectName %>"
     <% Next %>
     
+    <% For Each entity As Entity In new EntityManager(DynamicListBase).Entities %>
+        Public Const <%= entity.ClassName %>ListFactoryName As String = "<%= DataProjectName %>.<%= entity.ClassName %>ListFactory, <%= DataProjectName %>"
+    <% Next %>
     <% For Each entity As Entity In new EntityManager(DynamicRootList).Entities %>
         Public Const <%= entity.ClassName %>ListFactoryName As String = "<%= DataProjectName %>.<%= entity.ClassName %>ListFactory, <%= DataProjectName %>"
     <% Next %>

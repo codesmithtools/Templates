@@ -49,7 +49,9 @@ namespace <%= BusinessProjectName %>
         public const string <%= entity.ClassName %>FactoryName = "<%= DataProjectName %>.<%= entity.ClassName %>Factory, <%= DataProjectName %>";
 <% }%> 
 
-<% foreach(Entity entity in new EntityManager(DynamicRootList).Entities){ %>
+<% foreach(Entity entity in new EntityManager(DynamicListBase).Entities){ %>
+        public const string <%= entity.ClassName %>ListFactoryName = "<%= DataProjectName %>.<%= entity.ClassName %>ListFactory, <%= DataProjectName %>";
+<% } foreach(Entity entity in new EntityManager(DynamicRootList).Entities){ %>
         public const string <%= entity.ClassName %>ListFactoryName = "<%= DataProjectName %>.<%= entity.ClassName %>ListFactory, <%= DataProjectName %>";
 <% } foreach(Entity entity in new EntityManager(EditableRootList).Entities){ %>
         public const string <%= entity.ClassName %>ListFactoryName = "<%= DataProjectName %>.<%= entity.ClassName %>ListFactory, <%= DataProjectName %>";
