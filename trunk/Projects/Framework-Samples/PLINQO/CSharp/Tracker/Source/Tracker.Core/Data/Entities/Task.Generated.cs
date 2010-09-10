@@ -469,7 +469,7 @@ namespace Tracker.Core.Data
         /// <summary>
         /// Gets or sets the <see cref="User"/> association.
         /// </summary>
-        [System.Data.Linq.Mapping.Association(Name = "User_Task", Storage = "_assignedUser", ThisKey = "AssignedId", OtherKey = "Id", IsUnique = true, IsForeignKey = true)]
+        [System.Data.Linq.Mapping.Association(Name = "User_Task", Storage = "_assignedUser", ThisKey = "AssignedId", OtherKey = "Id", IsForeignKey = true)]
         [System.Runtime.Serialization.DataMember(Order = 16, EmitDefaultValue = false)]
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         public User AssignedUser
@@ -510,7 +510,7 @@ namespace Tracker.Core.Data
         /// <summary>
         /// Gets or sets the <see cref="User"/> association.
         /// </summary>
-        [System.Data.Linq.Mapping.Association(Name = "User_Task1", Storage = "_createdUser", ThisKey = "CreatedId", OtherKey = "Id", IsUnique = true, IsForeignKey = true)]
+        [System.Data.Linq.Mapping.Association(Name = "User_Task1", Storage = "_createdUser", ThisKey = "CreatedId", OtherKey = "Id", IsForeignKey = true)]
         [System.Runtime.Serialization.DataMember(Order = 17, EmitDefaultValue = false)]
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         public User CreatedUser

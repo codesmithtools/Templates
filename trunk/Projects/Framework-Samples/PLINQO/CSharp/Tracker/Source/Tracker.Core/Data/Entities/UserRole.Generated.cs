@@ -125,7 +125,7 @@ namespace Tracker.Core.Data
         /// <summary>
         /// Gets or sets the <see cref="Role"/> association.
         /// </summary>
-        [System.Data.Linq.Mapping.Association(Name = "Role_UserRole", Storage = "_role", ThisKey = "RoleId", OtherKey = "Id", IsUnique = true, IsForeignKey = true, DeleteOnNull = true)]
+        [System.Data.Linq.Mapping.Association(Name = "Role_UserRole", Storage = "_role", ThisKey = "RoleId", OtherKey = "Id", IsForeignKey = true, DeleteOnNull = true)]
         [System.Runtime.Serialization.DataMember(Order = 3, EmitDefaultValue = false)]
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         public Role Role
@@ -166,7 +166,7 @@ namespace Tracker.Core.Data
         /// <summary>
         /// Gets or sets the <see cref="User"/> association.
         /// </summary>
-        [System.Data.Linq.Mapping.Association(Name = "User_UserRole", Storage = "_user", ThisKey = "UserId", OtherKey = "Id", IsUnique = true, IsForeignKey = true, DeleteOnNull = true)]
+        [System.Data.Linq.Mapping.Association(Name = "User_UserRole", Storage = "_user", ThisKey = "UserId", OtherKey = "Id", IsForeignKey = true, DeleteOnNull = true)]
         [System.Runtime.Serialization.DataMember(Order = 4, EmitDefaultValue = false)]
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         public User User
