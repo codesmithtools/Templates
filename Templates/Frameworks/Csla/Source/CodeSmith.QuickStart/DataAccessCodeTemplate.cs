@@ -6,6 +6,7 @@ using System.Linq;
 using CodeSmith.Engine;
 using CodeSmith.SchemaHelper;
 using SchemaExplorer;
+using Configuration = CodeSmith.SchemaHelper.Configuration;
 
 namespace CodeSmith.QuickStart
 {
@@ -664,65 +665,69 @@ namespace CodeSmith.QuickStart
             if (ReadOnlyChildList == null) ReadOnlyChildList = new TableSchemaCollection();
         }
 
-        private void AddChildList(TableSchema tableSchema, bool readOnly, bool child)
+        private void AddChildList(TableSchema table, bool readOnly, bool child)
         {
+            if (Configuration.Instance.ExcludeRegexIsMatch(table.FullName)) return;
+
             if (readOnly)
             {
-                if (ReadOnlyList.Count > 0 && ReadOnlyList.Contains(tableSchema.Owner, tableSchema.Name))
+                if (ReadOnlyList.Count > 0 && ReadOnlyList.Contains(table.Owner, table.Name))
                     return;
-                if (ReadOnlyChildList.Count > 0 && ReadOnlyChildList.Contains(tableSchema.Owner, tableSchema.Name))
+                if (ReadOnlyChildList.Count > 0 && ReadOnlyChildList.Contains(table.Owner, table.Name))
                     return;
 
                 if (child)
-                    ReadOnlyChildList.Add(tableSchema);
+                    ReadOnlyChildList.Add(table);
                 else
-                    ReadOnlyList.Add(tableSchema);
+                    ReadOnlyList.Add(table);
             }
             else
             {
-                if (DynamicRootList.Count > 0 && DynamicRootList.Contains(tableSchema.Owner, tableSchema.Name))
+                if (DynamicRootList.Count > 0 && DynamicRootList.Contains(table.Owner, table.Name))
                     return;
-                if (EditableRootList.Count > 0 && EditableRootList.Contains(tableSchema.Owner, tableSchema.Name))
+                if (EditableRootList.Count > 0 && EditableRootList.Contains(table.Owner, table.Name))
                     return;
-                if (EditableChildList.Count > 0 && EditableChildList.Contains(tableSchema.Owner, tableSchema.Name))
+                if (EditableChildList.Count > 0 && EditableChildList.Contains(table.Owner, table.Name))
                     return;
 
                 if (child)
-                    EditableChildList.Add(tableSchema);
+                    EditableChildList.Add(table);
                 else
-                    EditableRootList.Add(tableSchema);
+                    EditableRootList.Add(table);
             }
         }
 
-        private void AddChildEntity(TableSchema tableSchema, bool readOnly, bool child)
+        private void AddChildEntity(TableSchema table, bool readOnly, bool child)
         {
+            if (Configuration.Instance.ExcludeRegexIsMatch(table.FullName)) return;
+
             if (readOnly)
             {
-                if (ReadOnlyChild.Count > 0 && ReadOnlyChild.Contains(tableSchema.Owner, tableSchema.Name))
+                if (ReadOnlyChild.Count > 0 && ReadOnlyChild.Contains(table.Owner, table.Name))
                     return;
-                if (ReadOnlyRoot.Count > 0 && ReadOnlyRoot.Contains(tableSchema.Owner, tableSchema.Name))
+                if (ReadOnlyRoot.Count > 0 && ReadOnlyRoot.Contains(table.Owner, table.Name))
                     return;
 
                 if (child)
-                    ReadOnlyChild.Add(tableSchema);
+                    ReadOnlyChild.Add(table);
                 else
-                    ReadOnlyRoot.Add(tableSchema);
+                    ReadOnlyRoot.Add(table);
             }
             else
             {
-                if (DynamicRoot.Count > 0 && DynamicRoot.Contains(tableSchema.Owner, tableSchema.Name))
+                if (DynamicRoot.Count > 0 && DynamicRoot.Contains(table.Owner, table.Name))
                     return;
-                if (EditableChild.Count > 0 && EditableChild.Contains(tableSchema.Owner, tableSchema.Name))
+                if (EditableChild.Count > 0 && EditableChild.Contains(table.Owner, table.Name))
                     return;
-                if (EditableRoot.Count > 0 && EditableRoot.Contains(tableSchema.Owner, tableSchema.Name))
+                if (EditableRoot.Count > 0 && EditableRoot.Contains(table.Owner, table.Name))
                     return;
-                if (SwitchableObject.Count > 0 && SwitchableObject.Contains(tableSchema.Owner, tableSchema.Name))
+                if (SwitchableObject.Count > 0 && SwitchableObject.Contains(table.Owner, table.Name))
                     return;
 
                 if (child)
-                    EditableChild.Add(tableSchema);
+                    EditableChild.Add(table);
                 else
-                    EditableRoot.Add(tableSchema);
+                    EditableRoot.Add(table);
             }
         }
 
