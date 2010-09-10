@@ -223,7 +223,7 @@ namespace Tracker.Core.Data
         /// <summary>
         /// Gets or sets the <see cref="Task"/> association.
         /// </summary>
-        [System.Data.Linq.Mapping.Association(Name = "Task_TaskExtended", Storage = "_task", ThisKey = "TaskId", OtherKey = "Id", IsUnique = true, IsForeignKey = true)]
+        [System.Data.Linq.Mapping.Association(Name = "Task_TaskExtended", Storage = "_task", ThisKey = "TaskId", OtherKey = "Id", IsForeignKey = true)]
         [System.Runtime.Serialization.DataMember(Order = 7, EmitDefaultValue = false)]
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         public Task Task
