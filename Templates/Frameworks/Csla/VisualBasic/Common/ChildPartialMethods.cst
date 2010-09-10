@@ -22,8 +22,6 @@
         End Sub
         Partial Private Sub OnChildFetched()
         End Sub
-        Private Partial Sub OnChildLoading(ByVal childProperty As Csla.Core.IPropertyInfo, ByRef cancel As Boolean)
-        End Sub
         Partial Private Sub OnMapping(ByVal reader As SafeDataReader, ByRef cancel As Boolean)
         End Sub
         Partial Private Sub OnMapped()
@@ -49,5 +47,7 @@
     <% If(IncludeSilverlightSupport) Then %>
 #End If
     <% End If %>
+        Private Partial Sub OnChildLoading(ByVal childProperty As Csla.Core.IPropertyInfo, ByRef cancel As Boolean)
+        End Sub
     
 #End Region
