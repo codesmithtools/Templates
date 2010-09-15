@@ -146,6 +146,28 @@ under the file that can be changed.</p>
 </ul>
 <h2>History</h2>
 <ul>
+    <li>Release 3.0.1<ul>
+        <li>Added CSLA 4.0.1 support.</li>
+        <li>Fixed a breaking bug in CSLA 4.0.0 with private backing fields.</li>
+        <li>Fixed the determination logic of EditableRoot vs EditableChild objects. The relationships were being detected incorrectly during the QuickStart.</li>
+        <li>Added Silverlight support for the Command Object.</li>
+        <li>Added a ChildLoader to facilitate Silverlight lazy loading</li>
+        <li>Added a partial method override for OnChildLoading.</li>
+        <li>Added the ability to specify a child class name. This is so you can create a list and specify what the child type should be.</li>
+        <li>Fixed a bug where ignored tables could still be generated.</li>
+        <li>Fixed a bug where the new DynamicListBase classes were not being generated for ObjectFactory.</li>
+        <li>Fixed a bug where varchar(MAX) would create a rule with the size of -1.</li>
+        <li>If you are using the master template's for each template type. You must now specify the full class name <span style="color:red">*Breaking 
+            Change: You will need to append List, Criteria, Info... To all of your outputs. You now have 100% control over the naming.</span></li>
+        <li>Fixed a bug where the Child_Update method specifies identity key parameter as output instead of input</li>    
+        <li>Fixed a bug where the Child_Update method caused runtime exception because reader("anyvariable") was not found</li>    
+        <li>Fixed a bug where the Child_Update must be called FieldManager.UpdateChildren() for SwitchableObjects</li>    
+        <li>Fixed a bug where an exception could be thrown when trying to load SchemaHelper.</li>
+        <li>Renamed the QuickStart Assembly to CodeSmith.QuickStart as Telerik also has an assembly called QuickStart and this was causing exceptions.</li>    
+        <li>Fixed many other 
+            <a href="http://code.google.com/p/codesmith/issues/list?can=1&q=Framework%3DCSLA+AND+Version%3D3.0.1">template bugs</a>.</li>
+        </ul>
+    </li>
     <li>Release 3.0<ul>
         <li>Added CSLA 4.0 support.</li>
         <li>Added support for CSLA 4.0 (Requires CSLA 4).</li>
@@ -167,7 +189,7 @@ under the file that can be changed.</p>
             Change: Collections will no longer throw exceptions when no records exist in the 
             database.</span></li>
         <li>Fixed many other 
-            <a href="http://code.google.com/p/codesmith/issues/list?can=1&amp;q=label:Framework-CSLA+AND+label:version-3.0.0">template bugs</a>.</li>
+            <a href="http://code.google.com/p/codesmith/issues/list?can=1&q=Framework%3DCSLA+AND+Version%3D3.0.0">template bugs</a>.</li>
         </ul>
     </li>
     <li>Release 2.0
@@ -189,7 +211,7 @@ under the file that can be changed.</p>
             <li>Added partial method hooks for the DataPortal methods.</li>
             <li>Updated the templates to throw an exception when a record doesn’t exist.</li>
             <li>Added support to rename a non identity primary key column.</li>
-            <li>Fixed many other <a href="http://code.google.com/p/codesmith/issues/list?can=1&q=label:version-2.0">template bugs</a>.</li>
+            <li>Fixed many other <a href="http://code.google.com/p/codesmith/issues/list?can=1&q=Framework%3DCSLA+AND+Version%3D2.0">template bugs</a>.</li>
         </ul>
     </li>
     <li>Release 1.1.1
