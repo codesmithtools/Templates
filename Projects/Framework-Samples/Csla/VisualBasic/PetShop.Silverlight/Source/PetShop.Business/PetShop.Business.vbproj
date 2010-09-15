@@ -287,6 +287,7 @@
     <Compile Include="PetShopProfileProvider.vb" />
     <Compile Include="ProfileManager.vb" />
     <Compile Include="Utility\ADOHelper.vb" />
+    <Compile Include="Utility\AsyncChildLoader.vb" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="My Project\Resources.resx">
