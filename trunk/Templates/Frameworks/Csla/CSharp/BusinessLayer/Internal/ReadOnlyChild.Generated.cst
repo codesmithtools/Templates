@@ -85,8 +85,8 @@ namespace <%= BusinessProjectName %>
             
             // Mark as child?
             var dp = new DataPortal< <%= BusinessClassName %><%= Entity.GenericProperty %> >();
-            AddHandler dp.FetchCompleted, handler
-            dp.BeginFetch(criteria)
+            dp.FetchCompleted += handler;
+            dp.BeginFetch(criteria);
         }
 <% } %>
 #endif

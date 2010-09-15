@@ -133,43 +133,59 @@
                         <%= association.BuildObjectInitializer(true) %>
 <% If(IncludeSilverlightSupport) Then %>
 #If SILVERLIGHT Then
-                        MarkBusy()
+                        'Markbusy()
     <% If(BusinessObjectExists(association) = False AndAlso IsReadOnlyBusinessObject( association, "Info")) Then %>
-                        If(<%= association.BuildNullCheckStatement(true, false, false, false) %><%= BusinessProjectName %>.<%= associationClassName %><%= association.GenericProperty %>.Exists(criteria)) Then
-                            <%= associationClassName %><%= association.GenericProperty %>.<%= association.SearchCriteria.MethodName%>Async(<%= association.SearchCriteria.Members.BuildPropertyVariableArguments() %>, Sub(o, e)
-                                    If Not (e.Error Is Nothing) Then
-                                        Throw e.Error
-                                    End If
+                        If(<%= association.BuildNullCheckStatement(true, false, false, false, true) %>) Then
+                            <%= BusinessProjectName %>.<%= associationClassName %><%= association.GenericProperty %>.Exists(criteria, Sub(o, e)
+                                If Not (e.Error Is Nothing) Then
+                                    Throw e.Error
+                                End If
+                                
+                                If Not (e.Object.Result) Then
+                                    <%= associationClassName %><%= association.GenericProperty %>.<%= association.SearchCriteria.MethodName%>Async(<%= association.SearchCriteria.Members.BuildPropertyVariableArguments() %>, Sub(o1, e1)
+                                        If Not (e1.Error Is Nothing) Then
+                                            Throw e1.Error
+                                        End If
 
-                                    Me.LoadProperty(<%= association.PrivateMemberVariableName %>Property, e.Object)
+                                        Me.LoadProperty(<%= association.PrivateMemberVariableName %>Property, e1.Object)
 
-                                    MarkIdle()
-                                    OnPropertyChanged(<%= association.PrivateMemberVariableName %>Property)
-                                End Sub)
+                                        'MarkIdle()
+                                        OnPropertyChanged(<%= association.PrivateMemberVariableName %>Property)
+                                    End Sub)
+                                End If
+                            End Sub)
                         End If
     <% Else %>
-                        If (Me.IsNew OrElse <%= association.BuildNullCheckStatement(true, true, false, false) %>Not <%= BusinessProjectName %>.<%= associationClassName %><%= association.GenericProperty %>.Exists(criteria)) Then
-                            <%= associationClassName %><%= association.GenericProperty %>.New<%= associationClassName %>Async(Sub(o, e)
-                                    If Not (e.Error Is Nothing) Then
-                                       Throw e.Error
-                                    End If
+                        If (<%= association.BuildNullCheckStatement(true, true, false, false, true) %>) Then
+                            <%= BusinessProjectName %>.<%= associationClassName %><%= association.GenericProperty %>.Exists(criteria, Sub(o, e) 
+                                If Not (e.Error Is Nothing) Then
+                                    Throw e.Error
+                                End If
 
-                                    Me.LoadProperty(<%= association.PrivateMemberVariableName %>Property, e.Object)
-
-                                    MarkIdle()
-                                    OnPropertyChanged(<%= association.PrivateMemberVariableName %>Property)
-                                End Sub)
-                        Else
-                            <%= associationClassName %><%= association.GenericProperty %>.<%= association.SearchCriteria.MethodName%>Async(<%= association.SearchCriteria.Members.BuildPropertyVariableArguments() %>, Sub(o, e)
-                                    If Not (e.Error Is Nothing) Then
-                                        Throw e.Error
-                                    End If
-
-                                    Me.LoadProperty(<%= association.PrivateMemberVariableName %>Property, e.Object)
-
-                                    MarkIdle()
-                                    OnPropertyChanged(<%= association.PrivateMemberVariableName %>Property)
-                                End Sub)
+                                If Not (e.Object.Result) Then
+                                    <%= associationClassName %><%= association.GenericProperty %>.New<%= associationClassName %>Async(Sub(o1, e1)
+                                        If Not (e1.Error Is Nothing) Then
+                                        Throw e1.Error
+                                        End If
+    
+                                        Me.LoadProperty(<%= association.PrivateMemberVariableName %>Property, e1.Object)
+    
+                                        'MarkIdle()
+                                        OnPropertyChanged(<%= association.PrivateMemberVariableName %>Property)
+                                    End Sub)
+                                Else
+                                    <%= associationClassName %><%= association.GenericProperty %>.<%= association.SearchCriteria.MethodName%>Async(<%= association.SearchCriteria.Members.BuildPropertyVariableArguments() %>, Sub(o2, e2)
+                                        If Not (e2.Error Is Nothing) Then
+                                            Throw e2.Error
+                                        End If
+    
+                                        Me.LoadProperty(<%= association.PrivateMemberVariableName %>Property, e2.Object)
+    
+                                        'MarkIdle()
+                                        OnPropertyChanged(<%= association.PrivateMemberVariableName %>Property)
+                                    End Sub)
+                                End If
+                            End Sub)
                         End If
     <% End If %>
 #Else
@@ -179,7 +195,7 @@
                             LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= associationClassName %><%= association.GenericProperty %>.<%= association.SearchCriteria.MethodName%>(<%= association.SearchCriteria.Members.BuildPropertyVariableArguments() %>))
                         End If
     <% Else %>
-                        If (Me.IsNew OrElse <%= association.BuildNullCheckStatement(true, true, false, false) %>Not <%= BusinessProjectName %>.<%= associationClassName %><%= association.GenericProperty %>.Exists(criteria)) Then
+                        If (<%= association.BuildNullCheckStatement(true, true, false, false) %>Not <%= BusinessProjectName %>.<%= associationClassName %><%= association.GenericProperty %>.Exists(criteria)) Then
                             LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= associationClassName %><%= association.GenericProperty %>.New<%= associationClassName %>())
                         Else
                             LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= associationClassName %><%= association.GenericProperty %>.<%= association.SearchCriteria.MethodName%>(<%= association.SearchCriteria.Members.BuildPropertyVariableArguments() %>))
@@ -231,19 +247,25 @@
 
 <% If(IncludeSilverlightSupport) Then %>
 #If SILVERLIGHT Then
-                        MarkBusy()
-                        If (<%= BusinessProjectName %>.<%= associationClassName %><%= association.GenericProperty %>.Exists(criteria)) Then
-                            <%= BusinessProjectName %>.<%= associationClassName %><%= association.GenericProperty %>.<%= association.SearchCriteria.MethodName%>Async(<%= association.SearchCriteria.Members.BuildPropertyVariableArguments() %>, Sub(o, e)
-                                    If Not (e.Error Is Nothing) Then
-                                        Throw e.Error
+                        'Markbusy()
+                        <%= BusinessProjectName %>.<%= associationClassName %><%= association.GenericProperty %>.Exists(criteria, Sub(o, e)
+                            If Not (e.Error Is Nothing) Then
+                                Throw e.Error
+                            End If
+                            
+                            If (e.Object.Result) Then
+                                <%= BusinessProjectName %>.<%= associationClassName %><%= association.GenericProperty %>.<%= association.SearchCriteria.MethodName%>Async(<%= association.SearchCriteria.Members.BuildPropertyVariableArguments() %>, Sub(o1, e1)
+                                    If Not (e1.Error Is Nothing) Then
+                                        Throw e1.Error
                                     End If
 
-                                    Me.LoadProperty(<%= association.PrivateMemberVariableName %>Property, e.Object<% If(IsChildBusinessObject(association)) Then %>.Child<% End If %>)
+                                    Me.LoadProperty(<%= association.PrivateMemberVariableName %>Property, e1.Object<% If(IsChildBusinessObject(association)) Then %>.Child<% End If %>)
 
-                                    MarkIdle()
+                                    'MarkIdle()
                                     OnPropertyChanged(<%= association.PrivateMemberVariableName %>Property)
                                 End Sub)
-                        End If
+                            End If
+                        End Sub)
 #Else
 <% End If %>
                         If (<%= BusinessProjectName %>.<%= associationClassName %><%= association.GenericProperty %>.Exists(criteria)) Then
@@ -287,8 +309,7 @@
                     If Not (FieldManager.FieldExists(<%= association.PrivateMemberVariableName %>Property)) Then
 <% If(IncludeSilverlightSupport) Then %>
 #If SILVERLIGHT Then
-                        MarkBusy()
-                    
+                        'Markbusy()
     <% If(IsNameValueListBusinessObject(association, "NameValueList")) Then %>
                     <%= BusinessProjectName %>.<%= associationClassName %>List<%= association.GenericProperty %>.GetAllAsync(Sub(o, e)
                                     If Not (e.Error Is Nothing) Then
@@ -297,7 +318,7 @@
 
                                     Me.LoadProperty(<%= association.PrivateMemberVariableName %>Property, e.Object)
 
-                                    MarkIdle()
+                                    'MarkIdle()
                                     OnPropertyChanged(<%= association.PrivateMemberVariableName %>Property)
                                 End Sub)
     <% Else %>
@@ -305,41 +326,57 @@
                         <%= association.BuildObjectInitializer(true) %>
 
         <% If(BusinessObjectExists(association, "List") = False AndAlso IsReadOnlyBusinessObject( association, "InfoList")) Then %>
-                        If(<%= association.BuildNullCheckStatement(true, false, false, false) %><%= BusinessProjectName %>.<%= associationClassName %>List<%= association.GenericProperty %>.Exists(criteria)) Then
-                            <%= BusinessProjectName %>.<%= associationClassName %>List.<%= association.SearchCriteria.MethodName%>Async(<%= association.SearchCriteria.Members.BuildPropertyVariableArguments() %>, Sub(o, e)
-                                    If Not (e.Error Is Nothing) Then
-                                        Throw e.Error
-                                    End If
+                        If(<%= association.BuildNullCheckStatement(true, false, false, false, true) %>)
+                            <%= BusinessProjectName %>.<%= associationClassName %>List<%= association.GenericProperty %>.Exists(criteria, Sub(o, e)
+                                If Not (e.Error Is Nothing) Then
+                                    Throw e.Error
+                                End If
+                            
+                                If Not (e.Object.Result) Then
+                                    <%= BusinessProjectName %>.<%= associationClassName %>List.<%= association.SearchCriteria.MethodName%>Async(<%= association.SearchCriteria.Members.BuildPropertyVariableArguments() %>, Sub(o1, e1)
+                                        If Not (e1.Error Is Nothing) Then
+                                            Throw e1.Error
+                                        End If
 
-                                    Me.LoadProperty(<%= association.PrivateMemberVariableName %>Property, e.Object)
+                                        Me.LoadProperty(<%= association.PrivateMemberVariableName %>Property, e1.Object)
 
-                                    MarkIdle()
-                                    OnPropertyChanged(<%= association.PrivateMemberVariableName %>Property)
-                                End Sub)
+                                        'MarkIdle()
+                                        OnPropertyChanged(<%= association.PrivateMemberVariableName %>Property)
+                                    End Sub)
+                                End If
+                            End Sub)
                         End If
         <% Else %>
-                        If (Me.IsNew OrElse <%= association.BuildNullCheckStatement(true, true, false, false) %>Not <%= BusinessProjectName %>.<%= associationClassName %>List<%= association.GenericProperty %>.Exists(criteria)) Then
-                            <%= BusinessProjectName %>.<%= associationClassName %>List<%= association.GenericProperty %>.NewListAsync(Sub(o, e)
-                                    If Not (e.Error Is Nothing) Then
-                                        Throw e.Error
-                                    End If
+                        If (<%= association.BuildNullCheckStatement(true, true, false, false, true) %>) Then
+                            <%= BusinessProjectName %>.<%= associationClassName %>List<%= association.GenericProperty %>.Exists(criteria, Sub(o, e)
+                                If Not (e.Error Is Nothing) Then
+                                    Throw e.Error
+                                End If
 
-                                    Me.LoadProperty(<%= association.PrivateMemberVariableName %>Property, e.Object)
+                                If Not (e.Object.Result) Then
+                                    <%= BusinessProjectName %>.<%= associationClassName %>List<%= association.GenericProperty %>.NewListAsync(Sub(o1, e1)
+                                        If Not (e1.Error Is Nothing) Then
+                                            Throw e1.Error
+                                        End If
 
-                                    MarkIdle()
-                                    OnPropertyChanged(<%= association.PrivateMemberVariableName %>Property)
-                                End Sub)
-                        Else
-                            <%= BusinessProjectName %>.<%= associationClassName %>List<%= association.GenericProperty %>.<%= association.SearchCriteria.MethodName%>Async(<%= association.SearchCriteria.Members.BuildPropertyVariableArguments() %>, Sub(o, e)
-                                    If Not (e.Error Is Nothing) Then
-                                        Throw e.Error
-                                    End If
+                                        Me.LoadProperty(<%= association.PrivateMemberVariableName %>Property, e1.Object)
 
-                                    Me.LoadProperty(<%= association.PrivateMemberVariableName %>Property, e.Object<% If(IsChildBusinessObject(association, "List")) Then %>.Child<% End If %>)
+                                        'MarkIdle()
+                                        OnPropertyChanged(<%= association.PrivateMemberVariableName %>Property)
+                                    End Sub)
+                                Else
+                                    <%= BusinessProjectName %>.<%= associationClassName %>List<%= association.GenericProperty %>.<%= association.SearchCriteria.MethodName%>Async(<%= association.SearchCriteria.Members.BuildPropertyVariableArguments() %>, Sub(o2, e2)
+                                        If Not (e2.Error Is Nothing) Then
+                                            Throw e2.Error
+                                        End If
 
-                                    MarkIdle()
-                                    OnPropertyChanged(<%= association.PrivateMemberVariableName %>Property)
-                                End Sub)
+                                        Me.LoadProperty(<%= association.PrivateMemberVariableName %>Property, e2.Object<% If(IsChildBusinessObject(association, "List")) Then %>.Child<% End If %>)
+
+                                        'MarkIdle()
+                                        OnPropertyChanged(<%= association.PrivateMemberVariableName %>Property)
+                                    End Sub)
+                                End If
+                            End Sub)
                         End If
         <% End If
     End If %>
@@ -356,7 +393,7 @@
                             LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= BusinessProjectName %>.<%= associationClassName %>List.<%= association.SearchCriteria.MethodName%>(<%= association.SearchCriteria.Members.BuildPropertyVariableArguments() %>))
                         End If
         <% Else %>
-                        If (Me.IsNew OrElse <%= association.BuildNullCheckStatement(true, true, false, false) %>Not <%= BusinessProjectName %>.<%= associationClassName %>List<%= association.GenericProperty %>.Exists(criteria)) Then
+                        If (<%= association.BuildNullCheckStatement(true, true, false, false) %>Not <%= BusinessProjectName %>.<%= associationClassName %>List<%= association.GenericProperty %>.Exists(criteria)) Then
                             LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= BusinessProjectName %>.<%= associationClassName %>List<%= association.GenericProperty %>.NewList())
                         Else
                             LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= BusinessProjectName %>.<%= associationClassName %>List<%= association.GenericProperty %>.<%= association.SearchCriteria.MethodName%>(<%= association.SearchCriteria.Members.BuildPropertyVariableArguments() %>))

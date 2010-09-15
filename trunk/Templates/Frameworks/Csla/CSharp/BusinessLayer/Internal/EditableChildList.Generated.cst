@@ -104,25 +104,25 @@ namespace <%= BusinessProjectName %>
         #region Asynchronous Factory Methods
 
 #if SILVERLIGHT
-        internal static void NewListAsync(EventHandler<DataPortalResult<<%= ChildBusinessClassName %><%= Entity.GenericProperty %>>> handler)
+        internal static void NewListAsync(EventHandler<DataPortalResult<<%= BusinessClassName %><%= Entity.GenericProperty %>>> handler)
         {
-            var dp = new DataPortal<<%= ChildBusinessClassName %><%= Entity.GenericProperty %>>();
+            var dp = new DataPortal<<%= BusinessClassName %><%= Entity.GenericProperty %>>();
             dp.CreateCompleted += handler;
             dp.BeginCreate();
         }
 <% foreach(SearchCriteria sc in Entity.SearchCriteria()) { %>
 
-        internal static void <%= sc.MethodName %>Async(<%= sc.Members.BuildParametersVariables() %>, EventHandler<DataPortalResult<AsyncChildLoader<<%= ChildBusinessClassName %><%= Entity.GenericProperty %>>>> handler)
+        internal static void <%= sc.MethodName %>Async(<%= sc.Members.BuildParametersVariables() %>, EventHandler<DataPortalResult<AsyncChildLoader<<%= BusinessClassName %><%= Entity.GenericProperty %>>>> handler)
         {
             var criteria = new <%= CriteriaClassName %><%= Entity.GenericProperty %>{<%= sc.Members.BuildObjectInitializer() %>};
             <%=sc.Members.BuildNullableObjectInitializer()%>
-            DataPortal.BeginFetch<AsyncChildLoader<<%= ChildBusinessClassName %><%= Entity.GenericProperty %>>>(criteria, handler);
+            DataPortal.BeginFetch<AsyncChildLoader<<%= BusinessClassName %><%= Entity.GenericProperty %>>>(criteria,handler);
         }
 <% } %>
 
-        internal static void GetAllAsync(EventHandler<DataPortalResult<AsyncChildLoader<<%= ChildBusinessClassName %><%= Entity.GenericProperty %>>>> handler)
+        internal static void GetAllAsync(EventHandler<DataPortalResult<AsyncChildLoader<<%= BusinessClassName %><%= Entity.GenericProperty %>>>> handler)
         {
-            DataPortal.BeginFetch<AsyncChildLoader<<%= ChildBusinessClassName %><%= Entity.GenericProperty %>>>(new <%= CriteriaClassName %><%= Entity.GenericProperty %>(), handler);
+            DataPortal.BeginFetch<AsyncChildLoader<<%= BusinessClassName %><%= Entity.GenericProperty %>>>(new <%= CriteriaClassName %><%= Entity.GenericProperty %>(),handler);
         }
 #endif
  

@@ -11,9 +11,22 @@
 <%@ Import Namespace="CodeSmith.QuickStart" %>
 
 #Region "Exists Command"
+<% If(IncludeSilverlightSupport) Then %>
+#If Not SILVERLIGHT Then
+<% End If %>
 
-        Public Shared Function Exists(ByVal criteria As <%= CriteriaClassName %> ) As Boolean
+        Public Shared Function Exists(ByVal criteria As <%= CriteriaClassName %>) As Boolean
             Return <%= BusinessProjectName %>.ExistsCommand.Execute(criteria)
         End Function
+
+<% If(IncludeSilverlightSupport) Then %>
+#Else
+
+        Public Shared Sub Exists(ByVal criteria As <%= CriteriaClassName %>, ByVal handler As EventHandler(Of DataPortalResult(Of ExistsCommand)))
+            <%= BusinessProjectName %>.ExistsCommand.Execute(criteria, handler)
+        End Sub
+
+#End If
+<% End If %>
 
 #End Region

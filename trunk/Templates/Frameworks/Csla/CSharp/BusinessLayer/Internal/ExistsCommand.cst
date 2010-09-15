@@ -21,13 +21,21 @@ using System;
 <% if(IncludeSilverlightSupport) { %>
 
 #if SILVERLIGHT
+
 using Csla;
+using Csla.Core;
 using Csla.Serialization;
+using Csla.Serialization.Mobile;
+
 #else
+
 using System.Data.SqlClient;
 
 using Csla;
+using Csla.Core;
 using Csla.Data;
+using Csla.Serialization.Mobile;
+
 #endif
 <% } else { %>
 using System.Data.SqlClient;
@@ -44,11 +52,26 @@ namespace <%= BusinessProjectName %>
     public class ExistsCommand : CommandBase<% if(IsCSLA40) { %><ExistsCommand><% } %>
     {
         #region Constructor(s)
+<% if(IncludeSilverlightSupport) { %>
+
+#if SILVERLIGHT
+
+        public ExistsCommand()
+        {
+        }
+
+#else
+
+<% } %>
 
         private ExistsCommand()
         {
         }
-        
+
+<% if(IncludeSilverlightSupport) { %>
+#endif
+<% } %>
+
         #endregion
 
         #region Authorization Methods
@@ -87,7 +110,7 @@ namespace <%= BusinessProjectName %>
         #region Asynchronous Factory Methods
 
 #if SILVERLIGHT
-        public static bool Execute<T>(T criteria) where T : <%= BusinessProjectName %>.IGeneratedCriteria
+        public static void Execute<T>(T criteria, EventHandler<DataPortalResult<ExistsCommand>> handler) where T : <%= BusinessProjectName %>.IGeneratedCriteria
         {
             if (!CanExecuteCommand())
                 throw new System.Security.SecurityException("Not authorized to execute command");
@@ -95,24 +118,9 @@ namespace <%= BusinessProjectName %>
             var cmd = new ExistsCommand();
             cmd.BeforeServer(criteria);
 
-            var waitHandle = new System.Threading.ManualResetEvent(false);
-            DataPortal.BeginExecute(cmd, (o, e) =>
-                    {
-                        if (e.Error != null) 
-                            throw e.Error;
-                        
-                        cmd.Result = e.Object.Result;
-
-                        waitHandle.Set();
-                    });
-                
-            cmd.AfterServer();
-
-            bool result = waitHandle.WaitOne(30000);
-            if (result)
-                return cmd.Result;
-            
-            throw new Exception("Exists timed out.");
+            var dp = new DataPortal<ExistsCommand>();
+            dp.ExecuteCompleted += handler;
+            dp.BeginExecute(cmd);
         }
 #endif  
         
@@ -122,7 +130,7 @@ namespace <%= BusinessProjectName %>
         #region Client-side Code
 
         private <%= BusinessProjectName %>.IGeneratedCriteria Criteria { get; set; }
-        private bool Result { get; set; }
+        public bool Result { get; private set; }
 
         private void BeforeServer(<%= BusinessProjectName %>.IGeneratedCriteria criteria)
         {
@@ -159,5 +167,36 @@ namespace <%= BusinessProjectName %>
 <% } %>
 
         #endregion
+
+<% if(IncludeSilverlightSupport) { %>
+
+        #region Serialization
+
+        protected override void OnGetState(SerializationInfo info, StateMode mode)
+        {
+            base.OnGetState(info, mode);
+            info.AddValue("Result", Result);
+        }
+
+        protected override void OnSetState(SerializationInfo info, StateMode mode)
+        {
+            base.OnSetState(info, mode);
+            Result = info.GetValue<bool>("Result");
+        }
+
+        protected override void OnGetChildren(SerializationInfo info, MobileFormatter formatter)
+        {
+            var serializedCriteria = formatter.SerializeObject(Criteria);
+            info.AddChild("Criteria", 2);
+        }
+
+        protected override void OnSetChildren(SerializationInfo info, MobileFormatter formatter)
+        {
+            var criteriaData = info.Children["Criteria"];
+            Criteria = (IGeneratedCriteria)formatter.GetObject(criteriaData.ReferenceId);
+        }
+        
+        #endregion
+<% } %>
     }
 }

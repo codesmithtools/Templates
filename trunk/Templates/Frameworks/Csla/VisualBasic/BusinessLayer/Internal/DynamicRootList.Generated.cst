@@ -133,11 +133,11 @@ Namespace <%= BusinessProjectName %>
         End Sub
     <% Next %> 
 
-        Public Shared Function GetAllAsync(ByVal handler As EventHandler(Of DataPortalResult(Of <%= BusinessClassName %><%= Entity.GenericProperty %>))) As <%= BusinessClassName %><%= Entity.GenericProperty %>
+        Public Shared Sub GetAllAsync(ByVal handler As EventHandler(Of DataPortalResult(Of <%= BusinessClassName %><%= Entity.GenericProperty %>)))
             Dim dp As New DataPortal(Of <%= BusinessClassName %><%= Entity.GenericProperty %>)()
             AddHandler dp.FetchCompleted, handler
             dp.BeginFetch(New <%= CriteriaClassName %><%= Entity.GenericProperty %>())
-        End Function 
+        End Sub 
 #End If
 
 #End Region

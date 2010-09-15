@@ -22,13 +22,21 @@ Imports System
 <% If(IncludeSilverlightSupport) Then %>
 
 #If SILVERLIGHT Then
+
 Imports Csla
+Imports Csla.Core
 Imports Csla.Serialization
+Imports Csla.Serialization.Mobile
+
 #Else
+
 Imports System.Data.SqlClient
 
 Imports Csla
+Imports Csla.Core
 Imports Csla.Data
+Imports Csla.Serialization.Mobile
+
 #End If
 <% Else %>
 Imports System.Data.SqlClient
@@ -43,10 +51,24 @@ Namespace <%= BusinessProjectName %>
         Inherits CommandBase<% If(IsCSLA40) Then %>(Of ExistsCommand)<% End If %>
     
 #Region "Constructor(s)"
-    
+<% If(IncludeSilverlightSupport) Then %>
+
+#If SILVERLIGHT Then
+
+        Public Sub New()
+        End Sub
+
+#Else
+
+<% End If %>
+
         Private Sub New()
         End Sub
-    
+
+<% If(IncludeSilverlightSupport) Then %>
+#End If
+<% End If %>
+
 #End Region
     
 #Region "Authorization Methods"
@@ -84,7 +106,7 @@ Namespace <%= BusinessProjectName %>
 #Region "Asynchronous Factory Methods"
 
 #If SILVERLIGHT Then
-        Public Shared Function Execute(Of T As IGeneratedCriteria)(ByVal criteria As T) As Boolean
+        Public Shared Sub Execute(Of T As IGeneratedCriteria)(ByVal criteria As T, ByVal handler As EventHandler(Of DataPortalResult(Of ExistsCommand)))
             If Not CanExecuteCommand() Then
                 Throw New System.Security.SecurityException("Not authorized to execute command")
             End If
@@ -92,27 +114,10 @@ Namespace <%= BusinessProjectName %>
             Dim cmd As New ExistsCommand()
             cmd.BeforeServer(criteria)
 
-            Dim waitHandle = New System.Threading.ManualResetEvent(False)
-
-            DataPortal.BeginExecute(cmd, Sub(o, e)
-                                             If e.Error IsNot Nothing Then
-                                                 Throw e.Error
-                                             End If
-
-                                             cmd.Result = e.Object.Result
-
-                                             waitHandle.Set()
-                                         End Sub)
-
-            cmd.AfterServer()
-
-            Dim result As Boolean = waitHandle.WaitOne(30000)
-            If result Then
-                Return cmd.Result
-            End If
-
-            Throw New Exception("Exists timed out.")
-        End Function
+            Dim dp = New DataPortal(Of ExistsCommand)()
+            AddHandler dp.ExecuteCompleted, handler
+            dp.BeginExecute(cmd)
+        End Sub
 #End If
 
 #End Region
@@ -131,11 +136,11 @@ Namespace <%= BusinessProjectName %>
         End Property
     
         Private _result As Boolean
-        Private Property Result() As Boolean
+        Public Property Result() As Boolean
             Get
                 Return _result
             End Get
-            Set(ByVal value As Boolean)
+            Private Set(ByVal value As Boolean)
                 _result = value
             End Set
         End Property
@@ -170,5 +175,31 @@ Namespace <%= BusinessProjectName %>
 <% End If %>
 
 #End Region
+<% If(IncludeSilverlightSupport) Then %>
+
+#Region "Serialization"
+
+        Protected Overrides Sub OnGetState(info As SerializationInfo, mode As StateMode)
+            MyBase.OnGetState(info, mode)
+            info.AddValue("Result", Result)
+        End Sub
+
+        Protected Overrides Sub OnSetState(info As SerializationInfo, mode As StateMode)
+            MyBase.OnSetState(info, mode)
+            Result = info.GetValue(Of Boolean)("Result")
+        End Sub
+
+        Protected Overrides Sub OnGetChildren(info As SerializationInfo, formatter As MobileFormatter)
+            Dim serializedCriteria = formatter.SerializeObject(Criteria)
+            info.AddChild("Criteria", 2)
+        End Sub
+
+        Protected Overrides Sub OnSetChildren(info As SerializationInfo, formatter As MobileFormatter)
+            Dim criteriaData = info.Children("Criteria")
+            Criteria = DirectCast(formatter.GetObject(criteriaData.ReferenceId), IGeneratedCriteria)
+        End Sub
+#End Region
+<% End If %>
+
     End Class
 End Namespace
