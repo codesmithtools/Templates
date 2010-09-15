@@ -261,6 +261,7 @@
     <Compile Include="ProfileManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utility\ADOHelper.cs" />
+    <Compile Include="Utility\AsyncChildLoader.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Entities.csp">

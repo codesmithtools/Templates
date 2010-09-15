@@ -71,9 +71,10 @@
       </property>
       <property name="Location">.\DynamicRoot\</property>
       <property name="FrameworkVersion">v35</property>
-      <property name="BusinessClassName">Category</property>
+      <property name="BusinessClassName">CategoryList</property>
       <property name="CriteriaClassName">CategoryCriteria</property>
       <property name="IncludeSilverlightSupport">False</property>
+      <property name="ChildBusinessClassName">Category</property>
     </propertySet>
     <propertySet name="DynmaicRootCriteria" template="..\..\..\..\..\..\..\..\..\Templates\Frameworks\Csla\VisualBasic\BusinessLayer\Criteria.cst">
       <property name="CleanExpressions">
@@ -106,9 +107,10 @@
       </property>
       <property name="Location">.\DynamicRoot\</property>
       <property name="FrameworkVersion">v35</property>
-      <property name="BusinessClassName">Category</property>
+      <property name="BusinessClassName">CategoryCriteria</property>
       <property name="CriteriaClassName">CategoryCriteria</property>
       <property name="IncludeSilverlightSupport">False</property>
+      <property name="ChildBusinessClassName">Category</property>
     </propertySet>
     <propertySet name="EditableChild" template="..\..\..\..\..\..\..\..\..\Templates\Frameworks\Csla\VisualBasic\BusinessLayer\EditableChild.cst">
       <property name="CleanExpressions">
@@ -177,9 +179,10 @@
         </table>
       </property>
       <property name="FrameworkVersion">v35</property>
-      <property name="BusinessClassName">Category</property>
+      <property name="BusinessClassName">CategoryList</property>
       <property name="IncludeSilverlightSupport">False</property>
       <property name="CriteriaClassName">CategoryCriteria</property>
+      <property name="ChildBusinessClassName">Category</property>
     </propertySet>
     <propertySet name="EditableChildCriteria" template="..\..\..\..\..\..\..\..\..\Templates\Frameworks\Csla\VisualBasic\BusinessLayer\Criteria.cst">
       <property name="CleanExpressions">
@@ -212,9 +215,10 @@
       </property>
       <property name="Location">.\EditableChild\</property>
       <property name="FrameworkVersion">v35</property>
-      <property name="BusinessClassName">Category</property>
+      <property name="BusinessClassName">CategoryCriteria</property>
       <property name="CriteriaClassName">CategoryCriteria</property>
       <property name="IncludeSilverlightSupport">False</property>
+      <property name="ChildBusinessClassName">Category</property>
     </propertySet>
     <propertySet name="EditableRoot" template="..\..\..\..\..\..\..\..\..\Templates\Frameworks\Csla\VisualBasic\BusinessLayer\EditableRoot.cst">
       <property name="CleanExpressions">
@@ -252,7 +256,7 @@
       <property name="CriteriaClassName">CategoryCriteria</property>
       <property name="IncludeSilverlightSupport">False</property>
     </propertySet>
-    <propertySet name="EditableRootList" template="..\..\..\..\..\..\..\..\..\Templates\Frameworks\Csla\VisualBasic\BusinessLayer\EditableRootList.cst">
+    <propertySet name="DynamicListBase" template="..\..\..\..\..\..\..\..\..\Templates\Frameworks\Csla\VisualBasic\BusinessLayer\DynamicListBase.cst">
       <property name="CleanExpressions">
         <stringList>
           <string>^\w+_</string>
@@ -281,6 +285,12 @@
         </stringList>
       </property>
       <property name="Location">.\EditableRoot\</property>
+      <property name="FrameworkVersion">v35</property>
+      <property name="BusinessClassName">CategoryList</property>
+      <property name="CriteriaClassName">CategoryCriteria</property>
+      <property name="UseDeferredDeletion">False</property>
+      <property name="IncludeSilverlightSupport">False</property>
+      <property name="ChildBusinessClassName">Category</property>
     </propertySet>
     <propertySet name="EditableRootCriteria" template="..\..\..\..\..\..\..\..\..\Templates\Frameworks\Csla\VisualBasic\BusinessLayer\Criteria.cst">
       <property name="CleanExpressions">
@@ -313,9 +323,10 @@
       </property>
       <property name="Location">.\EditableRoot\</property>
       <property name="FrameworkVersion">v35</property>
-      <property name="BusinessClassName">Category</property>
+      <property name="BusinessClassName">CategoryCriteria</property>
       <property name="CriteriaClassName">CategoryCriteria</property>
       <property name="IncludeSilverlightSupport">False</property>
+      <property name="ChildBusinessClassName">Category</property>
     </propertySet>
     <propertySet name="ReadOnlyChild" template="..\..\..\..\..\..\..\..\..\Templates\Frameworks\Csla\VisualBasic\BusinessLayer\ReadOnlyChild.cst">
       <property name="CleanExpressions">
@@ -349,9 +360,10 @@
       </property>
       <property name="Location">.\ReadOnlyChild\</property>
       <property name="FrameworkVersion">v35</property>
-      <property name="BusinessClassName">Category</property>
+      <property name="BusinessClassName">CategoryInfo</property>
       <property name="CriteriaClassName">CategoryCriteria</property>
       <property name="IncludeSilverlightSupport">False</property>
+      <property name="ChildBusinessClassName">CategoryInfo</property>
     </propertySet>
     <propertySet name="ReadOnlyChildList" template="..\..\..\..\..\..\..\..\..\Templates\Frameworks\Csla\VisualBasic\BusinessLayer\ReadOnlyChildList.cst">
       <property name="CleanExpressions">
@@ -383,16 +395,17 @@
       </property>
       <property name="Location">.\ReadOnlyChild\</property>
       <property name="FrameworkVersion">v35</property>
-      <property name="BusinessClassName">Category</property>
+      <property name="BusinessClassName">CategoryInfoList</property>
       <property name="CriteriaClassName">CategoryCriteria</property>
       <property name="UseDeferredDeletion">False</property>
       <property name="IncludeSilverlightSupport">False</property>
+      <property name="ChildBusinessClassName">CategoryInfo</property>
     </propertySet>
     <propertySet name="ReadOnlyChildCriteria" template="..\..\..\..\..\..\..\..\..\Templates\Frameworks\Csla\VisualBasic\BusinessLayer\Criteria.cst">
       <property name="CleanExpressions">
         <stringList>
-          <string>^\w+_</string>
-        </stringList>
+      <string>^\w+_</string>
+    </stringList>
       </property>
       <property name="UseMemberVariables">False</property>
       <property name="ParameterPrefix">@p_</property>
@@ -407,21 +420,22 @@
         <connectionString>$(ConnectionString1)</connectionString>
         <providerType>SchemaExplorer.SqlSchemaProvider,SchemaExplorer.SqlSchemaProvider</providerType>
         <table>
-          <owner>dbo</owner>
-          <name>Category</name>
-        </table>
+      <owner>dbo</owner>
+      <name>Category</name>
+    </table>
       </property>
       <property name="IgnoreExpressions">
         <stringList>
-          <string>sysdiagrams$</string>
-          <string>^dbo.aspnet</string>
-        </stringList>
+      <string>sysdiagrams$</string>
+      <string>^dbo.aspnet</string>
+    </stringList>
       </property>
       <property name="Location">.\ReadOnlyChild\</property>
       <property name="FrameworkVersion">v35</property>
-      <property name="BusinessClassName">Category</property>
+      <property name="BusinessClassName">CategoryCriteria</property>
       <property name="CriteriaClassName">CategoryCriteria</property>
       <property name="IncludeSilverlightSupport">False</property>
+      <property name="ChildBusinessClassName">CategoryInfo</property>
     </propertySet>
     <propertySet name="ReadOnlyRoot" template="..\..\..\..\..\..\..\..\..\Templates\Frameworks\Csla\VisualBasic\BusinessLayer\ReadOnlyRoot.cst">
       <property name="CleanExpressions">
@@ -454,10 +468,11 @@
       </property>
       <property name="Location">.\ReadOnlyRoot\</property>
       <property name="FrameworkVersion">v35</property>
-      <property name="BusinessClassName">Category</property>
+      <property name="BusinessClassName">CategoryInfo</property>
       <property name="CriteriaClassName">CategoryCriteria</property>
       <property name="UseDeferredDeletion">False</property>
       <property name="IncludeSilverlightSupport">False</property>
+      <property name="ChildBusinessClassName">CategoryInfo</property>
     </propertySet>
     <propertySet name="ReadOnlyList" template="..\..\..\..\..\..\..\..\..\Templates\Frameworks\Csla\VisualBasic\BusinessLayer\ReadOnlyList.cst">
       <property name="CleanExpressions">
@@ -489,16 +504,17 @@
       </property>
       <property name="Location">.\ReadOnlyRoot\</property>
       <property name="FrameworkVersion">v35</property>
-      <property name="BusinessClassName">Category</property>
+      <property name="BusinessClassName">CategoryInfoList</property>
       <property name="CriteriaClassName">CategoryCriteria</property>
       <property name="UseDeferredDeletion">False</property>
       <property name="IncludeSilverlightSupport">False</property>
+      <property name="ChildBusinessClassName">CategoryInfo</property>
     </propertySet>
     <propertySet name="ReadOnlyRootCriteria" template="..\..\..\..\..\..\..\..\..\Templates\Frameworks\Csla\VisualBasic\BusinessLayer\Criteria.cst">
       <property name="CleanExpressions">
         <stringList>
-          <string>^\w+_</string>
-        </stringList>
+      <string>^\w+_</string>
+    </stringList>
       </property>
       <property name="UseMemberVariables">False</property>
       <property name="ParameterPrefix">@p_</property>
@@ -513,21 +529,22 @@
         <connectionString>$(ConnectionString1)</connectionString>
         <providerType>SchemaExplorer.SqlSchemaProvider,SchemaExplorer.SqlSchemaProvider</providerType>
         <table>
-          <owner>dbo</owner>
-          <name>Category</name>
-        </table>
+      <owner>dbo</owner>
+      <name>Category</name>
+    </table>
       </property>
       <property name="IgnoreExpressions">
         <stringList>
-          <string>sysdiagrams$</string>
-          <string>^dbo.aspnet</string>
-        </stringList>
+      <string>sysdiagrams$</string>
+      <string>^dbo.aspnet</string>
+    </stringList>
       </property>
       <property name="Location">.\ReadOnlyRoot\</property>
       <property name="FrameworkVersion">v35</property>
-      <property name="BusinessClassName">Category</property>
+      <property name="BusinessClassName">CategoryCriteria</property>
       <property name="CriteriaClassName">CategoryCriteria</property>
       <property name="IncludeSilverlightSupport">False</property>
+      <property name="ChildBusinessClassName">CategoryInfo</property>
     </propertySet>
   </propertySets>
 </codeSmith>

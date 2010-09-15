@@ -250,6 +250,9 @@
     <Compile Include="..\PetShop.Business\Entities\Supplier.Generated.cs">
       <Link>Entities\Supplier.Generated.cs</Link>
     </Compile>
+    <Compile Include="..\PetShop.Business\Utility\AsyncChildLoader.cs">
+      <Link>Utility\AsyncChildLoader.cs</Link>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Silverlight\$(SilverlightVersion)\Microsoft.Silverlight.CSharp.targets" />

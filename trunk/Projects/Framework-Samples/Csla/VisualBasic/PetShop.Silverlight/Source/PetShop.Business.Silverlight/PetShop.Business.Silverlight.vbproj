@@ -309,6 +309,9 @@
     <Compile Include="..\PetShop.Business\Entities\Supplier.vb">
       <Link>Entities\Supplier.vb</Link>
     </Compile>
+    <Compile Include="..\PetShop.Business\Utility\AsyncChildLoader.vb">
+      <Link>Utility\AsyncChildLoader.vb</Link>
+    </Compile>
     <Compile Include="My Project\AssemblyInfo.vb" />
   </ItemGroup>
   <ItemGroup>
