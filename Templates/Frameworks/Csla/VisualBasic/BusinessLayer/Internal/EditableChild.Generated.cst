@@ -96,13 +96,13 @@ Namespace <%= BusinessProjectName %>
         End Sub
     <% For Each sc As SearchCriteria In  Entity.SearchCriteria() %>
     
-        Friend Shared Sub <%= sc.MethodName %>Async(<%= sc.Members.BuildParametersVariables() %>, ByVal handler As EventHandler(Of DataPortalResult(Of AsyncChildLoader(Of <%= ChildBusinessClassName %><%= Entity.GenericProperty %>))))
+        Friend Shared Sub <%= sc.MethodName %>Async(<%= sc.Members.BuildParametersVariables() %>, ByVal handler As EventHandler(Of DataPortalResult(Of AsyncChildLoader(Of <%= BusinessClassName %><%= Entity.GenericProperty %>))))
             Dim criteria As New <%= CriteriaClassName %><%= Entity.GenericProperty %>()
     <%For Each member As Member in sc.Members %>
             criteria.<%= member.PropertyName %> = <%= member.VariableName %>
     <% Next %>
 
-            DataPortal.BeginFetch(Of AsyncChildLoader(Of <%= ChildBusinessClassName %><%= Entity.GenericProperty %>))(criteria, handler)
+            DataPortal.BeginFetch(Of AsyncChildLoader(Of <%= BusinessClassName %><%= Entity.GenericProperty %>))(criteria, handler)
         End Sub
     <% Next %> 
 #End If

@@ -11,11 +11,25 @@
 <%@ Import Namespace="CodeSmith.QuickStart" %>
 
         #region Exists Command
+<% if(IncludeSilverlightSupport) { %>
+#if !SILVERLIGHT
+<% } %>
 
         public static bool Exists(<%= CriteriaClassName %><%= Entity.GenericProperty %> criteria)
         {
             return <%= BusinessProjectName %>.ExistsCommand.Execute(criteria);
         }
 
+<% if(IncludeSilverlightSupport) { %>
+#else
+
+        public static void Exists(<%= CriteriaClassName %><%= Entity.GenericProperty %> criteria, EventHandler<DataPortalResult<ExistsCommand>> handler)
+        {
+            <%= BusinessProjectName %>.ExistsCommand.Execute(criteria, handler);
+        }
+
+#endif
+
+<% } %>
         #endregion
 
