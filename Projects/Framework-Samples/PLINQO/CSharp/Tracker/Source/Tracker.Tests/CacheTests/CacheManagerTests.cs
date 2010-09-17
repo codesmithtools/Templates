@@ -173,7 +173,7 @@ namespace Tracker.Tests.CacheTests
         {
             var db = new TrackerDataContext();
 
-            var user = CacheManager.GetOrSet("test@email.com", k => db.User.GetByEmailAddress(k));
+            var user = CacheManager.GetOrSet("william.adama@battlestar.com", k => db.User.GetByEmailAddress(k));
 
         }
 

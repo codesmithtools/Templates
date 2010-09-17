@@ -1,8 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Templates", "Templates", "{719A27A6-988D-47DD-B035-7DC9ADCF06C1}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{69024164-16FF-495E-8A97-8B31C52A2B86}"
 	ProjectSection(SolutionItems) = preProject
 		Master.proj = Master.proj
