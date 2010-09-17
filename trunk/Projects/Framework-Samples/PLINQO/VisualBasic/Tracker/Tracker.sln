@@ -1,6 +1,6 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 10.00
-# Visual Studio 2008
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
 Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "Tracker.Core", "Source\Tracker.Core\Tracker.Core.vbproj", "{8A41D420-5DA7-4DF9-A2B4-C12B745FC27F}"
 EndProject
 Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "Tracker.Tests", "Source\Tracker.Tests\Tracker.Tests.vbproj", "{2BF2A396-C20F-4DC6-ADCA-EFC1575BAB0E}"
