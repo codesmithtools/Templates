@@ -138,7 +138,7 @@ namespace Tracker.Tests
         }
 
         [Test]
-        [Ignore]
+        //[Ignore]
         public void ManyToMany()
         {
             var db = new TrackerDataContext { Log = Console.Out };
