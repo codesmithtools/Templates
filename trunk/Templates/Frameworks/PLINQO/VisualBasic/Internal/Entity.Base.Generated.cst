@@ -16,6 +16,10 @@
      Type="System.Boolean" Default="True" Optional="False"
      Description="Include WCF DataContract attributes." %>
 
+<%@ Property Category="2.Class" Name="IncludeXmlSerialization"
+    Type="System.Boolean" Default="false" Optional="False"
+    Description="Include Xml serialization support." %>
+
 <%@ Property Category="2.Class" Name="Framework"
     Type="FrameworkEnum" Default="v35_SP1" Optional="False"
     Description="Include Serialization attributes and what kind." %>
@@ -36,6 +40,9 @@ Namespace <%= ClassNamespace %>
     ''' <summary>
     ''' A base class for Linq entities that implements notification events.
     ''' </summary>
+<% If (IncludeXmlSerialization) Then%>
+    <System.Serializable()> _
+<% End If %>
     <%If IncludeDataContract Then %>
     <System.Runtime.Serialization.DataContract(IsReference:=True)> _
     <%End If%>
@@ -163,7 +170,7 @@ Namespace <%= ClassNamespace %>
         #End Region
 
         #Region "ToString"
-        
+
         ''' <summary>
         ''' Returns a <see cref="T:System.String"/> that represents the current <see cref="T:System.Object"/>.
         ''' </summary>
@@ -247,7 +254,7 @@ Namespace <%= ClassNamespace %>
         End Function
 
         ''' <summary>
-        ''' Returns a byte array that represents the current <see cref="T:System.Object"/>. 
+        ''' Returns a byte array that represents the current <see cref="T:System.Object"/>.
         ''' </summary>
         ''' <returns>A byte array that represents the current <see cref="T:System.Object"/>.</returns>
         Public Function ToBinary() As Byte()
