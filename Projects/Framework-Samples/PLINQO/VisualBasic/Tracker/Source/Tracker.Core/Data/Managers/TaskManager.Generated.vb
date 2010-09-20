@@ -101,7 +101,7 @@ Namespace Tracker.Core.Data
         ''' <summary>
         ''' Gets a query by an index.
         ''' </summary>
-        Public Overloads Function GetByAssignedIdStatus(ByVal assignedId As Integer?, ByVal status As Status) As IQueryable(Of Tracker.Core.Data.Task)
+        Public Overloads Function GetByAssignedIdStatus(ByVal assignedId As Integer?, ByVal status As Tracker.Core.Data.Status) As IQueryable(Of Tracker.Core.Data.Task)
             If Context.LoadOptions Is Nothing Then 
                 return Query.GetByAssignedIdStatus.Invoke(Context, assignedId, status)
             Else
@@ -113,7 +113,7 @@ Namespace Tracker.Core.Data
         ''' <summary>
         ''' Gets a query by an index.
         ''' </summary>
-        Public Overloads Function GetByStatus(ByVal status As Status) As IQueryable(Of Tracker.Core.Data.Task)
+        Public Overloads Function GetByStatus(ByVal status As Tracker.Core.Data.Status) As IQueryable(Of Tracker.Core.Data.Task)
             If Context.LoadOptions Is Nothing Then 
                 return Query.GetByStatus.Invoke(Context, status)
             Else
@@ -124,7 +124,7 @@ Namespace Tracker.Core.Data
         ''' <summary>
         ''' Gets a query by an index.
         ''' </summary>
-        Public Overloads Function GetByPriority(ByVal priority As Priority) As IQueryable(Of Tracker.Core.Data.Task)
+        Public Overloads Function GetByPriority(ByVal priority As Tracker.Core.Data.Priority?) As IQueryable(Of Tracker.Core.Data.Task)
             If Context.LoadOptions Is Nothing Then 
                 return Query.GetByPriority.Invoke(Context, priority)
             Else
@@ -171,20 +171,20 @@ Namespace Tracker.Core.Data
                      Function(db As Tracker.Core.Data.TrackerDataContext, ByVal id As Integer) _
                         db.Task.FirstOrDefault(Function(t)t.Id = id))
 
-            Friend Shared Readonly  GetByAssignedIdStatus As Func(Of Tracker.Core.Data.TrackerDataContext, Integer?, Status, IQueryable(Of Tracker.Core.Data.Task)) = _
+            Friend Shared Readonly  GetByAssignedIdStatus As Func(Of Tracker.Core.Data.TrackerDataContext, Integer?, Tracker.Core.Data.Status, IQueryable(Of Tracker.Core.Data.Task)) = _
                 CompiledQuery.Compile( _
-                    Function( db As Tracker.Core.Data.TrackerDataContext , ByVal assignedId As Integer?, ByVal status As Status) _
+                    Function( db As Tracker.Core.Data.TrackerDataContext , ByVal assignedId As Integer?, ByVal status As Tracker.Core.Data.Status) _
                         db.Task.Where(Function(t)Object.Equals(t.AssignedId, assignedId) _
 							AndAlso t.Status = status))
 
-            Friend Shared Readonly  GetByStatus As Func(Of Tracker.Core.Data.TrackerDataContext, Status, IQueryable(Of Tracker.Core.Data.Task)) = _
+            Friend Shared Readonly  GetByStatus As Func(Of Tracker.Core.Data.TrackerDataContext, Tracker.Core.Data.Status, IQueryable(Of Tracker.Core.Data.Task)) = _
                 CompiledQuery.Compile( _
-                    Function( db As Tracker.Core.Data.TrackerDataContext , ByVal status As Status) _
+                    Function( db As Tracker.Core.Data.TrackerDataContext , ByVal status As Tracker.Core.Data.Status) _
                         db.Task.Where(Function(t)t.Status = status))
 
-            Friend Shared Readonly  GetByPriority As Func(Of Tracker.Core.Data.TrackerDataContext, Priority, IQueryable(Of Tracker.Core.Data.Task)) = _
+            Friend Shared Readonly  GetByPriority As Func(Of Tracker.Core.Data.TrackerDataContext, Tracker.Core.Data.Priority?, IQueryable(Of Tracker.Core.Data.Task)) = _
                 CompiledQuery.Compile( _
-                    Function( db As Tracker.Core.Data.TrackerDataContext , ByVal priority As Priority) _
+                    Function( db As Tracker.Core.Data.TrackerDataContext , ByVal priority As Tracker.Core.Data.Priority?) _
                         db.Task.Where(Function(t)Object.Equals(t.Priority, priority)))
 
             Friend Shared Readonly  GetByCreatedId As Func(Of Tracker.Core.Data.TrackerDataContext, Integer, IQueryable(Of Tracker.Core.Data.Task)) = _

@@ -108,7 +108,7 @@ Namespace Tracker.Core.Data
         ''' <summary>
         ''' Gets or sets the Role association.
         ''' </summary>
-        <System.Data.Linq.Mapping.Association(Name:="Role_UserRole", Storage:="_role", ThisKey:="RoleId", OtherKey:="Id", IsUnique:=true, IsForeignKey:=true)> _
+        <System.Data.Linq.Mapping.Association(Name:="Role_UserRole", Storage:="_role", ThisKey:="RoleId", OtherKey:="Id", IsForeignKey:=true)> _
         <System.Runtime.Serialization.DataMember(Order:=3, EmitDefaultValue:=False)> _
         Public Property Role() As Role
             Get
@@ -142,7 +142,7 @@ Namespace Tracker.Core.Data
         ''' <summary>
         ''' Gets or sets the User association.
         ''' </summary>
-        <System.Data.Linq.Mapping.Association(Name:="User_UserRole", Storage:="_user", ThisKey:="UserId", OtherKey:="Id", IsUnique:=true, IsForeignKey:=true, DeleteOnNull:=true)> _
+        <System.Data.Linq.Mapping.Association(Name:="User_UserRole", Storage:="_user", ThisKey:="UserId", OtherKey:="Id", IsForeignKey:=true, DeleteOnNull:=true)> _
         <System.Runtime.Serialization.DataMember(Order:=4, EmitDefaultValue:=False)> _
         Public Property User() As User
             Get

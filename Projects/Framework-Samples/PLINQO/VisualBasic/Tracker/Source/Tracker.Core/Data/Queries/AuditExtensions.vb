@@ -572,7 +572,7 @@ Namespace Tracker.Core.Data
         ''' <param name="myxml">Myxml to search for.</param>
         ''' <returns>IQueryable with additional where clause.</returns>
         <System.Runtime.CompilerServices.Extension()> _
-        Public Function ByMyxml(ByVal queryable As IQueryable(Of Tracker.Core.Data.Audit), ByVal myxml As String) As IQueryable(Of Tracker.Core.Data.Audit)
+        Public Function ByMyxml(ByVal queryable As IQueryable(Of Tracker.Core.Data.Audit), ByVal myxml As System.Xml.Linq.XElement) As IQueryable(Of Tracker.Core.Data.Audit)
             Return queryable.Where(Function(a) Object.Equals(a.Myxml, myxml))
         End Function
         
@@ -584,8 +584,8 @@ Namespace Tracker.Core.Data
         ''' <param name="additionalValues">Additional values to search for.</param>
         ''' <returns>IQueryable with additional where clause.</returns>
         <System.Runtime.CompilerServices.Extension()> _
-        Public Function ByMyxml(ByVal queryable As IQueryable(Of Tracker.Core.Data.Audit), ByVal myxml As String, ByVal ParamArray additionalValues As String()) As IQueryable(Of Tracker.Core.Data.Audit)
-            Dim values = New List(Of String)()
+        Public Function ByMyxml(ByVal queryable As IQueryable(Of Tracker.Core.Data.Audit), ByVal myxml As System.Xml.Linq.XElement, ByVal ParamArray additionalValues As System.Xml.Linq.XElement()) As IQueryable(Of Tracker.Core.Data.Audit)
+            Dim values = New List(Of System.Xml.Linq.XElement)()
             values.Add(myxml)
         
             If additionalValues IsNot Nothing Then
@@ -608,7 +608,7 @@ Namespace Tracker.Core.Data
         ''' <param name="values">The values to search for.</param>
         ''' <returns>IQueryable with additional where clause.</returns>
         <System.Runtime.CompilerServices.Extension()> _
-        Public Function ByMyxml(ByVal queryable As IQueryable(Of Tracker.Core.Data.Audit), ByVal values As IEnumerable(Of String)) As IQueryable(Of Tracker.Core.Data.Audit)
+        Public Function ByMyxml(ByVal queryable As IQueryable(Of Tracker.Core.Data.Audit), ByVal values As IEnumerable(Of System.Xml.Linq.XElement)) As IQueryable(Of Tracker.Core.Data.Audit)
                 ' creating dynmic expression to support nulls
                 Dim expression = DynamicExpression.BuildExpression(Of Tracker.Core.Data.Audit, Boolean)("Myxml", values)
                 Return queryable.Where(expression)
@@ -619,30 +619,24 @@ Namespace Tracker.Core.Data
         ''' </summary>
         ''' <param name="queryable">Query to append where clause.</param>
         ''' <param name="myxml">Myxml to search for.</param>
-        ''' <param name="containment">The containment operator.</param>
+        ''' <param name="comparison">The comparison operator.</param>
         ''' <returns>IQueryable with additional where clause.</returns>
         <System.Runtime.CompilerServices.Extension()> _
-        Public Function ByMyxml(ByVal queryable As IQueryable(Of Tracker.Core.Data.Audit), ByVal containment As ContainmentOperator, ByVal myxml As String) As IQueryable(Of Tracker.Core.Data.Audit)
-            If myxml Is Nothing AndAlso containment <> ContainmentOperator.Equals AndAlso containment <> ContainmentOperator.NotEquals Then
-                Throw New ArgumentNullException("myxml", "Parameter 'myxml' cannot be null with the specified ContainmentOperator.  Parameter 'containmentOperator' must be ContainmentOperator.Equals or ContainmentOperator.NotEquals to support null.")
-            End If
-            
-            Select Case containment
-                Case ContainmentOperator.Contains
-                    Return queryable.Where(Function(a) a.Myxml.Contains(myxml))
-                Case ContainmentOperator.StartsWith
-                    Return queryable.Where(Function(a) a.Myxml.StartsWith(myxml))
-                Case ContainmentOperator.EndsWith
-                    Return queryable.Where(Function(a) a.Myxml.EndsWith(myxml))
-                Case ContainmentOperator.NotContains
-                    Return queryable.Where(Function(a) a.Myxml.Contains(myxml) = False)
-                Case ContainmentOperator.NotEquals
+        Public Function ByMyxml(ByVal queryable As IQueryable(Of Tracker.Core.Data.Audit), ByVal comparison As ComparisonOperator, ByVal myxml As System.Xml.Linq.XElement) As IQueryable(Of Tracker.Core.Data.Audit)
+            If myxml Is Nothing AndAlso comparison <> ComparisonOperator.Equals AndAlso comparison <> ComparisonOperator.NotEquals Then
+                Throw New ArgumentNullException("myxml", "Parameter 'myxml' cannot be null with the specified ComparisonOperator.  Parameter 'comparison' must be ComparisonOperator.Equals or ComparisonOperator.NotEquals to support null.")
+            End If
+            
+            Select Case comparison
+                Case ComparisonOperator.GreaterThan, ComparisonOperator.GreaterThanOrEquals, ComparisonOperator.LessThan, ComparisonOperator.LessThanOrEquals
+                    Throw New ArgumentException("Parameter 'comparison' must be ComparisonOperator.Equals or ComparisonOperator.NotEquals to support System.Xml.Linq.XElement type.", "comparison")
+                Case ComparisonOperator.NotEquals
                     Return queryable.Where(Function(a) Object.Equals(a.Myxml, myxml) = False)
                 Case Else
                     Return queryable.Where(Function(a) Object.Equals(a.Myxml, myxml))
             End Select
         End Function
-        
+
 
         'Insert User Defined Extensions here.
         'Anything outside of this Region will be lost at regeneration

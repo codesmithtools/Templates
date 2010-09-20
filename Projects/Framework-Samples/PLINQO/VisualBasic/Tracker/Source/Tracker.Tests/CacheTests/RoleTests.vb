@@ -1,23 +1,27 @@
-Imports System.Collections
+Imports System
 Imports System.Collections.Generic
+Imports System.Data.Linq
+Imports System.IO
+Imports System.Runtime.Serialization
 Imports System.Web
-Imports CodeSmith.Data.Linq
+Imports System.Xml
 Imports NUnit.Framework
 Imports Tracker.Core.Data
+Imports CodeSmith.Data.Linq
 
 Namespace Tracker.Tests.CacheTests
     Public MustInherit Class RoleTests
-        Private ReadOnly _roleIds As New List(Of Integer)()
+        Private _roleIds As New List(Of Integer)()
 
         <TestFixtureSetUp()> _
         Public Sub TestFixtureSetUp()
-            Using db As New TrackerDataContext() With { _
+            Using db = New TrackerDataContext() With { _
              .Log = Console.Out _
             }
-                Dim role1 As New Role() With { _
+                Dim role1 = New Role() With { _
                  .Name = "Test Role" _
                 }
-                Dim role2 As New Role() With { _
+                Dim role2 = New Role() With { _
                  .Name = "Duck Roll" _
                 }
 
@@ -32,7 +36,7 @@ Namespace Tracker.Tests.CacheTests
 
         <TestFixtureTearDown()> _
         Public Sub TestFixtureTearDown()
-            Using db As New TrackerDataContext() With { _
+            Using db = New TrackerDataContext() With { _
              .Log = Console.Out _
             }
                 db.Role.Delete(Function(r) _roleIds.Contains(r.Id))
@@ -41,9 +45,9 @@ Namespace Tracker.Tests.CacheTests
 
         <SetUp()> _
         Public Sub SetUp()
-            Dim keys As New List(Of String)()
+            Dim keys = New List(Of String)()
 
-            Dim enumerator As IDictionaryEnumerator = HttpRuntime.Cache.GetEnumerator()
+            Dim enumerator = HttpRuntime.Cache.GetEnumerator()
             While enumerator.MoveNext()
                 keys.Add(TryCast(enumerator.Key, String))
             End While
@@ -53,6 +57,7 @@ Namespace Tracker.Tests.CacheTests
 
         <TearDown()> _
         Public Sub TearDown()
+
         End Sub
     End Class
 End Namespace
