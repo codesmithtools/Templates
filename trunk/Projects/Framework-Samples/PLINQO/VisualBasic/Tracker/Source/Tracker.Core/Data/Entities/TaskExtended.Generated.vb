@@ -195,7 +195,7 @@ Namespace Tracker.Core.Data
         ''' <summary>
         ''' Gets or sets the Task association.
         ''' </summary>
-        <System.Data.Linq.Mapping.Association(Name:="Task_TaskExtended", Storage:="_task", ThisKey:="TaskId", OtherKey:="Id", IsUnique:=true, IsForeignKey:=true)> _
+        <System.Data.Linq.Mapping.Association(Name:="Task_TaskExtended", Storage:="_task", ThisKey:="TaskId", OtherKey:="Id", IsForeignKey:=true)> _
         <System.Runtime.Serialization.DataMember(Order:=7, EmitDefaultValue:=False)> _
         Public Property Task() As Task
             Get

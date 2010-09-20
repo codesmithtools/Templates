@@ -177,11 +177,11 @@ Namespace Tracker.Core.Data
                 End If
 
                 If includeProperty Then
-                    If value Is Nothing Then
+                    If value IsNot Nothing Then
                         value = value.ToString().Replace(vbCr & vbLf, " ").Replace(ControlChars.Lf, " "C).Replace(ControlChars.Tab, " "C)
                     End If
 
-                    If value Is Nothing AndAlso value.ToString().Length > 50 Then
+                    If value IsNot Nothing AndAlso value.ToString().Length > 50 Then
                         value = [String].Concat(value.ToString().Substring(0, 50), "...")
                     End If
 
@@ -192,7 +192,7 @@ Namespace Tracker.Core.Data
                     sb.Append(prop.Name)
                     sb.Append(" = ")
 
-                    sb.AppendLine(If(value Is Nothing, If(value.ToString().Length > 0, value.ToString(), "<empty>"), "<null>"))
+                    sb.AppendLine(If(value IsNot Nothing, If(value.ToString().Length > 0, value.ToString(), "<empty>"), "<null>"))
                 End If
             Next
 

@@ -55,7 +55,7 @@ Namespace Tracker.Core.Data
         ''' <summary>
         ''' Gets the Id column value.
         ''' </summary>
-        <System.Data.Linq.Mapping.Column(Name:="Id", Storage:="_id", DbType:="int NOT NULL", IsPrimaryKey:=True, IsDbGenerated:=True, CanBeNull:=False, UpdateCheck:=System.Data.Linq.Mapping.UpdateCheck.Never)> _
+        <System.Data.Linq.Mapping.Column(Name:="Id", Storage:="_id", DbType:="int NOT NULL IDENTITY", IsPrimaryKey:=True, IsDbGenerated:=True, CanBeNull:=False, UpdateCheck:=System.Data.Linq.Mapping.UpdateCheck.Never)> _
         <System.Runtime.Serialization.DataMember(Order:=1)> _
         Public Property Id() As Integer
             Get
@@ -234,19 +234,19 @@ Namespace Tracker.Core.Data
             End Set
         End Property
 
-        Private _myxml As String
+        Private _myxml As System.Xml.Linq.XElement
 
         ''' <summary>
         ''' Gets or sets the myxml column value.
         ''' </summary>
         <System.Data.Linq.Mapping.Column(Name:="myxml", Storage:="_myxml", DbType:="xml", UpdateCheck:=System.Data.Linq.Mapping.UpdateCheck.Never)> _
         <System.Runtime.Serialization.DataMember(Order:=9)> _
-        Public Property Myxml() As String
+        Public Property Myxml() As System.Xml.Linq.XElement
             Get
                 Return _myxml
             End Get
-            Set(ByVal value As String)
-                If (String.Equals(Me._myxml, value) = False) Then
+            Set(ByVal value As System.Xml.Linq.XElement)
+                If (Object.Equals(Me._myxml, value) = False) Then
                     OnMyxmlChanging(value)
                     SendPropertyChanging("Myxml")
                     _myxml = value
@@ -264,7 +264,7 @@ Namespace Tracker.Core.Data
         ''' <summary>
         ''' Gets or sets the Task association.
         ''' </summary>
-        <System.Data.Linq.Mapping.Association(Name:="Task_Audit", Storage:="_task", ThisKey:="TaskId", OtherKey:="Id", IsUnique:=true, IsForeignKey:=true)> _
+        <System.Data.Linq.Mapping.Association(Name:="Task_Audit", Storage:="_task", ThisKey:="TaskId", OtherKey:="Id", IsForeignKey:=true)> _
         <System.Runtime.Serialization.DataMember(Order:=10, EmitDefaultValue:=False)> _
         Public Property Task() As Task
             Get
@@ -298,7 +298,7 @@ Namespace Tracker.Core.Data
         ''' <summary>
         ''' Gets or sets the User association.
         ''' </summary>
-        <System.Data.Linq.Mapping.Association(Name:="User_Audit", Storage:="_user", ThisKey:="UserId", OtherKey:="Id", IsUnique:=true, IsForeignKey:=true)> _
+        <System.Data.Linq.Mapping.Association(Name:="User_Audit", Storage:="_user", ThisKey:="UserId", OtherKey:="Id", IsForeignKey:=true)> _
         <System.Runtime.Serialization.DataMember(Order:=11, EmitDefaultValue:=False)> _
         Public Property User() As User
             Get
@@ -401,7 +401,7 @@ Namespace Tracker.Core.Data
         End Sub
         ''' <summary>Called when Myxml is changing.</summary>
         ''' <param name="value">The new value.</param>
-        Partial Private Sub OnMyxmlChanging(ByVal value As String)
+        Partial Private Sub OnMyxmlChanging(ByVal value As System.Xml.Linq.XElement)
         End Sub
         ''' <summary>Called after Myxml has Changed.</summary>
         Partial Private Sub OnMyxmlChanged()

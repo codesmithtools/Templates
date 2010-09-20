@@ -122,7 +122,7 @@ Namespace Tracker.Core.Data
         ''' <param name="status">Status to search for.</param>
         ''' <returns>IQueryable with additional where clause.</returns>
         <System.Runtime.CompilerServices.Extension()> _
-        Public Function ByStatus(ByVal queryable As IQueryable(Of Tracker.Core.Data.Task), ByVal status As Status) As IQueryable(Of Tracker.Core.Data.Task)
+        Public Function ByStatus(ByVal queryable As IQueryable(Of Tracker.Core.Data.Task), ByVal status As Tracker.Core.Data.Status) As IQueryable(Of Tracker.Core.Data.Task)
             Return queryable.Where(Function(t)t.Status = status)
         End Function
         
@@ -134,8 +134,8 @@ Namespace Tracker.Core.Data
         ''' <param name="additionalValues">Additional values to search for.</param>
         ''' <returns>IQueryable with additional where clause.</returns>
         <System.Runtime.CompilerServices.Extension()> _
-        Public Function ByStatus(ByVal queryable As IQueryable(Of Tracker.Core.Data.Task), ByVal status As Status, ByVal ParamArray additionalValues As Status()) As IQueryable(Of Tracker.Core.Data.Task)
-            Dim values = New List(Of Status)()
+        Public Function ByStatus(ByVal queryable As IQueryable(Of Tracker.Core.Data.Task), ByVal status As Tracker.Core.Data.Status, ByVal ParamArray additionalValues As Tracker.Core.Data.Status()) As IQueryable(Of Tracker.Core.Data.Task)
+            Dim values = New List(Of Tracker.Core.Data.Status)()
             values.Add(status)
         
             If additionalValues IsNot Nothing Then
@@ -156,7 +156,7 @@ Namespace Tracker.Core.Data
         ''' <param name="values">The values to search for.</param>
         ''' <returns>IQueryable with additional where clause.</returns>
         <System.Runtime.CompilerServices.Extension()> _
-        Public Function ByStatus(ByVal queryable As IQueryable(Of Tracker.Core.Data.Task), ByVal values As IEnumerable(Of Status)) As IQueryable(Of Tracker.Core.Data.Task)
+        Public Function ByStatus(ByVal queryable As IQueryable(Of Tracker.Core.Data.Task), ByVal values As IEnumerable(Of Tracker.Core.Data.Status)) As IQueryable(Of Tracker.Core.Data.Task)
                 Return queryable.Where(Function(t) values.Contains(t.Status))
         End Function
 
@@ -168,7 +168,7 @@ Namespace Tracker.Core.Data
         ''' <param name="comparison">The comparison operator.</param>
         ''' <returns>IQueryable with additional where clause.</returns>
         <System.Runtime.CompilerServices.Extension()> _
-        Public Function ByStatus(ByVal queryable As IQueryable(Of Tracker.Core.Data.Task), ByVal comparison As ComparisonOperator, ByVal status As Status) As IQueryable(Of Tracker.Core.Data.Task)
+        Public Function ByStatus(ByVal queryable As IQueryable(Of Tracker.Core.Data.Task), ByVal comparison As ComparisonOperator, ByVal status As Tracker.Core.Data.Status) As IQueryable(Of Tracker.Core.Data.Task)
             Select Case comparison
                 Case ComparisonOperator.GreaterThan
                     Return queryable.Where(Function(t) t.Status > status)
@@ -193,7 +193,7 @@ Namespace Tracker.Core.Data
         ''' <param name="priority">Priority to search for.</param>
         ''' <returns>IQueryable with additional where clause.</returns>
         <System.Runtime.CompilerServices.Extension()> _
-        Public Function ByPriority(ByVal queryable As IQueryable(Of Tracker.Core.Data.Task), ByVal priority As Priority?) As IQueryable(Of Tracker.Core.Data.Task)
+        Public Function ByPriority(ByVal queryable As IQueryable(Of Tracker.Core.Data.Task), ByVal priority As Tracker.Core.Data.Priority?) As IQueryable(Of Tracker.Core.Data.Task)
             Return queryable.Where(Function(t) Object.Equals(t.Priority, priority))
         End Function
         
@@ -205,8 +205,8 @@ Namespace Tracker.Core.Data
         ''' <param name="additionalValues">Additional values to search for.</param>
         ''' <returns>IQueryable with additional where clause.</returns>
         <System.Runtime.CompilerServices.Extension()> _
-        Public Function ByPriority(ByVal queryable As IQueryable(Of Tracker.Core.Data.Task), ByVal priority As Priority?, ByVal ParamArray additionalValues As Priority?()) As IQueryable(Of Tracker.Core.Data.Task)
-            Dim values = New List(Of Priority?)()
+        Public Function ByPriority(ByVal queryable As IQueryable(Of Tracker.Core.Data.Task), ByVal priority As Tracker.Core.Data.Priority?, ByVal ParamArray additionalValues As Tracker.Core.Data.Priority?()) As IQueryable(Of Tracker.Core.Data.Task)
+            Dim values = New List(Of Tracker.Core.Data.Priority?)()
             values.Add(priority)
         
             If additionalValues IsNot Nothing Then
@@ -229,7 +229,7 @@ Namespace Tracker.Core.Data
         ''' <param name="values">The values to search for.</param>
         ''' <returns>IQueryable with additional where clause.</returns>
         <System.Runtime.CompilerServices.Extension()> _
-        Public Function ByPriority(ByVal queryable As IQueryable(Of Tracker.Core.Data.Task), ByVal values As IEnumerable(Of Priority?)) As IQueryable(Of Tracker.Core.Data.Task)
+        Public Function ByPriority(ByVal queryable As IQueryable(Of Tracker.Core.Data.Task), ByVal values As IEnumerable(Of Tracker.Core.Data.Priority?)) As IQueryable(Of Tracker.Core.Data.Task)
                 ' creating dynmic expression to support nulls
                 Dim expression = DynamicExpression.BuildExpression(Of Tracker.Core.Data.Task, Boolean)("Priority", values)
                 Return queryable.Where(expression)
@@ -243,7 +243,7 @@ Namespace Tracker.Core.Data
         ''' <param name="comparison">The comparison operator.</param>
         ''' <returns>IQueryable with additional where clause.</returns>
         <System.Runtime.CompilerServices.Extension()> _
-        Public Function ByPriority(ByVal queryable As IQueryable(Of Tracker.Core.Data.Task), ByVal comparison As ComparisonOperator, ByVal priority As Priority?) As IQueryable(Of Tracker.Core.Data.Task)
+        Public Function ByPriority(ByVal queryable As IQueryable(Of Tracker.Core.Data.Task), ByVal comparison As ComparisonOperator, ByVal priority As Tracker.Core.Data.Priority?) As IQueryable(Of Tracker.Core.Data.Task)
             If priority Is Nothing AndAlso comparison <> ComparisonOperator.Equals AndAlso comparison <> ComparisonOperator.NotEquals Then
                 Throw New ArgumentNullException("priority", "Parameter 'priority' cannot be null with the specified ComparisonOperator.  Parameter 'comparison' must be ComparisonOperator.Equals or ComparisonOperator.NotEquals to support null.")
             End If

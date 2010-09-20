@@ -382,7 +382,7 @@ Namespace Tracker.Core.Data
         ''' <summary>
         ''' Gets or sets the User association.
         ''' </summary>
-        <System.Data.Linq.Mapping.Association(Name:="User_Task", Storage:="_assignedUser", ThisKey:="AssignedId", OtherKey:="Id", IsUnique:=true, IsForeignKey:=true)> _
+        <System.Data.Linq.Mapping.Association(Name:="User_Task", Storage:="_assignedUser", ThisKey:="AssignedId", OtherKey:="Id", IsForeignKey:=true)> _
         <System.Runtime.Serialization.DataMember(Order:=15, EmitDefaultValue:=False)> _
         Public Property AssignedUser() As User
             Get
@@ -416,7 +416,7 @@ Namespace Tracker.Core.Data
         ''' <summary>
         ''' Gets or sets the User association.
         ''' </summary>
-        <System.Data.Linq.Mapping.Association(Name:="User_Task1", Storage:="_createdUser", ThisKey:="CreatedId", OtherKey:="Id", IsUnique:=true, IsForeignKey:=true)> _
+        <System.Data.Linq.Mapping.Association(Name:="User_Task1", Storage:="_createdUser", ThisKey:="CreatedId", OtherKey:="Id", IsForeignKey:=true)> _
         <System.Runtime.Serialization.DataMember(Order:=16, EmitDefaultValue:=False)> _
         Public Property CreatedUser() As User
             Get
