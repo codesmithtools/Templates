@@ -13,20 +13,20 @@
 <%@ Import Namespace="LinqToSqlShared.DbmlObjectModel" %>
 <%@ Import Namespace="Manager" %>
 
-<%@ Property Category="3.Manager" Name="ManagerNamespace" 
-    Type="System.String" Default="" Optional="True" 
+<%@ Property Category="3.Manager" Name="ManagerNamespace"
+    Type="System.String" Optional="False"
     Description="The namespace to use for the generated manager class files."%>
 
-<%@ Property Category="3.Manager" Name="DataManager" 
-    Type="Manager.DataManager" Optional="False" 
+<%@ Property Category="3.Manager" Name="DataManager"
+    Type="Manager.DataManager" Optional="False"
     Description="DatabaseMapping instance. Must be set by parent template" %>
 
-<%@ Property Category="1.Mapping" Name="Database" 
-    Type="LinqToSqlShared.DbmlObjectModel.Database" Optional="False" 
+<%@ Property Category="1.Mapping" Name="Database"
+    Type="LinqToSqlShared.DbmlObjectModel.Database" Optional="False"
     Description="Database instance. Must be set by parent template" %>
-    
-<%@ Map Name="VBKeywordEscape" 
-    Src="VBKeywordEscape.csmap" Reverse="False" 
+
+<%@ Map Name="VBKeywordEscape"
+    Src="VBKeywordEscape.csmap" Reverse="False"
     Description="Mapping to escape c# keywords" %>
 
 '------------------------------------------------------------------------------
@@ -45,7 +45,7 @@ Namespace <%= ManagerNamespace %>
     ''' <summary>
     ''' The data manager for a DataContext.
     ''' </summary>
-    Public Class <%= DataManager.DataManagerName %> 
+    Public Class <%= DataManager.DataManagerName %>
         Inherits CodeSmith.Data.DataManagerBase(Of <%= Database.ContextNamespace %>.<%= DataManager.DataContextName %>)
         ''' <summary>
         ''' Initializes a new instance of the <see cref="<%= Database.ContextNamespace %>.<%= DataManager.DataManagerName %>"/> class.
@@ -59,7 +59,7 @@ Namespace <%= ManagerNamespace %>
         End Sub
         #Region "Managers"
 <% For Each m As EntityManager In DataManager.Managers %>
-        
+
         Private  <%= m.FieldName %> As <%= m.ManagerName %>
 
         ''' <summary>
