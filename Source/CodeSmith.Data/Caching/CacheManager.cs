@@ -51,6 +51,8 @@ namespace CodeSmith.Data.Caching
             _profiles = new ConcurrentDictionary<string, CacheSettings>(StringComparer.OrdinalIgnoreCase);
 
             RegisterProvider<HttpCacheProvider>(true);
+            _defaultProfile = new CacheSettings();
+
             Initialize();
         }
 
@@ -85,9 +87,6 @@ namespace CodeSmith.Data.Caching
                     if (_profiles.TryGetValue(cacheSection.DefaultProfile, out cacheSettings))
                         _defaultProfile = cacheSettings;
             }
-
-            if (_defaultProfile == null)
-                _defaultProfile = new CacheSettings();
 
             if (!String.IsNullOrEmpty(cacheSection.DefaultGroup))
                 DefaultGroup = cacheSection.DefaultGroup;

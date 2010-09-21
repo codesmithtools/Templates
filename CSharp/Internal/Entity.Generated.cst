@@ -87,6 +87,9 @@ namespace <%= Database.EntityNamespace %>
     /// Class representing <%= Type.Name %> data.
 <% } %>
     /// </summary>
+<% if (IncludeXmlSerialization) { %>
+    [System.Serializable]
+<% } %>
     <%= GetClassAttributes() %>
 <% if (IncludeDataContract) { %>
     [System.Runtime.Serialization.DataContract(IsReference = true)]
@@ -867,7 +870,7 @@ foreach(Column column in Type.Columns) {
             s.AppendFormat(", ThisKey = \"{0}\"", a.ThisKey);
         if (!string.IsNullOrEmpty(a.OtherKey))
             s.AppendFormat(", OtherKey = \"{0}\"", a.OtherKey);
-        if (a.Cardinality == Cardinality.One)
+        if (a.Cardinality == Cardinality.One && a.IsForeignKey != true)
             s.Append(", IsUnique = true");
         if (a.IsForeignKey == true)
             s.Append(", IsForeignKey = true");

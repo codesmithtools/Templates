@@ -40,6 +40,10 @@
 <%@ Property Category="3.Query" Name="MethodKeySuffix"
     Type="System.String" Default="Key" Optional="False"
     Description="The suffix of the primary key query method names." %>
+    
+<%@ Property Category="3.Query" Name="QueryNamespace"
+    Type="System.String" Default="" Optional="True"
+    Description="The namespace for the interfaces.  Leave blank to not generate them." %>
 
 <%@ Property Name="EnumDatabase"
     Type="LinqToSqlShared.Generator.DbmlEnum.Database" Optional="True"
@@ -72,7 +76,11 @@ using System.Data.Linq;
 using CodeSmith.Data.Linq;
 using CodeSmith.Data.Linq.Dynamic;
 
+<% if (string.IsNullOrEmpty(QueryNamespace)) { %>
 namespace <%= Database.ContextNamespace %>
+<% } else { %>
+namespace <%= QueryNamespace %>
+<% } %>
 {
     /// <summary>
     /// The query extension class for <%= EntityManager.EntityName %>.
@@ -461,7 +469,11 @@ namespace <%= Database.ContextNamespace %>
         LinqToSqlShared.Generator.DbmlEnum.Enum enumType = EnumDatabase != null
             ? EnumDatabase.Enums.FirstOrDefault(e => e.Name == column.Type) : null;
 
-        if (column.CanBeNull == true && (CommonUtility.IsNullableType(column.Type) || enumType != null))
+        bool isEnum = enumType != null;
+        if (isEnum && !dataType.StartsWith(Database.EntityNamespace + "."))
+            dataType = Database.EntityNamespace + "." + dataType;
+        
+        if (column.CanBeNull == true && (CommonUtility.IsNullableType(column.Type) || isEnum))
             dataType = string.Format("{0}?", CSharpAlias[dataType]);
         else
             dataType = CSharpAlias[dataType];

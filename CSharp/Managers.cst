@@ -1,6 +1,6 @@
 <%@ CodeTemplate Language="C#" TargetLanguage="XML" 
     Description="Generate Linq to Sql Class File" 
-    Debug="true" OutputType="None" %>
+    Debug="true" OutputType="None" CompilerVersion="v3.5" %>
 
 <%@ Assembly Name="System.Design" %>
 <%@ Assembly Name="CodeSmith.CustomProperties" %>
@@ -107,7 +107,8 @@
         t.DataManager = dataManager;
         t.Database = database;
         t.Framework = Framework;
-        
+        t.EnumDatabase = this.EnumDatabase;
+
         EntityManagerEditableClass p = this.Create<EntityManagerEditableClass>();
         this.CopyPropertiesTo(p);
         p.ClassNamespace = this.ManagerNamespace;
@@ -190,6 +191,34 @@
         this.Progress.PerformStep();
 
     }
+    
+    private string _enumXmlFileName = null;
+    private string EnumXmlFileName
+    {
+        get
+        {
+            if(String.IsNullOrEmpty(_enumXmlFileName))
+                _enumXmlFileName = DbmlGenerator.GetEnumXmlFileName(DbmlFile);
+            return _enumXmlFileName;
+        }
+    }
+
+    
+    private LinqToSqlShared.Generator.DbmlEnum.Database _enumDatabase = null;
+    private bool _isEnumDatabaseLoaded = false;
+    private LinqToSqlShared.Generator.DbmlEnum.Database EnumDatabase
+    {
+        get
+        {
+            if(!_isEnumDatabaseLoaded)
+            {
+                _enumDatabase = LinqToSqlShared.Generator.DbmlEnum.Database.DeserializeFromFile(EnumXmlFileName);
+                _isEnumDatabaseLoaded = true;
+            }
+            return _enumDatabase;
+        }
+    }
+
 </script>
 Generating Linq to Sql Entities ...
 <% Generate(); %>
