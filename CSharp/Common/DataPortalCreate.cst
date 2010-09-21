@@ -1,0 +1,35 @@
+<%-- Author: Blake Niemyjski --%>
+<%@ CodeTemplate Language="C#" TargetLanguage="C#" Inherits="QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Encoding="UTF-8" Description="CSLA Map" %>
+
+<%@ Assembly Name="SchemaExplorer" %>
+<%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\Common" %>
+<%@ Assembly Name="CodeSmith.SchemaHelper.Extensions" Path="..\..\Common" %>
+<%@ Assembly Name="CodeSmith.SchemaHelper.CSharpExtensions" Path="..\..\Common" %>
+<%@ Assembly Name="QuickStart" Path="..\..\Common" %>
+
+<%@ Import Namespace="SchemaExplorer" %>
+<%@ Import Namespace="CodeSmith.SchemaHelper" %>
+<%@ Import Namespace="QuickStart" %>
+            bool cancel = false;
+            OnCreating(ref cancel);
+            if (cancel) return;
+
+<% foreach(Member member in Entity.PrimaryKey.KeyMembers) {
+if(member.SystemType == "System.Guid") { if(UseMemberVariables) { %>
+            <%= member.PrivateMemberVariableName %> = Guid.NewGuid();
+<% } else { %>
+            LoadProperty(<%= member.PrivateMemberVariableName %>Property, Guid.NewGuid());
+<% } } }
+ foreach(Association association in Entity.AssociatedForeignKeys) { foreach(AssociationMember member in association) {
+if(member.AssociatedColumn.SystemType == "System.String" && !member.AssociatedColumn.IsIdentity && member.AssociatedColumn.IsForeignKey) { if(UseMemberVariables) { %>
+            <%= member.AssociatedColumn.PropertyName %> = "BN";
+<% } else { %>
+            LoadProperty(<%= member.AssociatedColumn.PrivateMemberVariableName %>Property, "BN");
+<% } } } } %>
+<% if(IsCSLA40) { %>
+            BusinessRules.CheckRules();
+<% } else { %>
+            ValidationRules.CheckRules();
+<% } %>
+
+            OnCreated();

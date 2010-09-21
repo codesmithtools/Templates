@@ -1,0 +1,68 @@
+﻿<%-- Author: Blake Niemyjski --%>
+<%@ CodeTemplate Language="C#" TargetLanguage="C#" Inherits="QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Encoding="UTF-8" Description="CSLA Map" %>
+
+<%@ Assembly Name="SchemaExplorer" %>
+<%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\Common" %>
+<%@ Assembly Name="CodeSmith.SchemaHelper.Extensions" Path="..\..\Common" %>
+<%@ Assembly Name="QuickStart" Path="..\..\Common" %>
+
+<%@ Import Namespace="SchemaExplorer" %>
+<%@ Import Namespace="CodeSmith.SchemaHelper" %>
+<%@ Import Namespace="QuickStart" %>
+        #region Authorization Rules
+
+<% if(IncludeSilverlightSupport) { %>
+#if !SILVERLIGHT
+<% } %>
+<% if(IsCSLA40) { %>
+        protected static void AddObjectAuthorizationRules()
+        {
+            //Csla.Rules.BusinessRules.AddRule(typeof(<%= BusinessClassName %>), new Csla.Rules.CommonRules.IsInRole(Csla.Rules.AuthorizationActions.CreateObject, "SomeRole"));
+            //Csla.Rules.BusinessRules.AddRule(typeof(<%= BusinessClassName %>), new Csla.Rules.CommonRules.IsInRole(Csla.Rules.AuthorizationActions.EditObject, "SomeRole"));
+            //Csla.Rules.BusinessRules.AddRule(typeof(<%= BusinessClassName %>), new Csla.Rules.CommonRules.IsInRole(Csla.Rules.AuthorizationActions.DeleteObject, "SomeRole", "SomeAdminRole"));
+<% } else { %>
+        protected override void AddAuthorizationRules()
+        {
+            //// More information on these rules can be found here (http://www.devx.com/codemag/Article/40663/1763/page/2).
+
+            //string[] canWrite = { "AdminUser", "RegularUser" };
+            //string[] canRead = { "AdminUser", "RegularUser", "ReadOnlyUser" };
+            //string[] admin = { "AdminUser" };
+
+            // AuthorizationRules.AllowCreate(typeof(<%= BusinessClassName %>), admin);
+            // AuthorizationRules.AllowDelete(typeof(<%= BusinessClassName %>), admin);
+            // AuthorizationRules.AllowEdit(typeof(<%= BusinessClassName %>), canWrite);
+            // AuthorizationRules.AllowGet(typeof(<%= BusinessClassName %>), canRead);
+
+<% foreach(Member member in Entity.MembersNoRowVersion){ %>
+            //// <%= member.PropertyName %>
+<% if (member.IsReadOnly) { %>
+            // AuthorizationRules.AllowWrite(<%= member.PrivateMemberVariableName %>Property, canWrite);
+<% } %>
+            // AuthorizationRules.AllowRead(<%= member.PrivateMemberVariableName %>Property, canRead);
+
+<% } %>
+<%-- One-To-Zero-Or-One --%>
+<% foreach(Association association in Entity.AssociatedOneToZeroOrOne){ %>
+            //// <%= association.PropertyName %>
+            // AuthorizationRules.AllowRead(<%= association.PrivateMemberVariableName %>Property, canRead);
+
+<% } %>
+<%-- Many-To-One --%>
+<% foreach(Association association in Entity.AssociatedManyToOne){ %>
+            //// <%= association.PropertyName %>
+            // AuthorizationRules.AllowRead(<%= association.PrivateMemberVariableName %>Property, canRead);
+
+<% } %>
+<%-- One-To-Many & Many-To-Many --%>
+// NOTE: Many-To-Many support coming soon.
+<% foreach(Association association in Entity.AssociatedOneToMany){ %>
+            //// <%= association.PropertyName %>
+            // AuthorizationRules.AllowRead(<%= association.PrivateMemberVariableName %>Property, canRead);
+
+<% } } %>
+        }
+<% if(IncludeSilverlightSupport) { %>
+#endif
+<% } %>
+        #endregion

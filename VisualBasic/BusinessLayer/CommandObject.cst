@@ -1,0 +1,50 @@
+<%-- Author: Blake Niemyjski --%>
+<%@ CodeTemplate Language="VB" TargetLanguage="VB" OutputType="None" Inherits="QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Encoding="UTF-8" Description="CSLA CommandObject" %>
+
+<%@ Register Name="CommandObject" Template="Internal\CommandObject.cst" %>
+<%@ Register Name="CommandObjectDataAccess" Template="Internal\CommandObject.DataAccess.cst" %>
+<%@ Register Name="CommandObjectGenerated" Template="Internal\CommandObject.Generated.cst" %>
+
+<%@ Assembly Name="CodeSmith.CustomProperties" %>
+<%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\Common" %>
+<%@ Assembly Name="QuickStart" Path="..\..\Common" %>
+<%@ Assembly Name="SchemaExplorer" %>
+
+<%@ Import Namespace="CodeSmith.CustomProperties" %>
+<%@ Import Namespace="CodeSmith.SchemaHelper" %>
+<%@ Import Namespace="QuickStart" %>
+<%@ Import Namespace="SchemaExplorer" %>
+
+<script runat="template">
+
+Public Overloads Overrides Sub Render(writer As System.IO.TextWriter)
+
+    RegisterReferences()
+
+    'CommandObject
+    Dim commandObject As CommandObject = Me.Create(Of CommandObject)()
+    Me.CopyPropertiesTo(commandObject)
+
+    Dim parentFileName As String = System.IO.Path.Combine(Me.Location, String.Format("Command\{0}.vb", commandObject.BusinessClassName))
+    If Not System.IO.File.Exists(parentFileName) Then
+        commandObject.RenderToFile(parentFileName, False)
+    End If
+
+    'CommandObject.Generated
+    Dim fileName As String = System.IO.Path.Combine(Location, String.Format("Command\{0}.Generated.vb", commandObject.BusinessClassName))
+
+    Dim commandObjectGenerated As CommandObjectGenerated = Me.Create(Of CommandObjectGenerated)()
+    Me.CopyPropertiesTo(commandObjectGenerated)
+
+    commandObjectGenerated.RenderToFile(fileName, parentFileName, True)
+
+    'CommandObject.DataAccess
+    fileName = System.IO.Path.Combine(Location, String.Format("Command\{0}.DataAccess.vb", commandObject.BusinessClassName))
+
+    Dim commandObjectDataAccess As CommandObjectDataAccess = Me.Create(Of CommandObjectDataAccess)()
+    Me.CopyPropertiesTo(commandObjectDataAccess)
+
+    commandObjectDataAccess.RenderToFile(fileName, parentFileName, True)
+End Sub
+
+</script>

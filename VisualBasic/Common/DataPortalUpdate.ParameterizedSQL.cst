@@ -1,0 +1,117 @@
+﻿<%-- Author: Blake Niemyjski --%>
+<%@ CodeTemplate Language="VB" TargetLanguage="VB" Inherits="QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Encoding="UTF-8" Description="CSLA Map" %>
+
+<%@ Assembly Name="SchemaExplorer" %>
+<%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\Common" %>
+<%@ Assembly Name="CodeSmith.SchemaHelper.Extensions" Path="..\..\Common" %>
+<%@ Assembly Name="CodeSmith.SchemaHelper.VisualBasicExtensions" Path="..\..\Common" %>
+<%@ Assembly Name="QuickStart" Path="..\..\Common" %>
+
+<%@ Import Namespace="SchemaExplorer" %>
+<%@ Import Namespace="CodeSmith.SchemaHelper" %>
+<%@ Import Namespace="QuickStart" %>
+            Dim cancel As Boolean = False
+            OnUpdating(cancel)
+            If (cancel) Then
+                Return
+            End If
+    
+    <% If Not(Entity.HasIdentityMember) Then %>
+            If <%= Entity.PrimaryKey.KeyMembers.BuildIdentityKeyEqualityStatements()%> Then
+                ' Insert new child.
+                Dim item As New <%= BusinessClassName %>()
+                <%= Entity.MembersNoRowVersion.BuildObjectInitializer(false, true, false, "item.") %>
+                item = item.Save()
+    
+                ' Mark child lists as dirty. This code may need to be updated to one-to-one relationships.
+    <% For Each association As Association in Entity.AssociatedOneToMany  %>
+                For Each itemToUpdate As <%= association.ClassName %> In <%= association.PropertyName %>
+    <%= association.SearchCriteria.BuildUpdateStatements("itemToUpdate", "") %>
+                Next
+    <% Next %>
+    
+                ' Create a new connection.
+                Using connection As New SqlConnection(ADOHelper.ConnectionString)
+                    connection.Open()
+                    FieldManager.UpdateChildren(Me, connection)
+                End Using
+    
+                ' Delete the old.
+                Dim criteria As New <%= CriteriaClassName %>()
+                <%= Entity.PrimaryKey.KeyMembers.BuildObjectInitializer(false, false, true) %>
+                DataPortal_Delete(criteria)
+    
+                ' Mark the original as the new one.
+    <% For Each member As Member In Entity.PrimaryKey.KeyMembers
+    If Not(member.IsIdentity) Then %>
+                Original<%= member.PropertyName %> = <%= member.PropertyName %>
+    <% End If
+    Next
+    %>
+                OnUpdated()
+    
+                Return
+            End If
+    
+    <% End If %>
+            Const commandText As String = "UPDATE [<%= entity.Table.Owner %>].[<%= entity.Table.Name %>] <%= entity.MembersUpdateInsert.BuildSetStatements() %> <%= entity.PrimaryKey.KeyMembers.BuildWhereStatements(True) %><% If (entity.HasRowVersionMember) Then %> AND [<%= entity.RowVersionMember.ColumnName %>] = <%= ParameterPrefix  %><%= entity.RowVersionMember.ColumnName %><% End If %><%= entity.BuildUpdateSelectStatement() %>"
+            Using connection As New SqlConnection(ADOHelper.ConnectionString)
+                connection.Open()
+                Using command As New SqlCommand(commandText, connection)
+                    <%= entity.MembersNoRowVersion.BuildCommandParameters(False, False, False, False, True) %>
+    <% If(Entity.HasRowVersionMember) Then %>
+                    command.Parameters.AddWithValue("<%= ParameterPrefix  %><%= Entity.RowVersionMember.ColumnName %>", SqlDbType.Timestamp)
+                    command.Parameters("<%= ParameterPrefix  %><%= Entity.RowVersionMember.ColumnName %>").Value = Me.<%= Entity.RowVersionMember.PropertyName %>
+                    command.Parameters("<%= ParameterPrefix  %><%= Entity.RowVersionMember.ColumnName %>").Direction = ParameterDirection.InputOutput
+    <% End If %>
+    
+    <% If (entity.HasRowVersionMember Or entity.HasIdentityMember) Then %>
+                    Using reader As SafeDataReader = New SafeDataReader(command.ExecuteReader())
+                        'RecordsAffected: The number of rows changed, inserted, or deleted. -1 for select statements; 0 if no rows were affected, or the statement failed. 
+                        If reader.RecordsAffected = 0 Then
+                            Throw New DBConcurrencyException("The entity is out of date on the client. Please update the entity and try again. This could also be thrown if the sql statement failed to execute.")
+                        End If
+    
+                        If reader.Read() Then
+                            Using (BypassPropertyChecks)
+    <% If (Entity.HasRowVersionMember) Then %>
+                                <%= Entity.RowVersionMember.PropertyName %> = ADOHelper.GetBytes(reader, "<%= Entity.RowVersionMember.ColumnName %>")
+    <% End If %>
+    <%For Each member As Member In Entity.PrimaryKey.KeyMembers
+        If(Not member.IsIdentity AndAlso member.IsNullable) Then %> 
+                                ' Update non-identity nullable primary key value.
+            <% If(UseMemberVariables) Then %>
+                                <%= member.PrivateMemberVariableName %> = <%If not [member].HasByteArrayColumn() Then %>reader.<%= [member].GetReaderMethod() %>("<%= [member].ColumnName %>")<% else %>ADOHelper.GetBytes(reader, "<%= member.ColumnName %>")<% End If %>
+    <%      Else %>
+                                LoadProperty(<%= member.PrivateMemberVariableName %>Property, <%If not [member].HasByteArrayColumn() Then %>reader.<%= [member].GetReaderMethod() %>("<%= [member].ColumnName %>")<% else %>ADOHelper.GetBytes(reader, "<%= member.ColumnName %>")<% End If %>)
+    <%      End If
+        End If
+    Next %>
+                            End Using
+                        End If
+                    End Using
+    <%Else %>
+                'result: The number of rows changed, inserted, or deleted. -1 for select statements; 0 if no rows were affected, or the statement failed. 
+                Dim result As Integer = command.ExecuteNonQuery()
+                If (result = 0) Then
+                    throw new DBConcurrencyException("The entity is out of date on the client. Please update the entity and try again. This could also be thrown if the sql statement failed to execute.")
+                End If
+    <% End If %>
+                End Using
+    <% For Each member As Member In Entity.PrimaryKey.KeyMembers
+        If (Not member.IsIdentity OrElse member.DataType = DbType.Guid.ToString()) Then
+            If(UseMemberVariables) Then %>
+                _original<%= member.PropertyName %> = Me.<%= member.PropertyName %>
+    <%      Else %>
+                LoadProperty(_original<%= member.PropertyName %>Property, Me.<%= member.PropertyName %>)
+    <%      End If
+        End If
+    Next %>
+    
+    <% If (Entity.AssociatedToManyUnion.Count > 0 OrElse Entity.AssociatedManyToOne.Count > 0 OrElse Entity.AssociatedOneToZeroOrOne.Count > 0) Then %>
+    
+                FieldManager.UpdateChildren(Me, connection)
+    <% End If %>
+            End Using
+    
+            OnUpdated()

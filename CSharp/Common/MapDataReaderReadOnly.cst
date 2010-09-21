@@ -1,0 +1,25 @@
+﻿<%-- Author: Blake Niemyjski --%>
+<%@ CodeTemplate Language="C#" TargetLanguage="C#" Inherits="QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Encoding="UTF-8" Description="CSLA Map" %>
+
+<%@ Assembly Name="SchemaExplorer" %>
+<%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\Common" %>
+<%@ Assembly Name="CodeSmith.SchemaHelper.Extensions" Path="..\..\Common" %>
+<%@ Assembly Name="QuickStart" Path="..\..\Common" %>
+
+<%@ Import Namespace="SchemaExplorer" %>
+<%@ Import Namespace="CodeSmith.SchemaHelper" %>
+<%@ Import Namespace="QuickStart" %>
+            bool cancel = false;
+            OnMapping(reader, ref cancel);
+            if (cancel) return;
+
+<% foreach(Member member in Entity.MembersNoRowVersion) { if(UseMemberVariables) { %>
+    <% if( member.IsNullable && member.SystemType != "System.String" && member.SystemType != "System.Byte[]") {%>
+            <%= member.PrivateMemberVariableName %> = reader.IsDBNull("<%= member.ColumnName %>") ? (<%= member.SystemType %>)null : <%if(!member.HasByteArrayColumn()) { %>reader.<%= member.GetReaderMethod() %>("<%= member.ColumnName %>");<% } else { %>ADOHelper.GetBytes(reader);<% } %>
+    <% } else {%>
+            <%= member.PrivateMemberVariableName %> = <%if(!member.HasByteArrayColumn()) { %>reader.<%= member.GetReaderMethod() %>("<%= member.ColumnName %>");<% } else { %>ADOHelper.GetBytes(reader);<% } %>
+<% } } else { %>
+            LoadProperty(<%= member.PrivateMemberVariableName %>Property, <%if(!member.HasByteArrayColumn()) { %>reader["<%= member.ColumnName %>"]);<% } else { %>ADOHelper.GetBytes(reader," <%= member.ColumnName %>"));<% } %>
+<% } } %>
+
+            OnMapped();

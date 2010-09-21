@@ -1,0 +1,28 @@
+<%-- 
+Name: ASP.Net Samples
+Author: Blake Niemyjski
+Description: The following template will generate a ASP.Net page.
+--%>
+<%@ CodeTemplate Language="VB" TargetLanguage="Html" Inherits="QuickStart.InterfaceCodeTemplate" Description="The following template will generate a default default ASP.Net page." %>
+
+<%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\..\Common" %>
+<%@ Assembly Name="QuickStart" Path="..\..\..\Common" %>
+
+<%@ Import Namespace="QuickStart" %>
+<%@ Import Namespace="CodeSmith.SchemaHelper" %>
+<%%@ Page Language="VB" AutoEventWireup="false" CodeFile="Default.aspx.vb" Inherits="<%= InterfaceProjectName %>._Default" %>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <title><%= InterfaceProjectName %></title>
+</head>
+<body>
+    <form id="form1" runat="server">
+    <div>
+        CSLA Content...
+    </div>
+    </form>
+</body>
+</html>
