@@ -897,7 +897,7 @@ namespace LinqToSqlShared.Generator
 
                 PopulateColumn(column, columnSchema, table.Type.Name);
 
-                if (column.IsPrimaryKey == false)
+                if (column.IsPrimaryKey != true)
                     column.IsPrimaryKey = columnSchema.IsPrimaryKeyMember;
             }
 
