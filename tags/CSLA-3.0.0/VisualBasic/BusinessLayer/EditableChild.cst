@@ -1,0 +1,73 @@
+<%-- Author: Blake Niemyjski --%>
+<%@ CodeTemplate Language="VB" TargetLanguage="VB" OutputType="None" Inherits="QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Encoding="UTF-8" Description="CSLA EditableChild" %>
+
+<%@ Register Name="EditableChild" Template="Internal\EditableChild.cst" %>
+<%@ Register Name="EditableChildDataAccess" Template="Internal\EditableChild.DataAccess.cst" %>
+<%@ Register Name="EditableChildDataAccessParameterized" Template="Internal\EditableChild.DataAccess.ParameterizedSQL.cst" %>
+<%@ Register Name="EditableChildDataAccessStoredProcedures" Template="Internal\EditableChild.DataAccess.StoredProcedures.cst" %>
+<%@ Register Name="EditableChildGenerated" Template="Internal\EditableChild.Generated.cst" %>
+
+<%@ Register Name="SqlStoredProcedures" Template="..\DataAccessLayer\Internal\SQLStoredProcedures.cst" %>
+
+<%@ Assembly Name="CodeSmith.CustomProperties" %>
+<%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\Common" %>
+<%@ Assembly Name="QuickStart" Path="..\..\Common" %>
+<%@ Assembly Name="SchemaExplorer" %>
+
+<%@ Import Namespace="CodeSmith.CustomProperties" %>
+<%@ Import Namespace="CodeSmith.SchemaHelper" %>
+<%@ Import Namespace="QuickStart" %>
+<%@ Import Namespace="SchemaExplorer" %>
+
+<script runat="template">
+
+Public Overloads Overrides Sub Render(writer As System.IO.TextWriter)
+
+    RegisterReferences()
+
+    'EditableChild
+    Dim editableChild As EditableChild = Me.Create(Of EditableChild)()
+    Me.CopyPropertiesTo(editableChild)
+
+    Dim parentFileName As String = System.IO.Path.Combine(Me.Location, String.Format("Entities\{0}.vb", editableChild.BusinessClassName))
+    If Not System.IO.File.Exists(parentFileName) Then
+        editableChild.RenderToFile(parentFileName, False)
+    End If
+
+    'EditableChild.Generated
+    Dim fileName As String = System.IO.Path.Combine(Location, String.Format("Entities\{0}.Generated.vb", editableChild.BusinessClassName))
+
+    Dim editableChildGenerated As EditableChildGenerated = Me.Create(Of EditableChildGenerated)()
+    Me.CopyPropertiesTo(editableChildGenerated)
+
+    editableChildGenerated.RenderToFile(fileName, parentFileName, True)
+
+    'EditableChild.DataAccess
+    fileName = System.IO.Path.Combine(Location, String.Format("Entities\{0}.DataAccess.vb", editableChild.BusinessClassName))
+    If DataAccessImplementation = DataAccessMethod.None Then
+        Dim editableChildDataAccess As EditableChildDataAccess = Me.Create(Of EditableChildDataAccess)()
+        Me.CopyPropertiesTo(editableChildDataAccess)
+
+        editableChildDataAccess.RenderToFile(fileName, parentFileName, True)
+    ElseIf DataAccessImplementation = DataAccessMethod.ParameterizedSQL Then
+        Dim editableChildDataAccessParameterized As EditableChildDataAccessParameterized = Me.Create(Of EditableChildDataAccessParameterized)()
+        Me.CopyPropertiesTo(editableChildDataAccessParameterized)
+
+        editableChildDataAccessParameterized.RenderToFile(fileName, parentFileName, True)
+    ElseIf DataAccessImplementation = DataAccessMethod.StoredProcedures Then
+        Dim editableChildDataAccessStoredProcedures As EditableChildDataAccessStoredProcedures = Me.Create(Of EditableChildDataAccessStoredProcedures)()
+        Me.CopyPropertiesTo(editableChildDataAccessStoredProcedures)
+        
+        editableChildDataAccessStoredProcedures.RenderToFile(fileName, parentFileName, True)
+        
+        'StoredProcedures
+        fileName = System.IO.Path.Combine(Location, String.Format("Entities\{0}.StoredProcedures.sql", editableChild.BusinessClassName))
+        Dim sqlStoredProcedures As SqlStoredProcedures = Me.Create(Of SqlStoredProcedures)()
+        Me.CopyPropertiesTo(sqlStoredProcedures)
+        sqlStoredProcedures.DataProjectName = "Not needed for sql stored procedures."
+        
+        sqlStoredProcedures.RenderToFile(fileName, parentFileName, True)
+    End If
+End Sub
+
+</script>

@@ -1,0 +1,219 @@
+﻿<%-- Author: Blake Niemyjski --%>
+<%@ CodeTemplate Language="VB" TargetLanguage="VB" OutputType="None" Debug="False" Inherits="QuickStart.EntityMasterCodeTemplate" CompilerVersion="v3.5" Encoding="UTF-8" Description="CSLA Entities" %>
+
+<%@ Assembly Name="CodeSmith.CustomProperties" %>
+<%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\Common" %>
+<%@ Assembly Name="QuickStart" Path="..\..\Common" %>
+<%@ Assembly Name="SchemaExplorer" %>
+
+<%@ Import Namespace="CodeSmith.CustomProperties" %>
+<%@ Import Namespace="CodeSmith.SchemaHelper" %>
+<%@ Import Namespace="QuickStart" %>
+<%@ Import Namespace="SchemaExplorer" %>
+<%@ Import Namespace="System.Collections.Generic" %>
+
+<%@ Register Name="CommandObjectTemplate" Template="CommandObject.cst" %>
+<%@ Register Name="CriteriaTemplate" Template="Criteria.cst" %>
+<%@ Register Name="DynamicListBaseTemplate" Template="DynamicListBase.cst" %>
+<%@ Register Name="DynamicRootTemplate" Template="DynamicRoot.cst" %>
+<%@ Register Name="DynamicRootListTemplate" Template="DynamicRootList.cst" %>
+<%@ Register Name="EditableChildTemplate" Template="EditableChild.cst" %>
+<%@ Register Name="EditableChildListTemplate" Template="EditableChildList.cst" %>
+<%@ Register Name="EditableRootTemplate" Template="EditableRoot.cst" %>
+<%@ Register Name="EditableRootListTemplate" Template="EditableRootList.cst" %>
+<%@ Register Name="NameValueListTemplate" Template="NameValueList.cst" %>
+<%@ Register Name="ReadOnlyChildTemplate" Template="ReadOnlyChild.cst" %>
+<%@ Register Name="ReadOnlyChildListTemplate" Template="ReadOnlyChildList.cst" %>
+<%@ Register Name="ReadOnlyListTemplate" Template="ReadOnlyList.cst" %>
+<%@ Register Name="ReadOnlyRootTemplate" Template="ReadOnlyRoot.cst" %>
+<%@ Register Name="SwitchableObjectTemplate" Template="SwitchableObject.cst" %>
+
+<%@ Register Name="ADOHelperTemplate" Template="Internal\ADOHelper.cst" %>
+<%@ Register Name="FactoryNamesTemplate" Template="Internal\FactoryNames.cst" %>
+<%@ Register Name="ExistsCommandTemplate" Template="Internal\ExistsCommand.cst" %>
+
+<% Generate() %>
+
+<script runat="template">
+
+Public Overrides Sub Generate()
+    ' CommandObjectTemplate
+    
+    If Not Me.CommandObject Is Nothing Then
+        For Each table As TableSchema In Me.CommandObject
+            Dim template As CommandObjectTemplate = Me.Create(Of CommandObjectTemplate)()
+            RenderHelper(template, table)
+        Next
+    End If
+    
+    
+    ' CriteriaTemplate
+    
+    If Not Me.Criteria Is Nothing Then
+        For Each table As TableSchema In Me.Criteria
+            Dim template As CriteriaTemplate = Me.Create(Of CriteriaTemplate)()
+            RenderHelper(template, table)
+        Next
+    End If
+    
+    ' DynamicListBase
+    
+    If Not Me.DynamicListBase Is Nothing Then
+        For Each table As TableSchema In Me.DynamicListBase
+            Dim template As DynamicListBaseTemplate = Me.Create(Of DynamicListBaseTemplate)()
+            RenderHelper(template, table)
+        Next
+    End If
+    
+    ' DynamicRootTemplate
+    
+    If Not Me.DynamicRoot Is Nothing Then
+        For Each table As TableSchema In Me.DynamicRoot
+            Dim template As DynamicRootTemplate = Me.Create(Of DynamicRootTemplate)()
+            RenderHelper(template, table)
+        Next
+    End If
+    
+    
+    ' DynamicRootListTemplate
+    
+    If Not Me.DynamicRootList Is Nothing Then
+        For Each table As TableSchema In Me.DynamicRootList
+            Dim template As DynamicRootListTemplate = Me.Create(Of DynamicRootListTemplate)()
+            RenderHelper(template, table)
+        Next
+    End If
+    
+    
+    ' EditableChildTemplate
+    
+    If Not Me.EditableChild Is Nothing Then
+        For Each table As TableSchema In Me.EditableChild
+            Dim template As EditableChildTemplate = Me.Create(Of EditableChildTemplate)()
+            RenderHelper(template, table)
+        Next
+    End If
+    
+    
+    ' EditableChildListTemplate
+    
+    If Not Me.EditableChildList Is Nothing Then
+        For Each table As TableSchema In Me.EditableChildList
+            Dim template As EditableChildListTemplate = Me.Create(Of EditableChildListTemplate)()
+            RenderHelper(template, table)
+        Next
+    End If
+    
+    
+    ' EditableRootTemplate
+    
+    If Not Me.EditableRoot Is Nothing Then
+        For Each table As TableSchema In Me.EditableRoot
+            Dim template As EditableRootTemplate = Me.Create(Of EditableRootTemplate)()
+            RenderHelper(template, table)
+        Next
+    End If
+    
+    
+    ' EditableRootListTemplate
+    
+    If Not Me.EditableRootList Is Nothing Then
+        For Each table As TableSchema In Me.EditableRootList
+            Dim template As EditableRootListTemplate = Me.Create(Of EditableRootListTemplate)()
+            RenderHelper(template, table)
+        Next
+    End If
+    
+    
+    ' NameValueListTemplate
+    
+    If Not Me.NameValueList Is Nothing Then
+        For Each table As TableSchema In Me.NameValueList
+            Dim template As NameValueListTemplate = Me.Create(Of NameValueListTemplate)()
+            RenderHelper(template, table)
+        Next
+    End If
+    
+    
+    ' ReadOnlyChildTemplate
+    
+    If Not Me.ReadOnlyChild Is Nothing Then
+        For Each table As TableSchema In Me.ReadOnlyChild
+            Dim template As ReadOnlyChildTemplate = Me.Create(Of ReadOnlyChildTemplate)()
+            RenderHelper(template, table)
+        Next
+    End If
+    
+    
+    ' ReadOnlyChildListTemplate
+    
+    If Not Me.ReadOnlyChildList Is Nothing Then
+        For Each table As TableSchema In Me.ReadOnlyChildList
+            Dim template As ReadOnlyChildListTemplate = Me.Create(Of ReadOnlyChildListTemplate)()
+            RenderHelper(template, table)
+        Next
+    End If
+    
+    
+    ' ReadOnlyListTemplate
+    
+    If Not Me.ReadOnlyList Is Nothing Then
+        For Each table As TableSchema In Me.ReadOnlyList
+            Dim template As ReadOnlyListTemplate = Me.Create(Of ReadOnlyListTemplate)()
+            RenderHelper(template, table)
+        Next
+    End If
+    
+    
+    ' ReadOnlyRootTemplate
+    
+    If Not Me.ReadOnlyRoot Is Nothing Then
+        For Each table As TableSchema In Me.ReadOnlyRoot
+            Dim template As ReadOnlyRootTemplate = Me.Create(Of ReadOnlyRootTemplate)()
+            RenderHelper(template, table)
+        Next
+    End If
+    
+    
+    ' SwitchableObjectTemplate
+    
+    If Not Me.SwitchableObject Is Nothing Then
+        For Each table As TableSchema In Me.SwitchableObject
+            Dim template As SwitchableObjectTemplate = Me.Create(Of SwitchableObjectTemplate)()
+            RenderHelper(template, table)
+        Next
+    End If
+    
+    Dim strategy As New PreserveRegionsMergeStrategy()
+    strategy.Language = "VB"
+    strategy.RegionNameRegex = "^[ \t]*[ \s]*""?(?i:Preserved Code)""?"
+    
+    ' ADOHelperTemplate
+    
+    If DataAccessImplementation = DataAccessMethod.ParameterizedSQL OrElse DataAccessImplementation = DataAccessMethod.StoredProcedures OrElse DataAccessImplementation = DataAccessMethod.ObjectFactoryParameterizedSQL OrElse DataAccessImplementation = DataAccessMethod.ObjectFactoryStoredProcedures Then
+        Dim ADOHelper As ADOHelperTemplate = Me.Create(Of ADOHelperTemplate)()
+        Me.CopyPropertiesTo(ADOHelper)
+        ADOHelper.RenderToFile(System.IO.Path.Combine(Me.Location, "Utility\ADOHelper.vb"), strategy)
+    End If
+    
+    
+    ' FactoryNamesTemplate
+    
+    If DataAccessImplementation = DataAccessMethod.ObjectFactoryNone OrElse DataAccessImplementation = DataAccessMethod.ObjectFactoryParameterizedSQL OrElse DataAccessImplementation = DataAccessMethod.ObjectFactoryStoredProcedures Then
+        Dim factoryNames As FactoryNamesTemplate = Me.Create(Of FactoryNamesTemplate)()
+        Me.CopyPropertiesTo(factoryNames)
+    
+        factoryNames.RenderToFile(System.IO.Path.Combine(Me.Location, "Factory\FactoryNames.vb"), strategy)
+    End If
+    
+    
+    ' ExistsCommandTemplate
+    
+    Dim ExistsCommand As ExistsCommandTemplate = Me.Create(Of ExistsCommandTemplate)()
+    Me.CopyPropertiesTo(ExistsCommand)
+    ExistsCommand.RenderToFile(System.IO.Path.Combine(Me.Location, "Commands\ExistsCommand.vb"), True)
+    
+
+End Sub
+
+</script>

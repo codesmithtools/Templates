@@ -1,0 +1,43 @@
+﻿<%-- Author: Blake Niemyjski --%>
+<%@ CodeTemplate Language="C#" TargetLanguage="C#" Inherits="QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Encoding="UTF-8" Description="CSLA Map" %>
+
+<%@ Assembly Name="SchemaExplorer" %>
+<%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\Common" %>
+<%@ Assembly Name="CodeSmith.SchemaHelper.Extensions" Path="..\..\Common" %>
+<%@ Assembly Name="CodeSmith.SchemaHelper.CSharpExtensions" Path="..\..\Common" %>
+<%@ Assembly Name="QuickStart" Path="..\..\Common" %>
+
+<%@ Import Namespace="SchemaExplorer" %>
+<%@ Import Namespace="CodeSmith.SchemaHelper" %>
+<%@ Import Namespace="QuickStart" %>
+            bool cancel = false;
+            OnFetching(criteria, ref cancel);
+            if (cancel) return;
+
+            RaiseListChangedEvents = false;
+
+            // Fetch Child objects.
+            string commandText = string.Format("SELECT <%= Entity.Members.BuildDataBaseColumns() %> FROM [<%= Entity.Table.Owner %>].[<%= Entity.Table.Name %>] {0}", ADOHelper.BuildWhereStatement(criteria.StateBag));
+            using (SqlConnection connection = new SqlConnection(ADOHelper.ConnectionString))
+            {
+                connection.Open();
+                using (SqlCommand command = new SqlCommand(commandText, connection))
+                {
+                    command.Parameters.AddRange(ADOHelper.SqlParameters(criteria.StateBag));
+
+                    using(var reader = new SafeDataReader(command.ExecuteReader()))
+                    {
+                        if(reader.Read())
+                        {
+                            do
+                            {
+                                this.Add(new <%= BusinessProjectName %>.<%= ResolveTargetClassName(ChildBusinessClassName, "Info", BusinessClassName.Contains("InfoList") && IsReadOnlyBusinessObject("Info")) %>(reader));
+                            } while(reader.Read());
+                        }
+                    }
+                }
+            }
+
+            RaiseListChangedEvents = true;
+
+            OnFetched();
