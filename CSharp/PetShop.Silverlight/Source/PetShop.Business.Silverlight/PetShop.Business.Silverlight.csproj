@@ -1,0 +1,270 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.50727</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{C09737F1-D503-4AD0-8BC4-C8420D56AB5C}</ProjectGuid>
+    <ProjectTypeGuids>{A1591282-1198-4647-A2B1-27E5FF5F6F3B};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>PetShop.Business</RootNamespace>
+    <AssemblyName>PetShop.Business</AssemblyName>
+    <TargetFrameworkIdentifier>Silverlight</TargetFrameworkIdentifier>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <SilverlightVersion>$(TargetFrameworkVersion)</SilverlightVersion>
+    <SilverlightApplication>false</SilverlightApplication>
+    <ValidateXaml>true</ValidateXaml>
+    <ThrowErrorsInValidation>true</ThrowErrorsInValidation>
+  </PropertyGroup>
+  <!-- This property group is only here to support building this project using the 
+       MSBuild 3.5 toolset. In order to work correctly with this older toolset, it needs 
+       to set the TargetFrameworkVersion to v3.5 -->
+  <PropertyGroup Condition="'$(MSBuildToolsVersion)' == '3.5'">
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>Bin\Debug</OutputPath>
+    <DefineConstants>DEBUG;TRACE;SILVERLIGHT</DefineConstants>
+    <NoStdLib>true</NoStdLib>
+    <NoConfig>true</NoConfig>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>Bin\Release</OutputPath>
+    <DefineConstants>TRACE;SILVERLIGHT</DefineConstants>
+    <NoStdLib>true</NoStdLib>
+    <NoConfig>true</NoConfig>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Csla">
+      <HintPath>..\..\Libraries\Csla\Silverlight\Csla.dll</HintPath>
+    </Reference>
+    <Reference Include="mscorlib" />
+    <Reference Include="System" />
+    <Reference Include="System.Windows" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Net" />
+    <Reference Include="System.Windows.Browser" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\PetShop.Business\Address.cs">
+      <Link>Address.cs</Link>
+    </Compile>
+    <Compile Include="..\PetShop.Business\Collections\AccountList.cs">
+      <Link>Collections\AccountList.cs</Link>
+    </Compile>
+    <Compile Include="..\PetShop.Business\Collections\AccountList.Generated.cs">
+      <Link>Collections\AccountList.Generated.cs</Link>
+    </Compile>
+    <Compile Include="..\PetShop.Business\Collections\CartList.cs">
+      <Link>Collections\CartList.cs</Link>
+    </Compile>
+    <Compile Include="..\PetShop.Business\Collections\CartList.Generated.cs">
+      <Link>Collections\CartList.Generated.cs</Link>
+    </Compile>
+    <Compile Include="..\PetShop.Business\Collections\CategoryList.cs">
+      <Link>Collections\CategoryList.cs</Link>
+    </Compile>
+    <Compile Include="..\PetShop.Business\Collections\CategoryList.Generated.cs">
+      <Link>Collections\CategoryList.Generated.cs</Link>
+    </Compile>
+    <Compile Include="..\PetShop.Business\Collections\ItemList.cs">
+      <Link>Collections\ItemList.cs</Link>
+    </Compile>
+    <Compile Include="..\PetShop.Business\Collections\ItemList.Generated.cs">
+      <Link>Collections\ItemList.Generated.cs</Link>
+    </Compile>
+    <Compile Include="..\PetShop.Business\Collections\LineItemList.cs">
+      <Link>Collections\LineItemList.cs</Link>
+    </Compile>
+    <Compile Include="..\PetShop.Business\Collections\LineItemList.Generated.cs">
+      <Link>Collections\LineItemList.Generated.cs</Link>
+    </Compile>
+    <Compile Include="..\PetShop.Business\Collections\OrderStatusList.cs">
+      <Link>Collections\OrderStatusList.cs</Link>
+    </Compile>
+    <Compile Include="..\PetShop.Business\Collections\OrderStatusList.Generated.cs">
+      <Link>Collections\OrderStatusList.Generated.cs</Link>
+    </Compile>
+    <Compile Include="..\PetShop.Business\Collections\ProductList.cs">
+      <Link>Collections\ProductList.cs</Link>
+    </Compile>
+    <Compile Include="..\PetShop.Business\Collections\ProductList.Generated.cs">
+      <Link>Collections\ProductList.Generated.cs</Link>
+    </Compile>
+    <Compile Include="..\PetShop.Business\Collections\ProfileList.cs">
+      <Link>Collections\ProfileList.cs</Link>
+    </Compile>
+    <Compile Include="..\PetShop.Business\Collections\ProfileList.Generated.cs">
+      <Link>Collections\ProfileList.Generated.cs</Link>
+    </Compile>
+    <Compile Include="..\PetShop.Business\Commands\ExistsCommand.cs">
+      <Link>Commands\ExistsCommand.cs</Link>
+    </Compile>
+    <Compile Include="..\PetShop.Business\CreditCard.cs">
+      <Link>CreditCard.cs</Link>
+    </Compile>
+    <Compile Include="..\PetShop.Business\Criteria\AccountCriteria.cs">
+      <Link>Criteria\AccountCriteria.cs</Link>
+    </Compile>
+    <Compile Include="..\PetShop.Business\Criteria\AccountCriteria.Generated.cs">
+      <Link>Criteria\AccountCriteria.Generated.cs</Link>
+    </Compile>
+    <Compile Include="..\PetShop.Business\Criteria\CartCriteria.cs">
+      <Link>Criteria\CartCriteria.cs</Link>
+    </Compile>
+    <Compile Include="..\PetShop.Business\Criteria\CartCriteria.Generated.cs">
+      <Link>Criteria\CartCriteria.Generated.cs</Link>
+    </Compile>
+    <Compile Include="..\PetShop.Business\Criteria\CategoryCriteria.cs">
+      <Link>Criteria\CategoryCriteria.cs</Link>
+    </Compile>
+    <Compile Include="..\PetShop.Business\Criteria\CategoryCriteria.Generated.cs">
+      <Link>Criteria\CategoryCriteria.Generated.cs</Link>
+    </Compile>
+    <Compile Include="..\PetShop.Business\Criteria\Interfaces\IGeneratedCriteria.cs">
+      <Link>Criteria\Interfaces\IGeneratedCriteria.cs</Link>
+    </Compile>
+    <Compile Include="..\PetShop.Business\Criteria\InventoryCriteria.cs">
+      <Link>Criteria\InventoryCriteria.cs</Link>
+    </Compile>
+    <Compile Include="..\PetShop.Business\Criteria\InventoryCriteria.Generated.cs">
+      <Link>Criteria\InventoryCriteria.Generated.cs</Link>
+    </Compile>
+    <Compile Include="..\PetShop.Business\Criteria\ItemCriteria.cs">
+      <Link>Criteria\ItemCriteria.cs</Link>
+    </Compile>
+    <Compile Include="..\PetShop.Business\Criteria\ItemCriteria.Generated.cs">
+      <Link>Criteria\ItemCriteria.Generated.cs</Link>
+    </Compile>
+    <Compile Include="..\PetShop.Business\Criteria\LineItemCriteria.cs">
+      <Link>Criteria\LineItemCriteria.cs</Link>
+    </Compile>
+    <Compile Include="..\PetShop.Business\Criteria\LineItemCriteria.Generated.cs">
+      <Link>Criteria\LineItemCriteria.Generated.cs</Link>
+    </Compile>
+    <Compile Include="..\PetShop.Business\Criteria\OrderCriteria.cs">
+      <Link>Criteria\OrderCriteria.cs</Link>
+    </Compile>
+    <Compile Include="..\PetShop.Business\Criteria\OrderCriteria.Generated.cs">
+      <Link>Criteria\OrderCriteria.Generated.cs</Link>
+    </Compile>
+    <Compile Include="..\PetShop.Business\Criteria\OrderStatusCriteria.cs">
+      <Link>Criteria\OrderStatusCriteria.cs</Link>
+    </Compile>
+    <Compile Include="..\PetShop.Business\Criteria\OrderStatusCriteria.Generated.cs">
+      <Link>Criteria\OrderStatusCriteria.Generated.cs</Link>
+    </Compile>
+    <Compile Include="..\PetShop.Business\Criteria\ProductCriteria.cs">
+      <Link>Criteria\ProductCriteria.cs</Link>
+    </Compile>
+    <Compile Include="..\PetShop.Business\Criteria\ProductCriteria.Generated.cs">
+      <Link>Criteria\ProductCriteria.Generated.cs</Link>
+    </Compile>
+    <Compile Include="..\PetShop.Business\Criteria\ProfileCriteria.cs">
+      <Link>Criteria\ProfileCriteria.cs</Link>
+    </Compile>
+    <Compile Include="..\PetShop.Business\Criteria\ProfileCriteria.Generated.cs">
+      <Link>Criteria\ProfileCriteria.Generated.cs</Link>
+    </Compile>
+    <Compile Include="..\PetShop.Business\Criteria\SupplierCriteria.cs">
+      <Link>Criteria\SupplierCriteria.cs</Link>
+    </Compile>
+    <Compile Include="..\PetShop.Business\Criteria\SupplierCriteria.Generated.cs">
+      <Link>Criteria\SupplierCriteria.Generated.cs</Link>
+    </Compile>
+    <Compile Include="..\PetShop.Business\Entities\Account.cs">
+      <Link>Entities\Account.cs</Link>
+    </Compile>
+    <Compile Include="..\PetShop.Business\Entities\Account.Generated.cs">
+      <Link>Entities\Account.Generated.cs</Link>
+    </Compile>
+    <Compile Include="..\PetShop.Business\Entities\Cart.cs">
+      <Link>Entities\Cart.cs</Link>
+    </Compile>
+    <Compile Include="..\PetShop.Business\Entities\Cart.Generated.cs">
+      <Link>Entities\Cart.Generated.cs</Link>
+    </Compile>
+    <Compile Include="..\PetShop.Business\Entities\Category.cs">
+      <Link>Entities\Category.cs</Link>
+    </Compile>
+    <Compile Include="..\PetShop.Business\Entities\Category.Generated.cs">
+      <Link>Entities\Category.Generated.cs</Link>
+    </Compile>
+    <Compile Include="..\PetShop.Business\Entities\Inventory.cs">
+      <Link>Entities\Inventory.cs</Link>
+    </Compile>
+    <Compile Include="..\PetShop.Business\Entities\Inventory.Generated.cs">
+      <Link>Entities\Inventory.Generated.cs</Link>
+    </Compile>
+    <Compile Include="..\PetShop.Business\Entities\Item.cs">
+      <Link>Entities\Item.cs</Link>
+    </Compile>
+    <Compile Include="..\PetShop.Business\Entities\Item.Generated.cs">
+      <Link>Entities\Item.Generated.cs</Link>
+    </Compile>
+    <Compile Include="..\PetShop.Business\Entities\LineItem.cs">
+      <Link>Entities\LineItem.cs</Link>
+    </Compile>
+    <Compile Include="..\PetShop.Business\Entities\LineItem.Generated.cs">
+      <Link>Entities\LineItem.Generated.cs</Link>
+    </Compile>
+    <Compile Include="..\PetShop.Business\Entities\Order.cs">
+      <Link>Entities\Order.cs</Link>
+    </Compile>
+    <Compile Include="..\PetShop.Business\Entities\Order.Generated.cs">
+      <Link>Entities\Order.Generated.cs</Link>
+    </Compile>
+    <Compile Include="..\PetShop.Business\Entities\OrderStatus.cs">
+      <Link>Entities\OrderStatus.cs</Link>
+    </Compile>
+    <Compile Include="..\PetShop.Business\Entities\OrderStatus.Generated.cs">
+      <Link>Entities\OrderStatus.Generated.cs</Link>
+    </Compile>
+    <Compile Include="..\PetShop.Business\Entities\Product.cs">
+      <Link>Entities\Product.cs</Link>
+    </Compile>
+    <Compile Include="..\PetShop.Business\Entities\Product.Generated.cs">
+      <Link>Entities\Product.Generated.cs</Link>
+    </Compile>
+    <Compile Include="..\PetShop.Business\Entities\Profile.cs">
+      <Link>Entities\Profile.cs</Link>
+    </Compile>
+    <Compile Include="..\PetShop.Business\Entities\Profile.Generated.cs">
+      <Link>Entities\Profile.Generated.cs</Link>
+    </Compile>
+    <Compile Include="..\PetShop.Business\Entities\Supplier.cs">
+      <Link>Entities\Supplier.cs</Link>
+    </Compile>
+    <Compile Include="..\PetShop.Business\Entities\Supplier.Generated.cs">
+      <Link>Entities\Supplier.Generated.cs</Link>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Silverlight\$(SilverlightVersion)\Microsoft.Silverlight.CSharp.targets" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{A1591282-1198-4647-A2B1-27E5FF5F6F3B}">
+        <SilverlightProjectProperties />
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
