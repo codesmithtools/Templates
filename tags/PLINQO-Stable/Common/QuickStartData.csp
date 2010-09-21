@@ -17,6 +17,11 @@
           <string>^dbo.sp_</string>
         </stringList>
       </property>
+      <property name="IncludeList">
+        <stringList>
+          <string></string>
+        </stringList>
+      </property>
       <property name="CleanExpression">
         <stringList>
           <string>^(sp|tbl|udf|vw)_</string>

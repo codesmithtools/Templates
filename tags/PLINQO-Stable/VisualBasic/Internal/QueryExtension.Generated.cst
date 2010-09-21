@@ -36,11 +36,15 @@
 <%@ Property Category="3.Query" Name="MethodKeySuffix"
     Type="System.String" Default="Key" Optional="False"
     Description="The suffix of the primary key query method names." %>
-    
-<%@ Property Category="3.Query" Name="UniqueMethodPrefix" 
-    Type="System.String" Default="GetBy" Optional="True" 
+
+<%@ Property Category="3.Query" Name="UniqueMethodPrefix"
+    Type="System.String" Default="GetBy" Optional="True"
     Description="The prefix of query method names." %>
-    
+
+<%@ Property Category="3.Query" Name="QueryNamespace"
+    Type="System.String" Default="" Optional="True"
+    Description="The namespace for the interfaces.  Leave blank to not generate them." %>
+
 <%@ Property Name="EnumDatabase"
     Type="LinqToSqlShared.Generator.DbmlEnum.Database" Optional="True"
     Description="Enum Collection for Database." %>
@@ -72,7 +76,11 @@ Imports System.Runtime.CompilerServices
 Imports CodeSmith.Data.Linq
 Imports CodeSmith.Data.Linq.Dynamic
 
+<% If (String.IsNullOrEmpty(QueryNamespace)) %>
 Namespace <%= Database.ContextNamespace %>
+<% Else %>
+Namespace <%= QueryNamespace %>
+<% End If %>
     ''' <summary>
     ''' The query extension class for <%= EntityManager.EntityName %>.
     ''' </summary>
@@ -94,7 +102,7 @@ Namespace <%= Database.ContextNamespace %>
 
             Return queryable.FirstOrDefault(<%= GetLamba(method, 5) %>)
         End Function
-        
+
         ''' <summary>
         ''' Immediately deletes the entity by the primary key from the underlying data source with a single delete command.
         ''' </summary>
@@ -128,11 +136,11 @@ Namespace <%= Database.ContextNamespace %>
 <% For Each c As Column In Database.GetTypeByName(EntityManager.EntityName).Columns
     Dim paramName as string =  GetParamName(c.Member)
     paramName = CleanParamName(paramName)
-    
+
     Dim columnType As String = GetColumnType(c)
     Dim myAlias As String = GetAlias()
 
-    Dim functionName as String = MethodPrefix & c.Member 
+    Dim functionName as String = MethodPrefix & c.Member
     If Not c.IsVersion.Value AndAlso c.Type <> "System.Data.Linq.Binary" Then
      %>
 
@@ -150,7 +158,7 @@ Namespace <%= Database.ContextNamespace %>
             Return queryable.Where(Function(<%= myAlias %>)<%= myAlias %>.<%= c.Member %> = <%= paramName %>)
 <% End If %>
         End Function
-        
+
         ''' <summary>
         ''' Gets a query for <see cref="<%= safeName %>"/>.
         ''' </summary>
@@ -162,7 +170,7 @@ Namespace <%= Database.ContextNamespace %>
         Public Function <%= VBKeywordEscape(functionName) %>(ByVal queryable As IQueryable(Of <%= safeName %>), ByVal <%= paramName %> As <%= columnType %>, ByVal ParamArray additionalValues As <%= columnType %>()) As IQueryable(Of <%= safeName %>)
             Dim values = New List(Of <%= columnType %>)()
             values.Add(<%= paramName %>)
-        
+
             If additionalValues IsNot Nothing Then
                 values.AddRange(additionalValues)
 <% If (c.CanBeNull.HasValue AndAlso c.CanBeNull.Value) Then %>
@@ -170,14 +178,14 @@ Namespace <%= Database.ContextNamespace %>
                 values.Add(Nothing)
 <% End If %>
             End If
-        
+
             If values.Count = 1 Then
                 Return queryable.<%= functionName %>(values(0))
             End If
-        
+
             Return queryable.<%= functionName %>(values)
         End Function
-        
+
         ''' <summary>
         ''' Gets a query for <see cref="<%= safeName %>"/>.
         ''' </summary>
@@ -208,7 +216,7 @@ Namespace <%= Database.ContextNamespace %>
             If <%= paramName %> Is Nothing AndAlso containment <> ContainmentOperator.Equals AndAlso containment <> ContainmentOperator.NotEquals Then
                 Throw New ArgumentNullException("<%= paramName %>", "Parameter '<%= paramName %>' cannot be null with the specified ContainmentOperator.  Parameter 'containmentOperator' must be ContainmentOperator.Equals or ContainmentOperator.NotEquals to support null.")
             End If
-            
+           
             Select Case containment
                 Case ContainmentOperator.Contains
                     Return queryable.Where(Function(<%= myAlias %>) <%= myAlias %>.<%= c.Member %>.Contains(<%= paramName %>))
@@ -231,7 +239,7 @@ Namespace <%= Database.ContextNamespace %>
 <% End If 'CanBeNull %>
             End Select
         End Function
-        
+
 <% Else 'not string %>
         ''' <summary>
         ''' Gets a query for <see cref="<%= safeName %>"/>.
@@ -246,10 +254,10 @@ Namespace <%= Database.ContextNamespace %>
             If <%= paramName %> Is Nothing AndAlso comparison <> ComparisonOperator.Equals AndAlso comparison <> ComparisonOperator.NotEquals Then
                 Throw New ArgumentNullException("<%= paramName %>", "Parameter '<%= paramName %>' cannot be null with the specified ComparisonOperator.  Parameter 'comparison' must be ComparisonOperator.Equals or ComparisonOperator.NotEquals to support null.")
             End If
-            
+
 <% End If 'CanBeNull %>
             Select Case comparison
-<% If (c.Type = "System.Guid" OrElse c.Type = "System.Boolean") Then %>
+<% If (c.Type = "System.Object" OrElse c.Type = "System.Guid" OrElse c.Type = "System.Boolean" OrElse c.Type = "System.Xml.Linq.XElement") Then %>
                 Case ComparisonOperator.GreaterThan, ComparisonOperator.GreaterThanOrEquals, ComparisonOperator.LessThan, ComparisonOperator.LessThanOrEquals
                     Throw New ArgumentException("Parameter 'comparison' must be ComparisonOperator.Equals or ComparisonOperator.NotEquals to support <%= columnType %> type.", "comparison")
 <% Else %>
@@ -351,7 +359,7 @@ Public Function GetParameters(ByVal method As ManagerMethod) As String
         Dim paramType As String = GetColumnType(column)
         Dim paramName As String = GetParamName(column.Member)
         paramName = CleanParamName(paramName)
-        
+
         args.AppendFormat("ByVal {1} As {0}", paramType, paramName)
     Next
 
@@ -421,7 +429,7 @@ Public Function GetParamName(ByVal name as String) As String
     If VBKeywordEscape.ContainsKey(paramName) Then
         paramName = "my" + name
     End If
-    
+
     Return paramName
 End Function
 
@@ -442,19 +450,24 @@ End Function
 
 Public Function GetColumnType(ByVal column As Column) As String
     Dim dataType As String = column.Type
-    
+   
     Dim myEnumType As LinqToSqlShared.Generator.DbmlEnum.Enum = Nothing
-    
+
     If EnumDatabase IsNot Nothing Then
         myEnumType = EnumDatabase.Enums.FirstOrDefault(Function(e) e.Name = column.Type)
     End If
-    
-    If column.CanBeNull.HasValue AndAlso column.CanBeNull.Value AndAlso (CommonUtility.IsNullableType(column.Type) OrElse myEnumType IsNot Nothing) Then
+
+    Dim isEnum As Boolean = myEnumType IsNot Nothing
+    If isEnum AndAlso Not dataType.StartsWith(Database.EntityNamespace + ".") Then
+        dataType = Database.EntityNamespace + "." & dataType
+    End If
+
+    If column.CanBeNull.HasValue AndAlso column.CanBeNull.Value AndAlso (CommonUtility.IsNullableType(column.Type) OrElse isEnum) Then
         dataType = String.Format("{0}?", VBAlias(dataType))
     Else
         dataType = VBAlias(dataType)
     End If
-    
+   
     Return dataType
 End Function
 

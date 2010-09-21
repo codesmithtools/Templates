@@ -79,6 +79,9 @@ Namespace <%= Database.EntityNamespace %>
     ''' Class representing data for the <%= Database.Name %> database.
 <% End If %>
     ''' </summary>
+<% If (IncludeXmlSerialization) Then%>
+    <System.Serializable()> _
+<% End If %>
     <%= GetClassAttributes() %>
 <% If (IncludeDataContract) Then%>
     <System.Runtime.Serialization.DataContract(IsReference:=True)> _
@@ -185,9 +188,9 @@ For Each c As Column in Type.Columns
     If EnumDatabase IsNot Nothing Then
         enumType = EnumDatabase.Enums.FirstOrDefault(Function(e) e.Name = c.Type)
     End If
-    
+
     Dim isNullable As Boolean = c.CanBeNull.Value = True AndAlso (CommonUtility.IsNullableType(dataType) OrElse enumType IsNot Nothing)
-    
+
     If c.IsDelayLoaded.Value = True AndAlso c.IsPrimaryKey.Value = False Then
         dataType = VBAlias(dataType)
         fieldType = String.Format("System.Data.Linq.Link(Of {0})", dataType)
@@ -468,7 +471,7 @@ For Each c As Column in Type.Columns
     If EnumDatabase IsNot Nothing Then
         enumType = EnumDatabase.Enums.FirstOrDefault(Function(e) e.Name = c.Type)
     End If
-    
+
     Dim isNullable As Boolean = c.CanBeNull.HasValue AndAlso c.CanBeNull.Value AndAlso (CommonUtility.IsNullableType(c.Type) OrElse enumType IsNot Nothing)
 
     If (isNullable) Then
@@ -521,7 +524,7 @@ For Each c As Column in Type.Columns
         Public Sub OnDeserializing(ByVal context As System.Runtime.Serialization.StreamingContext)
             Initialize()
         End Sub
-        
+
         ''' <summary>
         ''' Deserializes an instance of <see cref="<%= VBKeywordEscape(Type.Name) %>"/> from XML.
         ''' </summary>
@@ -529,7 +532,7 @@ For Each c As Column in Type.Columns
         ''' <returns>An instance of <see cref="<%= VBKeywordEscape(Type.Name) %>"/> that is deserialized from the XML string.</returns>
         Public Shared Function FromXml(ByVal xml As String) As <%= VBKeywordEscape(Type.Name) %>
             Dim deserializer = New System.Runtime.Serialization.DataContractSerializer(GetType(<%= VBKeywordEscape(Type.Name) %>))
-            
+
             Using sr = New System.IO.StringReader(xml)
                 Using reader = System.Xml.XmlReader.Create(sr)
                     Return TryCast(deserializer.ReadObject(reader), <%= VBKeywordEscape(Type.Name) %>)
@@ -802,7 +805,7 @@ Public Function CreateAttribute(ByVal a As Association) As String
     If Not String.IsNullOrEmpty(a.OtherKey) Then
         s.AppendFormat(", OtherKey:=""{0}""", a.OtherKey)
     End If
-    If a.Cardinality.Value = Cardinality.One Then
+    If a.Cardinality.Value = Cardinality.One AndAlso a.IsForeignKey <> True Then
         s.Append(", IsUnique:=true")
     End If
     If a.IsForeignKey Then
@@ -828,10 +831,10 @@ Public Function GetValueCompare(ByVal c as Column, ByVal storage as String, ByVa
         s.AppendFormat("(Me.{0}.Equals({1}) = False)", storage, valueConvert)
     Else If CommonUtility.IsNullableType(c.Type) Then
         s.AppendFormat("((Me.{0} = {1}) = False)", storage, valueConvert)
-    Else 
+    Else
         s.AppendFormat("(Object.Equals(Me.{0}, {1}) = False)", storage, valueConvert)
     End If
-    
+
     Return s.ToString()
 End Function
 

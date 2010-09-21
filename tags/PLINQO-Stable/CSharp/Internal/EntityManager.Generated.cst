@@ -1,5 +1,5 @@
 ﻿<%@ CodeTemplate Language="C#" TargetLanguage="C#" Debug="True" Encoding="UTF-8"
-    Description="Linq to Sql Entity Manager Class." %>
+    Description="Linq to Sql Entity Manager Class." CompilerVersion="v3.5" %>
 
 <%@ Assembly Name="System.Data" %>
 <%@ Assembly Name="SchemaExplorer" %>
@@ -47,6 +47,10 @@
 <%@ Property Category="4.Mapping" Name="Table" 
     Type="LinqToSqlShared.DbmlObjectModel.Table" Optional="False" 
     Description="Must be set by parent template" %>
+    
+<%@ Property Name="EnumDatabase"
+    Type="LinqToSqlShared.Generator.DbmlEnum.Database" Optional="True"
+    Description="Enum Collection for Database." %>
 
 <%@ Map Name="CSharpKeyWordEscape" 
     Src="CSharpKeyWordEscape.csmap" Reverse="False" 
@@ -301,12 +305,10 @@ namespace <%= ManagerNamespace %>
             string paramName = StringUtil.ToCamelCase(column.Member);
             paramName = CleanParamName(paramName);
             
-            string typeName = CSharpAlias[column.Type];
-            if (column.CanBeNull == true && CommonUtility.IsNullableType(column.Type))
-                typeName += "?";
-                
+            string paramType = GetColumnType(column);
+
             args.AppendFormat("{0} {1}",
-                typeName,
+                paramType,
                 CSharpKeyWordEscape[paramName]);
         }
         
@@ -337,11 +339,8 @@ namespace <%= ManagerNamespace %>
             if (args.Length > 0)
                 args.Append(", ");
             
-            string typeName = CSharpAlias[column.Type];
-            if (column.CanBeNull == true && CommonUtility.IsNullableType(column.Type))
-                typeName += "?";
-            
-            args.Append(typeName);
+            string paramType = GetColumnType(column);
+            args.Append(paramType);
         }
         
         return args.ToString();
@@ -393,6 +392,25 @@ namespace <%= ManagerNamespace %>
         return size;            
     }
     
+    public string GetColumnType(Column column)
+    {
+        string dataType = column.Type;
+
+        LinqToSqlShared.Generator.DbmlEnum.Enum enumType = EnumDatabase != null
+            ? EnumDatabase.Enums.FirstOrDefault(e => e.Name == column.Type) : null;
+
+        bool isEnum = enumType != null;
+        if (isEnum && !dataType.StartsWith(Database.EntityNamespace + "."))
+            dataType = Database.EntityNamespace + "." + dataType;
+        
+        if (column.CanBeNull == true && (CommonUtility.IsNullableType(column.Type) || isEnum))
+            dataType = string.Format("{0}?", CSharpAlias[dataType]);
+        else
+            dataType = CSharpAlias[dataType];
+
+        return dataType;
+    }
+
     private static readonly string GeneratedCodeAttribute =  string.Format(
         "[System.CodeDom.Compiler.GeneratedCode(\"CodeSmith\", \"{0}\")]",
         typeof(CodeTemplate).Assembly.GetName().Version.ToString());

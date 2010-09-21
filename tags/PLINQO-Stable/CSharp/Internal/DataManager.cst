@@ -11,7 +11,7 @@
 <%@ Import Namespace="Manager" %>
 
 <%@ Property Category="3.Manager" Name="ManagerNamespace" 
-    Type="System.String" Default="" Optional="True" 
+    Type="System.String" Optional="False" 
     Description="The namespace to use for the generated manager class files."%>
 
 <%@ Property Category="3.Manager" Name="DataManager" 

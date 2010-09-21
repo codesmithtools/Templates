@@ -5,7 +5,7 @@
   <PropertyGroup>
     <Major>5</Major>
     <Minor>0</Minor>
-    <Build>0</Build>
+    <Build>1</Build>
     <Revision>0</Revision>
 
     <BindMinor>0</BindMinor>
@@ -15,7 +15,7 @@
 
   <PropertyGroup>
     <BuildConfiguration>Release</BuildConfiguration>
-    <DeployFolder>\\WEB\nightly\Plinqo</DeployFolder>
+    <DeployFolder>\\WEB02\nightly\Plinqo</DeployFolder>
   </PropertyGroup>
 
   <ItemGroup>

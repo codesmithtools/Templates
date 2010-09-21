@@ -15,6 +15,9 @@ namespace CodeSmith.Data.Rules
     /// </summary>
     public class RuleManager
     {
+        private static object _addSharedRuleLock = new object();
+        private static object _addSharedLock = new object();
+
         private static readonly RuleCollection _sharedBusinessRules;
         private readonly RuleCollection _businessRules;
 
@@ -71,10 +74,13 @@ namespace CodeSmith.Data.Rules
         /// <param name="entityType">The type of the entity</param>
         private static void AddShared(IRule rule, Type entityType)
         {
-            if (!_sharedBusinessRules.ContainsKey(entityType))
-                _sharedBusinessRules.TryAdd(entityType, new RuleList());
+            lock (_addSharedRuleLock)
+            {
+                if (!_sharedBusinessRules.ContainsKey(entityType))
+                    _sharedBusinessRules.TryAdd(entityType, new RuleList());
 
-            _sharedBusinessRules[entityType].Add(rule);
+                _sharedBusinessRules[entityType].Add(rule);
+            }
         }
 
         /// <summary>
@@ -88,38 +94,43 @@ namespace CodeSmith.Data.Rules
 
         private static void AddShared(Type entityType)
         {
-            Type metadata = null;
-
-            if (!_sharedBusinessRules.ContainsKey(entityType))
-                _sharedBusinessRules.TryAdd(entityType, new RuleList());
-
-            //don't do anything if the properties have already been processed.
-            if (_sharedBusinessRules[entityType].IsProcessed)
-                return;
-
-            _sharedBusinessRules[entityType].IsProcessed = true;
-
-            var metadataTypeAttribute = entityType.GetCustomAttributes(typeof(MetadataTypeAttribute), true).FirstOrDefault() as MetadataTypeAttribute;
-            if (metadataTypeAttribute != null)
-                metadata = metadataTypeAttribute.MetadataClassType;
-
-            PropertyDescriptorCollection properties = TypeDescriptor.GetProperties(entityType);
-            PropertyDescriptorCollection metadataProperties = null;
-            if (metadata != null)
-                metadataProperties = TypeDescriptor.GetProperties(metadata);
-
-            foreach (PropertyDescriptor property in properties)
+            lock (_addSharedLock)
             {
-                IList<Attribute> attributes = GetAttributes(property, metadataProperties);
+                Type metadata = null;
 
-                foreach (Attribute attribute in attributes)
-                    if (attribute is RuleAttributeBase)
-                    {
-                        var ruleAttribute = (RuleAttributeBase)attribute;
-                        AddShared(ruleAttribute.CreateRule(property.Name), entityType);
-                    }
-                    else if (attribute is ValidationAttribute)
-                        AddValidation(property.Name, attribute, entityType);
+                if (!_sharedBusinessRules.ContainsKey(entityType))
+                    _sharedBusinessRules.TryAdd(entityType, new RuleList());
+
+                //don't do anything if the properties have already been processed.
+                if (_sharedBusinessRules[entityType].IsProcessed)
+                    return;
+
+                _sharedBusinessRules[entityType].IsProcessed = true;
+
+                var metadataTypeAttribute =
+                    entityType.GetCustomAttributes(typeof (MetadataTypeAttribute), true).FirstOrDefault() as
+                    MetadataTypeAttribute;
+                if (metadataTypeAttribute != null)
+                    metadata = metadataTypeAttribute.MetadataClassType;
+
+                PropertyDescriptorCollection properties = TypeDescriptor.GetProperties(entityType);
+                PropertyDescriptorCollection metadataProperties = null;
+                if (metadata != null)
+                    metadataProperties = TypeDescriptor.GetProperties(metadata);
+
+                foreach (PropertyDescriptor property in properties)
+                {
+                    IList<Attribute> attributes = GetAttributes(property, metadataProperties);
+
+                    foreach (Attribute attribute in attributes)
+                        if (attribute is RuleAttributeBase)
+                        {
+                            var ruleAttribute = (RuleAttributeBase) attribute;
+                            AddShared(ruleAttribute.CreateRule(property.Name), entityType);
+                        }
+                        else if (attribute is ValidationAttribute)
+                            AddValidation(property.Name, attribute, entityType);
+                }
             }
         }
 

@@ -195,7 +195,7 @@ For x = 0 TO f.Parameters.Count - 1
     End If
 
     'set out params
-    Response.WriteLine("            {0} = (DirectCast(result.GetParameterValue({2}),{1}))",p.ParameterName, GetParameterType(p), x)
+    Response.WriteLine("            {0} = (DirectCast(result.GetParameterValue({2}),{1}))", VBKeywordEscape(p.ParameterName), GetParameterType(p), x)
 Next
 %>
 <% If (IsTableFunction(f)) Then %>
@@ -617,14 +617,17 @@ End Function
 Public Function GetArguments(ByVal f As [Function]) As String
     Dim s As New StringBuilder()
     For x As Integer = 0 To f.Parameters.Count - 1
-        
-
         Dim p As Parameter = f.Parameters(x)
         s.AppendLine(" _")
         s.AppendFormat("            <System.Data.Linq.Mapping.Parameter(Name := ""{0}"", DbType:=""{1}"")> ", p.Name, p.DbType)
         
+        If p.Direction <> LinqToSqlShared.DbmlObjectModel.ParameterDirection.In then
+            s.Append("ByRef")
+        Else
+            s.Append("ByVal")
+        End If
 
-        s.AppendFormat("ByVal {1} As {0}", GetParameterType(p), p.ParameterName)
+        s.AppendFormat(" {1} As {0}", GetParameterType(p), VBKeywordEscape(p.ParameterName))
         
         If x < f.Parameters.Count - 1 Then
             s.Append(", ")
@@ -652,7 +655,7 @@ Public Function GetArgumentNames(ByVal f As [Function]) As String
         End If
         
         Dim p As Parameter = f.Parameters(x)
-        s.Append(p.ParameterName)
+        s.Append(VBKeywordEscape(p.ParameterName))
     Next
     
     Return s.ToString()

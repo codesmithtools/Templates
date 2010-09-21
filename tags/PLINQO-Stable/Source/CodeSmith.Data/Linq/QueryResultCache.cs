@@ -164,7 +164,7 @@ namespace CodeSmith.Data.Linq
         /// <param name="profileName">Name of the cache profile to use.</param>
         /// <param name="sqlCacheDependencyTables">The tables for which to add SQL Cache Dependencies</param>
         /// <returns>The result of the query.</returns>
-        public static IEnumerable<T> FromCache<T>(this IQueryable<T> query, string profileName, 
+        public static IEnumerable<T> FromCache<T>(this IQueryable<T> query, string profileName,
             params ITable[] sqlCacheDependencyTables)
         {
             CacheSettings cacheSettings = CacheManager.GetProfile(profileName).AddCacheDependency(query.GetDataContext().Connection.Database, sqlCacheDependencyTables);
@@ -454,7 +454,7 @@ namespace CodeSmith.Data.Linq
         {
             return query.Cast<object>().FromCacheFirstOrDefault(profileName, sqlCacheDependencyTables);
         }
-        
+
         /// <summary>
         /// Returns the result of the query; if possible from the cache, otherwise
         /// the query is materialized and the result cached before being returned.
@@ -566,6 +566,45 @@ namespace CodeSmith.Data.Linq
 
         #endregion
 
+        #region ClearCacheFirstOrDefault
+
+        /// <summary>
+        /// Clears the cache of a given query.
+        /// </summary>
+        /// <typeparam name="T">The type of the data in the data source.</typeparam>
+        /// <param name="query">The query to be cleared.</param>
+        public static bool ClearCacheFirstOrDefault<T>(this IQueryable<T> query)
+        {
+            return ClearCacheFirstOrDefault(query, null, null);
+        }
+
+        /// <summary>
+        /// Clears the cache of a given query.
+        /// </summary>
+        /// <typeparam name="T">The type of the data in the data source.</typeparam>
+        /// <param name="query">The query to be cleared.</param>
+        /// <param name="group">The name of the cache group.</param>
+        public static bool ClearCacheFirstOrDefault<T>(this IQueryable<T> query, string group)
+        {
+            return ClearCacheFirstOrDefault(query, group, null);
+        }
+
+        /// <summary>
+        /// Clears the cache of a given query.
+        /// </summary>
+        /// <typeparam name="T">The type of the data in the data source.</typeparam>
+        /// <param name="query">The query to be cleared.</param>
+        /// <param name="group">The cache group.</param>
+        /// <param name="provider">The name of the cache provider.</param>
+        public static bool ClearCacheFirstOrDefault<T>(this IQueryable<T> query, string group, string provider)
+        {
+            return query
+                .Take(1)
+                .ClearCache(group, provider);
+        }
+
+        #endregion
+
         internal static void SetResultCache<T>(string key, CacheSettings settings, ICollection<T> result)
         {
             if (settings == null)
@@ -626,6 +665,11 @@ namespace CodeSmith.Data.Linq
 
             // use the string representation of the query for the cache key
             string key = expression.ToString();
+
+            // make key DB specific
+            DataContext db = query.GetDataContext();
+            if (db != null && db.Connection != null && !String.IsNullOrEmpty(db.Connection.Database))
+                key += db.Connection.Database;
 
             // the key is potentially very long, so use an md5 fingerprint
             // (fine if the query result data isn't critically sensitive)
