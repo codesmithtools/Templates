@@ -672,18 +672,20 @@ routing.</p>
 <h2>History</h2>
 <ul>
 	<li>Release 5.0.1<ul>
-		<li>added IncludeList property</li>
-		<li>fix keyword escapes to functions</li>
-		<li>add Serializable attribute</li>
-		<li>add QueryNamespace property</li>
-		<li>make enums use full namespace</li>
-		<li>fix issue with &quot;An item with the same key has already been added.&quot;</li>
-		<li>apply patch for ByRef params in vb functions</li>
-		<li>fix issue for cache on different databases</li>
-		<li>fix include list preventing association generation</li>
-		<li>fix default profile bug</li>
-		<li>make IsPrimaryKey update</li>
-		<li>fix initializing PLINQO rules asynchronously fails</li>
+		<li>Added IncludeList property to dbml template to support explicit 
+		include</li>
+		<li>Fixed keyword escape issues in functions</li>
+		<li>Added Serializable attribute to entities</li>
+		<li>Added QueryNamespace property to queries template so queries can be 
+		in a different namespace</li>
+		<li>Make enums use full namespace to prevent naming issues</li>
+		<li>Fixed issue with many to many association error &quot;An item with the same key has already been added.&quot;</li>
+		<li>Updated vb function to use correct ByRef or ByVal in parameters</li>
+		<li>Fixed issue for cache on different databases</li>
+		<li>Fixed include list to not prevent association generation</li>
+		<li>Fixed issue with cache default profile</li>
+		<li>Fix to make IsPrimaryKey sync correctly</li>
+		<li>Fixed issue initializing PLINQO rules asynchronously</li>
 	</ul>
 	</li>
 	<li>Release 5.0
