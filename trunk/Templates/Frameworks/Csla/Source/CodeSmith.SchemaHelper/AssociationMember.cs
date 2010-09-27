@@ -18,9 +18,16 @@ namespace CodeSmith.SchemaHelper
                                      ? GetToManyTableKey(column.Table, table).Name
                                      : String.Empty;
 
-            AssociatedColumn = new Member(localColumn,
-                entity != null && entity.Table.FullName.Equals(localColumn.Table.FullName, StringComparison.InvariantCultureIgnoreCase) ? entity : new Entity(localColumn.Table));
-            
+
+            using (CodeSmith.Engine.AssemblyResolver.Current.UseManagedAssemblyResolver)
+            {
+                AssociatedColumn = new Member(localColumn,
+                                              entity != null && entity.Table.FullName.Equals(localColumn.Table.FullName, StringComparison.InvariantCultureIgnoreCase)
+                                                  ? entity
+                                                  : new Entity(localColumn.Table));
+            }
+
+
             Cascade = (associationType == SchemaHelper.AssociationType.OneToMany && !column.AllowDBNull);
             ClassName = table.ClassName();
 
