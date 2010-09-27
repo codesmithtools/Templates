@@ -378,7 +378,10 @@ namespace CodeSmith.QuickStart
 
         public virtual void OnTableChanged()
         {
-            Entity = new Entity(SourceTable);
+            using (CodeSmith.Engine.AssemblyResolver.Current.UseManagedAssemblyResolver)
+            {
+                Entity = new Entity(SourceTable);
+            }
 
             if (OnTableChanging()) return;
             
