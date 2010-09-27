@@ -13,7 +13,10 @@ namespace CodeSmith.SchemaHelper
     {
         public static Entity AssociationEntity(this AssociationMember member)
         {
-            return new Entity(member.Table);
+            using (CodeSmith.Engine.AssemblyResolver.Current.UseManagedAssemblyResolver)
+            {
+                return new Entity(member.Table);
+            }
         }
     }
 }

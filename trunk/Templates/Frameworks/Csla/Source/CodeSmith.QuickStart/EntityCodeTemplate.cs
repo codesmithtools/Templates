@@ -88,8 +88,11 @@ namespace CodeSmith.QuickStart
                     }
                 }
 
-                if (SourceTable != null)
-                    Entity = new Entity(SourceTable);
+                using (CodeSmith.Engine.AssemblyResolver.Current.UseManagedAssemblyResolver)
+                {
+                    if (SourceTable != null)
+                        Entity = new Entity(SourceTable);
+                }
             }
         }
 
@@ -116,8 +119,11 @@ namespace CodeSmith.QuickStart
                     }
                 }
 
-                if(SourceTable != null)
-                    Entity = new Entity(SourceTable);
+                using (CodeSmith.Engine.AssemblyResolver.Current.UseManagedAssemblyResolver)
+                {
+                    if (SourceTable != null)
+                        Entity = new Entity(SourceTable);
+                }
             }
         }
 
