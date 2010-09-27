@@ -63,21 +63,9 @@
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="CodeSmith.CustomProperties, Version=5.0.0.0, Culture=neutral, PublicKeyToken=9fd61cdb91609a7a, processorArchitecture=x86">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>C:\Program Files\CodeSmith\v5.1\AddIns\CodeSmith.CustomProperties.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="CodeSmith.Engine, Version=5.0.0.0, Culture=neutral, PublicKeyToken=9fd61cdb91609a7a, processorArchitecture=x86">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>C:\Program Files\CodeSmith\v5.1\bin\CodeSmith.Engine.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="SchemaExplorer, Version=5.0.0.0, Culture=neutral, PublicKeyToken=9fd61cdb91609a7a, processorArchitecture=x86">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>C:\Program Files\CodeSmith\v5.1\AddIns\SchemaExplorer.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
+    <Reference Include="CodeSmith.CustomProperties" />
+    <Reference Include="CodeSmith.Engine" />
+    <Reference Include="SchemaExplorer" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
