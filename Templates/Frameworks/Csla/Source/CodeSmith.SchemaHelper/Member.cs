@@ -9,7 +9,7 @@ namespace CodeSmith.SchemaHelper
     public class Member
     {
         #region Constructor(s)
-        
+
         public Member(ColumnSchema column, Entity entity)
         {
             Name = column.GetName();
@@ -30,7 +30,13 @@ namespace CodeSmith.SchemaHelper
             IsComputed = column.IsComputed();
             IsRowVersion = column.IsRowVersion();
 
-            Entity = entity != null && entity.Table.FullName.Equals(column.Table.FullName, StringComparison.InvariantCultureIgnoreCase) ? entity : new Entity(column.Table);
+            using (CodeSmith.Engine.AssemblyResolver.Current.UseManagedAssemblyResolver)
+            {
+                Entity = entity != null &&
+                         entity.Table.FullName.Equals(column.Table.FullName, StringComparison.InvariantCultureIgnoreCase)
+                             ? entity
+                             : new Entity(column.Table);
+            }
         }
 
         #endregion
