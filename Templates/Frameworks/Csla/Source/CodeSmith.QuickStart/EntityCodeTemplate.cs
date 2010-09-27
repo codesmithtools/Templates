@@ -387,7 +387,6 @@ namespace CodeSmith.QuickStart
             using (CodeSmith.Engine.AssemblyResolver.Current.UseManagedAssemblyResolver)
             {
                 Entity = new Entity(SourceTable);
-            }
 
             if (OnTableChanging()) return;
             
@@ -405,6 +404,7 @@ namespace CodeSmith.QuickStart
 
             if (string.IsNullOrEmpty(ProcedurePrefix))
                 ProcedurePrefix = "CSLA_";
+            }
         }
 
         public virtual string GetTableOwner()
