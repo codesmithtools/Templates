@@ -71,7 +71,8 @@ namespace <%= TargetNamespace %>
 		#endregion
 		
 		#region Helper Methods
-		protected void LoadFromReader(SqlDataReader reader)
+		
+        protected void LoadFromReader(SqlDataReader reader)
 		{
 			if (reader != null && !reader.IsClosed)
 			{
@@ -80,7 +81,35 @@ namespace <%= TargetNamespace %>
 				<% } %>
 			}
 		}
-		#endregion
+        
+        /// <summary>
+        /// Returns the Bytes stored in a binary column.
+        /// </summary>
+        /// <param name="reader">The reader.</param>
+        /// <param name="index">The column index.</param>
+        /// <returns>Bytes Stored in a column.</returns>
+        public static byte[] GetBytes(SqlDataReader reader, int index)
+        {
+            var buffer = new byte[1024];
+            long fieldOffset = 0;
+            
+            using (var stream = new System.IO.MemoryStream())
+            {
+                long bytesRead;
+
+                while ((bytesRead = reader.GetBytes(index, fieldOffset, buffer, 0, buffer.Length)) > 0)
+                {
+                    var actualRead = new byte[bytesRead];
+                    Buffer.BlockCopy(buffer, 0, actualRead, 0, (int)bytesRead);
+                    stream.Write(actualRead, 0, actualRead.Length);
+                    fieldOffset += bytesRead;
+                }
+
+                return stream.ToArray();
+            }
+        }
+		
+        #endregion
 		
 		#region Public Properties
 		<% for (int i = 0; i < SourceCommand.CommandResults[0].Columns.Count; i++) { %>
@@ -924,6 +953,9 @@ public string BuildArgumentList()
 
 public string BuildNullCheckStatement(ParameterSchema parameter)
 {
+    if (GetNativeType(parameter).EndsWith("[]"))
+	    return string.Format("{0} != null", GetPropertyName(parameter));
+
     if(GetNativeType(parameter).Equals("string", StringComparison.InvariantCultureIgnoreCase))
         return string.Format("!string.IsNullOrEmpty({0})", GetPropertyName(parameter));
         
@@ -933,7 +965,7 @@ public string BuildNullCheckStatement(ParameterSchema parameter)
 // If the value type is a string then don't include the .Value.
 public string BuildNullValueStatement(ParameterSchema parameter)
 {
-    if(GetNativeType(parameter).Equals("string", StringComparison.InvariantCultureIgnoreCase))
+    if(GetNativeType(parameter).Equals("string", StringComparison.InvariantCultureIgnoreCase) || GetNativeType(parameter).EndsWith("[]"))
         return string.Empty;
         
     return ".Value";
@@ -1048,7 +1080,12 @@ public string GetReaderAssignmentStatement(CommandResultColumnSchema column, int
 	
 	if (column.Name.EndsWith("TypeCode")) statement += "(" + column.Name + ")";
 	
-	statement += "reader." + GetReaderMethod(column.DataType) + "(" + index.ToString() + ");";
+    string readerStatement = GetReaderMethod(column.DataType);
+    if ((readerStatement.Equals("GetBytes", StringComparison.InvariantCultureIgnoreCase))) {
+        statement += "GetBytes(reader, " + index.ToString() + ");";
+    } else {
+        statement += "reader." + readerStatement + "(" + index.ToString() + ");";
+    }
 	
 	return statement;
 }
@@ -1073,7 +1110,7 @@ public bool IsTableValuedFunction
 public string GetNativeType(ParameterSchema parameter)
 {
     string result = this.GetCSharpVariableType(parameter);
-    if(result.Equals("string", StringComparison.InvariantCultureIgnoreCase))
+    if(result.Equals("string", StringComparison.InvariantCultureIgnoreCase) || result.EndsWith("[]"))
         return result;
     
     return string.Format("{0}?", result);
@@ -1082,7 +1119,7 @@ public string GetNativeType(ParameterSchema parameter)
 public string GetNativeType(CommandResultColumnSchema column)
 {
     string result = this.GetCSharpVariableType(column);
-    if(result.Equals("string", StringComparison.InvariantCultureIgnoreCase))
+    if(result.Equals("string", StringComparison.InvariantCultureIgnoreCase) || result.EndsWith("[]"))
         return result;
     
     return string.Format("{0}?", result);
