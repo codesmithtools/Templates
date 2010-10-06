@@ -54,28 +54,61 @@ Namespace <%= TargetNamespace %>
 	<%= GetAccessModifier() %> Class <%= GetRowClassName() %>
 	
 		#Region "Member Variables"
-		<% For Each column As CommandResultColumnSchema In SourceCommand.CommandResults(0).Columns %>
+		
+        <% For Each column As CommandResultColumnSchema In SourceCommand.CommandResults(0).Columns %>
 		<%= GetMemberVariableDeclarationStatement(column) %>
 		<% Next %>
-		#End Region
+		
+        #End Region
 		
 		#Region "Constructors"
-		Public Sub New()
+		
+        Public Sub New()
 		End Sub
 		
 		Public Sub New(reader As SqlDataReader)
 			LoadFromReader(reader)
 		End Sub
-		#End Region
+		
+        #End Region
 		
 		#Region "Helper Methods"
-		Protected Sub LoadFromReader(reader As SqlDataReader)
+		
+        Protected Sub LoadFromReader(reader As SqlDataReader)
 			If (Not reader Is Nothing AndAlso Not reader.IsClosed) Then
 				<% For i as Int32 = 0 To (SourceCommand.CommandResults(0).Columns.Count - 1) %>
 				<%= GetReaderAssignmentStatement(SourceCommand.CommandResults(0).Columns(i), i) %>
 				<% Next %>
 			End If
 		End Sub
+        
+        ''' <summary>
+        ''' Returns the Bytes stored in a binary column.
+        ''' </summary>
+        ''' <param name="reader">The reader.</param>
+        ''' <param name="columnName">The column name.</param>
+        ''' <returns>Bytes Stored in a column.</returns>
+        Public Shared Function GetBytes(ByVal reader As SqlDataReader, ByVal columnName As String) As Byte()
+            Dim buffer As Byte() = New Byte(1024) {}
+            Dim fieldOffset As Long = 0
+    
+            Using stream As System.IO.MemoryStream = New System.IO.MemoryStream()
+                Dim bytesRead As Integer = 0
+    
+                bytesRead = CInt(reader.GetBytes(columnName, fieldOffset, buffer, 0, buffer.Length))
+                While bytesRead > 0
+                    Dim actualRead As Byte() = New Byte(bytesRead) {}
+                    Array.Copy(buffer, 0, actualRead, 0, bytesRead)
+                    stream.Write(actualRead, 0, actualRead.Length)
+                    fieldOffset += bytesRead
+    
+                    bytesRead = CInt(reader.GetBytes(columnName, fieldOffset, buffer, 0, buffer.Length))
+                End While
+    
+                Return stream.ToArray()
+            End Using
+        End Function  
+        
 		#End Region
 		
 		#Region "Public Properties"
@@ -206,6 +239,7 @@ Namespace <%= TargetNamespace %>
 		#End Region
 		
 		#Region "Helper Methods"
+        
         Private Function GetConnection() As SqlConnection
             If (Not Connection Is Nothing) Then
 				_ownsConnection = false
@@ -215,16 +249,16 @@ Namespace <%= TargetNamespace %>
             	Return New SqlConnection(ConnectionString)
             End If
         End Function
-		
+	    
 		#End Region
 		
 		#Region "Execute Methods"
-		<% If (ReturnsResultSet) Then %>
+		
+        <% If (ReturnsResultSet) Then %>
 		' <summary>
 		' This method calls the <%= SourceCommand.Name %> stored procedure and returns a SqlDataReader with the results.
 		' </summary>
 		' <returns>SqlDataReader</returns>
-
 		Public Overridable Function <%= IIf(ReturnsResultSet AndAlso ResultSchema = ResultSchemaEnum.ADO , "Execute" , "ExecuteReader") %>() As SqlDataReader
 
 			Dim reader As SqlDataReader = Nothing
@@ -242,8 +276,7 @@ Namespace <%= TargetNamespace %>
 				cmd.CommandType = CommandType.Text
 <% End If %>
 				
-				'"Populate Parameters"
-                
+				'Populate Parameters
 				Dim prmReturnValue As SqlParameter = cmd.Parameters.Add("@RETURN_VALUE", SqlDbType.Int)
 				prmReturnValue.Direction = ParameterDirection.ReturnValue
 				
@@ -266,18 +299,18 @@ Namespace <%= TargetNamespace %>
                 End If
 				<% If (i < SourceCommand.NonReturnValueParameters.Count - 1) Then Response.Write(vbTab + vbTab + vbTab + vbTab + vbNewLine) %>
 				<% Next %>
-				'"End Populate Parameters"
+				'End Populate Parameters
 				
-				'"Execute Command
+				'Execute Command
                 If (cn.State <> ConnectionState.Open) Then cn.Open()
 				If (_ownsConnection) Then
 					reader = cmd.ExecuteReader(CommandBehavior.CloseConnection)
 				Else
 					reader = cmd.ExecuteReader()
 				End If
-				'"End Execute Command
+				'End Execute Command
 				
-				'"Get Output Parameters
+				'Get Output Parameters
 				If (Not prmReturnValue.Value Is Nothing AndAlso Not prmReturnValue.Value Is DBNull.Value)
 					_returnValue = CType(prmReturnValue.Value, <%= GetReturnValueDataType() %>)
 				End If
@@ -317,7 +350,6 @@ Namespace <%= TargetNamespace %>
 			Dim cn As SqlConnection = GetConnection()
 			
 			Try
-
 				cmd.Connection = cn
 				cmd.Transaction = Transaction
 <% If Not(IsTableValuedFunction) Then %>
@@ -328,7 +360,7 @@ Namespace <%= TargetNamespace %>
 				cmd.CommandType = CommandType.Text
 <% End If %>
 				
-				'"Populate Parameters"
+				'Populate Parameters
 				Dim prmReturnValue As SqlParameter = cmd.Parameters.Add("@RETURN_VALUE", SqlDbType.Int)
 				prmReturnValue.Direction = ParameterDirection.ReturnValue
 				
@@ -351,17 +383,17 @@ Namespace <%= TargetNamespace %>
                 End If
 				<% If (i < SourceCommand.NonReturnValueParameters.Count - 1) Then Response.Write(vbTab + vbTab + vbTab + vbTab + vbNewLine) %>
 				<% Next %>
-				'"End Populate Parameters"
+				'End Populate Parameters
 				
-				'"Execute Command
+				'Execute Command
 				if (cn.State <> ConnectionState.Open) Then cn.Open()
 				
 				Dim da As SqlDataAdapter = New SqlDataAdapter(cmd)
 				da.Fill(ds)
 				_recordsAffected = ds.Tables(0).Rows.Count
-				'"End Execute Command
+				'End Execute Command
 				
-				'"Get Output Parameters
+				'Get Output Parameters
 				If (Not prmReturnValue.Value Is Nothing AndAlso Not prmReturnValue.Value Is DBNull.Value) Then
 					_returnValue = CType(prmReturnValue.Value, <%= GetReturnValueDataType() %>)
 				End If
@@ -382,7 +414,7 @@ Namespace <%= TargetNamespace %>
 				End If
 				<% If (i < SourceCommand.AllOutputParameters.Count - 1) Then Response.Write(vbTab + vbTab + vbTab + vbTab + vbNewLine) %>
 				<% Next %>
-				'"End Get Output Parameters
+				'End Get Output Parameters
 			Finally
 				If (_ownsConnection) Then
 					If (cn.State = ConnectionState.Open) Then
@@ -423,7 +455,7 @@ Namespace <%= TargetNamespace %>
 				cmd.CommandType = CommandType.Text
 <% End If %>
 				
-				'"Populate Parameters"
+				'Populate Parameters
 				Dim prmReturnValue As SqlParameter = cmd.Parameters.Add("@RETURN_VALUE", SqlDbType.Int)
 				prmReturnValue.Direction = ParameterDirection.ReturnValue
 				
@@ -447,7 +479,7 @@ Namespace <%= TargetNamespace %>
 				<% If (i < SourceCommand.NonReturnValueParameters.Count - 1) Then Response.Write(vbTab + vbTab + vbTab + vbTab + vbNewLine) %>
 				<% Next %>
 				
-				' "Execute Command"
+				'Execute Command
 				<% If (ReturnsResultSet) Then %>
 				If (cn.State <> ConnectionState.Open) Then cn.Open()
 				Dim reader As SqlDataReader = cmd.ExecuteReader()
@@ -467,7 +499,7 @@ Namespace <%= TargetNamespace %>
 				_recordsAffected = cmd.ExecuteNonQuery()
 				<% End If %>
 				
-				'"Get Output Parameters"
+				'Get Output Parameters
 				If Not (prmReturnValue.Value Is Nothing AndAlso prmReturnValue.Value Is DBNull.Value) Then 
 					_returnValue = CType(prmReturnValue.Value, <%= GetReturnValueDataType() %>)
 				End If
@@ -488,7 +520,7 @@ Namespace <%= TargetNamespace %>
 				End If
 				<% If (i < SourceCommand.AllOutputParameters.Count - 1) Then Response.Write(vbTab + vbTab + vbTab + vbTab + vbNewLine) %>
 				<% Next %>
-				'"End Get Output Parameters"
+				'End Get Output Parameters
 			Finally
 				If (_ownsConnection) Then
 					If (cn.State = ConnectionState.Open) Then
@@ -730,7 +762,7 @@ Public Sub BuildXmlCommentParameterList()
 	End If
 End Sub
 
-Public Sub BuildParameterExtraStatements(parameter As ParameterSchema)
+Public Sub BuildParameterExtraStatements(ByVal parameter As ParameterSchema)
 
 	Dim builder As System.Text.StringBuilder = New System.Text.StringBuilder()
 	Select Case (parameter.DataType)
@@ -788,7 +820,12 @@ Public Function BuildParameterList() As String
 	End If
 End Function
 
-Public Function BuildNullCheckStatement(parameter As ParameterSchema) As String
+Public Function BuildNullCheckStatement(ByVal parameter As ParameterSchema) As String
+
+	If GetNativeType(parameter).EndsWith("()") Then
+		Return String.Format("Not {0} Is Nothing", GetPropertyName(parameter))
+	End If
+
 	If GetNativeType(parameter).Equals("string", StringComparison.InvariantCultureIgnoreCase) Then
 		Return String.Format("Not String.IsNullOrEmpty({0})", GetPropertyName(parameter))
 	End If
@@ -813,8 +850,8 @@ Public Function BuildArgumentList() As String
 End Function
 
 ' If the value type is a string then don't include the .Value.
-Public Function BuildNullValueStatement(parameter As ParameterSchema) As String
-	If GetNativeType(parameter).Equals("string", StringComparison.InvariantCultureIgnoreCase) Then
+Public Function BuildNullValueStatement(ByVal parameter As ParameterSchema) As String
+	If GetNativeType(parameter).Equals("string", StringComparison.InvariantCultureIgnoreCase) OrElse GetNativeType(parameter).EndsWith("()") Then
 		Return String.Empty
 	End If
 
@@ -823,16 +860,16 @@ End Function
 
 Public Function GetNativeType(parameter As ParameterSchema) As String
 	Dim result As String = Me.GetVBVariableType(parameter)
-	If result.Equals("string", StringComparison.InvariantCultureIgnoreCase) Then
+	If result.Equals("string", StringComparison.InvariantCultureIgnoreCase) OrElse result.EndsWith("()") Then
 		Return result
 	End If
-
+    
 	Return String.Format("Nullable(Of {0})", result)
 End Function
 
 Public Function GetNativeType(column As CommandResultColumnSchema) As String
 	Dim result As String = Me.GetVBVariableType(column)
-	If result.Equals("string", StringComparison.InvariantCultureIgnoreCase) Then
+	If result.Equals("string", StringComparison.InvariantCultureIgnoreCase) OrElse result.EndsWith("()") Then
 		Return result
 	End If
 
@@ -890,11 +927,12 @@ End Function
 #End Region
 
 #Region "Declaration Statements"
-Public Shadows Function GetMemberVariableDeclarationStatement(column As CommandResultColumnSchema) As String
+
+Public Shadows Function GetMemberVariableDeclarationStatement(ByVal column As CommandResultColumnSchema) As String
 	Return GetMemberVariableDeclarationStatement("Protected", column)
 End Function
 
-Public Shadows Function GetMemberVariableDeclarationStatement(protectionLevel As String, column As CommandResultColumnSchema) As String
+Public Shadows Function GetMemberVariableDeclarationStatement(ByVal protectionLevel As String, ByVal column As CommandResultColumnSchema) As String
 
 	Dim statement As String = protectionLevel + " "
 	statement += GetMemberVariableName(column) + " As " + GetNativeType(column)
@@ -909,7 +947,7 @@ Public Shadows Function GetMemberVariableDeclarationStatement(protectionLevel As
 	Return statement
 End Function
 
-Public Shadows Function GetMemberVariableDeclarationStatement(parameter As ParameterSchema) As String
+Public Shadows Function GetMemberVariableDeclarationStatement(ByVal parameter As ParameterSchema) As String
 	Return GetMemberVariableDeclarationStatement("Protected", parameter)
 End Function
 
@@ -928,15 +966,19 @@ Public Shadows Function GetMemberVariableDeclarationStatement(protectionLevel As
 	Return statement
 End Function
 
-Public Function GetReaderAssignmentStatement(column As CommandResultColumnSchema, index As Int32) As String
+Public Function GetReaderAssignmentStatement(ByVal column As CommandResultColumnSchema, ByVal index As Int32) As String
 
 	Dim statement As String = "If (Not reader.IsDbNull(" + index.ToString() + ")) Then "
 	statement += GetMemberVariableName(column) + " = "
 	
 	if (column.Name.EndsWith("TypeCode")) Then statement += "(" + column.Name + ")"
 	
-	statement += "reader." + GetReaderMethod(column.DataType) + "(" + index.ToString() + ")"
-	
+    Dim readerStatement as String = GetReaderMethod(column.DataType)
+    If(readerStatement.Equals("GetBytes", StringComparison.InvariantCultureIgnoreCase)) Then
+        statement += "GetBytes(reader, "" + column.Name + "")"
+    Else
+	    statement += "reader." + readerStatement + "(" + index.ToString() + ")"
+    End If
 	Return statement
 End Function
 #End Region
