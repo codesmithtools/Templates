@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Web;
 
 namespace CodeSmith.Data.Caching
@@ -43,6 +44,12 @@ namespace CodeSmith.Data.Caching
                slidingExpiration,
                settings.Priority,
                settings.CacheItemRemovedCallback);
+
+#if DEBUG
+            if (!groupKey.StartsWith(GroupVersionPrefix))
+                Debug.WriteLine("Cache Insert for key " + groupKey);
+#endif
+
         }
 
         /// <summary>
@@ -52,7 +59,13 @@ namespace CodeSmith.Data.Caching
         /// <param name="group">The cache group.</param>
         public override bool Remove(string key, string group)
         {
-            return HttpRuntime.Cache.Remove(GetGroupKey(key, group)) != null;
+            var groupKey = GetGroupKey(key, group);
+            bool result = HttpRuntime.Cache.Remove(groupKey) != null;
+#if DEBUG
+            if (result && !groupKey.StartsWith(GroupVersionPrefix))
+                Debug.WriteLine("Cache Remove for key " + groupKey);
+#endif
+            return result;
         }
 
         /// <summary>
@@ -66,7 +79,15 @@ namespace CodeSmith.Data.Caching
         /// </returns>
         public override object Get(string key, string group)
         {
-            return HttpRuntime.Cache.Get(GetGroupKey(key, group));
+            var groupKey = GetGroupKey(key, group);
+            var value = HttpRuntime.Cache.Get(groupKey);
+
+#if DEBUG
+            if (value != null && !groupKey.StartsWith(GroupVersionPrefix))
+                Debug.WriteLine("Cache Hit for key " + groupKey);
+#endif
+
+            return value;
         }
     }
 }
