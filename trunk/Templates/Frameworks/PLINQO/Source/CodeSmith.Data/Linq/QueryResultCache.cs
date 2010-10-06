@@ -531,7 +531,7 @@ namespace CodeSmith.Data.Linq
         /// <param name="query">The query to be cleared.</param>
         public static bool ClearCache<T>(this IQueryable<T> query)
         {
-            return ClearCache(query, null, null);
+            return ClearCache(query, (CacheSettings)null);
         }
 
         /// <summary>
@@ -562,6 +562,20 @@ namespace CodeSmith.Data.Linq
                 return cacheProvider.Remove(key, group);
 
             return cacheProvider.Remove(key);
+        }
+
+        /// <summary>
+        /// Clears the cache of a given query.
+        /// </summary>
+        /// <typeparam name="T">The type of the data in the data source.</typeparam>
+        /// <param name="query">The query to be cleared.</param>
+        /// <param name="settings">Cache settings object.</param>
+        public static bool ClearCache<T>(this IQueryable<T> query, CacheSettings settings)
+        {
+            if (settings == null)
+                settings = CacheManager.GetProfile();
+
+            return ClearCache(query, settings.Group, settings.Provider);
         }
 
         #endregion
@@ -627,10 +641,6 @@ namespace CodeSmith.Data.Linq
 
             ICacheProvider cacheProvider = CacheManager.GetProvider(settings.Provider);
             cacheProvider.Set(key, result, settings);
-#if DEBUG
-            var groupKey = cacheProvider.GetGroupKey(key, settings.Group);
-            Debug.WriteLine("Cache Insert for key " + groupKey);
-#endif
         }
 
         internal static ICollection<T> GetResultCache<T>(string key, CacheSettings settings)
@@ -640,12 +650,6 @@ namespace CodeSmith.Data.Linq
 
             ICacheProvider cacheProvider = CacheManager.GetProvider(settings.Provider);
             var collection = cacheProvider.Get<ICollection<T>>(key, settings.Group);
-
-#if DEBUG
-            var groupKey = cacheProvider.GetGroupKey(key, settings.Group);
-            if (collection != null)
-                Debug.WriteLine("Cache Hit for key " + groupKey);
-#endif
             return collection;
         }
 

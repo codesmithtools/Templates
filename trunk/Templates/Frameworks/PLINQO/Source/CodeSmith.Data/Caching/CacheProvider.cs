@@ -15,6 +15,9 @@ namespace CodeSmith.Data.Caching
     /// </summary>
     public abstract class CacheProvider : ProviderBase, ICacheProvider
     {
+        public const string GroupVersionPrefix = "g_";
+        public const string GroupKeyPrefix = "p_";
+
         private static readonly Random _random = new Random();
 
         /// <summary>
@@ -256,7 +259,7 @@ namespace CodeSmith.Data.Caching
         {
             if (settings == null)
                 throw new ArgumentNullException("settings");
-            
+
             var d = Get(key, settings.Group);
             if (d != null)
                 return Convert<T>(d);
@@ -350,14 +353,14 @@ namespace CodeSmith.Data.Caching
             var groupVersion = GetGroupVersion(group);
             string cleanName = Regex.Replace(group, @"\W+", "");
 
-            // build key {prefix}_{groupName}_{groupVersion}_{originalKey}
-            return string.Format("p_{0}_{1}_{2}", cleanName, groupVersion, key);
+            // build key {prefix}{groupName}_{groupVersion}_{originalKey}
+            return string.Format("{0}{1}_{2}_{3}", GroupKeyPrefix, cleanName, groupVersion, key);
         }
 
         private static string GetGroupVersionKey(string group)
         {
             string cleanName = Regex.Replace(group, @"\W+", "");
-            return "g_" + cleanName;
+            return GroupVersionPrefix + cleanName;
         }
 
         private static T Convert<T>(object data)
@@ -375,17 +378,17 @@ namespace CodeSmith.Data.Caching
             if (converter.CanConvertFrom(dataType))
                 return (T)converter.ConvertFrom(data);
 
-            if (dataType != typeof (byte[]))
+            if (dataType != typeof(byte[]))
             {
                 return default(T);
 
             }
-            
-            if (valueType.IsSubclassOf(typeof (IEnumerable<T>)))
+
+            if (valueType.IsSubclassOf(typeof(IEnumerable<T>)))
             {
                 try
                 {
-                    var converted = (T) ((byte[]) data).ToCollection<T>();
+                    var converted = (T)((byte[])data).ToCollection<T>();
                     return converted;
                 }
                 catch
@@ -396,7 +399,7 @@ namespace CodeSmith.Data.Caching
             {
                 try
                 {
-                    var converted = ((byte[]) data).ToObject<T>();
+                    var converted = ((byte[])data).ToObject<T>();
                     return converted;
                 }
                 catch
