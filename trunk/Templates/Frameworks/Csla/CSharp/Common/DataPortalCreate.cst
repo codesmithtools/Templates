@@ -1,4 +1,4 @@
-<%-- Author: Blake Niemyjski --%>
+﻿<%-- Author: Blake Niemyjski --%>
 <%@ CodeTemplate Language="C#" TargetLanguage="C#" Inherits="CodeSmith.QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Encoding="UTF-8" Description="CSLA Map" %>
 
 <%@ Assembly Name="SchemaExplorer" %>
@@ -19,13 +19,8 @@ if(member.SystemType == "System.Guid") { if(UseMemberVariables) { %>
             <%= member.PrivateMemberVariableName %> = Guid.NewGuid();
 <% } else { %>
             LoadProperty(<%= member.PrivateMemberVariableName %>Property, Guid.NewGuid());
-<% } } }
- foreach(Association association in Entity.AssociatedForeignKeys) { foreach(AssociationMember member in association) {
-if(member.AssociatedColumn.SystemType == "System.String" && !member.AssociatedColumn.IsIdentity && member.AssociatedColumn.IsForeignKey) { if(UseMemberVariables) { %>
-            <%= member.AssociatedColumn.PropertyName %> = "BN";
-<% } else { %>
-            LoadProperty(<%= member.AssociatedColumn.PrivateMemberVariableName %>Property, "BN");
-<% } } } } %>
+<% } } } %>
+
 <% if(IsCSLA40) { %>
             BusinessRules.CheckRules();
 <% } else { %>

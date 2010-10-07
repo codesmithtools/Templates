@@ -24,19 +24,8 @@
             LoadProperty(<%= member.PrivateMemberVariableName %>Property, Guid.NewGuid())
     <% End If
     End If
-    Next
-    For Each association As Association in Entity.AssociatedForeignKeys
-        For Each member As AssociationMember in association
-    If (member.AssociatedColumn.SystemType = "System.String" AndAlso Not member.AssociatedColumn.IsIdentity AndAlso member.AssociatedColumn.IsForeignKey) Then
-        If (UseMemberVariables) Then %>
-            <%= member.AssociatedColumn.PropertyName %> = "BN"
-    <% Else %>
-            LoadProperty(<%= member.AssociatedColumn.PrivateMemberVariableName %>Property, "BN")
-    <% End If
-    End If
-    Next
-    Next
-    %>
+    Next %>
+
     <% If(IsCSLA40) Then %>
             BusinessRules.CheckRules()
     <% Else %>
