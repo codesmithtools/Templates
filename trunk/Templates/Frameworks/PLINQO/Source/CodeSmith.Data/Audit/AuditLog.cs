@@ -88,7 +88,7 @@ namespace CodeSmith.Data.Audit
                     return _serializer.Deserialize(reader) as AuditLog;
                 }
             }
-            catch (Exception ex)
+            catch
             {
                 //TODO: handle me
                 return new AuditLog();

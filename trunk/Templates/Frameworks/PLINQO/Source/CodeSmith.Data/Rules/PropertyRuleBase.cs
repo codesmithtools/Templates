@@ -227,7 +227,6 @@ namespace CodeSmith.Data.Rules
         /// Attempts to coerce a value of one type into a value of a different type.
         /// </summary>
         /// <param name="desiredType">Type to which the value should be coerced.</param>
-        /// <param name="valueType">Original type of the value.</param>
         /// <param name="value">The value to coerce.</param>
         public static object CoerceValue(Type desiredType, object value)
         {
