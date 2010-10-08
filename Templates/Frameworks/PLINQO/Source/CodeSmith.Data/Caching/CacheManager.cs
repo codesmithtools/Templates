@@ -107,7 +107,6 @@ namespace CodeSmith.Data.Caching
         /// <summary>
         /// Registers the specified provider name.
         /// </summary>
-        /// <typeparam name="T">The type of the provider.</typeparam>
         /// <param name="providerName">Name of the provider.</param>
         /// <param name="defaultProvider">if set to <c>true</c> this provider will be set as default.</param>
         /// <param name="createFactory">The factory to create a new provider.</param>

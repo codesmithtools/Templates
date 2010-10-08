@@ -71,7 +71,6 @@ namespace CodeSmith.Data.Caching
         /// <summary>
         /// Gets the data cached for specified key.
         /// </summary>
-        /// <typeparam name="T">The type for data being retrieved from cache,</typeparam>
         /// <param name="key">The key used to store the data in the cache provider.</param>
         /// <param name="group">The cache group.</param>
         /// <returns>
