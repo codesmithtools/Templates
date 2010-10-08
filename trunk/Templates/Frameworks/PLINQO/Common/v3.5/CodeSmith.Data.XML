@@ -615,7 +615,6 @@
             <summary>
             Registers the specified provider name.
             </summary>
-            <typeparam name="T">The type of the provider.</typeparam>
             <param name="providerName">Name of the provider.</param>
             <param name="defaultProvider">if set to <c>true</c> this provider will be set as default.</param>
             <param name="createFactory">The factory to create a new provider.</param>
@@ -1481,7 +1480,6 @@
             <summary>
             Gets the data cached for specified key.
             </summary>
-            <typeparam name="T">The type for data being retrieved from cache,</typeparam>
             <param name="key">The key used to store the data in the cache provider.</param>
             <param name="group">The cache group.</param>
             <returns>
@@ -4347,7 +4345,6 @@
             Attempts to coerce a value of one type into a value of a different type.
             </summary>
             <param name="desiredType">Type to which the value should be coerced.</param>
-            <param name="valueType">Original type of the value.</param>
             <param name="value">The value to coerce.</param>
         </member>
         <member name="M:CodeSmith.Data.Rules.PropertyRuleBase.CoerceValue(System.Type,System.Type,System.Object)">
