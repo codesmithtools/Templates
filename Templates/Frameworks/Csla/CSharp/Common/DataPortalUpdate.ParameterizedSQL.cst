@@ -23,7 +23,8 @@
                 item = item.Save();
 
                 // Mark child lists as dirty. This code may need to be updated to one-to-one relationships.
-<% foreach(Association association in Entity.AssociatedOneToMany) { %>
+<% foreach(Association association in Entity.AssociatedOneToMany) { 
+     if(!BusinessObjectExists(association) && IsReadOnlyBusinessObject( association, "Info")) { continue; }%>
                 foreach(<%= association.ClassName %> itemToUpdate in <%= association.PropertyName %>)
                 {
 <%= association.SearchCriteria.BuildUpdateStatements("itemToUpdate", "") %>
