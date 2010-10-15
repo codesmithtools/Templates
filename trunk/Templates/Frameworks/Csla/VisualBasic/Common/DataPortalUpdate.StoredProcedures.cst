@@ -24,7 +24,11 @@
                 item = item.Save()
     
                 ' Mark child lists as dirty. This code may need to be updated to one-to-one relationships.
-    <% For Each association As Association in Entity.AssociatedOneToMany  %>
+    <% For Each association As Association in Entity.AssociatedOneToMany
+            If(BusinessObjectExists(association) = False AndAlso IsReadOnlyBusinessObject(association, "Info")) Then
+                Continue For
+            End If %>
+    
                 For Each itemToUpdate As <%= association.ClassName %> In <%= association.PropertyName %>
     <%= association.SearchCriteria.BuildUpdateStatements("itemToUpdate", "") %>
                 Next
