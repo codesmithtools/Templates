@@ -1,5 +1,5 @@
 ﻿<%@ CodeTemplate Language="C#" TargetLanguage="C#" Debug="False" Encoding="UTF-8"
-    Description="Linq to Sql DataContext Class." %>
+    Description="Linq to Sql DataContext Class." CompilerVersion="v3.5" %>
 
 <%@ Assembly Name="Dbml" Path="..\..\Common" %>
 <%@ Assembly Name="Generator" Path="..\..\Common" %>
@@ -186,7 +186,7 @@ namespace <%= Database.ContextNamespace %>
             get { return GetTable<<%= Database.EntityNamespace %>.<%= table.Type.Name %>>(); }
         }
 
-<% } %>
+<% } // foreach %>
         #endregion
 
         #region Functions
@@ -231,19 +231,43 @@ for(int x = 0; x < function.Parameters.Count; x++) {
         <%= GeneratedCodeAttribute %>
         partial void OnCreated();
 <% foreach (Table table in Database.Tables) { %>
+
         /// <summary>Called before a <see cref="<%= table.Type.Name %>"/> is inserted.</summary>
         /// <param name="instance">The instance.</param>
         <%= GeneratedCodeAttribute %>
+<% if (table.InsertFunction != null) { %>
+        private void Insert<%= table.Type.Name %>(<%= table.Type.Name %> instance)
+        {
+<%= GetTableFunctionCall(table.InsertFunction) %>
+        }
+<% } else { %>
         partial void Insert<%= table.Type.Name %>(<%= Database.EntityNamespace %>.<%= table.Type.Name %> instance);
+<% } // InsertFunction%>
+
         /// <summary>Called before a <see cref="<%= table.Type.Name %>"/> is updated.</summary>
         /// <param name="instance">The instance.</param>
         <%= GeneratedCodeAttribute %>
+<% if (table.UpdateFunction != null) { %>
+        private void Update<%= table.Type.Name %>(<%= table.Type.Name %> instance)
+        {
+<%= GetTableFunctionCall(table.UpdateFunction) %>
+        }
+<% } else { %>
         partial void Update<%= table.Type.Name %>(<%= Database.EntityNamespace %>.<%= table.Type.Name %> instance);
+<% } // UpdateFunction%>
+
         /// <summary>Called before a <see cref="<%= table.Type.Name %>"/> is deleted.</summary>
         /// <param name="instance">The instance.</param>
         <%= GeneratedCodeAttribute %>
+<% if (table.DeleteFunction != null) { %>
+        private void Delete<%= table.Type.Name %>(<%= table.Type.Name %> instance)
+        {
+<%= GetTableFunctionCall(table.DeleteFunction) %>
+        }
+<% } else { %>
         partial void Delete<%= table.Type.Name %>(<%= Database.EntityNamespace %>.<%= table.Type.Name %> instance);
-<% } %>
+<% } // DeleteFunction%>
+<% } // foreach table%>
         #endregion
         <% if (IncludeIUpdatable) { %>
 
@@ -662,13 +686,13 @@ for(int x = 0; x < function.Parameters.Count; x++) {
     {
         StringBuilder s = new StringBuilder();
         s.Append("[System.Data.Linq.Mapping.Function(");
-        s.AppendFormat("Name=\"{0}\"", f.Name);
+        s.AppendFormat("Name = \"{0}\"", f.Name);
         if (f.IsComposable == true)
-            s.Append(", IsComposable=true");
+            s.Append(", IsComposable = true");
         s.Append(")]");
 
         if (f.Types.Count == 0 && f.Return != null)
-            s.AppendFormat("\r\n        [return: System.Data.Linq.Mapping.Parameter(DbType=\"{0}\")]", f.Return.DbType);
+            s.AppendFormat("\r\n        [return: System.Data.Linq.Mapping.Parameter(DbType = \"{0}\")]", f.Return.DbType);
         else if (f.HasMultipleResults == true)
             foreach(LinqToSqlShared.DbmlObjectModel.Type t in f.Types)
                 s.AppendFormat("\r\n        [System.Data.Linq.Mapping.ResultType(typeof({0}.{1}))]", Database.EntityNamespace, t.Name);
@@ -715,7 +739,7 @@ for(int x = 0; x < function.Parameters.Count; x++) {
         {
             Parameter p = function.Parameters[x];
             s.AppendLine();
-            s.AppendFormat("            [System.Data.Linq.Mapping.Parameter(Name=\"{0}\", DbType=\"{1}\")] ", p.Name, p.DbType);
+            s.AppendFormat("            [System.Data.Linq.Mapping.Parameter(Name = \"{0}\", DbType = \"{1}\")] ", p.Name, p.DbType);
 
             if (p.Direction != LinqToSqlShared.DbmlObjectModel.ParameterDirection.In)
                 s.Append("ref ");
@@ -723,7 +747,7 @@ for(int x = 0; x < function.Parameters.Count; x++) {
             s.AppendFormat("{0} {1}",GetParameterType(p), CSharpKeyWordEscape[p.ParameterName]);
 
             if (x < function.Parameters.Count - 1)
-                s.Append(", ");
+                s.Append(",");
         }
 
         return s.ToString();
@@ -752,7 +776,55 @@ for(int x = 0; x < function.Parameters.Count; x++) {
 
         return s.ToString();
     }
-    
+
+    public string GetTableFunctionCall(TableFunction tableFunction)
+    {
+        StringBuilder s1 = new StringBuilder();
+        StringBuilder s2 = new StringBuilder();
+        StringBuilder s3 = new StringBuilder();
+
+
+        Function function = tableFunction.MappedFunction;
+        s2.AppendFormat("            {0}(", function.Method);
+        for(int i = 0; i < tableFunction.Arguments.Count; i++)
+        {
+            TableFunctionParameter a = tableFunction.Arguments[i];
+            Parameter p = function.Parameters.First(n => n.ParameterName == a.ParameterName);
+            string t = GetParameterType(p);
+            bool isOut = p.Direction != LinqToSqlShared.DbmlObjectModel.ParameterDirection.In;
+
+            // copy object to params
+            s1.AppendFormat("            {0} p{1} = instance.{2};", t, i, a.Member);
+            s1.AppendLine();
+
+            // function call
+            if (isOut)
+                s2.Append("ref ");
+
+            s2.Append("p");
+            s2.Append(i);
+
+            if (i < tableFunction.Arguments.Count - 1)
+                s2.Append(", ");
+            else
+                s2.AppendLine(");");
+
+            // update object with out params
+            if (isOut)
+            {
+                if (s3.Length == 0)
+                    s3.AppendLine();
+
+                s3.AppendFormat("            instance.{0} = p{1}", a.Member, i);
+                if (CommonUtility.IsNullableType(p.Type))
+                    s3.Append(".GetValueOrDefault()");
+                s3.AppendLine(";");
+            }
+        }
+        s1.AppendLine();
+        return s1.ToString() + s2.ToString() + s3.ToString();
+    }
+
     private static readonly string GeneratedCodeAttribute =  string.Format(
         "[System.CodeDom.Compiler.GeneratedCode(\"CodeSmith\", \"{0}\")]",
         typeof(CodeTemplate).Assembly.GetName().Version.ToString());
