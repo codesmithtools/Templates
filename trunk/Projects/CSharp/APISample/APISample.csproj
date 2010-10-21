@@ -95,8 +95,8 @@
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="CodeSmith.Insight.Client">
-      <Name>CodeSmith.Insight.Client</Name>
+    <Reference Include="CodeSmith.Insight.Client.Windows">
+      <Name>CodeSmith.Insight.Client.Windows</Name>
     </Reference>
     <Reference Include="System">
       <Name>System</Name>
