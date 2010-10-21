@@ -236,8 +236,12 @@ for(int x = 0; x < function.Parameters.Count; x++) {
         /// <param name="instance">The instance.</param>
         <%= GeneratedCodeAttribute %>
 <% if (table.InsertFunction != null) { %>
-        private void Insert<%= table.Type.Name %>(<%= table.Type.Name %> instance)
+        private void Insert<%= table.Type.Name %>(<%= Database.EntityNamespace %>.<%= table.Type.Name %> instance)
         {
+<% if (table.InsertFunction.Arguments.Any(a => a.Version == LinqToSqlShared.DbmlObjectModel.Version.Original)) { %>
+            <%= Database.EntityNamespace %>.<%= table.Type.Name %> original = <%= table.Member %>.GetOriginalEntityState(instance);
+
+<% } // original %>
 <%= GetTableFunctionCall(table.InsertFunction) %>
         }
 <% } else { %>
@@ -248,8 +252,12 @@ for(int x = 0; x < function.Parameters.Count; x++) {
         /// <param name="instance">The instance.</param>
         <%= GeneratedCodeAttribute %>
 <% if (table.UpdateFunction != null) { %>
-        private void Update<%= table.Type.Name %>(<%= table.Type.Name %> instance)
+        private void Update<%= table.Type.Name %>(<%= Database.EntityNamespace %>.<%= table.Type.Name %> instance)
         {
+<% if (table.UpdateFunction.Arguments.Any(a => a.Version == LinqToSqlShared.DbmlObjectModel.Version.Original)) { %>
+            <%= Database.EntityNamespace %>.<%= table.Type.Name %> original = <%= table.Member %>.GetOriginalEntityState(instance);
+
+<% } // original %>
 <%= GetTableFunctionCall(table.UpdateFunction) %>
         }
 <% } else { %>
@@ -260,8 +268,12 @@ for(int x = 0; x < function.Parameters.Count; x++) {
         /// <param name="instance">The instance.</param>
         <%= GeneratedCodeAttribute %>
 <% if (table.DeleteFunction != null) { %>
-        private void Delete<%= table.Type.Name %>(<%= table.Type.Name %> instance)
+        private void Delete<%= table.Type.Name %>(<%= Database.EntityNamespace %>.<%= table.Type.Name %> instance)
         {
+<% if (table.DeleteFunction.Arguments.Any(a => a.Version == LinqToSqlShared.DbmlObjectModel.Version.Original)) { %>
+            <%= Database.EntityNamespace %>.<%= table.Type.Name %> original = <%= table.Member %>.GetOriginalEntityState(instance);
+
+<% } // original %>
 <%= GetTableFunctionCall(table.DeleteFunction) %>
         }
 <% } else { %>
@@ -783,8 +795,8 @@ for(int x = 0; x < function.Parameters.Count; x++) {
         StringBuilder s2 = new StringBuilder();
         StringBuilder s3 = new StringBuilder();
 
-
         Function function = tableFunction.MappedFunction;
+
         s2.AppendFormat("            {0}(", function.Method);
         for(int i = 0; i < tableFunction.Arguments.Count; i++)
         {
@@ -792,9 +804,11 @@ for(int x = 0; x < function.Parameters.Count; x++) {
             Parameter p = function.Parameters.First(n => n.ParameterName == a.ParameterName);
             string t = GetParameterType(p);
             bool isOut = p.Direction != LinqToSqlShared.DbmlObjectModel.ParameterDirection.In;
-
+            bool isOriginal = a.Version ==LinqToSqlShared.DbmlObjectModel.Version.Original;
+            string version =  isOriginal ? "original" : "instance";
+            
             // copy object to params
-            s1.AppendFormat("            {0} p{1} = instance.{2};", t, i, a.Member);
+            s1.AppendFormat("            {0} p{1} = {2}.{3};", t, i, version, a.Member);
             s1.AppendLine();
 
             // function call
@@ -814,7 +828,7 @@ for(int x = 0; x < function.Parameters.Count; x++) {
             {
                 if (s3.Length == 0)
                     s3.AppendLine();
-
+                
                 s3.AppendFormat("            instance.{0} = p{1}", a.Member, i);
                 if (CommonUtility.IsNullableType(p.Type))
                     s3.Append(".GetValueOrDefault()");
