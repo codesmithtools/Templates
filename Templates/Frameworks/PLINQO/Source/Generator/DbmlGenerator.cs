@@ -638,7 +638,6 @@ namespace LinqToSqlShared.Generator
 
             try
             {
-                function.Types.Clear();
                 for (int i = 0; i < commandSchema.CommandResults.Count; i++)
                 {
                     var r = commandSchema.CommandResults[i];
