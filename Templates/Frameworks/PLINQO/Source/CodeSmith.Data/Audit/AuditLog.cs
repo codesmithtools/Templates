@@ -81,16 +81,41 @@ namespace CodeSmith.Data.Audit
         /// </returns>
         public static AuditLog FromXml(string auditLog)
         {
+            if (string.IsNullOrEmpty(auditLog))
+                return new AuditLog(); 
+            
             try
             {
                 using (var reader = new StringReader(auditLog))
+                using (XmlReader xr = XmlReader.Create(reader))
                 {
-                    return _serializer.Deserialize(reader) as AuditLog;
+                    return FromXml(xr);
                 }
             }
             catch
             {
-                //TODO: handle me
+                return new AuditLog();
+            }
+        }
+
+        /// <summary>
+        /// Returns an <see cref="AuditLog"/> object created from an XML string.
+        /// </summary>
+        /// <param name="reader">The <see cref="XmlReader"/> to create the AuditLog from.</param>
+        /// <returns>
+        /// An <see cref="AuditLog"/> object created from an <see cref="XmlReader"/>.
+        /// </returns>
+        public static AuditLog FromXml(XmlReader reader)
+        {
+            if (reader == null)
+                return new AuditLog(); 
+
+            try
+            {
+                return _serializer.Deserialize(reader) as AuditLog;
+            }
+            catch
+            {
                 return new AuditLog();
             }
         }
