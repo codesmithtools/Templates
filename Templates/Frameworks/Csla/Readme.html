@@ -31,14 +31,14 @@
 <p>The following steps will create a quick data driven site.</p>
 <ol>
     <li>Open the QuickStart.cst file found in the directory with this file.</li>
-    <li>Select your Datasource.</li>
+    <li>Select your Data source.</li>
     <li>Generate the template.</li>
     <li>After Visual Studio Opens, set [DataSource].UI as the startup project.</li>
     <li>Run the project.(F5)</li>
-    <li>This produces a functional website.</li>
-    <li>The included csp in the data project can be used to regenerate databse informatin when
+    <li>This creates a blank website project that can be used to quickly consume the generated CSLA code.</li>
+    <li>The included CodeSmith Generator Project File (CSP) in the data project can be used to regenerate database information when
         future changes are made.</li>
-    <li>The quickstart has various properties that can be manipulalted in order to 
+    <li>The Quick Start has various properties that can be manipulated in order to 
         produce differing base projects, including Language and ProjectType.</li>
 </ol>
 
@@ -57,7 +57,7 @@
     </li>
 </ol>
 <h2><a title="QuickStart.cst" name="QuickStart.cst">QuickStart.cst Template</a></h2>
-<p>The QuickStart.cst temlplate is used to create a basic project using Linq to Sql. 
+<p>The QuickStart.cst template is used to create a basic project using Linq to Sql. 
 &nbsp; The template will create a visual studio solution with up to three included projects: 
 &nbsp; A Data Project, an Interface Project, and a Test Project.
 </p>
@@ -106,7 +106,7 @@ when the template is re-ran.&nbsp; It will have the following file name... &lt;e
 <p>The second file is a partial class that can be modified as it will not be re-generated.&nbsp; 
 You can implement the partial methods in this file.&nbsp; Some partial method stubs 
 are created by default. This file will be named... &lt;entity&gt;.cs</p>
-    <p>The third file is a partial clas that cannot be modified. It stores the Data 
+    <p>The third file is a partial class that cannot be modified. It stores the Data 
         Access Code. This file will be named &lt;entity&gt;.DataAccess.cs</p>
 <p>If you set the project file property on the template, the generated files will 
 be added to the project.&nbsp; The file that can not be modified will be hidden 
@@ -209,7 +209,7 @@ under the file that can be changed.</p>
             <li>Moved all repetitive template logic into sub templates (common folder)</li>
             <li>Added support for the new ByPassPropertyCheck in CSLA 3.8.</li>
             <li>Updated the templates to CSLA 3.8.2.</li>
-            <li>Fixed detection logic for GetBy Critiera.</li>
+            <li>Fixed detection logic for GetBy Criteria.</li>
             <li>Fixed many bugs dealing with Child objects and how they are populated.</li>
             <li>Added partial method hooks for the DataPortal methods.</li>
             <li>Updated the templates to throw an exception when a record doesn’t exist.</li>
