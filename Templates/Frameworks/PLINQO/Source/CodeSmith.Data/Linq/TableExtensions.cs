@@ -109,11 +109,11 @@ namespace CodeSmith.Data.Linq
             updateCommand.CommandText = string.Format("UPDATE {0}\r\n{1}\r\n\r\n{2}",
                                                       table.GetDbName(), // Database table name
                                                       setSB, // SET fld = {}, fld2 = {}, ...
-                                                      GetBatchJoinQuery(table, entities)); // Subquery join created from entities command text
+                                                      GetBatchJoinQuery(table, entities)); // Sub query join created from entities command text
 
             if (updateCommand.CommandText.IndexOf("[arg0]") >= 0)
                 // TODO (Chris): Probably a better way to determine this by using an visitor on the expression before the
-                //				 var selectExpression = Expression.Call... method call (search for that) and see which funcitons
+                //				 var selectExpression = Expression.Call... method call (search for that) and see which functions
                 //				 are being used and determine if supported by LINQ to SQL
                 throw new NotSupportedException(
                     string.Format(
@@ -157,7 +157,7 @@ namespace CodeSmith.Data.Linq
             bool needsTopClause = selectClause.IndexOf(" TOP ") < 0 && select.IndexOf("\r\nORDER BY ") > 0;
             string subSelect = selectClause
                                + (needsTopClause ? "TOP 100 PERCENT " : "") // If order by in original select without TOP clause, need TOP
-                               + subSelectSB; // Apped just the primary keys.
+                               + subSelectSB; // Append just the primary keys.
             subSelect = subSelect.Substring(0, subSelect.Length - 2); // Remove last ', '
 
             subSelect += select.Substring(select.IndexOf("\r\nFROM ")); // Create a sub SELECT that *only* includes the primary key fields
@@ -171,7 +171,7 @@ namespace CodeSmith.Data.Linq
             Type entityType = typeof(TEntity);
 
             if (memberInitExpression.Type != entityType)
-                throw new NotImplementedException(string.Format("The MemberInitExpression is intializing a class of the incorrect type '{0}' and it should be '{1}'.", memberInitExpression.Type,
+                throw new NotImplementedException(string.Format("The MemberInitExpression is initializing a class of the incorrect type '{0}' and it should be '{1}'.", memberInitExpression.Type,
                                                                 entityType));
 
             var setSB = new StringBuilder();
@@ -217,7 +217,7 @@ namespace CodeSmith.Data.Linq
                 // If entityParam is NULL, then no references to other columns on the TEntity row and need to eval 'constant' value...
                 if (entityParam == null)
                 {
-                    // Compile and invoke the assignment expression to obtain the contant value to add as a parameter.
+                    // Compile and invoke the assignment expression to obtain the constant value to add as a parameter.
                     object constant = Expression.Lambda(assignment.Expression, null).Compile().DynamicInvoke();
 
                     // use the MappedName from the table mapping DataMembers - that is field name in DB table.
@@ -233,7 +233,7 @@ namespace CodeSmith.Data.Linq
                 else
                 {
                     // TODO (Documentation): Explain what we are doing here again, I remember you telling me why we have to call but I can't remember now.
-                    // Wny are we calling Expression.Call and what are we passing it?  Below comments are just 'made up' and probably wrong.
+                    // Why are we calling Expression.Call and what are we passing it?  Below comments are just 'made up' and probably wrong.
 
                     // Create a MethodCallExpression which represents a 'simple' select of *only* the assignment part (right hand operator) of
                     // of the MemberInitExpression.MemberAssignment so that we can let the Linq Provider do all the 'sql syntax' generation for
@@ -268,7 +268,7 @@ namespace CodeSmith.Data.Linq
             // Convert the selectExpression into an IQueryable query so that I can get the CommandText
             IQueryable selectQuery = table.Provider.CreateQuery(selectExpression);
 
-            // Get the DbCommand so I can grab relavent parts of CommandText to construct a field 
+            // Get the DbCommand so I can grab relevant parts of CommandText to construct a field 
             // assignment and based on the 'current TEntity row'.  Additionally need to massage parameter 
             // names from temporary command when adding to the final update command.
             DbCommand selectCmd = table.Context.GetCommand(selectQuery);
