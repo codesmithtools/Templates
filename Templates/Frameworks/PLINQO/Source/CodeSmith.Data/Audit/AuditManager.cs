@@ -105,6 +105,51 @@ namespace CodeSmith.Data.Audit
             return mergedLog;
         }
 
+        /// <summary>
+        /// Refreshes the current properties in the audit log.
+        /// </summary>
+        /// <param name="log">The audit log to refresh.</param>
+        public static void Refresh(AuditLog log)
+        {
+            if (log == null)
+                return;
+
+            // update current values because the entites can change after submit
+            foreach (var auditEntity in log.Entities)
+            {
+                // don't need to update deletes
+                if (auditEntity.Action == AuditAction.Delete)
+                    continue;
+
+                // if current is stored, it will be updated on submit
+                object current = auditEntity.Current;
+                if (current == null)
+                    continue;
+
+                // update the key value
+                foreach (var key in auditEntity.Keys.Where(k => k.MetaDataMember != null))
+                    key.Value = GetKeyValue(key.MetaDataMember, current);
+
+                // update the property values
+                foreach (var property in auditEntity.Properties.Where(p => p.MetaDataMember != null))
+                {
+                    try
+                    {
+                        var dataMember = property.MetaDataMember;
+                        Type underlyingType = GetUnderlyingType(dataMember.Type);
+                        var boxedValue = dataMember.MemberAccessor.GetBoxedValue(current);
+                        var value = GetValue(dataMember.Member, underlyingType, boxedValue, current);
+                        property.Current = value;
+                    }
+                    catch (Exception ex)
+                    {
+                        Trace.TraceError(ex.Message);
+                        property.Current = "{error}";
+                    }                    
+                }
+            }
+        }
+
         private static void MergeAuditEntity(AuditEntity source, AuditEntity destination)
         {
             //destination.Action = source.Action;  // merge action?
@@ -159,11 +204,11 @@ namespace CodeSmith.Data.Audit
                 var auditProperty = new AuditKey();
                 try
                 {
+                    auditProperty.MetaDataMember = dataMember;
                     auditProperty.Name = dataMember.Member.Name;
                     auditProperty.Type = dataMember.Type.FullName;
-                    object value = dataMember.MemberAccessor.GetBoxedValue(entity);
-                    if (dataMember.Type.IsEnum)
-                        value = Enum.GetName(dataMember.Type, value);
+
+                    object value = GetKeyValue(dataMember, entity);
 
                     auditProperty.Value = value;
                 }
@@ -204,8 +249,9 @@ namespace CodeSmith.Data.Audit
             var auditProperty = new AuditProperty();
             try
             {
+                auditProperty.MetaDataMember = dataMember;
                 auditProperty.Name = dataMember.Member.Name;
-
+                
                 Type underlyingType = GetUnderlyingType(dataMember.Type);
                 auditProperty.Type = underlyingType.FullName;
 
@@ -458,6 +504,14 @@ namespace CodeSmith.Data.Audit
                 Trace.TraceError(ex.Message);
                 return "{error}";
             }
+        }
+
+        private static object GetKeyValue(MetaDataMember dataMember, object entity)
+        {
+            object value = dataMember.MemberAccessor.GetBoxedValue(entity);
+            if (dataMember.Type.IsEnum)
+                value = Enum.GetName(dataMember.Type, value);
+            return value;
         }
 
         private static MetaDataMember GetDisplayMember(MetaType rowType)
