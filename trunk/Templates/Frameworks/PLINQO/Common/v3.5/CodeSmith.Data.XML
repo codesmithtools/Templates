@@ -376,6 +376,12 @@
             <param name="logs">The list logs to merge together.</param>
             <returns>An instance of <see cref="T:CodeSmith.Data.Audit.AuditLog"/> with all other logs merged in.</returns>
         </member>
+        <member name="M:CodeSmith.Data.Audit.AuditManager.Refresh(CodeSmith.Data.Audit.AuditLog)">
+            <summary>
+            Refreshes the current properties in the audit log.
+            </summary>
+            <param name="log">The audit log to refresh.</param>
+        </member>
         <member name="M:CodeSmith.Data.Audit.AuditManager.ReadLock(System.Threading.ReaderWriterLockSlim)">
             <summary>
             Gets the read lock.
