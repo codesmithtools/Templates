@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System.Data.Linq.Mapping;
+using System.Diagnostics;
 using System.Xml.Serialization;
 
 namespace CodeSmith.Data.Audit
@@ -27,5 +28,8 @@ namespace CodeSmith.Data.Audit
         /// <value>The current value of the property.</value>
         [XmlElement("value")]
         public object Value { get; set; }
+
+        [XmlIgnore]
+        internal MetaDataMember MetaDataMember { get; set; }
     }
 }

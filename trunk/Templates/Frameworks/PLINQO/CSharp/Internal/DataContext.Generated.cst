@@ -579,6 +579,7 @@ for(int x = 0; x < function.Parameters.Count; x++) {
             PopulateLastAudit();
             BeforeSubmitChanges();
             base.SubmitChanges(failureMode);
+            RefreshLastAudit();
             AfterSubmitChanges();
         }
         #endregion
@@ -607,9 +608,6 @@ for(int x = 0; x < function.Parameters.Count; x++) {
         }
 
         <%= GeneratedCodeAttribute %>
-        private System.Data.Linq.ChangeSet _lastChangeSet;
-
-        <%= GeneratedCodeAttribute %>
         private CodeSmith.Data.Audit.AuditLog _lastAudit;
 
         /// <summary>
@@ -622,13 +620,7 @@ for(int x = 0; x < function.Parameters.Count; x++) {
         <%= GeneratedCodeAttribute %>
         public CodeSmith.Data.Audit.AuditLog LastAudit
         {
-            get
-            {
-                if (_lastAudit == null)
-                    PopulateLastAudit();
-
-                return _lastAudit;
-            }
+            get { return _lastAudit; }
         }
 
         /// <summary>
@@ -644,18 +636,17 @@ for(int x = 0; x < function.Parameters.Count; x++) {
             if (!AuditingEnabled)
                 return;
 
-            _lastAudit = null;
-            _lastChangeSet = this.GetChangeSet();
-            _lastAudit = CodeSmith.Data.Audit.AuditManager.CreateAuditLog(this, _lastChangeSet);
+            _lastAudit = CodeSmith.Data.Audit.AuditManager.CreateAuditLog(this);
         }
 
         /// <summary>
-        /// Resets the <see cref="LastAudit"/> property.
+        /// Refresh the <see cref="AuditLog"/> values stored in the <see cref="LastAudit"/> after SubmitChanges call.
         /// </summary>
         <%= GeneratedCodeAttribute %>
-        protected virtual void ResetLastAudit()
+        protected virtual void RefreshLastAudit()
         {
-            _lastAudit = null;
+            if (_lastAudit != null) 
+                CodeSmith.Data.Audit.AuditManager.Refresh(_lastAudit);
         }
         #endregion
         <% } %>

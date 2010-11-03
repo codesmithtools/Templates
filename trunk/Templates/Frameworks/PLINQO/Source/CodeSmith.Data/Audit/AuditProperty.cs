@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using System.Data.Linq.Mapping;
 using System.Diagnostics;
 using System.Runtime.Serialization;
 using System.Xml.Serialization;
@@ -35,8 +36,7 @@ namespace CodeSmith.Data.Audit
         [XmlAttribute("isForeignKey")]
         [DefaultValue(false)]
         public bool IsForeignKey { get; set; }
-
-
+        
         /// <summary>
         /// Gets or sets a value indicating whether this property is an association.
         /// </summary>
@@ -67,5 +67,8 @@ namespace CodeSmith.Data.Audit
         /// <value>The original value of the property.</value>
         [XmlElement("original")]
         public object Original { get; set; }
+
+        [XmlIgnore]
+        internal MetaDataMember MetaDataMember { get; set; }
     }
 }
