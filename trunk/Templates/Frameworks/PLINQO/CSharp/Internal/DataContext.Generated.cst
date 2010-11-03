@@ -579,7 +579,6 @@ for(int x = 0; x < function.Parameters.Count; x++) {
             PopulateLastAudit();
             BeforeSubmitChanges();
             base.SubmitChanges(failureMode);
-            ResetLastAudit();
             AfterSubmitChanges();
         }
         #endregion
@@ -625,8 +624,8 @@ for(int x = 0; x < function.Parameters.Count; x++) {
         {
             get
             {
-                if (_lastAudit == null && _lastChangeSet != null)
-                    _lastAudit = CodeSmith.Data.Audit.AuditManager.CreateAuditLog(this, _lastChangeSet);
+                if (_lastAudit == null)
+                    PopulateLastAudit();
 
                 return _lastAudit;
             }
@@ -647,6 +646,7 @@ for(int x = 0; x < function.Parameters.Count; x++) {
 
             _lastAudit = null;
             _lastChangeSet = this.GetChangeSet();
+            _lastAudit = CodeSmith.Data.Audit.AuditManager.CreateAuditLog(this, _lastChangeSet);
         }
 
         /// <summary>
