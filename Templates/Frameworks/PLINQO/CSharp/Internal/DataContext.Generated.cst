@@ -789,6 +789,7 @@ for(int x = 0; x < function.Parameters.Count; x++) {
         Function function = tableFunction.MappedFunction;
 
         s2.AppendFormat("            {0}(", function.Method);
+        s2.AppendLine();
         for(int i = 0; i < tableFunction.Arguments.Count; i++)
         {
             TableFunctionParameter a = tableFunction.Arguments[i];
@@ -799,18 +800,23 @@ for(int x = 0; x < function.Parameters.Count; x++) {
             string version =  isOriginal ? "original" : "instance";
             
             // copy object to params
-            s1.AppendFormat("            {0} p{1} = {2}.{3};", t, i, version, a.Member);
-            s1.AppendLine();
-
-            // function call
-            if (isOut)
-                s2.Append("ref ");
-
-            s2.Append("p");
-            s2.Append(i);
+            if(isOut)
+            {
+                s1.AppendFormat("            {0} p{1} = {2}.{3};", t, i, version, a.Member);
+                s1.AppendLine();
+                
+                s2.AppendFormat("\t\t\t\tref p{0}", i);
+            }
+            else
+            {
+                s2.AppendFormat("\t\t\t\t{0}.{1}", version, a.Member);
+            }
 
             if (i < tableFunction.Arguments.Count - 1)
-                s2.Append(", ");
+            {
+                s2.AppendFormat(",\t\t\t//{0}", i);
+                s2.AppendLine();
+            }
             else
                 s2.AppendLine(");");
 
