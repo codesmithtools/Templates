@@ -21,14 +21,13 @@ Public Class Global_asax
 
         profile = profile.Save()
 
-        ' Clean up anonymous profile
-        System.Web.Profile.ProfileManager.DeleteProfile(e.AnonymousID)
-        AnonymousIdentificationModule.ClearAnonymousIdentifier()
-
-        'Clear the cart.
         anonymousProfile.ShoppingCart.Clear()
         anonymousProfile.WishList.Clear()
         anonymousProfile = anonymousProfile.Save()
+
+        ' Clean up anonymous profile
+        'System.Web.Profile.ProfileManager.DeleteProfile(e.AnonymousID)
+        'AnonymousIdentificationModule.ClearAnonymousIdentifier()
     End Sub
 
     Sub Application_Start(ByVal sender As Object, ByVal e As EventArgs)

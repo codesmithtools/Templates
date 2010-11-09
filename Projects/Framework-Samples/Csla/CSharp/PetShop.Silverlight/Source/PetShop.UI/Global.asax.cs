@@ -27,14 +27,14 @@ namespace PetShop.UI
 
             profile = profile.Save();
 
-            // Clean up anonymous profile
-            ProfileManager.DeleteProfile(e.AnonymousID);
-            AnonymousIdentificationModule.ClearAnonymousIdentifier();
-
             //Clear the cart.
             anonymousProfile.ShoppingCart.Clear();
             anonymousProfile.WishList.Clear();
             anonymousProfile = anonymousProfile.Save();
+
+            // Clean up anonymous profile
+            //ProfileManager.DeleteProfile(e.AnonymousID);
+            //AnonymousIdentificationModule.ClearAnonymousIdentifier();
         }
 
         protected void Application_Start(object sender, EventArgs e)
