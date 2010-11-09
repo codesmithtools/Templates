@@ -92,7 +92,12 @@ Public Sub Generate()
         Me.RegisterReference("System.Data.Services")
         Me.RegisterReference("System.Data.Services.Client")
     End If
-    Me.RegisterReference(Path.GetFullPath(Path.Combine(Me.CodeTemplateInfo.DirectoryName, "..\Common\CodeSmith.Data.dll")))
+
+    If (Me.Framework = FrameworkEnum.v40) Then
+        Me.RegisterReference(Path.GetFullPath(Path.Combine(Me.CodeTemplateInfo.DirectoryName, "..\Common\v4.0\CodeSmith.Data.dll")))
+    Else
+        Me.RegisterReference(Path.GetFullPath(Path.Combine(Me.CodeTemplateInfo.DirectoryName, "..\Common\v3.5\CodeSmith.Data.dll")))
+    End If
 End Sub
 
 Public Sub CreateEntityBaseClass(ByVal database As Database)
