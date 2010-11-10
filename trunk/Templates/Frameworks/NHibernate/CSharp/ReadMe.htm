@@ -23,7 +23,7 @@
 <li><a href="#QuickStart">Quick Start</a></li>
 <li><a href="#SampleAppConfig">Sample App.Config</li>
 <li><a href="#AdvancedTips">AdvancedTips</li>
-<li><a href="#Dependancies">Dependancies</li>
+<li><a href="#Dependencies">Dependencies</li>
 <li><a href="#KnownIssues">Known Issues</li>
 <li><a href="#Downloads">Downloads</li>
 <li><a href="#History">History</li>
@@ -96,10 +96,13 @@ These templates are designed to produce 5 major things...
 &nbsp; &nbsp; &nbsp; &lt;mapping assembly="NHibernate.Generated"/&gt;<br>
 &nbsp; &nbsp; &lt;/session-factory&gt;<br>
 &nbsp; &lt;/hibernate-configuration&gt;<br>
-&lt;/configuration&gt;<br>
+&lt;/configuration&gt;</p>
+    <p>
+        Please reference this
+        <a href="http://community.jboss.org/wiki/DatabasessupportedbynHibernate">
+        dialect documentation</a> when you need to configure a non Microsoft SQL Server RDBMS like MySQL, 
+        Oracle...
 </p>
-
-
 
 <h2><a title="AdvancedTips" name="AdvancedTips"></a>Advanced Tips</h2>
 <p>
@@ -111,7 +114,7 @@ The value true will always define the table as many to many, while a value of fa
 </p>
 
 
-<h2><a title="Dependancies" name="Dependancies"></a>Dependancies</h2>
+<h2><a title="Dependencies" name="Dependencies"></a>Dependencies</h2>
 <p>
 These templates are dependant on the following applications.
 <ul>
@@ -121,7 +124,7 @@ These templates are dependant on the following applications.
   <li>2008</li>
   <li>2005</li>
   <ul>
-   <li>Generation: Does not include partial methods in business ojects.</li>
+   <li>Generation: Does not include partial methods in business objects.</li>
   </ul>
  </ul>
 </ul>
@@ -131,7 +134,7 @@ These templates use the following assemblies.
  <ul>
   <li>2.1.0.GA</li>
   <ul>
-   <li>Runtime: Requires "proxyfactory.factory_class" property in config.</li>
+   <li>Runtime: Requires "proxyfactory.factory_class" property in configuration.</li>
   </ul>
   <li>2.0.1.GA</li>
   <li>1.2.1.GA</li>
@@ -148,7 +151,7 @@ These templates use the following assemblies.
 <p>
 <ul>
 <li>UnitTests require that each table in the database have at least valid row.</li>
-<li>Currently we do not support Composite Foriegn Keys; the columns for the keys will be generated, but the associations will not.</li>
+<li>Currently we do not support Composite Foreign Keys; the columns for the keys will be generated, but the associations will not.</li>
 </ul>
 </p>
 
@@ -225,7 +228,7 @@ Download the latest release from GoogleCode.<br>
       <ul>
        <li>Query</li>
        <li>UniqueQuery</li>
-       <li>Cirteria</li>
+       <li>Criteria</li>
        <li>Evict</li>
       </ul>
      </li>
@@ -239,15 +242,15 @@ Download the latest release from GoogleCode.<br>
    <li>Bug Fixes
     <ul>
      <li>No more ObjectDisposed exceptions from global ISession. (This depends on the proper disposal of managers.)</li>
-     <li>Added checking for null/empty ExcludedColumns regex patterns.</li>
+     <li>Added checking for null/empty ExcludedColumns Regex patterns.</li>
      <li>Now Association Columns will get properties when their table is excluded.</li>
      <li>Updated version column logic to prevent primary key property duplication on generation.</li>
      <li>Changed default HBM Bag Inverse attribute to false to fix many to many persistence issue.</li>
      <li>SearchCritera was including foreign keys columns even when their associated tables were excluded.</li>
      <li>Updated UnitTests to use only non key and version columns for Update.</li>
      <li>Removed MembersPrimaryKeyUnion and integrated logic with Members list; this should prevent redundant properties from being created for primary key columns.</li>
-     <li>Fix Row Version rutime bug in HBM.</li>
-     <li>Column names will no be set to singluar for no reason.</li>
+     <li>Fix Row Version runtime bug in HBM.</li>
+     <li>Column names will no be set to singular for no reason.</li>
      <li>Better duplicate member name prevention.</li>
      <li>prevents duplication of columns and associations in the business entities</li>
      <li>Now support creating unit test data for varchar(max).</li>
