@@ -805,16 +805,16 @@ for(int x = 0; x < function.Parameters.Count; x++) {
                 s1.AppendFormat("            {0} p{1} = {2}.{3};", t, i, version, a.Member);
                 s1.AppendLine();
                 
-                s2.AppendFormat("\t\t\t\tref p{0}", i);
+                s2.AppendFormat("                ref p{0}", i);
             }
             else
             {
-                s2.AppendFormat("\t\t\t\t{0}.{1}", version, a.Member);
+                s2.AppendFormat("                {0}.{1}", version, a.Member);
             }
 
             if (i < tableFunction.Arguments.Count - 1)
             {
-                s2.AppendFormat(",\t\t\t//{0}", i);
+                s2.Append(",");
                 s2.AppendLine();
             }
             else
