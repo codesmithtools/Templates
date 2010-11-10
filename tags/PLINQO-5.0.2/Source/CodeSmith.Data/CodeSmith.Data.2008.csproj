@@ -1,0 +1,218 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{389DE9AF-2491-4C91-A3A3-FB15FFD8515B}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>CodeSmith.Data</RootNamespace>
+    <AssemblyName>CodeSmith.Data</AssemblyName>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>CodeSmith.Data.snk</AssemblyOriginatorKeyFile>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <OldToolsVersion>2.0</OldToolsVersion>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\..\Common\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>..\..\Common\CodeSmith.Data.XML</DocumentationFile>
+    <NoWarn>1591</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\..\Common\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>..\..\Common\CodeSmith.Data.XML</DocumentationFile>
+    <NoWarn>1591</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x86\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DocumentationFile>bin\Debug\CodeSmith.Data.XML</DocumentationFile>
+    <NoWarn>1591</NoWarn>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <OutputPath>bin\x86\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <DocumentationFile>..\..\Common\CodeSmith.Data.XML</DocumentationFile>
+    <Optimize>true</Optimize>
+    <NoWarn>1591</NoWarn>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.Linq">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Runtime.Serialization">
+      <RequiredTargetFramework>3.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Transactions" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.DynamicData">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Web.Extensions">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\GlobalAssemblyInfo.cs">
+      <Link>GlobalAssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="Attributes\IpAddressAttribute.cs" />
+    <Compile Include="Attributes\NotNullAttribute.cs" />
+    <Compile Include="Attributes\RuleAttributeBase.cs" />
+    <Compile Include="Attributes\UserNameAttribute.cs" />
+    <Compile Include="Attributes\GuidAttribute.cs" />
+    <Compile Include="Attributes\NowAttribute.cs" />
+    <Compile Include="Audit\AlwaysAuditAttribute.cs" />
+    <Compile Include="Audit\AuditAction.cs" />
+    <Compile Include="Audit\AuditAttribute.cs" />
+    <Compile Include="Audit\AuditEntity.cs" />
+    <Compile Include="Audit\AuditKey.cs" />
+    <Compile Include="Audit\AuditKeyCollection.cs" />
+    <Compile Include="Audit\AuditManager.cs" />
+    <Compile Include="Audit\AuditProperty.cs" />
+    <Compile Include="Audit\AuditLog.cs" />
+    <Compile Include="Audit\AuditPropertyCollection.cs" />
+    <Compile Include="Audit\AuditPropertyFormatAttribute.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Audit\NotAuditedAttribute.cs" />
+    <Compile Include="Caching\CacheManager.cs" />
+    <Compile Include="Caching\CacheManagerSection.cs" />
+    <Compile Include="Caching\ProfileElement.cs" />
+    <Compile Include="Caching\ProfileElementCollection.cs" />
+    <Compile Include="Caching\CacheProvider.cs" />
+    <Compile Include="Caching\CacheProviderCollection.cs" />
+    <Compile Include="Caching\HttpCacheProvider.cs" />
+    <Compile Include="Caching\ICacheProvider.cs" />
+    <Compile Include="Collections\ConcurrentDictionary.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="EntityKey.cs" />
+    <Compile Include="DataManagerBase.cs" />
+    <Compile Include="EntityManagerBase.cs" />
+    <Compile Include="IDataManager.cs" />
+    <Compile Include="IEntityManager.cs" />
+    <Compile Include="ILinqEntity.cs" />
+    <Compile Include="Caching\CacheSettings.cs" />
+    <Compile Include="Linq\ComparisonOperator.cs" />
+    <Compile Include="Linq\ContainmentOperator.cs" />
+    <Compile Include="Linq\DataContextExtensions.cs" />
+    <Compile Include="Linq\DynamicQuery.cs" />
+    <Compile Include="Linq\Evaluator.cs" />
+    <Compile Include="Linq\ExpressionVisitor.cs" />
+    <Compile Include="Linq\FutureCount.cs" />
+    <Compile Include="Linq\FutureException.cs" />
+    <Compile Include="Linq\FutureQuery.cs" />
+    <Compile Include="Linq\DataContextBase.cs" />
+    <Compile Include="Linq\FutureExtensions.cs" />
+    <Compile Include="Linq\FutureQueryBase.cs" />
+    <Compile Include="Linq\FutureValue.cs" />
+    <Compile Include="Linq\IFutureContext.cs" />
+    <Compile Include="Linq\IFutureQuery.cs" />
+    <Compile Include="Linq\IPagedList.cs" />
+    <Compile Include="Linq\PagedList.cs" />
+    <Compile Include="Linq\PagingExtensions.cs" />
+    <Compile Include="Linq\QueryExtensions.cs" />
+    <Compile Include="Linq\QueryResultCache.cs" />
+    <Compile Include="Linq\SerializationExtensions.cs" />
+    <Compile Include="Linq\TableExtensions.cs" />
+    <Compile Include="Linq\XElementExtensions.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Rules\Assign\IpAddressRule.cs" />
+    <Compile Include="Rules\EntityState.cs" />
+    <Compile Include="Rules\Assign\GuidRule.cs" />
+    <Compile Include="Rules\Assign\NowRule.cs" />
+    <Compile Include="Rules\Assign\UserNameRule.cs" />
+    <Compile Include="Rules\Assign\DefaultValueRule.cs" />
+    <Compile Include="Rules\BrokenRule.cs" />
+    <Compile Include="Rules\BrokenRuleCollection.cs" />
+    <Compile Include="Rules\BrokenRuleException.cs" />
+    <Compile Include="Rules\IRule.cs" />
+    <Compile Include="Rules\PropertyRuleBase.cs" />
+    <Compile Include="Rules\RuleCollection.cs" />
+    <Compile Include="Rules\RuleContext.cs" />
+    <Compile Include="Rules\RuleList.cs" />
+    <Compile Include="Rules\RuleManager.cs" />
+    <Compile Include="Rules\Security\AuthorizationRuleBase.cs" />
+    <Compile Include="Rules\Security\CreateRule.cs" />
+    <Compile Include="Rules\Security\DeleteRule.cs" />
+    <Compile Include="Rules\Security\UpdateRule.cs" />
+    <Compile Include="Rules\Validation\CompareRule.cs" />
+    <Compile Include="Rules\Validation\ComparisonOperator.cs" />
+    <Compile Include="Rules\Validation\CustomRule.cs" />
+    <Compile Include="Rules\Validation\LengthRule.cs" />
+    <Compile Include="Rules\Validation\NotNullRule.cs" />
+    <Compile Include="Rules\Validation\RangeRule.cs" />
+    <Compile Include="Rules\Validation\RegexRule.cs" />
+    <Compile Include="Rules\Validation\RequiredRule.cs" />
+    <Compile Include="Serialization\ByteArrayTypeConverter.cs" />
+    <Compile Include="Serialization\JavaScriptSerializerExtensions.cs" />
+    <Compile Include="TrackedObject.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Serialization\ByteArrayConverter.cs" />
+    <Compile Include="Web\LinqCacheDataSource.cs">
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <SubType>Designer</SubType>
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Audit\Audit.xsd" />
+    <None Include="CodeSmith.Data.snk" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
