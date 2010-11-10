@@ -973,6 +973,8 @@ namespace LinqToSqlShared.Generator
             List<Column> removedColumns = new List<Column>();
             List<Association> removedAssociations = new List<Association>();
             List<Function> removedFunctions = new List<Function>();
+            List<Type> removedFunctionTypes = new List<Type>();
+            List<Column> removedFunctionColumns = new List<Column>();
 
             foreach (Table table in database.Tables)
             {
@@ -1003,8 +1005,32 @@ namespace LinqToSqlShared.Generator
                 database.Tables.Remove(t);
 
             foreach (Function f in database.Functions)
+            {
                 if (!f.IsProcessed)
+                {
                     removedFunctions.Add(f);
+                    continue;
+                }
+
+                foreach (var t in f.Types)
+                {
+                    if (!t.IsProcessed)
+                    {
+                        removedFunctionTypes.Add(t);
+                        continue;
+                    }
+
+                    foreach (var c in t.Columns)
+                        if (!c.IsProcessed)
+                            removedFunctionColumns.Add(c);
+
+                    foreach (var c in removedFunctionColumns)
+                        t.Columns.Remove(c);
+                }
+
+                foreach (var t in removedFunctionTypes)
+                    f.Types.Remove(t);
+            }
 
             foreach (Function f in removedFunctions)
                 database.Functions.Remove(f);
