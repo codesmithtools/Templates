@@ -1,5 +1,5 @@
 ﻿<%@ CodeTemplate Language="VB" TargetLanguage="VB" Debug="False" Encoding="UTF-8"
-    Description="Linq to Sql DataContext Class." %>
+    Description="Linq to Sql DataContext Class." CompilerVersion="v3.5" %>
 
 <%@ Assembly Name="Dbml" Path="..\..\Common" %>
 <%@ Assembly Name="Generator" Path="..\..\Common" %>
@@ -8,8 +8,8 @@
 <%@ Import Namespace="LinqToSqlShared.DbmlObjectModel" %>
 <%@ Import Namespace="LinqToSqlShared.Generator" %>
 
-<%@ Property Category="1.Mapping" Name="Database" 
-    Type="LinqToSqlShared.DbmlObjectModel.Database" Optional="False" 
+<%@ Property Category="1.Mapping" Name="Database"
+    Type="LinqToSqlShared.DbmlObjectModel.Database" Optional="False"
     Description="Database schema instance. Must be set by parent template" %>
 
 <%@ Property Category="2.Class" Name="Framework"
@@ -23,21 +23,21 @@
 <%@ Property Category="2.Class" Name="IncludeDataRules"
     Type="System.Boolean" Default="true" Optional="False"
     Description="Include CodeSmith.Data rules." %>
-    
+
 <%@ Property Category="2.Class" Name="DefaultConnectionString"
     Type="System.String" Optional="True"
     Description="Default Connection String Name for DatabaseContext." %>
-    
+
 <%@ Property Category="2.Class" Name="AuditingEnabled"
     Type="System.Boolean" Default="False" Optional="True"
     Description="Flag indicating if the default state of the AuditingEnabled property." %>
 
-<%@ Map Name="VBKeywordEscape" 
-    Src="VBKeywordEscape.csmap" Reverse="False" 
+<%@ Map Name="VBKeywordEscape"
+    Src="VBKeywordEscape.csmap" Reverse="False"
     Description="Mapping to escape c# keywords" %>
 
-<%@ Map Name="VBAlias" 
-    Src="System-VBAlias.csmap" Reverse="False" 
+<%@ Map Name="VBAlias"
+    Src="System-VBAlias.csmap" Reverse="False"
     Description="Convert system data types to c# alias" %>
 
 '------------------------------------------------------------------------------
@@ -55,7 +55,7 @@ Namespace <%= Database.ContextNamespace %>
     ''' <summary>
     ''' The DataContext class for the <%= Database.Name %> database.
     ''' </summary>
-    <%= Naming.GetModifier(Database.AccessModifier) %> Partial Class <%= Database.Class %> 
+    Partial <%= GetModifier(Database.AccessModifier) %> Class <%= Database.Class %>
         Inherits CodeSmith.Data.Linq.DataContextBase
 <% If (IncludeIUpdatable) Then %>
         Implements System.Data.Services.IUpdatable
@@ -67,14 +67,14 @@ Namespace <%= Database.ContextNamespace %>
         Private Const CONNECTION_NAME As String = "<%= IIF(DefaultConnectionString IS NOTHING, Database.Connection.SettingsPropertyName, DefaultConnectionString) %>"
         Private Shared _connectionString As String
         Private Shared _connectionLock As New Object()
-        
+
         ''' <summary>The application connection string read from web.config or app.config</summary>
         ''' <example>
         ''' Add the following key to the "connectionStrings" section of your config:
         ''' <code><![CDATA[
         ''' <configuration>
         '''     <connectionStrings>
-        '''         <add name="<%= Database.Connection.SettingsPropertyName %>" 
+        '''         <add name="<%= Database.Connection.SettingsPropertyName %>"
         '''             connectionString="Data Source=(local);Initial Catalog=DATABASE;Integrated Security=True"
         '''             providerName="System.Data.SqlClient" />
         '''     </connectionStrings>
@@ -82,7 +82,7 @@ Namespace <%= Database.ContextNamespace %>
         ''' ]]></code>
         ''' </example>
         Public Shared ReadOnly Property ConnectionString() As String
-        
+
             Get
                 If _connectionString Is Nothing Then
                     SyncLock _connectionLock
@@ -94,7 +94,7 @@ Namespace <%= Database.ContextNamespace %>
                 Return _connectionString
             End Get
         End Property
-        
+
         Private Shared Function GetDefaultConnectionString() As String
             Dim settings As System.Configuration.ConnectionStringSettings = System.Configuration.ConfigurationManager.ConnectionStrings(CONNECTION_NAME)
             If settings Is Nothing Then
@@ -110,65 +110,65 @@ Namespace <%= Database.ContextNamespace %>
         ''' <summary>
         ''' Initializes a new instance of the <see cref="<%= Database.Class %>"/> class.
         ''' </summary>
-        <System.Diagnostics.DebuggerNonUserCode> _
-        <%= Naming.GetModifier(Database.AccessModifier) %> Sub New()
+        <System.Diagnostics.DebuggerNonUserCode()> _
+        <%= GetModifier(Database.AccessModifier) %> Sub New()
             MyBase.New(ConnectionString, MappingCache)
             OnCreated()
         End Sub
 
-        
+
         ''' <summary>
         ''' Initializes a new instance of the <see cref="<%= Database.Class %>"/> class.
         ''' </summary>
         ''' <param name="connection">The connection string.</param>
-        <System.Diagnostics.DebuggerNonUserCode> _
-        <%= Naming.GetModifier(Database.AccessModifier) %> Sub New(ByVal connection As String)
+        <System.Diagnostics.DebuggerNonUserCode()> _
+        <%= GetModifier(Database.AccessModifier) %> Sub New(ByVal connection As String)
             MyBase.New(connection, MappingCache)
             OnCreated()
         End Sub
-        
+
         ''' <summary>
         ''' Initializes a new instance of the <see cref="<%= Database.Class %>"/> class.
         ''' </summary>
         ''' <param name="connection">The database connection.</param>
-        <System.Diagnostics.DebuggerNonUserCode> _
-        <%= Naming.GetModifier(Database.AccessModifier) %> Sub New(ByVal connection As System.Data.IDbConnection)
+        <System.Diagnostics.DebuggerNonUserCode()> _
+        <%= GetModifier(Database.AccessModifier) %> Sub New(ByVal connection As System.Data.IDbConnection)
             MyBase.New(connection, MappingCache)
             OnCreated()
         End Sub
-        
+
         ''' <summary>
         ''' Initializes a new instance of the <see cref="<%= Database.Class %>"/> class.
         ''' </summary>
         ''' <param name="connection">The connection string.</param>
         ''' <param name="mappingSource">The mapping source.</param>
-        <System.Diagnostics.DebuggerNonUserCode> _
-        <%= Naming.GetModifier(Database.AccessModifier) %> Sub New(ByVal connection As String, ByVal mappingSource As System.Data.Linq.Mapping.MappingSource)
+        <System.Diagnostics.DebuggerNonUserCode()> _
+        <%= GetModifier(Database.AccessModifier) %> Sub New(ByVal connection As String, ByVal mappingSource As System.Data.Linq.Mapping.MappingSource)
             MyBase.New(connection, mappingSource)
             OnCreated()
         End Sub
-        
+
         ''' <summary>
         ''' Initializes a new instance of the <see cref="<%= Database.Class %>"/> class.
         ''' </summary>
         ''' <param name="connection">The database connection.</param>
         ''' <param name="mappingSource">The mapping source.</param>
-        <System.Diagnostics.DebuggerNonUserCode> _
-        <%= Naming.GetModifier(Database.AccessModifier) %> Sub New(ByVal connection As System.Data.IDbConnection, ByVal mappingSource As System.Data.Linq.Mapping.MappingSource)
+        <System.Diagnostics.DebuggerNonUserCode()> _
+        <%= GetModifier(Database.AccessModifier) %> Sub New(ByVal connection As System.Data.IDbConnection, ByVal mappingSource As System.Data.Linq.Mapping.MappingSource)
             MyBase.New(connection, mappingSource)
             OnCreated()
         End Sub
         #End Region
-        
+
         #Region "Tables"
 <% For Each table As Table In Database.Tables  %>
         ''' <summary>Represents the <%= table.Name %> table in the underlying database.</summary>
-        <%= Naming.GetModifier(table.AccessModifier, table.Modifier) %> ReadOnly Property <%= VBKeywordEscape(GetName(table)) %> As System.Data.Linq.Table(Of <%= Database.EntityNamespace %>.<%= table.Type.Name %>)
+        <%= GetModifier(table.AccessModifier, table.Modifier) %> ReadOnly Property <%= VBKeywordEscape(GetName(table)) %> As System.Data.Linq.Table(Of <%= Database.EntityNamespace %>.<%= table.Type.Name %>)
             Get
                 Return GetTable(Of <%= Database.EntityNamespace %>.<%= table.Type.Name %>)()
             End Get
         End Property
-        
+
 <% Next %>
         #End Region
 
@@ -177,14 +177,14 @@ Namespace <%= Database.ContextNamespace %>
         ''' <summary>Method that is mapped to the <%= f.Name %> database procedure.</summary>
         ''' <returns></returns>
         <%= CreateAttribute(f) %>
-        <%= Naming.GetModifier(f.AccessModifier, f.Modifier) %> Function <%= f.Method %>(<%= GetArguments(f) %>) As <%= GetReturnType(f) %>
+        <%= GetModifier(f.AccessModifier, f.Modifier) %> Function <%= f.Method %>(<%= GetArguments(f) %>) As <%= GetReturnType(f) %>
             Dim methodInfo = DirectCast(System.Reflection.MethodInfo.GetCurrentMethod(), System.Reflection.MethodInfo)
 <% If (IsTableFunction(f)) Then %>
             Dim result = Me.CreateMethodCallQuery(Of <%= GetResultName(f) %>)(Me, methodInfo<%= GetArgumentNames(f) %>)
 <% Else %>
             Dim result As System.Data.Linq.IExecuteResult = Me.ExecuteMethodCall(Me, methodInfo<%= GetArgumentNames(f) %>)
 <% End If %>
-<% 
+<%
 Dim x As Integer
 For x = 0 TO f.Parameters.Count - 1
     Dim p As Parameter = f.Parameters(x)
@@ -212,19 +212,49 @@ Next
         ''' <summary>Called after this instance is created.</summary>
         Partial Private Sub OnCreated()
         End Sub
-<% For Each [table] As [Table] in Database.Tables %>
-        ''' <summary>Called before a <%= [table].Type.Name %> is inserted.</summary>
+
+<% For Each table As Table in Database.Tables %>
+        ''' <summary>Called before a <%= table.Type.Name %> is inserted.</summary>
         ''' <param name="instance">The instance.</param>
-        Partial Private Sub Insert<%= [table].Type.Name %>(ByVal instance As <%= Database.EntityNamespace %>.<%= [table].Type.Name %>)
+<% If (table.InsertFunction IsNot Nothing) Then %>
+        Private Sub Insert<%= table.Type.Name %>(ByVal instance As <%= Database.EntityNamespace %>.<%= table.Type.Name %>)
+<% If (table.InsertFunction.Arguments.Any(Function(a) a.Version = LinqToSqlShared.DbmlObjectModel.Version.Original)) %>
+            Dim original As <%= Database.EntityNamespace %>.<%= table.Type.Name %> = <%= table.Member %>.GetOriginalEntityState(instance)
+<% End If %>
+<%= GetTableFunctionCall(table.InsertFunction) %>
         End Sub
-        ''' <summary>Called before a <%= [table].Type.Name %> is updated.</summary>
+<% Else %>
+        Partial Private Sub Insert<%= table.Type.Name %>(ByVal instance As <%= Database.EntityNamespace %>.<%= table.Type.Name %>)
+        End Sub
+<% End If %>
+
+        ''' <summary>Called before a <%= table.Type.Name %> is updated.</summary>
         ''' <param name="instance">The instance.</param>
-        Partial Private Sub Update<%= [table].Type.Name %>(ByVal instance As <%= Database.EntityNamespace %>.<%= [table].Type.Name %>)
+<% If (table.UpdateFunction IsNot Nothing) Then %>
+        Private Sub Update<%= table.Type.Name %>(ByVal instance As <%= Database.EntityNamespace %>.<%= table.Type.Name %>)
+<% If (table.UpdateFunction.Arguments.Any(Function(a) a.Version = LinqToSqlShared.DbmlObjectModel.Version.Original)) %>
+            Dim original As <%= Database.EntityNamespace %>.<%= table.Type.Name %> = <%= table.Member %>.GetOriginalEntityState(instance)
+<% End If %>
+<%= GetTableFunctionCall(table.UpdateFunction) %>
         End Sub
-        ''' <summary>Called before a <%= [table].Type.Name %> is deleted.</summary>
+<% Else %>
+        Partial Private Sub Update<%= table.Type.Name %>(ByVal instance As <%= Database.EntityNamespace %>.<%= table.Type.Name %>)
+        End Sub
+<% End If %>
+
+        ''' <summary>Called before a <%= table.Type.Name %> is deleted.</summary>
         ''' <param name="instance">The instance.</param>
-        Partial Private Sub Delete<%= [table].Type.Name %>(ByVal instance As <%= Database.EntityNamespace %>.<%= [table].Type.Name %>)
+<% If (table.DeleteFunction IsNot Nothing) Then %>
+        Private Sub Delete<%= table.Type.Name %>(ByVal instance As <%= Database.EntityNamespace %>.<%= table.Type.Name %>)
+<% If (table.DeleteFunction.Arguments.Any(Function(a) a.Version = LinqToSqlShared.DbmlObjectModel.Version.Original)) %>
+            Dim original As <%= Database.EntityNamespace %>.<%= table.Type.Name %> = <%= table.Member %>.GetOriginalEntityState(instance)
+<% End If %>
+<%= GetTableFunctionCall(table.DeleteFunction) %>
         End Sub
+<% Else %>
+        Partial Private Sub Delete<%= table.Type.Name %>(ByVal instance As <%= Database.EntityNamespace %>.<%= table.Type.Name %>)
+        End Sub
+<% End If %>
 <% Next %>
         #End Region
 
@@ -451,13 +481,13 @@ Next
 
             Return (ci.Invoke(Nothing))
         End Function
-        
+
         #End Region
 <% End If %>
 
         #Region "RuleManager"
         Private ReadOnly _ruleManager As New CodeSmith.Data.Rules.RuleManager()
-        
+
         ''' <summary>
         ''' Gets the current <see cref="CodeSmith.Data.Rules.RuleManager"/> for the <see cref="System.Data.Linq.DataContext"/>.
         ''' </summary>
@@ -466,18 +496,18 @@ Next
                 Return _ruleManager
             End Get
         End Property
-        
+
         ''' <summary>
         ''' Sends changes made to retrieved objects to the underlying database.
         ''' </summary>
         ''' <param name="failureMode">How concurrency conflicts should be reported.</param>
         Public Overloads Overrides Sub SubmitChanges(ByVal failureMode As System.Data.Linq.ConflictMode)
             Dim isValid As Boolean = RuleManager.Run(Me)
-            
+
             If Not isValid Then
                 Throw New CodeSmith.Data.Rules.BrokenRuleException(RuleManager.BrokenRules)
             End If
-            
+
             PopulateLastAudit()
             BeforeSubmitChanges()
             MyBase.SubmitChanges(failureMode)
@@ -486,11 +516,11 @@ Next
 
         #Region "Auditing"
         ''' <summary>Called before the underlying DataContext.SubmitChanges is called.</summary>
-        Private Partial Sub BeforeSubmitChanges()
+        Partial Private Sub BeforeSubmitChanges()
         End Sub
-        
+
         Private _auditingEnabled As Boolean = <%= AuditingEnabled.ToString() %>
-        
+
         ''' <summary>
         ''' Gets or sets a value indicating whether auditing is enabled.
         ''' </summary>
@@ -503,9 +533,9 @@ Next
                 _auditingEnabled = value
             End Set
         End Property
-        
+
         Private _lastAudit As CodeSmith.Data.Audit.AuditLog
-        
+
         ''' <summary>
         ''' Gets the last <see cref="CodeSmith.Data.Audit.AuditLog"/>.
         ''' </summary>
@@ -518,7 +548,7 @@ Next
                 Return _lastAudit
             End Get
         End Property
-        
+
         ''' <summary>
         ''' Populates the <see cref="LastAudit"/> property with the <see cref="CodeSmith.Data.Audit.AuditLog"/>
         ''' of changes in this <see cref="System.Data.Linq.DataContext"/>.
@@ -530,7 +560,7 @@ Next
             If Not AuditingEnabled Then
                 Exit Sub
             End If
-            
+
             _lastAudit = CodeSmith.Data.Audit.AuditManager.CreateAuditLog(Me)
         End Sub
         #End Region
@@ -573,14 +603,14 @@ Public Function CreateAttribute(ByVal f As [Function]) As String
         s.Append(", IsComposable:=true")
     End If
     s.Append(")> _")
-    
+
      If f.HasMultipleResults.Value = true Then
-        Dim ty
+        Dim ty As LinqToSqlShared.DbmlObjectModel.Type
         For Each ty In f.Types
             s.AppendFormat(vbCr & vbLf & "        <System.Data.Linq.Mapping.ResultType(GetType({0}.{1}))> _", Database.EntityNamespace, ty.Name)
         Next
     End If
-    
+
     Return s.ToString()
 End Function
 Public Function GetName(ByVal table As Table) As String
@@ -601,7 +631,7 @@ Public Function GetReturnType(ByVal f As [Function]) As String
     Else
         s.AppendFormat("System.Data.Linq.ISingleResult(Of {0})", GetResultName(f))
     End If
-    
+
     Return s.ToString()
 End Function
 
@@ -609,7 +639,7 @@ Public Function GetResultName(ByVal f As [Function]) As String
     If f.Types.Count = 0 Then
         Return String.Empty
     End If
-    
+
     Dim resultType As LinqToSqlShared.DbmlObjectModel.Type = f.Types(0)
     Return f.Types(0).Name
 End Function
@@ -619,8 +649,8 @@ Public Function GetArguments(ByVal f As [Function]) As String
     For x As Integer = 0 To f.Parameters.Count - 1
         Dim p As Parameter = f.Parameters(x)
         s.AppendLine(" _")
-        s.AppendFormat("            <System.Data.Linq.Mapping.Parameter(Name := ""{0}"", DbType:=""{1}"")> ", p.Name, p.DbType)
-        
+        s.AppendFormat("            <System.Data.Linq.Mapping.Parameter(Name:=""{0}"", DbType:=""{1}"")> ", p.Name, p.DbType)
+
         If p.Direction <> LinqToSqlShared.DbmlObjectModel.ParameterDirection.In then
             s.Append("ByRef")
         Else
@@ -628,7 +658,7 @@ Public Function GetArguments(ByVal f As [Function]) As String
         End If
 
         s.AppendFormat(" {1} As {0}", GetParameterType(p), VBKeywordEscape(p.ParameterName))
-        
+
         If x < f.Parameters.Count - 1 Then
             s.Append(", ")
         End If
@@ -649,17 +679,87 @@ End Function
 Public Function GetArgumentNames(ByVal f As [Function]) As String
     Dim s As New StringBuilder()
     For x As Integer = 0 To f.Parameters.Count - 1
-     
+
         If x < f.Parameters.Count Then
             s.Append(", ")
         End If
-        
+
         Dim p As Parameter = f.Parameters(x)
         s.Append(VBKeywordEscape(p.ParameterName))
     Next
-    
+
     Return s.ToString()
 End Function
 
-  
+Public Function GetTableFunctionCall(tableFunction As TableFunction) As String
+    Dim s1 As New StringBuilder()
+    Dim s2 As New StringBuilder()
+    Dim s3 As New StringBuilder()
+
+    Dim f As [Function] = tableFunction.MappedFunction
+
+    s2.AppendFormat("            {0}( _", f.Method)
+    s2.AppendLine()
+    For i As Integer = 0 To tableFunction.Arguments.Count - 1
+        Dim a As TableFunctionParameter = tableFunction.Arguments(i)
+        Dim p As Parameter = f.Parameters.First(Function(n) n.ParameterName = a.ParameterName)
+        Dim t As String = GetParameterType(p)
+        Dim isOut As Boolean = p.Direction <> LinqToSqlShared.DbmlObjectModel.ParameterDirection.In
+        Dim isOriginal As Boolean = a.Version = LinqToSqlShared.DbmlObjectModel.Version.Original
+        Dim version As String = If(isOriginal, "original", "instance")
+
+        ' copy object to params
+        If isOut Then
+            s1.AppendFormat("            Dim p{1} As {0} = {2}.{3}", t, i, version, a.Member)
+            s1.AppendLine()
+
+            s2.AppendFormat("                p{0}", i)
+        Else
+            s2.AppendFormat("                {0}.{1}", version, a.Member)
+        End If
+
+        If i < tableFunction.Arguments.Count - 1 Then
+            s2.Append(", _")
+            s2.AppendLine()
+        Else
+            s2.AppendLine(")")
+        End If
+
+        ' update object with out params
+        If isOut Then
+            If s3.Length = 0 Then
+                s3.AppendLine()
+            End If
+
+            s3.AppendFormat("            instance.{0} = p{1}", a.Member, i)
+            If CommonUtility.IsNullableType(p.Type) Then
+                s3.Append(".GetValueOrDefault()")
+            End If
+            s3.AppendLine()
+        End If
+    Next
+    s1.AppendLine()
+    Return s1.ToString() + s2.ToString() + s3.ToString()
+End Function
+
+Public Function GetModifier(ByVal access As LinqToSqlShared.DbmlObjectModel.AccessModifier?) As String
+    Return access.ToString()
+End Function
+
+Public Function GetModifier(ByVal access As LinqToSqlShared.DbmlObjectModel.AccessModifier?, ByVal modifier As LinqToSqlShared.DbmlObjectModel.ClassModifier?) As String
+    If modifier.HasValue Then
+        Return String.Format("{0} {1}", access, modifier)
+    Else
+        Return access.ToString()
+    End If
+End Function
+
+Public Function GetModifier(ByVal  access As LinqToSqlShared.DbmlObjectModel.AccessModifier?, ByVal modifier As LinqToSqlShared.DbmlObjectModel.MemberModifier?) As String
+    If modifier.HasValue Then
+        Return String.Format("{0} {1}", access, modifier)
+    Else
+        Return access.ToString()
+    End If
+End Function
+
 </script>
