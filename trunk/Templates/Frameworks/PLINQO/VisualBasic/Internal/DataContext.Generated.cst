@@ -721,8 +721,6 @@ Public Function GetTableFunctionCall(tableFunction As TableFunction) As String
         If i < tableFunction.Arguments.Count - 1 Then
             s2.Append(", _")
             s2.AppendLine()
-        Else
-            s2.AppendLine(")")
         End If
 
         ' update object with out params
@@ -738,7 +736,10 @@ Public Function GetTableFunctionCall(tableFunction As TableFunction) As String
             s3.AppendLine()
         End If
     Next
+    
+    s2.AppendLine(")")
     s1.AppendLine()
+    
     Return s1.ToString() + s2.ToString() + s3.ToString()
 End Function
 

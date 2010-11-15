@@ -817,8 +817,6 @@ for(int x = 0; x < function.Parameters.Count; x++) {
                 s2.Append(",");
                 s2.AppendLine();
             }
-            else
-                s2.AppendLine(");");
 
             // update object with out params
             if (isOut)
@@ -832,7 +830,9 @@ for(int x = 0; x < function.Parameters.Count; x++) {
                 s3.AppendLine(";");
             }
         }
+        s2.AppendLine(");");
         s1.AppendLine();
+        
         return s1.ToString() + s2.ToString() + s3.ToString();
     }
 
