@@ -51,6 +51,7 @@ namespace CodeSmith.Data.Caching
             _profiles = new ConcurrentDictionary<string, CacheSettings>(StringComparer.OrdinalIgnoreCase);
 
             RegisterProvider<HttpCacheProvider>(true);
+            RegisterProvider<StaticCacheProvider>();
             _defaultProfile = new CacheSettings();
 
             Initialize();
