@@ -268,7 +268,6 @@ namespace NHibernateHelper
                 case NHibernateVersion.v1_2:
                     return "NHibernate.Expression";
 
-                case NHibernateVersion.v2_0:
                 case NHibernateVersion.v2_1:
                     return "NHibernate.Criterion";
 

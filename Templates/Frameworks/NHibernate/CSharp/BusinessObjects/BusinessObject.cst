@@ -100,12 +100,12 @@ namespace <%= BusinessNamespace %>
             get { return <%= em.PrivateVariableName %>; }
 			set
 			{
-				<% if(VsVersion.Equals(VisualStudioVersion.VS_2008)) { %>On<%= em.PropertyName %>Changing();<% } %>
+				<% if(!VsVersion.Equals(VisualStudioVersion.VS_2005)) { %>On<%= em.PropertyName %>Changing();<% } %>
 				<%= em.PrivateVariableName %> = value;
-				<% if(VsVersion.Equals(VisualStudioVersion.VS_2008)) { %>On<%= em.PropertyName %>Changed();<% } %>
+				<% if(!VsVersion.Equals(VisualStudioVersion.VS_2005)) { %>On<%= em.PropertyName %>Changed();<% } %>
 			}
         }
-		<% if(VsVersion.Equals(VisualStudioVersion.VS_2008)) { %>
+		<% if(!VsVersion.Equals(VisualStudioVersion.VS_2005)) { %>
 		partial void On<%= em.PropertyName %>Changing();
 		partial void On<%= em.PropertyName %>Changed();
 		<% } %>
@@ -118,12 +118,12 @@ namespace <%= BusinessNamespace %>
             get { return <%= association.PrivateVariableName %>; }
 			set
 			{
-				<% if(VsVersion.Equals(VisualStudioVersion.VS_2008)) { %>On<%= association.PropertyName %>Changing();<% } %>
+				<% if(!VsVersion.Equals(VisualStudioVersion.VS_2005)) { %>On<%= association.PropertyName %>Changing();<% } %>
 				<%= association.PrivateVariableName %> = value;
-				<% if(VsVersion.Equals(VisualStudioVersion.VS_2008)) { %>On<%= association.PropertyName %>Changed();<% } %>
+				<% if(!VsVersion.Equals(VisualStudioVersion.VS_2005)) { %>On<%= association.PropertyName %>Changed();<% } %>
 			}
         }
-		<% if(VsVersion.Equals(VisualStudioVersion.VS_2008)) { %>
+		<% if(!VsVersion.Equals(VisualStudioVersion.VS_2005)) { %>
 		partial void On<%= association.PropertyName %>Changing();
 		partial void On<%= association.PropertyName %>Changed();
 		<% } %>
@@ -136,12 +136,12 @@ namespace <%= BusinessNamespace %>
             get { return <%= association.PrivateVariableName %>; }
             set
 			{
-				<% if(VsVersion.Equals(VisualStudioVersion.VS_2008)) { %>On<%= association.PropertyName %>Changing();<% } %>
+				<% if(!VsVersion.Equals(VisualStudioVersion.VS_2005)) { %>On<%= association.PropertyName %>Changing();<% } %>
 				<%= association.PrivateVariableName %> = value;
-				<% if(VsVersion.Equals(VisualStudioVersion.VS_2008)) { %>On<%= association.PropertyName %>Changed();<% } %>
+				<% if(!VsVersion.Equals(VisualStudioVersion.VS_2005)) { %>On<%= association.PropertyName %>Changed();<% } %>
 			}
         }
-		<% if(VsVersion.Equals(VisualStudioVersion.VS_2008)) { %>
+		<% if(!VsVersion.Equals(VisualStudioVersion.VS_2005)) { %>
 		partial void On<%= association.PropertyName %>Changing();
 		partial void On<%= association.PropertyName %>Changed();
 		<% } %>
