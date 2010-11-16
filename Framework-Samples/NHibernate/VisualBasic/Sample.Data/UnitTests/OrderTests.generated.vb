@@ -9,7 +9,7 @@ Imports Sample.Data.Generated.Base
 Namespace Sample.Data.Generated.UnitTests
 	<TestFixture()> _
 	Public Partial Class OrderTests
-		Inherits UNuitTestBase
+		Inherits UnitTestbase
 		
 		Protected manager As IOrderManager
 
@@ -29,28 +29,28 @@ Namespace Sample.Data.Generated.UnitTests
 			Dim entity As New Order()
 
 			
-			entity.UserId = "Test Test "
+			entity.UserId = "T"
 			entity.OrderDate = DateTime.Now
-			entity.ShipAddr1 = "Test Test Test Test Te"
-			entity.ShipAddr2 = "Test Test Test Test Test Test Test Test "
-			entity.ShipCity = "Test Test Test Test Test Test Test Test Te"
-			entity.ShipState = "Test Test Test Test Test Test Test Test Test Test Test Test Test "
-			entity.ShipZip = "Test Test Test"
-			entity.ShipCountry = "Te"
-			entity.BillAddr1 = "Test Test Test Test Test Test Test Test Test Test Test Test T"
-			entity.BillAddr2 = "Test Test Test Test Test Test Test Test Tes"
-			entity.BillCity = "Test Test Test Te"
-			entity.BillState = "Test Test Test Test Te"
-			entity.BillZip = "Test T"
-			entity.BillCountry = "Test "
-			entity.Courier = "Test Test"
-			entity.TotalPrice = 76
-			entity.BillToFirstName = "Test Test Test Test T"
-			entity.BillToLastName = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Te"
-			entity.ShipToFirstName = "Test Test Test Test Test Test Test"
-			entity.ShipToLastName = "Test Test Test Test Test Test Test Test Test Test Test "
-			entity.AuthorizationNumber = 80
-			entity.Locale = "Test Test Test "
+			entity.ShipAddr1 = "Test Test Test Test Test"
+			entity.ShipAddr2 = "Test Test Test Test Test Test Test Test Test Test Tes"
+			entity.ShipCity = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test"
+			entity.ShipState = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Te"
+			entity.ShipZip = "Test Test "
+			entity.ShipCountry = "Test Test Test"
+			entity.BillAddr1 = "Test Test Test Test Test Test Test Test Test Test"
+			entity.BillAddr2 = "Test Test Test Test Test Test Test Test Test Te"
+			entity.BillCity = "Test Test Test Test "
+			entity.BillState = "Test Test Test Test Test Test Test Test Test Te"
+			entity.BillZip = "Test Test Test Tes"
+			entity.BillCountry = "Test Test Test "
+			entity.Courier = "Test Test Test Test Test Test Test Test Test Test Test Test Test T"
+			entity.TotalPrice = 92
+			entity.BillToFirstName = "Test Test Test Test "
+			entity.BillToLastName = "Test Test Test "
+			entity.ShipToFirstName = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Tes"
+			entity.ShipToLastName = "Te"
+			entity.AuthorizationNumber = 72
+			entity.Locale = "Test Test Tes"
 
 			Return entity
 		End Function

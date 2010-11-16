@@ -6,7 +6,7 @@ Imports Sample.Data.Generated.ManagerObjects
 Imports Sample.Data.Generated.BusinessObjects
 
 Namespace Sample.Data.Generated.Base
-	Public Class UNuitTestBase
+	Public Class UnitTestbase
 		Protected managerFactory As IManagerFactory = New ManagerFactory()
 	End Class
 End Namespace

@@ -9,7 +9,7 @@ using Sample.Data.Generated.Base;
 namespace Sample.Data.Generated.UnitTests
 {
 	[TestFixture]
-    public partial class InventoryTests : UNuitTestBase
+    public partial class InventoryTests : UnitTestbase
     {
         [SetUp]
         public void SetUp()
@@ -32,9 +32,9 @@ namespace Sample.Data.Generated.UnitTests
 			Sample.Data.Generated.BusinessObjects.Inventory entity = new Sample.Data.Generated.BusinessObjects.Inventory();
 			
 			// You may need to maually enter this key if there is a constraint violation.
-			entity.Id = "Te";
+			entity.Id = "Test";
 			
-			entity.Qty = 59;
+			entity.Qty = 92;
 			
 			return entity;
 		}
@@ -86,7 +86,7 @@ namespace Sample.Data.Generated.UnitTests
             {
                 Sample.Data.Generated.BusinessObjects.Inventory entityA = GetFirstInventory();
 				
-				entityA.Qty = 32;
+				entityA.Qty = 61;
 				
 				manager.Update(entityA);
 

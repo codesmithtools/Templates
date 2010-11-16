@@ -14,8 +14,9 @@
 		<property name="Zip" column="[Zip]" />
 		<property name="Phone" column="[Phone]" />
 		<bag name="Items" lazy="true" cascade="all"  inverse="false" >
-			<key column="[Supplier]"></key>
+			<key column="[SupplierId]"></key>
 			<one-to-many class="Item"></one-to-many>
 		</bag>
 	</class>
 </hibernate-mapping>
+

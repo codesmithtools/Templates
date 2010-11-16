@@ -9,7 +9,7 @@ using Sample.Data.Generated.Base;
 namespace Sample.Data.Generated.UnitTests
 {
 	[TestFixture]
-    public partial class OrderStatusTests : UNuitTestBase
+    public partial class OrderStatusTests : UnitTestbase
     {
         [SetUp]
         public void SetUp()
@@ -32,8 +32,8 @@ namespace Sample.Data.Generated.UnitTests
 			Sample.Data.Generated.BusinessObjects.OrderStatus entity = new Sample.Data.Generated.BusinessObjects.OrderStatus();
 			
 			
-			entity.OrderId = 81;
-			entity.LineNum = 57;
+			entity.OrderId = 49;
+			entity.LineNum = 51;
 			entity.Timestamp = System.DateTime.Now;
 			entity.Status = "T";
 			

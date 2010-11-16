@@ -9,7 +9,7 @@ using Sample.Data.Generated.Base;
 namespace Sample.Data.Generated.UnitTests
 {
 	[TestFixture]
-    public partial class LineItemTests : UNuitTestBase
+    public partial class LineItemTests : UnitTestbase
     {
         [SetUp]
         public void SetUp()
@@ -32,11 +32,11 @@ namespace Sample.Data.Generated.UnitTests
 			Sample.Data.Generated.BusinessObjects.LineItem entity = new Sample.Data.Generated.BusinessObjects.LineItem();
 			
 			
-			entity.OrderId = 40;
-			entity.LineNum = 87;
-			entity.ItemId = "T";
-			entity.Quantity = 76;
-			entity.UnitPrice = 65;
+			entity.OrderId = 3;
+			entity.LineNum = 89;
+			entity.ItemId = "Test Test";
+			entity.Quantity = 57;
+			entity.UnitPrice = 21;
 			
 			return entity;
 		}
@@ -88,7 +88,7 @@ namespace Sample.Data.Generated.UnitTests
             {
                 Sample.Data.Generated.BusinessObjects.LineItem entityA = GetFirstLineItem();
 				
-				entityA.ItemId = "Test ";
+				entityA.ItemId = "Test Test";
 				
 				manager.Update(entityA);
 

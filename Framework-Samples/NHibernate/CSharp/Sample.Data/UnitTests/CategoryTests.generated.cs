@@ -9,7 +9,7 @@ using Sample.Data.Generated.Base;
 namespace Sample.Data.Generated.UnitTests
 {
 	[TestFixture]
-    public partial class CategoryTests : UNuitTestBase
+    public partial class CategoryTests : UnitTestbase
     {
         [SetUp]
         public void SetUp()
@@ -32,9 +32,9 @@ namespace Sample.Data.Generated.UnitTests
 			Sample.Data.Generated.BusinessObjects.Category entity = new Sample.Data.Generated.BusinessObjects.Category();
 			
 			// You may need to maually enter this key if there is a constraint violation.
-			entity.Id = "T";
+			entity.Id = "Tes";
 			
-			entity.Name = "Test Test Test Te";
+			entity.Name = "Test Test Test Test Test Test Tes";
 			entity.Descn = "Test Test ";
 			
 			return entity;
@@ -87,7 +87,7 @@ namespace Sample.Data.Generated.UnitTests
             {
                 Sample.Data.Generated.BusinessObjects.Category entityA = GetFirstCategory();
 				
-				entityA.Name = "Test Test Test Test Test Test Test Test Tes";
+				entityA.Name = "Test Test Te";
 				
 				manager.Update(entityA);
 

@@ -9,7 +9,7 @@ Imports Sample.Data.Generated.Base
 Namespace Sample.Data.Generated.UnitTests
 	<TestFixture()> _
 	Public Partial Class CategoryTests
-		Inherits UNuitTestBase
+		Inherits UnitTestbase
 		
 		Protected manager As ICategoryManager
 
@@ -29,9 +29,9 @@ Namespace Sample.Data.Generated.UnitTests
 			Dim entity As New Category()
 
 			' You may need to maually enter this key if there is a constraint violation.
-			entity.Id = "Tes"
+			entity.Id = "Test "
 			
-			entity.Name = "Test Test Test Test Test Test Test Test Test Test T"
+			entity.Name = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test T"
 			entity.Descn = "Test Test "
 
 			Return entity
@@ -74,7 +74,7 @@ Namespace Sample.Data.Generated.UnitTests
 			Try
 				Dim entityA As Category = GetFirstCategory()
 				
-				entityA.Name = "Test Test Test Test Test Test Test Test Test Test Test Test "
+				entityA.Name = "Test Test Test Test Test Test Test Test Test Test Test Tes"
 				
 				manager.Update(entityA)
 

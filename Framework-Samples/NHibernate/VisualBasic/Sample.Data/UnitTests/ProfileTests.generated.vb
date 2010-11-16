@@ -9,7 +9,7 @@ Imports Sample.Data.Generated.Base
 Namespace Sample.Data.Generated.UnitTests
 	<TestFixture()> _
 	Public Partial Class ProfileTests
-		Inherits UNuitTestBase
+		Inherits UnitTestbase
 		
 		Protected manager As IProfileManager
 

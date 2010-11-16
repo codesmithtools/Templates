@@ -37,8 +37,8 @@ namespace Sample.Data.Generated.Base
             if (x == null || y == null)
                 return false;
 
-            var xdoc_x = (XmlDocument)x;
-            var xdoc_y = (XmlDocument)y;
+            XmlDocument xdoc_x = (XmlDocument)x;
+            XmlDocument xdoc_y = (XmlDocument)y;
             return xdoc_y.OuterXml == xdoc_x.OuterXml;
         }
 
@@ -52,10 +52,9 @@ namespace Sample.Data.Generated.Base
             if (names.Length != 1)
                 throw new InvalidOperationException("names array has more than one element. can't handle this!");
 
-            var document = new XmlDocument();
+            XmlDocument document = new XmlDocument();
 
-            var val = rs[names[0]] as string;
-
+            string val = rs[names[0]] as string;
             if (val != null)
             {
                 document.LoadXml(val);
@@ -67,8 +66,7 @@ namespace Sample.Data.Generated.Base
 
         public void NullSafeSet(IDbCommand cmd, object value, int index)
         {
-            var parameter = (DbParameter)cmd.Parameters[index];
-
+            DbParameter parameter = (DbParameter)cmd.Parameters[index];
             if (value == null)
             {
                 parameter.Value = DBNull.Value;
@@ -81,12 +79,11 @@ namespace Sample.Data.Generated.Base
         public object DeepCopy(object value)
         {
 
-            var toCopy = value as XmlDocument;
-
+            XmlDocument toCopy = value as XmlDocument;
             if (toCopy == null)
                 return null;
 
-            var copy = new XmlDocument();
+            XmlDocument copy = new XmlDocument();
             copy.LoadXml(toCopy.OuterXml);
             return copy;
         }
@@ -98,10 +95,10 @@ namespace Sample.Data.Generated.Base
 
         public object Assemble(object cached, object owner)
         {
-            var str = cached as string;
+            string str = cached as string;
             if (str != null)
             {
-                var doc = new XmlDocument();
+                XmlDocument doc = new XmlDocument();
                 doc.LoadXml(str);
                 return doc;
             }
@@ -114,7 +111,7 @@ namespace Sample.Data.Generated.Base
 
         public object Disassemble(object value)
         {
-            var val = value as XmlDocument;
+            XmlDocument val = value as XmlDocument;
             if (val != null)
             {
                 return val.OuterXml;
@@ -146,16 +143,14 @@ namespace Sample.Data.Generated.Base
 
     public class SqlXmlType : SqlType
     {
-        public SqlXmlType()
-            : base(DbType.Xml)
+        public SqlXmlType() : base(DbType.Xml)
         {
         }
     }
 
     public class SqlXmlStringType : SqlType
     {
-        public SqlXmlStringType()
-            : base(DbType.String, 4000)
+        public SqlXmlStringType() : base(DbType.String, 4000)
         {
         }
     }

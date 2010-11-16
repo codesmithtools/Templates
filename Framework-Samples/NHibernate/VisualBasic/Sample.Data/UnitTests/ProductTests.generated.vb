@@ -9,7 +9,7 @@ Imports Sample.Data.Generated.Base
 Namespace Sample.Data.Generated.UnitTests
 	<TestFixture()> _
 	Public Partial Class ProductTests
-		Inherits UNuitTestBase
+		Inherits UnitTestbase
 		
 		Protected manager As IProductManager
 
@@ -29,11 +29,11 @@ Namespace Sample.Data.Generated.UnitTests
 			Dim entity As New Product()
 
 			' You may need to maually enter this key if there is a constraint violation.
-			entity.Id = "Test"
+			entity.Id = "Test Te"
 			
-			entity.Name = "Test Test Test Test Test Test Test Test Test Test Test Test"
+			entity.Name = "Test Test Tes"
 			entity.Descn = "Test Test "
-			entity.Image = "Test Test Test Test Test Test Test Test Test Test Test Tes"
+			entity.Image = "Test Test Test Test Test Test "
 			
 			Dim categoryManager As ICategoryManager = managerFactory.GetCategoryManager()
 			entity.Category = categoryManager.GetAll(1)(0)
@@ -78,7 +78,7 @@ Namespace Sample.Data.Generated.UnitTests
 			Try
 				Dim entityA As Product = GetFirstProduct()
 				
-				entityA.Name = "Test Test Test Test"
+				entityA.Name = "Test Test Test Test Test Test Test Test Test Test Test Test Tes"
 				
 				manager.Update(entityA)
 

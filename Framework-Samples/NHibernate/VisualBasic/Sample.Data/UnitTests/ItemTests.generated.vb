@@ -9,7 +9,7 @@ Imports Sample.Data.Generated.Base
 Namespace Sample.Data.Generated.UnitTests
 	<TestFixture()> _
 	Public Partial Class ItemTests
-		Inherits UNuitTestBase
+		Inherits UnitTestbase
 		
 		Protected manager As IItemManager
 
@@ -31,11 +31,11 @@ Namespace Sample.Data.Generated.UnitTests
 			' You may need to maually enter this key if there is a constraint violation.
 			entity.Id = "Test Test"
 			
-			entity.ListPrice = 1
-			entity.UnitCost = 31
+			entity.ListPrice = 73
+			entity.UnitCost = 77
 			entity.Status = "T"
-			entity.Name = "Test Test Test Test Test Test Test Test Test Test"
-			entity.Image = "Test Test Tes"
+			entity.Name = "Test Test Test Test T"
+			entity.Image = "Test Te"
 			
 			Dim productManager As IProductManager = managerFactory.GetProductManager()
 			entity.Product = productManager.GetAll(1)(0)
@@ -83,7 +83,7 @@ Namespace Sample.Data.Generated.UnitTests
 			Try
 				Dim entityA As Item = GetFirstItem()
 				
-				entityA.ListPrice = 58
+				entityA.ListPrice = 73
 				
 				manager.Update(entityA)
 

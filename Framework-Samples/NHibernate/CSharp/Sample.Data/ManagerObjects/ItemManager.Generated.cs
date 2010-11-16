@@ -11,7 +11,7 @@ namespace Sample.Data.Generated.ManagerObjects
     {
 		// Get Methods
 		IList<Item> GetByProductId(System.String product);
-		IList<Item> GetBySupplier(System.Int32 supplier);
+		IList<Item> GetBySupplierId(System.Int32 supplier);
 		Item GetByProductIdItemIdListPriceName(System.String product, System.String itemId, System.Decimal listPrice, System.String name);
     }
 
@@ -42,7 +42,7 @@ namespace Sample.Data.Generated.ManagerObjects
 			return criteria.List<Item>();
         }
 		
-		public IList<Item> GetBySupplier(System.Int32 supplier)
+		public IList<Item> GetBySupplierId(System.Int32 supplier)
         {
             ICriteria criteria = Session.GetISession().CreateCriteria(typeof(Item));
 			

@@ -7,7 +7,7 @@ using Sample.Data.Generated.BusinessObjects;
 
 namespace Sample.Data.Generated.Base
 {
-    public class UNuitTestBase
+    public class UnitTestbase
     {
         protected IManagerFactory managerFactory = new ManagerFactory();
     }

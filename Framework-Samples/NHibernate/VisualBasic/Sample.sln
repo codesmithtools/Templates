@@ -1,6 +1,6 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 10.00
-# Visual Studio 2008
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
 Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "Sample.Console", "Sample.Console\Sample.Console.vbproj", "{A6449A03-8F82-4EC5-9C40-904EE10DCE60}"
 EndProject
 Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "Sample.Data", "Sample.Data\Sample.Data.vbproj", "{C6914673-4456-45C3-B9AF-267E1BBE08D5}"

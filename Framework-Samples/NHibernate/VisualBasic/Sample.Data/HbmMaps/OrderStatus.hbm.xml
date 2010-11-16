@@ -10,3 +10,4 @@
 		<property name="Status" column="[Status]" />
 	</class>
 </hibernate-mapping>
+

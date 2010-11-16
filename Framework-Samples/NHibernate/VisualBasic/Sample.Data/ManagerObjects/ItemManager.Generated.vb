@@ -12,7 +12,7 @@ Namespace Sample.Data.Generated.ManagerObjects
 		
 		' Get Methods
 		Function GetByProductId(ByVal product As System.String) As IList(Of Item)
-		Function GetBySupplier(ByVal supplier As System.Int32) As IList(Of Item)
+		Function GetBySupplierId(ByVal supplier As System.Int32) As IList(Of Item)
 		Function GetByProductIdItemIdListPriceName(ByVal product As System.String, ByVal itemId As System.String, ByVal listPrice As System.Decimal, ByVal name As System.String) As IList(Of Item)
 		
 	End Interface
@@ -41,7 +41,7 @@ Namespace Sample.Data.Generated.ManagerObjects
 						
             return criteria.List(Of Item)()
         End Function
-		Public Function GetBySupplier(ByVal supplier As System.Int32) As IList(Of Item) Implements IItemManager.GetBySupplier
+		Public Function GetBySupplierId(ByVal supplier As System.Int32) As IList(Of Item) Implements IItemManager.GetBySupplierId
             Dim criteria As ICriteria = Session.GetISession().CreateCriteria(GetType(Item))
 			
 			

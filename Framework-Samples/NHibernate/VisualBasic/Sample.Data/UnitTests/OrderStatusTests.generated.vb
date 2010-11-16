@@ -9,7 +9,7 @@ Imports Sample.Data.Generated.Base
 Namespace Sample.Data.Generated.UnitTests
 	<TestFixture()> _
 	Public Partial Class OrderStatusTests
-		Inherits UNuitTestBase
+		Inherits UnitTestbase
 		
 		Protected manager As IOrderStatusManager
 
@@ -29,8 +29,8 @@ Namespace Sample.Data.Generated.UnitTests
 			Dim entity As New OrderStatus()
 
 			
-			entity.OrderId = 59
-			entity.LineNum = 85
+			entity.OrderId = 15
+			entity.LineNum = 87
 			entity.Timestamp = DateTime.Now
 			entity.Status = "T"
 

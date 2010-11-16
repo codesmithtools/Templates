@@ -4,7 +4,7 @@
     <add key="ConnectionString1" value="Data Source=localhost;Initial Catalog=Petshop;Integrated Security=True" />
   </variables>
   <propertySets>
-    <propertySet name="NHibernateMaster" template="..\..\..\..\..\Templates\Frameworks\NHibernate\CSharp\NHibernateMaster.cst">
+    <propertySet name="NHibernateMaster" template="..\..\Templates\CSharp\NHibernateMaster.cst">
       <property name="NHibernateVersion">v2_1</property>
       <property name="VsVersion">VS_2008</property>
       <property name="AssemblyName">Sample.Data</property>

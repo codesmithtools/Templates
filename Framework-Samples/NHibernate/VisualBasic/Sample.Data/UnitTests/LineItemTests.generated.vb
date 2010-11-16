@@ -9,7 +9,7 @@ Imports Sample.Data.Generated.Base
 Namespace Sample.Data.Generated.UnitTests
 	<TestFixture()> _
 	Public Partial Class LineItemTests
-		Inherits UNuitTestBase
+		Inherits UnitTestbase
 		
 		Protected manager As ILineItemManager
 
@@ -29,11 +29,11 @@ Namespace Sample.Data.Generated.UnitTests
 			Dim entity As New LineItem()
 
 			
-			entity.OrderId = 54
-			entity.LineNum = 30
-			entity.ItemId = "Tes"
-			entity.Quantity = 26
-			entity.UnitPrice = 61
+			entity.OrderId = 10
+			entity.LineNum = 31
+			entity.ItemId = "Test "
+			entity.Quantity = 61
+			entity.UnitPrice = 69
 
 			Return entity
 		End Function
@@ -75,7 +75,7 @@ Namespace Sample.Data.Generated.UnitTests
 			Try
 				Dim entityA As LineItem = GetFirstLineItem()
 				
-				entityA.ItemId = "Test"
+				entityA.ItemId = "Tes"
 				
 				manager.Update(entityA)
 

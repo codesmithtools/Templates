@@ -213,7 +213,8 @@ namespace Sample.Data.Generated.Base
         {
             if (!_disposed)
             {
-                session.DecrementRefCount();
+                if (session != null)
+                    session.DecrementRefCount();
 
                 if (!finalizing)
                     GC.SuppressFinalize(this);

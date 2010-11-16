@@ -9,7 +9,7 @@ using Sample.Data.Generated.Base;
 namespace Sample.Data.Generated.UnitTests
 {
 	[TestFixture]
-    public partial class SupplierTests : UNuitTestBase
+    public partial class SupplierTests : UnitTestbase
     {
         [SetUp]
         public void SetUp()
@@ -32,16 +32,16 @@ namespace Sample.Data.Generated.UnitTests
 			Sample.Data.Generated.BusinessObjects.Supplier entity = new Sample.Data.Generated.BusinessObjects.Supplier();
 			
 			// You may need to maually enter this key if there is a constraint violation.
-			entity.Id = 51;
+			entity.Id = 48;
 			
-			entity.Name = "Test Test Test Test Test Test Test T";
+			entity.Name = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test";
 			entity.Status = "T";
-			entity.Addr1 = "Test Test Test Test Test Test Test Test Test Test ";
-			entity.Addr2 = "Test Test Test Test Test Test Test T";
-			entity.City = "Test Test Test Test Test T";
-			entity.State = "Test Test Test Test Test Test Test Test Test T";
-			entity.Zip = "Te";
-			entity.Phone = "Test Test T";
+			entity.Addr1 = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Tes";
+			entity.Addr2 = "Test Test Test Test";
+			entity.City = "Test Test Test Test Test Test Test Test Test T";
+			entity.State = "T";
+			entity.Zip = "Test";
+			entity.Phone = "Test Test Test Test Test Test Test";
 			
 			return entity;
 		}
@@ -93,7 +93,7 @@ namespace Sample.Data.Generated.UnitTests
             {
                 Sample.Data.Generated.BusinessObjects.Supplier entityA = GetFirstSupplier();
 				
-				entityA.Name = "Test Test Test Test Test Test Test Test Test Test Test Test Test ";
+				entityA.Name = "Test Test Test Test Test Test Test Test Test Test Test Test Test";
 				
 				manager.Update(entityA);
 

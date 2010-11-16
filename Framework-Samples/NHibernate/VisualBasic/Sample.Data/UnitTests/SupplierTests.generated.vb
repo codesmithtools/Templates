@@ -9,7 +9,7 @@ Imports Sample.Data.Generated.Base
 Namespace Sample.Data.Generated.UnitTests
 	<TestFixture()> _
 	Public Partial Class SupplierTests
-		Inherits UNuitTestBase
+		Inherits UnitTestbase
 		
 		Protected manager As ISupplierManager
 
@@ -29,16 +29,16 @@ Namespace Sample.Data.Generated.UnitTests
 			Dim entity As New Supplier()
 
 			' You may need to maually enter this key if there is a constraint violation.
-			entity.Id = 4
+			entity.Id = 95
 			
-			entity.Name = "Test Test Test Test Test Test Test Test Test Test"
+			entity.Name = "Test Test Test Test Test T"
 			entity.Status = "T"
-			entity.Addr1 = "Test Test Te"
-			entity.Addr2 = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Te"
-			entity.City = "Test Test Test Test Test Test Tes"
-			entity.State = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test "
-			entity.Zip = "Test"
-			entity.Phone = "Test Test Test Test Test Test Test Tes"
+			entity.Addr1 = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Tes"
+			entity.Addr2 = "Test Test Test Te"
+			entity.City = "Test Test Test T"
+			entity.State = "Test Test Test Test Test Test Test Test Test Test Test Te"
+			entity.Zip = "Tes"
+			entity.Phone = "Test Test Test Test Test Test Test Test"
 
 			Return entity
 		End Function
@@ -80,7 +80,7 @@ Namespace Sample.Data.Generated.UnitTests
 			Try
 				Dim entityA As Supplier = GetFirstSupplier()
 				
-				entityA.Name = "Test Test Test Test Test Test Test Test Test Te"
+				entityA.Name = "Test Test Test Test Test Test Test Test Tes"
 				
 				manager.Update(entityA)
 

@@ -16,3 +16,4 @@
 		<many-to-one name="Profile" column="[UniqueID]" class="Profile" />
 	</class>
 </hibernate-mapping>
+

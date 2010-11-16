@@ -11,3 +11,4 @@
 		<property name="UnitPrice" column="[UnitPrice]" />
 	</class>
 </hibernate-mapping>
+

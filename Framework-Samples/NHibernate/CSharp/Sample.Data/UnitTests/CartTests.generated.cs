@@ -9,7 +9,7 @@ using Sample.Data.Generated.Base;
 namespace Sample.Data.Generated.UnitTests
 {
 	[TestFixture]
-    public partial class CartTests : UNuitTestBase
+    public partial class CartTests : UnitTestbase
     {
         [SetUp]
         public void SetUp()
@@ -32,14 +32,14 @@ namespace Sample.Data.Generated.UnitTests
 			Sample.Data.Generated.BusinessObjects.Cart entity = new Sample.Data.Generated.BusinessObjects.Cart();
 			
 			
-			entity.ItemId = "Test";
-			entity.Name = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test";
-			entity.Type = "Test Test Test Test Test Test ";
-			entity.Price = 60;
-			entity.CategoryId = "Te";
-			entity.ProductId = "Test ";
+			entity.ItemId = "Test Te";
+			entity.Name = "Test Test Test Test Test";
+			entity.Type = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Tes";
+			entity.Price = 47;
+			entity.CategoryId = "Test";
+			entity.ProductId = "Test Te";
 			entity.IsShoppingCart = true;
-			entity.Quantity = 83;
+			entity.Quantity = 32;
 			
 			using(Sample.Data.Generated.ManagerObjects.IProfileManager profileManager = managerFactory.GetProfileManager())
 			    entity.Profile = profileManager.GetAll(1)[0];
@@ -94,7 +94,7 @@ namespace Sample.Data.Generated.UnitTests
             {
                 Sample.Data.Generated.BusinessObjects.Cart entityA = GetFirstCart();
 				
-				entityA.ItemId = "Tes";
+				entityA.ItemId = "Test Te";
 				
 				manager.Update(entityA);
 

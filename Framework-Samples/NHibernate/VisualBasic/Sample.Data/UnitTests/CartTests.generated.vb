@@ -9,7 +9,7 @@ Imports Sample.Data.Generated.Base
 Namespace Sample.Data.Generated.UnitTests
 	<TestFixture()> _
 	Public Partial Class CartTests
-		Inherits UNuitTestBase
+		Inherits UnitTestbase
 		
 		Protected manager As ICartManager
 
@@ -30,13 +30,13 @@ Namespace Sample.Data.Generated.UnitTests
 
 			
 			entity.ItemId = "Test Test"
-			entity.Name = "Test Test Test Test Test Test Test "
-			entity.Type = "Test Test Test Test Test Test Tes"
-			entity.Price = 8
-			entity.CategoryId = "Test Test"
-			entity.ProductId = "Test Te"
+			entity.Name = "Test Test Test Test Test Test Test Test Test Test Tes"
+			entity.Type = "Test Test Test Test Test Test Test Test Test Test Test Tes"
+			entity.Price = 40
+			entity.CategoryId = "Test Tes"
+			entity.ProductId = "Test "
 			entity.IsShoppingCart = True
-			entity.Quantity = 58
+			entity.Quantity = 85
 			
 			Dim profileManager As IProfileManager = managerFactory.GetProfileManager()
 			entity.Profile = profileManager.GetAll(1)(0)
@@ -81,7 +81,7 @@ Namespace Sample.Data.Generated.UnitTests
 			Try
 				Dim entityA As Cart = GetFirstCart()
 				
-				entityA.ItemId = "Test"
+				entityA.ItemId = "Test T"
 				
 				manager.Update(entityA)
 

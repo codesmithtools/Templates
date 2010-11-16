@@ -9,7 +9,7 @@ using Sample.Data.Generated.Base;
 namespace Sample.Data.Generated.UnitTests
 {
 	[TestFixture]
-    public partial class ItemTests : UNuitTestBase
+    public partial class ItemTests : UnitTestbase
     {
         [SetUp]
         public void SetUp()
@@ -32,13 +32,13 @@ namespace Sample.Data.Generated.UnitTests
 			Sample.Data.Generated.BusinessObjects.Item entity = new Sample.Data.Generated.BusinessObjects.Item();
 			
 			// You may need to maually enter this key if there is a constraint violation.
-			entity.Id = "Test Te";
+			entity.Id = "Test Tes";
 			
-			entity.ListPrice = 42;
-			entity.UnitCost = 12;
+			entity.ListPrice = 69;
+			entity.UnitCost = 50;
 			entity.Status = "T";
-			entity.Name = "Test Test Test Tes";
-			entity.Image = "Test Test Test Test Test Test Test Test Te";
+			entity.Name = "Test Test Test Test Test Tes";
+			entity.Image = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test";
 			
 			using(Sample.Data.Generated.ManagerObjects.IProductManager productManager = managerFactory.GetProductManager())
 			    entity.Product = productManager.GetAll(1)[0];
@@ -96,7 +96,7 @@ namespace Sample.Data.Generated.UnitTests
             {
                 Sample.Data.Generated.BusinessObjects.Item entityA = GetFirstItem();
 				
-				entityA.ListPrice = 98;
+				entityA.ListPrice = 42;
 				
 				manager.Update(entityA);
 

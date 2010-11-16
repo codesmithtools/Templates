@@ -9,7 +9,7 @@ Imports Sample.Data.Generated.Base
 Namespace Sample.Data.Generated.UnitTests
 	<TestFixture()> _
 	Public Partial Class InventoryTests
-		Inherits UNuitTestBase
+		Inherits UnitTestbase
 		
 		Protected manager As IInventoryManager
 
@@ -29,9 +29,9 @@ Namespace Sample.Data.Generated.UnitTests
 			Dim entity As New Inventory()
 
 			' You may need to maually enter this key if there is a constraint violation.
-			entity.Id = "Test Tes"
+			entity.Id = "Test"
 			
-			entity.Qty = 43
+			entity.Qty = 44
 
 			Return entity
 		End Function
@@ -73,7 +73,7 @@ Namespace Sample.Data.Generated.UnitTests
 			Try
 				Dim entityA As Inventory = GetFirstInventory()
 				
-				entityA.Qty = 60
+				entityA.Qty = 76
 				
 				manager.Update(entityA)
 

@@ -9,7 +9,7 @@ Imports Sample.Data.Generated.Base
 Namespace Sample.Data.Generated.UnitTests
 	<TestFixture()> _
 	Public Partial Class AccountTests
-		Inherits UNuitTestBase
+		Inherits UnitTestbase
 		
 		Protected manager As IAccountManager
 
@@ -30,16 +30,15 @@ Namespace Sample.Data.Generated.UnitTests
 
 			
 			entity.Email = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test T"
-			entity.FirstName = "Test Test Test Test Test Test Test Te"
-			entity.LastName = "Test Test Test Tes"
-			entity.Address1 = "Test Test Test Test Test Test Test Test Test Test Test Test Test "
-			entity.Address2 = "Test Test Test Test Test Test Test Test Test Test Test Test "
-			entity.City = "Test Test Test Test Test Test Test Test "
-			entity.State = "Test Test Test Test Test Test Test Test Test Test Test Test Tes"
-			entity.Zip = "Test Test Test Tes"
-			entity.Country = "Test Test Test Tes"
-			entity.Phone = "Test Test Tes"
-			entity.Number = 60
+			entity.FirstName = "Test Test Test Test Test Test Test Test Test Test Test "
+			entity.LastName = "Test Test Test Test Test Test Test Test Tes"
+			entity.Address1 = "Test Test T"
+			entity.Address2 = "Test Test Test Test Test Test Test Test Test Test "
+			entity.City = "Test Test Test Test"
+			entity.State = "Test Test Test Test Test Te"
+			entity.Zip = "Test"
+			entity.Country = "Test"
+			entity.Phone = "Test Tes"
 			
 			Dim profileManager As IProfileManager = managerFactory.GetProfileManager()
 			entity.Profile = profileManager.GetAll(1)(0)
@@ -84,7 +83,7 @@ Namespace Sample.Data.Generated.UnitTests
 			Try
 				Dim entityA As Account = GetFirstAccount()
 				
-				entityA.Email = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Tes"
+				entityA.Email = "Test Test Test Test Tes"
 				
 				manager.Update(entityA)
 

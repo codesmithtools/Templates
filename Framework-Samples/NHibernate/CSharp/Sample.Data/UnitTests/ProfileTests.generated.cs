@@ -9,7 +9,7 @@ using Sample.Data.Generated.Base;
 namespace Sample.Data.Generated.UnitTests
 {
 	[TestFixture]
-    public partial class ProfileTests : UNuitTestBase
+    public partial class ProfileTests : UnitTestbase
     {
         [SetUp]
         public void SetUp()
