@@ -99,12 +99,12 @@ Namespace <%= BusinessNamespace %>
 				Return <%= em.PrivateVariableName %>
 			End Get
 			Set
-				<% If VsVersion.Equals(VisualStudioVersion.VS_2008) Then %>On<%= em.PropertyName %>Changing()<% End If %>
+				<% If Not VsVersion.Equals(VisualStudioVersion.VS_2005) Then %>On<%= em.PropertyName %>Changing()<% End If %>
 				<%= em.PrivateVariableName %> = value
-				<% If VsVersion.Equals(VisualStudioVersion.VS_2008) Then %>On<%= em.PropertyName %>Changed()<% End If %>
+				<% If Not VsVersion.Equals(VisualStudioVersion.VS_2005) Then %>On<%= em.PropertyName %>Changed()<% End If %>
 			End Set
 		End Property
-		<% If VsVersion.Equals(VisualStudioVersion.VS_2008) Then %>
+		<% If Not VsVersion.Equals(VisualStudioVersion.VS_2005) Then %>
 		Partial Private Sub On<%= em.PropertyName %>Changing()
 		End Sub
 		Partial Private Sub On<%= em.PropertyName %>Changed()
@@ -119,12 +119,12 @@ Namespace <%= BusinessNamespace %>
 				Return <%= association.PrivateVariableName %>
 			End Get
 			Set
-				<% If VsVersion.Equals(VisualStudioVersion.VS_2008) Then %>On<%= association.PropertyName %>Changing()<% End If %>
+				<% If Not VsVersion.Equals(VisualStudioVersion.VS_2005) Then %>On<%= association.PropertyName %>Changing()<% End If %>
 				<%= association.PrivateVariableName %> = value
-				<% If VsVersion.Equals(VisualStudioVersion.VS_2008) Then %>On<%= association.PropertyName %>Changed()<% End If %>
+				<% If Not VsVersion.Equals(VisualStudioVersion.VS_2005) Then %>On<%= association.PropertyName %>Changed()<% End If %>
 			End Set
 		End Property
-		<% If VsVersion.Equals(VisualStudioVersion.VS_2008) Then %>
+		<% If Not VsVersion.Equals(VisualStudioVersion.VS_2005) Then %>
 		Partial Private Sub On<%= association.PropertyName %>Changing()
 		End Sub
 		Partial Private Sub On<%= association.PropertyName %>Changed()
@@ -139,12 +139,12 @@ Namespace <%= BusinessNamespace %>
 				Return <%= association.PrivateVariableName %>
 			End Get
 			Set
-				<% If VsVersion.Equals(VisualStudioVersion.VS_2008) Then %>On<%= association.PropertyName %>Changing()<% End If %>
+				<% If Not VsVersion.Equals(VisualStudioVersion.VS_2005) Then %>On<%= association.PropertyName %>Changing()<% End If %>
 				<%= association.PrivateVariableName %> = value
-				<% If VsVersion.Equals(VisualStudioVersion.VS_2008) Then %>On<%= association.PropertyName %>Changed()<% End If %>
+				<% If Not VsVersion.Equals(VisualStudioVersion.VS_2005) Then %>On<%= association.PropertyName %>Changed()<% End If %>
 			End Set
 		End Property
-		<% If VsVersion.Equals(VisualStudioVersion.VS_2008) Then %>
+		<% If Not VsVersion.Equals(VisualStudioVersion.VS_2005) Then %>
 		Partial Private Sub On<%= association.PropertyName %>Changing()
 		End Sub
 		Partial Private Sub On<%= association.PropertyName %>Changed()

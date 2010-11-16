@@ -12,8 +12,8 @@ Description: Generates a complete set of Maps, Business Objects, Manager Objects
 <%@ Property Name="TablePrefix" Type="System.String" Default="" Optional="True" Category="1b. Database Options" Description="A prefix that will be stripped from table names when class names are generated." %>
 <%@ Property Name="VersionColumn" Type="System.String" Default="^((R|r)ow)?(V|v)ersion$" Optional="True" Category="1b. Database Options" Description="A regular expression; a match will mark a column as a version column." %>
 
-<%@ Property Name="NHibernateVersion" Type="NHibernateVersion" Default="v2_0" Optional="False" Category="2. Versions" Description="The version of NHibernate to generate for." %>
-<%@ Property Name="VsVersion" Type="VisualStudioVersion" Default="VS_2008" Optional="False" Category="2. Versions" Description="The version of Visual Studio to generate for." %>
+<%@ Property Name="NHibernateVersion" Type="NHibernateVersion" Default="v2_1" Optional="False" Category="2. Versions" Description="The version of NHibernate to generate for." %>
+<%@ Property Name="VsVersion" Type="VisualStudioVersion" Default="VS_2010" Optional="False" Category="2. Versions" Description="The version of Visual Studio to generate for." %>
 
 <%@ Property Name="AssemblyName" Type="System.String" Default="NHibernate.Generated" Optional="False" Category="3a. Assembly" Description="The name of the Assembly that will contain the business objects." %>
 
@@ -231,26 +231,18 @@ End Sub
 Private Sub RegisterReferences()
     Select Case Me.NHibernateVersion
         Case NHibernateVersion.v1_2
-            Me.RegisterReference(Path.Combine(Me.CodeTemplateInfo.DirectoryName, "..\Common\NHibernate\1.2.1.GA\NHibernate.dll"))
-            Me.RegisterReference(Path.Combine(Me.CodeTemplateInfo.DirectoryName, "..\Common\NHibernate\1.2.1.GA\Iesi.Collections.dll"))
-            Me.RegisterReference(Path.Combine(Me.CodeTemplateInfo.DirectoryName, "..\Common\NHibernate\1.2.1.GA\log4net.dll"))
-            Exit Select
-    
-        Case NHibernateVersion.v2_0
-            Me.RegisterReference(Path.Combine(Me.CodeTemplateInfo.DirectoryName, "..\Common\NHibernate\2.0.1.GA\NHibernate.dll"))
-            Me.RegisterReference(Path.Combine(Me.CodeTemplateInfo.DirectoryName, "..\Common\NHibernate\2.0.1.GA\Castle.Core.dll"))
-            Me.RegisterReference(Path.Combine(Me.CodeTemplateInfo.DirectoryName, "..\Common\NHibernate\2.0.1.GA\Castle.DynamicProxy2.dll"))
-            Me.RegisterReference(Path.Combine(Me.CodeTemplateInfo.DirectoryName, "..\Common\NHibernate\2.0.1.GA\Iesi.Collections.dll"))
-            Me.RegisterReference(Path.Combine(Me.CodeTemplateInfo.DirectoryName, "..\Common\NHibernate\2.0.1.GA\log4net.dll"))
+            Me.RegisterReference(Path.Combine(Me.CodeTemplateInfo.DirectoryName, "..\Common\NHibernate\1.2\NHibernate.dll"))
+            Me.RegisterReference(Path.Combine(Me.CodeTemplateInfo.DirectoryName, "..\Common\NHibernate\1.2\Iesi.Collections.dll"))
+            Me.RegisterReference(Path.Combine(Me.CodeTemplateInfo.DirectoryName, "..\Common\NHibernate\1.2\log4net.dll"))
             Exit Select
     
         Case NHibernateVersion.v2_1
-            Me.RegisterReference(Path.Combine(Me.CodeTemplateInfo.DirectoryName, "..\Common\NHibernate\2.1.0.GA\NHibernate.dll"))
-            Me.RegisterReference(Path.Combine(Me.CodeTemplateInfo.DirectoryName, "..\Common\NHibernate\2.1.0.GA\Castle.Core.dll"))
-            Me.RegisterReference(Path.Combine(Me.CodeTemplateInfo.DirectoryName, "..\Common\NHibernate\2.1.0.GA\Castle.DynamicProxy2.dll"))
-            Me.RegisterReference(Path.Combine(Me.CodeTemplateInfo.DirectoryName, "..\Common\NHibernate\2.1.0.GA\NHibernate.ByteCode.Castle.dll"))
-            Me.RegisterReference(Path.Combine(Me.CodeTemplateInfo.DirectoryName, "..\Common\NHibernate\2.1.0.GA\Iesi.Collections.dll"))
-            Me.RegisterReference(Path.Combine(Me.CodeTemplateInfo.DirectoryName, "..\Common\NHibernate\2.1.0.GA\log4net.dll"))
+            Me.RegisterReference(Path.Combine(Me.CodeTemplateInfo.DirectoryName, "..\Common\NHibernate\2.1\NHibernate.dll"))
+            Me.RegisterReference(Path.Combine(Me.CodeTemplateInfo.DirectoryName, "..\Common\NHibernate\2.1\Castle.Core.dll"))
+            Me.RegisterReference(Path.Combine(Me.CodeTemplateInfo.DirectoryName, "..\Common\NHibernate\2.1\Castle.DynamicProxy2.dll"))
+            Me.RegisterReference(Path.Combine(Me.CodeTemplateInfo.DirectoryName, "..\Common\NHibernate\2.1\NHibernate.ByteCode.Castle.dll"))
+            Me.RegisterReference(Path.Combine(Me.CodeTemplateInfo.DirectoryName, "..\Common\NHibernate\2.1\Iesi.Collections.dll"))
+            Me.RegisterReference(Path.Combine(Me.CodeTemplateInfo.DirectoryName, "..\Common\NHibernate\2.1\log4net.dll"))
             Exit Select
     End Select
     Me.RegisterReference(Path.Combine(Me.CodeTemplateInfo.DirectoryName, "..\Common\NUnit\NUnit.Framework.dll"))
