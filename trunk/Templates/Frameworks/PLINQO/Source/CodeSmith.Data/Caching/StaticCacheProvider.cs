@@ -17,10 +17,10 @@ namespace CodeSmith.Data.Caching
         public override void Set<T>(string key, T data, CacheSettings settings)
         {
             string groupKey = GetGroupKey(key, settings.Group);
-            bool result = _cache.TryAdd(groupKey, data);
+            _cache[groupKey] = data;
 
 #if DEBUG
-            if (result && !groupKey.StartsWith(GroupVersionPrefix))
+            if (!groupKey.StartsWith(GroupVersionPrefix))
                 Debug.WriteLine("Cache Insert for key " + groupKey);
 #endif
 
