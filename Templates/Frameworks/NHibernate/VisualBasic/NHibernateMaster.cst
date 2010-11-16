@@ -237,6 +237,7 @@ Private Sub RegisterReferences()
             Exit Select
     
         Case NHibernateVersion.v2_1
+            Me.RegisterReference(Path.Combine(Me.CodeTemplateInfo.DirectoryName, "..\Common\NHibernate\2.1\Antlr3.Runtime.dll"))
             Me.RegisterReference(Path.Combine(Me.CodeTemplateInfo.DirectoryName, "..\Common\NHibernate\2.1\NHibernate.dll"))
             Me.RegisterReference(Path.Combine(Me.CodeTemplateInfo.DirectoryName, "..\Common\NHibernate\2.1\Castle.Core.dll"))
             Me.RegisterReference(Path.Combine(Me.CodeTemplateInfo.DirectoryName, "..\Common\NHibernate\2.1\Castle.DynamicProxy2.dll"))

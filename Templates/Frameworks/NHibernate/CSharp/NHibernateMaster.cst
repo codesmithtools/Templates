@@ -238,6 +238,7 @@ private void RegisterReferences()
             break;
         
         case NHibernateVersion.v2_1:
+            this.RegisterReference(Path.Combine(this.CodeTemplateInfo.DirectoryName, @"..\Common\NHibernate\2.1\Antlr3.Runtime.dll"));
             this.RegisterReference(Path.Combine(this.CodeTemplateInfo.DirectoryName, @"..\Common\NHibernate\2.1\NHibernate.dll"));
             this.RegisterReference(Path.Combine(this.CodeTemplateInfo.DirectoryName, @"..\Common\NHibernate\2.1\Castle.Core.dll"));
             this.RegisterReference(Path.Combine(this.CodeTemplateInfo.DirectoryName, @"..\Common\NHibernate\2.1\Castle.DynamicProxy2.dll"));
