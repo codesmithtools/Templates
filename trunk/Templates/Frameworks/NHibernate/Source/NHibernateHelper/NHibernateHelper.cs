@@ -42,7 +42,10 @@ namespace NHibernateHelper
                 if (!String.IsNullOrEmpty(s) && s.Trim().Length > 0)
                     _excludedColumns.Add(new Regex(s, RegexOptions.Compiled));
 
-            SchemaProvider = (SchemaProvider)Enum.Parse(typeof(SchemaProvider), providerName);
+
+            SchemaProvider = Enum.IsDefined(typeof(SchemaProvider), providerName) 
+                ? (SchemaProvider)Enum.Parse(typeof(SchemaProvider), providerName) 
+                : SchemaProvider.ADOXSchemaProvider; // Default to the ADOX SchemaProvider;
 
             //_tableNaming = namingConventions.TableNaming;
             //_entityNaming = namingConventions.EntityNaming;

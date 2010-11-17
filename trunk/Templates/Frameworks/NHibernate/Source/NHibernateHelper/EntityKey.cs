@@ -21,7 +21,8 @@ namespace NHibernateHelper
 
             if (!IsCompositeKey)
             {
-                IsIdentity = (KeyColumn.Column.ExtendedProperties.Contains(Identity)
+                IsIdentity = (KeyColumn.Column.ExtendedProperties != null 
+                    && KeyColumn.Column.ExtendedProperties.Contains(Identity)
                     && ((bool)KeyColumn.Column.ExtendedProperties[Identity].Value) == true);
 
                 Generator = (IsIdentity)
@@ -43,9 +44,7 @@ namespace NHibernateHelper
         {
             get
             {
-                return (IsCompositeKey || KeyColumns.Count == 0)
-                    ? null
-                    : KeyColumns[0];
+                return (IsCompositeKey || KeyColumns.Count == 0) ? null : KeyColumns[0];
             }
         }
 
