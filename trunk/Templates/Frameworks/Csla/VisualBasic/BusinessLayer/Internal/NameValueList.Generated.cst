@@ -71,9 +71,20 @@ Namespace <%= BusinessProjectName %>
             _list = Nothing
         End Sub
     
+    <% If(IncludeSilverlightSupport) Then %>
+#If Not SILVERLIGHT Then
+    <% End If %>
         Private Sub New()
+            ' require use of factory method 
         End Sub
-        
+    <% If(IncludeSilverlightSupport) Then %>
+#Else
+        public Sub New()
+            ' require use of factory method 
+        End Sub
+#End If
+    <% End If %>
+
 #End Region
     
     
