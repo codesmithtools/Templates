@@ -13,7 +13,9 @@
 #Region "Business Rules"
     
         Protected Overrides Sub AddBusinessRules()
-    
+            ' Call the base class, if this call isn't made than any declared System.ComponentModel.DataAnnotations rules will not work.
+            MyBase.AddBusinessRules()
+
             If AddBusinessValidationRules() Then Exit Sub
     
     <%     For Each member As Member in Entity.MembersNoRowVersion %>
