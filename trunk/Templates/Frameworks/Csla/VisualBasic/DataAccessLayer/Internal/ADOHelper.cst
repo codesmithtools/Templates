@@ -85,25 +85,24 @@ Namespace <%= DataProjectName %>
         ''' <param name="columnName">The column name.</param>
         ''' <returns>Bytes Stored in a column.</returns>
         Public Shared Function GetBytes(ByVal reader As SafeDataReader, ByVal columnName As String) As Byte()
-            Dim buffer As Byte() = New Byte(1024) {}
-            Dim fieldOffset As Long = 0
-    
             Using stream As MemoryStream = New MemoryStream()
-                Dim bytesRead As Integer = 0
-    
-                bytesRead = CInt(reader.GetBytes(columnName, fieldOffset, buffer, 0, buffer.Length))
-                While bytesRead > 0
-                    Dim actualRead As Byte() = New Byte(bytesRead) {}
-                    Array.Copy(buffer, 0, actualRead, 0, bytesRead)
-                    stream.Write(actualRead, 0, actualRead.Length)
-                    fieldOffset += bytesRead
-    
-                    bytesRead = CInt(reader.GetBytes(columnName, fieldOffset, buffer, 0, buffer.Length))
-                End While
-    
+                Dim bufferSize As Integer = 1024
+                Dim buffer(bufferSize - 1) As Byte
+                Dim retVal As Long = 0
+                Dim startIndex As Long = 0
+
+                retVal = reader.GetBytes(columnName, startIndex, buffer, 0, bufferSize)
+                Do While retVal > 0
+                    stream.Write(buffer, 0, CInt(retVal))
+                    stream.Flush()
+
+                    startIndex += bufferSize
+                    retVal = reader.GetBytes(columnName, startIndex, buffer, 0, bufferSize)
+                Loop
+
                 Return stream.ToArray()
             End Using
-        End Function  
+        End Function
     
 #Region "Nullable Helpers" 'This code is here to help in the Data access implementation of handling DBNull.Value.
     
