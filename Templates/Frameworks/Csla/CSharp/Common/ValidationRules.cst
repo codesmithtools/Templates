@@ -13,6 +13,9 @@
 
         protected override void AddBusinessRules()
         {
+            // Call the base class, if this call isn't made than any declared System.ComponentModel.DataAnnotations rules will not work.
+            base.AddBusinessRules();
+            
             if(AddBusinessValidationRules())
                 return;
 
