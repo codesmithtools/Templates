@@ -672,6 +672,21 @@ namespace CodeSmith.Data.Linq
 
             // make key DB specific
             DataContext db = query.GetDataContext();
+
+            return GetHashKey(db, key);
+        }
+
+        public static string GetHashKey(this DataContext db, params object[] values)
+        {
+            var sb = new StringBuilder();
+            foreach (var value in values)
+                sb.Append(value);
+
+            return GetHashKey(db, sb.ToString());
+        }
+
+        private static string GetHashKey(this DataContext db, string key)
+        {
             if (db != null && db.Connection != null && !String.IsNullOrEmpty(db.Connection.Database))
                 key += db.Connection.Database;
 
