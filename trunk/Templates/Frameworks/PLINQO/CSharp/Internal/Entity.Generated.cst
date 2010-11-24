@@ -337,6 +337,15 @@ foreach(Column column in Type.Columns) {
 <% } // HasOtherAssociation %>
             }
         }
+        
+        <% if(!string.IsNullOrEmpty(this.InterfaceNamespace)) { %>
+        <%= this.InterfaceNamespace %>.I<%= a.Type %> <%= this.InterfaceNamespace %>.I<%= this.Type.Name %>.<%= a.Member %>
+        {
+            get { return this.<%= a.Member %>; }
+            set { this.<%= a.Member %> = value as <%= Database.EntityNamespace %>.<%= a.Type %>; }
+        }
+        <% } %>
+        
 <% if (IncludeXmlSerialization) { %>
 
         /// <summary>
@@ -376,6 +385,26 @@ foreach(Column column in Type.Columns) {
 <% } %>
             set { <%= a.Storage %>.Assign(value); }
         }
+        
+        <% if(!string.IsNullOrEmpty(this.InterfaceNamespace)) { %>
+        System.Collections.Generic.IList<<%= this.InterfaceNamespace %>.I<%= a.Type %>> <%= this.InterfaceNamespace %>.I<%= this.Type.Name %>.<%= a.Member %>
+        {
+            get
+            {
+                return this.<%= a.Member %>
+                    .AsQueryable<<%= this.InterfaceNamespace %>.I<%= a.Type %>>()
+                    as System.Collections.Generic.IList<<%= this.InterfaceNamespace %>.I<%= a.Type %>>;
+            }
+            set
+            {
+                if (value == null)
+                    this.<%= a.Member %>.Clear();
+                else
+                    this.<%= a.Member %>.SetSource(value.Cast<<%= Database.EntityNamespace %>.<%= a.Type %>>());
+            }
+        }
+        <% } %>
+        
 <% if (IncludeXmlSerialization) { %>
 
         /// <summary>
