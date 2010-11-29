@@ -146,21 +146,22 @@ The <%= SolutionName %> Solution has been created at <%= Location %>.
         return new ProjectBuilderSettings()
         {
             SourceDatabase = this.SourceDatabase,
+            FrameworkVersion = this.Framework,
+            Language = this.Language,
             Location = this.Location,
             SolutionName = this.SolutionName,
-            Language = this.Language,
-            FrameworkVersion = this.Framework,
-            ProjectType = this.ProjectType,
-            IncludeDataServices = this.IncludeDataServices,
+            DataContextName = this.DataContextName,
             DataProjectName = this.DataProjectName,
+            QueryPattern = this.QueryPattern,
             CopyTemplatesToFolder = this.CopyTemplatesToFolder,
+            IncludeDataServices = this.IncludeDataServices,
             InterfaceProjectName = this.InterfaceProjectName,
-            TestProjectName = this.TestProjectName,
             IncludeTestProject = this.IncludeTestProject,
+            ProjectType = this.ProjectType,
+            TestProjectName = this.TestProjectName,
             WorkingDirectory = this.CopyTemplatesToFolder
                 ? Path.Combine(Location, @"Templates\LinqToSql")
-                : this.CodeTemplateInfo.DirectoryName,
-            QueryPattern = this.QueryPattern
+                : this.CodeTemplateInfo.DirectoryName
         };
     }
     private string CreateSolution(List<SolutionItem> solutionItems)
