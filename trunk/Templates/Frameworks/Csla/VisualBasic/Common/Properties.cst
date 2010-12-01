@@ -30,12 +30,12 @@
         ''' <%= member.Description %>
         ''' </summary>
     <% End If %>
-    <%If IncludeSilverlightSupport Then %>
+    <%If IncludeSilverlightSupport And member.IsPrimaryKey Then %>
 #If Not SILVERLIGHT Then
     <% End If %>
         <%If member.IsPrimaryKey Then %><%= member.BuildDataObjectField(IncludeSilverlightSupport) %><% End If %>
         Public Property <%= member.PropertyName %>() As <%= member.SystemType %>
-    <%If IncludeSilverlightSupport Then %>
+    <%If IncludeSilverlightSupport And member.IsPrimaryKey Then %>
 #Else
         Public Property <%= member.PropertyName %>() As <%= member.SystemType %>
 #End If
@@ -71,12 +71,12 @@
         ''' <%= member.Description %>
         ''' </summary>
     <% End If %>
-    <%If IncludeSilverlightSupport Then %>
+    <%If IncludeSilverlightSupport And member.IsPrimaryKey Then %>
 #If Not SILVERLIGHT Then
     <% End If %>
         <%If member.IsPrimaryKey Then %><%= member.BuildDataObjectField(IncludeSilverlightSupport) %><% End If %>
         Public Property <%= member.PropertyName %>() As <%= member.SystemType %>
-    <%If IncludeSilverlightSupport Then %>
+    <%If IncludeSilverlightSupport And member.IsPrimaryKey Then %>
 #Else
         Public Property <%= member.PropertyName %>() As <%= member.SystemType %>
 #End If
