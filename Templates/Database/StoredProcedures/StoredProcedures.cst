@@ -158,7 +158,7 @@ if (IncludeInsert)
 		|| ((SourceTable.PrimaryKey.MemberColumns[0].DataType == DbType.Int16
 		|| SourceTable.PrimaryKey.MemberColumns[0].DataType == DbType.Int32
 		|| SourceTable.PrimaryKey.MemberColumns[0].DataType == DbType.Int64)
-		&& (bool)SourceTable.PrimaryKey.MemberColumns[0].ExtendedProperties["CS_IsIdentity"].Value == true)))
+		&& SourceTable.PrimaryKey.MemberColumns[0].ExtendedProperties != null && SourceTable.PrimaryKey.MemberColumns[0].ExtendedProperties.Contains("CS_IsIdentity") && (bool)SourceTable.PrimaryKey.MemberColumns[0].ExtendedProperties["CS_IsIdentity"].Value == true)))
 	{
 		ColumnSchema primaryKeyColumn = SourceTable.PrimaryKey.MemberColumns[0];
 %>
