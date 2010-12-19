@@ -15,11 +15,9 @@
 <%  foreach(Member member in Entity.MembersNoRowVersion){ if (UseMemberVariables){ %>
         private static readonly PropertyInfo< <%= member.SystemType %> > <%= member.PrivateMemberVariableName %>Property = RegisterProperty< <%= member.SystemType %> >(p => p.<%= member.PropertyName %>, string.Empty<% if(member.IsNullable) { %>, (<%= member.SystemType %>)null<% } %><%if (IsCSLA40) { %>, RelationshipTypes.PrivateField<% }%>);
         private <%= member.SystemType %> <%= member.PrivateMemberVariableName %> = <%= member.PrivateMemberVariableName %>Property.DefaultValue;<%= member.BuildDataObjectField(IncludeSilverlightSupport) %>
-<% if(member.HasDescription) { %>
         /// <summary>
-        /// <%= member.Description %>
+        <% if(member.HasDescription) { %>/// <%= member.Description %><%}else{%>/// No description available from the database.<%}%>
         /// </summary>
-<% } %>
         public <%= member.SystemType %> <%= member.PropertyName %>
         {
             get { return GetProperty(<%= member.PrivateMemberVariableName %>Property, <%= member.PrivateMemberVariableName %>); }
@@ -27,11 +25,9 @@
 
 <% } else { %>
         private static readonly PropertyInfo< <%= member.SystemType %> > <%= member.PrivateMemberVariableName %>Property = RegisterProperty< <%= member.SystemType %> >(p => p.<%= member.PropertyName %>, string.Empty<% if(member.IsNullable) { %>, (<%= member.SystemType %>)null<% } %>);<%= member.BuildDataObjectField(IncludeSilverlightSupport) %>
-<% if(member.HasDescription) { %>
         /// <summary>
-        /// <%= member.Description %>
+        <% if(member.HasDescription) { %>/// <%= member.Description %><%}else{%>/// No description available from the database.<%}%>
         /// </summary>
-<% } %>
         public <%= member.SystemType %> <%= member.PropertyName %>
         {
             get { return GetProperty(<%= member.PrivateMemberVariableName %>Property); }

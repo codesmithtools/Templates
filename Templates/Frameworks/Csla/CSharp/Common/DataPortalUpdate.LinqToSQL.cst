@@ -1,0 +1,177 @@
+﻿<%-- Author: Blake Niemyjski --%>
+<%--         Joe McPherson   --%>
+<%@ CodeTemplate Language="C#" TargetLanguage="C#" Inherits="CodeSmith.QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Encoding="UTF-8" Description="CSLA Map" %>
+
+<%@ Assembly Name="SchemaExplorer" %>
+<%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\Common" %>
+<%@ Assembly Name="CodeSmith.SchemaHelper.Extensions" Path="..\..\Common" %>
+<%@ Assembly Name="CodeSmith.SchemaHelper.CSharpExtensions" Path="..\..\Common" %>
+<%@ Assembly Name="CodeSmith.QuickStart" Path="..\..\Common" %>
+
+<%@ Import Namespace="SchemaExplorer" %>
+<%@ Import Namespace="CodeSmith.SchemaHelper" %>
+<%@ Import Namespace="CodeSmith.QuickStart" %>
+			//LinqToSQL Modification
+            bool cancel = false;
+            OnUpdating(ref cancel);
+            if (cancel) return;
+			
+			// Create a new connection.
+            using (var ctx = ContextManager<DAL.PetshopDataContext>.GetManager(LinqToSQLHelper.ConnectionString, true))
+			{
+
+<% 	if(!Entity.HasIdentityMember) 
+	{ %>
+				if(<%= Entity.PrimaryKey.KeyMembers.BuildIdentityKeyEqualityStatements()%>)
+				{
+					// Insert new child.
+					DAL.<%= StringUtil.ToPascalCase(Entity.Table.Name) %> newItem = new DAL.<%= StringUtil.ToPascalCase(Entity.Table.Name) %>();
+
+<% 		if(Entity.HasRowVersionMember || Entity.HasIdentityMember) 
+		{ 
+			if(Entity.HasRowVersionMember) 
+			foreach(Member member in Entity.PrimaryKey.KeyMembers) 
+			{ 
+				if(member.IsIdentity) 			
+				{ %>
+            LoadProperty(<%= member.PrivateMemberVariableName %>Property, <%if(!member.HasByteArrayColumn()) { %>this.<%= member.PropertyName %>);<% } else { %>LinqToSQLHelper.GetBinary(this.<%= member.PropertyName %>));<% } %>
+<% 				}
+			} %>
+<% 			else 
+			foreach(Member member in Entity.PrimaryKey.KeyMembers) 
+			{ 
+				if(member.IsIdentity) 			
+				{ %>
+            LoadProperty(_original<%= member.PropertyName %>Property, this.<%= member.PropertyName %>);
+<% 				}
+			} %>
+<%		} 
+		else
+		{
+			foreach(Member member in Entity.PrimaryKey.KeyMembers) 
+			{ %>
+					newItem.<%= member.PropertyName %> = this.<%= member.PropertyName %>;
+<% 			} 
+		}%>
+<% 		foreach (Member member in Entity.MembersNoPrimaryKeys) 
+		{%>
+					newItem.<%= member.PropertyName %> = <%if(!member.HasByteArrayColumn()) { %>this.<%= member.PropertyName %>;<% } else { %>LinqToSQLHelper.GetBinary(this.<%= member.PropertyName %>);<% } %>
+<%		}%>
+			
+					ctx.DataContext.<%= StringUtil.ToPascalCase(Entity.Table.Name) %>.InsertOnSubmit(newItem);
+					ctx.DataContext.SubmitChanges();
+
+                // Mark child lists as dirty. This code may need to be updated to one-to-one relationships.
+<% 		foreach(Association association in Entity.AssociatedOneToMany) 
+		{ %>
+                	foreach(<%= association.ClassName %> itemToUpdate in <%= association.PropertyName %>)
+					{
+		<%= association.SearchCriteria.BuildUpdateStatements("itemToUpdate", "") %>
+					}
+<% 		} %>
+
+                	FieldManager.UpdateChildren(this);
+
+					// Delete the old.
+                	var criteria = new <%= CriteriaClassName %> {<%= Entity.PrimaryKey.KeyMembers.BuildObjectInitializer(false, false, true) %>};
+                	<%= Entity.PrimaryKey.KeyMembers.BuildNullableObjectInitializer(false, false, true)%>
+					DataPortal_Delete(criteria);
+				
+                	// Mark the original as the new one.
+<% 		foreach(Member member in Entity.PrimaryKey.KeyMembers) 
+		{ 
+			if(!member.IsIdentity) 
+			{ %>
+                	Original<%= member.PropertyName %> = <%= member.PropertyName %>;
+<% 			}%>
+<%		}%>
+                	OnUpdated();
+
+               	 	return;
+            	}
+<%	} %>
+				// Get <%= StringUtil.ToPascalCase(Entity.Table.Name) %> data for a single criteria
+<%	string PrimaryKeyCriteria = "";	
+	string PrimaryKeyFields = "";
+ 	int memberCount = 0 ; 
+	foreach (Member member in Entity.PrimaryKey.KeyMembers) 
+	{
+		PrimaryKeyCriteria += "criteria." + member.PropertyName.ToString() ;
+		PrimaryKeyFields += member.PropertyName.ToString() ;
+		if ( memberCount < (Entity.PrimaryKey.KeyMembers.Count - 1))
+		{
+			PrimaryKeyCriteria += ", " ;
+			PrimaryKeyFields += ", ";
+		}
+ 		memberCount = memberCount + 1 ; 
+ 	} 
+%>	
+				DAL.<%= StringUtil.ToPascalCase(Entity.Table.Name) %> item = ctx.DataContext.<%= StringUtil.ToPascalCase(Entity.Table.Name) %>.GetByKey(<%=PrimaryKeyFields%>);
+
+				if (item == null)
+					throw new ArgumentNullException("<%=PrimaryKeyFields%>", "Selection by <%=PrimaryKeyFields%> did not return a result.");
+				else
+				{		
+<% 	if(Entity.HasRowVersionMember) 
+	{ %>
+                	item.<%= Entity.RowVersionMember.PropertyName %> = LinqToSQLHelper.GetBytes(this, "<%= Entity.RowVersionMember.PropertyName %>");
+<% 	} %>
+<% 	foreach(Member member in Entity.MembersNoRowVersion) 
+	{ 
+		if(UseMemberVariables) 
+		{ %>
+<% 			if( member.IsNullable && member.SystemType != "System.String" && member.SystemType != "System.Byte[]") 
+			{%>
+                	item.<%= member.PropertyName %> = this.IsDBNull("<%= member.ColumnName %>") ? (<%= member.SystemType %>)null : <%if(!member.HasByteArrayColumn()) { %>this.<%= member.PropertyName %>;<% } else { %>LinqToSQLHelper.GetBinary(this.<%= member.PropertyName %>);<% } %>
+<%				if (member.IsPrimaryKey && !member.IsIdentity) 
+				{ %>
+                	item.<%= member.PropertyName %> = this.IsDBNull("<%= member.ColumnName %>") ? (<%= member.SystemType %>)null : <%if(!member.HasByteArrayColumn()) { %>this.<%= member.PropertyName %>;<% } else { %>LinqToSQLHelper.GetBinary(this.<%= member.PropertyName %>);<% } %>
+<% 				} 
+			} 
+			else 
+			{%>
+                	item.<%= member.PropertyName %> = <%if(!member.HasByteArrayColumn()) { %>this.<%= member.PropertyName %>;<% } else { %>LinqToSQLHelper.GetBinary(this.<%= member.PropertyName %>);<% } %>
+<%				if (member.IsPrimaryKey && !member.IsIdentity) 
+				{ %>
+                	item.<%= member.PropertyName %> = <%if(!member.HasByteArrayColumn()) { %>this.<%= member.PropertyName %>;<% } else { %>LinqToSQLHelper.GetBinary(this.<%= member.PropertyName %>);<% } %>
+<% 				} 
+			} 
+		} 
+		else 
+		{ %>
+<%			if (!member.IsPrimaryKey && !member.IsIdentity) 
+			{%>
+                	item.<%= member.PropertyName %> = <%if(!member.HasByteArrayColumn()) { %>this.<%= member.PropertyName %>;<% } else { %>LinqToSQLHelper.GetBinary(this.<%= member.PropertyName %>);<% } %>
+<%			}
+			if (member.IsPrimaryKey && !member.IsIdentity) 
+			{ %>
+                	item.<%= member.PropertyName %> = <%if(!member.HasByteArrayColumn()) { %>this.<%= member.PropertyName %>;<% } else { %>LinqToSQLHelper.GetBinary(this.<%= member.PropertyName %>);<% } %>
+<% 			} 
+		} 
+	} %>
+		    	}           
+
+				try
+				{
+					ctx.DataContext.SubmitChanges();
+				}
+				catch(System.Exception e)
+				{
+					throw new DataPortalException("The entity is out of date on the client. " +
+						"Please update the entity and try again. This could also be thrown if the sql statement " +
+						"failed to execute.",e,this);
+				}
+<% 	foreach(Member member in Entity.PrimaryKey.KeyMembers)%>
+<%	{%>
+<%		if(!member.IsIdentity)%>
+<%		{%>
+				LoadProperty(_original<%= member.PropertyName %>Property, this.<%= member.PropertyName %>);
+<%		}%>
+<%	} %>
+
+<% 	if(Entity.AssociatedToManyUnion.Count > 0 || Entity.AssociatedManyToOne.Count > 0)
+	{%>         	
+				FieldManager.UpdateChildren(this);
+<% 	} %>
+            	OnUpdated();
+			}

@@ -12,6 +12,11 @@
 
         #region Exists Command
 
+        /// <summary>
+        /// Determines if a record exists in the <%=ChildBusinessClassName%><%= Entity.GenericProperty %> in the database for the specified criteria. 
+        /// </summary>
+        /// <param name="criteria">The criteria parameter is a <see cref="<%=BusinessClassName%><%= Entity.GenericProperty %>"/> object.</param>
+        /// <returns>A boolean value of true is returned if a record is found.</returns>
 <% if(IncludeSilverlightSupport) { %>
 #if !SILVERLIGHT
 <% } %>

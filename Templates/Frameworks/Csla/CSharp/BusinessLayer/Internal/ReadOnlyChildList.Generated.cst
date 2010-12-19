@@ -29,6 +29,10 @@ using System;
 using System.Collections.Generic;
 
 using Csla;
+<%  if( DataAccessImplementation == DataAccessMethod.LinqToSQL) {%>
+using <%=LinqToSQLContextNamespace%>;
+using DAL=<%=LinqToSQLContextNamespace%>;
+<% }%>
 <% if(IncludeSilverlightSupport) { %>
 #if SILVERLIGHT
 using Csla.Serialization;
@@ -49,7 +53,7 @@ namespace <%= BusinessProjectName %>
 <% } %>
     public partial class <%= BusinessClassName %><%= Entity.GenericProperty %> : ReadOnlyListBase< <%= BusinessClassName %><%= Entity.GenericProperty %>, <%= ChildBusinessClassName %><%= Entity.GenericProperty %> >
     {
-    
+
         #region Constructor(s)
 
 <% if(IncludeSilverlightSupport) { %>
@@ -72,6 +76,13 @@ namespace <%= BusinessProjectName %>
         #region Synchronous Factory Methods     
 <% foreach(SearchCriteria sc in Entity.SearchCriteria()) { %>
 
+        /// <summary>
+        /// Returns a <see cref="<%=BusinessClassName%><%= Entity.GenericProperty %>"/> object of the specified criteria. 
+        /// </summary>
+<% foreach(Member item in  sc.Members) { %>
+        /// <param name="<%= item.VariableName%>"><%if(item.HasDescription){%><%=item.Description%>.<%}else{%>No additional detail available.<%}%></param>
+<%}%>
+        /// <returns>A <see cref="<%=BusinessClassName%><%= Entity.GenericProperty %>"/> object of the specified criteria.</returns>
         internal static <%= BusinessClassName %> <%= sc.MethodName %>(<%= sc.Members.BuildParametersVariables() %>)
         {
             var criteria = new <%= CriteriaClassName %>{<%= sc.Members.BuildObjectInitializer() %>};
@@ -80,7 +91,6 @@ namespace <%= BusinessProjectName %>
             return DataPortal.FetchChild< <%= BusinessClassName %> >(criteria);
         }
 <% } %>
-
         internal static <%= BusinessClassName %> GetAll()
         {
             return DataPortal.FetchChild< <%= BusinessClassName %> >(new <%= CriteriaClassName %>());
@@ -106,7 +116,6 @@ namespace <%= BusinessProjectName %>
             dp.BeginFetch(criteria);
         }
 <% } %>
-
         internal static void GetAllAsync(EventHandler<DataPortalResult<<%= BusinessClassName %><%= Entity.GenericProperty %>>> handler)
         {
             // Mark as child?
@@ -119,8 +128,9 @@ namespace <%= BusinessProjectName %>
         #endregion
 
 <% } %>
-
-<% RenderHelper(new PartialMethods()); %>
-<% RenderHelper(new Exists()); %>
+<%/*  Documentation code handled in the appropriate PartialMethods template  */
+   RenderHelper(new PartialMethods()); %>
+<%/*  Documentation code handled in the Exists.cst template  */
+   RenderHelper(new Exists()); %>
     }
 }

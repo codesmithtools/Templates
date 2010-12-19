@@ -4,6 +4,7 @@
 <%@ Register Name="DynamicRootList" Template="Internal\DynamicRootList.cst" %>
 <%@ Register Name="DynamicRootListDataAccess" Template="Internal\DynamicRootList.DataAccess.cst" %>
 <%@ Register Name="DynamicRootListDataAccessParameterized" Template="Internal\DynamicRootList.DataAccess.ParameterizedSQL.cst" %>
+<%@ Register Name="DynamicRootListDataAccessLinqToSQL" Template="Internal\DynamicRootList.DataAccess.LinqToSQL.cst" %>
 <%@ Register Name="DynamicRootListDataAccessStoredProcedures" Template="Internal\DynamicRootList.DataAccess.StoredProcedures.cst" %>
 <%@ Register Name="DynamicRootListGenerated" Template="Internal\DynamicRootList.Generated.cst" %>
 
@@ -64,6 +65,13 @@ public override void Render(System.IO.TextWriter writer)
         
         dynamicRootListDataAccessParameterized.RenderToFile(fileName, parentFileName, true);
     }
+    else if(DataAccessImplementation == DataAccessMethod.LinqToSQL)
+    {
+        DynamicRootListDataAccessLinqToSQL dynamicRootListDataAccessLinqToSQL = this.Create<DynamicRootListDataAccessLinqToSQL>();
+        this.CopyPropertiesTo(dynamicRootListDataAccessLinqToSQL);
+        
+        dynamicRootListDataAccessLinqToSQL.RenderToFile(fileName, parentFileName, true);
+    }
     else if(DataAccessImplementation == DataAccessMethod.StoredProcedures)
     {
         DynamicRootListDataAccessStoredProcedures dynamicRootListDataAccessStoredProcedures = this.Create<DynamicRootListDataAccessStoredProcedures>();
@@ -81,7 +89,7 @@ public override void Render(System.IO.TextWriter writer)
     }
     
     #endregion
-    
+ 
     #endregion
 
 }

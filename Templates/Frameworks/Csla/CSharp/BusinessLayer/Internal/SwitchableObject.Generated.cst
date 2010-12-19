@@ -31,6 +31,10 @@
 using System;
 
 using Csla;
+<% if( DataAccessImplementation == DataAccessMethod.LinqToSQL) {%>
+using <%=LinqToSQLContextNamespace%>;
+using DAL=<%=LinqToSQLContextNamespace%>;
+<% }%>
 <% if(IsCSLA40) { %>
 using Csla.Rules;
 <% } else { %>
@@ -58,23 +62,37 @@ namespace <%= BusinessProjectName %>
 <% } %>
     public partial class <%= BusinessClassName %><%= Entity.GenericProperty %> : BusinessBase< <%= BusinessClassName %><%= Entity.GenericProperty %> >
     {
-<% RenderHelper(new Constructor(), true); %>
+<%/*  Documentation code handled in the Constructor.cst template  */
+   RenderHelper(new Constructor(), true); %>
 
-<% RenderHelper(new ValidationRules()); %>
+<%/*  Documentation code handled in the ValidationRules.cst template  */
+   RenderHelper(new ValidationRules()); %>
 
-<% RenderHelper(new Properties()); %>
+<%/*  Documentation code handled in the Properties.cst template  */
+   RenderHelper(new Properties()); %>
 
 <% if(IncludeSilverlightSupport) { %>
 #if !SILVERLIGHT
 <% } %>
         #region Synchronous Root Factory Methods 
-        
+
+        /// <summary>
+        /// Creates a new object of type <see cref="<%=BusinessClassName%><%= Entity.GenericProperty %>"/>. 
+        /// </summary>
+        /// <returns>Returns a newly instantiated collection of type <see cref="<%=BusinessClassName%><%= Entity.GenericProperty %>"/>.</returns>	
         public static <%= BusinessClassName %><%= Entity.GenericProperty %> New<%= BusinessClassName %>()
         {
             return DataPortal.Create< <%= BusinessClassName %><%= Entity.GenericProperty %> >();
         }
 <% foreach(SearchCriteria sc in Entity.SearchCriteria()) { %>
 
+        /// <summary>
+        /// Returns a <see cref="<%=BusinessClassName%><%= Entity.GenericProperty %>"/> object of the specified criteria. 
+        /// </summary>
+<% foreach(Member item in  sc.Members) { %>
+        /// <param name="<%= item.VariableName%>"><%if(item.HasDescription){%><%=item.Description%>.<%}else{%>No additional detail available.<%}%></param>
+<%}%>
+        /// <returns>A <see cref="<%=BusinessClassName%><%= Entity.GenericProperty %>"/> object of the specified criteria.</returns>
         public static <%= BusinessClassName %><%= Entity.GenericProperty %> <%= sc.MethodName %>(<%= sc.Members.BuildParametersVariables() %>)
         {
             var criteria = new <%= CriteriaClassName %><%= Entity.GenericProperty %> {<%= sc.Members.BuildObjectInitializer() %>};
@@ -148,12 +166,24 @@ namespace <%= BusinessProjectName %>
 <% } %>
 
         #region Synchronous Child Factory Methods 
-        
+
+        /// <summary>
+        /// Creates a new object of type <see cref="<%=BusinessClassName%><%= Entity.GenericProperty %>"/>. 
+        /// </summary>
+        /// <returns>Returns a newly instantiated collection of type <see cref="<%=BusinessClassName%><%= Entity.GenericProperty %>"/>.</returns>
         internal static <%= BusinessClassName %><%= Entity.GenericProperty %> New<%= BusinessClassName %>Child()
         {
             return DataPortal.CreateChild< <%= BusinessClassName %><%= Entity.GenericProperty %> >();
         }
 <% foreach(SearchCriteria sc in Entity.SearchCriteria()) { %>
+
+        /// <summary>
+        /// Returns a <see cref="<%=BusinessClassName%><%= Entity.GenericProperty %>"/> object of the specified criteria. 
+        /// </summary>
+<% foreach(Member item in  sc.Members) { %>
+        /// <param name="<%= item.VariableName%>"><%if(item.HasDescription){%><%=item.Description%>.<%}else{%>No additional detail available.<%}%></param>
+<%}%>
+        /// <returns>A <see cref="<%=BusinessClassName%><%= Entity.GenericProperty %>"/> object of the specified criteria.</returns>
 
         internal static <%= BusinessClassName %><%= Entity.GenericProperty %> <%= sc.MethodName %>Child(<%= sc.Members.BuildParametersVariables() %>)
         {
@@ -192,29 +222,81 @@ namespace <%= BusinessProjectName %>
 
         #endregion
 <% } %>
-<% RenderHelper(new PartialMethods()); %>
+<%/*  Documentation code handled in the appropriate PartialMethods template  */
+   RenderHelper(new PartialMethods()); %>
 
         #region ChildPortal partial methods
 
 <% if(IncludeSilverlightSupport) { %>
 #if !SILVERLIGHT
 <% } %>
+
+        /// <summary>
+        /// Codesmith generated stub method that is called when creating the child <see cref="<%=ChildBusinessClassName%><%= Entity.GenericProperty %>"/> object. 
+        /// </summary>
+        /// <param name="cancel">Value returned from the method indicating whether the object creation should proceed.</param>
         partial void OnChildCreating(ref bool cancel);
+
+        /// <summary>
+        /// Codesmith generated stub method that is called after the child <see cref="<%=ChildBusinessClassName%><%= Entity.GenericProperty %>"/> object has been created. 
+        /// </summary>
         partial void OnChildCreated();
+
+        /// <summary>
+        /// Codesmith generated stub method that is called when fetching the child <see cref="<%=ChildBusinessClassName%><%= Entity.GenericProperty %>"/> object. 
+        /// </summary>
+        /// <param name="criteria"><see cref="<%= ChildBusinessClassName %>Criteria"/> object containg the criteria of the object to fetch.</param>
+        /// <param name="cancel">Value returned from the method indicating whether the object fetching should proceed.</param>
         partial void OnChildFetching(<%= CriteriaClassName %><%= Entity.GenericProperty %> criteria, ref bool cancel);
+
+        /// <summary>
+        /// Codesmith generated stub method that is called after the child <see cref="<%=ChildBusinessClassName%><%= Entity.GenericProperty %>"/> object has been fetched. 
+        /// </summary>
         partial void OnChildFetched();
+
+        /// <summary>
+        /// Codesmith generated stub method that is called when inserting the child <see cref="<%=ChildBusinessClassName%><%= Entity.GenericProperty %>"/> object. 
+        /// </summary>
+        /// <param name="cancel">Value returned from the method indicating whether the object insertion should proceed.</param>
+        partial void OnChildInserting(ref bool cancel);
         partial void OnChildInserting(SqlConnection connection, ref bool cancel);
+
+        /// <summary>
+        /// Codesmith generated stub method that is called after the child <see cref="<%=ChildBusinessClassName%><%= Entity.GenericProperty %>"/> object has been inserted. 
+        /// </summary>
         partial void OnChildInserted();
+
+        /// <summary>
+        /// Codesmith generated stub method that is called when updating the child <see cref="<%=ChildBusinessClassName%><%= Entity.GenericProperty %>"/> object. 
+        /// </summary>
+        /// <param name="cancel">Value returned from the method indicating whether the object creation should proceed.</param>
+        partial void OnChildUpdating(ref bool cancel);
         partial void OnChildUpdating(SqlConnection connection, ref bool cancel);
+
+        /// <summary>
+        /// Codesmith generated stub method that is called after the child <see cref="<%=ChildBusinessClassName%><%= Entity.GenericProperty %>"/> object has been updated. 
+        /// </summary>
         partial void OnChildUpdated();
+
+        /// <summary>
+        /// Codesmith generated stub method that is called when self deleting the child <see cref="<%=ChildBusinessClassName%><%= Entity.GenericProperty %>"/> object. 
+        /// </summary>
+        /// <param name="cancel">Value returned from the method indicating whether the object self deletion should proceed.</param>
         partial void OnChildSelfDeleting(ref bool cancel);
+
+        /// <summary>
+        /// Codesmith generated stub method that is called after the child <see cref="<%=ChildBusinessClassName%><%= Entity.GenericProperty %>"/> object has been deleted. 
+        /// </summary>
         partial void OnChildSelfDeleted();
 <% if(IncludeSilverlightSupport) { %>
 #endif
 <% } %>
         #endregion
-<% RenderHelper(new IsDirty()); %>
-<% RenderHelper(new Exists()); %>
-<% RenderHelper(new CompositeKeyMethods()); %>
+<%/*  Documentation code handled in the IsDirty.cst template  */
+   RenderHelper(new IsDirty()); %>
+<%/*  Documentation code handled in the Exists.cst template  */
+   RenderHelper(new Exists()); %>
+<%/*  Documentation code handled in the CompositeKeyMethods.cst template  */
+   RenderHelper(new CompositeKeyMethods()); %>
     }
 }

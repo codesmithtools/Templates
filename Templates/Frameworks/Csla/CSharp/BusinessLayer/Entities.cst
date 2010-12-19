@@ -29,6 +29,7 @@
 <%@ Register Name="SwitchableObjectTemplate" Template="SwitchableObject.cst" %>
 
 <%@ Register Name="ADOHelperTemplate" Template="Internal\ADOHelper.cst" %>
+<%@ Register Name="LinqToSQLHelperTemplate" Template="Internal\LinqToSQLHelper.cst" %>
 <%@ Register Name="FactoryNamesTemplate" Template="Internal\FactoryNames.cst" %>
 <%@ Register Name="ExistsCommandTemplate" Template="Internal\ExistsCommand.cst" %>
 <%@ Register Name="AsyncChildLoaderTemplate" Template="Internal\AsyncChildLoader.cst" %>
@@ -247,7 +248,18 @@ public override void Generate()
     }
 
     #endregion
-    
+
+    #region LinqToSQLHelperTemplate
+
+    if(DataAccessImplementation == DataAccessMethod.LinqToSQL )
+    {
+        LinqToSQLHelperTemplate LinqToSQLHelper = this.Create<LinqToSQLHelperTemplate>();
+        this.CopyPropertiesTo(LinqToSQLHelper);
+        LinqToSQLHelper.RenderToFile(System.IO.Path.Combine(this.Location, "Utility\\LinqToSQLHelper.cs"), strategy);
+    }
+
+    #endregion
+	
     #region FactoryNamesTemplate
 
     if(DataAccessImplementation == DataAccessMethod.ObjectFactoryNone || DataAccessImplementation == DataAccessMethod.ObjectFactoryParameterizedSQL || DataAccessImplementation == DataAccessMethod.ObjectFactoryStoredProcedures)
@@ -260,11 +272,9 @@ public override void Generate()
     #endregion
 
     #region ExistsCommandTemplate
-
-    ExistsCommandTemplate ExistsCommand = this.Create<ExistsCommandTemplate>();
-    this.CopyPropertiesTo(ExistsCommand);
-    ExistsCommand.RenderToFile(System.IO.Path.Combine(this.Location, "Commands\\ExistsCommand.cs"), true);
-
+	ExistsCommandTemplate ExistsCommand = this.Create<ExistsCommandTemplate>();
+	this.CopyPropertiesTo(ExistsCommand);
+	ExistsCommand.RenderToFile(System.IO.Path.Combine(this.Location, "Commands\\ExistsCommand.cs"), true);
     #endregion
 
     #region AsyncChildLoaderTemplate
@@ -277,7 +287,6 @@ public override void Generate()
     }
 
     #endregion
-
 }
 
 </script>

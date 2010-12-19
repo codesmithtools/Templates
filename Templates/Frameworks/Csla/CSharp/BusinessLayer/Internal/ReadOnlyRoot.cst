@@ -32,6 +32,9 @@ using Csla.Validation;
 
 namespace <%= BusinessProjectName %>
 {
+    /// <summary>
+    /// The <%=BusinessClassName%><%= Entity.GenericProperty %> class is a CSLA read only root class.  See CSLA documentation for a more detailed description.
+    /// </summary>
     public partial class <%= BusinessClassName %><%= Entity.GenericProperty %>
     {
 <% RenderHelper(new AuthorizationRules()); %>

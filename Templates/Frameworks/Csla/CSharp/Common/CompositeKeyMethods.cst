@@ -13,7 +13,10 @@
 
         #region Protected Overriden Method(s)
 
-        // NOTE: This is needed for Composite Keys. 
+        /// <summary>
+        /// Creates a GUID identifier needed to uniquely identify records with a composite key.
+        /// </summary>
+        /// <returns>Returns a new GUID identifier.</returns>
         private readonly Guid _guidID = Guid.NewGuid();
         protected override object GetIdValue()
         {

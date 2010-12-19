@@ -3,6 +3,7 @@
 
 <%@ Register Name="DynamicListBase" Template="Internal\DynamicListBase.cst" %>
 <%@ Register Name="DynamicListBaseDataAccess" Template="Internal\DynamicListBase.DataAccess.cst" %>
+<%@ Register Name="DynamicListBaseDataAccessLinqToSQL" Template="Internal\DynamicListBase.DataAccess.LinqToSQL.cst" %>
 <%@ Register Name="DynamicListBaseDataAccessParameterized" Template="Internal\DynamicListBase.DataAccess.ParameterizedSQL.cst" %>
 <%@ Register Name="DynamicListBaseDataAccessStoredProcedures" Template="Internal\DynamicListBase.DataAccess.StoredProcedures.cst" %>
 <%@ Register Name="DynamicListBaseGenerated" Template="Internal\DynamicListBase.Generated.cst" %>
@@ -64,7 +65,14 @@ public override void Render(System.IO.TextWriter writer)
         
         DynamicListBaseDataAccessParameterized.RenderToFile(fileName, parentFileName, true);
     }
-    else if(DataAccessImplementation == DataAccessMethod.StoredProcedures)
+    else if(DataAccessImplementation == DataAccessMethod.LinqToSQL)
+    {
+        DynamicListBaseDataAccessLinqToSQL DynamicListBaseDataAccessLinqToSQL = this.Create<DynamicListBaseDataAccessLinqToSQL>();
+        this.CopyPropertiesTo(DynamicListBaseDataAccessLinqToSQL);
+        
+        DynamicListBaseDataAccessLinqToSQL.RenderToFile(fileName, parentFileName, true);
+    }
+	else if(DataAccessImplementation == DataAccessMethod.StoredProcedures)
     {
         DynamicListBaseDataAccessStoredProcedures DynamicListBaseDataAccessStoredProcedures = this.Create<DynamicListBaseDataAccessStoredProcedures>();
         this.CopyPropertiesTo(DynamicListBaseDataAccessStoredProcedures);
