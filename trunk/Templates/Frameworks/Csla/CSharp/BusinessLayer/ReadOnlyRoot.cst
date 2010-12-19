@@ -4,6 +4,7 @@
 <%@ Register Name="ReadOnlyRoot" Template="Internal\ReadOnlyRoot.cst" %>
 <%@ Register Name="ReadOnlyRootDataAccess" Template="Internal\ReadOnlyRoot.DataAccess.cst" %>
 <%@ Register Name="ReadOnlyRootDataAccessParameterized" Template="Internal\ReadOnlyRoot.DataAccess.ParameterizedSQL.cst" %>
+<%@ Register Name="ReadOnlyRootDataAccessLinqToSQL" Template="Internal\ReadOnlyRoot.DataAccess.LinqToSQL.cst" %>
 <%@ Register Name="ReadOnlyRootDataAccessStoredProcedures" Template="Internal\ReadOnlyRoot.DataAccess.StoredProcedures.cst" %>
 <%@ Register Name="ReadOnlyRootGenerated" Template="Internal\ReadOnlyRoot.Generated.cst" %>
 
@@ -64,7 +65,14 @@ public override void Render(System.IO.TextWriter writer)
         
         readOnlyRootDataAccessParameterized.RenderToFile(fileName, parentFileName, true);
     }
-    else if(DataAccessImplementation == DataAccessMethod.StoredProcedures)
+    else if(DataAccessImplementation == DataAccessMethod.LinqToSQL)
+    {
+        ReadOnlyRootDataAccessLinqToSQL readOnlyRootDataAccessLinqToSQL = this.Create<ReadOnlyRootDataAccessLinqToSQL>();
+        this.CopyPropertiesTo(readOnlyRootDataAccessLinqToSQL);
+        
+        readOnlyRootDataAccessLinqToSQL.RenderToFile(fileName, parentFileName, true);
+    }
+	else if(DataAccessImplementation == DataAccessMethod.StoredProcedures)
     {
         ReadOnlyRootDataAccessStoredProcedures readOnlyRootDataAccessStoredProcedures = this.Create<ReadOnlyRootDataAccessStoredProcedures>();
         this.CopyPropertiesTo(readOnlyRootDataAccessStoredProcedures);

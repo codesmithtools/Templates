@@ -371,6 +371,22 @@ namespace CodeSmith.QuickStart
 
         #endregion
 
+        #region 7. LinqToSQL Data Access Layer
+ 
+        [Category("7. LinqToSQL Data Access Layer")]
+        [Description("LinqToSQL context name space.")]
+        [DefaultValue(false)]
+        [Optional]
+        public string LinqToSQLContextNamespace { get; set; }
+
+        [Category("7. LinqToSQL Data Access Layer")]
+        [Description("LinqToSQL data context name.")]
+        [DefaultValue(false)]
+        [Optional]
+        public string LinqToSQLDataContextName { get; set; }
+
+        #endregion
+
         #region public virtual properties
 
         [Browsable(false)]

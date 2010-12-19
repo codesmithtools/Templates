@@ -1,0 +1,40 @@
+﻿<%-- Author: Blake Niemyjski --%>
+<%--         Joe McPherson   --%>
+<%@ CodeTemplate Language="C#" TargetLanguage="C#" Inherits="CodeSmith.QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Encoding="UTF-8" Description="CSLA Map" %>
+
+<%@ Assembly Name="SchemaExplorer" %>
+<%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\Common" %>
+<%@ Assembly Name="CodeSmith.SchemaHelper.Extensions" Path="..\..\Common" %>
+<%@ Assembly Name="CodeSmith.SchemaHelper.CSharpExtensions" Path="..\..\Common" %>
+<%@ Assembly Name="CodeSmith.QuickStart" Path="..\..\Common" %>
+
+<%@ Import Namespace="SchemaExplorer" %>
+<%@ Import Namespace="CodeSmith.SchemaHelper" %>
+<%@ Import Namespace="CodeSmith.QuickStart" %>
+			//LinqToSQL Modification
+            bool cancel = false;
+            OnDeleting(criteria, ref cancel);
+            if (cancel) return;
+			
+			// Delete <%= StringUtil.ToPascalCase(Entity.Table.Name) %> data based on specified criteria
+<%	string PrimaryKeyCriteria = "";	
+	string PrimaryKeyFields = "";
+ 	int memberCount = 0 ; 
+	foreach (Member member in Entity.PrimaryKey.KeyMembers) 
+	{
+		PrimaryKeyCriteria += "criteria." + member.PropertyName.ToString() ;
+		PrimaryKeyFields += member.PropertyName.ToString() ;
+		if ( memberCount < (Entity.PrimaryKey.KeyMembers.Count - 1))
+		{
+			PrimaryKeyCriteria += ", " ;
+			PrimaryKeyFields += ", ";
+		}
+ 	memberCount = memberCount + 1 ; 
+ 	} 
+%>	
+            using (var ctx = ContextManager<DAL.PetshopDataContext>.GetManager(LinqToSQLHelper.ConnectionString, true))
+			{
+				ctx.DataContext.<%= StringUtil.ToPascalCase(Entity.Table.Name) %>.Delete(<%= PrimaryKeyCriteria %>);
+			
+            	OnDeleted();
+			}

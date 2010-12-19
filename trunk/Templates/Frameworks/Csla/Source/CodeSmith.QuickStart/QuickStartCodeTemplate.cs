@@ -20,7 +20,8 @@ namespace CodeSmith.QuickStart
         #region Private Member(s)
 
         private DatabaseSchema _database;
-        private string _solutionName;
+        private string _solutionName; 
+        private DataAccessMethod _dataAccessImplementation;
 
         #endregion
 
@@ -168,8 +169,15 @@ namespace CodeSmith.QuickStart
 
         [Category("4. Data Project")]
         [Description("Changes how the Business Data Access Methods and Data Access Layer are implemented.")]
-        public DataAccessMethod DataAccessImplementation { get; set; }
-
+        public DataAccessMethod DataAccessImplementation 
+        { 
+            get { return _dataAccessImplementation; }
+            set
+            {
+                _dataAccessImplementation = value;
+                OnDataAccessImplementationChanged();
+            }
+        }
         [Category("4. Data Project")]
         [Description("The Name Space for the Data Project.")]
         public string DataProjectName { get; set; }
@@ -223,6 +231,21 @@ namespace CodeSmith.QuickStart
         [Category("6. Test Project")]
         [Description("The namespace for the test project.")]
         public string TestProjectName { get; set; }
+
+        #endregion
+
+        #region 7. LinqToSQL Data Access Layer 
+        [Category("7. LinqToSQL Data Access Layer")]
+        [Description("The data acces layer namespace to be used.  This should match with the data context used by LinqToSQL.")]
+        [DefaultValue(false)]
+        [Optional]
+        public string LinqToSQLContextNamespace { get; set; }
+
+        [Category("7. LinqToSQL Data Access Layer")]
+        [Description("The data context name to be used.  This should match with the data context used by LinqToSQL.")]
+        [DefaultValue(false)]
+        [Optional]
+        public string LinqToSQLDataContextName { get; set; }
 
         #endregion
 
@@ -396,6 +419,25 @@ namespace CodeSmith.QuickStart
             {
                 TestProjectName = string.Format("{0}.Test", SolutionName);
             }
+        }
+
+        public virtual void OnDataAccessImplementationChanged()
+        { 
+            if (_dataAccessImplementation == DataAccessMethod.LinqToSQL)
+            {
+                if (string.IsNullOrEmpty(LinqToSQLContextNamespace))
+                {
+                    LinqToSQLContextNamespace = string.Format("{0}.Data", SourceDatabase);
+                    LinqToSQLDataContextName = string.Format("{0}DataContext", SourceDatabase);
+                }
+            }
+            else
+            {
+                LinqToSQLContextNamespace = string.Empty;
+                LinqToSQLDataContextName = string.Empty;
+
+            }
+
         }
 
         #endregion

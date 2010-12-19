@@ -26,7 +26,10 @@
 #region Using declarations
 
 using System;
-
+<% if( DataAccessImplementation == DataAccessMethod.LinqToSQL) {%>
+using <%=LinqToSQLContextNamespace%>;
+using DAL=<%=LinqToSQLContextNamespace%>;
+<% }%>
 using Csla;
 <% if(IncludeSilverlightSupport) { %>
 #if SILVERLIGHT
@@ -80,12 +83,20 @@ namespace <%= BusinessProjectName %>
         #endregion
 
         #region Synchronous Factory Methods 
-        
+
+        /// <summary>
+        /// Creates a new list collection of type <see cref="<%=BusinessClassName%><%= Entity.GenericProperty %>"/>. 
+        /// </summary>
+        /// <returns>Returns a newly instantiated collection of type <see cref="<%=BusinessClassName%><%= Entity.GenericProperty %>"/>.</returns>
         public static <%= BusinessClassName %><%= Entity.GenericProperty %> NewList()
         {
             return DataPortal.Create< <%= BusinessClassName %><%= Entity.GenericProperty %> >();
         }
-
+	
+        /// <summary>
+        /// Returns a <see cref="<%=BusinessClassName%><%= Entity.GenericProperty %>"/> collection of all <see cref="<%=ChildBusinessClassName%><%= Entity.GenericProperty %>"/> items. 
+        /// </summary>
+        /// <returns>Collection of all <%=ChildBusinessClassName%><%= Entity.GenericProperty %> items.</returns>	
         public static <%= BusinessClassName %><%= Entity.GenericProperty %> GetAll()
         {
             return DataPortal.Fetch< <%= BusinessClassName %><%= Entity.GenericProperty %>>(new <%= CriteriaClassName %><%= Entity.GenericProperty %>());
@@ -93,6 +104,13 @@ namespace <%= BusinessProjectName %>
 
 <% foreach(SearchCriteria sc in Entity.SearchCriteria()) { %>
 
+        /// <summary>
+        /// Returns a <see cref="<%=BusinessClassName%><%= Entity.GenericProperty %>"/> collection of <see cref="<%=ChildBusinessClassName%><%= Entity.GenericProperty %>"/> items with the specified criteria. 
+        /// </summary>
+<% foreach(Member item in  sc.Members) { %>
+        /// <param name="<%= item.VariableName%>"><%if(item.HasDescription){%><%=item.Description%>.<%}else{%>No additional detail available.<%}%></param>
+<%}%>
+        /// <returns>Collection of all <see cref="<%=ChildBusinessClassName%><%= Entity.GenericProperty %>"/> items.</returns>	
         public static <%= BusinessClassName %><%= Entity.GenericProperty %> <%= sc.MethodName %>(<%= sc.Members.BuildParametersVariables() %>)
         {
             var criteria = new <%= CriteriaClassName %><%= Entity.GenericProperty %>{<%= sc.Members.BuildObjectInitializer() %>};
@@ -148,8 +166,11 @@ namespace <%= BusinessProjectName %>
         #endregion
 
 <% } %>
-<% RenderHelper(new IsDirty()); %>
-<% RenderHelper(new PartialMethods()); %>
-<% RenderHelper(new Exists()); %>
+<%/*  Documentation code handled in the IsDirty.cst template  */
+   RenderHelper(new IsDirty()); %>
+<%/*  Documentation code handled in the appropriate PartialMethods template  */
+   RenderHelper(new PartialMethods()); %>
+<%/*  Documentation code handled in the Exists.cst template  */
+   RenderHelper(new Exists()); %>
     }
 }

@@ -14,19 +14,84 @@
 <% if(IncludeSilverlightSupport) { %>
 #if !SILVERLIGHT
 <% } %>
+        /// <summary>
+        /// Codesmith generated stub method that is called when creating the <see cref="<%=ChildBusinessClassName%><%= Entity.GenericProperty %>"/> object. 
+        /// </summary>
+        /// <param name="cancel">Value returned from the method indicating whether the object creation should proceed.</param>
         partial void OnCreating(ref bool cancel);
+
+        /// <summary>
+        /// Codesmith generated stub method that is called after the <see cref="<%=ChildBusinessClassName%><%= Entity.GenericProperty %>"/> object has been created. 
+        /// </summary>
         partial void OnCreated();
+
+        /// <summary>
+        /// Codesmith generated stub method that is called when fetching the <see cref="<%=ChildBusinessClassName%><%= Entity.GenericProperty %>"/> object. 
+        /// </summary>
+        /// <param name="criteria"><see cref="<%= ChildBusinessClassName %>Criteria"/> object containg the criteria of the object to fetch.</param>
+        /// <param name="cancel">Value returned from the method indicating whether the object fetching should proceed.</param>
         partial void OnFetching(<%= CriteriaClassName %><%= Entity.GenericProperty %> criteria, ref bool cancel);
+
+        /// <summary>
+        /// Codesmith generated stub method that is called after the <see cref="<%=ChildBusinessClassName%><%= Entity.GenericProperty %>"/> object has been fetched. 
+        /// </summary>	
         partial void OnFetched();
+
+        /// <summary>
+        /// Codesmith generated stub method that is called when mapping the <see cref="<%=ChildBusinessClassName%><%= Entity.GenericProperty %>"/> object. 
+        /// </summary>
+        /// <param name="cancel">Value returned from the method indicating whether the object mapping should proceed.</param>
+        partial void OnMapping(ref bool cancel);
         partial void OnMapping(SafeDataReader reader, ref bool cancel);
+
+        /// <summary>
+        /// Codesmith generated stub method that is called after the <see cref="<%=ChildBusinessClassName%><%= Entity.GenericProperty %>"/> object has been mapped. 
+        /// </summary>
         partial void OnMapped();
+
+        /// <summary>
+        /// Codesmith generated stub method that is called when inserting the <see cref="<%=ChildBusinessClassName%><%= Entity.GenericProperty %>"/> object. 
+        /// </summary>
+        /// <param name="cancel">Value returned from the method indicating whether the object insertion should proceed.</param>
         partial void OnInserting(ref bool cancel);
+
+        /// <summary>
+        /// Codesmith generated stub method that is called after the <see cref="<%=ChildBusinessClassName%><%= Entity.GenericProperty %>"/> object has been inserted. 
+        /// </summary>
         partial void OnInserted();
+
+        /// <summary>
+        /// Codesmith generated stub method that is called when updating the <see cref="<%=ChildBusinessClassName%><%= Entity.GenericProperty %>"/> object. 
+        /// </summary>
+        /// <param name="cancel">Value returned from the method indicating whether the object creation should proceed.</param>
         partial void OnUpdating(ref bool cancel);
+
+        /// <summary>
+        /// Codesmith generated stub method that is called after the <see cref="<%=ChildBusinessClassName%><%= Entity.GenericProperty %>"/> object has been updated. 
+        /// </summary>
         partial void OnUpdated();
+
+        /// <summary>
+        /// Codesmith generated stub method that is called when self deleting the <see cref="<%=ChildBusinessClassName%><%= Entity.GenericProperty %>"/> object. 
+        /// </summary>
+        /// <param name="cancel">Value returned from the method indicating whether the object self deletion should proceed.</param>
         partial void OnSelfDeleting(ref bool cancel);
+
+        /// <summary>
+        /// Codesmith generated stub method that is called after the <see cref="<%=ChildBusinessClassName%><%= Entity.GenericProperty %>"/> object has been deleted. 
+        /// </summary>
         partial void OnSelfDeleted();
+
+        /// <summary>
+        /// Codesmith generated stub method that is called when deleting the <see cref="<%=ChildBusinessClassName%><%= Entity.GenericProperty %>"/> object. 
+        /// </summary>
+        /// <param name="criteria"><see cref="<%= ChildBusinessClassName %>Criteria"/> object containg the criteria of the object to delete.</param>
+        /// <param name="cancel">Value returned from the method indicating whether the object deletion should proceed.</param>
         partial void OnDeleting(<%= CriteriaClassName %><%= Entity.GenericProperty %> criteria, ref bool cancel);
+
+        /// <summary>
+        /// Codesmith generated stub method that is called after the <see cref="<%=ChildBusinessClassName%><%= Entity.GenericProperty %>"/> object with the specified criteria has been deleted. 
+        /// </summary>
         partial void OnDeleted();
 <% if(IncludeSilverlightSupport) { %>
 #endif

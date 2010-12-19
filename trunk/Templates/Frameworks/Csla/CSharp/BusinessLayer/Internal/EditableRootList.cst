@@ -26,8 +26,13 @@ using Csla;
 
 namespace <%= BusinessProjectName %>
 {
+    /// <summary>
+    /// The <%=BusinessClassName%><%= Entity.GenericProperty %> class is a CSLA editable root list class collection of <see cref="<%= ChildBusinessClassName %>"/> objects.  See CSLA documentation for a more detailed description.
+    /// </summary>
+    /// <returns></returns>
     public partial class <%= BusinessClassName %><%= Entity.GenericProperty %>
     {
-<% RenderHelper(new AuthorizationRules()); %>
+<%/*  Documentation code handled in the AuthorizationRules.cst template  */
+   RenderHelper(new AuthorizationRules()); %>
     }
 }

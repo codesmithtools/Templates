@@ -28,6 +28,10 @@
 using System;
 
 using Csla;
+<% if( DataAccessImplementation == DataAccessMethod.LinqToSQL) {%>
+using <%=LinqToSQLContextNamespace%>;
+using DAL=<%=LinqToSQLContextNamespace%>;
+<% }%>
 <% if(IncludeSilverlightSupport) { %>
 #if SILVERLIGHT
 using Csla.Serialization;
@@ -50,9 +54,11 @@ namespace <%= BusinessProjectName %>
 <% } %>
     public partial class <%= BusinessClassName %><%= Entity.GenericProperty %> : ReadOnlyBase< <%= BusinessClassName %><%= Entity.GenericProperty %> >
     {
-<% RenderHelper(new Constructor()); %>
+<%/*  Documentation code handled in the Constructor.cst template  */
+   RenderHelper(new Constructor()); %>
 
-<% RenderHelper(new Properties()); %>
+<%/*  Documentation code handled in the Properties.cst template  */
+   RenderHelper(new Properties()); %>
 
 <% if(IncludeSilverlightSupport) { %>
 #if !SILVERLIGHT
@@ -60,6 +66,13 @@ namespace <%= BusinessProjectName %>
         #region Synchronous Factory Methods 
 <% foreach(SearchCriteria sc in Entity.SearchCriteria()) { %>
 
+        /// <summary>
+        /// Returns a <see cref="<%=BusinessClassName%><%= Entity.GenericProperty %>"/> object of the specified criteria. 
+        /// </summary>
+<% foreach(Member item in  sc.Members) { %>
+        /// <param name="<%= item.VariableName%>"><%if(item.HasDescription){%><%=item.Description%>.<%}else{%>No additional detail available.<%}%></param>
+<%}%>
+        /// <returns>A <see cref="<%=BusinessClassName%><%= Entity.GenericProperty %>"/> object of the specified criteria.</returns>
         internal static <%= ChildBusinessClassName %><%= Entity.GenericProperty %> <%= sc.MethodName %>(<%= sc.Members.BuildParametersVariables() %>)
         {
             var criteria = new <%= CriteriaClassName %><%= Entity.GenericProperty %> {<%= sc.Members.BuildObjectInitializer() %>};
@@ -95,8 +108,11 @@ namespace <%= BusinessProjectName %>
 
 <% } %>
 
-<% RenderHelper(new PartialMethods()); %>
-<% RenderHelper(new Exists()); %>
-<% RenderHelper(new CompositeKeyMethods()); %>
+<%/*  Documentation code handled in the appropriate PartialMethods template  */
+   RenderHelper(new PartialMethods()); %>
+<%/*  Documentation code handled in the Exists.cst template  */
+   RenderHelper(new Exists()); %>
+<%/*  Documentation code handled in the CompositeKeyMethods.cst template  */
+   RenderHelper(new CompositeKeyMethods()); %>
     }
 }

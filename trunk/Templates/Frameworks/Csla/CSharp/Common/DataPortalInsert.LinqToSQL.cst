@@ -1,0 +1,101 @@
+﻿<%-- Author: Blake Niemyjski --%>
+<%--         Joe McPherson   --%>
+<%@ CodeTemplate Language="C#" TargetLanguage="C#" Inherits="CodeSmith.QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Encoding="UTF-8" Description="CSLA Map" %>
+
+<%@ Assembly Name="SchemaExplorer" %>
+<%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\Common" %>
+<%@ Assembly Name="CodeSmith.SchemaHelper.Extensions" Path="..\..\Common" %>
+<%@ Assembly Name="CodeSmith.SchemaHelper.CSharpExtensions" Path="..\..\Common" %>
+<%@ Assembly Name="CodeSmith.QuickStart" Path="..\..\Common" %>
+
+<%@ Import Namespace="SchemaExplorer" %>
+<%@ Import Namespace="CodeSmith.SchemaHelper" %>
+<%@ Import Namespace="CodeSmith.QuickStart" %>
+			//LinqToSQL Modification
+			bool cancel = false;
+            OnInserting(ref cancel);
+            if (cancel) return;
+			
+			// Get <%= StringUtil.ToPascalCase(Entity.Table.Name) %> data for a single criteria
+            using (var ctx = ContextManager<DAL.PetshopDataContext>.GetManager(LinqToSQLHelper.ConnectionString, true))
+			{
+				DAL.<%= StringUtil.ToPascalCase(Entity.Table.Name) %> item = new DAL.<%= StringUtil.ToPascalCase(Entity.Table.Name) %>();
+				
+				using (BypassPropertyChecks)
+				{
+<% 	if(Entity.HasRowVersionMember || Entity.HasIdentityMember) 
+	{ 
+		if(Entity.HasRowVersionMember) 
+		foreach(Member member in Entity.PrimaryKey.KeyMembers) 
+		{ 
+			if(!member.IsIdentity) 			
+			{ %>
+			LoadProperty(<%= member.PrivateMemberVariableName %>Property, <%if(!member.HasByteArrayColumn()) { %>item.<%= member.ColumnName %>);<% } else { %>LinqToSQLHelper.GetBinary(this.<%= member.PropertyName %>));<% } %>
+<% 			}
+		} %>
+<% 		else 
+		foreach(Member member in Entity.PrimaryKey.KeyMembers) 
+		{ 
+			if(!member.IsIdentity) 			
+			{ %>
+            LoadProperty(_original<%= member.PropertyName %>Property, this.<%= member.PropertyName %>);
+<% 			}
+		} %>
+<%	} 
+	else
+	{
+		foreach(Member member in Entity.PrimaryKey.KeyMembers) 
+		{ %>
+					item.<%= member.PropertyName %> = this.<%= member.PropertyName %>;
+<% 		} 
+	}%>
+<% foreach (Member member in Entity.MembersNoPrimaryKeys) 
+	{%>
+					item.<%= member.PropertyName %> = <%if(!member.HasByteArrayColumn()) { %>this.<%= member.PropertyName %>;<% } else { %>LinqToSQLHelper.GetBinary(this.<%= member.PropertyName %>);<% } %>
+<%	}%>
+				}
+			
+				ctx.DataContext.<%= StringUtil.ToPascalCase(Entity.Table.Name) %>.InsertOnSubmit(item);
+            	ctx.DataContext.SubmitChanges();
+<%
+			
+ 	if(Entity.HasRowVersionMember || Entity.HasIdentityMember) 
+	{ 
+		if(Entity.HasRowVersionMember) 
+		foreach(Member member in Entity.PrimaryKey.KeyMembers) 
+		{ 
+			if(member.IsIdentity) 			
+			{ %>
+            LoadProperty(<%= member.PrivateMemberVariableName %>Property, <%if(!member.HasByteArrayColumn()) { %>item.<%= member.ColumnName %>);<% } else { %>LinqToSQLHelper.GetBinary(this.<%= member.PropertyName %>));<% } %>
+<% 			}
+		} %>
+<% 		else 
+		foreach(Member member in Entity.PrimaryKey.KeyMembers) 
+		{ 
+			if(member.IsIdentity) 			
+			{ %>
+           		LoadProperty(<%= member.PrivateMemberVariableName %>Property, item.<%= member.ColumnName %>);
+<% 			}
+		} %>
+<%	}%>			
+<%
+	foreach(Member member in Entity.PrimaryKey.KeyMembers)
+	{ 
+		if(!member.IsIdentity) 
+		{ 
+			if(UseMemberVariables) 
+			{ %>
+            _original<%= member.PropertyName %> = this.<%= member.PropertyName %>;
+<% 			} 
+			else 
+			{ %>
+            	LoadProperty(_original<%= member.PropertyName %>Property, this.<%= member.PropertyName %>);
+<% 			}
+		} 
+	} %>
+<% 	if(Entity.AssociatedToManyUnion.Count > 0 || Entity.AssociatedManyToOne.Count > 0)
+	{%>         	
+				FieldManager.UpdateChildren(this);
+<% 	} %>
+				OnInserted();
+			}

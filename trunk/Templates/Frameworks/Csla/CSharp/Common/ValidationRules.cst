@@ -11,11 +11,14 @@
 <%@ Import Namespace="CodeSmith.QuickStart" %>
         #region Business Rules
 
+        /// <summary>
+        /// Contains the Codesmith generated validation rules.
+        /// </summary>
         protected override void AddBusinessRules()
         {
             // Call the base class, if this call isn't made than any declared System.ComponentModel.DataAnnotations rules will not work.
             base.AddBusinessRules();
-            
+
             if(AddBusinessValidationRules())
                 return;
 

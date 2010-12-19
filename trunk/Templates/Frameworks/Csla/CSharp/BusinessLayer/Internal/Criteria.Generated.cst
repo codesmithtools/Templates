@@ -26,6 +26,10 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
+<% if(DataAccessImplementation == DataAccessMethod.LinqToSQL) {%>
+using <%=LinqToSQLContextNamespace%>;
+using DAL=<%=LinqToSQLContextNamespace%>;
+<% } %>
 <% if(IncludeSilverlightSupport) { %>
 using Csla.Core;
 #if SILVERLIGHT
@@ -116,6 +120,16 @@ foreach(Member member in Entity.MembersNoRowVersion){ if(member.IsNullable) { %>
             }
         }
 
+<% if(DataAccessImplementation == DataAccessMethod.LinqToSQL) {%>
+        public Type EntityType
+        {
+            get
+            {
+                return typeof(DAL.<%= Entity.Table.Name%>);
+            }
+        }
+<% } %>
+		
         #endregion
 
         #endregion

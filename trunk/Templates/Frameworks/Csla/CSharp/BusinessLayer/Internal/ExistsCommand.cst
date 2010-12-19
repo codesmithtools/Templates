@@ -18,6 +18,13 @@
 #region Using declarations
 
 using System;
+
+<% if(DataAccessImplementation == DataAccessMethod.LinqToSQL) {%>
+using <%=LinqToSQLContextNamespace%>;
+using DAL=<%=LinqToSQLContextNamespace%>;
+using System.Linq;
+using CodeSmith.Data.Linq.Dynamic;
+<% } %>
 <% if(IncludeSilverlightSupport) { %>
 
 #if SILVERLIGHT
@@ -149,6 +156,15 @@ namespace <%= BusinessProjectName %>
 <% if(IncludeSilverlightSupport) { %>
 #if !SILVERLIGHT
 <% } %>
+<% if(DataAccessImplementation == DataAccessMethod.LinqToSQL) {%>
+        protected override void DataPortal_Execute()
+        {
+            using (var ctx = ContextManager<DAL.PetshopDataContext>.GetManager(LinqToSQLHelper.ConnectionString, true))
+            {
+                Result = ctx.DataContext.GetTable(Criteria.EntityType).Where(LinqToSQLHelper.BuildWhereStatement(Criteria.StateBag), Criteria.StateBag.Values.ToArray()).Count() > 0;
+            }
+        }
+<% } else { %>
         protected override void DataPortal_Execute()
         {
             string commandText = string.Format("SELECT COUNT(1) FROM {0} {1}", Criteria.TableFullName, ADOHelper.BuildWhereStatement(Criteria.StateBag));
@@ -162,6 +178,7 @@ namespace <%= BusinessProjectName %>
                 }
             }
         }
+<% } %>
 <% if(IncludeSilverlightSupport) { %>
 #endif
 <% } %>

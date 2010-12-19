@@ -4,6 +4,7 @@
 <%@ Register Name="EditableRootList" Template="Internal\EditableRootList.cst" %>
 <%@ Register Name="EditableRootListDataAccess" Template="Internal\EditableRootList.DataAccess.cst" %>
 <%@ Register Name="EditableRootListDataAccessParameterized" Template="Internal\EditableRootList.DataAccess.ParameterizedSQL.cst" %>
+<%@ Register Name="EditableRootListDataAccessLinqToSQL" Template="Internal\EditableRootList.DataAccess.LinqToSQL.cst" %>
 <%@ Register Name="EditableRootListDataAccessStoredProcedures" Template="Internal\EditableRootList.DataAccess.StoredProcedures.cst" %>
 <%@ Register Name="EditableRootListGenerated" Template="Internal\EditableRootList.Generated.cst" %>
 
@@ -64,6 +65,13 @@ public override void Render(System.IO.TextWriter writer)
         
         editableRootListDataAccessParameterized.RenderToFile(fileName, parentFileName, true);
     }
+    else if(DataAccessImplementation == DataAccessMethod.LinqToSQL)
+	{
+        EditableRootListDataAccessLinqToSQL editableRootListDataAccessLinqToSQL = this.Create<EditableRootListDataAccessLinqToSQL>();
+        this.CopyPropertiesTo(editableRootListDataAccessLinqToSQL);
+        
+        editableRootListDataAccessLinqToSQL.RenderToFile(fileName, parentFileName, true);
+    }	
     else if(DataAccessImplementation == DataAccessMethod.StoredProcedures)
     {
         EditableRootListDataAccessStoredProcedures editableRootListDataAccessStoredProcedures = this.Create<EditableRootListDataAccessStoredProcedures>();

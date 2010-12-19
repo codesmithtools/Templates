@@ -60,4 +60,10 @@
 #endif
 <% } %>
 <% } %>
+<%  if(DataAccessImplementation == DataAccessMethod.LinqToSQL ) { %>
+        internal <%= BusinessClassName %>(DAL.<%=StringUtil.ToPascalCase(Entity.Table.Name)%> DataSource)
+        {
+           	Map(DataSource);
+        }
+<%  } %>
         #endregion

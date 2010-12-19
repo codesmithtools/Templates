@@ -4,6 +4,7 @@
 <%@ Register Name="ReadOnlyChild" Template="Internal\ReadOnlyChild.cst" %>
 <%@ Register Name="ReadOnlyChildDataAccess" Template="Internal\ReadOnlyChild.DataAccess.cst" %>
 <%@ Register Name="ReadOnlyChildDataAccessParameterized" Template="Internal\ReadOnlyChild.DataAccess.ParameterizedSQL.cst" %>
+<%@ Register Name="ReadOnlyChildDataAccessLinqToSQL" Template="Internal\ReadOnlyChild.DataAccess.LinqToSQL.cst" %>
 <%@ Register Name="ReadOnlyChildDataAccessStoredProcedures" Template="Internal\ReadOnlyChild.DataAccess.StoredProcedures.cst" %>
 <%@ Register Name="ReadOnlyChildGenerated" Template="Internal\ReadOnlyChild.Generated.cst" %>
 
@@ -63,6 +64,13 @@ public override void Render(System.IO.TextWriter writer)
         this.CopyPropertiesTo(readOnlyChildDataAccessParameterized);
         
         readOnlyChildDataAccessParameterized.RenderToFile(fileName, parentFileName, true);
+    }
+    else if(DataAccessImplementation == DataAccessMethod.LinqToSQL)
+    {
+        ReadOnlyChildDataAccessLinqToSQL readOnlyChildDataAccessLinqToSQL = this.Create<ReadOnlyChildDataAccessLinqToSQL>();
+        this.CopyPropertiesTo(readOnlyChildDataAccessLinqToSQL);
+        
+        readOnlyChildDataAccessLinqToSQL.RenderToFile(fileName, parentFileName, true);
     }
     else if(DataAccessImplementation == DataAccessMethod.StoredProcedures)
     {

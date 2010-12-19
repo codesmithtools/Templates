@@ -8,7 +8,8 @@ namespace CodeSmith.QuickStart
     {
         None = 0,
         ParameterizedSQL = 1,
-        StoredProcedures = 2,
+        StoredProcedures = 2, 
+        LinqToSQL = 3,
         ObjectFactoryNone = 10,
         ObjectFactoryParameterizedSQL = 11,
         ObjectFactoryStoredProcedures = 12

@@ -1,9 +1,10 @@
-<%-- Author: Blake Niemyjski --%>
+﻿<%-- Author: Blake Niemyjski --%>
 <%@ CodeTemplate Language="C#" TargetLanguage="C#" OutputType="None" Inherits="CodeSmith.QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Encoding="UTF-8" Description="CSLA EditableChild" %>
 
 <%@ Register Name="EditableChild" Template="Internal\EditableChild.cst" %>
 <%@ Register Name="EditableChildDataAccess" Template="Internal\EditableChild.DataAccess.cst" %>
 <%@ Register Name="EditableChildDataAccessParameterized" Template="Internal\EditableChild.DataAccess.ParameterizedSQL.cst" %>
+<%@ Register Name="EditableChildDataAccessLinqToSQL" Template="Internal\EditableChild.DataAccess.LinqToSQL.cst" %>
 <%@ Register Name="EditableChildDataAccessStoredProcedures" Template="Internal\EditableChild.DataAccess.StoredProcedures.cst" %>
 <%@ Register Name="EditableChildGenerated" Template="Internal\EditableChild.Generated.cst" %>
 
@@ -64,7 +65,14 @@ public override void Render(System.IO.TextWriter writer)
         
         editableChildDataAccessParameterized.RenderToFile(fileName, parentFileName, true);
     }
-    else if(DataAccessImplementation == DataAccessMethod.StoredProcedures)
+    else if(DataAccessImplementation == DataAccessMethod.LinqToSQL)
+    {
+        EditableChildDataAccessLinqToSQL editableChildDataAccessLinqToSQL = this.Create<EditableChildDataAccessLinqToSQL>();
+        this.CopyPropertiesTo(editableChildDataAccessLinqToSQL);
+        
+        editableChildDataAccessLinqToSQL.RenderToFile(fileName, parentFileName, true);
+    }
+	else if(DataAccessImplementation == DataAccessMethod.StoredProcedures)
     {
         EditableChildDataAccessStoredProcedures editableChildDataAccessStoredProcedures = this.Create<EditableChildDataAccessStoredProcedures>();
         this.CopyPropertiesTo(editableChildDataAccessStoredProcedures);
@@ -81,7 +89,7 @@ public override void Render(System.IO.TextWriter writer)
     }
     
     #endregion
-    
+
     #endregion
 
 }

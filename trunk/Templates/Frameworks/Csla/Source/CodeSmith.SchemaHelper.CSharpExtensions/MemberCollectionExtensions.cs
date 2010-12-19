@@ -270,5 +270,41 @@ namespace CodeSmith.SchemaHelper
 
             return statement.TrimStart(new[] { '|', ' ' });
         }
+        //LinqToSQL MOdification
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="members"></param>
+        /// <param name="usePropertyName"></param>
+        /// <param name="isChildInsertUpdate"></param>
+        /// <param name="isUpdateStatement"></param>
+        /// <param name="indentLevel"></param>
+        /// <returns></returns>
+        public static string BuildLinqToSQLCommandParameters( this List<Member> members, bool usePropertyName,  bool isChildInsertUpdate, bool isUpdateStatement, int indentLevel)
+        {
+            string commandParameters = string.Empty;
+            string tabLevel = new string((char)9,indentLevel);
+            foreach (Member member in members)
+            {
+                
+                string includeThisPrefix =  "this." ;
+                string propertyName = member.PropertyName;
+                string strPropertyName = member.PropertyName;
+                string originalPropertyName = isUpdateStatement && member.IsPrimaryKey && !member.IsIdentity ? string.Format("Original{0}", member.PropertyName) : string.Empty;
+                string columnName = member.ColumnName;
+                if (member.HasByteArrayColumn())
+                {
+                    strPropertyName = "LinqToSQLHelper.GetBinary(" + includeThisPrefix + propertyName + ")";
+                }
+                else
+                {
+                    strPropertyName = includeThisPrefix + propertyName;
+
+                }
+                commandParameters += string.Format("\r\n{0}item.{1} = {2};", tabLevel, propertyName, strPropertyName);
+            }
+
+            return commandParameters.TrimStart(new[] { '\r', '\n' });
+        }
     }
 }

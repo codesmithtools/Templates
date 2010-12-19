@@ -32,11 +32,16 @@ using Csla.Validation;
 #endregion
 
 namespace <%= BusinessProjectName %>
-{
+{	
+    /// <summary>
+    /// The <%=BusinessClassName%><%= Entity.GenericProperty %> class is a CSLA editable root class.  See CSLA documentation for a more detailed description.
+    /// </summary>
     public partial class <%= BusinessClassName %><%= Entity.GenericProperty %>
     {
-<% RenderHelper(new ValidationRules()); %>
+<%/*  Documentation code handled in the ValidationRules.cst template  */
+   RenderHelper(new ValidationRules()); %>
 
-<% RenderHelper(new AuthorizationRules()); %>
+<%/*  Documentation code handled in the AuthorizationRules.cst template  */
+   RenderHelper(new AuthorizationRules()); %>
     }
 }
