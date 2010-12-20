@@ -99,13 +99,13 @@ namespace <%= BusinessProjectName %>
             var criteria = new <%= CriteriaClassName %><%= Entity.GenericProperty %>{<%= sc.Members.BuildObjectInitializer() %>};
             <%=sc.Members.BuildNullableObjectInitializer()%>
             
-            return DataPortal.FetchChild< <%= BusinessClassName %><%= Entity.GenericProperty %> >(criteria);
+            return DataPortal.Fetch<% if(DataAccessImplementation != DataAccessMethod.ObjectFactoryNone && DataAccessImplementation != DataAccessMethod.ObjectFactoryParameterizedSQL && DataAccessImplementation != DataAccessMethod.ObjectFactoryStoredProcedures){ %>Child<% } %>< <%= BusinessClassName %><%= Entity.GenericProperty %> >(criteria);
         }
 <% } %>
 
         internal static <%= BusinessClassName %><%= Entity.GenericProperty %> GetAll()
         {
-            return DataPortal.FetchChild< <%= BusinessClassName %><%= Entity.GenericProperty %> >(new <%= CriteriaClassName %><%= Entity.GenericProperty %>());
+            return DataPortal.Fetch<% if(DataAccessImplementation != DataAccessMethod.ObjectFactoryNone && DataAccessImplementation != DataAccessMethod.ObjectFactoryParameterizedSQL && DataAccessImplementation != DataAccessMethod.ObjectFactoryStoredProcedures){ %>Child<% } %>< <%= BusinessClassName %><%= Entity.GenericProperty %> >(new <%= CriteriaClassName %><%= Entity.GenericProperty %>());
         }
 
         #endregion

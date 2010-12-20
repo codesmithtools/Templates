@@ -88,12 +88,12 @@ namespace <%= BusinessProjectName %>
             var criteria = new <%= CriteriaClassName %>{<%= sc.Members.BuildObjectInitializer() %>};
             <%= sc.Members.BuildNullableObjectInitializer()%>
             
-            return DataPortal.FetchChild< <%= BusinessClassName %> >(criteria);
+            return DataPortal.Fetch<% if(DataAccessImplementation != DataAccessMethod.ObjectFactoryNone && DataAccessImplementation != DataAccessMethod.ObjectFactoryParameterizedSQL && DataAccessImplementation != DataAccessMethod.ObjectFactoryStoredProcedures){ %>Child<% } %>< <%= BusinessClassName %> >(criteria);
         }
 <% } %>
         internal static <%= BusinessClassName %> GetAll()
         {
-            return DataPortal.FetchChild< <%= BusinessClassName %> >(new <%= CriteriaClassName %>());
+            return DataPortal.Fetch<% if(DataAccessImplementation != DataAccessMethod.ObjectFactoryNone && DataAccessImplementation != DataAccessMethod.ObjectFactoryParameterizedSQL && DataAccessImplementation != DataAccessMethod.ObjectFactoryStoredProcedures){ %>Child<% } %>< <%= BusinessClassName %> >(new <%= CriteriaClassName %>());
         }
     
         #endregion
