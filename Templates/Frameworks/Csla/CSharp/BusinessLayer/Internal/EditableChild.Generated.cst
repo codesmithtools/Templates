@@ -99,7 +99,7 @@ namespace <%= BusinessProjectName %>
             var criteria = new <%= CriteriaClassName %><%= Entity.GenericProperty %> {<%= sc.Members.BuildObjectInitializer() %>};
             <%=sc.Members.BuildNullableObjectInitializer()%>
         
-            return DataPortal.FetchChild< <%= ChildBusinessClassName %><%= Entity.GenericProperty %> >(criteria);
+            return DataPortal.Fetch<% if(DataAccessImplementation != DataAccessMethod.ObjectFactoryNone && DataAccessImplementation != DataAccessMethod.ObjectFactoryParameterizedSQL && DataAccessImplementation != DataAccessMethod.ObjectFactoryStoredProcedures){ %>Child<% } %>< <%= ChildBusinessClassName %><%= Entity.GenericProperty %> >(criteria);
         }
 <% } %>
 <% if(IncludeSilverlightSupport) { %>

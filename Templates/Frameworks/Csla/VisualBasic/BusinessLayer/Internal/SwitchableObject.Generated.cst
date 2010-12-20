@@ -148,7 +148,7 @@ Namespace <%= BusinessProjectName %>
             criteria.<%= member.PropertyName %> = <%= member.VariableName %>
     <% Next %>
     
-            Return DataPortal.FetchChild(Of <%= BusinessClassName %>)(criteria)
+            Return DataPortal.Fetch<% If( Not DataAccessImplementation = DataAccessMethod.ObjectFactoryNone AndAlso Not DataAccessImplementation = DataAccessMethod.ObjectFactoryParameterizedSQL AndAlso Not DataAccessImplementation = DataAccessMethod.ObjectFactoryStoredProcedures) Then %>Child<% End If %>(Of <%= BusinessClassName %>)(criteria)
         End Function
     <% Next %>
     

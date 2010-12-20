@@ -75,12 +75,12 @@ Namespace <%= BusinessProjectName %>
             Dim criteria As New <%= CriteriaClassName %>()
             <%= sc.Members.BuildObjectInitializer() %>
     
-            Return DataPortal.FetchChild(Of <%= BusinessClassName %>)(criteria)
+            Return DataPortal.Fetch<% If( Not DataAccessImplementation = DataAccessMethod.ObjectFactoryNone AndAlso Not DataAccessImplementation = DataAccessMethod.ObjectFactoryParameterizedSQL AndAlso Not DataAccessImplementation = DataAccessMethod.ObjectFactoryStoredProcedures) Then %>Child<% End If %>(Of <%= BusinessClassName %>)(criteria)
         End Function
     <% Next %>
     
         Friend Shared Function GetAll() As <%= BusinessClassName %>
-            Return DataPortal.FetchChild(Of <%= BusinessClassName %>)(New <%= CriteriaClassName %>())
+            Return DataPortal.Fetch<% If( Not DataAccessImplementation = DataAccessMethod.ObjectFactoryNone AndAlso Not DataAccessImplementation = DataAccessMethod.ObjectFactoryParameterizedSQL AndAlso Not DataAccessImplementation = DataAccessMethod.ObjectFactoryStoredProcedures) Then %>Child<% End If %>(Of <%= BusinessClassName %>)(New <%= CriteriaClassName %>())
         End Function
     
 #End Region
