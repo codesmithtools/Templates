@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using CodeSmith.Engine;
@@ -28,7 +29,11 @@ namespace NHibernateHelper
         /// Should be called the first thing every time the master template executes.
         /// </summary>
         /// <param name="tablePrefix">TablePrefix Property</param>
-        /// <param name="namingProperty">NamingContentions Property</param>
+        /// <param name="systemCSharpAliasMap"></param>
+        /// <param name="csharpKeyWordEscapeMap"></param>
+        /// <param name="excludedColumns"></param>
+        /// <param name="versionRegex"></param>
+        /// <param name="providerName"></param>
         public static void HelperInit(string tablePrefix, MapCollection systemCSharpAliasMap, MapCollection csharpKeyWordEscapeMap, string[] excludedColumns, string versionRegex, string providerName) //, NamingProperty namingConventions)
         {
             _tablePrefix = tablePrefix;
@@ -42,10 +47,18 @@ namespace NHibernateHelper
                 if (!String.IsNullOrEmpty(s) && s.Trim().Length > 0)
                     _excludedColumns.Add(new Regex(s, RegexOptions.Compiled));
 
-
-            SchemaProvider = Enum.IsDefined(typeof(SchemaProvider), providerName) 
-                ? (SchemaProvider)Enum.Parse(typeof(SchemaProvider), providerName) 
-                : SchemaProvider.ADOXSchemaProvider; // Default to the ADOX SchemaProvider;
+            if (!string.IsNullOrEmpty(providerName) && Enum.IsDefined(typeof (SchemaProvider), providerName.Trim()))
+            {
+                try
+                {
+                    SchemaProvider = (SchemaProvider) Enum.Parse(typeof (SchemaProvider), providerName.Trim());
+                }
+                catch (Exception ex)
+                {
+                    Trace.WriteLine(ex);
+                    SchemaProvider = SchemaProvider.ADOXSchemaProvider;
+                }
+            }
 
             //_tableNaming = namingConventions.TableNaming;
             //_entityNaming = namingConventions.EntityNaming;
