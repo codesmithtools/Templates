@@ -687,8 +687,9 @@ namespace CodeSmith.Data.Linq
 
         private static string GetHashKey(this DataContext db, string key)
         {
-            if (db != null && db.Connection != null && !String.IsNullOrEmpty(db.Connection.Database))
-                key += db.Connection.Database;
+            if (db != null && db.Connection != null 
+                && !string.IsNullOrEmpty(db.Connection.ConnectionString))
+                key += db.Connection.ConnectionString;
 
             // the key is potentially very long, so use an md5 fingerprint
             // (fine if the query result data isn't critically sensitive)
