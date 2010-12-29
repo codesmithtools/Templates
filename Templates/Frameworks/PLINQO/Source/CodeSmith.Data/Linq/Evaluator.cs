@@ -1,5 +1,7 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 
 namespace CodeSmith.Data.Linq
@@ -35,8 +37,6 @@ namespace CodeSmith.Data.Linq
         {
             return expression.NodeType != ExpressionType.Parameter;
         }
-
-        #region Nested type: Nominator
 
         /// <summary>
         /// Performs bottom-up analysis to determine which nodes can possibly
@@ -84,10 +84,6 @@ namespace CodeSmith.Data.Linq
             }
         }
 
-        #endregion
-
-        #region Nested type: SubtreeEvaluator
-
         /// <summary>
         /// Evaluates and replaces sub-trees when first candidate is reached (top-down)
         /// </summary>
@@ -126,10 +122,53 @@ namespace CodeSmith.Data.Linq
                 }
                 LambdaExpression lambda = Expression.Lambda(e);
                 Delegate fn = lambda.Compile();
-                return Expression.Constant(fn.DynamicInvoke(null), e.Type);
+                object value = fn.DynamicInvoke(null);
+
+                if (e.Type.IsValueType || e.Type == typeof(string))
+                    return Expression.Constant(value, e.Type);
+
+                if (e.Type.IsArray)
+                    return EvaluateArray(e, value);
+
+                var enumerable = e.Type.GetInterface("System.Collections.Generic.IEnumerable`1");
+                if (enumerable != null)
+                    return EvaluateEnumerable(e, value, enumerable);
+
+                return Expression.Constant(value, e.Type);
+            }
+
+            private Expression EvaluateArray(Expression e, object value)
+            {
+                var itemType = e.Type.GetElementType();
+                var list = value as IEnumerable;
+                if (list == null)
+                    return Expression.Constant(value, e.Type);
+
+                var initializers = list.Cast<object>()
+                    .Select(o => Expression.Constant(o, itemType));
+
+                return Expression.NewArrayInit(itemType, initializers);
+            }
+
+            private Expression EvaluateEnumerable(Expression e, object value, Type enumerable)
+            {
+                var itemType = enumerable
+                    .GetGenericArguments()
+                    .FirstOrDefault();
+
+                if (itemType == null)
+                    return Expression.Constant(value, e.Type);
+
+                var list = value as IEnumerable;
+                if (list == null)
+                    return Expression.Constant(value, e.Type);
+
+                var newExpression = Expression.New(e.Type);
+                var initializers = list.Cast<object>()
+                    .Select(o => Expression.Constant(o, itemType));
+
+                return Expression.ListInit(newExpression, initializers);
             }
         }
-
-        #endregion
     }
 }
