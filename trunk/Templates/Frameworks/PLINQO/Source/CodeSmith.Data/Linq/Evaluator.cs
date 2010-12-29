@@ -145,7 +145,8 @@ namespace CodeSmith.Data.Linq
                     return Expression.Constant(value, e.Type);
 
                 var initializers = list.Cast<object>()
-                    .Select(o => Expression.Constant(o, itemType));
+                    .Select(o => Expression.Constant(o, itemType))
+                    .Cast<Expression>();
 
                 return Expression.NewArrayInit(itemType, initializers);
             }
@@ -165,7 +166,8 @@ namespace CodeSmith.Data.Linq
 
                 var newExpression = Expression.New(e.Type);
                 var initializers = list.Cast<object>()
-                    .Select(o => Expression.Constant(o, itemType));
+                    .Select(o => Expression.Constant(o, itemType))
+                    .Cast<Expression>();
 
                 return Expression.ListInit(newExpression, initializers);
             }
