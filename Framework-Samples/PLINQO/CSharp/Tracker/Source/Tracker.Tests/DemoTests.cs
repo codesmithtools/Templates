@@ -157,7 +157,9 @@ namespace Tracker.Tests
                 try
                 {
                     Task task = db.Task.GetByKey(SpockId);
-                    IQueryable<Task> tasks = db.Task.ByAssignedId(SpockId).ByStatus(Status.InProgress);
+                    IQueryable<Task> tasks = db.Task
+                        .ByAssignedId(SpockId)
+                        .ByStatus(Status.InProgress);
                     //tasks = tasks.OrderBy(t => t.CompleteDate);
                     var list = tasks.ToPagedList<Task>(1, 10);
                 }
@@ -173,8 +175,8 @@ namespace Tracker.Tests
         {
             using (var db = new TrackerDataContext { Log = Console.Out })
             {
-                var priorites = db.Task.Where(t => !t.Priority.HasValue || t.Priority.Value == Priority.High).ToList();
-                var something = db.Task.ByPriority(null, Priority.High).ToList();
+                var priorites = db.Task.Where(t => !t.Priority.HasValue || t.Priority.Value == Priority.High);
+                var something = db.Task.ByPriority(null, Priority.High);
             }
         }
 

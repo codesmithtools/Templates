@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Data.Linq;
+using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -221,7 +223,7 @@ namespace Tracker.Tests
             user.PasswordHash = "asdf";
             user.PasswordSalt = "asdf";
 
-            db.User.InsertOnSubmit(user);            
+            db.User.InsertOnSubmit(user);
             db.SubmitChanges();
 
             var auditLog = db.LastAudit;
@@ -245,10 +247,167 @@ namespace Tracker.Tests
 
             var users = db.User
                 .Take(5)
-                .Include(u=> u.CreatedTaskList).ToList();
+                .Include(u => u.CreatedTaskList).ToList();
 
             Assert.IsNotNull(users);
 
         }
+
+        [Test]
+        public void KeyTestContainsArray()
+        {
+            var db = new TrackerDataContext();
+            var firstNames1 = new[] { "William", "Laura" };
+            var firstNames2 = new[] { "Kara", "Lee" };
+
+            var q1 = db.User
+                .Where(u => firstNames1.Contains(u.FirstName))
+                .Select(u => new
+                {
+                    u.Id,
+                    u.EmailAddress,
+                    u.FirstName,
+                    u.LastName
+                });
+
+            var q2 = db.User
+                .Where(u => firstNames2.Contains(u.FirstName))
+                .Select(u => new
+                {
+                    u.Id,
+                    u.EmailAddress,
+                    u.FirstName,
+                    u.LastName
+                });
+
+
+            Stopwatch watch = Stopwatch.StartNew();
+            var k1 = q1.GetHashKey();
+            var k2 = q2.GetHashKey();
+            watch.Stop();
+            Console.WriteLine("Time: {0} ms", watch.ElapsedMilliseconds);
+
+            Assert.AreNotEqual(k1, k2);
+        }
+
+        [Test]
+        public void KeyTestContainsList()
+        {
+            var db = new TrackerDataContext();
+            var firstNames1 = new List<string> { "William", "Laura" };
+            var firstNames2 = new List<string> { "Kara", "Lee" };
+
+            var q1 = db.User
+                .Where(u => firstNames1.Contains(u.FirstName))
+                .Select(u => new
+                {
+                    u.Id,
+                    u.EmailAddress,
+                    u.FirstName,
+                    u.LastName
+                });
+
+            var q2 = db.User
+                .Where(u => firstNames2.Contains(u.FirstName))
+                .Select(u => new
+                {
+                    u.Id,
+                    u.EmailAddress,
+                    u.FirstName,
+                    u.LastName
+                });
+
+
+            Stopwatch watch = Stopwatch.StartNew();
+            var k1 = q1.GetHashKey();
+            var k2 = q2.GetHashKey();
+            watch.Stop();
+            Console.WriteLine("Time: {0} ms", watch.ElapsedMilliseconds);
+
+
+            var r1 = q1.ToList();
+            var r2 = q2.ToList();
+            Assert.AreNotEqual(k1, k2);
+
+        }
+
+        [Test]
+        public void KeyTestContainsCollection()
+        {
+            var db = new TrackerDataContext();
+            var firstNames1 = new Collection<string> { "William", "Laura" };
+            var firstNames2 = new Collection<string> { "Kara", "Lee" };
+
+            var q1 = db.User
+                .Where(u => firstNames1.Contains(u.FirstName))
+                .Select(u => new
+                {
+                    u.Id,
+                    u.EmailAddress,
+                    u.FirstName,
+                    u.LastName
+                });
+
+            var q2 = db.User
+                .Where(u => firstNames2.Contains(u.FirstName))
+                .Select(u => new
+                {
+                    u.Id,
+                    u.EmailAddress,
+                    u.FirstName,
+                    u.LastName
+                });
+
+
+            Stopwatch watch = Stopwatch.StartNew();
+            var k1 = q1.GetHashKey();
+            var k2 = q2.GetHashKey();
+            watch.Stop();
+            Console.WriteLine("Time: {0} ms", watch.ElapsedMilliseconds);
+
+
+            var r1 = q1.ToList();
+            var r2 = q2.ToList();
+            Assert.AreNotEqual(k1, k2);
+
+        }
+
+        [Test]
+        public void KeyTest()
+        {
+            var db = new TrackerDataContext();
+            var firstNames1 =  "William";
+            var firstNames2 = "Kara";
+
+            var q1 = db.User
+                .Where(u => u.FirstName == firstNames1)
+                .Select(u => new
+                {
+                    u.Id,
+                    u.EmailAddress,
+                    u.FirstName,
+                    u.LastName
+                });
+
+            var q2 = db.User
+                .Where(u => u.FirstName == firstNames2)
+                .Select(u => new
+                {
+                    u.Id,
+                    u.EmailAddress,
+                    u.FirstName,
+                    u.LastName
+                });
+
+
+            Stopwatch watch = Stopwatch.StartNew();
+            var k1 = q1.GetHashKey();
+            var k2 = q2.GetHashKey();
+            watch.Stop();
+            Console.WriteLine("Time: {0} ms", watch.ElapsedMilliseconds);
+
+            Assert.AreNotEqual(k1, k2);
+        }
+
     }
 }
