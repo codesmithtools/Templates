@@ -17,6 +17,15 @@ namespace CodeSmith.Data.Linq
     /// <summary>
     /// Extension methods for caching IQuerable objects.
     /// </summary>
+    /// <remarks>
+    /// <para>Based on the work by Pete Montgomery.</para>
+    /// <para>
+    /// Copyright (c) 2010 Pete Montgomery.
+    /// http://petemontgomery.wordpress.com
+    /// Licenced under GNU LGPL v3.
+    /// http://www.gnu.org/licenses/lgpl.html
+    /// </para>
+    /// </remarks>
     public static class QueryResultCache
     {
         #region FromCache
