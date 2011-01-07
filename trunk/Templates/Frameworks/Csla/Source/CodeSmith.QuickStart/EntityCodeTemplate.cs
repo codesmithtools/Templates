@@ -143,7 +143,7 @@ namespace CodeSmith.QuickStart
 
         [Optional]
         [Category("2. Solution")]
-        [Description("The .NET Framework Version. If you use v40 then CSLA 4.0 will be used. If you use v35 then CSLA 3.8 will be used.")]
+        [Description("If this property is set to v35 then a .NET 3.5 Visual Studio 2008 Solution will be created targeting CSLA 3.8. If it is set to v40 than a .NET 4.0 Visual Studio 2010 solution will be created targeting CSLA 4.1.")]
         public FrameworkVersion FrameworkVersion
         {
             get
