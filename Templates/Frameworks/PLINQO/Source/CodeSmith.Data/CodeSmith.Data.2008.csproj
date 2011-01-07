@@ -120,6 +120,7 @@
     <Compile Include="Caching\CacheProviderCollection.cs" />
     <Compile Include="Caching\HttpCacheProvider.cs" />
     <Compile Include="Caching\ICacheProvider.cs" />
+    <Compile Include="Caching\StaticCacheProvider.cs" />
     <Compile Include="Collections\ConcurrentDictionary.cs">
       <SubType>Code</SubType>
     </Compile>

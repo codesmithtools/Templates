@@ -81,18 +81,24 @@
     
     <MSBuild Projects="Source\CodeSmith.Data\CodeSmith.Data.csproj"
              Properties="Configuration=$(BuildConfiguration);TargetFrameworkVersion=v3.5;DefineConstants=TRACE" />
+
+    <MSBuild Projects="Source\CodeSmith.Data.Memcached\CodeSmith.Data.Memcached.csproj"
+             Properties="Configuration=$(BuildConfiguration);TargetFrameworkVersion=v3.5;DefineConstants=TRACE" />
   </Target>
 
   <ItemGroup>
     <Assemblies Include="Common\CodeSmith.Data.dll" />
+    <Assemblies Include="Common\CodeSmith.Data.Memcached.dll" />
     <Comments Include="Common\CodeSmith.Data.xml" />
   </ItemGroup>
 
   <ItemGroup>
     <CommitFiles Include="Common\CodeSmith.CodeParser.dll" />
     <CommitFiles Include="Common\v3.5\CodeSmith.Data.dll" />
+    <CommitFiles Include="Common\v3.5\CodeSmith.Data.Memcached.dll" />
     <CommitFiles Include="Common\v3.5\CodeSmith.Data.xml" />
     <CommitFiles Include="Common\v4.0\CodeSmith.Data.dll" />
+    <CommitFiles Include="Common\v4.0\CodeSmith.Data.Memcached.dll" />
     <CommitFiles Include="Common\v4.0\CodeSmith.Data.xml" />
     <CommitFiles Include="Common\CodeSmith.Data.chm" />
     <CommitFiles Include="Common\CodeSmith.InsertClassMergeStrategy.dll" />

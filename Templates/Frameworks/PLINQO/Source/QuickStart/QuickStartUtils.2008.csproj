@@ -53,16 +53,19 @@
     <Compile Include="..\GlobalAssemblyInfo.cs">
       <Link>GlobalAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="WebsiteProjectCreator.cs" />
     <Compile Include="DataProjectCreator.cs" />
     <Compile Include="Enums.cs" />
     <Compile Include="PathHelper.cs" />
     <Compile Include="ProjectBuilderSettings.cs" />
+    <Compile Include="ProjectCreator.cs" />
     <Compile Include="QuickStartUtils.cs" />
     <Compile Include="SolutionItem.cs" />
-    <Compile Include="UnitTestProjectCreator.cs" />
-    <Compile Include="VsProjectCreator.cs" />
-    <Compile Include="WebAppProjectCreator.cs" />
+    <Compile Include="TestProjectCreator.cs" />
+    <Compile Include="WebApplicationCreator.cs" />
+    <Compile Include="WebSiteCreator.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="QuickStartUtils.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />
