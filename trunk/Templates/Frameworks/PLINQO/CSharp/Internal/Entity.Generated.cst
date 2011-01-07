@@ -51,7 +51,7 @@
     Description="Include Xml serialization support." %>
 
 <%@ Property Category="2.Class" Name="IncludeManyToMany"
-    Type="System.Boolean" Default="true" Optional="False"
+    Type="System.Boolean" Default="false" Optional="False"
     Description="Generate ManyToMany Associations." %>
 
 <%@ Property Name="AssociationNamingSuffix"
@@ -318,7 +318,13 @@ foreach(Column column in Type.Columns) {
                         value.<%= info.OtherAssociation.Member %><%= info.AddSyntax %>;
 <% if (a.IsForeignKey == true) { %>
 <% for(int i = 0; i < info.AssignColumns.Count; i++) { %>
+<% if (info.AssignColumns[i].CanBeNull == false && info.OtherColumns[i].CanBeNull == true && CommonUtility.IsNullableType(info.OtherColumns[i].Type)) { %>
+                        <%= info.AssignColumns[i].Storage %> = value.<%= info.OtherColumns[i].Member %>.HasValue
+                            ? value.<%= info.OtherColumns[i].Member %>.Value
+                            : default(<%= GetColumnType(info.AssignColumns[i]) %>);
+<% } else { %>
                         <%= info.AssignColumns[i].Storage %> = value.<%= info.OtherColumns[i].Member %>;
+<% } %>
 <% } %>
                     }
                     else
