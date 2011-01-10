@@ -469,7 +469,10 @@ Namespace <%= DataProjectName %>
     End If %>
     <% Next %>
             End Using
-                MarkOld(item)
+            MarkOld(item)
+    <% If(IsChildBusinessObject) Then %>
+            MarkAsChild(item)
+    <% End If %>
     
             Return item
         End Function

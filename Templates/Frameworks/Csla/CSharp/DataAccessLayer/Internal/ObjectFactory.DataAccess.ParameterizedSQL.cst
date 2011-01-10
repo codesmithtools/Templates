@@ -451,6 +451,9 @@ if(member.AssociatedColumn.SystemType == "System.String" && !member.AssociatedCo
             }
             
             MarkOld(item);
+<% if(IsChildBusinessObject) { %>
+            MarkAsChild(item);
+<%}%>
 
             return item;
         }

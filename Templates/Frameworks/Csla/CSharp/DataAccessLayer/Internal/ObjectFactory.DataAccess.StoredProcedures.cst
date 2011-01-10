@@ -438,6 +438,9 @@ foreach(Member member in Entity.MembersNoRowVersion) { %>
             }
             
             MarkOld(item);
+<% if(IsChildBusinessObject) { %>
+            MarkAsChild(item);
+<%}%>
             
             return item;
         }
