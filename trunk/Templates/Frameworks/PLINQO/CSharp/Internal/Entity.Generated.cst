@@ -51,7 +51,7 @@
     Description="Include Xml serialization support." %>
 
 <%@ Property Category="2.Class" Name="IncludeManyToMany"
-    Type="System.Boolean" Default="false" Optional="False"
+    Type="System.Boolean" Default="true" Optional="False"
     Description="Generate ManyToMany Associations." %>
 
 <%@ Property Name="AssociationNamingSuffix"
