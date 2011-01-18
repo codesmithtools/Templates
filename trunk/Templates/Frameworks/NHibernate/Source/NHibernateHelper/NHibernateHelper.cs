@@ -304,7 +304,7 @@ namespace NHibernateHelper
 
         public static string TableSafeName(TableSchema sourceTable)
         {
-            var safeOwner = String.IsNullOrEmpty(sourceTable.Owner)
+            var safeOwner = IsSqlServer && String.IsNullOrEmpty(sourceTable.Owner)
                                ? String.Empty
                                : String.Concat(SafeName(sourceTable.Owner), ".");
 
