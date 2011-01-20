@@ -713,7 +713,7 @@ namespace <%= Namespace %>.<%= DomainNamespace %>.Framework
         /// internal, and is used for recursive saves within a transaction.
         /// </summary>
         /// <param name="helper">The data connection helper</param>
-        public override void Save(SqlHelper helper)
+        public override void Save(IDataHelper helper)
         {
             EntityCancelEventArgs e = new EntityCancelEventArgs(this, helper);
 
