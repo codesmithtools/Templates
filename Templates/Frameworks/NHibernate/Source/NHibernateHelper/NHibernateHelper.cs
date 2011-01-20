@@ -304,6 +304,9 @@ namespace NHibernateHelper
 
         public static string TableSafeName(TableSchema sourceTable)
         {
+            if (SchemaProvider == SchemaProvider.PostgreSchemaProvider || SchemaProvider == SchemaProvider.PostgreSQLSchemaProvider) 
+                return SafeName(sourceTable.Name);
+
             var safeOwner = IsSqlServer && String.IsNullOrEmpty(sourceTable.Owner)
                                ? String.Empty
                                : String.Concat(SafeName(sourceTable.Owner), ".");
