@@ -92,7 +92,7 @@ These templates are designed to produce 5 major things...
 &nbsp; &nbsp; &nbsp; &lt;property name="connection.driver_class"&gt;NHibernate.Driver.SqlClientDriver&lt;/property&gt;<br>
 &nbsp; &nbsp; &nbsp; &lt;property name="connection.connection_string"&gt;&lt;/property&gt;<br>
 <br>
-&nbsp; &nbsp; &nbsp; &lt;!-- NHibernate 2.1 --&gt;<br>
+&nbsp; &nbsp; &nbsp; &lt;!-- Not required in NHibernate 1.2 --&gt;<br>
 &nbsp; &nbsp; &nbsp; &lt;property name="proxyfactory.factory_class"&gt;NHibernate.ByteCode.Castle.ProxyFactoryFactory, NHibernate.ByteCode.Castle&lt;/property&gt;<br>
 <br>
 &nbsp; &nbsp; &nbsp; &lt;mapping assembly="NHibernate.Generated"/&gt;<br>
@@ -123,6 +123,7 @@ These templates are dependant on the following applications.
  <li>CodeSmith Professional 5</li>
  <li>Visual Studio</li>
  <ul>
+  <li>2010</li>
   <li>2008</li>
   <li>2005</li>
   <ul>
@@ -134,13 +135,11 @@ These templates use the following assemblies.
 <ul>
  <li>NHibernate</li>
  <ul>
+  <li>3.0.0.GA</li>
   <li>2.1.0.GA</li>
-  <ul>
-   <li>Runtime: Requires "proxyfactory.factory_class" property in configuration.</li>
-  </ul>
-  <li>2.0.1.GA</li>
   <li>1.2.1.GA</li>
   <ul>
+   <li>Runtime: Does not require "proxyfactory.factory_class" property in configuration.</li>
    <li>Generation: Supports legacy Namespaces.</li>
    <li>Generation: UnitTests validate deleted rows differently.</li>
   </ul>
@@ -170,6 +169,11 @@ Download the latest release from GoogleCode.<br>
 <h2><a title="History" name="History"></a>History</h2>
 <p>
 <ul>
+ <li>Release 1.2.0.r2115
+  <ul>
+   <li>Added support for NHibernate 3.0</li>
+  </ul>
+ </li>
  <li>Release 1.1.7.r2056
   <ul>
    <li>New Feature: Added Visual Studio 2010 option.</li>
