@@ -8,7 +8,8 @@ namespace NHibernateHelper
     public enum NHibernateVersion
     {
         v1_2,
-        v2_1
+        v2_1,
+        v3_0
     }
 
     public enum VisualStudioVersion

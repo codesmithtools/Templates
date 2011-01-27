@@ -246,6 +246,16 @@ private void RegisterReferences()
             this.RegisterReference(Path.Combine(this.CodeTemplateInfo.DirectoryName, @"..\Common\NHibernate\2.1\Iesi.Collections.dll"));
             this.RegisterReference(Path.Combine(this.CodeTemplateInfo.DirectoryName, @"..\Common\NHibernate\2.1\log4net.dll"));
             break;
+            
+        case NHibernateVersion.v3_0:
+            this.RegisterReference(Path.Combine(this.CodeTemplateInfo.DirectoryName, @"..\Common\NHibernate\3.0\Antlr3.Runtime.dll"));
+            this.RegisterReference(Path.Combine(this.CodeTemplateInfo.DirectoryName, @"..\Common\NHibernate\3.0\NHibernate.dll"));
+            this.RegisterReference(Path.Combine(this.CodeTemplateInfo.DirectoryName, @"..\Common\NHibernate\3.0\Castle.Core.dll"));
+            this.RegisterReference(Path.Combine(this.CodeTemplateInfo.DirectoryName, @"..\Common\NHibernate\3.0\NHibernate.ByteCode.Castle.dll"));
+            this.RegisterReference(Path.Combine(this.CodeTemplateInfo.DirectoryName, @"..\Common\NHibernate\3.0\Remotion.Data.Linq.dll"));
+            this.RegisterReference(Path.Combine(this.CodeTemplateInfo.DirectoryName, @"..\Common\NHibernate\3.0\Iesi.Collections.dll"));
+            this.RegisterReference(Path.Combine(this.CodeTemplateInfo.DirectoryName, @"..\Common\NHibernate\3.0\log4net.dll"));
+            break;
     }
     this.RegisterReference(Path.Combine(this.CodeTemplateInfo.DirectoryName, @"..\Common\NUnit\NUnit.Framework.dll"));
 	this.RegisterReference(@"System.Web");
