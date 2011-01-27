@@ -59,28 +59,28 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Antlr3.Runtime">
-      <HintPath>..\..\Templates\VisualBasic\..\Common\NHibernate\2.1\Antlr3.Runtime.dll</HintPath>
+      <HintPath>..\..\Templates\VisualBasic\..\Common\NHibernate\3.0\Antlr3.Runtime.dll</HintPath>
     </Reference>
     <Reference Include="Castle.Core">
-      <HintPath>..\..\Templates\VisualBasic\..\Common\NHibernate\2.1\Castle.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="Castle.DynamicProxy2">
-      <HintPath>..\..\Templates\VisualBasic\..\Common\NHibernate\2.1\Castle.DynamicProxy2.dll</HintPath>
+      <HintPath>..\..\Templates\VisualBasic\..\Common\NHibernate\3.0\Castle.Core.dll</HintPath>
     </Reference>
     <Reference Include="Iesi.Collections">
-      <HintPath>..\..\Templates\VisualBasic\..\Common\NHibernate\2.1\Iesi.Collections.dll</HintPath>
+      <HintPath>..\..\Templates\VisualBasic\..\Common\NHibernate\3.0\Iesi.Collections.dll</HintPath>
     </Reference>
     <Reference Include="log4net">
-      <HintPath>..\..\Templates\VisualBasic\..\Common\NHibernate\2.1\log4net.dll</HintPath>
+      <HintPath>..\..\Templates\VisualBasic\..\Common\NHibernate\3.0\log4net.dll</HintPath>
     </Reference>
     <Reference Include="NHibernate">
-      <HintPath>..\..\Templates\VisualBasic\..\Common\NHibernate\2.1\NHibernate.dll</HintPath>
+      <HintPath>..\..\Templates\VisualBasic\..\Common\NHibernate\3.0\NHibernate.dll</HintPath>
     </Reference>
     <Reference Include="NHibernate.ByteCode.Castle">
-      <HintPath>..\..\Templates\VisualBasic\..\Common\NHibernate\2.1\NHibernate.ByteCode.Castle.dll</HintPath>
+      <HintPath>..\..\Templates\VisualBasic\..\Common\NHibernate\3.0\NHibernate.ByteCode.Castle.dll</HintPath>
     </Reference>
     <Reference Include="NUnit.Framework">
       <HintPath>..\..\Templates\VisualBasic\..\Common\NUnit\NUnit.Framework.dll</HintPath>
+    </Reference>
+    <Reference Include="Remotion.Data.Linq">
+      <HintPath>..\..\Templates\VisualBasic\..\Common\NHibernate\3.0\Remotion.Data.Linq.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />

@@ -5,7 +5,8 @@
   </variables>
   <propertySets>
     <propertySet name="NHibernateMaster" template="..\..\Templates\CSharp\NHibernateMaster.cst">
-      <property name="NHibernateVersion">v2_1</property>
+      <property name="VersionColumn">^((R|r)ow)?(V|v)ersion$</property>
+      <property name="NHibernateVersion">v3_0</property>
       <property name="VsVersion">VS_2008</property>
       <property name="AssemblyName">Sample.Data</property>
       <property name="ManagerNamespace">Sample.Data.Generated.ManagerObjects</property>

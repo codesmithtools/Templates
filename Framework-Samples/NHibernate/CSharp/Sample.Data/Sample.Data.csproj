@@ -52,30 +52,29 @@
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Antlr3.Runtime, Version=3.1.0.39271, Culture=neutral, PublicKeyToken=3a9cab8f8d22bfb7, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Templates\Common\NHibernate\2.1\Antlr3.Runtime.dll</HintPath>
+    <Reference Include="Antlr3.Runtime">
+      <HintPath>..\..\Templates\CSharp\..\Common\NHibernate\3.0\Antlr3.Runtime.dll</HintPath>
     </Reference>
     <Reference Include="Castle.Core">
-      <HintPath>..\..\Templates\CSharp\..\Common\NHibernate\2.1\Castle.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="Castle.DynamicProxy2">
-      <HintPath>..\..\Templates\CSharp\..\Common\NHibernate\2.1\Castle.DynamicProxy2.dll</HintPath>
+      <HintPath>..\..\Templates\CSharp\..\Common\NHibernate\3.0\Castle.Core.dll</HintPath>
     </Reference>
     <Reference Include="Iesi.Collections">
-      <HintPath>..\..\Templates\CSharp\..\Common\NHibernate\2.1\Iesi.Collections.dll</HintPath>
+      <HintPath>..\..\Templates\CSharp\..\Common\NHibernate\3.0\Iesi.Collections.dll</HintPath>
     </Reference>
     <Reference Include="log4net">
-      <HintPath>..\..\Templates\CSharp\..\Common\NHibernate\2.1\log4net.dll</HintPath>
+      <HintPath>..\..\Templates\CSharp\..\Common\NHibernate\3.0\log4net.dll</HintPath>
     </Reference>
     <Reference Include="NHibernate">
-      <HintPath>..\..\Templates\CSharp\..\Common\NHibernate\2.1\NHibernate.dll</HintPath>
+      <HintPath>..\..\Templates\CSharp\..\Common\NHibernate\3.0\NHibernate.dll</HintPath>
     </Reference>
     <Reference Include="NHibernate.ByteCode.Castle">
-      <HintPath>..\..\Templates\CSharp\..\Common\NHibernate\2.1\NHibernate.ByteCode.Castle.dll</HintPath>
+      <HintPath>..\..\Templates\CSharp\..\Common\NHibernate\3.0\NHibernate.ByteCode.Castle.dll</HintPath>
     </Reference>
     <Reference Include="NUnit.Framework">
       <HintPath>..\..\Templates\CSharp\..\Common\NUnit\NUnit.Framework.dll</HintPath>
+    </Reference>
+    <Reference Include="Remotion.Data.Linq">
+      <HintPath>..\..\Templates\CSharp\..\Common\NHibernate\3.0\Remotion.Data.Linq.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">

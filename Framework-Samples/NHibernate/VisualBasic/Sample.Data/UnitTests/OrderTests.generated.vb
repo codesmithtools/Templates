@@ -29,28 +29,28 @@ Namespace Sample.Data.Generated.UnitTests
 			Dim entity As New Order()
 
 			
-			entity.UserId = "T"
+			entity.UserId = "Test Test "
 			entity.OrderDate = DateTime.Now
-			entity.ShipAddr1 = "Test Test Test Test Test"
-			entity.ShipAddr2 = "Test Test Test Test Test Test Test Test Test Test Tes"
-			entity.ShipCity = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test"
-			entity.ShipState = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Te"
-			entity.ShipZip = "Test Test "
-			entity.ShipCountry = "Test Test Test"
-			entity.BillAddr1 = "Test Test Test Test Test Test Test Test Test Test"
-			entity.BillAddr2 = "Test Test Test Test Test Test Test Test Test Te"
-			entity.BillCity = "Test Test Test Test "
-			entity.BillState = "Test Test Test Test Test Test Test Test Test Te"
-			entity.BillZip = "Test Test Test Tes"
-			entity.BillCountry = "Test Test Test "
-			entity.Courier = "Test Test Test Test Test Test Test Test Test Test Test Test Test T"
-			entity.TotalPrice = 92
-			entity.BillToFirstName = "Test Test Test Test "
-			entity.BillToLastName = "Test Test Test "
-			entity.ShipToFirstName = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Tes"
-			entity.ShipToLastName = "Te"
-			entity.AuthorizationNumber = 72
-			entity.Locale = "Test Test Tes"
+			entity.ShipAddr1 = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test "
+			entity.ShipAddr2 = "Test Test Test Test Test Test Test Test Test Test Test Test T"
+			entity.ShipCity = "Test Test Test Test "
+			entity.ShipState = "Test Test Test T"
+			entity.ShipZip = "Test"
+			entity.ShipCountry = "Test Test Te"
+			entity.BillAddr1 = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test T"
+			entity.BillAddr2 = "Test Test Test Test T"
+			entity.BillCity = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test"
+			entity.BillState = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Tes"
+			entity.BillZip = "Test Test T"
+			entity.BillCountry = "Test Test Test Test"
+			entity.Courier = "Tes"
+			entity.TotalPrice = 67
+			entity.BillToFirstName = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test"
+			entity.BillToLastName = "Test Test Test Test Test Test Test Test Test Te"
+			entity.ShipToFirstName = "Test Test Test Test Test Test T"
+			entity.ShipToLastName = "Test Test Test Test Test Test Te"
+			entity.AuthorizationNumber = 11
+			entity.Locale = "Test"
 
 			Return entity
 		End Function
@@ -92,7 +92,7 @@ Namespace Sample.Data.Generated.UnitTests
 			Try
 				Dim entityA As Order = GetFirstOrder()
 				
-				entityA.UserId = "Test T"
+				entityA.UserId = "Test Test Test "
 				
 				manager.Update(entityA)
 
