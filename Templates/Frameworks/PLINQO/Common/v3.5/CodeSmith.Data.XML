@@ -4878,6 +4878,14 @@
             <typeparam name="TEntity">The type of the entity.</typeparam>
             <param name="rule">The rule to add.</param>
         </member>
+        <member name="M:CodeSmith.Data.Rules.RuleManager.Remove``1(CodeSmith.Data.Rules.IRule)">
+            <summary>
+            Removes the specified rule.
+            </summary>
+            <typeparam name="TEntity">The type of the entity.</typeparam>
+            <param name="rule">The rule to add.</param>
+            <returns>True if the rule is found and removed.</returns>
+        </member>
         <member name="M:CodeSmith.Data.Rules.RuleManager.AddShared``1(CodeSmith.Data.Rules.IRule)">
             <summary>
             Adds the shared global rules.
