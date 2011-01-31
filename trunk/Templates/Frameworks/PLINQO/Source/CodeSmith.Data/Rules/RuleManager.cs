@@ -58,6 +58,18 @@ namespace CodeSmith.Data.Rules
         }
 
         /// <summary>
+        /// Removes the specified rule.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the entity.</typeparam>
+        /// <param name="rule">The rule to add.</param>
+        /// <returns>True if the rule is found and removed.</returns>
+        public bool Remove<TEntity>(IRule rule)
+        {
+            var t = typeof (TEntity);
+            return _businessRules.ContainsKey(t) && _businessRules[t].Remove(rule);
+        }
+
+        /// <summary>
         /// Adds the shared global rules.
         /// </summary>
         /// <typeparam name="TEntity">The type of the entity.</typeparam>
@@ -132,11 +144,6 @@ namespace CodeSmith.Data.Rules
                             AddValidation(property.Name, attribute, entityType);
                 }
             }
-        }
-
-        private static void AddValidation<TEntity>(string property, Attribute attribute)
-        {
-            AddValidation(property, attribute, typeof(TEntity));
         }
 
         private static void AddValidation(string property, Attribute attribute, Type entityType)
@@ -239,7 +246,6 @@ namespace CodeSmith.Data.Rules
 
             return rules;
         }
-
 
         /// <summary>
         /// Run the rules for the specified <see cref="TrackedObject"/> list.
