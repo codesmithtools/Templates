@@ -9,6 +9,7 @@ Description: Generates a HBM Map for NHibernate.
 <%@ Property Name="AssemblyName" Type="System.String" Default="NHibernate.Generated" Optional="False" Category="2a. Assembly" Description="The name of the Assembly that will contain the business objects." %>
 <%@ Property Name="BusinessNamespace" Type="System.String" Default="NHibernate.Generated.BusinessObjects" Optional="False" Category="2b. Namespaces" Description="The desired Namespace for the Business Objects." %>
 <%@ Property Name="BaseNamespace" Type="System.String" Default="NHibernate.Generated.Base" Optional="False" Category="3b. Namespaces" Description="The Namespace where the Base classes (BusinessBase & ManagerBase) are located." %>
+<%@ Property Name="NHibernateVersion" Type="NHibernateVersion" Default="v3_0" Optional="False" Category="4. Version" Description="The version of NHibernate to generate for." %>
 <%@ Assembly Name="SchemaExplorer" %>
 <%@ Assembly Name="System.Data" %>
 <%@ Assembly Name="NHibernateHelper" Path="..\..\Common\NHibernateHelper" %>
@@ -63,10 +64,14 @@ Description: Generates a HBM Map for NHibernate.
 
 <script runat="template">
     Public Function GetPropertyType(ByVal type As String) As String
-        If(type = "System.Xml.XmlDocument")
-            Return [String].Format("type=""{0}.XmlType, {1}""", Me.BaseNamespace, Me.AssemblyName)
-        Else
-            Return [String].Empty
+        If (NHibernateVersion = NHibernateVersion.v3_0 AndAlso type = "byte[]")
+            Return "length=""2147483647"""
         End If
+        
+        If (type = "System.Xml.XmlDocument")
+            Return [String].Format("type=""{0}.XmlType, {1}""", Me.BaseNamespace, Me.AssemblyName)
+        End If
+        
+        Return [String].Empty
     End Function
 </script>
