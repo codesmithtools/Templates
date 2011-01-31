@@ -38,7 +38,7 @@ Description: Generates a HBM Map for NHibernate.
 		<% } %>
 		<% // Properties %>
 		<% foreach(EntityMember em in entityManager.MembersNoKeyNoVersion) { %>
-		<property name="<%= em.PropertyName %>" column="<%= em.ColumnSafeName %>" <%= GetPropertyType(em.SystemType) %>/>
+		<property name="<%= em.PropertyName %>" column="<%= em.ColumnSafeName %>" <%= GetPropertyType(em) %>/>
 		<% } %>
 		<% // Many-To-One %>
 		<% foreach(EntityAssociation association in entityManager.ManyToOne) { %>
@@ -62,14 +62,26 @@ Description: Generates a HBM Map for NHibernate.
 </hibernate-mapping>
 
 <script runat="template">
-    public string GetPropertyType(string type)
+    public string GetPropertyType(EntityMember em)
     {
-        if (NHibernateVersion == NHibernateVersion.v3_0 && type == "byte[]")
+        if (em.SystemType == "System.Xml.XmlDocument")
+            return String.Format(@"type=""{0}.XmlType, {1}""", this.BaseNamespace, this.AssemblyName);
+    
+        if (NHibernateVersion != NHibernateVersion.v3_0)
+            return String.Empty;
+        
+        if (em.SystemType == "byte[]")
             return @"length=""2147483647""";
             
-        if (type == "System.Xml.XmlDocument")
-            return String.Format(@"type=""{0}.XmlType, {1}""", this.BaseNamespace, this.AssemblyName);
+        if (em.Column.NativeType == "nvarchar" && (em.Column.Size > 4000 || em.Column.Size == -1))
+            return @"type=""StringClob""";
+    
+        if (em.Column.NativeType == "varchar" && (em.Column.Size > 8000 || em.Column.Size == -1))
+            return @"type=""StringClob""";
         
+        if (em.Column.NativeType == "ntext" || em.Column.NativeType == "text")
+            return @"type=""StringClob""";
+            
         return String.Empty;
     }
 </script>

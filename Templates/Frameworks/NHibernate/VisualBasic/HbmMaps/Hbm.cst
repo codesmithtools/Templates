@@ -39,7 +39,7 @@ Description: Generates a HBM Map for NHibernate.
 		<% End If %>
 		<% 'Properties %>
 		<% For Each em As EntityMember In entityManager.MembersNoKeyNoVersion %>
-		<property name="<%= em.PropertyName %>" column="<%= em.ColumnSafeName %>" <%= GetPropertyType(em.SystemType) %>/>
+		<property name="<%= em.PropertyName %>" column="<%= em.ColumnSafeName %>" <%= GetPropertyType(em) %>/>
 		<% Next %>
 		<% 'Many-To-One %>
 		<% For Each association As EntityAssociation In entityManager.ManyToOne %>
@@ -63,15 +63,31 @@ Description: Generates a HBM Map for NHibernate.
 </hibernate-mapping>
 
 <script runat="template">
-    Public Function GetPropertyType(ByVal type As String) As String
-        If (NHibernateVersion = NHibernateVersion.v3_0 AndAlso type = "byte[]")
-            Return "length=""2147483647"""
-        End If
-        
-        If (type = "System.Xml.XmlDocument")
+    Public Function GetPropertyType(em As EntityMember) As String
+        If em.SystemType = "System.Xml.XmlDocument" Then
             Return [String].Format("type=""{0}.XmlType, {1}""", Me.BaseNamespace, Me.AssemblyName)
         End If
-        
+    
+        If NHibernateVersion <> NHibernateVersion.v3_0 Then
+            Return [String].Empty
+        End If
+    
+        If em.SystemType = "byte[]" Then
+            Return "length=""2147483647"""
+        End If
+    
+        If em.Column.NativeType = "nvarchar" AndAlso (em.Column.Size > 4000 OrElse em.Column.Size = -1) Then
+            Return "type=""StringClob"""
+        End If
+    
+        If em.Column.NativeType = "varchar" AndAlso (em.Column.Size > 8000 OrElse em.Column.Size = -1) Then
+            Return "type=""StringClob"""
+        End If
+    
+        If em.Column.NativeType = "ntext" OrElse em.Column.NativeType = "text" Then
+            Return "type=""StringClob"""
+        End If
+    
         Return [String].Empty
     End Function
 </script>
