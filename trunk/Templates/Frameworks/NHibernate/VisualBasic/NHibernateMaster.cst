@@ -12,7 +12,7 @@ Description: Generates a complete set of Maps, Business Objects, Manager Objects
 <%@ Property Name="TablePrefix" Type="System.String" Default="" Optional="True" Category="1b. Database Options" Description="A prefix that will be stripped from table names when class names are generated." %>
 <%@ Property Name="VersionColumn" Type="System.String" Default="^((R|r)ow)?(V|v)ersion$" Optional="True" Category="1b. Database Options" Description="A regular expression; a match will mark a column as a version column." %>
 
-<%@ Property Name="NHibernateVersion" Type="NHibernateVersion" Default="v2_1" Optional="False" Category="2. Versions" Description="The version of NHibernate to generate for." %>
+<%@ Property Name="NHibernateVersion" Type="NHibernateVersion" Default="v3_0" Optional="False" Category="2. Versions" Description="The version of NHibernate to generate for." %>
 <%@ Property Name="VsVersion" Type="VisualStudioVersion" Default="VS_2010" Optional="False" Category="2. Versions" Description="The version of Visual Studio to generate for." %>
 
 <%@ Property Name="AssemblyName" Type="System.String" Default="NHibernate.Generated" Optional="False" Category="3a. Assembly" Description="The name of the Assembly that will contain the business objects." %>
@@ -134,6 +134,7 @@ Private Sub RenderHbmMaps(ByVal table As TableSchema)
     hbmMap.BaseNamespace = Me.BaseNamespace
 	hbmMap.SourceTable = table
 	hbmMap.ExcludedTables = Me.ExcludedTables
+    hbmMap.NHibernateVersion = Me.NHibernateVersion
 
 	hbmMap.RenderToFile(GetOutputFile(fileName, Nothing, "BuildAction", 3), True)
 End Sub
