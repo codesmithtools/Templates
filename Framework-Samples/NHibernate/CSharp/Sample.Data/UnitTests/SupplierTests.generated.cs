@@ -32,16 +32,16 @@ namespace Sample.Data.Generated.UnitTests
 			Sample.Data.Generated.BusinessObjects.Supplier entity = new Sample.Data.Generated.BusinessObjects.Supplier();
 			
 			// You may need to maually enter this key if there is a constraint violation.
-			entity.Id = 68;
+			entity.Id = 57;
 			
-			entity.Name = "Test Test Test Test Test Test Test Test Test Test Test Test Test Te";
+			entity.Name = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Te";
 			entity.Status = "T";
-			entity.Addr1 = "Test Test Test Test Test Test Test Test Test Test Test T";
-			entity.Addr2 = "Test Test Test Test Test Test Test Test Test Test Test Test Test Te";
-			entity.City = "Test Test Test Test Test Test Test Test Test Test Test Test Test ";
-			entity.State = "Test Test Test Test Test Test Test Test Test Test Tes";
-			entity.Zip = "Tes";
-			entity.Phone = "Te";
+			entity.Addr1 = "Test ";
+			entity.Addr2 = "Test Test Test Test Test Test Test Test Test Test";
+			entity.City = "Test Test Test Test Test Test Test Test Test Test Test Test T";
+			entity.State = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test";
+			entity.Zip = "Test";
+			entity.Phone = "Tes";
 			
 			return entity;
 		}
@@ -93,7 +93,7 @@ namespace Sample.Data.Generated.UnitTests
             {
                 Sample.Data.Generated.BusinessObjects.Supplier entityA = GetFirstSupplier();
 				
-				entityA.Name = "Test Test Test Test Test Test Test Te";
+				entityA.Name = "Test Test Test Test Test Test Test Test Test Test Test Test Tes";
 				
 				manager.Update(entityA);
 

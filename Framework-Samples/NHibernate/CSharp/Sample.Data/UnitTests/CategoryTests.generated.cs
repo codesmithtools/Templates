@@ -32,9 +32,9 @@ namespace Sample.Data.Generated.UnitTests
 			Sample.Data.Generated.BusinessObjects.Category entity = new Sample.Data.Generated.BusinessObjects.Category();
 			
 			// You may need to maually enter this key if there is a constraint violation.
-			entity.Id = "Test T";
+			entity.Id = "Test Test";
 			
-			entity.Name = "Te";
+			entity.Name = "Test Test Test Test Test Test Test ";
 			entity.Descn = "Test Test ";
 			
 			return entity;
@@ -87,7 +87,7 @@ namespace Sample.Data.Generated.UnitTests
             {
                 Sample.Data.Generated.BusinessObjects.Category entityA = GetFirstCategory();
 				
-				entityA.Name = "Test Test Test Test Tes";
+				entityA.Name = "Test Test Tes";
 				
 				manager.Update(entityA);
 

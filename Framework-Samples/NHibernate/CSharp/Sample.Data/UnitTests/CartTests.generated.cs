@@ -32,14 +32,14 @@ namespace Sample.Data.Generated.UnitTests
 			Sample.Data.Generated.BusinessObjects.Cart entity = new Sample.Data.Generated.BusinessObjects.Cart();
 			
 			
-			entity.ItemId = "Test";
-			entity.Name = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test T";
-			entity.Type = "Test Test Test Test Test ";
-			entity.Price = 7;
+			entity.ItemId = "Test Tes";
+			entity.Name = "Test Test Test Test Test Te";
+			entity.Type = "Test Test Test Test Test Test Test Test Test Test Test Test Tes";
+			entity.Price = 87;
 			entity.CategoryId = "Test";
-			entity.ProductId = "Test Test";
+			entity.ProductId = "Test ";
 			entity.IsShoppingCart = true;
-			entity.Quantity = 75;
+			entity.Quantity = 78;
 			
 			using(Sample.Data.Generated.ManagerObjects.IProfileManager profileManager = managerFactory.GetProfileManager())
 			    entity.Profile = profileManager.GetAll(1)[0];
