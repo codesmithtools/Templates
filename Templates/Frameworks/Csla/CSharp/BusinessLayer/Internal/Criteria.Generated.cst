@@ -116,7 +116,7 @@ foreach(Member member in Entity.MembersNoRowVersion){ if(member.IsNullable) { %>
         {
             get
             {
-                return "[<%= Entity.Table.Owner%>].<%= Entity.Table.Name%>";
+                return "[<%= Entity.Table.Owner%>].[<%= Entity.Table.Name%>]";
             }
         }
 

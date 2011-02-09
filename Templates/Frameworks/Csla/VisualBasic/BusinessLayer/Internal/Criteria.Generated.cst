@@ -124,7 +124,7 @@ Namespace <%= BusinessProjectName %>
         ''' </summary>
         Public ReadOnly Property TableFullName() As String Implements IGeneratedCriteria.TableFullName
             Get
-                Return "[<%= Entity.Table.Owner%>].<%= Entity.Table.Name%>"
+                Return "[<%= Entity.Table.Owner%>].[<%= Entity.Table.Name%>]"
             End Get
         End Property
     
