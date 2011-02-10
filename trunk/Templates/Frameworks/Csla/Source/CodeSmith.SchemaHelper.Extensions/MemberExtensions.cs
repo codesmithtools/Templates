@@ -31,6 +31,7 @@ namespace CodeSmith.SchemaHelper
         public static bool ExcludeBusinessSizeRule(this Member member)
         {
             return member.NativeType.Equals("ntext", StringComparison.InvariantCultureIgnoreCase) ||
+                   member.NativeType.Equals("text", StringComparison.InvariantCultureIgnoreCase) ||
                   (member.NativeType.Equals("nvarchar", StringComparison.InvariantCultureIgnoreCase) && member.Size == -1) ||
                   (member.NativeType.Equals("varchar", StringComparison.InvariantCultureIgnoreCase) && member.Size == -1);
         }
