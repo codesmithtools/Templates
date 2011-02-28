@@ -37,7 +37,7 @@
         list.Add(className) %>
                 <%If(isObjectFactory) Then %>'<% End If%>Dim <%= variableName %> As <%= className %> = CType(Me.Parent, <%= className %>)
     <% Else %>
-                <%If(isObjectFactory) Then %>'<% End If%><%= variableName %> = Me.Parent As <%= className %>
+                <%If(isObjectFactory) Then %>'<% End If%><%= variableName %> = CType(Me.Parent, <%= className %>)
     <% End If %>
                 <%If(isObjectFactory) Then %>'<% End If%>If Not(<%= variableName %> Is Nothing)
                 <%If(isObjectFactory) Then %>'<% End If%>    item.<%= member.PropertyName %> = <%= variableWithChildProperty %>
@@ -76,7 +76,7 @@
         list.Add(className) %>
                         <%If(isObjectFactory) Then %>'<% End If%>Dim <%= variableName %> As <%= className %> = CType(Me.Parent, <%= className %>)
     <% Else %>
-                        <%If(isObjectFactory) Then %>'<% End If%><%= variableName %> = Me.Parent As <%= className %>
+                        <%If(isObjectFactory) Then %>'<% End If%><%= variableName %> = CType(Me.Parent, <%= className %>)
     <% End If %>
                         <%If(isObjectFactory) Then %>'<% End If%>If Not(<%= variableName %> Is Nothing)
                         <%If(isObjectFactory) Then %>'<% End If%>    item.<%= member.PropertyName %> = <%= variableWithChildProperty %>
