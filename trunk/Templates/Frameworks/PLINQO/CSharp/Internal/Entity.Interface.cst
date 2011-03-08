@@ -99,7 +99,7 @@ namespace <%= this.InterfaceNamespace %>
         /// <summary>
         /// Gets or sets the <see cref="T:<%= this.InterfaceNamespace %>.I<%= association.Type %>"/> association.
         /// </summary>
-        System.Collections.Generic.IList<<%= this.InterfaceNamespace %>.I<%= association.Type %>> <%=association.Member%> { get; set; }
+        System.Collections.Generic.IEnumerable<<%= this.InterfaceNamespace %>.I<%= association.Type %>> <%=association.Member%> { get; set; }
 <% } %>
     }
 }
