@@ -397,13 +397,11 @@ foreach(Column column in Type.Columns) {
         }
         
         <% if(!string.IsNullOrEmpty(this.InterfaceNamespace)) { %>
-        System.Collections.Generic.IList<<%= this.InterfaceNamespace %>.I<%= a.Type %>> <%= this.InterfaceNamespace %>.I<%= this.Type.Name %>.<%= a.Member %>
+        System.Collections.Generic.IEnumerable<<%= this.InterfaceNamespace %>.I<%= a.Type %>> <%= this.InterfaceNamespace %>.I<%= this.Type.Name %>.<%= a.Member %>
         {
             get
             {
-                return this.<%= a.Member %>
-                    .AsQueryable<<%= this.InterfaceNamespace %>.I<%= a.Type %>>()
-                    as System.Collections.Generic.IList<<%= this.InterfaceNamespace %>.I<%= a.Type %>>;
+                return this.<%= a.Member %>.Cast<<%= this.InterfaceNamespace %>.I<%= a.Type %>>();
             }
             set
             {
