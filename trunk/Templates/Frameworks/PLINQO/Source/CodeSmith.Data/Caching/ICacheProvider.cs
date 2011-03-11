@@ -235,5 +235,10 @@ namespace CodeSmith.Data.Caching
         /// </summary>
         /// <param name="group">The name of the cache group.</param>
         void InvalidateGroup(string group);
+
+        /// <summary>
+        /// Invalidates all cache items.
+        /// </summary>
+        void Clear();
     }
 }

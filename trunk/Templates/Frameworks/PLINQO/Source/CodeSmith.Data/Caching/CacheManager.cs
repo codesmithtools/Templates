@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Linq;
 using System.Web.Configuration;
 using CodeSmith.Data.Collections;
 
@@ -458,6 +459,82 @@ namespace CodeSmith.Data.Caching
         public static void InvalidateGroup(string groupName)
         {
             DefaultProvider.InvalidateGroup(groupName);
+        }
+
+        /// <summary>
+        /// /// Invalidates the cache items for the specified group from the specified cache provider.
+        /// </summary>
+        /// <typeparam name="T">The type of the provider.</typeparam>
+        /// <param name="groupName">Name of the group.</param>
+        public static void InvalidateGroup<T>(string groupName) where T : ICacheProvider
+        {
+            ICacheProvider provider;
+            if (_providers.TryGetValue(typeof(T).Name, out provider))
+                provider.InvalidateGroup(groupName);
+        }
+
+        /// <summary>
+        /// Invalidates the cache items for the specified groups from the default cache provider.
+        /// </summary>
+        /// <param name="groupNames">Names of the groups.</param>
+        public static void InvalidateGroups(IEnumerable<string> groupNames)
+        {
+            foreach (var groupName in groupNames)
+                DefaultProvider.InvalidateGroup(groupName);
+        }
+
+        /// <summary>
+        /// Invalidates the cache items for the specified groups from the default cache provider.
+        /// </summary>
+        /// <param name="groupNames">Names of the groups.</param>
+        public static void InvalidateGroups(params string[] groupNames)
+        {
+            InvalidateGroups(groupNames.AsEnumerable());
+        }
+
+        /// <summary>
+        /// Invalidates the cache items for the specified groups from the specified cache provider.
+        /// </summary>
+        /// <typeparam name="T">The type of the provider.</typeparam>
+        /// <param name="groupNames">Names of the groups.</param>
+        public static void InvalidateGroups<T>(IEnumerable<string> groupNames)
+        {
+            ICacheProvider provider;
+            if (_providers.TryGetValue(typeof(T).Name, out provider))
+            {
+                foreach (var groupName in groupNames)
+                    provider.InvalidateGroup(groupName);
+            }
+        }
+
+        /// <summary>
+        /// Invalidates the cache items for the specified groups from the specified cache provider.
+        /// </summary>
+        /// <typeparam name="T">The type of the provider.</typeparam>
+        /// <param name="groupNames">Names of the groups.</param>
+        public static void InvalidateGroups<T>(params string[] groupNames)
+        {
+            InvalidateGroups<T>(groupNames.AsEnumerable());
+        }
+
+        /// <summary>
+        /// Invalidates all cache items for all loaded providers.
+        /// </summary>
+        public static void Clear()
+        {
+            foreach (ICacheProvider provider in _providers.Values)
+                provider.Clear();
+        }
+
+        /// <summary>
+        /// Invalidates all cache items from the specified cache provider.
+        /// </summary>
+        /// <typeparam name="T">The type of the provider.</typeparam>
+        public static void Clear<T>()
+        {
+            ICacheProvider provider;
+            if (_providers.TryGetValue(typeof(T).Name, out provider))
+                provider.Clear();
         }
     }
 }

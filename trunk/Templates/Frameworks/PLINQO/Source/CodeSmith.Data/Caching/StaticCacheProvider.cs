@@ -40,6 +40,14 @@ namespace CodeSmith.Data.Caching
             return result;
         }
 
+        /// <summary>
+        /// Invalidates all cache items.
+        /// </summary>
+        public override void Clear()
+        {
+            _cache.Clear();
+        }
+
         public override object Get(string key, string group)
         {
             string groupKey = GetGroupKey(key, group);

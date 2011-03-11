@@ -109,6 +109,11 @@ namespace CodeSmith.Data.Caching
         }
 
         /// <summary>
+        /// Invalidates all cache items.
+        /// </summary>
+        public abstract void Clear();
+
+        /// <summary>
         /// Gets the data cached for specified key.
         /// </summary>
         /// <param name="key">The key used to store the data in the cache provider.</param>
