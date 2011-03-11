@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Diagnostics;
 using System.Web;
 
@@ -66,6 +67,19 @@ namespace CodeSmith.Data.Caching
                 Debug.WriteLine("Cache Remove for key " + groupKey);
 #endif
             return result;
+        }
+
+        /// <summary>
+        /// Invalidates all cache items.
+        /// </summary>
+        public override void Clear()
+        {
+            var cacheEnum = HttpRuntime.Cache.GetEnumerator();
+            while (cacheEnum.MoveNext())
+            {
+                var key = cacheEnum.Key.ToString();
+                HttpRuntime.Cache.Remove(key);
+            }
         }
 
         /// <summary>

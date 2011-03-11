@@ -42,6 +42,14 @@ namespace CodeSmith.Data.Memcached
             return Client.Remove(GetGroupKey(key, group));
         }
 
+        /// <summary>
+        /// Invalidates all items in the cache.
+        /// </summary>
+        public override void Clear()
+        {
+            Client.FlushAll();
+        }
+
         public override object Get(string key, string group)
         {
             return Client.Get(GetGroupKey(key, group));
