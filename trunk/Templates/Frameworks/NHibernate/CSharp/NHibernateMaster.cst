@@ -277,14 +277,14 @@ private OutputFile GetOutputFile(string fileName, string dependentUpon, params o
 	return outputFile;
 }
 private string GetFolder(string folder)
-{
-	if (folder.Contains(".") && !folder.EndsWith("."))
-        folder = folder.Substring(folder.LastIndexOf('.')+1);
-		
+{	
 	if(String.IsNullOrEmpty(folder))
 		folder = String.Empty;
 	else
 	{
+        if (folder.Contains(".") && !folder.EndsWith("."))
+            folder = folder.Substring(folder.LastIndexOf('.')+1);
+        
 		if (!Directory.Exists(folder))
             Directory.CreateDirectory(folder);
 			

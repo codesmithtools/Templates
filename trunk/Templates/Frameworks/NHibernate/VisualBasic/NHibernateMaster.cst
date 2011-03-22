@@ -282,19 +282,19 @@ Private Function GetOutputFile(ByVal fileName As String, ByVal dependentUpon As 
 	Return outputFile
 End Function
 Private Function GetFolder(ByVal folder As String) As String
-	If folder.Contains(".") AndAlso Not folder.EndsWith(".") Then
-		folder = folder.Substring(folder.LastIndexOf("."C) + 1)
-	End If
-
-	If [String].IsNullOrEmpty(folder) Then
-		folder = [String].Empty
+	If String.IsNullOrEmpty(folder) Then
+		folder = String.Empty
 	Else
+    	If folder.Contains(".") AndAlso Not folder.EndsWith(".") Then
+		    folder = folder.Substring(folder.LastIndexOf("."C) + 1)
+	    End If
+    
 		If Not Directory.Exists(folder) Then
 			Directory.CreateDirectory(folder)
 		End If
 
 		If Not folder.EndsWith("\") Then
-			folder = [String].Format("{0}\", folder)
+			folder = String.Format("{0}\", folder)
 		End If
 	End If
 	Return folder
