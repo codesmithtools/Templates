@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<codeSmith xmlns="http://www.codesmithtools.com/schema/csp.xsd">
+  <variables>
+    <add key="$databaseName$ConnectionString" value="$connectionString$" />
+  </variables>
+  <defaultProperties>
+    <property name="EdmxFile">$databaseName$.edmx</property>
+  </defaultProperties>
+  <propertySets>
+    <propertySet name="EDMX" template="$template.path$$language$\edmx.cst">
+      <property name="IncludeViews">False</property>
+      <property name="IncludeFunctions">False</property>
+      <property name="IgnoreList">
+        <stringList>
+          <string>^dbo.sysdiagrams$</string>
+          <string>^dbo.sp_</string>
+          <string>^dbo.aspnet</string>
+        </stringList>
+      </property>
+      <property name="IncludeList">
+        <stringList>
+          <string></string>
+        </stringList>
+      </property>
+      <property name="CleanExpression">
+        <stringList>
+          <string>^(sp|tbl|udf|vw)_</string>
+        </stringList>
+      </property>
+      <property name="SourceDatabase">
+        <connectionString>$($databaseName$ConnectionString)</connectionString>
+        <providerType>SchemaExplorer.SqlSchemaProvider,SchemaExplorer.SqlSchemaProvider</providerType>
+      </property>
+      <property name="EntityNamespace">$entityNamespace$</property>
+      <property name="ContextNamespace">$entityNamespace$</property>
+      <property name="DataContextName">$datacontext$</property>
+    </propertySet>
+    <propertySet name="Entities" template="$template.path$$language$\Entities.cst">
+      <property name="OutputDirectory">.\Entities</property>
+      <property name="BaseDirectory">.\</property>
+    </propertySet>
+    <propertySet name="Managers" template="$template.path$$language$\Managers.cst" enabled="false">
+      <property name="ManagerDirectory">.\Managers</property>
+      <property name="MethodPrefix">GetBy</property>
+      <property name="MethodKeySuffix">Key</property>
+      <property name="SourceDatabase">
+        <connectionString>$($databaseName$ConnectionString)</connectionString>
+        <providerType>SchemaExplorer.SqlSchemaProvider,SchemaExplorer.SqlSchemaProvider</providerType>
+      </property>
+      <property name="DataContextFile">.\$datacontext$.$languageExtension$</property>
+      <property name="DataManagerName">$databaseName$DataManager</property>
+      <property name="ManagerNamespace">$entityNamespace$</property>
+    </propertySet>
+  </propertySets>
+</codeSmith>

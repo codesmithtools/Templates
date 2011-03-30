@@ -1,0 +1,159 @@
+<%@ CodeTemplate Language="C#" TargetLanguage="XML" Description="Generates an EDMX File" Debug="true" OutputType="None" %>
+
+<%@ Assembly Name="CodeSmith.CustomProperties" %>
+<%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\Common" %>
+<%@ Assembly Name="Generator.QuickStart" Path="..\Common" %>
+<%@ Assembly Name="Generator.Microsoft.Frameworks" Path="..\Common" %>
+<%@ Assembly Name="Xml.Schema.Linq" Path="..\Common" %>
+<%@ Assembly Name="SchemaExplorer" %>
+
+<%@ Import Namespace="System.IO" %>
+<%@ Import Namespace="System.Text.RegularExpressions" %>
+<%@ Import Namespace="System.Collections.Generic" %>
+<%@ Import Namespace="CodeSmith.CustomProperties" %>
+<%@ Import Namespace="CodeSmith.SchemaHelper" %>
+<%@ Import Namespace="Generator.QuickStart" %>
+<%@ Import Namespace="Generator.Microsoft.Frameworks" %>
+<%@ Import Namespace="SchemaExplorer" %>
+
+<%@ Property Category="1. Database" Name="SourceDatabase" Type="SchemaExplorer.DatabaseSchema" Optional="False" OnChanged="OnSourceDatabaseChanged" DeepLoad="true" IncludeFunctions="true" Description="The source database for Linq to Sql." %>
+<%@ Property Category="1. Database" Name="IncludeViews" Type="System.Boolean" Default="false" Optional="False" Description="Include views in mapping." %>
+<%@ Property Category="1. Database" Name="IncludeFunctions" Type="System.Boolean" Default="false" Optional="False" Description="Include stored procedures and user functions in mapping." %>
+<%@ Property Category="1. Database" Name="IgnoreList" Type="CodeSmith.CustomProperties.StringCollection" Optional="True" Description="List of regular expressions to ignore tables, views and commands when generating mapping." Default="sysdiagrams$, ^dbo.aspnet" %>
+<%@ Property Category="1. Database" Name="IncludeList" Type="CodeSmith.CustomProperties.StringCollection" Optional="True" Description="List of regular expressions to include tables and views when generating mapping." Default="" %> 
+<%@ Property Category="1. Database" Name="CleanExpression" Type="CodeSmith.CustomProperties.StringCollection" Optional="True" Description="List of regular expressions to clean table, view and column names." Default="^(sp|tbl|udf|vw)_, ^\\w+_" %>
+<%-- <%@ Property Category="2. Class" Name="EntityBase" Type="System.String" Default="LinqEntityBase" Optional="True" Description="The base class for the entity." %> --%>
+<%@ Property Category="2. Class" Name="EntityNamespace" Type="System.String" Default="" Optional="False" OnChanged="OnEntityNamespaceChanged" Description="The namespace to use for the entity class files."%>
+<%@ Property Category="2. Class" Name="ContextNamespace" Type="System.String" Default="" Optional="False" OnChanged="OnContextNamespaceChanged" Description="The namespace to use for the context class files."%>
+<%@ Property Category="2. Class" Name="DataContextName" Type="System.String" Default="" Optional="True" Description="The name of the DataContext."%>
+
+<%@ Property Category="3. Mapping" Name="EdmxFile" Type="System.String" Default="" Optional="False" Description="The full path to the edmx file." Editor="System.Windows.Forms.Design.FileNameEditor, System.Design" %>
+
+<script runat="template">
+
+    public void Generate()
+    {
+        Stopwatch watch = Stopwatch.StartNew();
+        string filePath = Path.GetFullPath(EdmxFile);
+        string outputDirectory = Path.GetDirectoryName(filePath);
+        
+        if (!Directory.Exists(outputDirectory))
+            Directory.CreateDirectory(outputDirectory);
+
+        if (SourceDatabase != null)
+        {
+            this.Progress.MaximumValue = (SourceDatabase.Tables.Count + 1);
+            if (IncludeViews)
+                this.Progress.MaximumValue += SourceDatabase.Views.Count;
+            if (IncludeFunctions)
+                this.Progress.MaximumValue += SourceDatabase.Commands.Count;
+            this.Progress.Step = 1;
+        }
+        
+        OnPreOutputWritten(this.EdmxFile);
+
+        GeneratorSettings settings = new GeneratorSettings();
+        settings.MappingFile = filePath;
+        settings.ContextNamespace = ContextNamespace;
+        settings.DataContextName = DataContextName;
+        settings.EntityNamespace = EntityNamespace;
+        settings.DatabaseName = SourceDatabase.Name;
+
+        CodeSmith.SchemaHelper.Configuration.Instance.CleanExpressions = new List<Regex>();
+        if(CleanExpression != null)
+        {
+            foreach (string clean in CleanExpression)
+            {
+                if (!string.IsNullOrEmpty(clean))
+                {
+                    CodeSmith.SchemaHelper.Configuration.Instance.CleanExpressions.Add(new Regex(clean, RegexOptions.IgnoreCase));
+                }
+            }
+        }
+        
+        CodeSmith.SchemaHelper.Configuration.Instance.IgnoreExpressions = new List<Regex>();
+        if(IgnoreList != null)
+        {
+            foreach (string ignore in IgnoreList)
+            {
+                if (!string.IsNullOrEmpty(ignore))
+                {
+                    CodeSmith.SchemaHelper.Configuration.Instance.IgnoreExpressions.Add(new Regex(ignore, RegexOptions.IgnoreCase));
+                }
+            }
+        }
+         
+        CodeSmith.SchemaHelper.Configuration.Instance.IncludeExpressions = new List<Regex>();
+        if(IncludeList != null)
+        {
+            foreach (string include in IncludeList)
+            {
+                if (!string.IsNullOrEmpty(include))
+                {
+                    CodeSmith.SchemaHelper.Configuration.Instance.IncludeExpressions.Add(new Regex(include, RegexOptions.IgnoreCase));
+                }
+            }
+        }
+        
+        if (CodeSmith.SchemaHelper.Configuration.Instance.IncludeExpressions.Count == 0)
+            CodeSmith.SchemaHelper.Configuration.Instance.IncludeExpressions.Add(new Regex(".*"));
+        
+        CodeSmith.SchemaHelper.Configuration.Instance.IncludeViews = IncludeViews;
+        CodeSmith.SchemaHelper.Configuration.Instance.IncludeFunctions = IncludeFunctions;
+        
+        EdmxGenerator generator = new EdmxGenerator(settings);
+        //generator.SchemaItemProcessed += new EventHandler<SchemaItemProcessedEventArgs>(OnSchemaItemProcessed);
+
+        EntityManager manager = new EntityManager(SourceDatabase);
+        generator.Create(manager.Entities);
+        
+        OutputFile edmxOutputFile = new OutputFile(this.EdmxFile);
+        edmxOutputFile.Metadata.Add("CustomTool", "");// "EntityModelCodeGenerator");
+        //edmxOutputFile.Metadata.Add("BuildAction", "EntityDeploy");// "EntityModelCodeGenerator");
+
+        this.RegisterOutput(edmxOutputFile);
+
+        watch.Stop();
+        Response.WriteLine("Generate Time: " + watch.ElapsedMilliseconds + " ms");
+    }
+    
+    private void OnSchemaItemProcessed(object sender, SchemaItemProcessedEventArgs e)
+    {
+        this.Progress.PerformStep();
+        Response.WriteLine(e.Name);
+    }
+
+    private void OnSourceDatabaseChanged(object sender, EventArgs e)
+    {
+        if (SourceDatabase == null)
+            return;
+        
+        string name = StringUtil.ToPascalCase(SourceDatabase.Database.Name);
+        
+        if(string.IsNullOrEmpty(EdmxFile) || EdmxFile.Equals("Database.edmx"))
+            EdmxFile = name + ".edmx";
+            
+        //if (string.IsNullOrEmpty(ContextNamespace))
+         //   ContextNamespace = name + ".Data";
+    }
+    
+    private void OnEntityNamespaceChanged(object sender, EventArgs e)
+    {
+        //if (string.IsNullOrEmpty(EntityNamespace))
+        //    return;
+            
+        //if (string.IsNullOrEmpty(ContextNamespace))
+        //    ContextNamespace = EntityNamespace;
+    }
+    private void OnContextNamespaceChanged(object sender, EventArgs e)
+    {
+        //if (string.IsNullOrEmpty(ContextNamespace))
+        //    return;
+            
+        //if (string.IsNullOrEmpty(EntityNamespace))
+        //    EntityNamespace = ContextNamespace;
+    }
+
+</script>
+Generating Entity Framework Edmx File...
+<% Generate(); %>
