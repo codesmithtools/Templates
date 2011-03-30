@@ -1,0 +1,19 @@
+﻿<%-- Author: Blake Niemyjski --%>
+<%@ CodeTemplate Language="C#" TargetLanguage="C#" Debug="False" CompilerVersion="v3.5" Encoding="UTF-8" Description="EF Data Context" %>
+
+<%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\Common" %>
+<%@ Assembly Name="Generator.QuickStart" Path="..\..\Common" %>
+<%@ Assembly Name="Generator.Microsoft.Frameworks" Path="..\..\Common" %>
+
+<%@ Import Namespace="CodeSmith.SchemaHelper" %>
+<%@ Import Namespace="Generator.QuickStart" %>
+<%@ Import Namespace="Generator.Microsoft.Frameworks" %>
+
+<%@ Property Name="DataContextName" Type="System.String" Category="2. Class" Optional="False" %>
+<%@ Property Name="ContextNamespace" Type="System.String" Category="2. Class" Optional="False" Description="The namespace to use for the context class files."%>
+namespace <%= ContextNamespace %>
+{
+    partial class <%= DataContextName %>
+    {
+    }
+}

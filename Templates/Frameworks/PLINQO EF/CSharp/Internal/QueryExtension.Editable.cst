@@ -1,0 +1,30 @@
+﻿<%@ CodeTemplate Language="C#" TargetLanguage="C#" Inherits="EntityCodeTemplate" CompilerVersion="v3.5" Encoding="UTF-8" Description="EF Query Extension Class." %>
+<%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\Common" %>
+<%@ Assembly Name="Generator.QuickStart" Path="..\..\Common" %>
+<%@ Assembly Name="Generator.Microsoft.Frameworks" Path="..\..\Common" %>
+
+<%@ Import Namespace="System.Collections.Generic" %>
+<%@ Import Namespace="CodeSmith.SchemaHelper" %>
+<%@ Import Namespace="Generator.QuickStart" %>
+<%@ Import Namespace="Generator.Microsoft.Frameworks" %>
+
+<%@ Property Category="3. Query" Name="QueryNamespace" Type="System.String" Default="" Optional="True" Description="The namespace for the interfaces.  Leave blank to not generate them." %>
+using System;
+
+namespace <%= string.IsNullOrEmpty(QueryNamespace)? EntityNamespace : QueryNamespace %>
+{
+    public static partial class <%= Entity.Name %>Extensions
+    {
+        // Place custom query extensions here.
+
+        #region Query
+
+        // A private class for lazy loading static compiled queries.
+        private static partial class Query
+        {
+            // Place custom compiled queries here. 
+        } 
+
+        #endregion
+    }
+}

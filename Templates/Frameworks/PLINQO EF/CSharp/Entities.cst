@@ -1,0 +1,137 @@
+﻿<%-- Author: Blake Niemyjski --%>
+<%@ CodeTemplate Language="C#" TargetLanguage="C#" OutputType="None" CompilerVersion="v3.5" Encoding="UTF-8" Description="EF Entities" %>
+
+<%@ Assembly Name="CodeSmith.CustomProperties" %>
+<%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\Common" %>
+<%@ Assembly Name="Generator.QuickStart" Path="..\Common" %>
+<%@ Assembly Name="Generator.Microsoft.Frameworks" Path="..\Common" %>
+<%@ Assembly Name="Xml.Schema.Linq" Path="..\Common" %>
+<%@ Assembly Name="SchemaExplorer" %>
+
+<%@ Import Namespace="System.IO" %>
+<%@ Import Namespace="System.Collections.Generic" %>
+<%@ Import Namespace="CodeSmith.CustomProperties" %>
+<%@ Import Namespace="CodeSmith.SchemaHelper" %>
+<%@ Import Namespace="Generator.QuickStart" %>
+<%@ Import Namespace="Generator.Microsoft.Frameworks" %>
+<%@ Import Namespace="SchemaExplorer" %>
+
+<%@ Register Name="Entity" Template="Internal\Entity.Editable.cst" %>
+<%@ Register Name="EntityGenerated" Template="Internal\Entity.Generated.cst" %>
+<%@ Register Name="DataContext" Template="Internal\DataContext.Editable.cst" %>
+<%@ Register Name="DataContextGenerated" Template="Internal\DataContext.Generated.cst" %>
+
+<%@ Property Name="BaseDirectory" Type="System.String" Category="2. Class" Default=".\" Optional="False" Description="The path to the current project" Editor="System.Windows.Forms.Design.FileNameEditor, System.Design" %>
+<%@ Property Name="OutputDirectory" Type="System.String" Category="2. Class" Default=".\Entities" Optional="True" Description="The folder to save the generated entity files." Editor="System.Windows.Forms.Design.FolderNameEditor, System.Design" %>
+
+<%@ Property Name="EdmxFile" Type="System.String" Category="4. Mapping" Optional="False" Description="The full path to the edmx file." Editor="System.Windows.Forms.Design.FileNameEditor, System.Design" %>
+<% 
+Generate(); 
+RegisterReferences();
+%>
+
+<script runat="template">
+
+public void Generate()
+{
+    if(string.IsNullOrEmpty(EdmxFile) || !System.IO.File.Exists(EdmxFile))
+    {
+        Response.WriteLine("The Edmx File does not exist, the entities will not be generated.");
+        return;
+    }
+
+    OutputDirectory = string.IsNullOrEmpty(OutputDirectory) ? BaseDirectory : OutputDirectory;
+    if (!Directory.Exists(this.OutputDirectory))
+        Directory.CreateDirectory(this.OutputDirectory);
+
+    EdmxEntityProvider entityProvider = new EdmxEntityProvider(EdmxFile);
+    EntityManager entityManager = new EntityManager((IEntityProvider)entityProvider);
+
+    CreateCodeFirstEntities(entityManager.Entities, entityProvider.EntityNamespace);
+    CreateCodeFirstObjectContext(entityManager.Entities.Where(e => IsConceptualEntity(e)), entityProvider.EntityNamespace, entityProvider.ContextNamespace, entityProvider.DataContextName, entityProvider.LazyLoadingEnabled);
+}
+
+private void CreateCodeFirstEntities(IEnumerable<IEntity> entities, string entityNamespace)
+{
+    var entityTemplate = this.Create<Entity>();
+    var entityGeneratedTemplate = this.Create<EntityGenerated>();
+
+    foreach (var entity in entities)
+    {
+        var outputFolder = OutputDirectory;
+        if(entity is ComplexEntity)
+        {
+            outputFolder = Path.Combine(OutputDirectory, "ComplexTypes");
+            if (!Directory.Exists(outputFolder))
+                Directory.CreateDirectory(outputFolder);
+        }
+
+        var parentFileName = string.Format("{0}\\{1}.cs", outputFolder, entity.Name);
+        var fileName = string.Format("{0}\\{1}.generated.cs", outputFolder, entity.Name);
+
+
+		// TODO: Add Smart Regeneration Support via NRefactory.
+		if(!File.Exists(parentFileName))
+		{
+            this.CopyPropertiesTo(entityTemplate);
+            entityTemplate.Entity = entity;
+            entityTemplate.EntityNamespace = entityNamespace;
+            Response.WriteLine(parentFileName);
+            entityTemplate.RenderToFile(parentFileName, true);
+		}
+
+        this.CopyPropertiesTo(entityGeneratedTemplate);
+        entityGeneratedTemplate.Entity = entity;
+        entityGeneratedTemplate.EntityNamespace = entityNamespace;
+
+        Response.WriteLine(fileName);
+        entityGeneratedTemplate.RenderToFile(fileName, parentFileName, true);
+    }
+}
+
+private void CreateCodeFirstObjectContext(IEnumerable<IEntity> entities, string entityNamespace, string contextNamespace, string dataContextName, bool lazyLoadingEnabled)
+{
+    var dataContextTemplate = this.Create<DataContext>();
+    var dataContextGeneratedTemplate = this.Create<DataContextGenerated>();
+
+    var parentFileName = string.Format("{0}\\{1}.cs", BaseDirectory, dataContextName);
+    var fileName = string.Format("{0}\\{1}.generated.cs", BaseDirectory, dataContextName);
+
+    if(!File.Exists(parentFileName))
+    {
+        this.CopyPropertiesTo(dataContextTemplate);
+        dataContextTemplate.DataContextName = dataContextName;
+        dataContextTemplate.ContextNamespace = contextNamespace;
+        
+        Response.WriteLine(parentFileName);
+        dataContextTemplate.RenderToFile(parentFileName, true);
+    }
+    
+    this.CopyPropertiesTo(dataContextGeneratedTemplate);
+    dataContextGeneratedTemplate.DataContextName = dataContextName;
+    dataContextGeneratedTemplate.Entities = entities;
+    dataContextGeneratedTemplate.EntityNamespace = entityNamespace;
+    dataContextGeneratedTemplate.ContextNamespace = contextNamespace;
+    dataContextGeneratedTemplate.LazyLoadingEnabled = lazyLoadingEnabled;
+
+    Response.WriteLine(fileName);
+    dataContextGeneratedTemplate.RenderToFile(fileName, parentFileName, true);
+}
+
+private bool IsConceptualEntity(IEntity entity)
+{
+    return (entity is ConceptualEntity);
+}
+
+public void RegisterReferences()
+{
+    RegisterReference("System");
+    RegisterReference("System.Core");
+    RegisterReference("System.ComponentModel.DataAnnotations");
+    RegisterReference("System.Data");
+    RegisterReference("System.Data.Entity");
+    RegisterReference("System.Runtime.Serialization");
+    RegisterReference("System.Security");
+    RegisterReference("System.Xml");
+}
+</script>
