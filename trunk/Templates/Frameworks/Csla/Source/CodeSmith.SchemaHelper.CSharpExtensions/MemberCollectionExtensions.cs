@@ -260,6 +260,8 @@ namespace CodeSmith.SchemaHelper
 
         public static string BuildIdentityKeyEqualityStatements(this List<Member> members, string prefix)
         {
+            if (members == null || members.Count == 0) return string.Empty;
+
             string statement = string.Empty;
 
             foreach (Member member in members)
