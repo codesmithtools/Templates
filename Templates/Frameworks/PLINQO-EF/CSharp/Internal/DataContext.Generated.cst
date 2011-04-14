@@ -34,7 +34,7 @@ using System.Runtime.Serialization;
 [assembly: EdmSchemaAttribute()]
 
 <% foreach(Association association in UniqueAssociations()) {%>
-[assembly: EdmRelationshipAttribute("<%= association.Namespace %>", "<%= association.AssociationKeyName %>", "<%= association.Entity.Name %>", <%= GetRelationshipMultiplicity(association, false) %>, typeof(<%= EntityNamespace %>.<%= association.Entity.Name %>), "<%= association.ForeignEntity.Name %>", <%= GetRelationshipMultiplicity(association, true) %>, typeof(<%= EntityNamespace %>.<%= association.ForeignEntity.Name %>)<%= association.Properties.Count > 0 ? ", true" : string.Empty %>)]
+[assembly: EdmRelationshipAttribute("<%= association.Namespace %>", "<%= association.AssociationKeyName %>", "<%= association.Entity.Name %>", <%= GetRelationshipMultiplicity(association, false) %>, typeof(<%= EntityNamespace %>.<%= association.Entity.Name %>), "<%=  association.ForeignEntity.Name.Equals(association.Entity.Name) ? association.ForeignEntity.Name + "1" : association.ForeignEntity.Name%>", <%= GetRelationshipMultiplicity(association, true) %>, typeof(<%= EntityNamespace %>.<%= association.ForeignEntity.Name %>)<%= association.Properties.Count > 0 ? ", true" : string.Empty %>)]
 <%}%>
 namespace <%= ContextNamespace %>
 {
@@ -87,7 +87,7 @@ namespace <%= ContextNamespace %>
         /// </summary>
 <% } %>
         private ObjectSet<<%= ResolveEntityNamespace() %><%= entity.Name %>> <%= entity.PrivateMemberVariableName %>;
-        <%= entity.TypeAccess %> ObjectSet<<%= ResolveEntityNamespace() %><%= entity.Name %>> <%= entity.PropertyName %>
+        <%= entity.TypeAccess %> ObjectSet<<%= ResolveEntityNamespace() %><%= entity.Name %>> <%= entity.Name %>
         {
             get
             {

@@ -49,16 +49,16 @@ namespace <%= EntityNamespace %>
         /// Create a new <%= Entity.Name %> object.
         /// </summary>
 <% foreach(var property in FactoryProperties()) { %>
-        /// <param name="<%= property.VariableName %>">Initial value of the <%= property.PropertyName %> property.</param>
+        /// <param name="<%= property.VariableName %>">Initial value of the <%= property.Name %> property.</param>
 <% } %>
         public static <%= Entity.Name %> Create<%= Entity.Name %>(<% foreach(var property in FactoryProperties().AsIndexedEnumerable()) { if(!IsComplexProperty(property.Value)) { %>global::<%}%><%= property.Value.SystemType %> <%= property.Value.VariableName %><%if(!property.IsLast) {%>, <% } } %>)
         {
             <%= Entity.Name %> <%= Entity.VariableName %> = new <%= Entity.Name %>();
 <% foreach(var property in FactoryProperties()) { 
     if(!IsComplexProperty(property)) { %>
-            <%= Entity.VariableName %>.<%= property.PropertyName %> = <%= property.VariableName %>;
+            <%= Entity.VariableName %>.<%= property.Name %> = <%= property.VariableName %>;
     <% } else {%>
-            <%= Entity.VariableName %>.<%= property.PropertyName %> = StructuralObject.VerifyComplexObjectIsNotNull(<%= property.VariableName %>, "<%= property.PropertyName %>");
+            <%= Entity.VariableName %>.<%= property.Name %> = StructuralObject.VerifyComplexObjectIsNotNull(<%= property.VariableName %>, "<%= property.Name %>");
 <% } } %>
 
             return <%= Entity.VariableName %>;
@@ -77,7 +77,7 @@ namespace <%= EntityNamespace %>
 <% } %>
         [EdmScalarPropertyAttribute(EntityKeyProperty=<%= ((property.PropertyType & PropertyType.Key) == PropertyType.Key) ? "true" : "false" %>, IsNullable=<%= property.IsNullable.ToString().ToLower() %>)]
         [DataMemberAttribute()]
-        <%= property.TypeAccess %> global::<%= property.SystemType %> <%= property.PropertyName %>
+        <%= property.TypeAccess %> global::<%= property.SystemType %> <%= property.Name %>
         {
            <%= property.GetterAccess %> get
             {
@@ -95,18 +95,18 @@ namespace <%= EntityNamespace %>
                 if (<%= property.PrivateMemberVariableName %> != value)
 <% } %>
                 {
-                    On<%= property.PropertyName %>Changing(value);
-                    ReportPropertyChanging("<%= property.PropertyName %>");
+                    On<%= property.Name %>Changing(value);
+                    ReportPropertyChanging("<%= property.Name %>");
                     <%= property.PrivateMemberVariableName %> = StructuralObject.SetValidValue(value<% if(property.BaseSystemType == "System.Byte[]" || property.BaseSystemType == "System.String") {%>, <%= property.IsNullable || ((property.PropertyType & PropertyType.Computed) == PropertyType.Computed) ? "true" : "false" %><% } %>);
-                    ReportPropertyChanged("<%= property.PropertyName %>");
-                    On<%= property.PropertyName %>Changed();
+                    ReportPropertyChanged("<%= property.Name %>");
+                    On<%= property.Name %>Changed();
                 }
             }
         }
 
         private global::<%= property.SystemType %> <%= property.PrivateMemberVariableName %>;
-        partial void On<%= property.PropertyName %>Changing(global::<%= property.SystemType %> value);
-        partial void On<%= property.PropertyName %>Changed();
+        partial void On<%= property.Name %>Changing(global::<%= property.SystemType %> value);
+        partial void On<%= property.Name %>Changed();
 <% } %>
 
         #endregion
@@ -125,28 +125,28 @@ namespace <%= EntityNamespace %>
         [XmlElement(IsNullable=true)]
         [SoapElement(IsNullable=true)]
         [DataMemberAttribute()]
-        <%= property.TypeAccess %> <%= property.SystemType %> <%= property.PropertyName %>
+        <%= property.TypeAccess %> <%= property.SystemType %> <%= property.Name %>
         {
             get
             {
-                <%= property.PrivateMemberVariableName %> = GetValidValue(<%= property.PrivateMemberVariableName %>, "<%= property.PropertyName %>", false, <%= property.PrivateMemberVariableName %>Initialized);
+                <%= property.PrivateMemberVariableName %> = GetValidValue(<%= property.PrivateMemberVariableName %>, "<%= property.Name %>", false, <%= property.PrivateMemberVariableName %>Initialized);
                 <%= property.PrivateMemberVariableName %>Initialized = true;
                 return <%= property.PrivateMemberVariableName %>;
             }
             set
             {
-                On<%= property.PropertyName %>Changing(value);
-                ReportPropertyChanging("<%= property.PropertyName %>");
-                <%= property.PrivateMemberVariableName %> = SetValidValue(<%= property.PrivateMemberVariableName %>, value, "<%= property.PropertyName %>");
+                On<%= property.Name %>Changing(value);
+                ReportPropertyChanging("<%= property.Name %>");
+                <%= property.PrivateMemberVariableName %> = SetValidValue(<%= property.PrivateMemberVariableName %>, value, "<%= property.Name %>");
                 <%= property.PrivateMemberVariableName %>Initialized = true;
-                ReportPropertyChanged("<%= property.PropertyName %>");
-                On<%= property.PropertyName %>Changed();
+                ReportPropertyChanged("<%= property.Name %>");
+                On<%= property.Name %>Changed();
             }
         }
         private <%= property.SystemType %> <%= property.PrivateMemberVariableName %>;
         private bool <%= property.PrivateMemberVariableName %>Initialized;
-        partial void On<%= property.PropertyName %>Changing(<%= property.SystemType %> value);
-        partial void On<%= property.PropertyName %>Changed();
+        partial void On<%= property.Name %>Changing(<%= property.SystemType %> value);
+        partial void On<%= property.Name %>Changed();
 <% } %>
 
         #endregion
