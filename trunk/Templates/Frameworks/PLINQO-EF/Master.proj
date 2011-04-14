@@ -14,7 +14,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <DeployFolder>\\WEB02\nightly\PLINQO-EF</DeployFolder>
+    <DeployFolder>\\WEB02\nightly\PLINQOEF</DeployFolder>
   </PropertyGroup>
 
   <ItemGroup>
