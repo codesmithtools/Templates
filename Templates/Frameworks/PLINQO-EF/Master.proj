@@ -54,11 +54,11 @@
     <ZipFiles Include="**\*.*" Exclude="@(DefaultExclude)" />
   </ItemGroup>
 
-  <Target Name="Version;Zip">
+  <Target Name="Zip">
     <Zip Files="@(ZipFiles)" ZipFileName="plinqo-ef-r$(Revision).zip" />
   </Target>
 
-  <Target Name="Nightly" DependsOnTargets="Zip">
+  <Target Name="Nightly" DependsOnTargets="Version;Zip">
     <Copy SourceFiles="plinqo-ef-r$(Revision).zip"
           DestinationFiles="$(DeployFolder)\plinqo-ef-r$(Revision).zip" />
   </Target>
