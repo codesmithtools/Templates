@@ -17,6 +17,21 @@
     <DeployFolder>\\WEB02\nightly\PLINQOEF</DeployFolder>
   </PropertyGroup>
 
+  <Target Name="Version">
+    <SvnVersion LocalPath="$(MSBuildProjectDirectory)">
+      <Output TaskParameter="Revision" PropertyName="Revision" />
+    </SvnVersion>
+
+    <Message Text="Revision: $(Revision)"/>
+    
+    <Time>
+      <Output TaskParameter="Month" PropertyName="Month" />
+      <Output TaskParameter="Day" PropertyName="Day" />
+      <Output TaskParameter="Year" PropertyName="Year" />
+    </Time>
+
+  </Target>
+
   <ItemGroup>
     <SvnExclude Include="**\.svn\**" />
 
@@ -39,7 +54,7 @@
     <ZipFiles Include="**\*.*" Exclude="@(DefaultExclude)" />
   </ItemGroup>
 
-  <Target Name="Zip">
+  <Target Name="Version;Zip">
     <Zip Files="@(ZipFiles)" ZipFileName="plinqo-ef-r$(Revision).zip" />
   </Target>
 
