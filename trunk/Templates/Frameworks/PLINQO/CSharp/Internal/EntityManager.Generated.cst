@@ -302,11 +302,10 @@ namespace <%= ManagerNamespace %>
             if (args.Length > 0)
                 args.Append(", ");
             
+            string paramType = GetColumnType(column);
             string paramName = StringUtil.ToCamelCase(column.Member);
             paramName = CleanParamName(paramName);
             
-            string paramType = GetColumnType(column);
-
             args.AppendFormat("{0} {1}",
                 paramType,
                 CSharpKeyWordEscape[paramName]);

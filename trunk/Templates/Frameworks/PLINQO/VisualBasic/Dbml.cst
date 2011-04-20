@@ -1,15 +1,12 @@
 <%@ CodeTemplate Language="VB" TargetLanguage="XML"
     Description="Generate Linq to Sql Dbml File"
     Debug="true" OutputType="None" %>
-<%--VB Version Synced with C# Revision: 191 --%>
 <%@ Assembly Name="System.Design" %>
-<%@ Assembly Name="System.Data" %>
 <%@ Assembly Name="CodeSmith.CustomProperties" %>
 <%@ Assembly Name="SchemaExplorer" %>
 <%@ Assembly Name="Dbml" Path="..\Common" %>
 <%@ Assembly Name="Generator" Path="..\Common" %>
 
-<%@ Import Namespace="System.Data" %>
 <%@ Import Namespace="System.IO" %>
 <%@ Import Namespace="System.Text.RegularExpressions" %>
 <%@ Import Namespace="CodeSmith.CustomProperties" %>
@@ -70,7 +67,7 @@
 
 <%@ Property Category="2.Class" Name="IncludeDeleteOnNull"
     Type="System.Boolean" Default="True" Optional="False"
-    Description="Templates will generate DeleteOnNull Attribute for Associations." %>
+    Description="Templates will generated DeleteOnNull Attribute for Associations." %>
 
 <%@ Property Category="3.Enum" Name="NameColumn"
     Type="CodeSmith.CustomProperties.StringCollection" Optional="True"
@@ -221,7 +218,7 @@ Private Sub OnSourceDatabaseChanged(ByVal sender As Object, ByVal e As EventArgs
     Dim name as String = StringUtil.ToPascalCase(SourceDatabase.Database.Name)
     
     If String.IsNullOrEmpty(DbmlFile) OrElse DbmlFile.Equals("Database.dbml") Then
-        DbmlFile = Path.Combine(CodeTemplateInfo.DirectoryName, name + ".dbml")
+        DbmlFile = name + ".dbml"
     End If
 
     If String.IsNullOrEmpty(ContextNamespace) Then

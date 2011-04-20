@@ -1,4 +1,3 @@
-
 Imports System
 Imports System.ComponentModel
 Imports System.Collections.Generic
@@ -21,6 +20,10 @@ Namespace Manager
         
         Private Shared Sub GetMethods(ByVal databaseSchema As DatabaseSchema, ByVal database As Database, ByVal managerMapping As DataManager)
             For Each manager As EntityManager In managerMapping.Managers
+                If Not(database.Tables.Contains(manager.TableName))
+                    Continue For
+		End If
+		
                 Dim tableMapping As Table = database.Tables(manager.TableName)
                 Dim table As TableSchema
                 Dim parts As String() = manager.TableName.Split("."C)
@@ -66,8 +69,12 @@ Namespace Manager
         Private Shared Sub GetIndexes(ByVal manager As EntityManager, ByVal tableMapping As Table, ByVal table As TableSchema)
             For Each index As IndexSchema In table.Indexes
                 Dim method As ManagerMethod = GetMethodFromColumns(tableMapping, index.MemberColumns)
+                If (method Is Nothing)
+                    Continue For
+                End If
+
                 method.IsUnique = index.IsUnique
-                
+
                 If Not manager.Methods.Contains(method.NameSuffix) Then
                     manager.Methods.Add(method)
                 End If
@@ -79,10 +86,19 @@ Namespace Manager
             method.EntityName = tableMapping.Type.Name
             Dim methodName As String = String.Empty
             For Each column As ColumnSchema In columns
+                If Not(tableMapping.Type.Columns.Contains(column.Name))
+                    Continue For
+                End If
+
                 Dim columnMapping As Column = tableMapping.Type.Columns(column.Name)
                 method.Columns.Add(columnMapping)
                 methodName += columnMapping.Member
             Next
+
+            If (method.Columns.Count = 0)
+                Return Nothing
+            End If
+
             method.NameSuffix = methodName
             Return method
         End Function

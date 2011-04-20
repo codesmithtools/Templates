@@ -98,7 +98,6 @@ namespace <%= Database.EntityNamespace %>
                     dataType = CSharpAlias[dataType];
                 }
                 
-
                 if(sourceAttributes.PropertyMap.ContainsKey(column.Member))
                 {
                     foreach (ICSharpCode.NRefactory.Ast.AttributeSection attributeSection in sourceAttributes.PropertyMap[column.Member].Attributes)

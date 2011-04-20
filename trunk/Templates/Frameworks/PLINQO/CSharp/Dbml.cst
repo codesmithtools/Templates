@@ -21,11 +21,11 @@
     Description="The source database for Linq to Sql." %>
 
 <%@ Property Category="1.Database" Name="IncludeViews"
-    Type="System.Boolean" Default="false" Optional="False"
+    Type="System.Boolean" Default="False" Optional="False"
     Description="Include views in mapping." %>
 
 <%@ Property Category="1.Database" Name="IncludeFunctions"
-    Type="System.Boolean" Default="false" Optional="False"
+    Type="System.Boolean" Default="False" Optional="False"
     Description="Include stored procedures and user functions in mapping." %>
 
 <%@ Property Category="1.Database" Name="IgnoreList"
@@ -47,7 +47,7 @@
     Type="CodeSmith.CustomProperties.StringCollection" Optional="True"
     Description="List of regular expressions to identify an Enum Table."
     Default="(E|e)num$" %>
-    
+
 <%@ Property Category="2.Class" Name="EntityBase"
     Type="System.String" Default="LinqEntityBase" Optional="True"
     Description="The base class for the entity." %>
@@ -67,7 +67,7 @@
     Description="The name of the DataContext."%>
 
 <%@ Property Category="2.Class" Name="IncludeDeleteOnNull"
-    Type="System.Boolean" Default="true" Optional="False"
+    Type="System.Boolean" Default="True" Optional="False"
     Description="Templates will generated DeleteOnNull Attribute for Associations." %>
 
 <%@ Property Category="3.Enum" Name="NameColumn"

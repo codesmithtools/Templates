@@ -1,36 +1,41 @@
 <%@ CodeTemplate Language="VB" TargetLanguage="XML"
-    Description="Generate Linq to Sql Query Extension Class File"
-    Debug="True"  OutputType="None" CompilerVersion="v3.5"%>
+    Description="Generate Linq to Sql Query Extension Class File" 
+    Debug="true" OutputType="None" CompilerVersion="v3.5" %>
 
 <%@ Assembly Name="System.Design" %>
+<%@ Assembly Name="System.Data" %>
+<%@ Assembly Name="Microsoft.Build.Engine" %>
+<%@ Assembly Name="Microsoft.Build.Utilities" %>
+<%@ Assembly Name="CodeSmith.CustomProperties" %>
 <%@ Assembly Name="SchemaExplorer" %>
 <%@ Assembly Name="Dbml" Path="..\Common" %>
 <%@ Assembly Name="Generator" Path="..\Common" %>
 <%@ Assembly Src="Internal\Manager.vb" %>
 
+<%@ Import Namespace="System.Data" %>
 <%@ Import Namespace="System.IO" %>
+<%@ Import Namespace="CodeSmith.CustomProperties" %>
 <%@ Import Namespace="SchemaExplorer" %>
 <%@ Import Namespace="LinqToSqlShared.DbmlObjectModel" %>
 <%@ Import Namespace="LinqToSqlShared.Generator" %>
 <%@ Import Namespace="Manager" %>
 
-<%@ Property Category="1.Database" Name="SourceDatabase"
+<%@ Property Category="1.Database" Name="SourceDatabase" 
     Type="SchemaExplorer.DatabaseSchema"  Optional="False"
     Description="The source database for Linq to Sql." %>
 
-<%@ Property Category="2.Mapping" Name="DbmlFile"
-    Type="System.String" Default="Database.dbml" Optional="False"
-    Description="The full path to the mapping file."
+<%@ Property Category="2.Mapping" Name="DbmlFile" 
+    Type="System.String" Default="Database.dbml" Optional="False" 
+    Description="The full path to the mapping file." 
     Editor="System.Windows.Forms.Design.FileNameEditor, System.Design, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" %>
 
-<%@ Property Category="3.Query" Name="QueryDirectory"
-    Type="System.String" Default="" Optional="false"
-    Description="The folder to save the generated query extension files."
+<%@ Property Category="3.Query" Name="QueryDirectory" 
+    Type="System.String" Default="Queries" Optional="false" 
+    Description="The folder to save the generated query extension files." 
     Editor="System.Windows.Forms.Design.FolderNameEditor, System.Design, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" %>
 
-
-<%@ Register Name="QueryExtensionGeneratedClass"
-    Template="Internal\QueryExtension.Generated.cst"
+<%@ Register Name="QueryExtensionGeneratedClass" 
+    Template="Internal\QueryExtension.Generated.cst" 
     MergeProperties="true" ExcludeProperties="Database, DataManager,EntityManager,Table" %>
 
 <script runat="template">

@@ -1,14 +1,16 @@
 <%@ CodeTemplate Language="VB" TargetLanguage="XML"
-    Description="Generate Linq to Sql Class File"
+    Description="Generate Linq to Sql Class File" 
     Debug="true" OutputType="None" CompilerVersion="v3.5" %>
 
 <%@ Assembly Name="System.Design" %>
 <%@ Assembly Name="CodeSmith.CustomProperties" %>
-<%@ Assembly Name="SchemaExplorer" %><%@ Assembly Name="Dbml" Path="..\Common" %>
+<%@ Assembly Name="SchemaExplorer" %>
+<%@ Assembly Name="Dbml" Path="..\Common" %>
 <%@ Assembly Name="Generator" Path="..\Common" %>
 <%@ Assembly Src="Internal\Manager.vb" %>
 
 <%@ Import Namespace="System.IO" %>
+<%@ Import Namespace="CodeSmith.CustomProperties" %>
 <%@ Import Namespace="SchemaExplorer" %>
 <%@ Import Namespace="LinqToSqlShared.DbmlObjectModel" %>
 <%@ Import Namespace="LinqToSqlShared.Generator" %>
@@ -21,41 +23,40 @@
 <%@ Property Category="2.Class" Name="Framework"
     Type="FrameworkEnum" Default="v35_SP1" Optional="False"
     Description="Include Serialization attributes and what kind." %>
-
-<%@ Property Category="2.Mapping" Name="DbmlFile"
-    Type="System.String" Default="Database.dbml" Optional="False"
-    Description="The full path to the mapping file."
+    
+<%@ Property Category="2.Mapping" Name="DbmlFile" 
+    Type="System.String" Default="Database.dbml" Optional="False" 
+    Description="The full path to the mapping file." 
     Editor="System.Windows.Forms.Design.FileNameEditor, System.Design, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" %>
 
-<%@ Property Category="3.Manager" Name="ManagerDirectory"
-    Type="System.String" Default="" Optional="false"
-    Description="The folder to save the generated manager files."
+<%@ Property Category="3.Manager" Name="ManagerDirectory" 
+    Type="System.String" Default="Managers" Optional="false" 
+    Description="The folder to save the generated manager files." 
     Editor="System.Windows.Forms.Design.FolderNameEditor, System.Design, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" %>
 
-<%@ Property Category="3.Manager" Name="DataContextFile"
-    Type="System.String" Default="" Optional="True"
-    Description="The path to the DataContext file to add managers to."
+<%@ Property Category="3.Manager" Name="DataContextFile" 
+    Type="System.String" Default="" Optional="True" 
+    Description="The path to the DataContext file to add managers to." 
     Editor="System.Windows.Forms.Design.FileNameEditor, System.Design, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" %>
 
-<%@ Property Category="3.Manager" Name="DataManagerName"
-    Type="System.String" Default="" Optional="True"
+<%@ Property Category="3.Manager" Name="DataManagerName" 
+    Type="System.String" Default="" Optional="True" 
     Description="The name of the data manager class." %>
 
-
-<%@ Register Name="EntityManagerEditableClass"
-    Template="Internal\EntityManager.Editable.cst"
+<%@ Register Name="EntityManagerEditableClass" 
+    Template="Internal\EntityManager.Editable.cst" 
     MergeProperties="False" %>
 
-<%@ Register Name="DataManagerClass"
-    Template="Internal\DataManager.cst"
+<%@ Register Name="DataManagerClass" 
+    Template="Internal\DataManager.cst" 
     MergeProperties="True" ExcludeProperties="Database, DataManager" %>
 
-<%@ Register Name="DataContextManagerClass"
-    Template="Internal\DataContext.Manager.cst"
+<%@ Register Name="DataContextManagerClass" 
+    Template="Internal\DataContext.Manager.cst" 
     MergeProperties="True" ExcludeProperties="Database, DataManager" %>
 
-<%@ Register Name="EntityManagerGeneratedClass"
-    Template="Internal\EntityManager.Generated.cst"
+<%@ Register Name="EntityManagerGeneratedClass" 
+    Template="Internal\EntityManager.Generated.cst" 
     MergeProperties="True" ExcludeProperties="Database, DataManager,EntityManager,Table" %>
 
 <script runat="template">
@@ -89,10 +90,11 @@
     CreateDataManagerClass(database, databaseManager)
     CreateDataContextManagerClass(database, databaseManager)
     CreateEntityManagerClasses(database, databaseManager)
-
-    Me.RegisterReference(Path.GetFullPath(Path.Combine( _
-            Me.CodeTemplateInfo.DirectoryName, _
-            "..\Common\CodeSmith.Data.dll")))
+    If Me.Framework = FrameworkEnum.v40 Then
+	Me.RegisterReference(Path.GetFullPath(Path.Combine(Me.CodeTemplateInfo.DirectoryName, "..\Common\v4.0\CodeSmith.Data.dll")))
+    Else
+	Me.RegisterReference(Path.GetFullPath(Path.Combine(Me.CodeTemplateInfo.DirectoryName, "..\Common\v3.5\CodeSmith.Data.dll")))
+    End If
 End Sub
 
 Public Sub CreateEntityManagerClasses(ByVal database As Database, ByVal dataManager As DataManager)
@@ -111,26 +113,26 @@ Public Sub CreateEntityManagerClasses(ByVal database As Database, ByVal dataMana
         Dim watch As Stopwatch = Stopwatch.StartNew()
 
         Dim className As String = manager.ManagerName
+	Dim table As Table = database.Tables(manager.TableName)
 
         Dim parentFileName As String = className + ".vb"
         parentFileName = Path.Combine(ManagerDirectory, parentFileName)
 
         If Not File.Exists(parentFileName) Then
             p.ClassName = className
+	    p.Table = table
             Response.WriteLine(parentFileName)
             p.RenderToFile(parentFileName, False)
         End If
 
         Dim fileName As String = className + ".Generated.vb"
         fileName = Path.Combine(ManagerDirectory, fileName)
-
-        Dim table As Table = database.Tables(manager.TableName)
-
+            
         Debug.WriteLine(String.Format("Creating Entity Manager Class '{0}' ...", className))
         t.EntityManager = manager
         t.Table = table
         t.RenderToFile(fileName, parentFileName, True)
-
+            
         Debug.WriteLine(String.Format("Created '{0}' in {1} ms.", className, watch.Elapsed.TotalMilliseconds.ToString()))
 
         Me.Progress.PerformStep()

@@ -1,4 +1,4 @@
-<%@ CodeTemplate Language="C#" TargetLanguage="XML"
+<%@ CodeTemplate Language="C#" TargetLanguage="Text"
     Description="Generate Linq to Sql Class File"
     Debug="True" OutputType="None" CompilerVersion="v3.5"%>
 
@@ -72,8 +72,6 @@
 <%@ Register Name="EnumClass"
     Template="Internal\Enums.cst"
     MergeProperties="False" %>
-
-
 
 <script runat="template">
     private List<string> generatedEntities = new List<string>();
