@@ -4,11 +4,16 @@
 <%@ Property Category="2.Class" Name="ClassName" 
     Type="System.String" Default="" Optional="False" 
     Description="The name of the class."%>
+<%@ Assembly Name="Dbml" Path="..\..\Common" %>
+<%@ Import Namespace="LinqToSqlShared.DbmlObjectModel" %>
 
 <%@ Property Category="2.Class" Name="ClassNamespace" 
     Type="System.String" Default="" Optional="False" 
     Description="The namespace to use for the generated class files."%>
 
+<%@ Property Category="2.Class" Name="Table" 
+    Type="LinqToSqlShared.DbmlObjectModel.Table" Optional="False" 
+    Description="Must be set by parent template" %>
 Imports System
 Imports System.Collections.Generic
 Imports System.Data.Linq
@@ -18,7 +23,7 @@ Imports CodeSmith.Data.Rules
 Imports CodeSmith.Data.Rules.Validation
 
 Namespace <%= ClassNamespace %>
-    Public Partial Class <%= ClassName %>
+     Partial <%= Naming.GetModifier(Table.Type.AccessModifier, Table.Type.Modifier) %> Class <%= ClassName %>
         #Region "Query"
         ' A private class for lazy loading static compiled queries.
         Private Partial Class Query

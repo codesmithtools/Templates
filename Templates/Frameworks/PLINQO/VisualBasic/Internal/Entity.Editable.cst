@@ -1,32 +1,40 @@
 ﻿<%@ CodeTemplate Language="VB" TargetLanguage="VB" Debug="True" Encoding="UTF-8"
-    Description="Linq to Sql Entity Class." %>
+    Description="Linq to Sql Entity Class." CompilerVersion="v3.5" %>
 
 <%@ Assembly Name="ICSharpCode.NRefactory, Version=4.0.0.9999, Culture=neutral, PublicKeyToken=efe927acf176eea2, processorArchitecture=MSIL" Path="..\..\Common" %>
 <%@ Assembly Name="CodeSmith.InsertClassMergeStrategy" Path="..\..\Common" %>
 <%@ Assembly Name="CodeSmith.CodeParser" Path="..\..\Common" %>
 <%@ Assembly Name="Generator" Path="..\..\Common" %>
-<%@ Assembly Name="Dbml" Path="..\..\Common"%>
+<%@ Assembly Name="Dbml" Path="..\..\Common" %>
 
 <%@ Import Namespace="System.Text" %>
 <%@ Import Namespace="System.Text.RegularExpressions" %>
 <%@ Import Namespace="LinqToSqlShared.DbmlObjectModel" %>
 <%@ Import Namespace="LinqToSqlShared.Generator" %>
 
-<%@ Property Category="1.Mapping" Name="Database" 
-    Type="LinqToSqlShared.DbmlObjectModel.Database" Optional="False" 
+<%@ Property Category="1.Mapping" Name="Database"
+    Type="LinqToSqlShared.DbmlObjectModel.Database" Optional="False"
     Description="Database instance. Must be set by parent template" %>
 
-<%@ Property Category="1.Mapping" Name="Type" 
-    Type="LinqToSqlShared.DbmlObjectModel.Type" Optional="False" 
+<%@ Property Category="1.Mapping" Name="Type"
+    Type="LinqToSqlShared.DbmlObjectModel.Type" Optional="False"
     Description="The Type instance for this entity. Must be set by parent template" %>
-    
+
 <%@ Property Category="2.Class" Name="Framework"
     Type="LinqToSqlShared.Generator.FrameworkEnum" Default="v35_SP1" Optional="False"
     Description="Which version of the .Net Framework is being generated for." %>
+    
+<%@ Property Category="2.Class" Name="InterfaceNamespace" 
+    Type="System.String" Default="" Optional="True" 
+    Description="The namespace for the interfaces.  Leave blank to not generate them." %>
+
+<%@ Property Name="EnumDatabase"
+    Type="LinqToSqlShared.Generator.DbmlEnum.Database" Optional="True"
+    Description="Enum Collection for Database." %>
 
 <%@ Property Category="2.Class" Name="ExistingFile"
     Type="CodeFileParser" Optional="True" %>
-
+    
 <%@ Property Category="2.Class" Name="EntityBase"
     Type="System.String" Default="" Optional="True"
     Description="The base class for the entity." %>
@@ -41,24 +49,22 @@
     
 Imports System
 Imports System.Linq
+Imports System.Data.Linq
 Imports System.Collections.Generic
 Imports System.Text
-Imports System.Data.Linq
 Imports System.ComponentModel.DataAnnotations
 Imports CodeSmith.Data.Attributes
 Imports CodeSmith.Data.Rules
 
 Namespace <%= Database.EntityNamespace %>
     
-    <%= Naming.GetModifier(Type.AccessModifier, Type.Modifier) %> Partial Class <%= VBKeywordEscape(Type.Name) %>
+    <%= StringUtil.ToPascalCase(Naming.GetModifier(Type.AccessModifier, Type.Modifier)) %> Partial Class <%= VBKeywordEscape(Type.Name) %>
         
-        ' For more information about the features contained in this class, please visit our GoogleCode Wiki at...
-        ' http://code.google.com/p/codesmith/wiki/PLINQO
-        ' Also, you can watch our Video Tutorials at...
-        ' http://community.codesmithtools.com/
+        ' Place custom code here.
         
         #Region "Metadata"
-        
+        ' For more information about how to use the metadata class visit:
+        ' http://www.plinqo.com/metadata.ashx
         <CodeSmith.Data.Audit.Audit()> _
 <% If Not String.IsNullOrEmpty(EntityBase) AndAlso EntityBase <> Database.EntityBase Then %>
         Friend Shadows Class Metadata
@@ -66,13 +72,27 @@ Namespace <%= Database.EntityNamespace %>
 <% Else %>
         Friend Class Metadata
 <% End If %>
-            ' Only Attributes in the class will be preserved.
+            ' WARNING: Only attributes inside of this class will be preserved.
             
 <%          Dim sourceAttributes As AttributeSectionVisitor = new AttributeSectionVisitor()
             If ExistingFile IsNot Nothing Then
                 ExistingFile.CompilationUnit.AcceptVisitor(sourceAttributes, "Metadata")
             End If 
             For Each column As Column In Type.Columns
+		Dim dataType As String = column.Type
+
+		Dim isVersion As Boolean = column.IsVersion = True AndAlso dataType.Equals("System.Data.Linq.Binary")
+
+		Dim enumType As LinqToSqlShared.Generator.DbmlEnum.Enum = If(EnumDatabase IsNot Nothing, EnumDatabase.Enums.FirstOrDefault(Function(e) e.Name = column.Type), Nothing)
+
+		If column.IsDelayLoaded = True AndAlso column.IsPrimaryKey = False Then
+			dataType = VbAlias(dataType)
+		ElseIf column.CanBeNull = True AndAlso (CommonUtility.IsNullableType(dataType) OrElse enumType IsNot Nothing) Then
+			dataType = String.Format("{0}?", VbAlias(dataType))
+		Else
+			dataType = VbAlias(dataType)
+		End If
+		
                 If sourceAttributes.PropertyMap.ContainsKey(column.Member) Then
                     For Each attributeSection As ICSharpCode.NRefactory.Ast.AttributeSection In sourceAttributes.PropertyMap(column.Member).Attributes %>
             <%= ExistingFile.GetSection(attributeSection.StartLocation, attributeSection.EndLocation) %> _
@@ -84,9 +104,11 @@ Namespace <%= Database.EntityNamespace %>
                         Else If (column.Type.Contains("DateTime")) Then
                             If (column.Member.Contains("Create")) Then
                                 Response.WriteLine("            <Now(EntityState.New)> _")
+                                Response.WriteLine("            <CodeSmith.Data.Audit.NotAudited> _")
                             Else If (column.Member.Contains("Modify") OrElse column.Member.Contains("Modified") _
                             OrElse column.Member.Contains("Edit")) Then
                                 Response.WriteLine("            <Now(EntityState.Dirty)> _")
+                                Response.WriteLine("            <CodeSmith.Data.Audit.NotAudited> _")
                             End If
                         End If
                     End If

@@ -13,7 +13,7 @@
     Description="The names of the class."%>
     
 <%@ Property Category="2.Class" Name="IncludeDataContract"
-     Type="System.Boolean" Default="true" Optional="False"
+     Type="System.Boolean" Default="True" Optional="False"
      Description="Include WCF DataContract attributes." %>
     
 <%@ Property Category="2.Class" Name="IncludeXmlSerialization"
