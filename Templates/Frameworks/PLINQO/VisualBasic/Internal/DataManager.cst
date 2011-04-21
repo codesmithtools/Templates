@@ -53,7 +53,7 @@ Namespace <%= ManagerNamespace %>
         End Sub
         #Region "Managers"
 <% For Each m As EntityManager In DataManager.Managers %>
-	<% Dim table As Table = Database.Tables(m.TableName) %>    
+    <% Dim table As Table = Database.Tables(m.TableName) %>
         Private  <%= m.FieldName %> As <%= m.ManagerName %>
 
         ''' <summary>
@@ -61,9 +61,9 @@ Namespace <%= ManagerNamespace %>
         ''' </summary>
         <%= StringUtil.ToPascalCase(Naming.GetModifier(table.AccessModifier, table.Modifier)) %> ReadOnly Property <%= VBKeywordEscape(m.PropertyName) %> As <%= m.ManagerName %>
             Get
-		If (<%= m.FieldName %> Is Nothing) Then
-                    <%= m.FieldName %> = New <%= m.ManagerName %>(Me);
-		End If
+        If (<%= m.FieldName %> Is Nothing) Then
+                    <%= m.FieldName %> = New <%= m.ManagerName %>(Me)
+        End If
 
                 Return <%= m.FieldName %>
             End Get
