@@ -365,9 +365,9 @@ Next %>
 <% If IncludeXmlSerialization Then %>
 
         ''' <summary>
-        ''' Used by the <see cref="System.Xml.Serialization.XmlSerializer"/> to determine if <see cref="<%= a.Member %>"/> should be serialized.
+        ''' Used by the <see cref="System.Xml.Serialization.XmlSerializer"/> to determine if <see cref="<%= VBKeywordEscape(a.Member) %>"/> should be serialized.
         ''' </summary>
-        ''' <returns><c>true</c> if <see cref="<%= a.Member %>"/> should be serialized; otherwise, <c>false</c>.</returns>
+        ''' <returns><c>true</c> if <see cref="<%= VBKeywordEscape(a.Member) %>"/> should be serialized; otherwise, <c>false</c>.</returns>
         <%= GeneratedCodeAttribute %>
         Public Function ShouldSerialize<%= a.Member %>() As Boolean
             Return <%= a.Storage %>.HasLoadedOrAssignedValue
@@ -425,9 +425,9 @@ Next %>
 <% If IncludeXmlSerialization Then %>
 
         ''' <summary>
-        ''' Used by the <see cref="System.Xml.Serialization.XmlSerializer"/> to determine if <see cref="<%= a.Member %>"/> should be serialized.
+        ''' Used by the <see cref="System.Xml.Serialization.XmlSerializer"/> to determine if <see cref="<%= VBKeywordEscape(a.Member) %>"/> should be serialized.
         ''' </summary>
-        ''' <returns><c>true</c> if <see cref="<%= a.Member %>"/> should be serialized; otherwise, <c>false</c>.</returns>
+        ''' <returns><c>true</c> if <see cref="<%= VBKeywordEscape(a.Member) %>"/> should be serialized; otherwise, <c>false</c>.</returns>
         <%= GeneratedCodeAttribute %>
         Public Function ShouldSerialize<%= a.Member %>() As Boolean
             Return <%= a.Storage %>.HasLoadedOrAssignedValues
@@ -544,23 +544,23 @@ Next %>
         dataType = String.Format("Nullable(Of {0})", dataType)
     End If
 %>
-        ''' <summary>Called when <see cref="<%= c.Member %>"/> is changing.</summary>
+        ''' <summary>Called when <see cref="<%= VBKeywordEscape(c.Member) %>"/> is changing.</summary>
         ''' <param name="value">The new value.</param>
         <%= GeneratedCodeAttribute %>
         Partial Private Sub On<%= c.Member %>Changing(ByVal value As <%= dataType %>)
         End Sub
-        ''' <summary>Called after <see cref="<%= c.Member %>"/> has Changed.</summary>
+        ''' <summary>Called after <see cref="<%= VBKeywordEscape(c.Member) %>"/> has Changed.</summary>
         <%= GeneratedCodeAttribute %>
         Partial Private Sub On<%= c.Member %>Changed()
         End Sub
 <% Next ' foreach %>
 <% For Each a As Association in Type.EntityRefAssociations %>
-        ''' <summary>Called when <see cref="<%= a.Member %>"/> is changing.</summary>
+        ''' <summary>Called when <see cref="<%= VBKeywordEscape(a.Member) %>"/> is changing.</summary>
         ''' <param name="value">The new value.</param>
         <%= GeneratedCodeAttribute %>
         Partial Private Sub On<%= a.Member %>Changing(ByVal value As <%= a.Type %>)
         End Sub
-        ''' <summary>Called after <see cref="<%= a.Member %>"/> has Changed.</summary>
+        ''' <summary>Called after <see cref="<%= VBKeywordEscape(a.Member) %>"/> has Changed.</summary>
         <%= GeneratedCodeAttribute %>
         Partial Private Sub On<%= a.Member %>Changed()
         End Sub

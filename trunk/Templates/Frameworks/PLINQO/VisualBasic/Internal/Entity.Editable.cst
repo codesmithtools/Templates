@@ -88,7 +88,7 @@ Namespace <%= Database.EntityNamespace %>
 		If column.IsDelayLoaded = True AndAlso column.IsPrimaryKey = False Then
 			dataType = VbAlias(dataType)
 		ElseIf column.CanBeNull = True AndAlso (CommonUtility.IsNullableType(dataType) OrElse enumType IsNot Nothing) Then
-			dataType = String.Format("{0}?", VbAlias(dataType))
+			dataType = String.Format("Nullable(Of {0})", VbAlias(dataType))
 		Else
 			dataType = VbAlias(dataType)
 		End If
