@@ -112,10 +112,12 @@ namespace LinqToSqlShared.Generator
 
         public bool IsEnum(TableSchema table)
         {
-            return !IsIgnored(table.FullName)                                   // 1) Is not ignored.
+            // NOTE: These were reordered on 4/25/2011 by Blake. I profiled this code and noticed that the IsRegexMatch and IsIgnored is an expensive call.
+            // My goal was to check the two other clauses and see if they validate before checking the regex to save a regex call.
+            return table.HasPrimaryKey                                          // 1) Has a Primary Key...
+                && table.PrimaryKey.MemberColumns.Count == 1                    // 2) ...that is a single column...
+                && !IsIgnored(table.FullName)                                   // 3) Is not ignored.
                 && IsRegexMatch(table.Name, EnumExpressions)                    // 2) Matches the enum regex.
-                && table.PrimaryKey != null                                     // 3) Has a Primary Key...
-                && table.PrimaryKey.MemberColumns.Count == 1                    // 4) ...that is a single column...
                 && IsEnumSystemType(table.PrimaryKey.MemberColumns[0])          // 5) ...of a number type.
                 && !string.IsNullOrEmpty(GetEnumNameColumnName(table));         // 6) Contains a column for name.
                 

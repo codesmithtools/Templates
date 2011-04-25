@@ -21,6 +21,18 @@ namespace LinqToSqlShared.DbmlObjectModel
             private List<string> functionIds;
             private bool isTableType;
 
+            private static readonly string[] _validDatabaseAttributes = new[] { "Name", "Class", "EntityNamespace", "ContextNamespace", "BaseType", "Provider", "AccessModifier", "Modifier", "ExternalMapping", "EntityBase", "Serialization" };
+            private static readonly string[] _validTableAttributes = new[] { "Name", "Member", "AccessModifier", "Modifier" };
+            private static readonly string[] _validTypeAttributes = new[] { "IdRef", "Name", "Id", "InheritanceCode", "IsInheritanceDefault", "AccessModifier", "Modifier" };
+            private static readonly string[] _validColumnAttributes = new[] { "Name", "Type", "Member", "Storage", "AccessModifier", "Modifier", "AutoSync", "IsDbGenerated", "IsReadOnly", "IsPrimaryKey", "CanBeNull", "UpdateCheck", "Expression", "IsDiscriminator", "IsVersion", "IsDelayLoaded", "DbType" };
+            
+            private static readonly string[] _validFunctionAttributes = new[] { "Name", "Method", "Id", "AccessModifier", "Modifier", "HasMultipleResults", "IsComposable" };
+            private static readonly string[] _validParameterAttributes = new[] { "Name", "Parameter", "Type", "DbType", "Direction" };
+            private static readonly string[] _validReturnAttributes = new[] { "Type", "DbType" };
+            private static readonly string[] _validTableFunctionAttributes = new[] { "FunctionId", "AccessModifier" };
+            private static readonly string[] _validTableFunctionParameterAttributes = new[] { "Parameter", "Member", "Version" };
+            private static readonly string[] _validTableFunctionReturnAttributes = new[] { "Member" };
+         
             private static void AssertEmptyElement(XmlReader reader)
             {
                 if (reader.IsEmptyElement)
@@ -181,14 +193,7 @@ namespace LinqToSqlShared.DbmlObjectModel
 
             private static Column ReadColumn(XmlTextReader reader)
             {
-                ValidateAttributes(reader, new[]
-                                               {
-                                                   "Name", "Type", "Member", "Storage", "AccessModifier", "Modifier",
-                                                   "AutoSync", "IsDbGenerated", "IsReadOnly", "IsPrimaryKey",
-                                                   "CanBeNull", "UpdateCheck", "Expression", "IsDiscriminator",
-                                                   "IsVersion", "IsDelayLoaded",
-                                                   "DbType"
-                                               });
+                ValidateAttributes(reader, _validColumnAttributes);
 
                 var column = new Column("")
                                  {
@@ -298,14 +303,7 @@ namespace LinqToSqlShared.DbmlObjectModel
 
             private Database ReadDatabase(XmlTextReader reader)
             {
-                ValidateAttributes(reader,
-                                   new[]
-                                       {
-                                           "Name", "Class", "EntityNamespace", "ContextNamespace", "BaseType",
-                                           "Provider",
-                                           "AccessModifier", "Modifier", "ExternalMapping", "EntityBase",
-                                           "Serialization"
-                                       });
+                ValidateAttributes(reader, _validDatabaseAttributes);
 
                 var database = new Database
                                    {
@@ -398,12 +396,7 @@ namespace LinqToSqlShared.DbmlObjectModel
 
             private Function ReadFunction(XmlTextReader reader)
             {
-                ValidateAttributes(reader,
-                                   new[]
-                                       {
-                                           "Name", "Method", "Id", "AccessModifier", "Modifier", "HasMultipleResults",
-                                           "IsComposable"
-                                       });
+                ValidateAttributes(reader, _validFunctionAttributes);
 
                 var function = new Function("");
                 currentTableType = null;
@@ -491,7 +484,7 @@ namespace LinqToSqlShared.DbmlObjectModel
 
             private static Parameter ReadParameter(XmlTextReader reader)
             {
-                ValidateAttributes(reader, new[] {"Name", "Parameter", "Type", "DbType", "Direction"});
+                ValidateAttributes(reader, _validParameterAttributes);
                 var parameter = new Parameter("", "");
 
                 string attribute = reader.GetAttribute("Name");
@@ -527,7 +520,7 @@ namespace LinqToSqlShared.DbmlObjectModel
 
             private static Return ReadReturn(XmlTextReader reader)
             {
-                ValidateAttributes(reader, new[] {"Type", "DbType"});
+                ValidateAttributes(reader, _validReturnAttributes);
                 var r = new Return("");
 
                 string attribute = reader.GetAttribute("Type");
@@ -542,7 +535,7 @@ namespace LinqToSqlShared.DbmlObjectModel
 
             private Table ReadTable(XmlTextReader reader)
             {
-                ValidateAttributes(reader, new[] {"Name", "Member", "AccessModifier", "Modifier"});
+                ValidateAttributes(reader, _validTableAttributes);
                 var table = new Table("", new Type(""));
 
                 string attribute = reader.GetAttribute("Name");
@@ -639,7 +632,7 @@ namespace LinqToSqlShared.DbmlObjectModel
 
             private TableFunction ReadTableFunction(XmlTextReader reader)
             {
-                ValidateAttributes(reader, new[] {"FunctionId", "AccessModifier"});
+                ValidateAttributes(reader, _validTableFunctionAttributes);
                 var item = new TableFunction();
 
                 string attribute = reader.GetAttribute("FunctionId");
@@ -715,7 +708,7 @@ namespace LinqToSqlShared.DbmlObjectModel
 
             private static TableFunctionParameter ReadTableFunctionParameter(XmlTextReader reader)
             {
-                ValidateAttributes(reader, new[] {"Parameter", "Member", "Version"});
+                ValidateAttributes(reader, _validTableFunctionParameterAttributes);
                 var parameter = new TableFunctionParameter("", "");
 
                 string attribute = reader.GetAttribute("Parameter");
@@ -747,7 +740,7 @@ namespace LinqToSqlShared.DbmlObjectModel
 
             private static TableFunctionReturn ReadTableFunctionReturn(XmlTextReader reader)
             {
-                ValidateAttributes(reader, new[] {"Member"});
+                ValidateAttributes(reader, _validTableFunctionReturnAttributes);
                 var r = new TableFunctionReturn();
                 string attribute = reader.GetAttribute("Member");
                 if (attribute == null)
@@ -760,12 +753,7 @@ namespace LinqToSqlShared.DbmlObjectModel
 
             private Type ReadType(XmlTextReader reader)
             {
-                ValidateAttributes(reader,
-                                   new[]
-                                       {
-                                           "IdRef", "Name", "Id", "InheritanceCode", "IsInheritanceDefault",
-                                           "AccessModifier", "Modifier"
-                                       });
+                ValidateAttributes(reader, _validTypeAttributes);
 
                 string attribute = reader.GetAttribute("IdRef");
                 if (attribute != null)
@@ -902,7 +890,7 @@ namespace LinqToSqlShared.DbmlObjectModel
                 for (int i = 0; i < reader.AttributeCount; i++)
                 {
                     reader.MoveToAttribute(i);
-                    if ((IsInNamespace(reader) && (reader.LocalName != "xmlns")) && !list.Contains(reader.LocalName))
+                    if (((reader.LocalName != "xmlns") && IsInNamespace(reader)) && !list.Contains(reader.LocalName))
                     {
                         throw Error.SchemaUnrecognizedAttribute(
                             string.Format(CultureInfo.InvariantCulture, "{0}{1}{2}",
