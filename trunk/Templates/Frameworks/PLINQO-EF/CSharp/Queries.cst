@@ -42,7 +42,7 @@ public void Generate()
 
     var entityProvider = new EdmxEntityProvider(EdmxFile);
     var entityManager = new EntityManager((IEntityProvider)entityProvider);
-    foreach(var entity in entityManager.Entities.Where(e => IsConceptualEntity(e)))
+    foreach(var entity in entityManager.Entities.Where(e => IsConceptualEntity(e) && !IsViewEntity(e)))
     {
         var className = string.Concat(entity.Name, "Extensions");
         var parentFileName = Path.Combine(QueryDirectory, string.Concat(className, ".cs"));
@@ -63,10 +63,17 @@ public void Generate()
         queryExtensionsGenerated.RenderToFile(fileName, parentFileName, true);
     }
 }
+
 private bool IsConceptualEntity(IEntity entity)
 {
     return (entity is ConceptualEntity);
 }
+
+private bool IsViewEntity(IEntity entity)
+{
+    return entity.ExtendedProperties.ContainsKey(EdmxConstants.IsViewEntityCustomAttribute);
+}
+
 public void RegisterReferences()
 {
     RegisterReference(Path.Combine(CodeTemplateInfo.DirectoryName,"..\\Common\\v4.0\\CodeSmith.Data.dll"));
