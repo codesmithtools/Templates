@@ -1,0 +1,150 @@
+<%-- Author: Tom DuPont --%>
+<%@ CodeTemplate Language="C#" TargetLanguage="XML" Debug="False" CompilerVersion="v3.5"
+    Src="NHibernateHelper.cs" Inherits="NHibernateHelper"
+    Description="Generates a HBM for PLINQO for NHibernate." %>
+
+<%@ Property Category="1. Source" Name="SourceEntity" Type="CodeSmith.SchemaHelper.IEntity"
+    Optional="False"
+    Description="SourceEntity" %>
+<%@ Property Category="2. Assembly" Name="AssemblyName" Type="System.String"
+    Optional="False" Default="" 
+    Description="The name of the Assembly that will contain the business objects." %>
+<%@ Property Category="3. Namespaces" Name="EntityNamespace" Type="System.String"
+    Optional="False" Default="" 
+    Description="The desired Namespace for the Business Objects." %>
+
+<%@ Assembly Name="System.Xml.Linq" %>
+<%@ Assembly Name="SchemaExplorer" %>
+<%@ Assembly Name="CodeSmith.SchemaHelper" Path="../../Common/SchemaHelper" %>
+<%@ Assembly Name="CodeSmith.SchemaHelper.NHibernate" Path="../../Common/SchemaHelper" %>
+
+<%@ Import Namespace="SchemaExplorer" %>
+<%@ Import Namespace="System.Collections.Generic" %>
+<%@ Import Namespace="System.Text" %>
+<%@ Import Namespace="System.Xml.Linq" %>
+<%@ Import Namespace="CodeSmith.SchemaHelper" %>
+<%@ Import Namespace="CodeSmith.SchemaHelper.NHibernate" %>
+<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" namespace="<%= SourceEntity.Namespace %>" assembly="<%= AssemblyName %>">
+    <class name="<%= SourceEntity.Name %>" table="<%= SourceEntity.GetSafeName() %>" <%= GetAttributes(SourceEntity) %>>
+    <% // Primary Key %>
+    <% if(SourceEntity.Key.IsComposite) { %>
+        <composite-id>
+        <% foreach(IProperty property in SourceEntity.Key.Properties) { %>
+            <key-property name="<%= property.Name %>" column="<%= property.GetSafeName() %>" type="<%= property.ExtendedProperties[NHibernateUtilities.NHibernateType] %>" <%= GetAttributes(property) %>/> 
+        <% } %>
+        </composite-id>
+    <% } else { %>
+        <% IProperty property = SourceEntity.Key.Properties.First(); %>
+        <id name="<%= property.Name %>" column="<%= property.GetSafeName() %>" type="<%= property.ExtendedProperties[NHibernateUtilities.NHibernateType] %>" <%= GetAttributes(property) %>>
+            <generator class="<%= property.ExtendedProperties[NHibernateUtilities.GeneratorClass] %>" />
+        </id>
+    <% } %>
+    <% // Version %>
+    <% IProperty rowVersion = GetRowVersion(); %>
+    <% if (rowVersion != null) { %>
+        <version name="<%= rowVersion.Name %>" column="<%= rowVersion.GetSafeName() %>" type="<%= rowVersion.ExtendedProperties[NHibernateUtilities.NHibernateType] %>" <%= GetAttributes(rowVersion) %>/>
+    <% } %>
+    <% // Properties %>
+    <% foreach(IProperty property in SourceEntity.Properties) { %>
+        <% if(IsKey(property) || IsRowVersion(property)) { continue; } %>
+        <property name="<%= property.Name %>" column="<%= property.GetSafeName() %>" type="<%= property.ExtendedProperties[NHibernateUtilities.NHibernateType] %>" <%= GetAttributes(property) %>/> 
+    <% } %>
+    <% // Associations %>
+    <% foreach(Association association in SourceEntity.Associations) { %>
+        <% // Many-To-One %>
+        <% if (association.AssociationType == AssociationType.ManyToOne || association.AssociationType == AssociationType.ManyToZeroOrOne) { %>
+        <many-to-one name="<%= association.Name %>" class="<%= association.ForeignEntity.Name %>" <%= GetAttributes(association) %>>
+            <% foreach(AssociationProperty associationProperty in association.Properties) { %>
+            <column name="<%= associationProperty.Property.GetSafeName() %>" />
+            <% } %>
+        </many-to-one>
+        <% continue; } %>
+        <% // One-To-Many %>
+        <% if (association.AssociationType == AssociationType.OneToMany || association.AssociationType == AssociationType.ZeroOrOneToMany) { %>
+        <bag name="<%= association.Name %>" inverse="true" <%= GetAttributes(association) %>>
+            <key>
+            <% foreach (AssociationProperty associationProperty in association.Properties) { %>
+                <column name="<%= associationProperty.ForeignProperty.GetSafeName() %>" />
+            <% } %>
+            </key>
+            <one-to-many class="<%= association.ForeignEntity.Name %>" />
+        </bag>
+        <% continue; } %>
+        <% // Many-To-Many %>
+        <% if (association.AssociationType == AssociationType.ManyToMany) { %>
+        <bag name="<%= association.Name %>" table="<%= association.ForeignEntity.GetSafeName() %>" inverse="false" <%= GetAttributes(association) %>>
+            <key>
+            <% foreach (AssociationProperty associationProperty in association.Properties) { %>
+                <column name="<%= associationProperty.ForeignProperty.GetSafeName() %>" />
+            <% } %>
+            </key>
+            <many-to-many class="<%= association.IntermediaryAssociation.Entity.Name %>" >
+                <% foreach (AssociationProperty associationProperty in association.IntermediaryAssociation.Properties) { %>
+                <column name="<%= associationProperty.ForeignProperty.GetSafeName() %>" />
+                <% } %>
+            </many-to-many>
+        </bag>
+        <% continue; } %>
+    <% } %>
+    </class>
+</hibernate-mapping>
+
+<script runat="template">
+    public string GetAttributes(IEntity entity)
+    {
+        return GetAttributes(entity.ExtendedProperties, NHibernateEntity.DefaultAttributes);
+    }
+    
+    public string GetAttributes(IProperty property)
+    {
+        return GetAttributes(property.ExtendedProperties, NHibernateProperty.DefaultAttributes);
+    }
+    
+    public string GetAttributes(Association association)
+    {
+        return GetAttributes(association.ExtendedProperties, NHibernateUtilities.AssociationDefaultAttributes);
+    }
+
+    public string GetAttributes(Dictionary<string, object> extendedProperties, params string[] ignore)
+    {
+        if (extendedProperties.Count == 0)
+            return String.Empty;
+            
+        var attributes = extendedProperties
+            .Where(ep => !ignore.Contains(ep.Key.ToString()) && !ep.Key.StartsWith("CS_"))
+            .Select(ep => String.Format(@"{0}=""{1}"" ", ep.Key, ep.Value));
+        
+        if (attributes.Count() < 2)
+            return attributes.FirstOrDefault();
+        
+        var sb = new StringBuilder();
+        foreach(var attribute in attributes)
+            sb.Append(attribute);
+        
+        return sb.ToString();
+    }
+    
+    public IProperty GetRowVersion()
+    {
+        return SourceEntity.Properties.FirstOrDefault(IsRowVersion);
+    }
+    
+    public static bool IsRowVersion(IProperty property)
+    {
+        ISchemaProperty sp = property as ISchemaProperty;
+        if (sp == null)
+            return false;
+        
+        return sp.IsRowVersion;
+    }
+    
+    public static bool IsKey(IProperty property)
+    {
+        ISchemaProperty sp = property as ISchemaProperty;
+        if (sp == null)
+            return false;
+        
+        return sp.IsPrimaryKey || sp.IsForeignKey;
+    }
+</script>
