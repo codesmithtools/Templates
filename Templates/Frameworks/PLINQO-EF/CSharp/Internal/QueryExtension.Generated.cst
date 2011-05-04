@@ -80,9 +80,10 @@ foreach(IProperty property in Entity.Properties) {
         }
 <% } // if is key
 } // foreach method%>
-<% foreach(IProperty property in Entity.Properties) {
-    if((property.PropertyType & PropertyType.Concurrency) != PropertyType.Concurrency && property.BaseSystemType != "System.Byte[]") { 
-        string alias = GetAlias();
+    <% foreach(IProperty property in Entity.Properties) { %>
+        <% if (IsIgnoreType(property)) { continue; } %>
+        <% string alias = GetAlias(); 
+           var paramName = CleanParamName(property.VariableName);
         %>
 
         /// <summary>
@@ -92,18 +93,18 @@ foreach(IProperty property in Entity.Properties) {
         /// <param name="<%= property.VariableName %>"><%= property.Name %> to search for.</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
         <%= GeneratedCodeAttribute %>
-        public static IQueryable<<%= EntityNamespace %>.<%= Entity.Name %>> <%= MethodPrefix %><%= property.Name %>(this IQueryable<<%= EntityNamespace %>.<%= Entity.Name %>> queryable, <%= property.SystemType %> <%= property.VariableName %>)
+        public static IQueryable<<%= EntityNamespace %>.<%= Entity.Name %>> <%= MethodPrefix %><%= property.Name %>(this IQueryable<<%= EntityNamespace %>.<%= Entity.Name %>> queryable, <%= property.SystemType %> <%= paramName %>)
         {
-<% if (property.IsNullable == true) { %>
+        <% if (property.IsNullable == true) { %>
             // support nulls
             return <%= property.VariableName %> == null 
                 ? queryable.Where(<%= alias %> => <%= alias %>.<%= property.Name %> == null) 
-                : queryable.Where(<%= alias %> => <%= alias %>.<%= property.Name %> == <%= property.VariableName %>);
-<% } else { %>
-            return queryable.Where(<%= alias %> => <%= alias %>.<%= property.Name %> == <%= property.VariableName %>);
-<% } %>
+                : queryable.Where(<%= alias %> => <%= alias %>.<%= property.Name %> == <%= paramName %>);
+        <% } else { %>
+            return queryable.Where(<%= alias %> => <%= alias %>.<%= property.Name %> == <%= paramName %>);
+        <% } %>
         }
-<% if (property.BaseSystemType == "System.String") { %>
+        <% if (IsContainmentOperator(property)) { %>
 
         /// <summary>
         /// Gets a query for <see cref="<%= EntityNamespace %>.<%= Entity.Name %>.<%= property.Name %>"/>.
@@ -113,7 +114,7 @@ foreach(IProperty property in Entity.Properties) {
         /// <param name="containmentOperator">The containment operator.</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
         <%= GeneratedCodeAttribute %>
-        public static IQueryable<<%= EntityNamespace %>.<%= Entity.Name %>> <%= MethodPrefix %><%= property.Name %>(this IQueryable<<%= EntityNamespace %>.<%= Entity.Name %>> queryable, ContainmentOperator containmentOperator, <%= property.SystemType %> <%= property.VariableName %>)
+        public static IQueryable<<%= EntityNamespace %>.<%= Entity.Name %>> <%= MethodPrefix %><%= property.Name %>(this IQueryable<<%= EntityNamespace %>.<%= Entity.Name %>> queryable, ContainmentOperator containmentOperator, <%= property.SystemType %> <%= paramName %>)
         {
             if (<%= property.VariableName %> == null && containmentOperator != ContainmentOperator.Equals && containmentOperator != ContainmentOperator.NotEquals)
                 throw new ArgumentNullException("<%= property.VariableName %>", "Parameter '<%= property.VariableName %>' cannot be null with the specified ContainmentOperator.  Parameter 'containmentOperator' must be ContainmentOperator.Equals or ContainmentOperator.NotEquals to support null.");
@@ -121,31 +122,31 @@ foreach(IProperty property in Entity.Properties) {
             switch (containmentOperator)
             {
                 case ContainmentOperator.Contains:
-                    return queryable.Where(<%= alias %> => <%= alias %>.<%= property.Name %>.Contains(<%= property.VariableName %>));
+                    return queryable.Where(<%= alias %> => <%= alias %>.<%= property.Name %>.Contains(<%= paramName %>));
                 case ContainmentOperator.StartsWith:
-                    return queryable.Where(<%= alias %> => <%= alias %>.<%= property.Name %>.StartsWith(<%= property.VariableName %>));
+                    return queryable.Where(<%= alias %> => <%= alias %>.<%= property.Name %>.StartsWith(<%= paramName %>));
                 case ContainmentOperator.EndsWith:
-                    return queryable.Where(<%= alias %> => <%= alias %>.<%= property.Name %>.EndsWith(<%= property.VariableName %>));
+                    return queryable.Where(<%= alias %> => <%= alias %>.<%= property.Name %>.EndsWith(<%= paramName %>));
                 case ContainmentOperator.NotContains:
-                    return queryable.Where(<%= alias %> => <%= alias %>.<%= property.Name %>.Contains(<%= property.VariableName %>) == false);
-<% if (property.IsNullable == true) { %>
+                    return queryable.Where(<%= alias %> => <%= alias %>.<%= property.Name %>.Contains(<%= paramName %>) == false);
+            <% if (property.IsNullable == true) { %>
                 case ContainmentOperator.NotEquals:
                     return <%= property.VariableName %> == null 
                         ? queryable.Where(<%= alias %> => <%= alias %>.<%= property.Name %> != null) 
-                        : queryable.Where(<%= alias %> => <%= alias %>.<%= property.Name %> != <%= property.VariableName %>);
+                        : queryable.Where(<%= alias %> => <%= alias %>.<%= property.Name %> != <%= paramName %>);
                 default:
                     return <%= property.VariableName %> == null 
                         ? queryable.Where(<%= alias %> => <%= alias %>.<%= property.Name %> == null) 
-                        : queryable.Where(<%= alias %> => <%= alias %>.<%= property.Name %> == <%= property.VariableName %>);
-<% } else { %>
+                        : queryable.Where(<%= alias %> => <%= alias %>.<%= property.Name %> == <%= paramName %>);
+            <% } else { %>
                 case ContainmentOperator.NotEquals:
-                    return queryable.Where(<%= alias %> => <%= alias %>.<%= property.Name %> != <%= property.VariableName %>);
+                    return queryable.Where(<%= alias %> => <%= alias %>.<%= property.Name %> != <%= paramName %>);
                 default:
-                    return queryable.Where(<%= alias %> => <%= alias %>.<%= property.Name %> == <%= property.VariableName %>);
-<% } %>
+                    return queryable.Where(<%= alias %> => <%= alias %>.<%= property.Name %> == <%= paramName %>);
+            <% } %>
             }
         }
-<% } else { %>
+        <% } else { %>
 
         /// <summary>
         /// Gets a query for <see cref="<%= EntityNamespace %>.<%= Entity.Name %>.<%= property.Name %>"/>.
@@ -155,49 +156,49 @@ foreach(IProperty property in Entity.Properties) {
         /// <param name="comparisonOperator">The comparison operator.</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
         <%= GeneratedCodeAttribute %>
-        public static IQueryable<<%= EntityNamespace %>.<%= Entity.Name %>> <%= MethodPrefix %><%= property.Name %>(this IQueryable<<%= EntityNamespace %>.<%= Entity.Name %>> queryable, ComparisonOperator comparisonOperator, <%= property.SystemType %> <%= property.VariableName %>)
+        public static IQueryable<<%= EntityNamespace %>.<%= Entity.Name %>> <%= MethodPrefix %><%= property.Name %>(this IQueryable<<%= EntityNamespace %>.<%= Entity.Name %>> queryable, ComparisonOperator comparisonOperator, <%= property.SystemType %> <%= paramName %>)
         {
-<% if (property.IsNullable == true) { %>
-            if (<%= property.VariableName %> == null && comparisonOperator != ComparisonOperator.Equals && comparisonOperator != ComparisonOperator.NotEquals)
-                throw new ArgumentNullException("<%= property.VariableName %>", "Parameter '<%= property.VariableName %>' cannot be null with the specified ComparisonOperator.  Parameter 'comparisonOperator' must be ComparisonOperator.Equals or ComparisonOperator.NotEquals to support null.");
+            <% if (property.IsNullable == true) { %>
+            if (<%= paramName %> == null && comparisonOperator != ComparisonOperator.Equals && comparisonOperator != ComparisonOperator.NotEquals)
+                throw new ArgumentNullException("<%= paramName %>", "Parameter '<%= paramName %>' cannot be null with the specified ComparisonOperator.  Parameter 'comparisonOperator' must be ComparisonOperator.Equals or ComparisonOperator.NotEquals to support null.");
 
-<% } %>
+            <% } %>
             switch (comparisonOperator)
             {
-<% if (property.BaseSystemType == "System.Object" || property.BaseSystemType == "System.Guid" || property.BaseSystemType == "System.Boolean" || property.BaseSystemType == "System.Xml.Linq.XElement" ) { %>
+            <% if (property.BaseSystemType == "System.Object" || property.BaseSystemType == "System.Guid" || property.BaseSystemType == "System.Boolean" || property.BaseSystemType == "System.Xml.Linq.XElement" ) { %>
                 case ComparisonOperator.GreaterThan:
                 case ComparisonOperator.GreaterThanOrEquals:
                 case ComparisonOperator.LessThan:
                 case ComparisonOperator.LessThanOrEquals:
                     throw new ArgumentException("Parameter 'comparisonOperator' must be ComparisonOperator.Equals or ComparisonOperator.NotEquals to support <%= property.SystemType %> type.", "comparisonOperator");
-<% } else { %>
+            <% } else { %>
                 case ComparisonOperator.GreaterThan:
-                    return queryable.Where(<%= alias %> => <%= alias %>.<%= property.Name %> > <%= property.VariableName %>);
+                    return queryable.Where(<%= alias %> => <%= alias %>.<%= property.Name %> > <%= paramName %>);
                 case ComparisonOperator.GreaterThanOrEquals:
-                    return queryable.Where(<%= alias %> => <%= alias %>.<%= property.Name %> >= <%= property.VariableName %>);
+                    return queryable.Where(<%= alias %> => <%= alias %>.<%= property.Name %> >= <%= paramName %>);
                 case ComparisonOperator.LessThan:
-                    return queryable.Where(<%= alias %> => <%= alias %>.<%= property.Name %> < <%= property.VariableName %>);
+                    return queryable.Where(<%= alias %> => <%= alias %>.<%= property.Name %> < <%= paramName %>);
                 case ComparisonOperator.LessThanOrEquals:
-                    return queryable.Where(<%= alias %> => <%= alias %>.<%= property.Name %> <= <%= property.VariableName %>);
-<% } %>
-<% if (property.IsNullable == true) { %>
+                    return queryable.Where(<%= alias %> => <%= alias %>.<%= property.Name %> <= <%= paramName %>);
+            <% } %>
+            <% if (property.IsNullable == true) { %>
                 case ComparisonOperator.NotEquals:
                     return <%= property.VariableName %> == null 
                         ? queryable.Where(<%= alias %> => <%= alias %>.<%= property.Name %> != null) 
-                        : queryable.Where(<%= alias %> => <%= alias %>.<%= property.Name %> != <%= property.VariableName %>);
+                        : queryable.Where(<%= alias %> => <%= alias %>.<%= property.Name %> != <%= paramName %>);
                 default:
                     return <%= property.VariableName %> == null 
                         ? queryable.Where(<%= alias %> => <%= alias %>.<%= property.Name %> == null) 
-                        : queryable.Where(<%= alias %> => <%= alias %>.<%= property.Name %> == <%= property.VariableName %>);
-<% } else { %>
+                        : queryable.Where(<%= alias %> => <%= alias %>.<%= property.Name %> == <%= paramName %>);
+            <% } else { %>
                 case ComparisonOperator.NotEquals:
-                    return queryable.Where(<%= alias %> => <%= alias %>.<%= property.Name %> != <%= property.VariableName %>);
+                    return queryable.Where(<%= alias %> => <%= alias %>.<%= property.Name %> != <%= paramName %>);
                 default:
-                    return queryable.Where(<%= alias %> => <%= alias %>.<%= property.Name %> == <%= property.VariableName %>);
-<% } %>
+                    return queryable.Where(<%= alias %> => <%= alias %>.<%= property.Name %> == <%= paramName %>);
+            <% } %>
             }
         }
-<% } %>
+        <% } %>
 
         /// <summary>
         /// Gets a query for <see cref="<%= EntityNamespace %>.<%= Entity.Name %>.<%= property.Name %>"/>.
@@ -207,16 +208,16 @@ foreach(IProperty property in Entity.Properties) {
         /// <param name="additionalValues">Additional values to search for.</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
         <%= GeneratedCodeAttribute %>
-        public static IQueryable<<%= EntityNamespace %>.<%= Entity.Name %>> <%= MethodPrefix %><%= property.Name %>(this IQueryable<<%= EntityNamespace %>.<%= Entity.Name %>> queryable, <%= property.SystemType %> <%= property.VariableName %>, params <%= property.SystemType %>[] additionalValues)
+        public static IQueryable<<%= EntityNamespace %>.<%= Entity.Name %>> <%= MethodPrefix %><%= property.Name %>(this IQueryable<<%= EntityNamespace %>.<%= Entity.Name %>> queryable, <%= property.SystemType %> <%= paramName %>, params <%= property.SystemType %>[] additionalValues)
         {
-            var <%= property.VariableName %>List = new List<<%= property.SystemType %>> { <%= property.VariableName %> };
+            var <%= property.VariableName %>List = new List<<%= property.SystemType %>> { <%= paramName %> };
 
             if (additionalValues != null)
                 <%= property.VariableName %>List.AddRange(additionalValues);
-<% if (property.IsNullable == true) { %>
+        <% if (property.IsNullable == true) { %>
             else
                 <%= property.VariableName %>List.Add(null);
-<% } %>
+        <% } %>
 
             if (<%= property.VariableName %>List.Count == 1)
                 return queryable.<%= MethodPrefix %><%= property.Name %>(<%= property.VariableName %>List[0]);
@@ -233,16 +234,15 @@ foreach(IProperty property in Entity.Properties) {
         <%= GeneratedCodeAttribute %>
         public static IQueryable<<%= EntityNamespace %>.<%= Entity.Name %>> <%= MethodPrefix %><%= property.Name %>(this IQueryable<<%= EntityNamespace %>.<%= Entity.Name %>> queryable, IEnumerable<<%= property.SystemType %>> values)
         {
-<% if (property.IsNullable == true) { %>
+        <% if (property.IsNullable == true) { %>
             // creating dynmic expression to support nulls
             var expression = DynamicExpression.BuildExpression<<%= EntityNamespace %>.<%= Entity.Name %>, bool>("<%= property.Name %>", values);
             return queryable.Where(expression);
-<% } else { %>
+        <% } else { %>
             return queryable.Where(<%= alias %> => values.Contains(<%= alias %>.<%= property.Name %>));
-<% } %>
+        <% } %>
         }
-<% } // if is  not key
- } // foreach method%>
+<% } // foreach method%>
 
         #region Query
         /// <summary>
@@ -278,9 +278,33 @@ foreach(IProperty property in Entity.Properties) {
 
     List<string> uniqueMethods = new List<string>();
 
+    public bool IsIgnoreType(IProperty property)
+    {
+        if (property.SystemType.Contains("XmlType"))
+            return true;
+            
+        if (property.SystemType.Contains("Byte[]"))
+            return true;
+        
+        if ((property.PropertyType & PropertyType.Concurrency) != PropertyType.Concurrency && property.BaseSystemType != "System.Byte[]")
+            return true;
+        
+        return false;
+    }
+    
+    public bool IsContainmentOperator(IProperty property)
+    {
+        if (property.BaseSystemType.EndsWith("String"))
+            return true;
+        
+        return false;
+    }
+
     public string GetAlias()
     {
-        return Entity.Name.Substring(0, 1).ToLowerInvariant();
+        return Entity.Name.Length == 1
+            ? "_" + Entity.Name.ToLowerInvariant()
+            : Entity.Name.Substring(0, 1).ToLowerInvariant();
     }
 
     public string CleanParamName(string name)
@@ -299,7 +323,7 @@ foreach(IProperty property in Entity.Properties) {
             if (args.Length > 0)
                 args.Append(", ");
 
-            args.AppendFormat("{0} {1}", property.SystemType, property.VariableName);
+            args.AppendFormat("{0} {1}", property.SystemType, CleanParamName(property.VariableName));
         }
 
         return args.ToString();
@@ -313,7 +337,7 @@ foreach(IProperty property in Entity.Properties) {
             if (args.Length > 0)
                 args.Append(", ");
 
-            args.Append(property.VariableName);
+            args.Append(CleanParamName(property.VariableName));
         }
 
         return args.ToString();
@@ -352,9 +376,9 @@ foreach(IProperty property in Entity.Properties) {
             }
 
             if (property.IsNullable == true)
-                lamba.AppendFormat("object.Equals({0}.{1}, {2})", alias, property.Name, property.VariableName);
+                lamba.AppendFormat("object.Equals({0}.{1}, {2})", alias, property.Name, CleanParamName(property.VariableName));
             else
-                lamba.AppendFormat("{0}.{1} == {2}", alias, property.Name, property.VariableName);
+                lamba.AppendFormat("{0}.{1} == {2}", alias, property.Name, CleanParamName(property.VariableName));
         }
 
         return lamba.ToString();
