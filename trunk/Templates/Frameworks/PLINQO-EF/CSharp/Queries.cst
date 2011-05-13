@@ -42,7 +42,7 @@ public void Generate()
 
     var entityProvider = new EdmxEntityProvider(EdmxFile);
     var entityManager = new EntityManager((IEntityProvider)entityProvider);
-    foreach(var entity in entityManager.Entities.Where(e => IsConceptualEntity(e) && !IsViewEntity(e)))
+    foreach(var entity in entityManager.Entities.Where(e => IsConceptualEntity(e)))
     {
         var className = string.Concat(entity.Name, "Extensions");
         var parentFileName = Path.Combine(QueryDirectory, string.Concat(className, ".cs"));

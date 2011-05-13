@@ -4,8 +4,10 @@
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\Common" %>
 <%@ Assembly Name="Generator.QuickStart" Path="..\..\Common" %>
 <%@ Assembly Name="Generator.Microsoft.Frameworks" Path="..\..\Common" %>
+<%@ Assembly Name="Xml.Schema.Linq" Path="..\..\Common" %>
 
 <%@ Import Namespace="System.Collections.Generic" %>
+<%@ Import Namespace="System.Text" %>
 <%@ Import Namespace="CodeSmith.SchemaHelper" %>
 <%@ Import Namespace="Generator.QuickStart" %>
 <%@ Import Namespace="Generator.Microsoft.Frameworks" %>
@@ -76,10 +78,10 @@ namespace <%= ContextNamespace %>
         partial void OnContextCreated();
 
         #endregion
-<% if(Entities.Count() > 0) { %>
+<% if(Entities.Count(e => IsConceptualEntity(e)) > 0) { %>
 
         #region ObjectSet Properties
-<% foreach(var entity in Entities) { %>
+<% foreach(var entity in Entities.Where(e => IsConceptualEntity(e))) { %>
 
 <% if(entity.HasDescription) { %>
         /// <summary>
@@ -100,6 +102,49 @@ namespace <%= ContextNamespace %>
             }
         }
 <% } %>
+        #endregion
+<% } %>
+<% if(Entities.Count(e => IsFunctionEntity(e)) > 0) { %>
+
+        #region Function Imports
+<% foreach(FunctionEntity entity in Entities.Where(e => IsFunctionEntity(e))) { 
+    bool isConceptualEntityReturnType = entity.AssociatedEntity != null && entity.AssociatedEntity is ConceptualEntity;
+    string returnType = entity.AssociatedEntity != null ? string.Concat(ResolveEntityNamespace(), entity.AssociatedEntity.Name) : entity.ReturnType;
+%>
+
+        <% if(entity.HasDescription) { %>
+        /// <summary>
+        /// <%= entity.Description %>
+        /// </summary>
+        <% } %>
+        public ObjectResult<<%= returnType %>> <%= entity.Name %>(<%= HasParameters(entity) ? GetParameters(entity.SearchCriteria[0].Properties) : string.Empty %>)
+        {
+<%if(HasParameters(entity)) {%>
+<% foreach(IProperty property in entity.SearchCriteria[0].Properties) { %>
+            ObjectParameter <%= property.VariableName %>Parameter = <% if(IsContainmentOperator(property)) { %><%= property.VariableName %> != null ? new ObjectParameter("<%= property.Name %>", <%= property.VariableName %>) : new ObjectParameter("<%= property.Name %>", typeof(<%= property.SystemType %>));<% } else { %>new ObjectParameter("<%= property.Name %>", <%= property.VariableName %>);<% } 
+}%>
+
+<% } %>
+            return base.ExecuteFunction<<%= returnType %>>("<%= entity.Name %>"<%if(HasParameters(entity)) {%>, <%= GetParametersNames(entity.SearchCriteria[0].Properties, "Parameter") %><%}%>);
+        }
+<% if(isConceptualEntityReturnType) { %>
+
+        <% if(entity.HasDescription) { %>
+        /// <summary>
+        /// <%= entity.Description %>
+        /// </summary>
+        <% } %>
+        public ObjectResult<<%= returnType %>> <%= entity.Name %>(<%if(HasParameters(entity)) {%><%= GetParameters(entity.SearchCriteria[0].Properties) %>, <%}%>MergeOption mergeOption)
+        {
+<%if(HasParameters(entity)) {%>
+<% foreach(IProperty property in entity.SearchCriteria[0].Properties) { %>
+            ObjectParameter <%= property.VariableName %>Parameter = <% if(IsContainmentOperator(property)) { %><%= property.VariableName %> != null ? new ObjectParameter("<%= property.Name %>", <%= property.VariableName %>) : new ObjectParameter("<%= property.Name %>", typeof(<%= property.SystemType %>));<% } else { %>new ObjectParameter("<%= property.Name %>", <%= property.VariableName %>);<% } 
+}%>
+
+<% } %>
+            return base.ExecuteFunction<<%= returnType %>>("<%= entity.Name %>", mergeOption<%if(HasParameters(entity)) {%>, <%= GetParametersNames(entity.SearchCriteria[0].Properties, "Parameter") %><%}%>);
+        }
+<% } } %>
         #endregion
 <% } %>
     }
@@ -172,4 +217,60 @@ private string ResolveEntityNamespace()
 
     return string.Concat(EntityNamespace, ".");
 }
+
+private bool IsConceptualEntity(IEntity entity)
+{
+    return (entity is ConceptualEntity);
+}
+
+private bool IsFunctionEntity(IEntity entity)
+{
+    return (entity is FunctionEntity);
+}
+
+private bool HasParameters(IEntity entity)
+{
+    return entity.SearchCriteria != null && entity.SearchCriteria.Count > 0 && entity.SearchCriteria[0].Properties.Count > 0;
+}
+
+public string GetParameters(List<IProperty> properties)
+{
+    StringBuilder args = new StringBuilder();
+    foreach(IProperty property in properties)
+    {
+        if (args.Length > 0)
+            args.Append(", ");
+
+        args.AppendFormat("{0} {1}", property.SystemType, property.VariableName);
+    }
+
+    return args.ToString();
+}
+
+public string GetParametersNames(List<IProperty> properties)
+{
+    return GetParametersNames(properties, string.Empty);
+}
+
+public string GetParametersNames(List<IProperty> properties, string suffix)
+{
+    StringBuilder args = new StringBuilder();
+    foreach(IProperty property in properties)
+    {
+        if (args.Length > 0)
+            args.Append(", ");
+
+        args.Append(property.VariableName + suffix);
+    }
+
+    return args.ToString();
+}
+
+public bool IsContainmentOperator(IProperty property)
+{
+    if (property.BaseSystemType.EndsWith("String"))
+        return true;
+    
+    return false;
+    }
 </script>

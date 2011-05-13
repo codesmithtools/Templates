@@ -44,10 +44,12 @@ namespace <%= string.IsNullOrEmpty(QueryNamespace)? EntityNamespace : QueryNames
         <%= GeneratedCodeAttribute %>
         public static <%= EntityNamespace %>.<%= Entity.Name %> <%= UniqueMethodPrefix %><%= MethodKeySuffix %>(this IQueryable<<%= EntityNamespace %>.<%= Entity.Name %>> queryable, <%= GetParameters(Entity.Key.Properties) %>)
         {
+<% if(Entity.Properties.Count < 4) { %>
             var entity = queryable as System.Data.Objects.ObjectSet<<%= EntityNamespace %>.<%= Entity.Name %>>;
             if (entity != null && !entity.Context.ContextOptions.LazyLoadingEnabled)
                 return Query.<%= UniqueMethodPrefix %><%= MethodKeySuffix %>.Invoke((<%= ContextNamespace %>.<%= DataContextName %>)entity.Context, <%= GetParametersNames(Entity.Key.Properties) %>);
 
+<% } %>
             return queryable.FirstOrDefault(<%= GetLamba(Entity.Key.Properties, 5) %>);
         }
 <%-- 
@@ -250,7 +252,8 @@ foreach(IProperty property in Entity.Properties) {
         /// </summary>
         private static partial class Query
         {
-<% if (Entity.HasKey) { %>
+<% if(Entity.Properties.Count < 4) {
+    if (Entity.HasKey) { %>
             <%= GeneratedCodeAttribute %>
             internal static readonly Func<<%= ContextNamespace %>.<%= DataContextName %>, <%= GetParametersTypes(Entity.Key.Properties) %>, <%= EntityNamespace %>.<%= Entity.Name %>> <%= UniqueMethodPrefix %><%= MethodKeySuffix %> =
                 System.Data.Objects.CompiledQuery.Compile(
@@ -266,7 +269,8 @@ foreach(IProperty property in Entity.Properties) {
                     (<%= ContextNamespace %>.<%= DataContextName %> db, <%= GetParameters(new List<IProperty>() { property }) %>) =>
                         db.<%= Entity.Name %>.FirstOrDefault(<%= GetLamba(new List<IProperty>() { property }, 7) %>));
 
-<% }
+<%  } 
+  }
 }// foreach method%>
         }
         #endregion
@@ -331,13 +335,18 @@ foreach(IProperty property in Entity.Properties) {
 
     public string GetParametersNames(List<IProperty> properties)
     {
+        return GetParametersNames(properties, string.Empty);
+    }
+
+    public string GetParametersNames(List<IProperty> properties, string suffix)
+    {
         StringBuilder args = new StringBuilder();
         foreach(IProperty property in properties)
         {
             if (args.Length > 0)
                 args.Append(", ");
 
-            args.Append(CleanParamName(property.VariableName));
+            args.Append(CleanParamName(property.VariableName) + suffix);
         }
 
         return args.ToString();
