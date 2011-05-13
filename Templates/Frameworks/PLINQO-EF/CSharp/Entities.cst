@@ -48,7 +48,7 @@ public void Generate()
     EntityManager entityManager = new EntityManager((IEntityProvider)entityProvider);
 
     CreateCodeFirstEntities(entityManager.Entities, entityProvider.EntityNamespace);
-    CreateCodeFirstObjectContext(entityManager.Entities.Where(e => IsConceptualEntity(e)), entityProvider.EntityNamespace, entityProvider.ContextNamespace, entityProvider.DataContextName, entityProvider.LazyLoadingEnabled);
+    CreateCodeFirstObjectContext(entityManager.Entities, entityProvider.EntityNamespace, entityProvider.ContextNamespace, entityProvider.DataContextName, entityProvider.LazyLoadingEnabled);
 }
 
 private void CreateCodeFirstEntities(IEnumerable<IEntity> entities, string entityNamespace)
@@ -58,6 +58,8 @@ private void CreateCodeFirstEntities(IEnumerable<IEntity> entities, string entit
 
     foreach (var entity in entities)
     {
+        if((entity is ComplexEntity || entity is ConceptualEntity) == false) continue;
+        
         var outputFolder = OutputDirectory;
         if(entity is ComplexEntity)
         {
@@ -116,11 +118,6 @@ private void CreateCodeFirstObjectContext(IEnumerable<IEntity> entities, string 
 
     Response.WriteLine(fileName);
     dataContextGeneratedTemplate.RenderToFile(fileName, parentFileName, true);
-}
-
-private bool IsConceptualEntity(IEntity entity)
-{
-    return (entity is ConceptualEntity);
 }
 
 public void RegisterReferences()
