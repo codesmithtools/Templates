@@ -121,8 +121,8 @@ namespace <%= ContextNamespace %>
         {
 <%if(HasParameters(entity)) {%>
 <% foreach(IProperty property in entity.SearchCriteria[0].Properties) { %>
-            ObjectParameter <%= property.VariableName %>Parameter = <% if(IsContainmentOperator(property)) { %><%= property.VariableName %> != null ? new ObjectParameter("<%= property.Name %>", <%= property.VariableName %>) : new ObjectParameter("<%= property.Name %>", typeof(<%= property.SystemType %>));<% } else { %>new ObjectParameter("<%= property.Name %>", <%= property.VariableName %>);<% } 
-}%>
+            ObjectParameter <%= property.VariableName %>Parameter = <% if(IsContainmentOperator(property)) { %><%= property.VariableName %> != null ? new ObjectParameter("<%= property.Name %>", <%= property.VariableName %>) : new ObjectParameter("<%= property.Name %>", typeof(<%= property.SystemType %>));<% } else { %>new ObjectParameter("<%= property.Name %>", <%= property.VariableName %>);<% } %>
+<% } %>
 
 <% } %>
             return base.ExecuteFunction<<%= returnType %>>("<%= entity.Name %>"<%if(HasParameters(entity)) {%>, <%= GetParametersNames(entity.SearchCriteria[0].Properties, "Parameter") %><%}%>);
@@ -138,8 +138,8 @@ namespace <%= ContextNamespace %>
         {
 <%if(HasParameters(entity)) {%>
 <% foreach(IProperty property in entity.SearchCriteria[0].Properties) { %>
-            ObjectParameter <%= property.VariableName %>Parameter = <% if(IsContainmentOperator(property)) { %><%= property.VariableName %> != null ? new ObjectParameter("<%= property.Name %>", <%= property.VariableName %>) : new ObjectParameter("<%= property.Name %>", typeof(<%= property.SystemType %>));<% } else { %>new ObjectParameter("<%= property.Name %>", <%= property.VariableName %>);<% } 
-}%>
+            ObjectParameter <%= property.VariableName %>Parameter = <% if(IsContainmentOperator(property)) { %><%= property.VariableName %> != null ? new ObjectParameter("<%= property.Name %>", <%= property.VariableName %>) : new ObjectParameter("<%= property.Name %>", typeof(<%= property.SystemType %>));<% } else { %>new ObjectParameter("<%= property.Name %>", <%= property.VariableName %>);<% } %>
+<% } %>
 
 <% } %>
             return base.ExecuteFunction<<%= returnType %>>("<%= entity.Name %>", mergeOption<%if(HasParameters(entity)) {%>, <%= GetParametersNames(entity.SearchCriteria[0].Properties, "Parameter") %><%}%>);
