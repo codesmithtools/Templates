@@ -33,9 +33,11 @@ namespace <%= EntityNamespace %>
     /// <%= Entity.Description %>
     /// </summary>
 <% } %>
-    [EdmEntityTypeAttribute(NamespaceName="<%= Entity.Namespace %>", Name="<%= Entity.Name %>")]
+    [<%= !IsComplexEntity() ? "EdmEntityTypeAttribute" : "EdmComplexTypeAttribute" %>(NamespaceName="<%= Entity.Namespace %>", Name="<%= Entity.Name %>")]
     [DataContractAttribute(IsReference=true)]
+<% if(!IsFunctionEntity()) { %>
     [ScaffoldTable(true)]
+<%}%>
     [Serializable()]
 <% if(!IsComplexEntity()) { foreach (var entity in Entity.DerivedEntities) { %>
     [KnownTypeAttribute(typeof(<%= entity.Name %>))]
@@ -216,10 +218,15 @@ namespace <%= EntityNamespace %>
     {
         return property.ExtendedProperties.ContainsKey(EdmxConstants.ComplexPropertyExtendedProperty);
     }
-    
+
     private bool IsComplexEntity()
     {
         return (Entity is ComplexEntity);
+    }
+
+    private bool IsFunctionEntity()
+    {
+        return IsComplexEntity() && Entity.ExtendedProperties.Count() > 0;
     }
 
     private List<IProperty> FactoryProperties()
