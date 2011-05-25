@@ -114,7 +114,7 @@ namespace Generator.Microsoft.Frameworks
         private void CreateConceptualFunctionEntity(CommandEntity entity)
         {
             // Check to see if this has already been processed.
-            if (_conceptualFunctions.Contains(ResolveEntityMappedName(entity.EntityKey(), entity.Name)) || !Configuration.Instance.IncludeFunctions) return;
+            if (entity.IsFunction || _conceptualFunctions.Contains(ResolveEntityMappedName(entity.EntityKey(), entity.Name)) || !Configuration.Instance.IncludeFunctions) return;
 
             //<FunctionImport Name="GetCategoryById">
             //    <Parameter Name="ID" Mode="In" Type="String" />
