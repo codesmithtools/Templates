@@ -350,10 +350,7 @@ namespace Generator.Microsoft.Frameworks
                     (m.ResultMapping.ComplexTypeMappings == null ||  m.ResultMapping.ComplexTypeMappings.Count == 0))
                 {
                     m.ResultMapping = null;
-
-                    // It's composible and can be removed.
-                    if(m.GetAttributeValue(EdmxConstants.IsFunctionEntityCustomAttribute) != null)
-                        functionImportMappingsToRemove.Add(m);
+                    functionImportMappingsToRemove.Add(m);
                 }
             }
 
@@ -367,7 +364,7 @@ namespace Generator.Microsoft.Frameworks
 
         private void CreateFunctionMappingEntity(CommandEntity entity)
         {
-            if (_mappingEntitys.Contains(entity.Name) || !Configuration.Instance.IncludeFunctions)
+            if (entity.IsFunction || _mappingEntitys.Contains(entity.Name) || !Configuration.Instance.IncludeFunctions)
             {
                 Debug.WriteLine(string.Format("Already Processed Mapping Model Entity {0}", entity.Name), MappingCategory);
                 return;
@@ -400,7 +397,6 @@ namespace Generator.Microsoft.Frameworks
             }
 
             importMapping.FunctionName = string.Concat(StorageSchema.Namespace, ".", entity.EntityKeyName);
-            if (entity.IsFunction) importMapping.SetAttributeValue(EdmxConstants.IsFunctionEntityCustomAttribute, Boolean.TrueString); // Mark it as composible..
 
             if (string.IsNullOrEmpty(importMapping.FunctionImportName) || !ConceptualSchemaEntityContainer.FunctionImports.Exists(importMapping.FunctionImportName))
                 importMapping.FunctionImportName = entity.Name;
@@ -420,9 +416,17 @@ namespace Generator.Microsoft.Frameworks
             //<ResultMapping>
             //  <ComplexTypeMapping TypeName="PetShopModel.GetCategoryById_Result">
             string entityName = string.Concat(entity.Name, "Result");
-            var mapping = importMapping.ResultMapping.ComplexTypeMappings.FirstOrDefault();
+            var mapping = importMapping.ResultMapping != null && importMapping.ResultMapping.ComplexTypeMappings != null
+                              ? importMapping.ResultMapping.ComplexTypeMappings.FirstOrDefault()
+                              : null;
+            
             if (mapping == null)
             {
+                importMapping.ResultMapping = new FunctionImportMappingResultMapping()
+                                                  {
+                                                      ComplexTypeMappings = new List<FunctionImportComplexTypeMapping>()
+                                                  };
+
                 mapping = new FunctionImportComplexTypeMapping() { TypeName = string.Concat(ConceptualSchema.Namespace, ".", entityName) };
                 importMapping.ResultMapping.ComplexTypeMappings.Add(mapping);
             }
