@@ -1,0 +1,22 @@
+<%-- 
+Name: ProgressReporting.cst
+Author: Eric J. Smith
+Description: Demonstrates how to report progress from templates.
+Template sets OutputType to None since this template does not output anything itself.
+--%>
+<%@ Template Language="C#" OutputType="None" Description="Demonstrates progress reporting." %>
+<script runat="template">
+public override void Render(System.IO.TextWriter writer)
+{
+   for (int i = 0; i <= 10; i++)
+   {
+#if CodeSmith60
+      this.Progress.Status = String.Format("Generating {0}...", i);
+#endif
+      this.Progress.Value = i * 10;
+      
+      // Simulate work.  Could be generating files here.
+      System.Threading.Thread.Sleep(1000);
+   }
+}
+</script>
