@@ -29,11 +29,23 @@ public class NHibernateHelper : CodeTemplate
         return outputFile;
     }
     
+    public string GetFolder(string folder, string subFolder)
+    {
+        string folderPath = GetFolder(folder);
+        
+        return CreateFolder(folderPath, subFolder);
+    }
+    
     public string GetFolder(string folder)
     {
         string current = Directory.GetCurrentDirectory();
         string path = Path.GetFullPath(current);
         
+        return CreateFolder(path, folder);
+    }
+    
+    private string CreateFolder(string path, string folder)
+    {
         if (String.IsNullOrEmpty(folder))
             return path;
             
@@ -64,6 +76,35 @@ public class NHibernateHelper : CodeTemplate
     public static readonly string GeneratedCodeAttribute =  string.Format(
         "[System.CodeDom.Compiler.GeneratedCode(\"CodeSmith\", \"{0}\")]",
         typeof(CodeTemplate).Assembly.GetName().Version.ToString());
+    
+    public string GetAlias(IEntity entity)
+    {
+        return entity.Name.Length == 1
+            ? "_" + entity.Name.ToLowerInvariant()
+            : entity.Name.Substring(0, 1).ToLowerInvariant();
+    }
+
+    public string CleanParamName(IEntity entity, string name)
+    {
+        if (name != GetAlias(entity))
+            return name;
+
+        return "my" + StringUtil.ToPascalCase(name);
+    }
+
+    public string GetParameters(IEntity entity, IEnumerable<IProperty> properties)
+    {
+        StringBuilder args = new StringBuilder();
+        foreach(IProperty property in properties)
+        {
+            if (args.Length > 0)
+                args.Append(", ");
+
+            args.AppendFormat("{0} {1}", property.SystemType, CleanParamName(entity, property.VariableName));
+        }
+
+        return args.ToString();
+    }
     
     #endregion
 }

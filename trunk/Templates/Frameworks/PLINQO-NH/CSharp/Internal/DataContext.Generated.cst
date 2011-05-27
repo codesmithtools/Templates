@@ -19,6 +19,7 @@
     Optional="False" Default="" 
     Description="Namespace of all generated base files." %>
 
+<%@ Assembly Name="System.Xml.Linq" %>
 <%@ Assembly Name="SchemaExplorer" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="../../Common/SchemaHelper" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper.NHibernate" Path="../../Common/SchemaHelper" %>
@@ -69,6 +70,7 @@ namespace <%= BaseNamespace %>
         #region Tables
         
 <% foreach(IEntity entity in SourceManager.Entities) { %>
+    <% if (entity is NHibernateCommandEntity) { continue; } %>
         <%= GeneratedCodeAttribute %>
         private ITable<<%= entity.Namespace %>.<%= entity.Name %>> <%= entity.PrivateMemberVariableName %>;
         
@@ -81,6 +83,30 @@ namespace <%= BaseNamespace %>
                     <%= entity.PrivateMemberVariableName %> = new Table<<%= entity.Namespace %>.<%= entity.Name %>>(this);
                 return <%= entity.PrivateMemberVariableName %>;
             }
+        }
+        
+<% } %>
+        #endregion
+        
+        #region Functions
+        
+<% foreach(IEntity entity in SourceManager.Entities) { %>
+    <% NHibernateCommandEntity command = entity as NHibernateCommandEntity; %>
+    <% if (command == null) { continue; } %>
+    <% SearchCriteria searchCriteria = command.SearchCriteria.First(); %>
+        public IList<<%= command.GetModelName() %>> <%= command.Name %>(<%= GetParameters(entity, searchCriteria.Properties) %>)
+        {
+            IQuery query = Session.GetNamedQuery("<%= command.Name %>");
+            
+            <% foreach(IProperty property in searchCriteria.Properties) { %>
+            query.SetParameter("<%= property.Name %>", <%= CleanParamName(entity, property.VariableName) %>);
+            <% } %>
+            
+            query.SetResultTransformer(
+                new NHibernate.Transform.AliasToBeanConstructorResultTransformer(
+                typeof (<%= command.GetModelName() %>).GetConstructors()[0]));
+            
+            return query.List<<%= command.GetModelName() %>>();
         }
         
 <% } %>
