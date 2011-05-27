@@ -19,6 +19,9 @@
 <%@ Property Category="2. Database" Name="CleanExpression" Type="CodeSmith.CustomProperties.StringCollection"
     Optional="True"
     Description="List of regular expressions to clean table, view and column names." Default="^(sp|tbl|udf|vw)_, ^\\w+_" %> 
+<%@ Property Category="2. Database" Name="IncludeFunctions" Type="System.Boolean"
+    Optional="False"
+    Description="Include Stored Procedures." Default="False" %> 
 <%@ Property Category="3. Directories" Name="MapsDirectory" Type="System.String"
     Optional="True" Default="Maps"
     Description="The output directory for mapping files." %>
@@ -42,7 +45,8 @@
 <%@ Import Namespace="CodeSmith.SchemaHelper" %>
 <%@ Import Namespace="CodeSmith.SchemaHelper.NHibernate" %>
 
-<%@ Register Name="HbmTemplate" Template="Internal\Hbm.cst" MergeProperties="False" %>
+<%@ Register Name="EntityTemplate" Template="Internal\Hbm.Entity.cst" MergeProperties="False" %>
+<%@ Register Name="FunctionTemplate" Template="Internal\Hbm.Function.cst" MergeProperties="False" %>
 
 Generating PLINQO for NHibernate Mapings...
 <% Generate(); %>
@@ -57,7 +61,12 @@ Generating PLINQO for NHibernate Mapings...
         RegisterReference();
         
         foreach(IEntity entity in entityManager.Entities)
-            RenderHbm(entity);
+        {
+            if (entity is CommandEntity)
+                RenderFunction((CommandEntity)entity);
+            else
+                RenderEntity(entity);
+        }
     }
 
     private void RegisterReference()
@@ -71,9 +80,9 @@ Generating PLINQO for NHibernate Mapings...
 
     private EntityManager CreateMapManager()
     {
-        string mapsDirectory = GetFolder(MapsDirectory);
-        NHibernateProvider mapsProvider = new NHibernateProvider(mapsDirectory);
-        return new EntityManager(mapsProvider);
+        string mapsFolder = GetFolder(MapsDirectory);
+        NHibernateProvider provider = new NHibernateProvider(mapsFolder);
+        return new EntityManager(provider);
     }
 
     private EntityManager CreateEntityManager()
@@ -100,20 +109,35 @@ Generating PLINQO for NHibernate Mapings...
             CodeSmith.SchemaHelper.Configuration.Instance.IncludeExpressions.Add(new Regex(".*"));
         
         CodeSmith.SchemaHelper.Configuration.Instance.ExcludeNonPrimaryKeyTables = true;
-        CodeSmith.SchemaHelper.Configuration.Instance.IncludeViews = false;
-        CodeSmith.SchemaHelper.Configuration.Instance.IncludeFunctions = false;
+        CodeSmith.SchemaHelper.Configuration.Instance.IncludeViews = false; // TODO
+        CodeSmith.SchemaHelper.Configuration.Instance.IncludeFunctions = IncludeFunctions;
         CodeSmith.SchemaHelper.Configuration.Instance.IncludeManyToManyEntity = false;
         CodeSmith.SchemaHelper.Configuration.Instance.SchemaProviderName = SourceDatabase.Provider.Name;
         
         return new EntityManager(SourceDatabase);
     }
     
-    private void RenderHbm(IEntity entity)
+    private void RenderFunction(CommandEntity command)
     {
-        string fileName = entity.ExtendedProperties[NHibernateUtilities.FileName] + ".hbm.xml";
-        string filePath = Path.Combine(GetFolder(MapsDirectory), fileName);
+        string fileName = command.ExtendedProperties[NHibernateUtilities.FileName] + NHibernateUtilities.MapExtension;
+        string folder = GetFolder(MapsDirectory, NHibernateProvider.FunctionsSubFolder);
+        string filePath = Path.Combine(folder, fileName);
     
-        HbmTemplate hbm = this.Create<HbmTemplate>();
+        FunctionTemplate hbm = this.Create<FunctionTemplate>();
+        hbm.SourceCommand = command;
+        hbm.AssemblyName = AssemblyName;
+        hbm.EntityNamespace = EntityNamespace;
+        
+        hbm.RenderToFile(GetOutputFile(filePath, null, "BuildAction", 3), true);
+    }
+    
+    private void RenderEntity(IEntity entity)
+    {
+        string fileName = entity.ExtendedProperties[NHibernateUtilities.FileName] + NHibernateUtilities.MapExtension;
+        string folder = GetFolder(MapsDirectory, NHibernateProvider.EntitiesSubFolder);
+        string filePath = Path.Combine(folder, fileName);
+    
+        EntityTemplate hbm = this.Create<EntityTemplate>();
         hbm.SourceEntity = entity;
         hbm.AssemblyName = AssemblyName;
         hbm.EntityNamespace = EntityNamespace;

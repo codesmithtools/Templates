@@ -13,6 +13,7 @@ namespace CodeSmith.SchemaHelper.NHibernate
         public static readonly string[] AssociationDefaultAttributes = new[] { "name", "table", "class", "inverse" };
 
         private static MapCollection _toNHibernateTypeMap;
+        private static MapCollection _fromNHibernateTypeMap;
 
         public const string MapExtension = ".hbm.xml";
         public const string FileName = "file-name";
@@ -67,6 +68,10 @@ namespace CodeSmith.SchemaHelper.NHibernate
                 }
             }
 
+            foreach (var searchCriteria in entity.SearchCriteria)
+                foreach (var property in searchCriteria.Properties)
+                    PrepProperty(property);
+
             foreach (var association in entity.Associations)
                 PrepAssociation(association);
         }
@@ -74,10 +79,10 @@ namespace CodeSmith.SchemaHelper.NHibernate
         private static void PrepProperty(IProperty property)
         {
             var nhibType = ToNHibernateType(property);
-            property.ExtendedProperties.Add(NHibernateType, nhibType);
+            property.ExtendedProperties[NHibernateType] = nhibType;
             
             if (nhibType.EndsWith("String") && property.Size > 0)
-                property.ExtendedProperties.Add(Length, property.Size);
+                property.ExtendedProperties[Length] = property.Size;
         }
 
         private static void PrepAssociation(Association assocication)
@@ -191,8 +196,8 @@ namespace CodeSmith.SchemaHelper.NHibernate
 
         public static string ToNHibernateType(IProperty property)
         {
-            var tableProperty = (TableProperty)property;
-            var dbType = tableProperty.DataType.ToString();
+            var schemaProperty = (ISchemaProperty)property;
+            var dbType = schemaProperty.DataType.ToString();
 
             var nhibernateType = ToNHibernateTypeMap.ContainsKey(dbType)
                 ? ToNHibernateTypeMap[dbType]
@@ -227,6 +232,42 @@ namespace CodeSmith.SchemaHelper.NHibernate
                 }
 
                 return _toNHibernateTypeMap;
+            }
+        }
+
+        public static string FromNHibernateType(string nhibernateType, int? length)
+        {
+            var systemType = FromNHibernateTypeMap.ContainsKey(nhibernateType)
+                ? FromNHibernateTypeMap[nhibernateType]
+                : "System.String";
+
+            if (length.HasValue && length > 1)
+            {
+                if (systemType == "System.Char")
+                    return "System.String";
+            }
+
+            return systemType;
+        }
+
+        private static MapCollection FromNHibernateTypeMap
+        {
+            get
+            {
+                if (_fromNHibernateTypeMap == null)
+                {
+                    string path;
+                    if (!Map.TryResolvePath("NHibernateToSystemType", String.Empty, out path))
+                    {
+                        // If the mapping file wasn't found in the maps folder than look it up in the common folder.
+                        var baseDirectory = new DirectoryInfo(Assembly.GetExecutingAssembly().Location).Parent.FullName;
+                        Map.TryResolvePath("NHibernateToSystemType", baseDirectory, out path);
+                    }
+
+                    _fromNHibernateTypeMap = Map.Load(path);
+                }
+
+                return _fromNHibernateTypeMap;
             }
         }
     }

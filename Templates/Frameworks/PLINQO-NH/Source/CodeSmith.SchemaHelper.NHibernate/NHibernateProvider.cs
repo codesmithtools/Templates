@@ -6,12 +6,18 @@ namespace CodeSmith.SchemaHelper.NHibernate
 {
     public class NHibernateProvider : IEntityProvider
     {
+        public const string EntitiesSubFolder = "Entities";
+        public const string FunctionsSubFolder = "Functions";
+
         public NHibernateProvider(string mapsDirectory)
         {
-            MapsDirectory = mapsDirectory;
+            EntitiesDirectory = Path.Combine(mapsDirectory, EntitiesSubFolder);
+            FunctionsDirectory = Path.Combine(mapsDirectory, FunctionsSubFolder);
         }
 
-        public string MapsDirectory { get; private set; }
+        public string EntitiesDirectory { get; private set; }
+
+        public string FunctionsDirectory { get; private set; }
 
         public string Description
         {
@@ -22,12 +28,21 @@ namespace CodeSmith.SchemaHelper.NHibernate
         {
             Initialize();
 
-            foreach (var file in _filePaths)
+            foreach (var file in _entityPaths)
                 using (var stream = new FileStream(file, FileMode.Open))
                 using (var reader = XmlReader.Create(stream))
                 {
                     var doc = XDocument.Load(reader);
                     var entity = new NHibernateEntity(doc, Path.GetFileName(file));
+                    EntityStore.Instance.EntityCollection.Add(entity.Name, entity);
+                }
+
+            foreach (var file in _functionPaths)
+                using (var stream = new FileStream(file, FileMode.Open))
+                using (var reader = XmlReader.Create(stream))
+                {
+                    var doc = XDocument.Load(reader);
+                    var entity = new NHibernateCommandEntity(doc, Path.GetFileName(file));
                     EntityStore.Instance.EntityCollection.Add(entity.Name, entity);
                 }
         }
@@ -45,20 +60,25 @@ namespace CodeSmith.SchemaHelper.NHibernate
         {
             Initialize();
 
-            return _filePaths != null && _filePaths.Length > 0;
+            return _entityPaths != null && _entityPaths.Length > 0;
         }
 
         private bool _intialized = false;
 
-        private string[] _filePaths;
+        private string[] _entityPaths;
+
+        private string[] _functionPaths;
 
         private void Initialize()
         {
             if (_intialized)
                 return;
 
-            if (Directory.Exists(MapsDirectory))
-                _filePaths = Directory.GetFiles(MapsDirectory, "*" + NHibernateUtilities.MapExtension);
+            if (Directory.Exists(EntitiesDirectory))
+                _entityPaths = Directory.GetFiles(EntitiesDirectory, "*" + NHibernateUtilities.MapExtension);
+
+            if (Directory.Exists(FunctionsDirectory))
+                _functionPaths = Directory.GetFiles(FunctionsDirectory, "*" + NHibernateUtilities.MapExtension);
 
             _intialized = true;
         }

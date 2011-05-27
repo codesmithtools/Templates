@@ -83,10 +83,13 @@ namespace Plinqo.NHibernate
             if (HasOpenTransaction)
                 RollbackTransaction();
 
-            if (Session.IsOpen)
-                Session.Close();
+            if (Session != null)
+            {
+                if (Session.IsOpen)
+                    Session.Close();
 
-            Session.Dispose();
+                Session.Dispose();
+            }
 
             if (!finalizing)
                 GC.SuppressFinalize(this);
@@ -163,7 +166,7 @@ namespace Plinqo.NHibernate
 
         public bool IsOpen
         {
-            get { return (Session.IsOpen); }
+            get { return (Session != null && Session.IsOpen); }
         }
 
         #endregion

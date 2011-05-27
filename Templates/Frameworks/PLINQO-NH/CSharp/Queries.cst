@@ -54,7 +54,12 @@ Generating PLINQO for NHibernate Queries...
         EntityManager manager = new EntityManager(provider);
         
         foreach(IEntity entity in manager.Entities)
+        {
+            if (entity is NHibernateCommandEntity)
+                continue;
+                
             RenderQueries(entity);
+        }
     }
     
     private void RenderQueries(IEntity entity)

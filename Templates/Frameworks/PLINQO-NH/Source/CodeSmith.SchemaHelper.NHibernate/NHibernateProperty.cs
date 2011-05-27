@@ -38,7 +38,7 @@ namespace CodeSmith.SchemaHelper.NHibernate
             Name = name;
             GetterAccess = "public";
             SetterAccess = "public";
-            SystemType = FromNHibernateType(type, length);
+            SystemType = NHibernateUtilities.FromNHibernateType(type, length);
 
             _safeName = column;
 
@@ -62,47 +62,11 @@ namespace CodeSmith.SchemaHelper.NHibernate
             // ReSharper restore PossibleNullReferenceException
         }
 
-        public string FromNHibernateType(string nhibernateType, int? length)
-        {
-            var systemType = FromNHibernateTypeMap.ContainsKey(nhibernateType)
-                ? FromNHibernateTypeMap[nhibernateType]
-                : "System.String";
-
-            if (length.HasValue && length > 1)
-            {
-                if (systemType == "System.Char")
-                    return "System.String";
-            }
-
-            return systemType;
-        }
-
         public override string GetSafeName()
         {
             return _safeName;
         }
 
-        private static MapCollection _fromNHibernateTypeMap;
-
-        private static MapCollection FromNHibernateTypeMap
-        {
-            get
-            {
-                if (_fromNHibernateTypeMap == null)
-                {
-                    string path;
-                    if (!Map.TryResolvePath("NHibernateToSystemType", String.Empty, out path))
-                    {
-                        // If the mapping file wasn't found in the maps folder than look it up in the common folder.
-                        var baseDirectory = new DirectoryInfo(Assembly.GetExecutingAssembly().Location).Parent.FullName;
-                        Map.TryResolvePath("NHibernateToSystemType", baseDirectory, out path);
-                    }
-
-                    _fromNHibernateTypeMap = Map.Load(path);
-                }
-
-                return _fromNHibernateTypeMap;
-            }
-        }
+        
     }
 }

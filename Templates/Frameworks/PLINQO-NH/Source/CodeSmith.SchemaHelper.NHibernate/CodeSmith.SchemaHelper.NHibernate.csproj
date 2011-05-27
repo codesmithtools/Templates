@@ -55,6 +55,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="NHibernateAssociationProperty.cs" />
+    <Compile Include="NHibernateCommandEntity.cs" />
+    <Compile Include="NHibernateCommandProperty.cs" />
     <Compile Include="NHibernateEntity.cs" />
     <Compile Include="NHibernateExtensions.cs" />
     <Compile Include="NHibernateProvider.cs" />

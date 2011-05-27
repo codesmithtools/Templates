@@ -19,6 +19,9 @@
 <%@ Property Category="2. Directories" Name="EntitiesDirectory" Type="System.String" 
     Optional="True" Default="Entities" 
     Description="The output directory for entity classes." %>
+<%@ Property Category="2. Directories" Name="ModelsDirectory" Type="System.String" 
+    Optional="True" Default="Models" 
+    Description="The output directory for model classes. (Function results and views.)" %>
 <%@ Property Category="3. Naming" Name="BaseNamespace" Type="System.String" 
     Optional="False" Default="" 
     Description="The namespace for base classes." %>
@@ -32,6 +35,7 @@
     Optional="False" Default="EntityBase" 
     Description="The base class for PLINQO entities." %>
     
+<%@ Assembly Name="System.Xml.Linq" %>
 <%@ Assembly Name="SchemaExplorer" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="../Common/SchemaHelper" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper.NHibernate" Path="../Common/SchemaHelper" %>
@@ -42,6 +46,8 @@
 
 <%@ Register Name="GeneratedEntity" Template="Internal\Entity.Generated.cst" %>
 <%@ Register Name="EditableEntity" Template="Internal\Entity.Editable.cst" %>
+<%@ Register Name="GeneratedFunction" Template="Internal\Function.Generated.cst" %>
+<%@ Register Name="EditableFunction" Template="Internal\Function.Editable.cst" %>
 <%@ Register Name="GeneratedBase" Template="Internal\EntityBase.Generated.cst" %>
 <%@ Register Name="EditableBase" Template="Internal\EntityBase.Editable.cst" %>
 <%@ Register Name="GeneratedContext" Template="Internal\DataContext.Generated.cst" %>
@@ -53,8 +59,8 @@ Generating PLINQO for NHibernate Entities...
 <script runat="template">
     public void Generate()
     {
-        string mapsDirectory = GetFolder(MapsDirectory);
-        NHibernateProvider provider = new NHibernateProvider(mapsDirectory);
+        string mapsFolder = GetFolder(MapsDirectory);
+        NHibernateProvider provider = new NHibernateProvider(mapsFolder);
         EntityManager manager = new EntityManager(provider);
         
         RegisterReference();
@@ -62,7 +68,12 @@ Generating PLINQO for NHibernate Entities...
         RenderBase();
         
         foreach(IEntity entity in manager.Entities)
-            RenderEntity(entity);
+        {
+            if (entity is NHibernateCommandEntity)
+                RenderFunction((NHibernateCommandEntity)entity);
+            else
+                RenderEntity(entity);
+        }
             
         if (GenerateDataContext)
             RenderContext(manager);
@@ -101,6 +112,33 @@ Generating PLINQO for NHibernate Entities...
         GeneratedBase generated = this.Create<GeneratedBase>();
         generated.BaseNamespace = BaseNamespace;
         generated.EntityBaseClass = EntityBaseClass;
+        generated.RenderToFile(GetOutputFile(filePath, editableFilePath), true);
+    }
+    
+    private void RenderFunction(NHibernateCommandEntity command)
+    {
+        if (command.IsAssociated)
+            return;
+        
+        string folder = GetFolder(ModelsDirectory);
+            
+        string fileName = command.GetModelName() + ".generated.cs";
+        string filePath = Path.Combine(folder, fileName);
+        
+        string editableFileName = command.GetModelName() + ".cs";
+	    string editableFilePath = Path.Combine(folder, editableFileName);
+        
+        if(!File.Exists(editableFilePath))
+        {
+            EditableFunction editable = this.Create<EditableFunction>();
+            editable.SourceCommand = command;
+            editable.BaseNamespace = BaseNamespace;
+            editable.RenderToFile(GetOutputFile(editableFilePath, null), true);
+        }
+    
+        GeneratedFunction generated = this.Create<GeneratedFunction>();
+        generated.SourceCommand = command;
+        generated.BaseNamespace = BaseNamespace;
         generated.RenderToFile(GetOutputFile(filePath, editableFilePath), true);
     }
     
