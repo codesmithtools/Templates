@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" namespace="Tracker.Data.Entities" assembly="Tracker">
+    <class name="Task" table="[dbo].[Task]" >
+        <id name="Id" column="[Id]" type="Int32" >
+            <generator class="native" />
+        </id>
+        <version name="RowVersion" column="[RowVersion]" type="BinaryBlob" generated="always" unsaved-value="null" />
+        <property name="Summary" column="[Summary]" type="String" length="255" /> 
+        <property name="Details" column="[Details]" type="String" length="2000" /> 
+        <property name="StartDate" column="[StartDate]" type="DateTime" /> 
+        <property name="DueDate" column="[DueDate]" type="DateTime" /> 
+        <property name="CompleteDate" column="[CompleteDate]" type="DateTime" /> 
+        <property name="CreatedDate" column="[CreatedDate]" type="DateTime" /> 
+        <property name="ModifiedDate" column="[ModifiedDate]" type="DateTime" /> 
+        <property name="LastModifiedBy" column="[LastModifiedBy]" type="String" length="50" /> 
+        <many-to-one name="Priority" class="Priority" >
+            <column name="[PriorityId]" />
+        </many-to-one>
+        <many-to-one name="Status" class="Status" >
+            <column name="[StatusId]" />
+        </many-to-one>
+        <many-to-one name="UserAssigned" class="User" >
+            <column name="[AssignedId]" />
+        </many-to-one>
+        <many-to-one name="UserCreated" class="User" >
+            <column name="[CreatedId]" />
+        </many-to-one>
+        <bag name="AuditList" inverse="true" cascade="all-delete-orphan" lazy="true" >
+            <key>
+                <column name="[TaskId]" />
+            </key>
+            <one-to-many class="Audit" />
+        </bag>
+    </class>
+</hibernate-mapping>
+
