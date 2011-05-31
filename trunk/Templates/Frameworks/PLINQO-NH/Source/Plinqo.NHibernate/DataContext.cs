@@ -44,22 +44,23 @@ namespace Plinqo.NHibernate
 
         protected abstract ISession CreateSession();
 
+        protected abstract IStatelessSession CreateStatelessSession();
+
         #endregion
 
         #region Declarations
 
         private bool _isDisposed = false;
 
-        protected ITransaction Transaction;
+        private bool _objectTrackingEnabled = true;
+
+        private IStateSession<ISession> _statefulSession = null;
+
+        private IStateSession<IStatelessSession> _statelessSession = null;
 
         #endregion
 
-        #region Constructors & Destructors
-
-        protected DataContext()
-        {
-            Session = CreateSession();
-        }
+        #region Destructor
 
         ~DataContext()
         {
@@ -80,16 +81,11 @@ namespace Plinqo.NHibernate
             if (_isDisposed)
                 return;
 
-            if (HasOpenTransaction)
-                RollbackTransaction();
+            if (_statefulSession != null)
+                _statefulSession.Dispose();
 
-            if (Session != null)
-            {
-                if (Session.IsOpen)
-                    Session.Close();
-
-                Session.Dispose();
-            }
+            if (_statelessSession != null)
+                _statelessSession.Dispose();
 
             if (!finalizing)
                 GC.SuppressFinalize(this);
@@ -99,74 +95,122 @@ namespace Plinqo.NHibernate
 
         #endregion
 
-        #region Public Methods
+        #region Methods
 
         public void SubmitChanges()
         {
-            Session.Flush();
+            if (_statefulSession != null)
+                _statefulSession.Session.Flush();
+            else if (!ObjectTrackingEnabled)
+                throw new Exception("Can not SubmitChanges when ObjectTrackingEnabled is false.");
         }
 
-        public void Refresh(object entity)
+        public bool ObjectTrackingEnabled
         {
-            Session.Refresh(entity);
-        }
+            get { return _objectTrackingEnabled; }
+            set
+            {
+                if (GetDefaultStateSession(false) != null)
+                    throw new Exception("Can not change ObjectTrackingEnabled after a session has been instantiated.");
 
-        public void RefreshAll(IEnumerable<object> entities)
-        {
-            foreach (var entity in entities)
-                Refresh(entity);
+                _objectTrackingEnabled = value;
+            }
         }
 
         public ITransaction BeginTransaction()
         {
-            if (Transaction == null)
-                Transaction = Session.BeginTransaction();
-
-            return Transaction;
+            return GetDefaultStateSession()
+                .BeginTransaction();
         }
 
         public void CommitTransaction()
         {
-            if (Transaction == null)
-                return;
-
-            try
-            {
-                Transaction.Commit();
-                Transaction.Dispose();
-                Transaction = null;
-            }
-            catch (HibernateException)
-            {
-                RollbackTransaction();
-                throw;
-            }
+            var session = GetDefaultStateSession(false);
+            if (session != null)
+                session.CommitTransaction();
         }
 
         public void RollbackTransaction()
         {
-            if (Transaction == null)
-                return;
+            var session = GetDefaultStateSession(false);
+            if (session != null)
+                session.RollbackTransaction();
+        }
 
-            Transaction.Rollback();
-            Transaction.Dispose();
-            Transaction = null;
+        public IStateSession GetDefaultStateSession()
+        {
+            return GetDefaultStateSession(true);
+        }
+
+        private IStateSession GetDefaultStateSession(bool create)
+        {
+            if (create)
+                return ObjectTrackingEnabled
+                    ? (IStateSession)StatefulSession
+                    : (IStateSession)StatelessSession;
+
+            return ObjectTrackingEnabled
+                ? (IStateSession)_statefulSession
+                : (IStateSession)_statelessSession;
         }
 
         #endregion
 
         #region Properties
 
-        public ISession Session { get; private set; }
+        public IStateSession<ISession> StatefulSession
+        {
+            get
+            {
+                if (_statefulSession == null)
+                {
+                    var session = CreateSession();
+                    _statefulSession = new StatefulSession(session);
+                }
+
+                return _statefulSession;
+            }
+        }
+
+        public IStateSession<IStatelessSession> StatelessSession
+        {
+            get
+            {
+                if (_statelessSession == null)
+                {
+                    var session = CreateStatelessSession();
+                    _statelessSession = new StatelessSession(session);
+                }
+
+                return _statelessSession;
+            }
+        }
+
+        public ITransaction Transaction
+        {
+            get
+            {
+                var session = GetDefaultStateSession(false);
+                return session == null ? null : session.Transaction;
+            }
+        }
 
         public bool HasOpenTransaction
         {
-            get { return (Transaction != null); }
+            get
+            {
+                var session = GetDefaultStateSession(false);
+                return session != null && session.HasOpenTransaction;
+            }
         }
 
         public bool IsOpen
         {
-            get { return (Session != null && Session.IsOpen); }
+            get
+            {
+                var session = GetDefaultStateSession(false);
+                return session != null && session.IsOpen;
+            }
         }
 
         #endregion
