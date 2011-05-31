@@ -127,8 +127,7 @@ namespace <%= BaseNamespace %>
     <% SearchCriteria searchCriteria = command.SearchCriteria.First(); %>
         public IList<<%= command.GetModelName() %>> <%= command.Name %>(<%= GetParameters(entity, searchCriteria.Properties) %>)
         {
-            IQuery query = GetDefaultStateSession()
-                .GetNamedQuery("<%= command.Name %>");
+            IQuery query = Sessions.DefaultSession.GetNamedQuery("<%= command.Name %>");
             
             <% foreach(IProperty property in searchCriteria.Properties) { %>
             query.SetParameter("<%= property.Name %>", <%= CleanParamName(entity, property.VariableName) %>);

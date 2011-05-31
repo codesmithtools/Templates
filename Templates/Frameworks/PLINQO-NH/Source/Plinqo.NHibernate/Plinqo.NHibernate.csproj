@@ -64,6 +64,7 @@
   <ItemGroup>
     <Compile Include="DataContext.cs" />
     <Compile Include="Enums.cs" />
+    <Compile Include="IDataContextSessions.cs" />
     <Compile Include="IDataContext.cs" />
     <Compile Include="IStateSession.cs" />
     <Compile Include="ITable.cs" />
