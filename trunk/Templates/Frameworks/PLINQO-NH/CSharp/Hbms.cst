@@ -22,6 +22,9 @@
 <%@ Property Category="2. Database" Name="IncludeFunctions" Type="System.Boolean"
     Optional="False"
     Description="Include Stored Procedures." Default="False" %> 
+<%@ Property Category="2. Database" Name="IncludeViews" Type="System.Boolean"
+    Optional="False"
+    Description="Include View Tables." Default="False" %> 
 <%@ Property Category="3. Directories" Name="MapsDirectory" Type="System.String"
     Optional="True" Default="Maps"
     Description="The output directory for mapping files." %>
@@ -109,7 +112,7 @@ Generating PLINQO for NHibernate Mapings...
             CodeSmith.SchemaHelper.Configuration.Instance.IncludeExpressions.Add(new Regex(".*"));
         
         CodeSmith.SchemaHelper.Configuration.Instance.ExcludeNonPrimaryKeyTables = true;
-        CodeSmith.SchemaHelper.Configuration.Instance.IncludeViews = false; // TODO
+        CodeSmith.SchemaHelper.Configuration.Instance.IncludeViews = IncludeViews;
         CodeSmith.SchemaHelper.Configuration.Instance.IncludeFunctions = IncludeFunctions;
         CodeSmith.SchemaHelper.Configuration.Instance.IncludeManyToManyEntity = false;
         CodeSmith.SchemaHelper.Configuration.Instance.SchemaProviderName = SourceDatabase.Provider.Name;
@@ -133,8 +136,12 @@ Generating PLINQO for NHibernate Mapings...
     
     private void RenderEntity(IEntity entity)
     {
+        string subFolder = entity is ViewEntity
+            ? NHibernateProvider.ViewsSubFolder
+            : NHibernateProvider.EntitiesSubFolder;
+        
         string fileName = entity.ExtendedProperties[NHibernateUtilities.FileName] + NHibernateUtilities.MapExtension;
-        string folder = GetFolder(MapsDirectory, NHibernateProvider.EntitiesSubFolder);
+        string folder = GetFolder(MapsDirectory, subFolder);
         string filePath = Path.Combine(folder, fileName);
     
         EntityTemplate hbm = this.Create<EntityTemplate>();

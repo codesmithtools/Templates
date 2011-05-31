@@ -144,11 +144,14 @@ Generating PLINQO for NHibernate Entities...
     
     private void RenderEntity(IEntity entity)
     {
+        bool isView = ((NHibernateEntity)entity).IsView;
+        string folder = GetFolder(isView ? ModelsDirectory : EntitiesDirectory);
+        
         string fileName = entity.Name + ".generated.cs";
-	    string filePath = Path.Combine(GetFolder(EntitiesDirectory), fileName);
+	    string filePath = Path.Combine(folder, fileName);
         
         string editableFileName = entity.Name + ".cs";
-	    string editableFilePath = Path.Combine(GetFolder(EntitiesDirectory), editableFileName);
+	    string editableFilePath = Path.Combine(folder, editableFileName);
         
         if(!File.Exists(editableFilePath))
         {

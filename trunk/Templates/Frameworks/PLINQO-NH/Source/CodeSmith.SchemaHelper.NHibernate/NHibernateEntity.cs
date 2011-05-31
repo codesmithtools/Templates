@@ -6,7 +6,7 @@ namespace CodeSmith.SchemaHelper.NHibernate
 {
     public class NHibernateEntity : EntityBase<XDocument>
     {
-        public readonly static string[] DefaultAttributes = new[] { "name", "table", "lazy", NHibernateUtilities.FileName };
+        public readonly static string[] DefaultAttributes = new[] { "name", "table", "lazy", "MS_DiagramPane1", "MS_DiagramPane2", "MS_DiagramPaneCount", NHibernateUtilities.FileName };
 
         internal readonly string XmlNamespace;
 
@@ -14,9 +14,13 @@ namespace CodeSmith.SchemaHelper.NHibernate
 
         private readonly string _fileName;
 
-        public NHibernateEntity(XDocument doc, string fileName)
+        public bool IsView { get; private set; }
+
+        public NHibernateEntity(XDocument doc, string fileName, bool isView = false)
             : base(doc)
         {
+            IsView = isView;
+
             // ReSharper disable PossibleNullReferenceException
             XmlNamespace = EntitySource.Root.Name.NamespaceName;
 

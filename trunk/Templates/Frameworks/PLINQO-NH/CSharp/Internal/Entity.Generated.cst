@@ -77,7 +77,9 @@ namespace <%= SourceEntity.Namespace %>
         
         #region Column Mapped Properties
         
-        <% IEnumerable<IProperty> allProperties = SourceEntity.Key.Properties.Concat(SourceEntity.Properties); %>
+        <% IEnumerable<IProperty> allProperties = SourceEntity.Key.IsComposite
+            ? SourceEntity.Properties
+            : SourceEntity.Key.Properties.Concat(SourceEntity.Properties); %>
         <% foreach(IProperty property in allProperties) { %>
         <%= GeneratedCodeAttribute %>
         private <%= property.SystemType %> <%= property.PrivateMemberVariableName %>;
