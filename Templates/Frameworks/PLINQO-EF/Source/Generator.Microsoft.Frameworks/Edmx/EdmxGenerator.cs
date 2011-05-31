@@ -256,19 +256,22 @@ namespace Generator.Microsoft.Frameworks
         }
 
 
-        private bool ExcludeAssociation(Association association)
+        private static bool ExcludeAssociation(Association association)
         {
             foreach (var property in association.Properties)
             {
-                if ((property.Property.PropertyType & PropertyType.Key) != PropertyType.Key ||
-                    (property.ForeignProperty.PropertyType & PropertyType.Key) != PropertyType.Key)
+                var invalid = association.IsParentEntity 
+                    ? (property.Property.PropertyType & PropertyType.Key) != PropertyType.Key && (property.ForeignProperty.PropertyType & PropertyType.Foreign) != PropertyType.Foreign
+                    : (property.ForeignProperty.PropertyType & PropertyType.Key) != PropertyType.Key && (property.Property.PropertyType & PropertyType.Foreign) != PropertyType.Foreign;
+                
+                if (invalid)
                     return true;
             }
 
             return false;
         }
 
-        private void ResolveAssociationValues(Association association, out IEntity principalEntity, out IEntity dependentEntity, out bool isParentEntity)
+        private static void ResolveAssociationValues(Association association, out IEntity principalEntity, out IEntity dependentEntity, out bool isParentEntity)
         {
             bool isManyToManyEntity = association.IsParentManyToMany();
             principalEntity = !isManyToManyEntity ? association.Entity : association.ForeignEntity;
