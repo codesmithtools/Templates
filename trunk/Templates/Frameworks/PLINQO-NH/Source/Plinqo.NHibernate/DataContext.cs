@@ -54,13 +54,14 @@ namespace Plinqo.NHibernate
 
         private bool _objectTrackingEnabled = true;
 
-        private IStateSession<ISession> _statefulSession = null;
-
-        private IStateSession<IStatelessSession> _statelessSession = null;
-
         #endregion
 
-        #region Destructor
+        #region Constructor & Destructor
+        
+        protected DataContext()
+        {
+            Sessions = new DataContextSessions(this);
+        }
 
         ~DataContext()
         {
@@ -81,11 +82,7 @@ namespace Plinqo.NHibernate
             if (_isDisposed)
                 return;
 
-            if (_statefulSession != null)
-                _statefulSession.Dispose();
-
-            if (_statelessSession != null)
-                _statelessSession.Dispose();
+            Sessions.Dispose();
 
             if (!finalizing)
                 GC.SuppressFinalize(this);
@@ -99,10 +96,10 @@ namespace Plinqo.NHibernate
 
         public void SubmitChanges()
         {
-            if (_statefulSession != null)
-                _statefulSession.Session.Flush();
+            if (Sessions.HasSession)
+                Sessions.Session.Flush();
             else if (!ObjectTrackingEnabled)
-                throw new Exception("Can not SubmitChanges when ObjectTrackingEnabled is false.");
+                throw new InvalidOperationException("Can not SubmitChanges when ObjectTrackingEnabled is false.");
         }
 
         public bool ObjectTrackingEnabled
@@ -110,8 +107,8 @@ namespace Plinqo.NHibernate
             get { return _objectTrackingEnabled; }
             set
             {
-                if (GetDefaultStateSession(false) != null)
-                    throw new Exception("Can not change ObjectTrackingEnabled after a session has been instantiated.");
+                if (Sessions.HasDefaultSession)
+                    throw new InvalidOperationException("Can not change ObjectTrackingEnabled after a session has been instantiated.");
 
                 _objectTrackingEnabled = value;
             }
@@ -119,100 +116,159 @@ namespace Plinqo.NHibernate
 
         public ITransaction BeginTransaction()
         {
-            return GetDefaultStateSession()
-                .BeginTransaction();
+            return Sessions.DefaultSession.BeginTransaction();
         }
 
         public void CommitTransaction()
         {
-            var session = GetDefaultStateSession(false);
-            if (session != null)
-                session.CommitTransaction();
+            if (Sessions.HasDefaultSession)
+                Sessions.DefaultSession.CommitTransaction();
         }
 
         public void RollbackTransaction()
         {
-            var session = GetDefaultStateSession(false);
-            if (session != null)
-                session.RollbackTransaction();
-        }
-
-        public IStateSession GetDefaultStateSession()
-        {
-            return GetDefaultStateSession(true);
-        }
-
-        private IStateSession GetDefaultStateSession(bool create)
-        {
-            if (create)
-                return ObjectTrackingEnabled
-                    ? (IStateSession)StatefulSession
-                    : (IStateSession)StatelessSession;
-
-            return ObjectTrackingEnabled
-                ? (IStateSession)_statefulSession
-                : (IStateSession)_statelessSession;
+            if (Sessions.HasDefaultSession)
+                Sessions.DefaultSession.RollbackTransaction();
         }
 
         #endregion
 
         #region Properties
 
-        public IStateSession<ISession> StatefulSession
-        {
-            get
-            {
-                if (_statefulSession == null)
-                {
-                    var session = CreateSession();
-                    _statefulSession = new StatefulSession(session);
-                }
-
-                return _statefulSession;
-            }
-        }
-
-        public IStateSession<IStatelessSession> StatelessSession
-        {
-            get
-            {
-                if (_statelessSession == null)
-                {
-                    var session = CreateStatelessSession();
-                    _statelessSession = new StatelessSession(session);
-                }
-
-                return _statelessSession;
-            }
-        }
-
-        public ITransaction Transaction
-        {
-            get
-            {
-                var session = GetDefaultStateSession(false);
-                return session == null ? null : session.Transaction;
-            }
-        }
-
         public bool HasOpenTransaction
         {
-            get
-            {
-                var session = GetDefaultStateSession(false);
-                return session != null && session.HasOpenTransaction;
-            }
+            get { return Sessions.HasDefaultSession && Sessions.DefaultSession.HasOpenTransaction; }
         }
 
         public bool IsOpen
         {
-            get
-            {
-                var session = GetDefaultStateSession(false);
-                return session != null && session.IsOpen;
-            }
+            get { return Sessions.HasDefaultSession && Sessions.DefaultSession.IsOpen; }
         }
 
+        public IDataContextSessions Sessions { get; private set; }
+
         #endregion
+
+        public class DataContextSessions : IDataContextSessions
+        {
+            #region Declarations
+
+            private readonly DataContext _dataContext;
+
+            private bool _isDisposed = false;
+
+            private IStateSession<ISession> _stateSession = null;
+
+            private IStateSession<IStatelessSession> _statelessStateSession = null;
+
+            #endregion
+
+            #region Constructor & Destructor
+
+            public DataContextSessions(DataContext dataContext)
+            {
+                _dataContext = dataContext;
+            }
+
+            ~DataContextSessions()
+            {
+                Dispose();
+            }
+
+            #endregion
+
+            #region IDisposable
+
+            public void Dispose()
+            {
+                Dispose(true);
+            }
+
+            private void Dispose(bool finalizing)
+            {
+                if (_isDisposed)
+                    return;
+
+                if (HasSession)
+                    _stateSession.Dispose();
+
+                if (HasStatelessSession)
+                    _statelessStateSession.Dispose();
+
+                if (!finalizing)
+                    GC.SuppressFinalize(this);
+
+                _isDisposed = true;
+            }
+
+            #endregion
+
+            #region Properties
+
+            public bool HasSession
+            {
+                get { return _stateSession != null; }
+            }
+
+            public ISession Session
+            {
+                get { return StateSession.Session; }
+            }
+
+            private IStateSession<ISession> StateSession
+            {
+                get
+                {
+                    if (!HasSession)
+                    {
+                        var session = _dataContext.CreateSession();
+                        _stateSession = new StatefulSession(session);
+                    }
+
+                    return _stateSession;
+                }
+            }
+
+            public bool HasStatelessSession
+            {
+                get { return _statelessStateSession != null; }
+            }
+
+            public IStatelessSession StatelessSession
+            {
+                get { return StatelessStateSession.Session; }
+            }
+
+            private IStateSession<IStatelessSession> StatelessStateSession
+            {
+                get
+                {
+                    if (!HasStatelessSession)
+                    {
+                        var session = _dataContext.CreateStatelessSession();
+                        _statelessStateSession = new StatelessSession(session);
+                    }
+
+                    return _statelessStateSession;
+                }
+            }
+
+            public bool HasDefaultSession
+            {
+                get { return _dataContext.ObjectTrackingEnabled ? HasSession : HasStatelessSession; }
+            }
+
+            public IStateSession DefaultSession
+            {
+                get
+                {
+                    return _dataContext.ObjectTrackingEnabled
+                        ? (IStateSession)StateSession
+                        : (IStateSession)StatelessStateSession;
+                }
+            }
+
+            #endregion
+        }
     }
 }

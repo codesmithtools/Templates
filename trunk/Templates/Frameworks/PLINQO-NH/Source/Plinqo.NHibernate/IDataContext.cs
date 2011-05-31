@@ -8,19 +8,11 @@ using Environment = NHibernate.Cfg.Environment;
 
 namespace Plinqo.NHibernate
 {
-    
-
     public interface IDataContext : IDisposable
     {
         void SubmitChanges();
 
-        IStateSession GetDefaultStateSession(); 
-
         bool ObjectTrackingEnabled { get; set; }
-
-        IStateSession<ISession> StatefulSession { get; }
-
-        IStateSession<IStatelessSession> StatelessSession { get; }
 
         ITransaction BeginTransaction();
 
@@ -28,10 +20,10 @@ namespace Plinqo.NHibernate
 
         void RollbackTransaction();
 
-        ITransaction Transaction { get; }
-
         bool HasOpenTransaction { get; }
 
         bool IsOpen { get; }
+
+        IDataContextSessions Sessions { get; }
     }
 }
