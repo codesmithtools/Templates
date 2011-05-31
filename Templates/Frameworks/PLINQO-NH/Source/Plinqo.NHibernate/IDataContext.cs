@@ -1,16 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
+using System.Linq;
 using NHibernate;
+using Configuration = NHibernate.Cfg.Configuration;
+using Environment = NHibernate.Cfg.Environment;
 
 namespace Plinqo.NHibernate
 {
+    
+
     public interface IDataContext : IDisposable
     {
         void SubmitChanges();
 
-        void Refresh(object entity);
+        IStateSession GetDefaultStateSession(); 
 
-        void RefreshAll(IEnumerable<object> entities);
+        bool ObjectTrackingEnabled { get; set; }
+
+        IStateSession<ISession> StatefulSession { get; }
+
+        IStateSession<IStatelessSession> StatelessSession { get; }
 
         ITransaction BeginTransaction();
 
@@ -18,7 +28,7 @@ namespace Plinqo.NHibernate
 
         void RollbackTransaction();
 
-        ISession Session { get; }
+        ITransaction Transaction { get; }
 
         bool HasOpenTransaction { get; }
 
