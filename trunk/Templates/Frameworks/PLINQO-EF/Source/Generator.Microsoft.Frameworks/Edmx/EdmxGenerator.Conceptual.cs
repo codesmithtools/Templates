@@ -158,7 +158,7 @@ namespace Generator.Microsoft.Frameworks
             {
                 var type = function.ReturnType != null ? function.ReturnType.ToString().Replace("Collection(", string.Empty).Replace(")", string.Empty).Trim() : string.Empty;
                 var complexTypeName = NamingConventions.PropertyName(type.Replace(ConceptualSchema.Namespace + ".", string.Empty));
-                if(entity.IsAssociated)
+                if (entity.IsStronglyTypedAssociatedEntity)
                 {
                     function.EntitySet = entity.AssociatedEntity.EntityKeyName;
                     function.ReturnType = string.Format("Collection({0}.{1})", ConceptualSchema.Namespace, ResolveEntityMappedName(entity.AssociatedEntity.EntityKey(), entity.AssociatedEntity.Name));
