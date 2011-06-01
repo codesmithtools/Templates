@@ -46,7 +46,7 @@ namespace CodeSmith.SchemaHelper.NHibernate
         {
             entity.Namespace = defaultNamespace;
 
-            entity.ExtendedProperties.Add(FileName, entity.Name);
+            entity.ExtendedProperties.Add(FileName, entity is CommandEntity ? entity.EntityKeyName : entity.Name);
             entity.ExtendedProperties.Add(Lazy, "true");
 
             foreach (var property in entity.Key.Properties)

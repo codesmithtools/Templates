@@ -14,6 +14,8 @@ namespace CodeSmith.SchemaHelper.NHibernate
 
         public bool IsAssociated { get; private set; }
 
+        public string AssociatedEntityName { get; private set; }
+
         public NHibernateCommandEntity(XDocument doc, string fileName)
             : base(doc)
         {
@@ -31,7 +33,12 @@ namespace CodeSmith.SchemaHelper.NHibernate
 
             EntityKeyName = fileName.Replace(NHibernateUtilities.MapExtension, String.Empty);
 
-            IsAssociated = EntitySource.Root.Descendant("return", XmlNamespace) != null;
+            var association = EntitySource.Root.Descendant("return", XmlNamespace);
+            if (association != null)
+            {
+                IsAssociated = true;
+                AssociatedEntityName = association.Attribute("class").Value;
+            }
 
             // ReSharper restore PossibleNullReferenceException
         }
@@ -80,7 +87,9 @@ namespace CodeSmith.SchemaHelper.NHibernate
 
         public string GetModelName()
         {
-            return EntityKeyName + ModelSuffix;
+            return IsAssociated
+                ? AssociatedEntityName
+                : (EntityKeyName + ModelSuffix);
         }
     }
 }

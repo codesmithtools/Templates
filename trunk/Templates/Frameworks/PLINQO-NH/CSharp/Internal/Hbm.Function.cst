@@ -28,7 +28,11 @@
 <hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" namespace="<%= EntityNamespace %>" assembly="<%= AssemblyName %>">
   <sql-query name="<%= SourceCommand.Name %>" >
 <% if (SourceCommand.IsAssociated) { %>
-    <return class="<%= SourceCommand.AssociatedEntity.Name %>" />
+    <return class="<%= SourceCommand.AssociatedEntity.Name %>" >
+    <% foreach(IProperty property in SourceCommand.Properties) { %>
+      <return-property name="<%= property.Name %>" column="<%= property.KeyName %>" />
+    <% } %>
+    </return>
 <% } else { %>
     <% foreach(IProperty property in SourceCommand.Properties) { %>
     <return-scalar column="<%= property.KeyName %>" type="<%= property.ExtendedProperties[NHibernateUtilities.NHibernateType] %>" />
