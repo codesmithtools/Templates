@@ -131,12 +131,14 @@ namespace <%= BaseNamespace %>
             
             <% foreach(IProperty property in searchCriteria.Properties) { %>
             query.SetParameter("<%= property.Name %>", <%= CleanParamName(entity, property.VariableName) %>);
-            <% } %>
             
+            <% } %>
+            <% if (@command.IsAssociated) { %>
             query.SetResultTransformer(
                 new NHibernate.Transform.AliasToBeanConstructorResultTransformer(
                 typeof (<%= command.GetModelName() %>).GetConstructors()[0]));
-            
+                
+            <% } %>
             return query.List<<%= command.GetModelName() %>>();
         }
         
