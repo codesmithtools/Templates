@@ -26,7 +26,7 @@ namespace CodeSmith.Data.Linq
     /// http://www.gnu.org/licenses/lgpl.html
     /// </para>
     /// </remarks>
-    public static class QueryResultCache
+    public static class QueryableCachingExtensions
     {
         #region FromCache
 
@@ -234,23 +234,7 @@ namespace CodeSmith.Data.Linq
         /// <returns>The result of the query.</returns>
         public static IEnumerable<T> FromCache<T>(this IQueryable<T> query, CacheSettings settings)
         {
-            if (settings == null)
-                settings = CacheManager.GetProfile();
-
-            var key = query.GetHashKey();
-
-            // try to get the query result from the cache
-            var result = GetResultCache<T>(key, settings);
-
-            if (result != null)
-                return result;
-
-            // materialize the query
-            result = query.ToList();
-
-            SetResultCache(key, settings, result);
-
-            return result;
+            return LinqToSqlQueryResultCache.Instance.FromCache(query, settings);
         }
 
         /// <summary>
@@ -628,111 +612,11 @@ namespace CodeSmith.Data.Linq
 
         #endregion
 
-        internal static void SetResultCache<T>(string key, CacheSettings settings, ICollection<T> result)
-        {
-            if (settings == null)
-                settings = CacheManager.GetProfile();
-
-            if (result == null)
-                return;
-
-            // Don't cache empty result.
-            if (result.Count == 0 && !settings.CacheEmptyResult)
-                return;
-
-            // detach for cache
-            foreach (var item in result)
-            {
-                var entity = item as ILinqEntity;
-                if (entity != null)
-                    entity.Detach();
-            }
-
-            ICacheProvider cacheProvider = CacheManager.GetProvider(settings.Provider);
-            cacheProvider.Set(key, result, settings);
-        }
-
-        internal static ICollection<T> GetResultCache<T>(string key, CacheSettings settings)
-        {
-            if (settings == null)
-                settings = CacheManager.GetProfile();
-
-            ICacheProvider cacheProvider = CacheManager.GetProvider(settings.Provider);
-            var collection = cacheProvider.Get<ICollection<T>>(key, settings.Group);
-            return collection;
-        }
-
         #region GetHashKey
 
-        /// <summary>
-        /// Gets a unique Md5 key for a query.
-        /// </summary>
-        /// <param name="query">The query to build a key from.</param>
-        /// <returns>A Md5 hash unique to the query.</returns>
         public static string GetHashKey(this IQueryable query)
         {
-            // locally evaluate as much of the query as possible
-            Expression expression = Evaluator.PartialEval(
-                query.Expression,
-                CanBeEvaluatedLocally);
-
-            // use the string representation of the query for the cache key
-            string key = expression.ToString();
-
-            // make key DB specific
-            DataContext db = query.GetDataContext();
-
-            return GetHashKey(db, key);
-        }
-
-        public static string GetHashKey(this DataContext db, params object[] values)
-        {
-            var sb = new StringBuilder();
-            foreach (var value in values)
-                sb.Append(value);
-
-            return GetHashKey(db, sb.ToString());
-        }
-
-        private static string GetHashKey(this DataContext db, string key)
-        {
-            if (db != null && db.Connection != null 
-                && !string.IsNullOrEmpty(db.Connection.ConnectionString))
-                key += db.Connection.ConnectionString;
-
-            // the key is potentially very long, so use an md5 fingerprint
-            // (fine if the query result data isn't critically sensitive)
-            return ToMd5Fingerprint(key);
-        }
-
-        private static Func<Expression, bool> CanBeEvaluatedLocally
-        {
-            get
-            {
-                return expression =>
-                {
-                    // don't evaluate parameters
-                    if (expression.NodeType == ExpressionType.Parameter)
-                        return false;
-
-                    // can't evaluate queries
-                    if (typeof(IQueryable).IsAssignableFrom(expression.Type))
-                        return false;
-
-                    return true;
-                };
-            }
-        }
-
-        private static string ToMd5Fingerprint(string s)
-        {
-            byte[] bytes = Encoding.Unicode.GetBytes(s.ToCharArray());
-            byte[] hash = new MD5CryptoServiceProvider().ComputeHash(bytes);
-
-            // concat the hash bytes into one long string
-            return hash.Aggregate(new StringBuilder(32),
-                (sb, b) => sb.Append(b.ToString("X2")))
-                .ToString();
+            return LinqToSqlQueryResultCache.Instance.GetHashKey(query);
         }
 
         #endregion
