@@ -37,6 +37,10 @@
       <HintPath>..\..\Common\NHibernate\Castle.Core.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="CodeSmith.Data, Version=5.0.0.0, Culture=neutral, PublicKeyToken=596a5eee5d207fdd, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Common\Plinqo.NHibernate\CodeSmith.Data.dll</HintPath>
+    </Reference>
     <Reference Include="Iesi.Collections, Version=1.0.1.0, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\Common\NHibernate\Iesi.Collections.dll</HintPath>
@@ -55,6 +59,7 @@
     <Reference Include="System" />
     <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Data.Linq" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -64,6 +69,7 @@
   <ItemGroup>
     <Compile Include="DataContext.cs" />
     <Compile Include="Enums.cs" />
+    <Compile Include="Extensions.cs" />
     <Compile Include="IDataContextSessions.cs" />
     <Compile Include="IDataContext.cs" />
     <Compile Include="IStateSession.cs" />

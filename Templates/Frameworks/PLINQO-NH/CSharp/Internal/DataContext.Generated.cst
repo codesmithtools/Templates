@@ -57,20 +57,25 @@ namespace <%= BaseNamespace %>
 
         private static ISessionFactory _sessionFactory = null;
 
+        private ISessionFactory SessionFactory
+        {
+            get
+            {
+                if (_sessionFactory == null)
+                    _sessionFactory = CreateSessionFactory("<%= SourceDatabase.Name %>", "<%= AssemblyName %>", "<%= GetDialect() %>", "<%= GetDriver() %>");
+
+                return _sessionFactory;
+            }
+        }
+
         protected override ISession CreateSession()
         {
-            if (_sessionFactory == null)
-                _sessionFactory = CreateSessionFactory("<%= SourceDatabase.Name %>", "<%= AssemblyName %>", "<%= GetDialect() %>", "<%= GetDriver() %>");
-
-            return _sessionFactory.OpenSession();
+            return SessionFactory.OpenSession();
         }
         
         protected override IStatelessSession CreateStatelessSession()
         {
-            if (_sessionFactory == null)
-                _sessionFactory = CreateSessionFactory("<%= SourceDatabase.Name %>", "<%= AssemblyName %>", "<%= GetDialect() %>", "<%= GetDriver() %>");
-
-            return _sessionFactory.OpenStatelessSession();
+            return SessionFactory.OpenStatelessSession();
         }
         
         #endregion
