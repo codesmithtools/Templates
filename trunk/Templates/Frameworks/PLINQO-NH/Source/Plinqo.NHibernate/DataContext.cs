@@ -10,26 +10,69 @@ namespace Plinqo.NHibernate
 {
     public abstract class DataContext : IDataContext
     {
-        #region Session Implementation
+        #region Session Repository
 
-        protected virtual string GetConnectionString(string databaseName)
+        private static Dictionary<ISession, DataContext> _sessionMap;
+
+        private static Dictionary<ISession, DataContext> SessionMap
         {
-            foreach (ConnectionStringSettings connection in ConfigurationManager.ConnectionStrings)
-                if (CompareConnectionName(connection, "hibernate", databaseName))
-                    return connection.ConnectionString;
+            get
+            {
+                if (_sessionMap == null)
+                    _sessionMap = new Dictionary<ISession, DataContext>();
 
-            throw new ApplicationException("Connection String Not Found");
+                return _sessionMap;
+            }
         }
+
+        private static Dictionary<IStatelessSession, DataContext> _statelessSessionMap;
+
+        private static Dictionary<IStatelessSession, DataContext> StatelessSessionMap
+        {
+            get
+            {
+                if (_statelessSessionMap == null)
+                    _statelessSessionMap = new Dictionary<IStatelessSession, DataContext>();
+
+                return _statelessSessionMap;
+            }
+        }
+
+        internal static DataContext GetBySession(object session)
+        {
+            var iSession = session as ISession;
+            if (iSession != null)
+                return SessionMap[iSession];
+
+            var iStatelessSession = session as IStatelessSession;
+            if (iStatelessSession != null)
+                return StatelessSessionMap[iStatelessSession];
+
+            return null;
+        }
+
+        #endregion
+
+        #region Session Implementation
 
         protected bool CompareConnectionName(ConnectionStringSettings connection, params string[] names)
         {
             return names.Any(name => connection.Name.Contains(name.ToLower()));
         }
 
-        protected virtual ISessionFactory CreateSessionFactory(string databaseName, string assemblyName, string dialect, string connectionDriver)
+        protected ISessionFactory CreateSessionFactory(string databaseName, string assemblyName, string dialect, string connectionDriver)
         {
+            DatabaseName = databaseName;
+
             var config = new Configuration();
 
+            ConfigureSessionFactory(config, databaseName, assemblyName, dialect, connectionDriver);
+
+            return config.BuildSessionFactory();
+        }
+
+        protected virtual void ConfigureSessionFactory(Configuration config, string databaseName, string assemblyName, string dialect, string connectionDriver)
+        {
             var connectionString = GetConnectionString(databaseName);
 
             config.SetProperty(Environment.ConnectionProvider, "NHibernate.Connection.DriverConnectionProvider");
@@ -38,8 +81,15 @@ namespace Plinqo.NHibernate
             config.SetProperty(Environment.ConnectionString, connectionString);
             config.SetProperty(Environment.ProxyFactoryFactoryClass, "NHibernate.ByteCode.Castle.ProxyFactoryFactory, NHibernate.ByteCode.Castle");
             config.AddAssembly(assemblyName);
+        }
 
-            return config.BuildSessionFactory();
+        protected virtual string GetConnectionString(string databaseName)
+        {
+            foreach (ConnectionStringSettings connection in ConfigurationManager.ConnectionStrings)
+                if (CompareConnectionName(connection, "hibernate", databaseName))
+                    return connection.ConnectionString;
+
+            throw new ApplicationException("Connection String Not Found");
         }
 
         protected abstract ISession CreateSession();
@@ -147,6 +197,8 @@ namespace Plinqo.NHibernate
 
         public IDataContextSessions Sessions { get; private set; }
 
+        public string DatabaseName { get; private set; }
+
         #endregion
 
         public class DataContextSessions : IDataContextSessions
@@ -190,10 +242,16 @@ namespace Plinqo.NHibernate
                     return;
 
                 if (HasSession)
+                {
+                    SessionMap.Remove(_stateSession.Session);
                     _stateSession.Dispose();
+                }
 
                 if (HasStatelessSession)
+                {
+                    StatelessSessionMap.Remove(_statelessStateSession.Session);
                     _statelessStateSession.Dispose();
+                }
 
                 if (!finalizing)
                     GC.SuppressFinalize(this);
@@ -222,6 +280,7 @@ namespace Plinqo.NHibernate
                     if (!HasSession)
                     {
                         var session = _dataContext.CreateSession();
+                        SessionMap.Add(session, _dataContext);
                         _stateSession = new StatefulSession(session);
                     }
 
@@ -246,6 +305,7 @@ namespace Plinqo.NHibernate
                     if (!HasStatelessSession)
                     {
                         var session = _dataContext.CreateStatelessSession();
+                        StatelessSessionMap.Add(session, _dataContext);
                         _statelessStateSession = new StatelessSession(session);
                     }
 
