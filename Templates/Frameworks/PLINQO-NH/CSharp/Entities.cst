@@ -90,6 +90,7 @@ Generating PLINQO for NHibernate Entities...
         
         // DataContext References
         this.RegisterReference("System.Configuration");
+        this.RegisterReference(GetFile(@"..\Common\Plinqo.NHibernate\CodeSmith.Data.dll"));
         this.RegisterReference(GetFile(@"..\Common\Plinqo.NHibernate\Plinqo.NHibernate.dll"));
     }
     
