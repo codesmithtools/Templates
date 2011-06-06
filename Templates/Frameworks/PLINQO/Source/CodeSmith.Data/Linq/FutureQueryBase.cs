@@ -53,7 +53,7 @@ namespace CodeSmith.Data.Linq
                 return;
 
             string key = GetKey();
-            ICollection<T> cached = LinqToSqlQueryResultCache.Instance.GetResultCache<T>(key, _cacheSettings);
+            ICollection<T> cached = QueryResultCache.GetResultCache<T>(key, _cacheSettings);
 
             if (cached == null)
                 return;
@@ -191,7 +191,7 @@ namespace CodeSmith.Data.Linq
 
             // cache the result 
             string key = GetKey();
-            LinqToSqlQueryResultCache.Instance.SetResultCache(key, _cacheSettings, resultList);
+            QueryResultCache.SetResultCache(key, _cacheSettings, resultList);
         }
     }
 }

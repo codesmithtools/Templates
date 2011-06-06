@@ -234,7 +234,7 @@ namespace CodeSmith.Data.Linq
         /// <returns>The result of the query.</returns>
         public static IEnumerable<T> FromCache<T>(this IQueryable<T> query, CacheSettings settings)
         {
-            return LinqToSqlQueryResultCache.Instance.FromCache(query, settings);
+            return QueryResultCache.FromCache(query, settings);
         }
 
         /// <summary>
@@ -616,7 +616,7 @@ namespace CodeSmith.Data.Linq
 
         public static string GetHashKey(this IQueryable query)
         {
-            return LinqToSqlQueryResultCache.Instance.GetHashKey(query);
+            return QueryResultCache.GetHashKey(query);
         }
 
         #endregion

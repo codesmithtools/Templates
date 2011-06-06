@@ -8,20 +8,9 @@ using CodeSmith.Data.Linq;
 
 namespace CodeSmith.Data.Caching
 {
-    public class LinqToSqlQueryResultCache : QueryResultCache
+    public class LinqToSqlQueryResultCacheHelper : IQueryResultCacheHelper
     {
-        public static QueryResultCache Instance { get; private set; }
-
-        static LinqToSqlQueryResultCache()
-        {
-            Instance = new LinqToSqlQueryResultCache();
-        }
-
-        private LinqToSqlQueryResultCache()
-        {
-        }
-
-        protected override string GetDbName(IQueryable query)
+        public string GetDbName(IQueryable query)
         {
             var db = query.GetDataContext();
 
@@ -30,7 +19,7 @@ namespace CodeSmith.Data.Caching
                 : String.Empty;
         }
 
-        protected override void Detach<T>(ICollection<T> results, IQueryable query)
+        public void Detach<T>(ICollection<T> results, IQueryable query)
         {
             foreach (var item in results)
             {
@@ -41,17 +30,18 @@ namespace CodeSmith.Data.Caching
         }
     }
 
-    public abstract class QueryResultCache
+    public interface IQueryResultCacheHelper
     {
-        /// <summary>
-        /// Returns the result of the query; if possible from the cache, otherwise
-        /// the query is materialized and the result cached before being returned.
-        /// </summary>
-        /// <typeparam name="T">The type of the data in the data source.</typeparam>
-        /// <param name="query">The query to be materialized.</param>
-        /// <param name="settings">Cache settings object.</param>
-        /// <returns>The result of the query.</returns>
-        public IEnumerable<T> FromCache<T>(IQueryable<T> query, CacheSettings settings)
+        void Detach<T>(ICollection<T> results, IQueryable query);
+
+        string GetDbName(IQueryable query);
+    }
+
+    public static class QueryResultCache
+    {
+        public static IQueryResultCacheHelper Helper { get; set; }
+
+        public static IEnumerable<T> FromCache<T>(IQueryable<T> query, CacheSettings settings)
         {
             if (settings == null)
                 settings = CacheManager.GetProfile();
@@ -67,17 +57,12 @@ namespace CodeSmith.Data.Caching
             // materialize the query
             result = query.ToList();
 
-            SetResultCache(key, settings, result);
+            SetResultCache(key, settings, result, query);
 
             return result;
         }
 
-        /// <summary>
-        /// Gets a unique Md5 key for a query.
-        /// </summary>
-        /// <param name="query">The query to build a key from.</param>
-        /// <returns>A Md5 hash unique to the query.</returns>
-        public string GetHashKey(IQueryable query)
+        public static string GetHashKey(IQueryable query)
         {
             // locally evaluate as much of the query as possible
             var expression = Evaluator.PartialEval(
@@ -97,12 +82,12 @@ namespace CodeSmith.Data.Caching
             return ToMd5Fingerprint(key);
         }
 
-        public void SetResultCache<T>(string key, CacheSettings settings, ICollection<T> results)
+        public static void SetResultCache<T>(string key, CacheSettings settings, ICollection<T> results)
         {
             SetResultCache(key, settings, results, null);
         }
 
-        public void SetResultCache<T>(string key, CacheSettings settings, ICollection<T> results, IQueryable query)
+        public static void SetResultCache<T>(string key, CacheSettings settings, ICollection<T> results, IQueryable<T> query)
         {
             if (settings == null)
                 settings = CacheManager.GetProfile();
@@ -121,7 +106,7 @@ namespace CodeSmith.Data.Caching
             cacheProvider.Set(key, results, settings);
         }
 
-        public ICollection<T> GetResultCache<T>(string key, CacheSettings settings)
+        public static ICollection<T> GetResultCache<T>(string key, CacheSettings settings)
         {
             if (settings == null)
                 settings = CacheManager.GetProfile();
@@ -131,9 +116,18 @@ namespace CodeSmith.Data.Caching
             return collection;
         }
 
-        protected abstract void Detach<T>(ICollection<T> results, IQueryable query);
+        private static void Detach<T, U>(ICollection<T> results, IQueryable<U> query)
+        {
+            if (Helper != null)
+                Helper.Detach(results, query);
+        }
 
-        protected abstract string GetDbName(IQueryable query);
+        private static string GetDbName(IQueryable query)
+        {
+            return Helper == null
+                ? String.Empty
+                : Helper.GetDbName(query);
+        }
 
         private static Func<Expression, bool> CanBeEvaluatedLocally
         {
