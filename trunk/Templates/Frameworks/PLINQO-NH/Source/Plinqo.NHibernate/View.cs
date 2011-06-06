@@ -20,7 +20,7 @@ namespace Plinqo.NHibernate
 
         private IQueryable<T> GetQueryable()
         {
-            return DataContext.Sessions.StatelessSession.Query<T>();
+            return DataContext.Advanced.StatelessSession.Query<T>();
         }
 
         public IEnumerator<T> GetEnumerator()

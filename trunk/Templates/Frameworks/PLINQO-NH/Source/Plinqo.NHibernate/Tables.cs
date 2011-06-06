@@ -21,8 +21,8 @@ namespace Plinqo.NHibernate
         private IQueryable<T> GetQueryable()
         {
             return DataContext.ObjectTrackingEnabled
-                ? DataContext.Sessions.Session.Query<T>()
-                : DataContext.Sessions.StatelessSession.Query<T>();
+                ? DataContext.Advanced.Session.Query<T>()
+                : DataContext.Advanced.StatelessSession.Query<T>();
         }
 
         public IEnumerator<T> GetEnumerator()
@@ -56,7 +56,7 @@ namespace Plinqo.NHibernate
 
         public void InsertOnSubmit(T entity)
         {
-            DataContext.Sessions.DefaultSession.Save(entity);
+            DataContext.Advanced.DefaultSession.Save(entity);
         }
 
         public void InsertAllOnSubmit(IEnumerable<T> entities)
@@ -67,7 +67,7 @@ namespace Plinqo.NHibernate
 
         public void DeleteOnSubmit(T entity)
         {
-            DataContext.Sessions.DefaultSession.Delete(entity);
+            DataContext.Advanced.DefaultSession.Delete(entity);
         }
 
         public void DeleteAllOnSubmit(IEnumerable<T> entities)
@@ -81,7 +81,7 @@ namespace Plinqo.NHibernate
             if (!DataContext.ObjectTrackingEnabled)
                 throw new Exception("Can not attach to DataContext when ObjectTrackingEnabled is false.");
 
-            DataContext.Sessions.Session.Update(entity);
+            DataContext.Advanced.Session.Update(entity);
         }
 
         public void AttachAll(IEnumerable<T> entities)
@@ -93,7 +93,7 @@ namespace Plinqo.NHibernate
         public void Detach(T entity)
         {
             if (DataContext.ObjectTrackingEnabled)
-                DataContext.Sessions.Session.Evict(entity);
+                DataContext.Advanced.Session.Evict(entity);
         }
 
         public void DetachAll(IEnumerable<T> entities)

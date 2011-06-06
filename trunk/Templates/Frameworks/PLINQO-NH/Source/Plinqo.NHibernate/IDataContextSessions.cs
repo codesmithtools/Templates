@@ -3,7 +3,7 @@ using NHibernate;
 
 namespace Plinqo.NHibernate
 {
-    public interface IDataContextSessions : IDisposable
+    public interface IDataContextAdvanced : IDisposable
     {
         bool HasSession { get; }
 

@@ -24,6 +24,6 @@ namespace Plinqo.NHibernate
 
         bool IsOpen { get; }
 
-        IDataContextSessions Sessions { get; }
+        IDataContextAdvanced Advanced { get; }
     }
 }
