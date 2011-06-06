@@ -8,8 +8,8 @@
     <ProjectGuid>{20D2F5EE-21AE-45C0-A6AF-E52AAFFCDD7E}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Plinqo.NHibernate</RootNamespace>
-    <AssemblyName>Plinqo.NHibernate</AssemblyName>
+    <RootNamespace>CodeSmith.Data.NHibernate</RootNamespace>
+    <AssemblyName>CodeSmith.Data.NHibernate</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -17,7 +17,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\Common\Plinqo.NHibernate\</OutputPath>
+    <OutputPath>..\..\Common\CodeSmith.Data\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -37,9 +37,8 @@
       <HintPath>..\..\Common\NHibernate\Castle.Core.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="CodeSmith.Data, Version=5.0.0.0, Culture=neutral, PublicKeyToken=596a5eee5d207fdd, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Common\Plinqo.NHibernate\CodeSmith.Data.dll</HintPath>
+    <Reference Include="CodeSmith.Data">
+      <HintPath>..\..\Common\CodeSmith.Data\CodeSmith.Data.dll</HintPath>
     </Reference>
     <Reference Include="Iesi.Collections, Version=1.0.1.0, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
