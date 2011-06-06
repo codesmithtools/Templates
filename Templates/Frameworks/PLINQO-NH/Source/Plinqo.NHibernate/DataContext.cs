@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
+using CodeSmith.Data.Caching;
 using NHibernate;
 using Configuration = NHibernate.Cfg.Configuration;
 using Environment = NHibernate.Cfg.Environment;
@@ -62,12 +63,11 @@ namespace Plinqo.NHibernate
 
         protected ISessionFactory CreateSessionFactory(string databaseName, string assemblyName, string dialect, string connectionDriver)
         {
+            QueryResultCache.Helper = new NHibernateQueryResultCacheHelper();
             DatabaseName = databaseName;
 
             var config = new Configuration();
-
             ConfigureSessionFactory(config, databaseName, assemblyName, dialect, connectionDriver);
-
             return config.BuildSessionFactory();
         }
 
@@ -110,7 +110,7 @@ namespace Plinqo.NHibernate
         
         protected DataContext()
         {
-            Sessions = new DataContextSessions(this);
+            Advanced = new DataContextAdvanced(this);
         }
 
         ~DataContext()
@@ -132,7 +132,7 @@ namespace Plinqo.NHibernate
             if (_isDisposed)
                 return;
 
-            Sessions.Dispose();
+            Advanced.Dispose();
 
             if (!finalizing)
                 GC.SuppressFinalize(this);
@@ -146,8 +146,8 @@ namespace Plinqo.NHibernate
 
         public void SubmitChanges()
         {
-            if (Sessions.HasSession)
-                Sessions.Session.Flush();
+            if (Advanced.HasSession)
+                Advanced.Session.Flush();
             else if (!ObjectTrackingEnabled)
                 throw new InvalidOperationException("Can not SubmitChanges when ObjectTrackingEnabled is false.");
         }
@@ -157,7 +157,7 @@ namespace Plinqo.NHibernate
             get { return _objectTrackingEnabled; }
             set
             {
-                if (Sessions.HasDefaultSession)
+                if (Advanced.HasDefaultSession)
                     throw new InvalidOperationException("Can not change ObjectTrackingEnabled after a session has been instantiated.");
 
                 _objectTrackingEnabled = value;
@@ -166,19 +166,19 @@ namespace Plinqo.NHibernate
 
         public ITransaction BeginTransaction()
         {
-            return Sessions.DefaultSession.BeginTransaction();
+            return Advanced.DefaultSession.BeginTransaction();
         }
 
         public void CommitTransaction()
         {
-            if (Sessions.HasDefaultSession)
-                Sessions.DefaultSession.CommitTransaction();
+            if (Advanced.HasDefaultSession)
+                Advanced.DefaultSession.CommitTransaction();
         }
 
         public void RollbackTransaction()
         {
-            if (Sessions.HasDefaultSession)
-                Sessions.DefaultSession.RollbackTransaction();
+            if (Advanced.HasDefaultSession)
+                Advanced.DefaultSession.RollbackTransaction();
         }
 
         #endregion
@@ -187,21 +187,21 @@ namespace Plinqo.NHibernate
 
         public bool HasOpenTransaction
         {
-            get { return Sessions.HasDefaultSession && Sessions.DefaultSession.HasOpenTransaction; }
+            get { return Advanced.HasDefaultSession && Advanced.DefaultSession.HasOpenTransaction; }
         }
 
         public bool IsOpen
         {
-            get { return Sessions.HasDefaultSession && Sessions.DefaultSession.IsOpen; }
+            get { return Advanced.HasDefaultSession && Advanced.DefaultSession.IsOpen; }
         }
 
-        public IDataContextSessions Sessions { get; private set; }
+        public IDataContextAdvanced Advanced { get; private set; }
 
         public string DatabaseName { get; private set; }
 
         #endregion
 
-        public class DataContextSessions : IDataContextSessions
+        public class DataContextAdvanced : IDataContextAdvanced
         {
             #region Declarations
 
@@ -217,12 +217,12 @@ namespace Plinqo.NHibernate
 
             #region Constructor & Destructor
 
-            public DataContextSessions(DataContext dataContext)
+            public DataContextAdvanced(DataContext dataContext)
             {
                 _dataContext = dataContext;
             }
 
-            ~DataContextSessions()
+            ~DataContextAdvanced()
             {
                 Dispose();
             }

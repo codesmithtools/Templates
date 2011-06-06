@@ -55,14 +55,20 @@ namespace <%= BaseNamespace %>
     {
         #region Session Implementation
 
+        private static object _sessionFactoryLock = new object();
+
         private static ISessionFactory _sessionFactory = null;
 
         private ISessionFactory SessionFactory
         {
             get
             {
-                if (_sessionFactory == null)
-                    _sessionFactory = CreateSessionFactory("<%= SourceDatabase.Name %>", "<%= AssemblyName %>", "<%= GetDialect() %>", "<%= GetDriver() %>");
+                lock (_sessionFactoryLock)
+                    if (_sessionFactory == null)
+                        _sessionFactory = CreateSessionFactory("<%= SourceDatabase.Name %>",
+                            "<%= AssemblyName %>",
+                            "<%= GetDialect() %>",
+                            "<%= GetDriver() %>");
 
                 return _sessionFactory;
             }
@@ -138,7 +144,7 @@ namespace <%= BaseNamespace %>
             query.SetParameter("<%= property.Name %>", <%= CleanParamName(entity, property.VariableName) %>);
             
             <% } %>
-            <% if (@command.IsAssociated) { %>
+            <% if (!command.IsAssociated) { %>
             query.SetResultTransformer(
                 new NHibernate.Transform.AliasToBeanConstructorResultTransformer(
                 typeof (<%= command.GetModelName() %>).GetConstructors()[0]));
