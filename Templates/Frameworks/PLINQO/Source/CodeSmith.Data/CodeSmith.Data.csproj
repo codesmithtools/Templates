@@ -135,6 +135,7 @@
     <Compile Include="Audit\NotAuditedAttribute.cs" />
     <Compile Include="Caching\CacheManager.cs" />
     <Compile Include="Caching\CacheManagerSection.cs" />
+    <Compile Include="Caching\IQueryResultCacheHelper.cs" />
     <Compile Include="Caching\ProfileElement.cs" />
     <Compile Include="Caching\ProfileElementCollection.cs" />
     <Compile Include="Caching\CacheProvider.cs" />
@@ -163,16 +164,13 @@
     <Compile Include="Linq\FutureException.cs" />
     <Compile Include="Linq\FutureQuery.cs" />
     <Compile Include="Linq\DataContextBase.cs" />
-    <Compile Include="Linq\FutureExtensions.cs" />
     <Compile Include="Linq\FutureQueryBase.cs" />
     <Compile Include="Linq\FutureValue.cs" />
     <Compile Include="Linq\IFutureContext.cs" />
     <Compile Include="Linq\IFutureQuery.cs" />
     <Compile Include="Linq\IPagedList.cs" />
     <Compile Include="Linq\PagedList.cs" />
-    <Compile Include="Linq\PagingExtensions.cs" />
     <Compile Include="Linq\QueryExtensions.cs" />
-    <Compile Include="Linq\QueryResultCache.cs" />
     <Compile Include="Linq\SerializationExtensions.cs" />
     <Compile Include="Linq\TableExtensions.cs" />
     <Compile Include="Linq\XElementExtensions.cs" />

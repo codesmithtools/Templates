@@ -68,7 +68,7 @@ namespace CodeSmith.Data.Linq
         /// <returns></returns>
         protected virtual string GetKey()
         {
-            return _query.GetHashKey();
+            return QueryResultCache.GetHashKey(_query);
         }
 
         /// <summary>
