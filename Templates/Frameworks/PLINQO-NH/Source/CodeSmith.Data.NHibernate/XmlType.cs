@@ -5,7 +5,7 @@ using System.Xml;
 using NHibernate.SqlTypes;
 using NHibernate.UserTypes;
 
-namespace Plinqo.NHibernate
+namespace CodeSmith.Data.NHibernate
 {
     /// <summary>
     /// UserType allowing easy saving of NHIbernate XmlDocument property.

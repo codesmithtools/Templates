@@ -1,4 +1,4 @@
-﻿namespace Plinqo.NHibernate
+﻿namespace CodeSmith.Data.NHibernate
 {
     public enum ComparisonOperator
     {

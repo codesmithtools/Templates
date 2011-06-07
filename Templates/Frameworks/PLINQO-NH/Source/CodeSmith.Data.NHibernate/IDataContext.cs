@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Linq;
 using NHibernate;
-using Configuration = NHibernate.Cfg.Configuration;
-using Environment = NHibernate.Cfg.Environment;
+using Plinqo.NHibernate;
 
-namespace Plinqo.NHibernate
+namespace CodeSmith.Data.NHibernate
 {
     public interface IDataContext : IDisposable
     {

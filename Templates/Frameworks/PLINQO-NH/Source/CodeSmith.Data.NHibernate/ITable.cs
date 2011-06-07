@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace Plinqo.NHibernate
+namespace CodeSmith.Data.NHibernate
 {
     public interface ITable<T> : IQueryable<T>
         where T : class

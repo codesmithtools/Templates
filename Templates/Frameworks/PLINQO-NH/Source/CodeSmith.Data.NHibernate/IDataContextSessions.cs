@@ -1,7 +1,8 @@
 ﻿using System;
 using NHibernate;
+using Plinqo.NHibernate;
 
-namespace Plinqo.NHibernate
+namespace CodeSmith.Data.NHibernate
 {
     public interface IDataContextAdvanced : IDisposable
     {

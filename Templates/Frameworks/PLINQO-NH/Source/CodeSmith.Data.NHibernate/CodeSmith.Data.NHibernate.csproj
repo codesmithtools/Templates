@@ -69,6 +69,14 @@
     <Compile Include="DataContext.cs" />
     <Compile Include="Enums.cs" />
     <Compile Include="Extensions.cs" />
+    <Compile Include="Extensions\ClearCacheExtensions.cs" />
+    <Compile Include="Extensions\ClearCacheFirstOrDefaultExtensions.cs" />
+    <Compile Include="Extensions\FromCacheExtensions.cs" />
+    <Compile Include="Extensions\FromCacheFirstOrDefaultExtensions.cs" />
+    <Compile Include="Extensions\FutureCacheExtensions.cs" />
+    <Compile Include="Extensions\FutureCacheFirstOrDefaultExtensions.cs" />
+    <Compile Include="Extensions\FutureExtensions.cs" />
+    <Compile Include="Extensions\UtilityExtensions.cs" />
     <Compile Include="IDataContextSessions.cs" />
     <Compile Include="IDataContext.cs" />
     <Compile Include="IStateSession.cs" />

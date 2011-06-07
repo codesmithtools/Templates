@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using NHibernate.Linq;
 
-namespace Plinqo.NHibernate
+namespace CodeSmith.Data.NHibernate
 {
     public class View<T> : IView<T>
         where T : class

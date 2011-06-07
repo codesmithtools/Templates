@@ -1,6 +1,7 @@
 ﻿using NHibernate;
+using Plinqo.NHibernate;
 
-namespace Plinqo.NHibernate
+namespace CodeSmith.Data.NHibernate
 {
     public class StatefulSession : StateSession<ISession>
     {

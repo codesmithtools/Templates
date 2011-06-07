@@ -4,10 +4,11 @@ using System.Configuration;
 using System.Linq;
 using CodeSmith.Data.Caching;
 using NHibernate;
+using Plinqo.NHibernate;
 using Configuration = NHibernate.Cfg.Configuration;
 using Environment = NHibernate.Cfg.Environment;
 
-namespace Plinqo.NHibernate
+namespace CodeSmith.Data.NHibernate
 {
     public abstract class DataContext : IDataContext
     {

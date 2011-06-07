@@ -1,7 +1,7 @@
 ﻿using System;
 using NHibernate;
 
-namespace Plinqo.NHibernate
+namespace CodeSmith.Data.NHibernate
 {
     public abstract class StateSession<T> : IStateSession<T>
         where T : IDisposable
