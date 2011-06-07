@@ -1,7 +1,7 @@
 ﻿using System;
 using NHibernate;
 
-namespace Plinqo.NHibernate
+namespace CodeSmith.Data.NHibernate
 {
     public interface IStateSession<T> : IStateSession
     {

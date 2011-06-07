@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 
-namespace Plinqo.NHibernate
+namespace CodeSmith.Data.NHibernate
 {
     public interface IView<T> : IQueryable<T>
         where T : class
