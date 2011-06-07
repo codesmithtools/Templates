@@ -8,12 +8,6 @@ using CodeSmith.Data.Caching;
 
 namespace CodeSmith.Data.Linq
 {
-    /// <summary>
-    /// Extension methods for future queries.
-    /// </summary>
-    /// <seealso cref="T:CodeSmith.Data.Linq.FutureQuery`1"/>
-    /// <seealso cref="T:CodeSmith.Data.Linq.FutureValue`1"/>
-    /// <seealso cref="T:CodeSmith.Data.Linq.FutureCount"/>
     public static class FutureExtensions
     {
         /// <summary>
@@ -25,9 +19,49 @@ namespace CodeSmith.Data.Linq
         /// <seealso cref="T:CodeSmith.Data.Linq.FutureQuery`1"/>
         public static FutureQuery<T> Future<T>(this IQueryable<T> source)
         {
-            return FutureCache(source, (CacheSettings)null);
+            return source.FutureCache((CacheSettings)null);
         }
 
+        /// <summary>
+        /// Provides for defering the execution of the <paramref name="source" /> query to a batch of future queries.
+        /// </summary>
+        /// <typeparam name="T">The type of the elements of <paramref name="source" />.</typeparam>
+        /// <param name="source">An <see cref="T:System.Linq.IQueryable`1" /> to add to the batch of future queries.</param>
+        /// <returns>An instance of <see cref="FutureCount"/> that contains the result of the query.</returns>
+        /// <seealso cref="T:CodeSmith.Data.Linq.FutureCount"/>
+        public static FutureCount FutureCount<T>(this IQueryable<T> source)
+        {
+            return source.FutureCacheCount((CacheSettings)null);
+        }
+
+        /// <summary>
+        /// Provides for defering the execution of the <paramref name="source" /> query to a batch of future queries.
+        /// </summary>
+        /// <typeparam name="T">The type of the elements of <paramref name="source" />.</typeparam>
+        /// <param name="source">An <see cref="T:System.Linq.IQueryable`1" /> to add to the batch of future queries.</param>
+        /// <returns>An instance of <see cref="T:CodeSmith.Data.Linq.FutureValue`1"/> that contains the result of the query.</returns>
+        /// <seealso cref="T:CodeSmith.Data.Linq.FutureValue`1"/>
+        public static FutureValue<T> FutureFirstOrDefault<T>(this IQueryable<T> source)
+        {
+            return source.FutureCacheFirstOrDefault((CacheSettings)null);
+        }
+
+        internal static IFutureContext GetFutureContext(this IQueryable source)
+        {
+            DataContext context = source.GetDataContext();
+            if (context == null)
+                throw new ArgumentException("The source must originate from a DataContext that implements IFutureContext.", "source");
+
+            IFutureContext futureContext = context as IFutureContext;
+            if (futureContext == null)
+                throw new ArgumentException("The source must originate from a DataContext that implements IFutureContext.", "source");
+
+            return futureContext;
+        }
+    }
+
+    public static class FutureCacheExtensions
+    {
         /// <summary>
         /// Provides for defering the execution of the <paramref name="source"/> query to a batch of future queries.
         /// </summary>
@@ -125,25 +159,15 @@ namespace CodeSmith.Data.Linq
             if (source == null)
                 throw new ArgumentNullException("source");
 
-            IFutureContext db = GetFutureContext(source);
+            IFutureContext db = source.GetFutureContext();
             var future = new FutureQuery<T>(source, db.ExecuteFutureQueries, cacheSettings);
             db.FutureQueries.Add(future);
             return future;
         }
+    }
 
-
-        /// <summary>
-        /// Provides for defering the execution of the <paramref name="source" /> query to a batch of future queries.
-        /// </summary>
-        /// <typeparam name="T">The type of the elements of <paramref name="source" />.</typeparam>
-        /// <param name="source">An <see cref="T:System.Linq.IQueryable`1" /> to add to the batch of future queries.</param>
-        /// <returns>An instance of <see cref="FutureCount"/> that contains the result of the query.</returns>
-        /// <seealso cref="T:CodeSmith.Data.Linq.FutureCount"/>
-        public static FutureCount FutureCount<T>(this IQueryable<T> source)
-        {
-            return FutureCacheCount(source, (CacheSettings)null);
-        }
-
+    public static class FutureCacheCountExtensions
+    {
         /// <summary>
         /// Provides for defering the execution of the <paramref name="source"/> query to a batch of future queries.
         /// </summary>
@@ -191,6 +215,7 @@ namespace CodeSmith.Data.Linq
             CacheSettings cacheSettings = CacheManager.GetProfile(profileName).AddCacheDependency(source, sqlCacheDependencyTableNames);
             return FutureCacheCount(source, cacheSettings);
         }
+        
         /// <summary>
         /// Provides for defering the execution of the <paramref name="source"/> query to a batch of future queries.
         /// </summary>
@@ -222,6 +247,7 @@ namespace CodeSmith.Data.Linq
         {
             return FutureCacheCount(source, new CacheSettings(duration));
         }
+
         /// <summary>
         /// Provides for defering the execution of the <paramref name="source"/> query to a batch of future queries.
         /// </summary>
@@ -237,25 +263,15 @@ namespace CodeSmith.Data.Linq
             if (source == null)
                 return new FutureCount(0);
 
-            IFutureContext db = GetFutureContext(source);
+            IFutureContext db = source.GetFutureContext();
             var future = new FutureCount(source, db.ExecuteFutureQueries, cacheSettings);
             db.FutureQueries.Add(future);
             return future;
         }
+    }
 
-
-        /// <summary>
-        /// Provides for defering the execution of the <paramref name="source" /> query to a batch of future queries.
-        /// </summary>
-        /// <typeparam name="T">The type of the elements of <paramref name="source" />.</typeparam>
-        /// <param name="source">An <see cref="T:System.Linq.IQueryable`1" /> to add to the batch of future queries.</param>
-        /// <returns>An instance of <see cref="T:CodeSmith.Data.Linq.FutureValue`1"/> that contains the result of the query.</returns>
-        /// <seealso cref="T:CodeSmith.Data.Linq.FutureValue`1"/>
-        public static FutureValue<T> FutureFirstOrDefault<T>(this IQueryable<T> source)
-        {
-            return FutureCacheFirstOrDefault(source, (CacheSettings)null);
-        }
-
+    public static class FutureCacheFirstOrDefaultExtensions
+    {
         /// <summary>
         /// Provides for defering the execution of the <paramref name="source"/> query to a batch of future queries.
         /// </summary>
@@ -355,24 +371,10 @@ namespace CodeSmith.Data.Linq
             // make sure to only get the first value
             var firstQuery = source.Take(1);
 
-            IFutureContext db = GetFutureContext(source);
+            IFutureContext db = source.GetFutureContext();
             var future = new FutureValue<T>(firstQuery, db.ExecuteFutureQueries, cacheSettings);
             db.FutureQueries.Add(future);
             return future;
         }
-
-        private static IFutureContext GetFutureContext(IQueryable source)
-        {
-            DataContext context = source.GetDataContext();
-            if (context == null)
-                throw new ArgumentException("The source must originate from a DataContext that implements IFutureContext.", "source");
-
-            IFutureContext futureContext = context as IFutureContext;
-            if (futureContext == null)
-                throw new ArgumentException("The source must originate from a DataContext that implements IFutureContext.", "source");
-
-            return futureContext;
-        }
-
     }
 }
