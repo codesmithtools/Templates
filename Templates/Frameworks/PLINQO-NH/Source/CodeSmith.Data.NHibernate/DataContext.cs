@@ -64,18 +64,15 @@ namespace CodeSmith.Data.NHibernate
 
         protected ISessionFactory CreateSessionFactory(string databaseName, string assemblyName, string dialect, string connectionDriver)
         {
-            QueryResultCache.Helper = new NHibernateQueryResultCacheHelper();
-            DatabaseName = databaseName;
+            ConnectionString = GetConnectionString(databaseName);
 
             var config = new Configuration();
-            ConfigureSessionFactory(config, databaseName, assemblyName, dialect, connectionDriver);
+            ConfigureSessionFactory(config, databaseName, assemblyName, dialect, connectionDriver, ConnectionString);
             return config.BuildSessionFactory();
         }
 
-        protected virtual void ConfigureSessionFactory(Configuration config, string databaseName, string assemblyName, string dialect, string connectionDriver)
+        protected virtual void ConfigureSessionFactory(Configuration config, string databaseName, string assemblyName, string dialect, string connectionDriver, string connectionString)
         {
-            var connectionString = GetConnectionString(databaseName);
-
             config.SetProperty(Environment.ConnectionProvider, "NHibernate.Connection.DriverConnectionProvider");
             config.SetProperty(Environment.Dialect, dialect);
             config.SetProperty(Environment.ConnectionDriver, connectionDriver);
@@ -109,6 +106,12 @@ namespace CodeSmith.Data.NHibernate
 
         #region Constructor & Destructor
         
+        static DataContext()
+        {
+            var provider = new NHibernateDataContextProvider();
+            DataContextProvider.Register(provider);
+        }
+
         protected DataContext()
         {
             Advanced = new DataContextAdvanced(this);
@@ -139,6 +142,29 @@ namespace CodeSmith.Data.NHibernate
                 GC.SuppressFinalize(this);
 
             _isDisposed = true;
+        }
+
+        #endregion
+
+        #region IDataContext Members
+
+        public string ConnectionString { get; private set; }
+
+        public void Detach(params object[] enities)
+        {
+            if (!ObjectTrackingEnabled || !Advanced.HasSession)
+                return;
+
+            try
+            {
+                foreach (var entity in enities)
+                    Advanced.Session.Evict(entity);
+            }
+            // ReSharper disable EmptyGeneralCatchClause
+            catch (Exception)
+            // ReSharper restore EmptyGeneralCatchClause
+            {
+            }
         }
 
         #endregion
@@ -197,8 +223,6 @@ namespace CodeSmith.Data.NHibernate
         }
 
         public IDataContextAdvanced Advanced { get; private set; }
-
-        public string DatabaseName { get; private set; }
 
         #endregion
 
