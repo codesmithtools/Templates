@@ -34,6 +34,10 @@
     <Reference Include="Castle.Core">
       <HintPath>..\..\Templates\Common\NHibernate\Castle.Core.dll</HintPath>
     </Reference>
+    <Reference Include="CodeSmith.Data, Version=5.0.0.0, Culture=neutral, PublicKeyToken=596a5eee5d207fdd, processorArchitecture=MSIL" />
+    <Reference Include="CodeSmith.Data.NHibernate">
+      <HintPath>..\..\..\..\trunk\Templates\Frameworks\PLINQO-NH\Common\CodeSmith.Data\CodeSmith.Data.NHibernate.dll</HintPath>
+    </Reference>
     <Reference Include="Iesi.Collections">
       <HintPath>..\..\Templates\Common\NHibernate\Iesi.Collections.dll</HintPath>
     </Reference>
@@ -47,7 +51,7 @@
       <HintPath>..\..\Templates\Common\NUnit\nunit.framework.dll</HintPath>
     </Reference>
     <Reference Include="Plinqo.NHibernate">
-      <HintPath>..\..\Templates\Common\Plinqo.NHibernate\Plinqo.NHibernate.dll</HintPath>
+      <HintPath>..\..\..\..\trunk\Templates\Frameworks\PLINQO-NH\Common\Plinqo.NHibernate\Plinqo.NHibernate.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
@@ -98,13 +102,13 @@
     <Compile Include="Data\EntityBase.generated.cs">
       <DependentUpon>EntityBase.cs</DependentUpon>
     </Compile>
-    <Compile Include="Data\Models\GetUsersWithRoleResult.cs" />
-    <Compile Include="Data\Models\GetUsersWithRoleResult.generated.cs">
-      <DependentUpon>GetUsersWithRoleResult.cs</DependentUpon>
-    </Compile>
     <Compile Include="Data\Models\RolesForUserResult.cs" />
     <Compile Include="Data\Models\RolesForUserResult.generated.cs">
       <DependentUpon>RolesForUserResult.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Models\TaskDetail.cs" />
+    <Compile Include="Data\Models\TaskDetail.generated.cs">
+      <DependentUpon>TaskDetail.cs</DependentUpon>
     </Compile>
     <Compile Include="Data\Queries\Audit.cs" />
     <Compile Include="Data\Queries\Audit.generated.cs">
@@ -130,6 +134,10 @@
     <Compile Include="Data\Queries\Task.generated.cs">
       <DependentUpon>Task.cs</DependentUpon>
     </Compile>
+    <Compile Include="Data\Queries\TaskDetail.cs" />
+    <Compile Include="Data\Queries\TaskDetail.generated.cs">
+      <DependentUpon>TaskDetail.cs</DependentUpon>
+    </Compile>
     <Compile Include="Data\Queries\TaskExtended.cs" />
     <Compile Include="Data\Queries\TaskExtended.generated.cs">
       <DependentUpon>TaskExtended.cs</DependentUpon>
@@ -153,9 +161,6 @@
     <EmbeddedResource Include="Data\Maps\Entities\Audit.hbm.xml" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Data\Maps\Functions\GetUsersWithRole.hbm.xml" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Data\Maps\Entities\Guid.hbm.xml" />
   </ItemGroup>
   <ItemGroup>
@@ -163,9 +168,6 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Data\Maps\Entities\Role.hbm.xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Data\Maps\Functions\RolesForUser.hbm.xml" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Data\Maps\Entities\Status.hbm.xml" />
@@ -179,7 +181,20 @@
   <ItemGroup>
     <EmbeddedResource Include="Data\Maps\Entities\User.hbm.xml" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Data\Maps\Views\TaskDetail.hbm.xml" />
+  </ItemGroup>
   <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="Data\Maps\Functions\GetUsersWithRoles.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Data\Maps\Functions\RolesForUser.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

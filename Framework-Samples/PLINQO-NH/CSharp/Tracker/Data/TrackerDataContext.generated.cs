@@ -25,14 +25,33 @@ namespace Tracker.Data
     {
         #region Session Implementation
 
+        private static object _sessionFactoryLock = new object();
+
         private static ISessionFactory _sessionFactory = null;
+
+        private ISessionFactory SessionFactory
+        {
+            get
+            {
+                lock (_sessionFactoryLock)
+                    if (_sessionFactory == null)
+                        _sessionFactory = CreateSessionFactory("Tracker",
+                            "Tracker",
+                            "NHibernate.Dialect.MsSql2008Dialect",
+                            "NHibernate.Driver.SqlClientDriver");
+
+                return _sessionFactory;
+            }
+        }
 
         protected override ISession CreateSession()
         {
-            if (_sessionFactory == null)
-                _sessionFactory = CreateSessionFactory("Tracker", "Tracker", "NHibernate.Dialect.MsSql2008Dialect", "NHibernate.Driver.SqlClientDriver");
-
-            return _sessionFactory.OpenSession();
+            return SessionFactory.OpenSession();
+        }
+        
+        protected override IStatelessSession CreateStatelessSession()
+        {
+            return SessionFactory.OpenStatelessSession();
         }
         
         #endregion
@@ -153,31 +172,44 @@ namespace Tracker.Data
         
         #endregion
         
+        #region Views
+        
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        private IView<Tracker.Data.Entities.TaskDetail> _taskDetail;
+        
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        public IView<Tracker.Data.Entities.TaskDetail> TaskDetail
+        {
+            get
+            {
+                if (_taskDetail == null)
+                    _taskDetail = new View<Tracker.Data.Entities.TaskDetail>(this);
+                return _taskDetail;
+            }
+        }
+        
+        #endregion
+        
         #region Functions
         
-        public IList<RolesForUserResult> GetRolesForUser(System.Int32 userId)
+        public IList<User> GetUsersWithRolez()
         {
-            IQuery query = Session.GetNamedQuery("GetRolesForUser");
+            IQuery query = Advanced.DefaultSession.GetNamedQuery("GetUsersWithRolez");
+            
+            return query.List<User>();
+        }
+        
+        public IList<RolesForUserResult> RolesForUser(System.Int32 userId)
+        {
+            IQuery query = Advanced.DefaultSession.GetNamedQuery("RolesForUser");
             
             query.SetParameter("UserId", userId);
             
             query.SetResultTransformer(
                 new NHibernate.Transform.AliasToBeanConstructorResultTransformer(
                 typeof (RolesForUserResult).GetConstructors()[0]));
-            
+                
             return query.List<RolesForUserResult>();
-        }
-        
-        public IList<GetUsersWithRoleResult> GetUsersWithRole()
-        {
-            IQuery query = Session.GetNamedQuery("GetUsersWithRole");
-            
-            
-            query.SetResultTransformer(
-                new NHibernate.Transform.AliasToBeanConstructorResultTransformer(
-                typeof (GetUsersWithRoleResult).GetConstructors()[0]));
-            
-            return query.List<GetUsersWithRoleResult>();
         }
         
         #endregion

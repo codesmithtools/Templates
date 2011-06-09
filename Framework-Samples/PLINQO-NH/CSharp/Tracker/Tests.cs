@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using NHibernate;
 using NUnit.Framework;
 using Plinqo.NHibernate;
 using Tracker.Data;
@@ -50,15 +51,18 @@ namespace Tracker
                     EmailAddress = "test@test.test",
                     FirstName = "Testie",
                     LastName = "McTester",
-                    PasswordHash = "aM/Vndh7cYd3Mxq7msArjl9YU8zoR6fF+sVTSUCcsJi2bx+cwOI0/Bkr5hfq9vYfTe3/rlgPpSMg108acpw+qA",
+                    PasswordHash =
+                        "aM/Vndh7cYd3Mxq7msArjl9YU8zoR6fF+sVTSUCcsJi2bx+cwOI0/Bkr5hfq9vYfTe3/rlgPpSMg108acpw+qA",
                     PasswordSalt = "=Unc%",
                     IsApproved = true,
                     CreatedDate = DateTime.Now,
                     ModifiedDate = DateTime.Now,
                     LastActivityDate = DateTime.Now,
                     LastLoginDate = DateTime.Now,
-                    LastPasswordChangeDate = DateTime.Now
+                    LastPasswordChangeDate = DateTime.Now,
+                    RoleList = new List<Role>()
                 };
+                
                 db.User.InsertOnSubmit(user);
 
                 var role = new Role
@@ -70,6 +74,7 @@ namespace Tracker
                 };
                 db.Role.InsertOnSubmit(role);
 
+                user.RoleList.Add(role);
                 db.SubmitChanges();
 
                 UserId = user.Id;
@@ -102,34 +107,31 @@ namespace Tracker
             using (var db = new TrackerDataContext())
             {
                 var user = db.User.GetByKey(UserId);
+                Assert.AreEqual(1, user.RoleList.Count);
+
+                var role = db.Role.GetByKey(RoleId);
+                user.RoleList.Remove(role);
                 
+                db.SubmitChanges();
                 Assert.AreEqual(0, user.RoleList.Count);
-                
+            }
+
+            using (var db = new TrackerDataContext())
+            {
+                var user = db.User.GetByKey(UserId);
+                Assert.AreEqual(0, user.RoleList.Count);
+
                 var role = db.Role.GetByKey(RoleId);
                 user.RoleList.Add(role);
-                db.SubmitChanges();
 
+                db.SubmitChanges();
                 Assert.AreEqual(1, user.RoleList.Count);
             }
 
             using (var db = new TrackerDataContext())
             {
                 var user = db.User.GetByKey(UserId);
-                
                 Assert.AreEqual(1, user.RoleList.Count);
-
-                var role = user.RoleList.First();
-                user.RoleList.Remove(role);
-                db.SubmitChanges();
-
-                Assert.AreEqual(0, user.RoleList.Count);
-            }
-
-            using (var db = new TrackerDataContext())
-            {
-                var user = db.User.GetByKey(UserId);
-
-                Assert.AreEqual(0, user.RoleList.Count);
             }
         }
 
@@ -220,9 +222,110 @@ namespace Tracker
         {
             using (var db = new TrackerDataContext())
             {
-                var a = db.GetRolesForUser(UserId);
+                var roles = db.RolesForUser(UserId);
+                var users = db.GetUsersWithRolez();
 
-                Assert.AreEqual(1, a.Count);
+                Assert.AreEqual(1, roles.Count);
+                Assert.Greater(users.Count, 0);
+            }
+        }
+
+        [Test]
+        public void Views()
+        {
+            using (var db = new TrackerDataContext())
+            {
+                var taskDetails = db.TaskDetail
+                    .ByPriority("High")
+                    .ToList();
+
+                Assert.AreEqual(1, taskDetails.Count);
+            }
+        }
+
+        [Test]
+        public void ObjectTrackingEnabled()
+        {
+            using (var db = new TrackerDataContext { ObjectTrackingEnabled = false })
+            {
+                var user = db.User
+                    .ByFirstName("Testie")
+                    .FirstOrDefault();
+
+                Assert.IsNotNull(user);
+
+                try
+                {
+                    db.SubmitChanges();
+                }
+                catch (Exception ex)
+                {
+                    Assert.IsTrue(ex.Message.Contains("ObjectTrackingEnabled"));
+                }
+            }
+        }
+
+        [Test]
+        public void GetHashKey()
+        {
+            using (var db = new TrackerDataContext())
+            {
+                var q1 = db.User.ByFirstName("James");
+                var q2 = db.User.ByFirstName("Spock");
+
+                var q3 = db.User.Where(u => u.FirstName == "James");
+                var q4 = db.User.Where(u => u.FirstName == "Spock");
+
+                var s1 = "James";
+                var s2 = "Spock";
+                var q5 = db.User.Where(u => u.FirstName == s1);
+                var q6 = db.User.Where(u => u.FirstName == s2);
+                var q7 = GetWhere(db, s1);
+                var q8 = GetWhere(db, s2);
+
+                var h1 = q1.GetHashKey();
+                var h2 = q2.GetHashKey();
+                var h3 = q3.GetHashKey();
+                var h4 = q4.GetHashKey();
+                var h5 = q5.GetHashKey();
+                var h6 = q6.GetHashKey();
+                var h7 = q7.GetHashKey();
+                var h8 = q8.GetHashKey();
+
+                Assert.AreNotEqual(h1, h2);
+
+                Assert.AreEqual(h1, h3);
+                Assert.AreEqual(h1, h5);
+                Assert.AreEqual(h1, h7);
+
+                Assert.AreEqual(h2, h4);
+                Assert.AreEqual(h2, h6);
+                Assert.AreEqual(h2, h8);
+            }
+        }
+
+        private IQueryable<User> GetWhere(TrackerDataContext db, string s)
+        {
+            return db.User.Where(u => u.FirstName == s);
+        }
+
+        [Test]
+        public void GetDataContext()
+        {
+            using (var db1 = new TrackerDataContext())
+            {
+                var q = db1.User.ByFirstName("James");
+                var db2 = q.GetDataContext();
+
+                Assert.AreSame(db1, db2);
+            }
+
+            using (var db3 = new TrackerDataContext { ObjectTrackingEnabled = false })
+            {
+                var q = db3.User.ByFirstName("James");
+                var db4 = q.GetDataContext();
+
+                Assert.AreSame(db3, db4);
             }
         }
     }

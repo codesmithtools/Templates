@@ -6,7 +6,7 @@ using Tracker.Data;
 
 namespace Tracker.Data.Entities
 {
-	public partial class GetUsersWithRoleResult
+	public partial class TaskDetail
     {
         // Place your custom code here.
 	}
