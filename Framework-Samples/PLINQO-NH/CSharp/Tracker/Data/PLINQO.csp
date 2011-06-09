@@ -4,7 +4,7 @@
     <add key="ConnectionString1" value="Data Source=localhost;Initial Catalog=Tracker;Integrated Security=True" />
   </variables>
   <propertySets>
-    <propertySet name="Hbms" template="..\..\..\..\..\trunk\Templates\Frameworks\PLINQO-NH\CSharp\Hbms.cst">
+    <propertySet name="Hbms" template="..\..\..\Templates\Frameworks\PLINQO-NH\CSharp\Hbms.cst">
       <property name="IgnoreList">
         <stringList>
       <string>sysdiagrams$</string>
@@ -27,7 +27,7 @@
       <property name="AssemblyName">Tracker</property>
       <property name="EntityNamespace">Tracker.Data.Entities</property>
     </propertySet>
-    <propertySet name="Entities" template="..\..\..\..\..\trunk\Templates\Frameworks\PLINQO-NH\CSharp\Entities.cst">
+    <propertySet name="Entities" template="..\..\..\trunk\Templates\Frameworks\PLINQO-NH\CSharp\Entities.cst">
       <property name="MapsDirectory">Maps</property>
       <property name="EntitiesDirectory">Entities</property>
       <property name="GenerateDataContext">True</property>
@@ -40,7 +40,7 @@
       </property>
       <property name="AssemblyName">Tracker</property>
     </propertySet>
-    <propertySet name="Queries" template="..\..\..\..\..\trunk\Templates\Frameworks\PLINQO-NH\CSharp\Queries.cst">
+    <propertySet name="Queries" template="..\..\..\trunk\Templates\Frameworks\PLINQO-NH\CSharp\Queries.cst">
       <property name="MapsDirectory">Maps</property>
       <property name="QueriesDirectory">Queries</property>
       <property name="MethodPrefix">By</property>
