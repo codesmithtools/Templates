@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -75,7 +76,12 @@ namespace CodeSmith.Data.Linq
         public static IEnumerable<T> FromCache<T>(this IQueryable<T> query, int duration,
             params string[] sqlCacheDependencyTableNames)
         {
-            CacheSettings cacheSettings = new CacheSettings(duration).AddCacheDependency(query.GetDataContext().Connection.Database, sqlCacheDependencyTableNames);
+            var db = DataContextProvider.GetDataConext(query);
+            var connectionString = db == null
+                                       ? String.Empty
+                                       : db.ConnectionString;
+
+            CacheSettings cacheSettings = new CacheSettings(duration).AddCacheDependency(connectionString, sqlCacheDependencyTableNames);
             return query.FromCache(cacheSettings);
         }
 

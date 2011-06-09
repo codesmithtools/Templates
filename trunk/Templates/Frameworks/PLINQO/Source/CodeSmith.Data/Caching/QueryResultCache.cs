@@ -10,8 +10,6 @@ namespace CodeSmith.Data.Caching
 {
     public static class QueryResultCache
     {
-        public static IQueryResultCacheHelper Helper { get; set; }
-
         public static IEnumerable<T> FromCache<T>(IQueryable<T> query, CacheSettings settings)
         {
             if (settings == null)
@@ -44,7 +42,7 @@ namespace CodeSmith.Data.Caching
             var key = expression.ToString();
 
             // make key DB specific
-            var dbName = GetDbName(query);
+            var dbName = GetConnectionString(query);
             if (!String.IsNullOrEmpty(dbName))
                 key += dbName;
 
@@ -89,15 +87,19 @@ namespace CodeSmith.Data.Caching
 
         private static void Detach<T, U>(ICollection<T> results, IQueryable<U> query)
         {
-            if (Helper != null)
-                Helper.Detach(results, query);
+            var db = DataContextProvider.GetDataConext(query);
+            if (db == null)
+                return;
+
+            db.Detach(results);
         }
 
-        private static string GetDbName(IQueryable query)
+        private static string GetConnectionString(IQueryable query)
         {
-            return Helper == null
+            var db = DataContextProvider.GetDataConext(query);
+            return db == null
                 ? String.Empty
-                : Helper.GetDbName(query);
+                : db.ConnectionString;
         }
 
         private static Func<Expression, bool> CanBeEvaluatedLocally

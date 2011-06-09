@@ -330,7 +330,12 @@ namespace CodeSmith.Data.Caching
 
         public static CacheSettings AddCacheDependency<T>(this CacheSettings settings, IQueryable<T> queryable, params string[] sqlCacheDependencyTableNames)
         {
-            return AddCacheDependency(settings, queryable.GetDataContext().Connection.Database, sqlCacheDependencyTableNames);
+            var db = DataContextProvider.GetDataConext(queryable);
+            var connectionString = db == null
+                                       ? String.Empty
+                                       : db.ConnectionString;
+
+            return AddCacheDependency(settings, connectionString, sqlCacheDependencyTableNames);
         }
 
         public static CacheSettings AddCacheDependency(this CacheSettings settings, string databaseName, params ITable[] sqlCacheDependencyTables)
@@ -344,7 +349,12 @@ namespace CodeSmith.Data.Caching
 
         public static CacheSettings AddCacheDependency<T>(this CacheSettings settings, IQueryable<T> queryable, params ITable[] sqlCacheDependencyTables)
         {
-            return AddCacheDependency(settings, queryable.GetDataContext().Connection.Database, sqlCacheDependencyTables);
+            var db = DataContextProvider.GetDataConext(queryable);
+            var connectionString = db == null
+                                       ? String.Empty
+                                       : db.ConnectionString;
+
+            return AddCacheDependency(settings, connectionString, sqlCacheDependencyTables);
         }
 
         public static CacheSettings WithCacheItemRemovedCallback(this CacheSettings settings, CacheItemRemovedCallback cacheItemRemovedCallback)

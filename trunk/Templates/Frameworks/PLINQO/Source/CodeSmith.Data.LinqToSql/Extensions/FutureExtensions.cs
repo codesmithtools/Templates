@@ -48,7 +48,7 @@ namespace CodeSmith.Data.Linq
 
         internal static IFutureContext GetFutureContext(this IQueryable source)
         {
-            DataContext context = source.GetDataContext();
+            DataContext context = LinqToSqlDataContextProvider.GetDataContext(source);
             if (context == null)
                 throw new ArgumentException("The source must originate from a DataContext that implements IFutureContext.", "source");
 
