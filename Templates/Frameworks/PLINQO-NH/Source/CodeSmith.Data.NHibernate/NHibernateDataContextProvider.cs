@@ -1,10 +1,8 @@
 ﻿using System.Linq;
 using System.Reflection;
-using CodeSmith.Data;
-using CodeSmith.Data.NHibernate;
 using NHibernate.Linq;
 
-namespace Plinqo.NHibernate
+namespace CodeSmith.Data.NHibernate
 {
     public class NHibernateDataContextProvider : IDataContextProvider
     {

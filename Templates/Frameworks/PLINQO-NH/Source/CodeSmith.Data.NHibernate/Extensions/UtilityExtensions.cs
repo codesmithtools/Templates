@@ -3,7 +3,6 @@ using System.Reflection;
 using CodeSmith.Data.Caching;
 using CodeSmith.Data.NHibernate;
 using NHibernate.Linq;
-using Plinqo.NHibernate;
 
 namespace CodeSmith.Data.Linq
 {

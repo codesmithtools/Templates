@@ -1,7 +1,6 @@
 ﻿using System.Linq;
 using CodeSmith.Data.Caching;
 using NHibernate;
-using Plinqo.NHibernate;
 
 namespace CodeSmith.Data.Linq
 {

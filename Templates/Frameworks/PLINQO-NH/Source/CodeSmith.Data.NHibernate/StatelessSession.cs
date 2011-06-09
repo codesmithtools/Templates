@@ -1,5 +1,4 @@
 ﻿using NHibernate;
-using Plinqo.NHibernate;
 
 namespace CodeSmith.Data.NHibernate
 {
