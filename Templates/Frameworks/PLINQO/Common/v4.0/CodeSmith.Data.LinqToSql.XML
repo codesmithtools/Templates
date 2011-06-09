@@ -387,6 +387,36 @@
             </summary>
             <value>The total item count.</value>
         </member>
+        <member name="M:CodeSmith.Data.Linq.UtilityExtensions.GetDataContext(System.Linq.IQueryable)">
+            <summary>
+            Gets the <see cref="T:System.Data.Linq.DataContext"/> that created the query.
+            </summary>
+            <param name="query">The query to look for the <see cref="T:System.Data.Linq.DataContext"/> on.</param>
+            <returns>
+            The instance of the <see cref="T:System.Data.Linq.DataContext"/> that created the query. 
+            If the query was not created by a <see cref="T:System.Data.Linq.DataContext"/>, 
+            <see langword="null"/> is returned. 
+            </returns>
+        </member>
+        <member name="M:CodeSmith.Data.Linq.UtilityExtensions.SupportsFutureQuery(System.Linq.IQueryable)">
+            <summary>
+            Determines whether the specified query supports a future query extension.
+            </summary>
+            <param name="query">The query.</param>
+            <returns>
+            	<c>true</c> if query supports a future query; otherwise, <c>false</c>.
+            </returns>
+        </member>
+        <member name="M:CodeSmith.Data.Linq.UtilityExtensions.Include``2(System.Linq.IQueryable{``0},System.Linq.Expressions.Expression{System.Func{``0,``1}})">
+            <summary>
+            Specifies the related objects to include in the query results.
+            </summary>
+            <typeparam name="T">The type of the data in the data source.</typeparam>
+            <typeparam name="TInclude">The type of the include.</typeparam>
+            <param name="query">The query to be materialized.</param>
+            <param name="includeExpression">The expression of related objects to return in the query results.</param>
+            <returns>The result of the query.</returns>
+        </member>
         <member name="M:CodeSmith.Data.Linq.FromCacheExtensions.FromCache``1(System.Linq.IQueryable{``0})">
             <summary>
             Returns the result of the query; if possible from the cache, otherwise

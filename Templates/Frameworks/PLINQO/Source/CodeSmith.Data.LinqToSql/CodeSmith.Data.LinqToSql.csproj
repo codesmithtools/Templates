@@ -50,7 +50,6 @@
     <Compile Include="Extensions\FutureExtensions.cs" />
     <Compile Include="Extensions\PagingExtensions.cs" />
     <Compile Include="Extensions\UtilityExtensions.cs" />
-    <Compile Include="LinqToSqlQueryResultCacheHelper.cs" />
     <Compile Include="PagedList.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
