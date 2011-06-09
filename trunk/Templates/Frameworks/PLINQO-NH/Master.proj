@@ -59,7 +59,7 @@
   </Target>
 
   <Target Name="Nightly" DependsOnTargets="Version;Zip">
-    <Copy SourceFiles="plinqo-ef-r$(Revision).zip"
+    <Copy SourceFiles="plinqo-nhibernate-r$(Revision).zip"
           DestinationFiles="$(DeployFolder)\plinqo-nhibernate-r$(Revision).zip" />
   </Target>
 
