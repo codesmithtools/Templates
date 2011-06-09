@@ -73,7 +73,7 @@ namespace CodeSmith.Data.Linq
 
             return cache == null
                        ? source.FutureFirstOrDefault()
-                       : new FutureValue<T>(cache.FirstOrDefault());
+                       : new NHibernate.FutureValue<T>(cache.FirstOrDefault());
         }
     }
 }

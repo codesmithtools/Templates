@@ -4,7 +4,7 @@ using Plinqo.NHibernate;
 
 namespace CodeSmith.Data.NHibernate
 {
-    public interface IDataContext : IDisposable
+    public interface IDataContext : Data.IDataContext, IDisposable
     {
         void SubmitChanges();
 
