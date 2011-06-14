@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using CodeSmith.Data.Linq;
 using NHibernate;
 using NUnit.Framework;
-using Plinqo.NHibernate;
 using Tracker.Data;
 using Tracker.Data.Entities;
 
@@ -326,6 +326,65 @@ namespace Tracker
                 var db4 = q.GetDataContext();
 
                 Assert.AreSame(db3, db4);
+            }
+        }
+
+        [Test]
+        public void Future()
+        {
+            using (var db = new TrackerDataContext())
+            {
+                var users = db.User
+                    .ByFirstName(ContainmentOperator.NotEquals, "James")
+                    .OrderBy(u => u.Id)
+                    .Future();
+
+                var user = db.User
+                    .ByFirstName(ContainmentOperator.NotEquals, "James")
+                    .OrderBy(u => u.Id)
+                    .FutureFirstOrDefault();
+
+                var value = users.FirstOrDefault();
+
+                Assert.AreEqual(value.Id, user.Value.Id);
+            }
+        }
+
+        [Test]
+        public void FutureCache()
+        {
+            using (var db = new TrackerDataContext())
+            {
+                var u1 = db.User
+                    .ByFirstName(ContainmentOperator.NotEquals, "James")
+                    .OrderBy(u => u.Id)
+                    .FutureCache();
+
+                var u2 = db.User
+                    .ByFirstName(ContainmentOperator.NotEquals, "James")
+                    .OrderBy(u => u.Id)
+                    .FutureCache();
+
+                Assert.AreEqual(u1.First(), u2.First());
+
+                db.User
+                    .ByFirstName(ContainmentOperator.NotEquals, "James")
+                    .OrderBy(u => u.Id)
+                    .ClearCache();
+
+                var u3 = db.User
+                    .ByFirstName(ContainmentOperator.NotEquals, "James")
+                    .OrderBy(u => u.Id)
+                    .FutureCache();
+
+                Assert.AreEqual(u1.First(), u3.First());
+
+                var u4 = db.User
+                    .ByFirstName(ContainmentOperator.NotEquals, "James")
+                    .OrderBy(u => u.Id)
+                    .FutureCache();
+
+                Assert.AreEqual(u3.First(), u4.First());
             }
         }
     }

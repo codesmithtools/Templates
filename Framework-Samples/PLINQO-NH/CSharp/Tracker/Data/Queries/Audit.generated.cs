@@ -9,7 +9,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Plinqo.NHibernate;
+using CodeSmith.Data.Linq;
 
 namespace Tracker.Data
 {
@@ -319,6 +319,81 @@ namespace Tracker.Data
         public static IQueryable<Tracker.Data.Entities.Audit> ByCreatedDate(this IQueryable<Tracker.Data.Entities.Audit> queryable, IEnumerable<System.DateTime> values)
         {
             return queryable.Where(a => values.Contains(a.CreatedDate));
+        }
+
+        /// <summary>
+        /// Gets a query for <see cref="Tracker.Data.Entities.Audit.Myxml"/>.
+        /// </summary>
+        /// <param name="queryable">Query to append where clause.</param>
+        /// <param name="myxml">Myxml to search for.</param>
+        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        public static IQueryable<Tracker.Data.Entities.Audit> ByMyxml(this IQueryable<Tracker.Data.Entities.Audit> queryable, System.String myxml)
+        {
+            return queryable.Where(a => a.Myxml == myxml);
+        }
+
+        /// <summary>
+        /// Gets a query for <see cref="Tracker.Data.Entities.Audit.Myxml"/>.
+        /// </summary>
+        /// <param name="queryable">Query to append where clause.</param>
+        /// <param name="myxml">Myxml to search for.</param>
+        /// <param name="containmentOperator">The containment operator.</param>
+        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        public static IQueryable<Tracker.Data.Entities.Audit> ByMyxml(this IQueryable<Tracker.Data.Entities.Audit> queryable, ContainmentOperator containmentOperator, System.String myxml)
+        {
+            if (myxml == null && containmentOperator != ContainmentOperator.Equals && containmentOperator != ContainmentOperator.NotEquals)
+                throw new ArgumentNullException("myxml", "Parameter 'myxml' cannot be null with the specified ContainmentOperator.  Parameter 'containmentOperator' must be ContainmentOperator.Equals or ContainmentOperator.NotEquals to support null.");
+
+            switch (containmentOperator)
+            {
+                case ContainmentOperator.Contains:
+                    return queryable.Where(a => a.Myxml.Contains(myxml));
+                case ContainmentOperator.StartsWith:
+                    return queryable.Where(a => a.Myxml.StartsWith(myxml));
+                case ContainmentOperator.EndsWith:
+                    return queryable.Where(a => a.Myxml.EndsWith(myxml));
+                case ContainmentOperator.NotContains:
+                    return queryable.Where(a => a.Myxml.Contains(myxml) == false);
+                case ContainmentOperator.NotEquals:
+                    return queryable.Where(a => a.Myxml != myxml);
+                default:
+                    return queryable.Where(a => a.Myxml == myxml);
+            }
+        }
+
+        /// <summary>
+        /// Gets a query for <see cref="Tracker.Data.Entities.Audit.Myxml"/>.
+        /// </summary>
+        /// <param name="queryable">Query to append where clause.</param>
+        /// <param name="myxml">Myxml to search for.</param>
+        /// <param name="additionalValues">Additional values to search for.</param>
+        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        public static IQueryable<Tracker.Data.Entities.Audit> ByMyxml(this IQueryable<Tracker.Data.Entities.Audit> queryable, System.String myxml, params System.String[] additionalValues)
+        {
+            var myxmlList = new List<System.String> { myxml };
+
+            if (additionalValues != null)
+                myxmlList.AddRange(additionalValues);
+
+            if (myxmlList.Count == 1)
+                return queryable.ByMyxml(myxmlList[0]);
+
+            return queryable.ByMyxml(myxmlList);
+        }
+
+        /// <summary>
+        /// Gets a query for <see cref="Tracker.Data.Entities.Audit.Myxml"/>.
+        /// </summary>
+        /// <param name="queryable">Query to append where clause.</param>
+        /// <param name="values">The values to search for..</param>
+        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        public static IQueryable<Tracker.Data.Entities.Audit> ByMyxml(this IQueryable<Tracker.Data.Entities.Audit> queryable, IEnumerable<System.String> values)
+        {
+            return queryable.Where(a => values.Contains(a.Myxml));
         }
     }
 }

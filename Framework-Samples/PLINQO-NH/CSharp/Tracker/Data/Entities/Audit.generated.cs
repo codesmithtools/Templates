@@ -146,11 +146,11 @@ namespace Tracker.Data.Entities
         }
         
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
-        private Plinqo.NHibernate.XmlType _myxml;
+        private System.String _myxml;
         
         [System.Runtime.Serialization.DataMember(Order = 6)]
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
-        public virtual Plinqo.NHibernate.XmlType Myxml
+        public virtual System.String Myxml
         {
             get { return _myxml; }
             set
@@ -249,9 +249,9 @@ namespace Tracker.Data.Entities
         
         partial void OnCreatedDateChanged(System.DateTime value);
         
-        partial void OnMyxmlChanging(Plinqo.NHibernate.XmlType newValue, Plinqo.NHibernate.XmlType oldValue);
+        partial void OnMyxmlChanging(System.String newValue, System.String oldValue);
         
-        partial void OnMyxmlChanged(Plinqo.NHibernate.XmlType value);
+        partial void OnMyxmlChanged(System.String value);
         
         partial void OnRowVersionChanging(System.Byte[] newValue, System.Byte[] oldValue);
         

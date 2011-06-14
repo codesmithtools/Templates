@@ -32,26 +32,26 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Castle.Core">
-      <HintPath>..\..\Templates\Common\NHibernate\Castle.Core.dll</HintPath>
+      <HintPath>..\..\..\..\trunk\Templates\Frameworks\PLINQO-NH\Common\NHibernate\Castle.Core.dll</HintPath>
     </Reference>
-    <Reference Include="CodeSmith.Data, Version=5.0.0.0, Culture=neutral, PublicKeyToken=596a5eee5d207fdd, processorArchitecture=MSIL" />
+    <Reference Include="CodeSmith.Data">
+      <HintPath>..\..\..\..\trunk\Templates\Frameworks\PLINQO-NH\Common\CodeSmith.Data\CodeSmith.Data.dll</HintPath>
+    </Reference>
     <Reference Include="CodeSmith.Data.NHibernate">
       <HintPath>..\..\..\..\trunk\Templates\Frameworks\PLINQO-NH\Common\CodeSmith.Data\CodeSmith.Data.NHibernate.dll</HintPath>
     </Reference>
     <Reference Include="Iesi.Collections">
-      <HintPath>..\..\Templates\Common\NHibernate\Iesi.Collections.dll</HintPath>
+      <HintPath>..\..\..\..\trunk\Templates\Frameworks\PLINQO-NH\Common\NHibernate\Iesi.Collections.dll</HintPath>
     </Reference>
-    <Reference Include="NHibernate">
-      <HintPath>..\..\Templates\Common\NHibernate\NHibernate.dll</HintPath>
+    <Reference Include="NHibernate, Version=3.2.0.2001, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\trunk\Templates\Frameworks\PLINQO-NH\Common\NHibernate\NHibernate.dll</HintPath>
     </Reference>
     <Reference Include="NHibernate.ByteCode.Castle">
-      <HintPath>..\..\Templates\Common\NHibernate\NHibernate.ByteCode.Castle.dll</HintPath>
+      <HintPath>..\..\..\..\trunk\Templates\Frameworks\PLINQO-NH\Common\NHibernate\NHibernate.ByteCode.Castle.dll</HintPath>
     </Reference>
     <Reference Include="nunit.framework">
       <HintPath>..\..\Templates\Common\NUnit\nunit.framework.dll</HintPath>
-    </Reference>
-    <Reference Include="Plinqo.NHibernate">
-      <HintPath>..\..\..\..\trunk\Templates\Frameworks\PLINQO-NH\Common\Plinqo.NHibernate\Plinqo.NHibernate.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
@@ -155,7 +155,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <None Include="Data\PLINQO.csp" />
+    <None Include="Data\PLINQO.csp">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Data\Maps\Entities\Audit.hbm.xml" />

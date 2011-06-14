@@ -9,7 +9,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Plinqo.NHibernate;
+using CodeSmith.Data.Linq;
 
 namespace Tracker.Data
 {

@@ -14,14 +14,15 @@ using System.Configuration;
 using System.Text;
 using NHibernate;
 using NHibernate.Cfg;
-using Plinqo.NHibernate;
+using CodeSmith.Data.Linq;
+using CodeSmith.Data.NHibernate;
 using Configuration = NHibernate.Cfg.Configuration;
 using Environment = NHibernate.Cfg.Environment;
 using Tracker.Data.Entities;
 
 namespace Tracker.Data
 {
-    public partial class TrackerDataContext : DataContext
+    public partial class TrackerDataContext : NHibernateDataContext
     {
         #region Session Implementation
 
