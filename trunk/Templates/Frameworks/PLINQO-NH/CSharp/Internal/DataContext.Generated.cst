@@ -42,7 +42,8 @@ using System.Configuration;
 using System.Text;
 using NHibernate;
 using NHibernate.Cfg;
-using Plinqo.NHibernate;
+using CodeSmith.Data.Linq;
+using CodeSmith.Data.NHibernate;
 using Configuration = NHibernate.Cfg.Configuration;
 using Environment = NHibernate.Cfg.Environment;
 <% foreach(string ns in GetEntityNamespaces(SourceManager)) { %>
@@ -51,7 +52,7 @@ using <%= ns %>;
 
 namespace <%= BaseNamespace %>
 {
-    public partial class <%= DataContextName %> : DataContext
+    public partial class <%= DataContextName %> : NHibernateDataContext
     {
         #region Session Implementation
 

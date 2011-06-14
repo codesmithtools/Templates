@@ -91,7 +91,7 @@
     </item>
     <item>
       <key>Xml</key>
-      <value>Plinqo.NHibernate.XmlType, Plinqo.NHibernate</value>
+      <value>CodeSmith.Data.NHibernate.XmlType, CodeSmith.Data.NHibernate</value>
     </item>
     <item>
       <key>String</key>
