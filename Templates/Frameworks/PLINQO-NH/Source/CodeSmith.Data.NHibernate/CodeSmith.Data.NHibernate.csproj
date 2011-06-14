@@ -66,31 +66,25 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DataContext.cs" />
-    <Compile Include="Enums.cs" />
-    <Compile Include="Extensions\ClearCacheExtensions.cs" />
-    <Compile Include="Extensions\ClearCacheFirstOrDefaultExtensions.cs" />
-    <Compile Include="Extensions\FromCacheExtensions.cs" />
-    <Compile Include="Extensions\FromCacheFirstOrDefaultExtensions.cs" />
-    <Compile Include="Extensions\FutureCacheExtensions.cs" />
-    <Compile Include="Extensions\FutureCacheFirstOrDefaultExtensions.cs" />
-    <Compile Include="Extensions\FutureExtensions.cs" />
-    <Compile Include="Extensions\UtilityExtensions.cs" />
-    <Compile Include="FutureValue.cs" />
-    <Compile Include="IDataContextSessions.cs" />
-    <Compile Include="IDataContext.cs" />
-    <Compile Include="IStateSession.cs" />
-    <Compile Include="ITable.cs" />
-    <Compile Include="IView.cs" />
-    <Compile Include="NHibernateDataContextProvider.cs" />
+    <Compile Include="DataContext\NHibernateDataContext.cs" />
+    <Compile Include="Future\NHibernateFutureValue.cs" />
+    <Compile Include="DataContext\INHibernateDataContextAdvanced.cs" />
+    <Compile Include="DataContext\INHibernateDataContext.cs" />
+    <Compile Include="Future\INHibernateFutureQuery.cs" />
+    <Compile Include="Future\NHibernateFutureQuery.cs" />
+    <Compile Include="Session\IStateSession.cs" />
+    <Compile Include="Entities\ITable.cs" />
+    <Compile Include="Entities\IView.cs" />
+    <Compile Include="DataContext\NHibernateDataContextProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="StatefulSession.cs" />
-    <Compile Include="StatelessSession.cs" />
-    <Compile Include="StateSession.cs" />
-    <Compile Include="Tables.cs" />
-    <Compile Include="View.cs" />
+    <Compile Include="Session\StatefulSession.cs" />
+    <Compile Include="Session\StatelessSession.cs" />
+    <Compile Include="Session\StateSession.cs" />
+    <Compile Include="Entities\Tables.cs" />
+    <Compile Include="Entities\View.cs" />
     <Compile Include="XmlType.cs" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
