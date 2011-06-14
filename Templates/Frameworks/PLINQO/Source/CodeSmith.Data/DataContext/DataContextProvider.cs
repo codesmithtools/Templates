@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using CodeSmith.Data.Future;
 
 namespace CodeSmith.Data
 {
@@ -18,6 +19,18 @@ namespace CodeSmith.Data
             foreach (var provider in _providers)
             {
                 var db = provider.GetDataConext(query);
+                if (db != null)
+                    return db;
+            }
+
+            return null;
+        }
+
+        public static IFutureContext GetFutureConext(IQueryable query)
+        {
+            foreach (var provider in _providers)
+            {
+                var db = provider.GetFutureContext(query);
                 if (db != null)
                     return db;
             }

@@ -77,7 +77,7 @@ namespace CodeSmith.Data.Linq
         /// <returns>The requested command object.</returns>
         protected override DbCommand GetCommand(System.Data.Linq.DataContext dataContext)
         {
-            IFutureQuery futureQuery = this;
+            ILinqToSqlFutureQuery futureQuery = this;
             var source = futureQuery.Query;
 
             // get static count method
@@ -103,6 +103,4 @@ namespace CodeSmith.Data.Linq
                             select m).FirstOrDefault();
         }
     }
-
-
 }
