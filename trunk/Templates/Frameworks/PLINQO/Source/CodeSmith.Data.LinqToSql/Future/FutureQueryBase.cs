@@ -5,6 +5,7 @@ using System.Data.Linq;
 using System.Diagnostics;
 using System.Linq;
 using CodeSmith.Data.Caching;
+using CodeSmith.Data.Future;
 
 namespace CodeSmith.Data.Linq
 {
@@ -13,7 +14,7 @@ namespace CodeSmith.Data.Linq
     /// </summary>
     /// <typeparam name="T">The type for the future query.</typeparam>
     [DebuggerDisplay("IsLoaded={IsLoaded}")]
-    public class FutureQueryBase<T> : IFutureQuery
+    public class FutureQueryBase<T> : ILinqToSqlFutureQuery
     {
         private readonly Action _loadAction;
         private readonly IQueryable _query;
@@ -141,7 +142,7 @@ namespace CodeSmith.Data.Linq
         /// </summary>
         /// <param name="dataContext">The data context to get the command from.</param>
         /// <returns>The requested command object.</returns>
-        DbCommand IFutureQuery.GetCommand(DataContext dataContext)
+        DbCommand ILinqToSqlFutureQuery.GetCommand(DataContext dataContext)
         {
             return GetCommand(dataContext);
         }
@@ -160,7 +161,7 @@ namespace CodeSmith.Data.Linq
         /// Sets the underling value after the query has been executed.
         /// </summary>
         /// <param name="result">The <see cref="IMultipleResults"/> to get the result from.</param>
-        void IFutureQuery.SetResult(IMultipleResults result)
+        void ILinqToSqlFutureQuery.SetResult(IMultipleResults result)
         {
             SetResult(result);
         }

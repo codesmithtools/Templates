@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Linq;
 using CodeSmith.Data.Caching;
+using CodeSmith.Data.Future;
 
 namespace CodeSmith.Data.Linq
 {
@@ -22,7 +23,7 @@ namespace CodeSmith.Data.Linq
     /// </code>
     /// </example>
     [DebuggerDisplay("IsLoaded={IsLoaded}, Value={UnderlingValue}")]
-    public class FutureValue<T> : FutureQueryBase<T>
+    public class FutureValue<T> : FutureQueryBase<T>, IFutureValue<T>
     {
         private bool _hasValue = false;
 
@@ -104,7 +105,4 @@ namespace CodeSmith.Data.Linq
         /// <value>The underling value.</value>
         internal T UnderlingValue { get; private set; }
     }
-
-
-
 }

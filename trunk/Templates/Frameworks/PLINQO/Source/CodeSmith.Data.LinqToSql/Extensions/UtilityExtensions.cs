@@ -5,43 +5,12 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using CodeSmith.Data.Caching;
+using CodeSmith.Data.LinqToSql;
 
 namespace CodeSmith.Data.Linq
 {
     public static class UtilityExtensions
     {
-        public static string GetHashKey(this IQueryable query)
-        {
-            return QueryResultCache.GetHashKey(query);
-        }
-
-        /// <summary>
-        /// Gets the <see cref="DataContext"/> that created the query.
-        /// </summary>
-        /// <param name="query">The query to look for the <see cref="DataContext"/> on.</param>
-        /// <returns>
-        /// The instance of the <see cref="DataContext"/> that created the query. 
-        /// If the query was not created by a <see cref="DataContext"/>, 
-        /// <see langword="null"/> is returned. 
-        /// </returns>
-        public static DataContext GetDataContext(this IQueryable query)
-        {
-            return LinqToSqlDataContextProvider.GetDataContext(query);
-        }
-
-        /// <summary>
-        /// Determines whether the specified query supports a future query extension.
-        /// </summary>
-        /// <param name="query">The query.</param>
-        /// <returns>
-        /// 	<c>true</c> if query supports a future query; otherwise, <c>false</c>.
-        /// </returns>
-        public static bool SupportsFutureQuery(this IQueryable query)
-        {
-            var db = LinqToSqlDataContextProvider.GetDataContext(query) as IFutureContext;
-            return (db != null);
-        }
-
         /// <summary>
         /// Specifies the related objects to include in the query results.
         /// </summary>

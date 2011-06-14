@@ -43,14 +43,24 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Extensions\ClearCacheExtensions.cs" />
-    <Compile Include="Extensions\ClearCacheFirstOrDefaultExtensions.cs" />
+    <Compile Include="DataContext\DataContextBase.cs" />
+    <Compile Include="Extensions\CacheSettingsExtensions.cs" />
+    <Compile Include="Extensions\DataContextExtensions.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Extensions\TableExtensions.cs" />
     <Compile Include="Extensions\FromCacheExtensions.cs" />
     <Compile Include="Extensions\FromCacheFirstOrDefaultExtensions.cs" />
-    <Compile Include="Extensions\FutureExtensions.cs" />
-    <Compile Include="Extensions\PagingExtensions.cs" />
+    <Compile Include="Extensions\FutureCacheCountExtensions.cs" />
+    <Compile Include="Extensions\FutureCacheExtensions.cs" />
+    <Compile Include="Extensions\FutureCacheFirstOrDefaultExtensions.cs" />
     <Compile Include="Extensions\UtilityExtensions.cs" />
-    <Compile Include="PagedList.cs" />
+    <Compile Include="DataContext\LinqToSqlDataContextProvider.cs" />
+    <Compile Include="Future\FutureCount.cs" />
+    <Compile Include="Future\FutureQuery.cs" />
+    <Compile Include="Future\FutureQueryBase.cs" />
+    <Compile Include="Future\FutureValue.cs" />
+    <Compile Include="Future\ILinqToSqlFutureQuery.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -56,7 +56,7 @@ namespace CodeSmith.Data.Caching
             SetResultCache(key, settings, results, null);
         }
 
-        public static void SetResultCache<T>(string key, CacheSettings settings, ICollection<T> results, IQueryable<T> query)
+        public static void SetResultCache<T>(string key, CacheSettings settings, ICollection<T> results, IQueryable query)
         {
             if (settings == null)
                 settings = CacheManager.GetProfile();
@@ -85,7 +85,7 @@ namespace CodeSmith.Data.Caching
             return collection;
         }
 
-        private static void Detach<T, U>(ICollection<T> results, IQueryable<U> query)
+        private static void Detach<T>(ICollection<T> results, IQueryable query)
         {
             var db = DataContextProvider.GetDataConext(query);
             if (db == null)
