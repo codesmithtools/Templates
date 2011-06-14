@@ -77,9 +77,9 @@ namespace <%= SourceEntity.Namespace %>
         
         #region Column Mapped Properties
         
-        <% IEnumerable<IProperty> allProperties = SourceEntity.Key.IsComposite
-            ? SourceEntity.Properties
-            : SourceEntity.Key.Properties.Concat(SourceEntity.Properties); %>
+        <% IEnumerable<IProperty> allProperties = IsComposite()
+            ? SourceEntity.Key.Properties.Concat(SourceEntity.Properties)
+            : SourceEntity.Properties; %>
         <% foreach(IProperty property in allProperties) { %>
         <%= GeneratedCodeAttribute %>
         private <%= property.SystemType %> <%= property.PrivateMemberVariableName %>;
@@ -125,7 +125,7 @@ namespace <%= SourceEntity.Namespace %>
         
         <% } %>
         #endregion
-        <% if (SourceEntity.Key.IsComposite) { %>
+        <% if (IsComposite()) { %>
         
         #region Composite Key Overrides
         
@@ -232,6 +232,10 @@ namespace <%= SourceEntity.Namespace %>
 #pragma warning restore 0414
 
 <script runat="template">
+    public bool IsComposite()
+    {
+        return SourceEntity.Key.IsComposite && !((NHibernateEntity)SourceEntity).IsView;
+    }
     public string GetAssociationSystemType(Association association)
     {
         return association.AssociationType == AssociationType.ManyToOne || association.AssociationType == AssociationType.ManyToZeroOrOne
