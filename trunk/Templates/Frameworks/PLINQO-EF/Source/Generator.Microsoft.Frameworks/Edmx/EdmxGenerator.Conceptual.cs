@@ -152,16 +152,18 @@ namespace Generator.Microsoft.Frameworks
 
             #endregion
 
+
             //http://msdn.microsoft.com/en-us/library/bb738614.aspx
             function.Name = ResolveEntityMappedName(entity.EntityKey(), entity.Name);
+            var entitySetName = ResolveEntityMappedName(entity.AssociatedEntity.EntityKey(), entity.AssociatedEntity.Name);
             if(exists)
             {
                 var type = function.ReturnType != null ? function.ReturnType.ToString().Replace("Collection(", string.Empty).Replace(")", string.Empty).Trim() : string.Empty;
                 var complexTypeName = NamingConventions.PropertyName(type.Replace(ConceptualSchema.Namespace + ".", string.Empty));
                 if (entity.IsStronglyTypedAssociatedEntity)
                 {
-                    function.EntitySet = entity.AssociatedEntity.EntityKeyName;
-                    function.ReturnType = string.Format("Collection({0}.{1})", ConceptualSchema.Namespace, ResolveEntityMappedName(entity.AssociatedEntity.EntityKey(), entity.AssociatedEntity.Name));
+                    function.EntitySet = entitySetName;
+                    function.ReturnType = string.Format("Collection({0}.{1})", ConceptualSchema.Namespace, entitySetName);
                 }
                 else if (function.IsComplexType(ConceptualSchema.Namespace) && ConceptualSchema.ComplexTypes.Exists(complexTypeName) && entity.Properties.Count > 0)
                 {
@@ -175,8 +177,14 @@ namespace Generator.Microsoft.Frameworks
                     function.EntitySet = null;
                 }
             }
+            else if (entity.IsStronglyTypedAssociatedEntity)
+            {
+                function.EntitySet = entitySetName;
+                function.ReturnType = string.Format("Collection({0}.{1})", ConceptualSchema.Namespace, entitySetName);
+            }
             else if(entity.Properties.Count > 0)
             {
+                function.ReturnType = null;
                 //By default create a new ComplexType for a procedure's resultset if it contains more a column in the result set.
                 function.ReturnType = string.Format("Collection({0}.{1}Result)", ConceptualSchema.Namespace, ResolveEntityMappedName(entity.EntityKey(), entity.Name));
                 CreateConceptualComplexType(entity);

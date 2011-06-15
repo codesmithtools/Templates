@@ -1381,6 +1381,53 @@
             <param name="useCleanExpression"></param>
             <returns></returns>
         </member>
+        <member name="M:CodeSmith.SchemaHelper.Util.NamingConventions.PrivateMemberVariableName(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="value"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.Util.NamingConventions.PrivateMemberVariableName(System.String,System.Boolean)">
+            <summary>
+            
+            </summary>
+            <param name="value"></param>
+            <param name="useKeywordRenameAlias"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.Util.NamingConventions.PrivateMemberVariableName(System.String,System.String)">
+            <summary>
+            
+            </summary>
+            <param name="value"></param>
+            <param name="suffix"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.Util.NamingConventions.PrivateMemberVariableName(System.String,System.String,System.Boolean)">
+            <summary>
+            
+            </summary>
+            <param name="value"></param>
+            <param name="suffix"></param>
+            <param name="useKeywordRenameAlias"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.Util.NamingConventions.VariableName(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="value"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.Util.NamingConventions.VariableName(System.String,System.Boolean)">
+            <summary>
+            
+            </summary>
+            <param name="value"></param>
+            <param name="useKeywordRenameAlias"></param>
+            <returns></returns>
+        </member>
         <member name="M:CodeSmith.SchemaHelper.Util.NamingConventions.ValidateName(CodeSmith.SchemaHelper.IProperty)">
             <summary>
             Validates the name is not the same name as the Property.
@@ -1392,6 +1439,21 @@
             Validates the name is not the same name as the Entity.
             </summary>
             <returns>Returns properly formatted class name based off the name of the table.</returns>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.Util.NamingConventions.GetSafeName(System.String,System.String)">
+            <summary>
+            
+            </summary>
+            <param name="schema"></param>
+            <param name="name"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.Util.NamingConventions.GetSafeName(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="name"></param>
+            <returns></returns>
         </member>
         <member name="P:CodeSmith.SchemaHelper.Util.NamingConventions.SystemTypeEscape">
             <summary>
@@ -1436,6 +1498,11 @@
             Do any Post constructor initialization here.
             </summary>
         </member>
+        <member name="M:CodeSmith.SchemaHelper.TableEntity.LoadKeys">
+            <summary>
+            Override to populate the keys from the implemented entity.
+            </summary>
+        </member>
         <member name="M:CodeSmith.SchemaHelper.TableEntity.LoadProperties">
             <summary>
             Override to populate the properties from the implemented entity.
@@ -1444,11 +1511,6 @@
         <member name="M:CodeSmith.SchemaHelper.TableEntity.LoadAssociations">
             <summary>
             Override to populate the associations from the implemented entity.
-            </summary>
-        </member>
-        <member name="M:CodeSmith.SchemaHelper.TableEntity.LoadKeys">
-            <summary>
-            Override to populate the keys from the implemented entity.
             </summary>
         </member>
         <member name="M:CodeSmith.SchemaHelper.TableEntity.LoadExtendedProperties">
@@ -1591,6 +1653,21 @@
         <member name="P:CodeSmith.SchemaHelper.CommandEntity.IsAssociated">
             <summary>
             Is this Command associated to an Entity
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.CommandEntity.IsStronglyTypedAssociatedEntity">
+            <summary>
+            Returns true if the Commands ResultSet (Properties) is a 1 - 1 match with the AssociatedEntity (properties).
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.CommandEntity.IsFunction">
+            <summary>
+            Returns true if the Command is a Function.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.CommandEntity.ReturnValueParameter">
+            <summary>
+            Returns the Commands Return Value.
             </summary>
         </member>
         <member name="P:CodeSmith.SchemaHelper.CommandEntity.Owner">
