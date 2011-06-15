@@ -403,12 +403,57 @@ namespace Generator.Microsoft.Frameworks
 
             #endregion
 
-            if (entity.Properties.Count > 0)
+            if (entity.IsStronglyTypedAssociatedEntity)
+            {
+                if (importMapping.ResultMapping != null && importMapping.ResultMapping.ComplexTypeMappings != null)
+                    importMapping.ResultMapping.ComplexTypeMappings = null;
+
+                CreateFunctionMappingEntityTypeMapping(entity, importMapping);
+            }
+            else if (entity.Properties.Count > 0)
                 CreateFunctionMappingComplexTypeMapping(entity, importMapping);
             else if(importMapping.ResultMapping != null && importMapping.ResultMapping.ComplexTypeMappings != null)
                 importMapping.ResultMapping.ComplexTypeMappings.Clear();
 
             _mappingEntitys.Add(entity.Name);
+        }
+
+        private void CreateFunctionMappingEntityTypeMapping(CommandEntity entity, FunctionImportMapping importMapping)
+        {
+            //<ResultMapping>
+            //  <EntityTypeMapping TypeName="PetShopModel.GetCategoryById">
+            string entityName = entity.AssociatedEntity.Name;
+            var mapping = importMapping.ResultMapping != null && importMapping.ResultMapping.EntityTypeMappings != null
+                              ? importMapping.ResultMapping.EntityTypeMappings.FirstOrDefault()
+                              : null;
+
+            if (mapping == null)
+            {
+                importMapping.ResultMapping = new FunctionImportMappingResultMapping()
+                {
+                    EntityTypeMappings = new List<FunctionImportEntityTypeMapping>()
+                };
+
+                mapping = new FunctionImportEntityTypeMapping() { TypeName = string.Concat(ConceptualSchema.Namespace, ".", entityName) };
+                importMapping.ResultMapping.EntityTypeMappings.Add(mapping);
+            }
+            else if (!string.IsNullOrEmpty(mapping.TypeName))
+            {
+                entityName = mapping.TypeName.Replace("IsTypeOf(", "").Replace(string.Format("{0}.", ConceptualSchema.Namespace), "").Replace(")", "");
+                entityName = entityName.Equals(entity.Name, StringComparison.InvariantCultureIgnoreCase) ? entity.Name : entityName;
+            }
+
+            // Check for inheritance.
+            mapping.TypeName = string.Format("{0}.{1}", ConceptualSchema.Namespace, entityName);
+
+            _mappingEntityNames.Add(entity.EntityKey(), importMapping.FunctionImportName);
+
+            //<EntityTypeMapping TypeName="PetShopModel.GetCategoryById">
+            //  <ScalarProperty Name="CategoryId" ColumnName="CategoryId" />
+            //  <ScalarProperty Name="Name" ColumnName="Name" />
+            //  <ScalarProperty Name="Description" ColumnName="Descn" />
+            //</EntityTypeMapping>
+            MergeScalarProperties(mapping, entity);
         }
 
         private void CreateFunctionMappingComplexTypeMapping(CommandEntity entity, FunctionImportMapping importMapping)
@@ -510,6 +555,43 @@ namespace Generator.Microsoft.Frameworks
 
                     if (!ExcludeProperty(property as ISchemaProperty))
                         properties.Add(prop);
+                }
+            }
+
+            mappingFragment.ScalarProperties = properties.Distinct().ToList();
+        }
+
+        private void MergeScalarProperties(FunctionImportEntityTypeMapping mappingFragment, CommandEntity entity)
+        {
+            foreach (var property in mappingFragment.ScalarProperties.Where(p => entity.Properties.Count(prop => prop.KeyName.Equals(p.ColumnName, StringComparison.InvariantCultureIgnoreCase)) == 0))
+                _mappingDroppedEntityPropertyNames[string.Format(PROPERTY_KEY, entity.EntityKeyName, property.ColumnName)] = property.Name;
+
+            var properties = new List<ScalarProperty>();
+            foreach (var property in entity.Properties)
+            {
+                var prop = mappingFragment.ScalarProperties.Where(p => p.ColumnName.Equals(property.KeyName, StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault();
+                if (prop == null)
+                {
+                    // The property doesn't exist so lets create it.
+                    prop = new ScalarProperty() { Name = property.Name };
+                }
+                else if (!property.Name.Equals(prop.Name, StringComparison.InvariantCultureIgnoreCase)) // Column matches that in the database.. If the names are different, it wins.
+                {
+                    // The propertyName has been updated.
+                    // TODO: Is there a better way to find out if they renamed the Property?
+                    //prop.Name = prop.Name;
+                }
+                else
+                {
+                    // Update the propertyName so it is always current with SchemaHelper.
+                    prop.Name = property.Name;
+                }
+
+                prop.ColumnName = property.KeyName;
+                if (!ExcludeProperty(property as ISchemaProperty) && properties.Count(p => p.Name.Equals(prop.Name, StringComparison.InvariantCultureIgnoreCase)) == 0)
+                {
+                    properties.Add(prop);
+                    _mappingEntityPropertyNames[string.Format("{0}-{1}", entity.Name, property.KeyName)] = prop.Name;
                 }
             }
 
