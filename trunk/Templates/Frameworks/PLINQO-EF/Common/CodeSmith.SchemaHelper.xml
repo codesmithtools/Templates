@@ -1738,6 +1738,13 @@
             <param name="column"></param>
             <returns></returns>
         </member>
+        <member name="M:CodeSmith.SchemaHelper.SchemaExplorerExtensions.EntityKey(CodeSmith.SchemaHelper.IEntity)">
+            <summary>
+            
+            </summary>
+            <param name="entity"></param>
+            <returns></returns>
+        </member>
         <member name="T:CodeSmith.SchemaHelper.EntityManager">
             <summary>
             

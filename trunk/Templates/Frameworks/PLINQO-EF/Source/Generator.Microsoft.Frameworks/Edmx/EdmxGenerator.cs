@@ -260,9 +260,9 @@ namespace Generator.Microsoft.Frameworks
         {
             foreach (var property in association.Properties)
             {
-                var invalid = association.IsParentEntity 
-                    ? (property.Property.PropertyType & PropertyType.Key) != PropertyType.Key && (property.ForeignProperty.PropertyType & PropertyType.Foreign) != PropertyType.Foreign
-                    : (property.ForeignProperty.PropertyType & PropertyType.Key) != PropertyType.Key && (property.Property.PropertyType & PropertyType.Foreign) != PropertyType.Foreign;
+                var invalid = association.IsParentEntity && !association.IsParentManyToMany()
+                    ? (property.Property.PropertyType & PropertyType.Key) != PropertyType.Key || (property.ForeignProperty.PropertyType & PropertyType.Foreign) != PropertyType.Foreign
+                    : (property.ForeignProperty.PropertyType & PropertyType.Key) != PropertyType.Key || (property.Property.PropertyType & PropertyType.Foreign) != PropertyType.Foreign;
                 
                 if (invalid)
                     return true;
