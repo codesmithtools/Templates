@@ -53,6 +53,8 @@ namespace <%= String.IsNullOrEmpty(QueryNamespace)? BaseNamespace : QueryNamespa
     /// </summary>
     public static partial class <%= Entity.Name %>Extensions
     {
+        #region Unique Results
+        
     <% if (Entity.HasKey) { %>
         /// <summary>
         /// Gets an instance by the primary key.
@@ -62,6 +64,7 @@ namespace <%= String.IsNullOrEmpty(QueryNamespace)? BaseNamespace : QueryNamespa
         {
             return queryable.FirstOrDefault(<%= GetLamba(Entity.Key.Properties, 5) %>);
         }
+        
     <% } %>
     <% IEnumerable<IProperty> allProperties = Entity.Key.Properties.Concat(Entity.Properties); %>
     <% foreach(IProperty property in allProperties) { %>
@@ -79,12 +82,16 @@ namespace <%= String.IsNullOrEmpty(QueryNamespace)? BaseNamespace : QueryNamespa
 
             return queryable.FirstOrDefault(<%= GetLamba(new List<IProperty>() { property }, 5) %>);
         }
+        
     <% } %>
+        #endregion
+        
+        #region By Property
+        
     <% foreach(IProperty property in allProperties) { %>
         <% if (IsIgnoreType(property)) { continue; } %>
-        <% string alias = GetAlias(); 
-           var paramName = CleanParamName(property.VariableName);
-        %>
+        <% string alias = GetAlias(); %>
+        <% string paramName = CleanParamName(property.VariableName); %>
 
         /// <summary>
         /// Gets a query for <see cref="<%= Entity.Namespace %>.<%= Entity.Name %>.<%= property.Name %>"/>.
@@ -186,7 +193,7 @@ namespace <%= String.IsNullOrEmpty(QueryNamespace)? BaseNamespace : QueryNamespa
                     return <%= property.VariableName %> == null 
                         ? queryable.Where(<%= alias %> => <%= alias %>.<%= property.Name %> != null) 
                         : queryable.Where(<%= alias %> => <%= alias %>.<%= property.Name %> != <%= paramName %>);
-                default:
+                c
                     return <%= property.VariableName %> == null 
                         ? queryable.Where(<%= alias %> => <%= alias %>.<%= property.Name %> == null) 
                         : queryable.Where(<%= alias %> => <%= alias %>.<%= property.Name %> == <%= paramName %>);
@@ -243,6 +250,92 @@ namespace <%= String.IsNullOrEmpty(QueryNamespace)? BaseNamespace : QueryNamespa
         <% } %>
         }
     <% } %>
+    
+        #endregion
+        
+        #region By Association
+        
+        <% foreach(Association association in Entity.Associations) { %>
+            <% if (association.AssociationType != AssociationType.ManyToOne && association.AssociationType != AssociationType.ManyToZeroOrOne) { continue; } %>
+            <% string alias = GetAlias(); %>
+        /// <summary>
+        /// Gets a query for <see cref="<%= Entity.Namespace %>.<%= Entity.Name %> by <%= association.Name %>'s primary key."/>.
+        /// </summary>
+        /// <param name="queryable">Query to append where clause.</param>
+        /// <param name="<%= CleanParamName(association.VariableName) %>"><%= association.Name %> to search for.</param>
+        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
+        <%= GeneratedCodeAttribute %>
+        public static IQueryable<<%= Entity.Namespace %>.<%= Entity.Name %>> <%= MethodPrefix %><%= association.Name %>(this IQueryable<<%= Entity.Namespace %>.<%= Entity.Name %>> queryable, <%= Entity.Namespace %>.<%= association.ForeignEntity.Name %> <%= association.VariableName %>)
+        {
+            return queryable.<%= MethodPrefix %><%= association.Name %>(ComparisonOperator.Equals, <%= association.VariableName %>);
+        }
+        
+        /// <summary>
+        /// Gets a query for <see cref="<%= Entity.Namespace %>.<%= Entity.Name %> by <%= association.Name %>'s primary key."/>.
+        /// </summary>
+        /// <param name="queryable">Query to append where clause.</param>
+        /// <param name="comparisonOperator">The comparison operator.</param>
+        /// <param name="<%= CleanParamName(association.VariableName) %>"><%= association.Name %> to search for.</param>
+        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
+        <%= GeneratedCodeAttribute %>
+        public static IQueryable<<%= Entity.Namespace %>.<%= Entity.Name %>> <%= MethodPrefix %><%= association.Name %>(this IQueryable<<%= Entity.Namespace %>.<%= Entity.Name %>> queryable, ComparisonOperator comparisonOperator, <%= Entity.Namespace %>.<%= association.ForeignEntity.Name %> <%= association.VariableName %>)
+        {
+            switch(comparisonOperator)
+            {
+                case ComparisonOperator.Equals:
+                    return queryable.Where(<%= alias %> => <%= alias %>.<%= association.Name %> == <%= association.VariableName %>);
+                
+                case ComparisonOperator.NotEquals:
+                    return queryable.Where(<%= alias %> => <%= alias %>.<%= association.Name %> != <%= association.VariableName %>);
+                    
+                default:
+                    throw new ArgumentException("Parameter 'comparisonOperator' must be ComparisonOperator.Equals or ComparisonOperator.NotEquals to support Association type.", "comparisonOperator");
+            }
+        }
+            
+            <% List<IProperty> properties = association.ForeignEntity.Key.Properties; %>
+            <% if (properties.Any(p => IsIgnoreType(p))) { continue; } %>
+        /// <summary>
+        /// Gets a query for <see cref="<%= Entity.Namespace %>.<%= Entity.Name %> by <%= association.ForeignEntity.Name %>'s primary key."/>.
+        /// </summary>
+        /// <param name="queryable">Query to append where clause.</param>
+            <% foreach (IProperty property in properties) { %>
+        /// <param name="<%= CleanParamName(property.VariableName) %>"><%= property.Name %> to search for.</param>
+            <% } %>
+        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
+        <%= GeneratedCodeAttribute %>
+        public static IQueryable<<%= Entity.Namespace %>.<%= Entity.Name %>> <%= MethodPrefix %><%= association.Name %>(this IQueryable<<%= Entity.Namespace %>.<%= Entity.Name %>> queryable, <%= GetParameters(properties) %>)
+        {
+            return queryable.<%= MethodPrefix %><%= association.Name %>(ComparisonOperator.Equals, <%= GetParametersNames(properties) %>);
+        }
+        
+        /// <summary>
+        /// Gets a query for <see cref="<%= Entity.Namespace %>.<%= Entity.Name %> by <%= association.ForeignEntity.Name %>'s primary key."/>.
+        /// </summary>
+        /// <param name="queryable">Query to append where clause.</param>
+        /// <param name="comparisonOperator">The comparison operator.</param>
+            <% foreach (IProperty property in properties) { %>
+        /// <param name="<%= CleanParamName(property.VariableName) %>"><%= property.Name %> to search for.</param>
+            <% } %>
+        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
+        <%= GeneratedCodeAttribute %>
+        public static IQueryable<<%= Entity.Namespace %>.<%= Entity.Name %>> <%= MethodPrefix %><%= association.Name %>(this IQueryable<<%= Entity.Namespace %>.<%= Entity.Name %>> queryable, ComparisonOperator comparisonOperator, <%= GetParameters(properties) %>)
+        {
+            switch(comparisonOperator)
+            {
+                case ComparisonOperator.Equals:
+                    return queryable.Where(<%= GetLamba(association, 5, true) %>);
+                
+                case ComparisonOperator.NotEquals:
+                    return queryable.Where(<%= GetLamba(association, 5, false) %>);
+                    
+                default:
+                    throw new ArgumentException("Parameter 'comparisonOperator' must be ComparisonOperator.Equals or ComparisonOperator.NotEquals to support Association type.", "comparisonOperator");
+            }
+        }
+            
+        <% } %>
+        #endregion
     }
 }
 #pragma warning restore 1591
@@ -334,10 +427,43 @@ namespace <%= String.IsNullOrEmpty(QueryNamespace)? BaseNamespace : QueryNamespa
 
     public string GetLamba(List<IProperty> properties, int tabCount)
     {
+        return GetLamba(properties, tabCount, true);
+    }
+
+    public string GetLamba(List<IProperty> properties, int tabCount, bool equals)
+    {
+        List<LambaValue> values = properties
+            .Select(p => new LambaValue
+            {
+                IsNullable = p.IsNullable,
+                Property = p.Name,
+                Variable = CleanParamName(p.VariableName)
+            })
+            .ToList();
+                
+        return GetLamba(values, tabCount, equals);
+    }
+    
+    public string GetLamba(Association association, int tabCount, bool equals)
+    {
+        List<LambaValue> values = association.ForeignEntity.Key.Properties
+            .Select(p => new LambaValue
+            {
+                IsNullable = p.IsNullable,
+                Property = association.Name + "." + p.Name,
+                Variable = CleanParamName(p.VariableName)
+            })
+            .ToList();
+        
+        return GetLamba(values, tabCount, equals);
+    }
+    
+    public string GetLamba(IEnumerable<LambaValue> values, int tabCount, bool equals)
+    {
         StringBuilder lamba = new StringBuilder();
         string alias = GetAlias();
 
-        foreach(IProperty property in properties)
+        foreach(LambaValue value in values)
         {
             if (lamba.Length == 0)
             {
@@ -347,15 +473,22 @@ namespace <%= String.IsNullOrEmpty(QueryNamespace)? BaseNamespace : QueryNamespa
             {
                 lamba.Append(" \r\n");
                 lamba.Append('\t', tabCount);
-                lamba.Append("&& ");
+                lamba.Append(equals ? "&& " : "|| ");
             }
 
-            if (property.IsNullable == true)
-                lamba.AppendFormat("object.Equals({0}.{1}, {2})", alias, property.Name, CleanParamName(property.VariableName));
+            if (value.IsNullable == true)
+                lamba.AppendFormat("{3}object.Equals({0}.{1}, {2})", alias, value.Property, value.Variable, equals ? String.Empty : "!");
             else
-                lamba.AppendFormat("{0}.{1} == {2}", alias, property.Name, CleanParamName(property.VariableName));
+                lamba.AppendFormat("{0}.{1} {3} {2}", alias, value.Property, value.Variable, equals ? "==" : "!=");
         }
 
         return lamba.ToString();
+    }
+    
+    public class LambaValue
+    {
+        public bool IsNullable {get;set;}
+        public string Property {get;set;}
+        public string Variable {get;set;}
     }
 </script>
