@@ -63,8 +63,8 @@ namespace <%= String.IsNullOrEmpty(QueryNamespace)? BaseNamespace : QueryNamespa
             return queryable.FirstOrDefault(<%= GetLamba(Entity.Key.Properties, 5) %>);
         }
     <% } %>
-    <% var properties = Entity.Properties.Concat(Entity.Key.Properties).ToList(); %>
-    <% foreach(IProperty property in properties) { %>
+    <% IEnumerable<IProperty> allProperties = Entity.Key.Properties.Concat(Entity.Properties); %>
+    <% foreach(IProperty property in allProperties) { %>
         <% if ((property.PropertyType & PropertyType.Index) != PropertyType.Index) { continue; } %>
         /// <summary>
         /// Gets an instance by using a unique index.
@@ -80,7 +80,7 @@ namespace <%= String.IsNullOrEmpty(QueryNamespace)? BaseNamespace : QueryNamespa
             return queryable.FirstOrDefault(<%= GetLamba(new List<IProperty>() { property }, 5) %>);
         }
     <% } %>
-    <% foreach(IProperty property in Entity.Properties) { %>
+    <% foreach(IProperty property in allProperties) { %>
         <% if (IsIgnoreType(property)) { continue; } %>
         <% string alias = GetAlias(); 
            var paramName = CleanParamName(property.VariableName);
