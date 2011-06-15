@@ -45,9 +45,10 @@ namespace CodeSmith.SchemaHelper.NHibernate
                 IsNullable = false;
             else
             {
-                bool isNullable;
-                Boolean.TryParse(notnull.Value, out isNullable);
-                IsNullable = isNullable;
+                bool notnullValue;
+                IsNullable = Boolean.TryParse(notnull.Value, out notnullValue)
+                    ? !notnullValue
+                    : false;
             }
 
             SystemType = IsNullable
