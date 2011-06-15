@@ -130,7 +130,7 @@
         return SourceEntity.Properties.FirstOrDefault(IsRowVersion);
     }
     
-    public static bool IsRowVersion(IProperty property)
+    public bool IsRowVersion(IProperty property)
     {
         ISchemaProperty sp = property as ISchemaProperty;
         if (sp == null)
@@ -139,8 +139,11 @@
         return sp.IsRowVersion;
     }
     
-    public static bool IsKey(IProperty property)
+    public bool IsKey(IProperty property)
     {
+        if (SourceEntity.Key.Properties.Any(p => p.KeyName == property.KeyName))
+            return true;
+        
         ISchemaProperty sp = property as ISchemaProperty;
         if (sp == null)
             return false;
