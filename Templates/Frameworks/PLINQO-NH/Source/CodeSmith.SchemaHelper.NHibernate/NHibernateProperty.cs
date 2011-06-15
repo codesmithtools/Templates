@@ -9,7 +9,7 @@ namespace CodeSmith.SchemaHelper.NHibernate
 {
     public class NHibernateProperty : PropertyBase<XElement>
     {
-        public static readonly string[] DefaultAttributes = new[] { "name", "column", "type", NHibernateUtilities.NHibernateType, NHibernateUtilities.GeneratorClass };
+        public static readonly string[] DefaultAttributes = new[] { "name", "column", "type", NHibernateUtilities.NotNull, NHibernateUtilities.NHibernateType, NHibernateUtilities.GeneratorClass };
 
         private string _safeName;
 
@@ -38,9 +38,21 @@ namespace CodeSmith.SchemaHelper.NHibernate
             Name = name;
             GetterAccess = "public";
             SetterAccess = "public";
-            SystemType = NHibernateUtilities.FromNHibernateType(type, length);
-
             _safeName = column;
+
+            var notnull = PropertySource.Attribute(NHibernateUtilities.NotNull);
+            if (notnull == null)
+                IsNullable = false;
+            else
+            {
+                bool isNullable;
+                Boolean.TryParse(notnull.Value, out isNullable);
+                IsNullable = isNullable;
+            }
+
+            SystemType = IsNullable
+                ? NHibernateUtilities.FromNHibernateNullableType(type, length)
+                : NHibernateUtilities.FromNHibernateType(type, length);
 
             ExtendedProperties.Add(NHibernateUtilities.NHibernateType, type);
 
@@ -66,7 +78,5 @@ namespace CodeSmith.SchemaHelper.NHibernate
         {
             return _safeName;
         }
-
-        
     }
 }

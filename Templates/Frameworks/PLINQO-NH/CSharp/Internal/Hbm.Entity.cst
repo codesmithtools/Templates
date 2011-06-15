@@ -48,7 +48,7 @@
     <% // Properties %>
     <% foreach(IProperty property in SourceEntity.Properties) { %>
         <% if(IsKey(property) || IsRowVersion(property)) { continue; } %>
-        <property name="<%= property.Name %>" column="<%= property.GetSafeName() %>" type="<%= property.ExtendedProperties[NHibernateUtilities.NHibernateType] %>" <%= GetAttributes(property) %>/> 
+        <property name="<%= property.Name %>" column="<%= property.GetSafeName() %>" type="<%= property.ExtendedProperties[NHibernateUtilities.NHibernateType] %>" not-null="<%= property.ExtendedProperties[NHibernateUtilities.NotNull] %>" <%= GetAttributes(property) %>/> 
     <% } %>
     <% // Associations %>
     <% foreach(Association association in SourceEntity.Associations) { %>

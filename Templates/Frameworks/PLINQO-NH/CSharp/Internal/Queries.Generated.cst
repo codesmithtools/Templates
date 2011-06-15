@@ -45,6 +45,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using CodeSmith.Data.Linq;
+using CodeSmith.Data.Linq.Dynamic;
 
 namespace <%= String.IsNullOrEmpty(QueryNamespace)? BaseNamespace : QueryNamespace %>
 {
@@ -193,7 +194,7 @@ namespace <%= String.IsNullOrEmpty(QueryNamespace)? BaseNamespace : QueryNamespa
                     return <%= property.VariableName %> == null 
                         ? queryable.Where(<%= alias %> => <%= alias %>.<%= property.Name %> != null) 
                         : queryable.Where(<%= alias %> => <%= alias %>.<%= property.Name %> != <%= paramName %>);
-                c
+                default:
                     return <%= property.VariableName %> == null 
                         ? queryable.Where(<%= alias %> => <%= alias %>.<%= property.Name %> == null) 
                         : queryable.Where(<%= alias %> => <%= alias %>.<%= property.Name %> == <%= paramName %>);
