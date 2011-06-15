@@ -14,6 +14,7 @@ namespace CodeSmith.SchemaHelper.NHibernate
 
         private static MapCollection _toNHibernateTypeMap;
         private static MapCollection _fromNHibernateTypeMap;
+        private static MapCollection _fromNHibernateNullableTypeMap;
 
         public const string MapExtension = ".hbm.xml";
         public const string FileName = "file-name";
@@ -24,6 +25,7 @@ namespace CodeSmith.SchemaHelper.NHibernate
         public const string Cascade = "cascade";
         public const string Generated = "generated";
         public const string UnsavedValue = "unsaved-value";
+        public const string NotNull = "not-null";
 
         public static void Merge(EntityManager destinationManager, EntityManager sourceManager, string defaultNamespace)
         {
@@ -80,6 +82,7 @@ namespace CodeSmith.SchemaHelper.NHibernate
         {
             var nhibType = ToNHibernateType(property);
             property.ExtendedProperties[NHibernateType] = nhibType;
+            property.ExtendedProperties[NotNull] = !property.IsNullable ? "true" : "false";
             
             if (nhibType.EndsWith("String") && property.Size > 0)
                 property.ExtendedProperties[Length] = property.Size;
@@ -268,6 +271,42 @@ namespace CodeSmith.SchemaHelper.NHibernate
                 }
 
                 return _fromNHibernateTypeMap;
+            }
+        }
+
+        public static string FromNHibernateNullableType(string nhibernateType, int? length)
+        {
+            var systemType = FromNHibernateNullableTypeMap.ContainsKey(nhibernateType)
+                ? FromNHibernateNullableTypeMap[nhibernateType]
+                : "System.String";
+
+            if (length.HasValue && length > 1)
+            {
+                if (systemType == "System.Char?")
+                    return "System.String";
+            }
+
+            return systemType;
+        }
+
+        private static MapCollection FromNHibernateNullableTypeMap
+        {
+            get
+            {
+                if (_fromNHibernateNullableTypeMap == null)
+                {
+                    string path;
+                    if (!Map.TryResolvePath("NHibernateToNullableType", String.Empty, out path))
+                    {
+                        // If the mapping file wasn't found in the maps folder than look it up in the common folder.
+                        var baseDirectory = new DirectoryInfo(Assembly.GetExecutingAssembly().Location).Parent.FullName;
+                        Map.TryResolvePath("NHibernateToNullableType", baseDirectory, out path);
+                    }
+
+                    _fromNHibernateNullableTypeMap = Map.Load(path);
+                }
+
+                return _fromNHibernateNullableTypeMap;
             }
         }
     }
