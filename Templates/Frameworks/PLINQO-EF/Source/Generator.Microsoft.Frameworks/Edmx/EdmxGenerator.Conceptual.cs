@@ -155,7 +155,9 @@ namespace Generator.Microsoft.Frameworks
 
             //http://msdn.microsoft.com/en-us/library/bb738614.aspx
             function.Name = ResolveEntityMappedName(entity.EntityKey(), entity.Name);
-            var entitySetName = ResolveEntityMappedName(entity.AssociatedEntity.EntityKey(), entity.AssociatedEntity.Name);
+            var entitySetName = entity.IsAssociated
+                                    ? ResolveEntityMappedName(entity.AssociatedEntity.EntityKey(), entity.AssociatedEntity.Name)
+                                    : ResolveEntityMappedName(entity.EntityKey(), entity.Name);
             if(exists)
             {
                 var type = function.ReturnType != null ? function.ReturnType.ToString().Replace("Collection(", string.Empty).Replace(")", string.Empty).Trim() : string.Empty;
