@@ -9,12 +9,6 @@
             <key-property name="Assigned" column="[Assigned]" type="String" length="250" /> 
             <key-property name="Created" column="[Created]" type="String" length="250" /> 
         </composite-id>
-        <property name="Id" column="[Id]" type="Int32" /> 
-        <property name="Summary" column="[Summary]" type="String" length="255" /> 
-        <property name="Priority" column="[Priority]" type="String" length="50" /> 
-        <property name="Status" column="[Status]" type="String" length="50" /> 
-        <property name="Assigned" column="[Assigned]" type="String" length="250" /> 
-        <property name="Created" column="[Created]" type="String" length="250" /> 
     </class>
 </hibernate-mapping>
 

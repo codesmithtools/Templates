@@ -5,11 +5,11 @@
             <generator class="native" />
         </id>
         <version name="RowVersion" column="[RowVersion]" type="BinaryBlob" generated="always" unsaved-value="null" />
-        <property name="Date" column="[Date]" type="DateTime" /> 
-        <property name="Content" column="[Content]" type="AnsiString" /> 
-        <property name="Username" column="[Username]" type="String" length="50" /> 
-        <property name="CreatedDate" column="[CreatedDate]" type="DateTime" /> 
-        <property name="Myxml" column="[myxml]" type="CodeSmith.Data.NHibernate.XmlType, CodeSmith.Data.NHibernate" /> 
+        <property name="Date" column="[Date]" type="DateTime" not-null="true" /> 
+        <property name="Content" column="[Content]" type="AnsiString" not-null="true" /> 
+        <property name="Username" column="[Username]" type="String" not-null="true" length="50" /> 
+        <property name="CreatedDate" column="[CreatedDate]" type="DateTime" not-null="true" /> 
+        <property name="Myxml" column="[myxml]" type="CodeSmith.Data.NHibernate.XmlType, CodeSmith.Data.NHibernate" not-null="false" /> 
         <many-to-one name="Task" class="Task" >
             <column name="[TaskId]" />
         </many-to-one>

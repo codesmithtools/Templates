@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using CodeSmith.Data.Linq;
 using NHibernate;
+using NHibernate.Linq;
 using NUnit.Framework;
 using Tracker.Data;
 using Tracker.Data.Entities;
@@ -385,6 +386,44 @@ namespace Tracker
                     .FutureCache();
 
                 Assert.AreEqual(u3.First(), u4.First());
+            }
+        }
+
+        [Test]
+        public void QueryByAssociation()
+        {
+            using (var db = new TrackerDataContext())
+            {
+                var count1 = db.Task.Where(t => t.Priority.Id == 1).Count();
+                var count2 = db.Task.ByPriority(1).Count();
+
+                Assert.AreEqual(count1, count2);
+
+                var count3 = db.Task.Where(t => t.Priority.Id != 1).Count();
+                var count4 = db.Task.ByPriority(ComparisonOperator.NotEquals, 1).Count();
+
+                Assert.AreEqual(count3, count4);
+
+                var priority = db.Priority.GetByKey(1);
+                var count5 = db.Task.ByPriority(priority).Count();
+                var count6 = db.Task.ByPriority(ComparisonOperator.NotEquals, priority).Count();
+
+                Assert.AreEqual(count1, count5);
+                Assert.AreEqual(count3, count6);
+            }
+        }
+
+        [Test]
+        public void Fetch()
+        {
+            using (var db = new TrackerDataContext())
+            {
+                var user1 = db.User
+                    .FirstOrDefault();
+
+                var user2 = db.User
+                    .FetchMany(u => u.TaskAssignedList)
+                    .FirstOrDefault();
             }
         }
     }

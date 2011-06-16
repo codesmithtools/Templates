@@ -254,11 +254,11 @@ namespace Tracker.Data.Entities
         }
         
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
-        private System.DateTime _lastLoginDate;
+        private System.DateTime? _lastLoginDate;
         
         [System.Runtime.Serialization.DataMember(Order = 12)]
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
-        public virtual System.DateTime LastLoginDate
+        public virtual System.DateTime? LastLoginDate
         {
             get { return _lastLoginDate; }
             set
@@ -290,11 +290,11 @@ namespace Tracker.Data.Entities
         }
         
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
-        private System.DateTime _lastPasswordChangeDate;
+        private System.DateTime? _lastPasswordChangeDate;
         
         [System.Runtime.Serialization.DataMember(Order = 14)]
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
-        public virtual System.DateTime LastPasswordChangeDate
+        public virtual System.DateTime? LastPasswordChangeDate
         {
             get { return _lastPasswordChangeDate; }
             set
@@ -471,17 +471,17 @@ namespace Tracker.Data.Entities
         
         partial void OnIsApprovedChanged(System.Boolean value);
         
-        partial void OnLastLoginDateChanging(System.DateTime newValue, System.DateTime oldValue);
+        partial void OnLastLoginDateChanging(System.DateTime? newValue, System.DateTime? oldValue);
         
-        partial void OnLastLoginDateChanged(System.DateTime value);
+        partial void OnLastLoginDateChanged(System.DateTime? value);
         
         partial void OnLastActivityDateChanging(System.DateTime newValue, System.DateTime oldValue);
         
         partial void OnLastActivityDateChanged(System.DateTime value);
         
-        partial void OnLastPasswordChangeDateChanging(System.DateTime newValue, System.DateTime oldValue);
+        partial void OnLastPasswordChangeDateChanging(System.DateTime? newValue, System.DateTime? oldValue);
         
-        partial void OnLastPasswordChangeDateChanged(System.DateTime value);
+        partial void OnLastPasswordChangeDateChanged(System.DateTime? value);
         
         partial void OnAvatarTypeChanging(System.String newValue, System.String oldValue);
         

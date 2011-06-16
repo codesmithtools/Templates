@@ -74,11 +74,11 @@ namespace Tracker.Data.Entities
         }
         
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
-        private System.Guid _alternateId;
+        private System.Guid? _alternateId;
         
         [System.Runtime.Serialization.DataMember(Order = 2)]
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
-        public virtual System.Guid AlternateId
+        public virtual System.Guid? AlternateId
         {
             get { return _alternateId; }
             set
@@ -107,9 +107,9 @@ namespace Tracker.Data.Entities
         
         partial void OnIdChanged(System.Guid value);
         
-        partial void OnAlternateIdChanging(System.Guid newValue, System.Guid oldValue);
+        partial void OnAlternateIdChanging(System.Guid? newValue, System.Guid? oldValue);
         
-        partial void OnAlternateIdChanged(System.Guid value);
+        partial void OnAlternateIdChanged(System.Guid? value);
         
         
         #endregion

@@ -110,11 +110,11 @@ namespace Tracker.Data.Entities
         }
         
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
-        private System.DateTime _startDate;
+        private System.DateTime? _startDate;
         
         [System.Runtime.Serialization.DataMember(Order = 4)]
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
-        public virtual System.DateTime StartDate
+        public virtual System.DateTime? StartDate
         {
             get { return _startDate; }
             set
@@ -128,11 +128,11 @@ namespace Tracker.Data.Entities
         }
         
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
-        private System.DateTime _dueDate;
+        private System.DateTime? _dueDate;
         
         [System.Runtime.Serialization.DataMember(Order = 5)]
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
-        public virtual System.DateTime DueDate
+        public virtual System.DateTime? DueDate
         {
             get { return _dueDate; }
             set
@@ -146,11 +146,11 @@ namespace Tracker.Data.Entities
         }
         
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
-        private System.DateTime _completeDate;
+        private System.DateTime? _completeDate;
         
         [System.Runtime.Serialization.DataMember(Order = 6)]
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
-        public virtual System.DateTime CompleteDate
+        public virtual System.DateTime? CompleteDate
         {
             get { return _completeDate; }
             set
@@ -349,17 +349,17 @@ namespace Tracker.Data.Entities
         
         partial void OnDetailsChanged(System.String value);
         
-        partial void OnStartDateChanging(System.DateTime newValue, System.DateTime oldValue);
+        partial void OnStartDateChanging(System.DateTime? newValue, System.DateTime? oldValue);
         
-        partial void OnStartDateChanged(System.DateTime value);
+        partial void OnStartDateChanged(System.DateTime? value);
         
-        partial void OnDueDateChanging(System.DateTime newValue, System.DateTime oldValue);
+        partial void OnDueDateChanging(System.DateTime? newValue, System.DateTime? oldValue);
         
-        partial void OnDueDateChanged(System.DateTime value);
+        partial void OnDueDateChanged(System.DateTime? value);
         
-        partial void OnCompleteDateChanging(System.DateTime newValue, System.DateTime oldValue);
+        partial void OnCompleteDateChanging(System.DateTime? newValue, System.DateTime? oldValue);
         
-        partial void OnCompleteDateChanged(System.DateTime value);
+        partial void OnCompleteDateChanged(System.DateTime? value);
         
         partial void OnCreatedDateChanging(System.DateTime newValue, System.DateTime oldValue);
         

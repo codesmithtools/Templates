@@ -8,6 +8,5 @@ namespace Tracker.Data.Entities
 {
 	public partial class Task
     {
-        // Place your custom code here.
 	}
 }

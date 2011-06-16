@@ -5,20 +5,20 @@
             <generator class="native" />
         </id>
         <version name="RowVersion" column="[RowVersion]" type="BinaryBlob" generated="always" unsaved-value="null" />
-        <property name="EmailAddress" column="[EmailAddress]" type="String" length="250" /> 
-        <property name="FirstName" column="[FirstName]" type="String" length="200" /> 
-        <property name="LastName" column="[LastName]" type="String" length="200" /> 
-        <property name="Avatar" column="[Avatar]" type="BinaryBlob" /> 
-        <property name="CreatedDate" column="[CreatedDate]" type="DateTime" /> 
-        <property name="ModifiedDate" column="[ModifiedDate]" type="DateTime" /> 
-        <property name="PasswordHash" column="[PasswordHash]" type="AnsiString" length="86" /> 
-        <property name="PasswordSalt" column="[PasswordSalt]" type="AnsiString" length="5" /> 
-        <property name="Comment" column="[Comment]" type="AnsiString" length="16" /> 
-        <property name="IsApproved" column="[IsApproved]" type="Boolean" /> 
-        <property name="LastLoginDate" column="[LastLoginDate]" type="DateTime" /> 
-        <property name="LastActivityDate" column="[LastActivityDate]" type="DateTime" /> 
-        <property name="LastPasswordChangeDate" column="[LastPasswordChangeDate]" type="DateTime" /> 
-        <property name="AvatarType" column="[AvatarType]" type="String" length="150" /> 
+        <property name="EmailAddress" column="[EmailAddress]" type="String" not-null="true" length="250" /> 
+        <property name="FirstName" column="[FirstName]" type="String" not-null="false" length="200" /> 
+        <property name="LastName" column="[LastName]" type="String" not-null="false" length="200" /> 
+        <property name="Avatar" column="[Avatar]" type="BinaryBlob" not-null="false" /> 
+        <property name="CreatedDate" column="[CreatedDate]" type="DateTime" not-null="true" /> 
+        <property name="ModifiedDate" column="[ModifiedDate]" type="DateTime" not-null="true" /> 
+        <property name="PasswordHash" column="[PasswordHash]" type="AnsiString" not-null="true" length="86" /> 
+        <property name="PasswordSalt" column="[PasswordSalt]" type="AnsiString" not-null="true" length="5" /> 
+        <property name="Comment" column="[Comment]" type="AnsiString" not-null="false" length="16" /> 
+        <property name="IsApproved" column="[IsApproved]" type="Boolean" not-null="true" /> 
+        <property name="LastLoginDate" column="[LastLoginDate]" type="DateTime" not-null="false" /> 
+        <property name="LastActivityDate" column="[LastActivityDate]" type="DateTime" not-null="true" /> 
+        <property name="LastPasswordChangeDate" column="[LastPasswordChangeDate]" type="DateTime" not-null="false" /> 
+        <property name="AvatarType" column="[AvatarType]" type="String" not-null="false" length="150" /> 
         <bag name="AuditList" inverse="true" cascade="all-delete-orphan" lazy="true" >
             <key>
                 <column name="[UserId]" />

@@ -5,11 +5,11 @@
             <generator class="native" />
         </id>
         <version name="RowVersion" column="[RowVersion]" type="BinaryBlob" generated="always" unsaved-value="null" />
-        <property name="Name" column="[Name]" type="String" length="50" /> 
-        <property name="Order" column="[Order]" type="Int32" /> 
-        <property name="Description" column="[Description]" type="String" length="200" /> 
-        <property name="CreatedDate" column="[CreatedDate]" type="DateTime" /> 
-        <property name="ModifiedDate" column="[ModifiedDate]" type="DateTime" /> 
+        <property name="Name" column="[Name]" type="String" not-null="true" length="50" /> 
+        <property name="Order" column="[Order]" type="Int32" not-null="true" /> 
+        <property name="Description" column="[Description]" type="String" not-null="false" length="200" /> 
+        <property name="CreatedDate" column="[CreatedDate]" type="DateTime" not-null="true" /> 
+        <property name="ModifiedDate" column="[ModifiedDate]" type="DateTime" not-null="true" /> 
         <bag name="TaskList" inverse="true" cascade="all-delete-orphan" lazy="true" >
             <key>
                 <column name="[PriorityId]" />

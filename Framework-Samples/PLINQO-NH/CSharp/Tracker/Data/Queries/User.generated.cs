@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using CodeSmith.Data.Linq;
+using CodeSmith.Data.Linq.Dynamic;
 
 namespace Tracker.Data
 {
@@ -18,6 +19,8 @@ namespace Tracker.Data
     /// </summary>
     public static partial class UserExtensions
     {
+        #region Unique Results
+        
         /// <summary>
         /// Gets an instance by the primary key.
         /// </summary>
@@ -25,6 +28,83 @@ namespace Tracker.Data
         public static Tracker.Data.Entities.User GetByKey(this IQueryable<Tracker.Data.Entities.User> queryable, System.Int32 id)
         {
             return queryable.FirstOrDefault(u => u.Id == id);
+        }
+        
+        #endregion
+        
+        #region By Property
+        
+
+        /// <summary>
+        /// Gets a query for <see cref="Tracker.Data.Entities.User.Id"/>.
+        /// </summary>
+        /// <param name="queryable">Query to append where clause.</param>
+        /// <param name="id">Id to search for.</param>
+        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        public static IQueryable<Tracker.Data.Entities.User> ById(this IQueryable<Tracker.Data.Entities.User> queryable, System.Int32 id)
+        {
+            return queryable.Where(u => u.Id == id);
+        }
+
+        /// <summary>
+        /// Gets a query for <see cref="Tracker.Data.Entities.User.Id"/>.
+        /// </summary>
+        /// <param name="queryable">Query to append where clause.</param>
+        /// <param name="id">Id to search for. This is on the right side of the operator.</param>
+        /// <param name="comparisonOperator">The comparison operator.</param>
+        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        public static IQueryable<Tracker.Data.Entities.User> ById(this IQueryable<Tracker.Data.Entities.User> queryable, ComparisonOperator comparisonOperator, System.Int32 id)
+        {
+            switch (comparisonOperator)
+            {
+                case ComparisonOperator.GreaterThan:
+                    return queryable.Where(u => u.Id > id);
+                case ComparisonOperator.GreaterThanOrEquals:
+                    return queryable.Where(u => u.Id >= id);
+                case ComparisonOperator.LessThan:
+                    return queryable.Where(u => u.Id < id);
+                case ComparisonOperator.LessThanOrEquals:
+                    return queryable.Where(u => u.Id <= id);
+                case ComparisonOperator.NotEquals:
+                    return queryable.Where(u => u.Id != id);
+                default:
+                    return queryable.Where(u => u.Id == id);
+            }
+        }
+
+        /// <summary>
+        /// Gets a query for <see cref="Tracker.Data.Entities.User.Id"/>.
+        /// </summary>
+        /// <param name="queryable">Query to append where clause.</param>
+        /// <param name="id">Id to search for.</param>
+        /// <param name="additionalValues">Additional values to search for.</param>
+        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        public static IQueryable<Tracker.Data.Entities.User> ById(this IQueryable<Tracker.Data.Entities.User> queryable, System.Int32 id, params System.Int32[] additionalValues)
+        {
+            var idList = new List<System.Int32> { id };
+
+            if (additionalValues != null)
+                idList.AddRange(additionalValues);
+
+            if (idList.Count == 1)
+                return queryable.ById(idList[0]);
+
+            return queryable.ById(idList);
+        }
+
+        /// <summary>
+        /// Gets a query for <see cref="Tracker.Data.Entities.User.Id"/>.
+        /// </summary>
+        /// <param name="queryable">Query to append where clause.</param>
+        /// <param name="values">The values to search for..</param>
+        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        public static IQueryable<Tracker.Data.Entities.User> ById(this IQueryable<Tracker.Data.Entities.User> queryable, IEnumerable<System.Int32> values)
+        {
+            return queryable.Where(u => values.Contains(u.Id));
         }
 
         /// <summary>
@@ -111,7 +191,10 @@ namespace Tracker.Data
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         public static IQueryable<Tracker.Data.Entities.User> ByFirstName(this IQueryable<Tracker.Data.Entities.User> queryable, System.String firstName)
         {
-            return queryable.Where(u => u.FirstName == firstName);
+            // support nulls
+            return firstName == null 
+                ? queryable.Where(u => u.FirstName == null) 
+                : queryable.Where(u => u.FirstName == firstName);
         }
 
         /// <summary>
@@ -138,9 +221,13 @@ namespace Tracker.Data
                 case ContainmentOperator.NotContains:
                     return queryable.Where(u => u.FirstName.Contains(firstName) == false);
                 case ContainmentOperator.NotEquals:
-                    return queryable.Where(u => u.FirstName != firstName);
+                    return firstName == null 
+                        ? queryable.Where(u => u.FirstName != null) 
+                        : queryable.Where(u => u.FirstName != firstName);
                 default:
-                    return queryable.Where(u => u.FirstName == firstName);
+                    return firstName == null 
+                        ? queryable.Where(u => u.FirstName == null) 
+                        : queryable.Where(u => u.FirstName == firstName);
             }
         }
 
@@ -158,6 +245,8 @@ namespace Tracker.Data
 
             if (additionalValues != null)
                 firstNameList.AddRange(additionalValues);
+            else
+                firstNameList.Add(null);
 
             if (firstNameList.Count == 1)
                 return queryable.ByFirstName(firstNameList[0]);
@@ -174,7 +263,9 @@ namespace Tracker.Data
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         public static IQueryable<Tracker.Data.Entities.User> ByFirstName(this IQueryable<Tracker.Data.Entities.User> queryable, IEnumerable<System.String> values)
         {
-            return queryable.Where(u => values.Contains(u.FirstName));
+            // creating dynmic expression to support nulls
+            var expression = DynamicExpression.BuildExpression<Tracker.Data.Entities.User, bool>("FirstName", values);
+            return queryable.Where(expression);
         }
 
         /// <summary>
@@ -186,7 +277,10 @@ namespace Tracker.Data
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         public static IQueryable<Tracker.Data.Entities.User> ByLastName(this IQueryable<Tracker.Data.Entities.User> queryable, System.String lastName)
         {
-            return queryable.Where(u => u.LastName == lastName);
+            // support nulls
+            return lastName == null 
+                ? queryable.Where(u => u.LastName == null) 
+                : queryable.Where(u => u.LastName == lastName);
         }
 
         /// <summary>
@@ -213,9 +307,13 @@ namespace Tracker.Data
                 case ContainmentOperator.NotContains:
                     return queryable.Where(u => u.LastName.Contains(lastName) == false);
                 case ContainmentOperator.NotEquals:
-                    return queryable.Where(u => u.LastName != lastName);
+                    return lastName == null 
+                        ? queryable.Where(u => u.LastName != null) 
+                        : queryable.Where(u => u.LastName != lastName);
                 default:
-                    return queryable.Where(u => u.LastName == lastName);
+                    return lastName == null 
+                        ? queryable.Where(u => u.LastName == null) 
+                        : queryable.Where(u => u.LastName == lastName);
             }
         }
 
@@ -233,6 +331,8 @@ namespace Tracker.Data
 
             if (additionalValues != null)
                 lastNameList.AddRange(additionalValues);
+            else
+                lastNameList.Add(null);
 
             if (lastNameList.Count == 1)
                 return queryable.ByLastName(lastNameList[0]);
@@ -249,7 +349,9 @@ namespace Tracker.Data
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         public static IQueryable<Tracker.Data.Entities.User> ByLastName(this IQueryable<Tracker.Data.Entities.User> queryable, IEnumerable<System.String> values)
         {
-            return queryable.Where(u => values.Contains(u.LastName));
+            // creating dynmic expression to support nulls
+            var expression = DynamicExpression.BuildExpression<Tracker.Data.Entities.User, bool>("LastName", values);
+            return queryable.Where(expression);
         }
 
         /// <summary>
@@ -555,7 +657,10 @@ namespace Tracker.Data
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         public static IQueryable<Tracker.Data.Entities.User> ByComment(this IQueryable<Tracker.Data.Entities.User> queryable, System.String comment)
         {
-            return queryable.Where(u => u.Comment == comment);
+            // support nulls
+            return comment == null 
+                ? queryable.Where(u => u.Comment == null) 
+                : queryable.Where(u => u.Comment == comment);
         }
 
         /// <summary>
@@ -582,9 +687,13 @@ namespace Tracker.Data
                 case ContainmentOperator.NotContains:
                     return queryable.Where(u => u.Comment.Contains(comment) == false);
                 case ContainmentOperator.NotEquals:
-                    return queryable.Where(u => u.Comment != comment);
+                    return comment == null 
+                        ? queryable.Where(u => u.Comment != null) 
+                        : queryable.Where(u => u.Comment != comment);
                 default:
-                    return queryable.Where(u => u.Comment == comment);
+                    return comment == null 
+                        ? queryable.Where(u => u.Comment == null) 
+                        : queryable.Where(u => u.Comment == comment);
             }
         }
 
@@ -602,6 +711,8 @@ namespace Tracker.Data
 
             if (additionalValues != null)
                 commentList.AddRange(additionalValues);
+            else
+                commentList.Add(null);
 
             if (commentList.Count == 1)
                 return queryable.ByComment(commentList[0]);
@@ -618,7 +729,9 @@ namespace Tracker.Data
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         public static IQueryable<Tracker.Data.Entities.User> ByComment(this IQueryable<Tracker.Data.Entities.User> queryable, IEnumerable<System.String> values)
         {
-            return queryable.Where(u => values.Contains(u.Comment));
+            // creating dynmic expression to support nulls
+            var expression = DynamicExpression.BuildExpression<Tracker.Data.Entities.User, bool>("Comment", values);
+            return queryable.Where(expression);
         }
 
         /// <summary>
@@ -697,9 +810,12 @@ namespace Tracker.Data
         /// <param name="lastLoginDate">LastLoginDate to search for.</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
-        public static IQueryable<Tracker.Data.Entities.User> ByLastLoginDate(this IQueryable<Tracker.Data.Entities.User> queryable, System.DateTime lastLoginDate)
+        public static IQueryable<Tracker.Data.Entities.User> ByLastLoginDate(this IQueryable<Tracker.Data.Entities.User> queryable, System.DateTime? lastLoginDate)
         {
-            return queryable.Where(u => u.LastLoginDate == lastLoginDate);
+            // support nulls
+            return lastLoginDate == null 
+                ? queryable.Where(u => u.LastLoginDate == null) 
+                : queryable.Where(u => u.LastLoginDate == lastLoginDate);
         }
 
         /// <summary>
@@ -710,8 +826,11 @@ namespace Tracker.Data
         /// <param name="comparisonOperator">The comparison operator.</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
-        public static IQueryable<Tracker.Data.Entities.User> ByLastLoginDate(this IQueryable<Tracker.Data.Entities.User> queryable, ComparisonOperator comparisonOperator, System.DateTime lastLoginDate)
+        public static IQueryable<Tracker.Data.Entities.User> ByLastLoginDate(this IQueryable<Tracker.Data.Entities.User> queryable, ComparisonOperator comparisonOperator, System.DateTime? lastLoginDate)
         {
+            if (lastLoginDate == null && comparisonOperator != ComparisonOperator.Equals && comparisonOperator != ComparisonOperator.NotEquals)
+                throw new ArgumentNullException("lastLoginDate", "Parameter 'lastLoginDate' cannot be null with the specified ComparisonOperator.  Parameter 'comparisonOperator' must be ComparisonOperator.Equals or ComparisonOperator.NotEquals to support null.");
+
             switch (comparisonOperator)
             {
                 case ComparisonOperator.GreaterThan:
@@ -723,9 +842,13 @@ namespace Tracker.Data
                 case ComparisonOperator.LessThanOrEquals:
                     return queryable.Where(u => u.LastLoginDate <= lastLoginDate);
                 case ComparisonOperator.NotEquals:
-                    return queryable.Where(u => u.LastLoginDate != lastLoginDate);
+                    return lastLoginDate == null 
+                        ? queryable.Where(u => u.LastLoginDate != null) 
+                        : queryable.Where(u => u.LastLoginDate != lastLoginDate);
                 default:
-                    return queryable.Where(u => u.LastLoginDate == lastLoginDate);
+                    return lastLoginDate == null 
+                        ? queryable.Where(u => u.LastLoginDate == null) 
+                        : queryable.Where(u => u.LastLoginDate == lastLoginDate);
             }
         }
 
@@ -737,12 +860,14 @@ namespace Tracker.Data
         /// <param name="additionalValues">Additional values to search for.</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
-        public static IQueryable<Tracker.Data.Entities.User> ByLastLoginDate(this IQueryable<Tracker.Data.Entities.User> queryable, System.DateTime lastLoginDate, params System.DateTime[] additionalValues)
+        public static IQueryable<Tracker.Data.Entities.User> ByLastLoginDate(this IQueryable<Tracker.Data.Entities.User> queryable, System.DateTime? lastLoginDate, params System.DateTime?[] additionalValues)
         {
-            var lastLoginDateList = new List<System.DateTime> { lastLoginDate };
+            var lastLoginDateList = new List<System.DateTime?> { lastLoginDate };
 
             if (additionalValues != null)
                 lastLoginDateList.AddRange(additionalValues);
+            else
+                lastLoginDateList.Add(null);
 
             if (lastLoginDateList.Count == 1)
                 return queryable.ByLastLoginDate(lastLoginDateList[0]);
@@ -757,9 +882,11 @@ namespace Tracker.Data
         /// <param name="values">The values to search for..</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
-        public static IQueryable<Tracker.Data.Entities.User> ByLastLoginDate(this IQueryable<Tracker.Data.Entities.User> queryable, IEnumerable<System.DateTime> values)
+        public static IQueryable<Tracker.Data.Entities.User> ByLastLoginDate(this IQueryable<Tracker.Data.Entities.User> queryable, IEnumerable<System.DateTime?> values)
         {
-            return queryable.Where(u => values.Contains(u.LastLoginDate));
+            // creating dynmic expression to support nulls
+            var expression = DynamicExpression.BuildExpression<Tracker.Data.Entities.User, bool>("LastLoginDate", values);
+            return queryable.Where(expression);
         }
 
         /// <summary>
@@ -841,9 +968,12 @@ namespace Tracker.Data
         /// <param name="lastPasswordChangeDate">LastPasswordChangeDate to search for.</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
-        public static IQueryable<Tracker.Data.Entities.User> ByLastPasswordChangeDate(this IQueryable<Tracker.Data.Entities.User> queryable, System.DateTime lastPasswordChangeDate)
+        public static IQueryable<Tracker.Data.Entities.User> ByLastPasswordChangeDate(this IQueryable<Tracker.Data.Entities.User> queryable, System.DateTime? lastPasswordChangeDate)
         {
-            return queryable.Where(u => u.LastPasswordChangeDate == lastPasswordChangeDate);
+            // support nulls
+            return lastPasswordChangeDate == null 
+                ? queryable.Where(u => u.LastPasswordChangeDate == null) 
+                : queryable.Where(u => u.LastPasswordChangeDate == lastPasswordChangeDate);
         }
 
         /// <summary>
@@ -854,8 +984,11 @@ namespace Tracker.Data
         /// <param name="comparisonOperator">The comparison operator.</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
-        public static IQueryable<Tracker.Data.Entities.User> ByLastPasswordChangeDate(this IQueryable<Tracker.Data.Entities.User> queryable, ComparisonOperator comparisonOperator, System.DateTime lastPasswordChangeDate)
+        public static IQueryable<Tracker.Data.Entities.User> ByLastPasswordChangeDate(this IQueryable<Tracker.Data.Entities.User> queryable, ComparisonOperator comparisonOperator, System.DateTime? lastPasswordChangeDate)
         {
+            if (lastPasswordChangeDate == null && comparisonOperator != ComparisonOperator.Equals && comparisonOperator != ComparisonOperator.NotEquals)
+                throw new ArgumentNullException("lastPasswordChangeDate", "Parameter 'lastPasswordChangeDate' cannot be null with the specified ComparisonOperator.  Parameter 'comparisonOperator' must be ComparisonOperator.Equals or ComparisonOperator.NotEquals to support null.");
+
             switch (comparisonOperator)
             {
                 case ComparisonOperator.GreaterThan:
@@ -867,9 +1000,13 @@ namespace Tracker.Data
                 case ComparisonOperator.LessThanOrEquals:
                     return queryable.Where(u => u.LastPasswordChangeDate <= lastPasswordChangeDate);
                 case ComparisonOperator.NotEquals:
-                    return queryable.Where(u => u.LastPasswordChangeDate != lastPasswordChangeDate);
+                    return lastPasswordChangeDate == null 
+                        ? queryable.Where(u => u.LastPasswordChangeDate != null) 
+                        : queryable.Where(u => u.LastPasswordChangeDate != lastPasswordChangeDate);
                 default:
-                    return queryable.Where(u => u.LastPasswordChangeDate == lastPasswordChangeDate);
+                    return lastPasswordChangeDate == null 
+                        ? queryable.Where(u => u.LastPasswordChangeDate == null) 
+                        : queryable.Where(u => u.LastPasswordChangeDate == lastPasswordChangeDate);
             }
         }
 
@@ -881,12 +1018,14 @@ namespace Tracker.Data
         /// <param name="additionalValues">Additional values to search for.</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
-        public static IQueryable<Tracker.Data.Entities.User> ByLastPasswordChangeDate(this IQueryable<Tracker.Data.Entities.User> queryable, System.DateTime lastPasswordChangeDate, params System.DateTime[] additionalValues)
+        public static IQueryable<Tracker.Data.Entities.User> ByLastPasswordChangeDate(this IQueryable<Tracker.Data.Entities.User> queryable, System.DateTime? lastPasswordChangeDate, params System.DateTime?[] additionalValues)
         {
-            var lastPasswordChangeDateList = new List<System.DateTime> { lastPasswordChangeDate };
+            var lastPasswordChangeDateList = new List<System.DateTime?> { lastPasswordChangeDate };
 
             if (additionalValues != null)
                 lastPasswordChangeDateList.AddRange(additionalValues);
+            else
+                lastPasswordChangeDateList.Add(null);
 
             if (lastPasswordChangeDateList.Count == 1)
                 return queryable.ByLastPasswordChangeDate(lastPasswordChangeDateList[0]);
@@ -901,9 +1040,11 @@ namespace Tracker.Data
         /// <param name="values">The values to search for..</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
-        public static IQueryable<Tracker.Data.Entities.User> ByLastPasswordChangeDate(this IQueryable<Tracker.Data.Entities.User> queryable, IEnumerable<System.DateTime> values)
+        public static IQueryable<Tracker.Data.Entities.User> ByLastPasswordChangeDate(this IQueryable<Tracker.Data.Entities.User> queryable, IEnumerable<System.DateTime?> values)
         {
-            return queryable.Where(u => values.Contains(u.LastPasswordChangeDate));
+            // creating dynmic expression to support nulls
+            var expression = DynamicExpression.BuildExpression<Tracker.Data.Entities.User, bool>("LastPasswordChangeDate", values);
+            return queryable.Where(expression);
         }
 
         /// <summary>
@@ -915,7 +1056,10 @@ namespace Tracker.Data
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         public static IQueryable<Tracker.Data.Entities.User> ByAvatarType(this IQueryable<Tracker.Data.Entities.User> queryable, System.String avatarType)
         {
-            return queryable.Where(u => u.AvatarType == avatarType);
+            // support nulls
+            return avatarType == null 
+                ? queryable.Where(u => u.AvatarType == null) 
+                : queryable.Where(u => u.AvatarType == avatarType);
         }
 
         /// <summary>
@@ -942,9 +1086,13 @@ namespace Tracker.Data
                 case ContainmentOperator.NotContains:
                     return queryable.Where(u => u.AvatarType.Contains(avatarType) == false);
                 case ContainmentOperator.NotEquals:
-                    return queryable.Where(u => u.AvatarType != avatarType);
+                    return avatarType == null 
+                        ? queryable.Where(u => u.AvatarType != null) 
+                        : queryable.Where(u => u.AvatarType != avatarType);
                 default:
-                    return queryable.Where(u => u.AvatarType == avatarType);
+                    return avatarType == null 
+                        ? queryable.Where(u => u.AvatarType == null) 
+                        : queryable.Where(u => u.AvatarType == avatarType);
             }
         }
 
@@ -962,6 +1110,8 @@ namespace Tracker.Data
 
             if (additionalValues != null)
                 avatarTypeList.AddRange(additionalValues);
+            else
+                avatarTypeList.Add(null);
 
             if (avatarTypeList.Count == 1)
                 return queryable.ByAvatarType(avatarTypeList[0]);
@@ -978,8 +1128,16 @@ namespace Tracker.Data
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         public static IQueryable<Tracker.Data.Entities.User> ByAvatarType(this IQueryable<Tracker.Data.Entities.User> queryable, IEnumerable<System.String> values)
         {
-            return queryable.Where(u => values.Contains(u.AvatarType));
+            // creating dynmic expression to support nulls
+            var expression = DynamicExpression.BuildExpression<Tracker.Data.Entities.User, bool>("AvatarType", values);
+            return queryable.Where(expression);
         }
+    
+        #endregion
+        
+        #region By Association
+        
+        #endregion
     }
 }
 #pragma warning restore 1591

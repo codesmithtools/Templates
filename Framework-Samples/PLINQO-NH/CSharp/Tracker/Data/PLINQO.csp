@@ -7,15 +7,15 @@
     <propertySet name="Hbms" template="..\..\..\Templates\CSharp\Hbms.cst">
       <property name="IgnoreList">
         <stringList>
-      <string>sysdiagrams$</string>
-      <string>^dbo.aspnet</string>
-    </stringList>
+          <string>sysdiagrams$</string>
+          <string>^dbo.aspnet</string>
+        </stringList>
       </property>
       <property name="CleanExpression">
         <stringList>
-      <string>^(sp|tbl|udf|vw)_</string>
-      <string>^\\w+_</string>
-    </stringList>
+          <string>^(sp|tbl|udf|vw)_</string>
+          <string>^\\w+_</string>
+        </stringList>
       </property>
       <property name="IncludeFunctions">True</property>
       <property name="IncludeViews">True</property>

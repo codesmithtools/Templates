@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using CodeSmith.Data.Linq;
+using CodeSmith.Data.Linq.Dynamic;
 
 namespace Tracker.Data
 {
@@ -18,6 +19,8 @@ namespace Tracker.Data
     /// </summary>
     public static partial class TaskDetailExtensions
     {
+        #region Unique Results
+        
         /// <summary>
         /// Gets an instance by the primary key.
         /// </summary>
@@ -31,6 +34,11 @@ namespace Tracker.Data
 					&& t.Assigned == assigned 
 					&& t.Created == created);
         }
+        
+        #endregion
+        
+        #region By Property
+        
 
         /// <summary>
         /// Gets a query for <see cref="Tracker.Data.Entities.TaskDetail.Id"/>.
@@ -478,6 +486,12 @@ namespace Tracker.Data
         {
             return queryable.Where(t => values.Contains(t.Created));
         }
+    
+        #endregion
+        
+        #region By Association
+        
+        #endregion
     }
 }
 #pragma warning restore 1591

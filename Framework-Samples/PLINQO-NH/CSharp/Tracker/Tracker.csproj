@@ -181,7 +181,9 @@
     <EmbeddedResource Include="Data\Maps\Entities\TaskExtended.hbm.xml" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Data\Maps\Entities\User.hbm.xml" />
+    <EmbeddedResource Include="Data\Maps\Entities\User.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Data\Maps\Views\TaskDetail.hbm.xml" />

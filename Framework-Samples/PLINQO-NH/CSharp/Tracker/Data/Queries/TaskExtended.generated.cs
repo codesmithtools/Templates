@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using CodeSmith.Data.Linq;
+using CodeSmith.Data.Linq.Dynamic;
 
 namespace Tracker.Data
 {
@@ -18,6 +19,8 @@ namespace Tracker.Data
     /// </summary>
     public static partial class TaskExtendedExtensions
     {
+        #region Unique Results
+        
         /// <summary>
         /// Gets an instance by the primary key.
         /// </summary>
@@ -25,6 +28,83 @@ namespace Tracker.Data
         public static Tracker.Data.Entities.TaskExtended GetByKey(this IQueryable<Tracker.Data.Entities.TaskExtended> queryable, System.Int32 taskId)
         {
             return queryable.FirstOrDefault(t => t.TaskId == taskId);
+        }
+        
+        #endregion
+        
+        #region By Property
+        
+
+        /// <summary>
+        /// Gets a query for <see cref="Tracker.Data.Entities.TaskExtended.TaskId"/>.
+        /// </summary>
+        /// <param name="queryable">Query to append where clause.</param>
+        /// <param name="taskId">TaskId to search for.</param>
+        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        public static IQueryable<Tracker.Data.Entities.TaskExtended> ByTaskId(this IQueryable<Tracker.Data.Entities.TaskExtended> queryable, System.Int32 taskId)
+        {
+            return queryable.Where(t => t.TaskId == taskId);
+        }
+
+        /// <summary>
+        /// Gets a query for <see cref="Tracker.Data.Entities.TaskExtended.TaskId"/>.
+        /// </summary>
+        /// <param name="queryable">Query to append where clause.</param>
+        /// <param name="taskId">TaskId to search for. This is on the right side of the operator.</param>
+        /// <param name="comparisonOperator">The comparison operator.</param>
+        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        public static IQueryable<Tracker.Data.Entities.TaskExtended> ByTaskId(this IQueryable<Tracker.Data.Entities.TaskExtended> queryable, ComparisonOperator comparisonOperator, System.Int32 taskId)
+        {
+            switch (comparisonOperator)
+            {
+                case ComparisonOperator.GreaterThan:
+                    return queryable.Where(t => t.TaskId > taskId);
+                case ComparisonOperator.GreaterThanOrEquals:
+                    return queryable.Where(t => t.TaskId >= taskId);
+                case ComparisonOperator.LessThan:
+                    return queryable.Where(t => t.TaskId < taskId);
+                case ComparisonOperator.LessThanOrEquals:
+                    return queryable.Where(t => t.TaskId <= taskId);
+                case ComparisonOperator.NotEquals:
+                    return queryable.Where(t => t.TaskId != taskId);
+                default:
+                    return queryable.Where(t => t.TaskId == taskId);
+            }
+        }
+
+        /// <summary>
+        /// Gets a query for <see cref="Tracker.Data.Entities.TaskExtended.TaskId"/>.
+        /// </summary>
+        /// <param name="queryable">Query to append where clause.</param>
+        /// <param name="taskId">TaskId to search for.</param>
+        /// <param name="additionalValues">Additional values to search for.</param>
+        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        public static IQueryable<Tracker.Data.Entities.TaskExtended> ByTaskId(this IQueryable<Tracker.Data.Entities.TaskExtended> queryable, System.Int32 taskId, params System.Int32[] additionalValues)
+        {
+            var taskIdList = new List<System.Int32> { taskId };
+
+            if (additionalValues != null)
+                taskIdList.AddRange(additionalValues);
+
+            if (taskIdList.Count == 1)
+                return queryable.ByTaskId(taskIdList[0]);
+
+            return queryable.ByTaskId(taskIdList);
+        }
+
+        /// <summary>
+        /// Gets a query for <see cref="Tracker.Data.Entities.TaskExtended.TaskId"/>.
+        /// </summary>
+        /// <param name="queryable">Query to append where clause.</param>
+        /// <param name="values">The values to search for..</param>
+        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        public static IQueryable<Tracker.Data.Entities.TaskExtended> ByTaskId(this IQueryable<Tracker.Data.Entities.TaskExtended> queryable, IEnumerable<System.Int32> values)
+        {
+            return queryable.Where(t => values.Contains(t.TaskId));
         }
 
         /// <summary>
@@ -36,7 +116,10 @@ namespace Tracker.Data
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         public static IQueryable<Tracker.Data.Entities.TaskExtended> ByBrowser(this IQueryable<Tracker.Data.Entities.TaskExtended> queryable, System.String browser)
         {
-            return queryable.Where(t => t.Browser == browser);
+            // support nulls
+            return browser == null 
+                ? queryable.Where(t => t.Browser == null) 
+                : queryable.Where(t => t.Browser == browser);
         }
 
         /// <summary>
@@ -63,9 +146,13 @@ namespace Tracker.Data
                 case ContainmentOperator.NotContains:
                     return queryable.Where(t => t.Browser.Contains(browser) == false);
                 case ContainmentOperator.NotEquals:
-                    return queryable.Where(t => t.Browser != browser);
+                    return browser == null 
+                        ? queryable.Where(t => t.Browser != null) 
+                        : queryable.Where(t => t.Browser != browser);
                 default:
-                    return queryable.Where(t => t.Browser == browser);
+                    return browser == null 
+                        ? queryable.Where(t => t.Browser == null) 
+                        : queryable.Where(t => t.Browser == browser);
             }
         }
 
@@ -83,6 +170,8 @@ namespace Tracker.Data
 
             if (additionalValues != null)
                 browserList.AddRange(additionalValues);
+            else
+                browserList.Add(null);
 
             if (browserList.Count == 1)
                 return queryable.ByBrowser(browserList[0]);
@@ -99,7 +188,9 @@ namespace Tracker.Data
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         public static IQueryable<Tracker.Data.Entities.TaskExtended> ByBrowser(this IQueryable<Tracker.Data.Entities.TaskExtended> queryable, IEnumerable<System.String> values)
         {
-            return queryable.Where(t => values.Contains(t.Browser));
+            // creating dynmic expression to support nulls
+            var expression = DynamicExpression.BuildExpression<Tracker.Data.Entities.TaskExtended, bool>("Browser", values);
+            return queryable.Where(expression);
         }
 
         /// <summary>
@@ -111,7 +202,10 @@ namespace Tracker.Data
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         public static IQueryable<Tracker.Data.Entities.TaskExtended> ByOs(this IQueryable<Tracker.Data.Entities.TaskExtended> queryable, System.String os)
         {
-            return queryable.Where(t => t.Os == os);
+            // support nulls
+            return os == null 
+                ? queryable.Where(t => t.Os == null) 
+                : queryable.Where(t => t.Os == os);
         }
 
         /// <summary>
@@ -138,9 +232,13 @@ namespace Tracker.Data
                 case ContainmentOperator.NotContains:
                     return queryable.Where(t => t.Os.Contains(os) == false);
                 case ContainmentOperator.NotEquals:
-                    return queryable.Where(t => t.Os != os);
+                    return os == null 
+                        ? queryable.Where(t => t.Os != null) 
+                        : queryable.Where(t => t.Os != os);
                 default:
-                    return queryable.Where(t => t.Os == os);
+                    return os == null 
+                        ? queryable.Where(t => t.Os == null) 
+                        : queryable.Where(t => t.Os == os);
             }
         }
 
@@ -158,6 +256,8 @@ namespace Tracker.Data
 
             if (additionalValues != null)
                 osList.AddRange(additionalValues);
+            else
+                osList.Add(null);
 
             if (osList.Count == 1)
                 return queryable.ByOs(osList[0]);
@@ -174,7 +274,9 @@ namespace Tracker.Data
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         public static IQueryable<Tracker.Data.Entities.TaskExtended> ByOs(this IQueryable<Tracker.Data.Entities.TaskExtended> queryable, IEnumerable<System.String> values)
         {
-            return queryable.Where(t => values.Contains(t.Os));
+            // creating dynmic expression to support nulls
+            var expression = DynamicExpression.BuildExpression<Tracker.Data.Entities.TaskExtended, bool>("Os", values);
+            return queryable.Where(expression);
         }
 
         /// <summary>
@@ -320,6 +422,12 @@ namespace Tracker.Data
         {
             return queryable.Where(t => values.Contains(t.ModifiedDate));
         }
+    
+        #endregion
+        
+        #region By Association
+        
+        #endregion
     }
 }
 #pragma warning restore 1591

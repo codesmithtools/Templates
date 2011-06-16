@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using CodeSmith.Data.Linq;
+using CodeSmith.Data.Linq.Dynamic;
 
 namespace Tracker.Data
 {
@@ -18,6 +19,8 @@ namespace Tracker.Data
     /// </summary>
     public static partial class PriorityExtensions
     {
+        #region Unique Results
+        
         /// <summary>
         /// Gets an instance by the primary key.
         /// </summary>
@@ -25,6 +28,83 @@ namespace Tracker.Data
         public static Tracker.Data.Entities.Priority GetByKey(this IQueryable<Tracker.Data.Entities.Priority> queryable, System.Int32 id)
         {
             return queryable.FirstOrDefault(p => p.Id == id);
+        }
+        
+        #endregion
+        
+        #region By Property
+        
+
+        /// <summary>
+        /// Gets a query for <see cref="Tracker.Data.Entities.Priority.Id"/>.
+        /// </summary>
+        /// <param name="queryable">Query to append where clause.</param>
+        /// <param name="id">Id to search for.</param>
+        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        public static IQueryable<Tracker.Data.Entities.Priority> ById(this IQueryable<Tracker.Data.Entities.Priority> queryable, System.Int32 id)
+        {
+            return queryable.Where(p => p.Id == id);
+        }
+
+        /// <summary>
+        /// Gets a query for <see cref="Tracker.Data.Entities.Priority.Id"/>.
+        /// </summary>
+        /// <param name="queryable">Query to append where clause.</param>
+        /// <param name="id">Id to search for. This is on the right side of the operator.</param>
+        /// <param name="comparisonOperator">The comparison operator.</param>
+        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        public static IQueryable<Tracker.Data.Entities.Priority> ById(this IQueryable<Tracker.Data.Entities.Priority> queryable, ComparisonOperator comparisonOperator, System.Int32 id)
+        {
+            switch (comparisonOperator)
+            {
+                case ComparisonOperator.GreaterThan:
+                    return queryable.Where(p => p.Id > id);
+                case ComparisonOperator.GreaterThanOrEquals:
+                    return queryable.Where(p => p.Id >= id);
+                case ComparisonOperator.LessThan:
+                    return queryable.Where(p => p.Id < id);
+                case ComparisonOperator.LessThanOrEquals:
+                    return queryable.Where(p => p.Id <= id);
+                case ComparisonOperator.NotEquals:
+                    return queryable.Where(p => p.Id != id);
+                default:
+                    return queryable.Where(p => p.Id == id);
+            }
+        }
+
+        /// <summary>
+        /// Gets a query for <see cref="Tracker.Data.Entities.Priority.Id"/>.
+        /// </summary>
+        /// <param name="queryable">Query to append where clause.</param>
+        /// <param name="id">Id to search for.</param>
+        /// <param name="additionalValues">Additional values to search for.</param>
+        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        public static IQueryable<Tracker.Data.Entities.Priority> ById(this IQueryable<Tracker.Data.Entities.Priority> queryable, System.Int32 id, params System.Int32[] additionalValues)
+        {
+            var idList = new List<System.Int32> { id };
+
+            if (additionalValues != null)
+                idList.AddRange(additionalValues);
+
+            if (idList.Count == 1)
+                return queryable.ById(idList[0]);
+
+            return queryable.ById(idList);
+        }
+
+        /// <summary>
+        /// Gets a query for <see cref="Tracker.Data.Entities.Priority.Id"/>.
+        /// </summary>
+        /// <param name="queryable">Query to append where clause.</param>
+        /// <param name="values">The values to search for..</param>
+        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        public static IQueryable<Tracker.Data.Entities.Priority> ById(this IQueryable<Tracker.Data.Entities.Priority> queryable, IEnumerable<System.Int32> values)
+        {
+            return queryable.Where(p => values.Contains(p.Id));
         }
 
         /// <summary>
@@ -183,7 +263,10 @@ namespace Tracker.Data
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         public static IQueryable<Tracker.Data.Entities.Priority> ByDescription(this IQueryable<Tracker.Data.Entities.Priority> queryable, System.String description)
         {
-            return queryable.Where(p => p.Description == description);
+            // support nulls
+            return description == null 
+                ? queryable.Where(p => p.Description == null) 
+                : queryable.Where(p => p.Description == description);
         }
 
         /// <summary>
@@ -210,9 +293,13 @@ namespace Tracker.Data
                 case ContainmentOperator.NotContains:
                     return queryable.Where(p => p.Description.Contains(description) == false);
                 case ContainmentOperator.NotEquals:
-                    return queryable.Where(p => p.Description != description);
+                    return description == null 
+                        ? queryable.Where(p => p.Description != null) 
+                        : queryable.Where(p => p.Description != description);
                 default:
-                    return queryable.Where(p => p.Description == description);
+                    return description == null 
+                        ? queryable.Where(p => p.Description == null) 
+                        : queryable.Where(p => p.Description == description);
             }
         }
 
@@ -230,6 +317,8 @@ namespace Tracker.Data
 
             if (additionalValues != null)
                 descriptionList.AddRange(additionalValues);
+            else
+                descriptionList.Add(null);
 
             if (descriptionList.Count == 1)
                 return queryable.ByDescription(descriptionList[0]);
@@ -246,7 +335,9 @@ namespace Tracker.Data
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         public static IQueryable<Tracker.Data.Entities.Priority> ByDescription(this IQueryable<Tracker.Data.Entities.Priority> queryable, IEnumerable<System.String> values)
         {
-            return queryable.Where(p => values.Contains(p.Description));
+            // creating dynmic expression to support nulls
+            var expression = DynamicExpression.BuildExpression<Tracker.Data.Entities.Priority, bool>("Description", values);
+            return queryable.Where(expression);
         }
 
         /// <summary>
@@ -392,6 +483,12 @@ namespace Tracker.Data
         {
             return queryable.Where(p => values.Contains(p.ModifiedDate));
         }
+    
+        #endregion
+        
+        #region By Association
+        
+        #endregion
     }
 }
 #pragma warning restore 1591

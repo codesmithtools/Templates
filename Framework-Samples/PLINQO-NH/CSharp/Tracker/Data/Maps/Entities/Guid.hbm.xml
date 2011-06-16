@@ -4,7 +4,7 @@
         <id name="Id" column="[Id]" type="Guid" >
             <generator class="native" />
         </id>
-        <property name="AlternateId" column="[AlternateId]" type="Guid" /> 
+        <property name="AlternateId" column="[AlternateId]" type="Guid" not-null="false" /> 
     </class>
 </hibernate-mapping>
 

@@ -5,10 +5,10 @@
             <generator class="native" />
         </id>
         <version name="RowVersion" column="[RowVersion]" type="BinaryBlob" generated="always" unsaved-value="null" />
-        <property name="Browser" column="[Browser]" type="String" length="200" /> 
-        <property name="Os" column="[OS]" type="String" length="150" /> 
-        <property name="CreatedDate" column="[CreatedDate]" type="DateTime" /> 
-        <property name="ModifiedDate" column="[ModifiedDate]" type="DateTime" /> 
+        <property name="Browser" column="[Browser]" type="String" not-null="false" length="200" /> 
+        <property name="Os" column="[OS]" type="String" not-null="false" length="150" /> 
+        <property name="CreatedDate" column="[CreatedDate]" type="DateTime" not-null="true" /> 
+        <property name="ModifiedDate" column="[ModifiedDate]" type="DateTime" not-null="true" /> 
     </class>
 </hibernate-mapping>
 

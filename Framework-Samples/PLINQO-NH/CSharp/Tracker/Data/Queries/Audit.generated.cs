@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using CodeSmith.Data.Linq;
+using CodeSmith.Data.Linq.Dynamic;
 
 namespace Tracker.Data
 {
@@ -18,6 +19,8 @@ namespace Tracker.Data
     /// </summary>
     public static partial class AuditExtensions
     {
+        #region Unique Results
+        
         /// <summary>
         /// Gets an instance by the primary key.
         /// </summary>
@@ -25,6 +28,83 @@ namespace Tracker.Data
         public static Tracker.Data.Entities.Audit GetByKey(this IQueryable<Tracker.Data.Entities.Audit> queryable, System.Int32 id)
         {
             return queryable.FirstOrDefault(a => a.Id == id);
+        }
+        
+        #endregion
+        
+        #region By Property
+        
+
+        /// <summary>
+        /// Gets a query for <see cref="Tracker.Data.Entities.Audit.Id"/>.
+        /// </summary>
+        /// <param name="queryable">Query to append where clause.</param>
+        /// <param name="id">Id to search for.</param>
+        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        public static IQueryable<Tracker.Data.Entities.Audit> ById(this IQueryable<Tracker.Data.Entities.Audit> queryable, System.Int32 id)
+        {
+            return queryable.Where(a => a.Id == id);
+        }
+
+        /// <summary>
+        /// Gets a query for <see cref="Tracker.Data.Entities.Audit.Id"/>.
+        /// </summary>
+        /// <param name="queryable">Query to append where clause.</param>
+        /// <param name="id">Id to search for. This is on the right side of the operator.</param>
+        /// <param name="comparisonOperator">The comparison operator.</param>
+        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        public static IQueryable<Tracker.Data.Entities.Audit> ById(this IQueryable<Tracker.Data.Entities.Audit> queryable, ComparisonOperator comparisonOperator, System.Int32 id)
+        {
+            switch (comparisonOperator)
+            {
+                case ComparisonOperator.GreaterThan:
+                    return queryable.Where(a => a.Id > id);
+                case ComparisonOperator.GreaterThanOrEquals:
+                    return queryable.Where(a => a.Id >= id);
+                case ComparisonOperator.LessThan:
+                    return queryable.Where(a => a.Id < id);
+                case ComparisonOperator.LessThanOrEquals:
+                    return queryable.Where(a => a.Id <= id);
+                case ComparisonOperator.NotEquals:
+                    return queryable.Where(a => a.Id != id);
+                default:
+                    return queryable.Where(a => a.Id == id);
+            }
+        }
+
+        /// <summary>
+        /// Gets a query for <see cref="Tracker.Data.Entities.Audit.Id"/>.
+        /// </summary>
+        /// <param name="queryable">Query to append where clause.</param>
+        /// <param name="id">Id to search for.</param>
+        /// <param name="additionalValues">Additional values to search for.</param>
+        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        public static IQueryable<Tracker.Data.Entities.Audit> ById(this IQueryable<Tracker.Data.Entities.Audit> queryable, System.Int32 id, params System.Int32[] additionalValues)
+        {
+            var idList = new List<System.Int32> { id };
+
+            if (additionalValues != null)
+                idList.AddRange(additionalValues);
+
+            if (idList.Count == 1)
+                return queryable.ById(idList[0]);
+
+            return queryable.ById(idList);
+        }
+
+        /// <summary>
+        /// Gets a query for <see cref="Tracker.Data.Entities.Audit.Id"/>.
+        /// </summary>
+        /// <param name="queryable">Query to append where clause.</param>
+        /// <param name="values">The values to search for..</param>
+        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        public static IQueryable<Tracker.Data.Entities.Audit> ById(this IQueryable<Tracker.Data.Entities.Audit> queryable, IEnumerable<System.Int32> values)
+        {
+            return queryable.Where(a => values.Contains(a.Id));
         }
 
         /// <summary>
@@ -330,7 +410,10 @@ namespace Tracker.Data
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         public static IQueryable<Tracker.Data.Entities.Audit> ByMyxml(this IQueryable<Tracker.Data.Entities.Audit> queryable, System.String myxml)
         {
-            return queryable.Where(a => a.Myxml == myxml);
+            // support nulls
+            return myxml == null 
+                ? queryable.Where(a => a.Myxml == null) 
+                : queryable.Where(a => a.Myxml == myxml);
         }
 
         /// <summary>
@@ -357,9 +440,13 @@ namespace Tracker.Data
                 case ContainmentOperator.NotContains:
                     return queryable.Where(a => a.Myxml.Contains(myxml) == false);
                 case ContainmentOperator.NotEquals:
-                    return queryable.Where(a => a.Myxml != myxml);
+                    return myxml == null 
+                        ? queryable.Where(a => a.Myxml != null) 
+                        : queryable.Where(a => a.Myxml != myxml);
                 default:
-                    return queryable.Where(a => a.Myxml == myxml);
+                    return myxml == null 
+                        ? queryable.Where(a => a.Myxml == null) 
+                        : queryable.Where(a => a.Myxml == myxml);
             }
         }
 
@@ -377,6 +464,8 @@ namespace Tracker.Data
 
             if (additionalValues != null)
                 myxmlList.AddRange(additionalValues);
+            else
+                myxmlList.Add(null);
 
             if (myxmlList.Count == 1)
                 return queryable.ByMyxml(myxmlList[0]);
@@ -393,8 +482,156 @@ namespace Tracker.Data
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         public static IQueryable<Tracker.Data.Entities.Audit> ByMyxml(this IQueryable<Tracker.Data.Entities.Audit> queryable, IEnumerable<System.String> values)
         {
-            return queryable.Where(a => values.Contains(a.Myxml));
+            // creating dynmic expression to support nulls
+            var expression = DynamicExpression.BuildExpression<Tracker.Data.Entities.Audit, bool>("Myxml", values);
+            return queryable.Where(expression);
         }
+    
+        #endregion
+        
+        #region By Association
+        
+        /// <summary>
+        /// Gets a query for <see cref="Tracker.Data.Entities.Audit by Task's primary key."/>.
+        /// </summary>
+        /// <param name="queryable">Query to append where clause.</param>
+        /// <param name="task">Task to search for.</param>
+        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        public static IQueryable<Tracker.Data.Entities.Audit> ByTask(this IQueryable<Tracker.Data.Entities.Audit> queryable, Tracker.Data.Entities.Task task)
+        {
+            return queryable.ByTask(ComparisonOperator.Equals, task);
+        }
+        
+        /// <summary>
+        /// Gets a query for <see cref="Tracker.Data.Entities.Audit by Task's primary key."/>.
+        /// </summary>
+        /// <param name="queryable">Query to append where clause.</param>
+        /// <param name="comparisonOperator">The comparison operator.</param>
+        /// <param name="task">Task to search for.</param>
+        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        public static IQueryable<Tracker.Data.Entities.Audit> ByTask(this IQueryable<Tracker.Data.Entities.Audit> queryable, ComparisonOperator comparisonOperator, Tracker.Data.Entities.Task task)
+        {
+            switch(comparisonOperator)
+            {
+                case ComparisonOperator.Equals:
+                    return queryable.Where(a => a.Task == task);
+                
+                case ComparisonOperator.NotEquals:
+                    return queryable.Where(a => a.Task != task);
+                    
+                default:
+                    throw new ArgumentException("Parameter 'comparisonOperator' must be ComparisonOperator.Equals or ComparisonOperator.NotEquals to support Association type.", "comparisonOperator");
+            }
+        }
+            
+        /// <summary>
+        /// Gets a query for <see cref="Tracker.Data.Entities.Audit by Task's primary key."/>.
+        /// </summary>
+        /// <param name="queryable">Query to append where clause.</param>
+        /// <param name="id">Id to search for.</param>
+        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        public static IQueryable<Tracker.Data.Entities.Audit> ByTask(this IQueryable<Tracker.Data.Entities.Audit> queryable, System.Int32 id)
+        {
+            return queryable.ByTask(ComparisonOperator.Equals, id);
+        }
+        
+        /// <summary>
+        /// Gets a query for <see cref="Tracker.Data.Entities.Audit by Task's primary key."/>.
+        /// </summary>
+        /// <param name="queryable">Query to append where clause.</param>
+        /// <param name="comparisonOperator">The comparison operator.</param>
+        /// <param name="id">Id to search for.</param>
+        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        public static IQueryable<Tracker.Data.Entities.Audit> ByTask(this IQueryable<Tracker.Data.Entities.Audit> queryable, ComparisonOperator comparisonOperator, System.Int32 id)
+        {
+            switch(comparisonOperator)
+            {
+                case ComparisonOperator.Equals:
+                    return queryable.Where(a => a.Task.Id == id);
+                
+                case ComparisonOperator.NotEquals:
+                    return queryable.Where(a => a.Task.Id != id);
+                    
+                default:
+                    throw new ArgumentException("Parameter 'comparisonOperator' must be ComparisonOperator.Equals or ComparisonOperator.NotEquals to support Association type.", "comparisonOperator");
+            }
+        }
+            
+        /// <summary>
+        /// Gets a query for <see cref="Tracker.Data.Entities.Audit by User's primary key."/>.
+        /// </summary>
+        /// <param name="queryable">Query to append where clause.</param>
+        /// <param name="user">User to search for.</param>
+        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        public static IQueryable<Tracker.Data.Entities.Audit> ByUser(this IQueryable<Tracker.Data.Entities.Audit> queryable, Tracker.Data.Entities.User user)
+        {
+            return queryable.ByUser(ComparisonOperator.Equals, user);
+        }
+        
+        /// <summary>
+        /// Gets a query for <see cref="Tracker.Data.Entities.Audit by User's primary key."/>.
+        /// </summary>
+        /// <param name="queryable">Query to append where clause.</param>
+        /// <param name="comparisonOperator">The comparison operator.</param>
+        /// <param name="user">User to search for.</param>
+        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        public static IQueryable<Tracker.Data.Entities.Audit> ByUser(this IQueryable<Tracker.Data.Entities.Audit> queryable, ComparisonOperator comparisonOperator, Tracker.Data.Entities.User user)
+        {
+            switch(comparisonOperator)
+            {
+                case ComparisonOperator.Equals:
+                    return queryable.Where(a => a.User == user);
+                
+                case ComparisonOperator.NotEquals:
+                    return queryable.Where(a => a.User != user);
+                    
+                default:
+                    throw new ArgumentException("Parameter 'comparisonOperator' must be ComparisonOperator.Equals or ComparisonOperator.NotEquals to support Association type.", "comparisonOperator");
+            }
+        }
+            
+        /// <summary>
+        /// Gets a query for <see cref="Tracker.Data.Entities.Audit by User's primary key."/>.
+        /// </summary>
+        /// <param name="queryable">Query to append where clause.</param>
+        /// <param name="id">Id to search for.</param>
+        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        public static IQueryable<Tracker.Data.Entities.Audit> ByUser(this IQueryable<Tracker.Data.Entities.Audit> queryable, System.Int32 id)
+        {
+            return queryable.ByUser(ComparisonOperator.Equals, id);
+        }
+        
+        /// <summary>
+        /// Gets a query for <see cref="Tracker.Data.Entities.Audit by User's primary key."/>.
+        /// </summary>
+        /// <param name="queryable">Query to append where clause.</param>
+        /// <param name="comparisonOperator">The comparison operator.</param>
+        /// <param name="id">Id to search for.</param>
+        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        public static IQueryable<Tracker.Data.Entities.Audit> ByUser(this IQueryable<Tracker.Data.Entities.Audit> queryable, ComparisonOperator comparisonOperator, System.Int32 id)
+        {
+            switch(comparisonOperator)
+            {
+                case ComparisonOperator.Equals:
+                    return queryable.Where(a => a.User.Id == id);
+                
+                case ComparisonOperator.NotEquals:
+                    return queryable.Where(a => a.User.Id != id);
+                    
+                default:
+                    throw new ArgumentException("Parameter 'comparisonOperator' must be ComparisonOperator.Equals or ComparisonOperator.NotEquals to support Association type.", "comparisonOperator");
+            }
+        }
+            
+        #endregion
     }
 }
 #pragma warning restore 1591
