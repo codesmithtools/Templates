@@ -156,18 +156,6 @@
     <Compile Include="Data\EntityBase.generated.cs">
       <DependentUpon>EntityBase.cs</DependentUpon>
     </Compile>
-    <Compile Include="Data\Models\HelloWorldResult.cs" />
-    <Compile Include="Data\Models\HelloWorldResult.generated.cs">
-      <DependentUpon>HelloWorldResult.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Data\Models\VwALLOrdersExtendedInfo.cs" />
-    <Compile Include="Data\Models\VwALLOrdersExtendedInfo.generated.cs">
-      <DependentUpon>VwALLOrdersExtendedInfo.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Data\Models\VwInventoryCurrent.cs" />
-    <Compile Include="Data\Models\VwInventoryCurrent.generated.cs">
-      <DependentUpon>VwInventoryCurrent.cs</DependentUpon>
-    </Compile>
     <Compile Include="Data\PetshopDataContext.cs" />
     <Compile Include="Data\PetshopDataContext.generated.cs">
       <DependentUpon>PetshopDataContext.cs</DependentUpon>
@@ -216,14 +204,6 @@
     <Compile Include="Data\Queries\Supplier.generated.cs">
       <DependentUpon>Supplier.cs</DependentUpon>
     </Compile>
-    <Compile Include="Data\Queries\VwALLOrdersExtendedInfo.cs" />
-    <Compile Include="Data\Queries\VwALLOrdersExtendedInfo.generated.cs">
-      <DependentUpon>VwALLOrdersExtendedInfo.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Data\Queries\VwInventoryCurrent.cs" />
-    <Compile Include="Data\Queries\VwInventoryCurrent.generated.cs">
-      <DependentUpon>VwInventoryCurrent.cs</DependentUpon>
-    </Compile>
     <Compile Include="Model\Address.cs" />
     <Compile Include="Model\CreditCard.cs" />
     <Compile Include="PetShopConstants.cs" />
@@ -263,9 +243,6 @@
     <EmbeddedResource Include="Data\Maps\Entities\Category.hbm.xml" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Data\Maps\Functions\HelloWorld.hbm.xml" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Data\Maps\Entities\Inventory.hbm.xml" />
   </ItemGroup>
   <ItemGroup>
@@ -294,17 +271,9 @@
     <EmbeddedResource Include="Data\Maps\Entities\Supplier.hbm.xml" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Data\Maps\Functions\usp_Product_GetBelowInventory.hbm.xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Data\Maps\Functions\usp_Profiles_GetActiveProfiles.hbm.xml" />
-  </ItemGroup>
-  <ItemGroup />
-  <ItemGroup>
-    <EmbeddedResource Include="Data\Maps\Views\VwALLOrdersExtendedInfo.hbm.xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Data\Maps\Views\VwInventoryCurrent.hbm.xml" />
+    <Folder Include="Data\Maps\Functions\" />
+    <Folder Include="Data\Maps\Views\" />
+    <Folder Include="Data\Models\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

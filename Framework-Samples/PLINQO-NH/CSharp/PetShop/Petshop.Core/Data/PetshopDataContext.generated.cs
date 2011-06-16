@@ -36,7 +36,7 @@ namespace Petshop.Data
             {
                 lock (_sessionFactoryLock)
                     if (_sessionFactory == null)
-                        _sessionFactory = CreateSessionFactory("Petshop",
+                        _sessionFactory = CreateSessionFactory("PetShop",
                             "Petshop.Core",
                             "NHibernate.Dialect.MsSql2008Dialect",
                             "NHibernate.Driver.SqlClientDriver");
@@ -217,70 +217,9 @@ namespace Petshop.Data
         
         #region Views
         
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
-        private IView<Petshop.Data.Entities.VwALLOrdersExtendedInfo> _vwALLOrdersExtendedInfo;
-        
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
-        public IView<Petshop.Data.Entities.VwALLOrdersExtendedInfo> VwALLOrdersExtendedInfo
-        {
-            get
-            {
-                if (_vwALLOrdersExtendedInfo == null)
-                    _vwALLOrdersExtendedInfo = new View<Petshop.Data.Entities.VwALLOrdersExtendedInfo>(this);
-                return _vwALLOrdersExtendedInfo;
-            }
-        }
-        
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
-        private IView<Petshop.Data.Entities.VwInventoryCurrent> _vwInventoryCurrent;
-        
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
-        public IView<Petshop.Data.Entities.VwInventoryCurrent> VwInventoryCurrent
-        {
-            get
-            {
-                if (_vwInventoryCurrent == null)
-                    _vwInventoryCurrent = new View<Petshop.Data.Entities.VwInventoryCurrent>(this);
-                return _vwInventoryCurrent;
-            }
-        }
-        
         #endregion
         
         #region Functions
-        
-        public IList<HelloWorldResult> HelloWorld(System.String productId)
-        {
-            IQuery query = Advanced.DefaultSession.GetNamedQuery("HelloWorld");
-            
-            query.SetParameter("ProductId", productId);
-            
-            query.SetResultTransformer(
-                new NHibernate.Transform.AliasToBeanConstructorResultTransformer(
-                typeof (HelloWorldResult).GetConstructors()[0]));
-                
-            return query.List<HelloWorldResult>();
-        }
-        
-        public IList<Product> UspProductGetBelowInventory(System.Int32 inventoryBelow)
-        {
-            IQuery query = Advanced.DefaultSession.GetNamedQuery("UspProductGetBelowInventory");
-            
-            query.SetParameter("InventoryBelow", inventoryBelow);
-            
-            return query.List<Product>();
-        }
-        
-        public IList<Profile> UspProfilesGetActiveProfile(System.DateTime lastActiveDateStart, System.DateTime lastActiveDateEnd)
-        {
-            IQuery query = Advanced.DefaultSession.GetNamedQuery("UspProfilesGetActiveProfile");
-            
-            query.SetParameter("LastActiveDateStart", lastActiveDateStart);
-            
-            query.SetParameter("LastActiveDateEnd", lastActiveDateEnd);
-            
-            return query.List<Profile>();
-        }
         
         #endregion
     }

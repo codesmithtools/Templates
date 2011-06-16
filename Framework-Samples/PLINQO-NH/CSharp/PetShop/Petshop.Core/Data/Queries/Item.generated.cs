@@ -615,34 +615,34 @@ namespace Petshop.Data
         }
             
         /// <summary>
-        /// Gets a query for <see cref="Petshop.Data.Entities.Item by Supplier's primary key."/>.
+        /// Gets a query for <see cref="Petshop.Data.Entities.Item by Supplier2's primary key."/>.
         /// </summary>
         /// <param name="queryable">Query to append where clause.</param>
-        /// <param name="supplier">Supplier to search for.</param>
+        /// <param name="supplier2">Supplier2 to search for.</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
-        public static IQueryable<Petshop.Data.Entities.Item> BySupplier(this IQueryable<Petshop.Data.Entities.Item> queryable, Petshop.Data.Entities.Supplier supplier)
+        public static IQueryable<Petshop.Data.Entities.Item> BySupplier2(this IQueryable<Petshop.Data.Entities.Item> queryable, Petshop.Data.Entities.Supplier supplier2)
         {
-            return queryable.BySupplier(ComparisonOperator.Equals, supplier);
+            return queryable.BySupplier2(ComparisonOperator.Equals, supplier2);
         }
         
         /// <summary>
-        /// Gets a query for <see cref="Petshop.Data.Entities.Item by Supplier's primary key."/>.
+        /// Gets a query for <see cref="Petshop.Data.Entities.Item by Supplier2's primary key."/>.
         /// </summary>
         /// <param name="queryable">Query to append where clause.</param>
         /// <param name="comparisonOperator">The comparison operator.</param>
-        /// <param name="supplier">Supplier to search for.</param>
+        /// <param name="supplier2">Supplier2 to search for.</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
-        public static IQueryable<Petshop.Data.Entities.Item> BySupplier(this IQueryable<Petshop.Data.Entities.Item> queryable, ComparisonOperator comparisonOperator, Petshop.Data.Entities.Supplier supplier)
+        public static IQueryable<Petshop.Data.Entities.Item> BySupplier2(this IQueryable<Petshop.Data.Entities.Item> queryable, ComparisonOperator comparisonOperator, Petshop.Data.Entities.Supplier supplier2)
         {
             switch(comparisonOperator)
             {
                 case ComparisonOperator.Equals:
-                    return queryable.Where(i => i.Supplier == supplier);
+                    return queryable.Where(i => i.Supplier2 == supplier2);
                 
                 case ComparisonOperator.NotEquals:
-                    return queryable.Where(i => i.Supplier != supplier);
+                    return queryable.Where(i => i.Supplier2 != supplier2);
                     
                 default:
                     throw new ArgumentException("Parameter 'comparisonOperator' must be ComparisonOperator.Equals or ComparisonOperator.NotEquals to support Association type.", "comparisonOperator");
@@ -656,9 +656,9 @@ namespace Petshop.Data
         /// <param name="suppId">SuppId to search for.</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
-        public static IQueryable<Petshop.Data.Entities.Item> BySupplier(this IQueryable<Petshop.Data.Entities.Item> queryable, System.Int32 suppId)
+        public static IQueryable<Petshop.Data.Entities.Item> BySupplier2(this IQueryable<Petshop.Data.Entities.Item> queryable, System.Int32 suppId)
         {
-            return queryable.BySupplier(ComparisonOperator.Equals, suppId);
+            return queryable.BySupplier2(ComparisonOperator.Equals, suppId);
         }
         
         /// <summary>
@@ -669,15 +669,15 @@ namespace Petshop.Data
         /// <param name="suppId">SuppId to search for.</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
-        public static IQueryable<Petshop.Data.Entities.Item> BySupplier(this IQueryable<Petshop.Data.Entities.Item> queryable, ComparisonOperator comparisonOperator, System.Int32 suppId)
+        public static IQueryable<Petshop.Data.Entities.Item> BySupplier2(this IQueryable<Petshop.Data.Entities.Item> queryable, ComparisonOperator comparisonOperator, System.Int32 suppId)
         {
             switch(comparisonOperator)
             {
                 case ComparisonOperator.Equals:
-                    return queryable.Where(i => i.Supplier.SuppId == suppId);
+                    return queryable.Where(i => i.Supplier2.SuppId == suppId);
                 
                 case ComparisonOperator.NotEquals:
-                    return queryable.Where(i => i.Supplier.SuppId != suppId);
+                    return queryable.Where(i => i.Supplier2.SuppId != suppId);
                     
                 default:
                     throw new ArgumentException("Parameter 'comparisonOperator' must be ComparisonOperator.Equals or ComparisonOperator.NotEquals to support Association type.", "comparisonOperator");

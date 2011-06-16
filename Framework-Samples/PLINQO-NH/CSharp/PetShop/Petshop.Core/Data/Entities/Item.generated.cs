@@ -186,20 +186,20 @@ namespace Petshop.Data.Entities
         }
         
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
-        private Supplier _supplier;
+        private Supplier _supplier2;
         
         [System.Runtime.Serialization.DataMember(Order = 8, EmitDefaultValue = false)]
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
-        public virtual Supplier Supplier
+        public virtual Supplier Supplier2
         {
-            get { return _supplier; }
+            get { return _supplier2; }
             set
             {
-                OnSupplierChanging(value, _supplier);
-                SendPropertyChanging("Supplier");
-                _supplier = value;
-                SendPropertyChanged("Supplier");
-                OnSupplierChanged(value);
+                OnSupplier2Changing(value, _supplier2);
+                SendPropertyChanging("Supplier2");
+                _supplier2 = value;
+                SendPropertyChanged("Supplier2");
+                OnSupplier2Changed(value);
             }
         }
         
@@ -240,9 +240,9 @@ namespace Petshop.Data.Entities
         
         partial void OnProductChanged(Product value);
         
-        partial void OnSupplierChanging(Supplier newValue, Supplier oldValue);
+        partial void OnSupplier2Changing(Supplier newValue, Supplier oldValue);
         
-        partial void OnSupplierChanged(Supplier value);
+        partial void OnSupplier2Changed(Supplier value);
         
         #endregion
         

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" namespace="Petshop.Data.Entities" assembly="Petshop.Core">
     <class name="Account" table="[dbo].[Account]" >
-        <id name="AccountID" column="[AccountID]" type="Int32" >
+        <id name="AccountId" column="[AccountId]" type="Int32" >
             <generator class="native" />
         </id>
         <property name="Email" column="[Email]" type="AnsiString" not-null="true" length="80" /> 
@@ -14,7 +14,6 @@
         <property name="Zip" column="[Zip]" type="AnsiString" not-null="true" length="20" /> 
         <property name="Country" column="[Country]" type="AnsiString" not-null="true" length="20" /> 
         <property name="Phone" column="[Phone]" type="AnsiString" not-null="false" length="20" /> 
-        <property name="Address3" column="[Address3]" type="String" not-null="false" length="50" /> 
         <many-to-one name="Profile" class="Profile" >
             <column name="[UniqueID]" />
         </many-to-one>

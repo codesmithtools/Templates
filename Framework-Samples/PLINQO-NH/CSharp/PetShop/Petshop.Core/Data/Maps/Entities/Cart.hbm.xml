@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" namespace="Petshop.Data.Entities" assembly="Petshop.Core">
     <class name="Cart" table="[dbo].[Cart]" >
-        <id name="CartID" column="[CartID]" type="Int32" >
+        <id name="CartId" column="[CartId]" type="Int32" >
             <generator class="native" />
         </id>
         <property name="ItemId" column="[ItemId]" type="AnsiString" not-null="true" length="10" /> 

@@ -119,7 +119,7 @@ namespace PetShop.Core.Utility
 
             using (var context = new PetshopDataContext())
             {
-                var cart = context.Cart.GetByKey(item.CartID);
+                var cart = context.Cart.GetByKey(item.CartId);
                 context.Cart.DeleteOnSubmit(cart);
                 context.SubmitChanges();
                 //context.Cart.Delete(item.CartId);

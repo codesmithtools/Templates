@@ -25,9 +25,9 @@ namespace Petshop.Data
         /// Gets an instance by the primary key.
         /// </summary>
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
-        public static Petshop.Data.Entities.Cart GetByKey(this IQueryable<Petshop.Data.Entities.Cart> queryable, System.Int32 cartID)
+        public static Petshop.Data.Entities.Cart GetByKey(this IQueryable<Petshop.Data.Entities.Cart> queryable, System.Int32 cartId)
         {
-            return queryable.FirstOrDefault(c => c.CartID == cartID);
+            return queryable.FirstOrDefault(c => c.CartId == cartId);
         }
         
         #endregion
@@ -36,75 +36,75 @@ namespace Petshop.Data
         
 
         /// <summary>
-        /// Gets a query for <see cref="Petshop.Data.Entities.Cart.CartID"/>.
+        /// Gets a query for <see cref="Petshop.Data.Entities.Cart.CartId"/>.
         /// </summary>
         /// <param name="queryable">Query to append where clause.</param>
-        /// <param name="cartID">CartID to search for.</param>
+        /// <param name="cartId">CartId to search for.</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
-        public static IQueryable<Petshop.Data.Entities.Cart> ByCartID(this IQueryable<Petshop.Data.Entities.Cart> queryable, System.Int32 cartID)
+        public static IQueryable<Petshop.Data.Entities.Cart> ByCartId(this IQueryable<Petshop.Data.Entities.Cart> queryable, System.Int32 cartId)
         {
-            return queryable.Where(c => c.CartID == cartID);
+            return queryable.Where(c => c.CartId == cartId);
         }
 
         /// <summary>
-        /// Gets a query for <see cref="Petshop.Data.Entities.Cart.CartID"/>.
+        /// Gets a query for <see cref="Petshop.Data.Entities.Cart.CartId"/>.
         /// </summary>
         /// <param name="queryable">Query to append where clause.</param>
-        /// <param name="cartID">CartID to search for. This is on the right side of the operator.</param>
+        /// <param name="cartId">CartId to search for. This is on the right side of the operator.</param>
         /// <param name="comparisonOperator">The comparison operator.</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
-        public static IQueryable<Petshop.Data.Entities.Cart> ByCartID(this IQueryable<Petshop.Data.Entities.Cart> queryable, ComparisonOperator comparisonOperator, System.Int32 cartID)
+        public static IQueryable<Petshop.Data.Entities.Cart> ByCartId(this IQueryable<Petshop.Data.Entities.Cart> queryable, ComparisonOperator comparisonOperator, System.Int32 cartId)
         {
             switch (comparisonOperator)
             {
                 case ComparisonOperator.GreaterThan:
-                    return queryable.Where(c => c.CartID > cartID);
+                    return queryable.Where(c => c.CartId > cartId);
                 case ComparisonOperator.GreaterThanOrEquals:
-                    return queryable.Where(c => c.CartID >= cartID);
+                    return queryable.Where(c => c.CartId >= cartId);
                 case ComparisonOperator.LessThan:
-                    return queryable.Where(c => c.CartID < cartID);
+                    return queryable.Where(c => c.CartId < cartId);
                 case ComparisonOperator.LessThanOrEquals:
-                    return queryable.Where(c => c.CartID <= cartID);
+                    return queryable.Where(c => c.CartId <= cartId);
                 case ComparisonOperator.NotEquals:
-                    return queryable.Where(c => c.CartID != cartID);
+                    return queryable.Where(c => c.CartId != cartId);
                 default:
-                    return queryable.Where(c => c.CartID == cartID);
+                    return queryable.Where(c => c.CartId == cartId);
             }
         }
 
         /// <summary>
-        /// Gets a query for <see cref="Petshop.Data.Entities.Cart.CartID"/>.
+        /// Gets a query for <see cref="Petshop.Data.Entities.Cart.CartId"/>.
         /// </summary>
         /// <param name="queryable">Query to append where clause.</param>
-        /// <param name="cartID">CartID to search for.</param>
+        /// <param name="cartId">CartId to search for.</param>
         /// <param name="additionalValues">Additional values to search for.</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
-        public static IQueryable<Petshop.Data.Entities.Cart> ByCartID(this IQueryable<Petshop.Data.Entities.Cart> queryable, System.Int32 cartID, params System.Int32[] additionalValues)
+        public static IQueryable<Petshop.Data.Entities.Cart> ByCartId(this IQueryable<Petshop.Data.Entities.Cart> queryable, System.Int32 cartId, params System.Int32[] additionalValues)
         {
-            var cartIDList = new List<System.Int32> { cartID };
+            var cartIdList = new List<System.Int32> { cartId };
 
             if (additionalValues != null)
-                cartIDList.AddRange(additionalValues);
+                cartIdList.AddRange(additionalValues);
 
-            if (cartIDList.Count == 1)
-                return queryable.ByCartID(cartIDList[0]);
+            if (cartIdList.Count == 1)
+                return queryable.ByCartId(cartIdList[0]);
 
-            return queryable.ByCartID(cartIDList);
+            return queryable.ByCartId(cartIdList);
         }
 
         /// <summary>
-        /// Gets a query for <see cref="Petshop.Data.Entities.Cart.CartID"/>.
+        /// Gets a query for <see cref="Petshop.Data.Entities.Cart.CartId"/>.
         /// </summary>
         /// <param name="queryable">Query to append where clause.</param>
         /// <param name="values">The values to search for..</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
-        public static IQueryable<Petshop.Data.Entities.Cart> ByCartID(this IQueryable<Petshop.Data.Entities.Cart> queryable, IEnumerable<System.Int32> values)
+        public static IQueryable<Petshop.Data.Entities.Cart> ByCartId(this IQueryable<Petshop.Data.Entities.Cart> queryable, IEnumerable<System.Int32> values)
         {
-            return queryable.Where(c => values.Contains(c.CartID));
+            return queryable.Where(c => values.Contains(c.CartId));
         }
 
         /// <summary>

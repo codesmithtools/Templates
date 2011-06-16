@@ -18,7 +18,7 @@ namespace Petshop.Data.Entities
 {
     [System.Runtime.Serialization.DataContract(IsReference = true)]
     [System.ComponentModel.DataAnnotations.ScaffoldTable(true)]
-    [System.Diagnostics.DebuggerDisplay("AccountID: {AccountID}")]
+    [System.Diagnostics.DebuggerDisplay("AccountId: {AccountId}")]
     public partial class Account : EntityBase
     {
         #region Static Constructor
@@ -56,20 +56,20 @@ namespace Petshop.Data.Entities
         #region Column Mapped Properties
         
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
-        private System.Int32 _accountID;
+        private System.Int32 _accountId;
         
         [System.Runtime.Serialization.DataMember(Order = 1)]
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
-        public virtual System.Int32 AccountID
+        public virtual System.Int32 AccountId
         {
-            get { return _accountID; }
+            get { return _accountId; }
             set
             {
-                OnAccountIDChanging(value, _accountID);
-                SendPropertyChanging("AccountID");
-                _accountID = value;
-                SendPropertyChanged("AccountID");
-                OnAccountIDChanged(value);
+                OnAccountIdChanging(value, _accountId);
+                SendPropertyChanging("AccountId");
+                _accountId = value;
+                SendPropertyChanged("AccountId");
+                OnAccountIdChanged(value);
             }
         }
         
@@ -253,24 +253,6 @@ namespace Petshop.Data.Entities
             }
         }
         
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
-        private System.String _address3;
-        
-        [System.Runtime.Serialization.DataMember(Order = 12)]
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
-        public virtual System.String Address3
-        {
-            get { return _address3; }
-            set
-            {
-                OnAddress3Changing(value, _address3);
-                SendPropertyChanging("Address3");
-                _address3 = value;
-                SendPropertyChanged("Address3");
-                OnAddress3Changed(value);
-            }
-        }
-        
         #endregion
         
         #region Associations Mappings
@@ -278,7 +260,7 @@ namespace Petshop.Data.Entities
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         private Profile _profile;
         
-        [System.Runtime.Serialization.DataMember(Order = 13, EmitDefaultValue = false)]
+        [System.Runtime.Serialization.DataMember(Order = 12, EmitDefaultValue = false)]
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         public virtual Profile Profile
         {
@@ -301,9 +283,9 @@ namespace Petshop.Data.Entities
         
         partial void OnCreated();
         
-        partial void OnAccountIDChanging(System.Int32 newValue, System.Int32 oldValue);
+        partial void OnAccountIdChanging(System.Int32 newValue, System.Int32 oldValue);
         
-        partial void OnAccountIDChanged(System.Int32 value);
+        partial void OnAccountIdChanged(System.Int32 value);
         
         partial void OnEmailChanging(System.String newValue, System.String oldValue);
         
@@ -344,10 +326,6 @@ namespace Petshop.Data.Entities
         partial void OnPhoneChanging(System.String newValue, System.String oldValue);
         
         partial void OnPhoneChanged(System.String value);
-        
-        partial void OnAddress3Changing(System.String newValue, System.String oldValue);
-        
-        partial void OnAddress3Changed(System.String value);
         
         
         partial void OnProfileChanging(Profile newValue, Profile oldValue);

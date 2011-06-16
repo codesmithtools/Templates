@@ -12,8 +12,8 @@
         <many-to-one name="Product" class="Product" >
             <column name="[ProductId]" />
         </many-to-one>
-        <many-to-one name="Supplier" class="Supplier" >
-            <column name="[SupplierId]" />
+        <many-to-one name="Supplier2" class="Supplier" >
+            <column name="[Supplier]" />
         </many-to-one>
     </class>
 </hibernate-mapping>

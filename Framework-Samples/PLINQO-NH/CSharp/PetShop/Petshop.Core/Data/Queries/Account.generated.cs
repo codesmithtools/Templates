@@ -25,9 +25,9 @@ namespace Petshop.Data
         /// Gets an instance by the primary key.
         /// </summary>
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
-        public static Petshop.Data.Entities.Account GetByKey(this IQueryable<Petshop.Data.Entities.Account> queryable, System.Int32 accountID)
+        public static Petshop.Data.Entities.Account GetByKey(this IQueryable<Petshop.Data.Entities.Account> queryable, System.Int32 accountId)
         {
-            return queryable.FirstOrDefault(a => a.AccountID == accountID);
+            return queryable.FirstOrDefault(a => a.AccountId == accountId);
         }
         
         #endregion
@@ -36,75 +36,75 @@ namespace Petshop.Data
         
 
         /// <summary>
-        /// Gets a query for <see cref="Petshop.Data.Entities.Account.AccountID"/>.
+        /// Gets a query for <see cref="Petshop.Data.Entities.Account.AccountId"/>.
         /// </summary>
         /// <param name="queryable">Query to append where clause.</param>
-        /// <param name="accountID">AccountID to search for.</param>
+        /// <param name="accountId">AccountId to search for.</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
-        public static IQueryable<Petshop.Data.Entities.Account> ByAccountID(this IQueryable<Petshop.Data.Entities.Account> queryable, System.Int32 accountID)
+        public static IQueryable<Petshop.Data.Entities.Account> ByAccountId(this IQueryable<Petshop.Data.Entities.Account> queryable, System.Int32 accountId)
         {
-            return queryable.Where(a => a.AccountID == accountID);
+            return queryable.Where(a => a.AccountId == accountId);
         }
 
         /// <summary>
-        /// Gets a query for <see cref="Petshop.Data.Entities.Account.AccountID"/>.
+        /// Gets a query for <see cref="Petshop.Data.Entities.Account.AccountId"/>.
         /// </summary>
         /// <param name="queryable">Query to append where clause.</param>
-        /// <param name="accountID">AccountID to search for. This is on the right side of the operator.</param>
+        /// <param name="accountId">AccountId to search for. This is on the right side of the operator.</param>
         /// <param name="comparisonOperator">The comparison operator.</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
-        public static IQueryable<Petshop.Data.Entities.Account> ByAccountID(this IQueryable<Petshop.Data.Entities.Account> queryable, ComparisonOperator comparisonOperator, System.Int32 accountID)
+        public static IQueryable<Petshop.Data.Entities.Account> ByAccountId(this IQueryable<Petshop.Data.Entities.Account> queryable, ComparisonOperator comparisonOperator, System.Int32 accountId)
         {
             switch (comparisonOperator)
             {
                 case ComparisonOperator.GreaterThan:
-                    return queryable.Where(a => a.AccountID > accountID);
+                    return queryable.Where(a => a.AccountId > accountId);
                 case ComparisonOperator.GreaterThanOrEquals:
-                    return queryable.Where(a => a.AccountID >= accountID);
+                    return queryable.Where(a => a.AccountId >= accountId);
                 case ComparisonOperator.LessThan:
-                    return queryable.Where(a => a.AccountID < accountID);
+                    return queryable.Where(a => a.AccountId < accountId);
                 case ComparisonOperator.LessThanOrEquals:
-                    return queryable.Where(a => a.AccountID <= accountID);
+                    return queryable.Where(a => a.AccountId <= accountId);
                 case ComparisonOperator.NotEquals:
-                    return queryable.Where(a => a.AccountID != accountID);
+                    return queryable.Where(a => a.AccountId != accountId);
                 default:
-                    return queryable.Where(a => a.AccountID == accountID);
+                    return queryable.Where(a => a.AccountId == accountId);
             }
         }
 
         /// <summary>
-        /// Gets a query for <see cref="Petshop.Data.Entities.Account.AccountID"/>.
+        /// Gets a query for <see cref="Petshop.Data.Entities.Account.AccountId"/>.
         /// </summary>
         /// <param name="queryable">Query to append where clause.</param>
-        /// <param name="accountID">AccountID to search for.</param>
+        /// <param name="accountId">AccountId to search for.</param>
         /// <param name="additionalValues">Additional values to search for.</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
-        public static IQueryable<Petshop.Data.Entities.Account> ByAccountID(this IQueryable<Petshop.Data.Entities.Account> queryable, System.Int32 accountID, params System.Int32[] additionalValues)
+        public static IQueryable<Petshop.Data.Entities.Account> ByAccountId(this IQueryable<Petshop.Data.Entities.Account> queryable, System.Int32 accountId, params System.Int32[] additionalValues)
         {
-            var accountIDList = new List<System.Int32> { accountID };
+            var accountIdList = new List<System.Int32> { accountId };
 
             if (additionalValues != null)
-                accountIDList.AddRange(additionalValues);
+                accountIdList.AddRange(additionalValues);
 
-            if (accountIDList.Count == 1)
-                return queryable.ByAccountID(accountIDList[0]);
+            if (accountIdList.Count == 1)
+                return queryable.ByAccountId(accountIdList[0]);
 
-            return queryable.ByAccountID(accountIDList);
+            return queryable.ByAccountId(accountIdList);
         }
 
         /// <summary>
-        /// Gets a query for <see cref="Petshop.Data.Entities.Account.AccountID"/>.
+        /// Gets a query for <see cref="Petshop.Data.Entities.Account.AccountId"/>.
         /// </summary>
         /// <param name="queryable">Query to append where clause.</param>
         /// <param name="values">The values to search for..</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
-        public static IQueryable<Petshop.Data.Entities.Account> ByAccountID(this IQueryable<Petshop.Data.Entities.Account> queryable, IEnumerable<System.Int32> values)
+        public static IQueryable<Petshop.Data.Entities.Account> ByAccountId(this IQueryable<Petshop.Data.Entities.Account> queryable, IEnumerable<System.Int32> values)
         {
-            return queryable.Where(a => values.Contains(a.AccountID));
+            return queryable.Where(a => values.Contains(a.AccountId));
         }
 
         /// <summary>
@@ -876,92 +876,6 @@ namespace Petshop.Data
         {
             // creating dynmic expression to support nulls
             var expression = DynamicExpression.BuildExpression<Petshop.Data.Entities.Account, bool>("Phone", values);
-            return queryable.Where(expression);
-        }
-
-        /// <summary>
-        /// Gets a query for <see cref="Petshop.Data.Entities.Account.Address3"/>.
-        /// </summary>
-        /// <param name="queryable">Query to append where clause.</param>
-        /// <param name="address3">Address3 to search for.</param>
-        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
-        public static IQueryable<Petshop.Data.Entities.Account> ByAddress3(this IQueryable<Petshop.Data.Entities.Account> queryable, System.String address3)
-        {
-            // support nulls
-            return address3 == null 
-                ? queryable.Where(a => a.Address3 == null) 
-                : queryable.Where(a => a.Address3 == address3);
-        }
-
-        /// <summary>
-        /// Gets a query for <see cref="Petshop.Data.Entities.Account.Address3"/>.
-        /// </summary>
-        /// <param name="queryable">Query to append where clause.</param>
-        /// <param name="address3">Address3 to search for.</param>
-        /// <param name="containmentOperator">The containment operator.</param>
-        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
-        public static IQueryable<Petshop.Data.Entities.Account> ByAddress3(this IQueryable<Petshop.Data.Entities.Account> queryable, ContainmentOperator containmentOperator, System.String address3)
-        {
-            if (address3 == null && containmentOperator != ContainmentOperator.Equals && containmentOperator != ContainmentOperator.NotEquals)
-                throw new ArgumentNullException("address3", "Parameter 'address3' cannot be null with the specified ContainmentOperator.  Parameter 'containmentOperator' must be ContainmentOperator.Equals or ContainmentOperator.NotEquals to support null.");
-
-            switch (containmentOperator)
-            {
-                case ContainmentOperator.Contains:
-                    return queryable.Where(a => a.Address3.Contains(address3));
-                case ContainmentOperator.StartsWith:
-                    return queryable.Where(a => a.Address3.StartsWith(address3));
-                case ContainmentOperator.EndsWith:
-                    return queryable.Where(a => a.Address3.EndsWith(address3));
-                case ContainmentOperator.NotContains:
-                    return queryable.Where(a => a.Address3.Contains(address3) == false);
-                case ContainmentOperator.NotEquals:
-                    return address3 == null 
-                        ? queryable.Where(a => a.Address3 != null) 
-                        : queryable.Where(a => a.Address3 != address3);
-                default:
-                    return address3 == null 
-                        ? queryable.Where(a => a.Address3 == null) 
-                        : queryable.Where(a => a.Address3 == address3);
-            }
-        }
-
-        /// <summary>
-        /// Gets a query for <see cref="Petshop.Data.Entities.Account.Address3"/>.
-        /// </summary>
-        /// <param name="queryable">Query to append where clause.</param>
-        /// <param name="address3">Address3 to search for.</param>
-        /// <param name="additionalValues">Additional values to search for.</param>
-        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
-        public static IQueryable<Petshop.Data.Entities.Account> ByAddress3(this IQueryable<Petshop.Data.Entities.Account> queryable, System.String address3, params System.String[] additionalValues)
-        {
-            var address3List = new List<System.String> { address3 };
-
-            if (additionalValues != null)
-                address3List.AddRange(additionalValues);
-            else
-                address3List.Add(null);
-
-            if (address3List.Count == 1)
-                return queryable.ByAddress3(address3List[0]);
-
-            return queryable.ByAddress3(address3List);
-        }
-
-        /// <summary>
-        /// Gets a query for <see cref="Petshop.Data.Entities.Account.Address3"/>.
-        /// </summary>
-        /// <param name="queryable">Query to append where clause.</param>
-        /// <param name="values">The values to search for..</param>
-        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
-        public static IQueryable<Petshop.Data.Entities.Account> ByAddress3(this IQueryable<Petshop.Data.Entities.Account> queryable, IEnumerable<System.String> values)
-        {
-            // creating dynmic expression to support nulls
-            var expression = DynamicExpression.BuildExpression<Petshop.Data.Entities.Account, bool>("Address3", values);
             return queryable.Where(expression);
         }
     

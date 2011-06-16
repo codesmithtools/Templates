@@ -18,7 +18,7 @@ namespace Petshop.Data.Entities
 {
     [System.Runtime.Serialization.DataContract(IsReference = true)]
     [System.ComponentModel.DataAnnotations.ScaffoldTable(true)]
-    [System.Diagnostics.DebuggerDisplay("CartID: {CartID}")]
+    [System.Diagnostics.DebuggerDisplay("CartId: {CartId}")]
     public partial class Cart : EntityBase
     {
         #region Static Constructor
@@ -56,20 +56,20 @@ namespace Petshop.Data.Entities
         #region Column Mapped Properties
         
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
-        private System.Int32 _cartID;
+        private System.Int32 _cartId;
         
         [System.Runtime.Serialization.DataMember(Order = 1)]
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
-        public virtual System.Int32 CartID
+        public virtual System.Int32 CartId
         {
-            get { return _cartID; }
+            get { return _cartId; }
             set
             {
-                OnCartIDChanging(value, _cartID);
-                SendPropertyChanging("CartID");
-                _cartID = value;
-                SendPropertyChanged("CartID");
-                OnCartIDChanged(value);
+                OnCartIdChanging(value, _cartId);
+                SendPropertyChanging("CartId");
+                _cartId = value;
+                SendPropertyChanged("CartId");
+                OnCartIdChanged(value);
             }
         }
         
@@ -247,9 +247,9 @@ namespace Petshop.Data.Entities
         
         partial void OnCreated();
         
-        partial void OnCartIDChanging(System.Int32 newValue, System.Int32 oldValue);
+        partial void OnCartIdChanging(System.Int32 newValue, System.Int32 oldValue);
         
-        partial void OnCartIDChanged(System.Int32 value);
+        partial void OnCartIdChanged(System.Int32 value);
         
         partial void OnItemIdChanging(System.String newValue, System.String oldValue);
         

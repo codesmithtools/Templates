@@ -14,6 +14,7 @@
         <stringList>
       <string>sysdiagrams$</string>
       <string>^dbo.aspnet</string>
+      <string>^dbo.vw_aspnet_</string>
     </stringList>
       </property>
       <property name="CleanExpression">
