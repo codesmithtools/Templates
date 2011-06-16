@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Data.Linq;
 using Petshop.Data;
 using Petshop.Data.Entities;
+using CodeSmith.Data.Linq;
 
 
 namespace PetShop.UI.Controls
@@ -40,7 +41,10 @@ namespace PetShop.UI.Controls
                 options.LoadWith<Item>(i => i.Product);
                 context.LoadOptions = options;*/
 
-                itemsGrid.DataSource = context.Item.ByProduct(productId).ToList();
+                itemsGrid.DataSource = context.Item
+                    .ByProduct(productId)
+                    .Fetch(i => i.Product)
+                    .ToList();
             }
             itemsGrid.DataBind();
         }

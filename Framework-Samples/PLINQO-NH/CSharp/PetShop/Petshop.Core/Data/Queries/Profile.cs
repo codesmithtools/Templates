@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using CodeSmith.Data.Linq;
 using Petshop.Data;
 using Petshop.Data.Entities;
 
@@ -9,7 +10,10 @@ namespace Petshop.Data
     {
         public static Profile GetProfile(this IQueryable<Profile> query, string name)
         {
-            return query.ByUsername(name).FirstOrDefault();
+            return query
+                .ByUsername(name)
+                .Fetch(p => p.AccountList)
+                .FirstOrDefault();
         }
 
         #region Query

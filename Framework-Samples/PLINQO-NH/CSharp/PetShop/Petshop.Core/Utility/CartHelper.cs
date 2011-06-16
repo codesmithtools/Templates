@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Data.Linq;
+using CodeSmith.Data.Linq;
 using Petshop.Data;
 using Petshop.Data.Entities;
 
@@ -38,8 +39,8 @@ namespace PetShop.Core.Utility
             bool found = false;
             using (var context = new PetshopDataContext())
             {
-                var options = new DataLoadOptions();
-                options.LoadWith<Item>(i => i.Product);
+                /*var options = new DataLoadOptions();
+                options.LoadWith<Item>(i => i.Product);*/
 
                 var item = items.FirstOrDefault(i => i.ItemId == itemId);
 
@@ -51,8 +52,10 @@ namespace PetShop.Core.Utility
                 }
                 else
                 {
-
-                    var cartItem = context.Item.GetByKey(itemId);
+                    var cartItem = context.Item
+                        .ByItemId(itemId)
+                        .Fetch(i => i.Product)
+                        .FirstOrDefault();
                     var profile = context.Profile.GetByKey(uniqueId);
 
                     var cart = new Cart();
