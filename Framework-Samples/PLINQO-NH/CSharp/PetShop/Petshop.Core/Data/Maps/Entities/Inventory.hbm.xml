@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" namespace="Petshop.Data.Entities" assembly="Petshop.Core">
+    <class name="Inventory" table="[dbo].[Inventory]" >
+        <id name="ItemId" column="[ItemId]" type="AnsiString" length="10" >
+            <generator class="native" />
+        </id>
+        <property name="Qty" column="[Qty]" type="Int32" not-null="true" /> 
+    </class>
+</hibernate-mapping>
+

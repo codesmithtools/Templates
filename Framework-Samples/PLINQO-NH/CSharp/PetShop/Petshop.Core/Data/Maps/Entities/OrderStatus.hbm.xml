@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" namespace="Petshop.Data.Entities" assembly="Petshop.Core">
+    <class name="OrderStatus" table="[dbo].[OrderStatus]" >
+        <composite-id>
+            <key-property name="OrderId" column="[OrderId]" type="Int32" /> 
+            <key-property name="LineNum" column="[LineNum]" type="Int32" /> 
+        </composite-id>
+        <property name="Timestamp" column="[Timestamp]" type="DateTime" not-null="true" /> 
+        <property name="Status" column="[Status]" type="AnsiString" not-null="true" length="2" /> 
+        <many-to-one name="Order" class="Order" >
+            <column name="[OrderId]" />
+        </many-to-one>
+    </class>
+</hibernate-mapping>
+
