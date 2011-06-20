@@ -29,7 +29,7 @@
   <sql-query name="<%= SourceCommand.Name %>" >
 <% if (SourceCommand.IsAssociated) { %>
     <return class="<%= SourceCommand.AssociatedEntity.Name %>" >
-    <% foreach(IProperty property in SourceCommand.Properties) { %>
+    <% foreach(IProperty property in SourceCommand.AssociatedEntity.Properties) { %>
       <return-property name="<%= property.Name %>" column="<%= property.KeyName %>" />
     <% } %>
     </return>
