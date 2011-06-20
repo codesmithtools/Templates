@@ -18,7 +18,7 @@ namespace Tracker.Data.Entities
 {
     [System.Runtime.Serialization.DataContract(IsReference = true)]
     [System.ComponentModel.DataAnnotations.ScaffoldTable(true)]
-    [System.Diagnostics.DebuggerDisplay("Identification: {Identification}")]
+    [System.Diagnostics.DebuggerDisplay("Id: {Id}")]
     public partial class User : EntityBase
     {
         #region Static Constructor
@@ -60,16 +60,16 @@ namespace Tracker.Data.Entities
         
         [System.Runtime.Serialization.DataMember(Order = 1)]
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
-        public virtual System.Int32 Identification
+        public virtual System.Int32 Id
         {
             get { return _identification; }
             set
             {
-                OnIdentificationChanging(value, _identification);
-                SendPropertyChanging("Identification");
+                OnIdChanging(value, _identification);
+                SendPropertyChanging("Id");
                 _identification = value;
-                SendPropertyChanged("Identification");
-                OnIdentificationChanged(value);
+                SendPropertyChanged("Id");
+                OnIdChanged(value);
             }
         }
         
@@ -427,9 +427,9 @@ namespace Tracker.Data.Entities
         
         partial void OnCreated();
         
-        partial void OnIdentificationChanging(System.Int32 newValue, System.Int32 oldValue);
+        partial void OnIdChanging(System.Int32 newValue, System.Int32 oldValue);
         
-        partial void OnIdentificationChanged(System.Int32 value);
+        partial void OnIdChanged(System.Int32 value);
         
         partial void OnEmailAddressChanging(System.String newValue, System.String oldValue);
         

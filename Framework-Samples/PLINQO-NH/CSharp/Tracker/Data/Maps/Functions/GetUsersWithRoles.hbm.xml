@@ -2,7 +2,7 @@
 <hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" namespace="Tracker.Data.Entities" assembly="Tracker">
   <sql-query name="GetUsersWithRolez" >
     <return class="User" >
-      <return-property name="Identification" column="Id" />
+      <return-property name="Id" column="Id" />
       <return-property name="EmailAddress" column="EmailAddress" />
       <return-property name="FirstName" column="FirstName" />
       <return-property name="LastName" column="LastName" />

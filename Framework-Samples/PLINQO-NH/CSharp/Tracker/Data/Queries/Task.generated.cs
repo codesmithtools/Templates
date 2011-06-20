@@ -943,7 +943,7 @@ namespace Tracker.Data
         /// Gets a query for <see cref="Tracker.Data.Entities.Task by User's primary key."/>.
         /// </summary>
         /// <param name="queryable">Query to append where clause.</param>
-        /// <param name="identification">Identification to search for.</param>
+        /// <param name="identification">Id to search for.</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         public static IQueryable<Tracker.Data.Entities.Task> ByUserAssigned(this IQueryable<Tracker.Data.Entities.Task> queryable, System.Int32 identification)
@@ -956,7 +956,7 @@ namespace Tracker.Data
         /// </summary>
         /// <param name="queryable">Query to append where clause.</param>
         /// <param name="comparisonOperator">The comparison operator.</param>
-        /// <param name="identification">Identification to search for.</param>
+        /// <param name="identification">Id to search for.</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         public static IQueryable<Tracker.Data.Entities.Task> ByUserAssigned(this IQueryable<Tracker.Data.Entities.Task> queryable, ComparisonOperator comparisonOperator, System.Int32 identification)
@@ -964,10 +964,10 @@ namespace Tracker.Data
             switch(comparisonOperator)
             {
                 case ComparisonOperator.Equals:
-                    return queryable.Where(t => t.UserAssigned.Identification == identification);
+                    return queryable.Where(t => t.UserAssigned.Id == identification);
                 
                 case ComparisonOperator.NotEquals:
-                    return queryable.Where(t => t.UserAssigned.Identification != identification);
+                    return queryable.Where(t => t.UserAssigned.Id != identification);
                     
                 default:
                     throw new ArgumentException("Parameter 'comparisonOperator' must be ComparisonOperator.Equals or ComparisonOperator.NotEquals to support Association type.", "comparisonOperator");
@@ -1013,7 +1013,7 @@ namespace Tracker.Data
         /// Gets a query for <see cref="Tracker.Data.Entities.Task by User's primary key."/>.
         /// </summary>
         /// <param name="queryable">Query to append where clause.</param>
-        /// <param name="identification">Identification to search for.</param>
+        /// <param name="identification">Id to search for.</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         public static IQueryable<Tracker.Data.Entities.Task> ByUserCreated(this IQueryable<Tracker.Data.Entities.Task> queryable, System.Int32 identification)
@@ -1026,7 +1026,7 @@ namespace Tracker.Data
         /// </summary>
         /// <param name="queryable">Query to append where clause.</param>
         /// <param name="comparisonOperator">The comparison operator.</param>
-        /// <param name="identification">Identification to search for.</param>
+        /// <param name="identification">Id to search for.</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         public static IQueryable<Tracker.Data.Entities.Task> ByUserCreated(this IQueryable<Tracker.Data.Entities.Task> queryable, ComparisonOperator comparisonOperator, System.Int32 identification)
@@ -1034,10 +1034,10 @@ namespace Tracker.Data
             switch(comparisonOperator)
             {
                 case ComparisonOperator.Equals:
-                    return queryable.Where(t => t.UserCreated.Identification == identification);
+                    return queryable.Where(t => t.UserCreated.Id == identification);
                 
                 case ComparisonOperator.NotEquals:
-                    return queryable.Where(t => t.UserCreated.Identification != identification);
+                    return queryable.Where(t => t.UserCreated.Id != identification);
                     
                 default:
                     throw new ArgumentException("Parameter 'comparisonOperator' must be ComparisonOperator.Equals or ComparisonOperator.NotEquals to support Association type.", "comparisonOperator");

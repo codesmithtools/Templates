@@ -78,7 +78,7 @@ namespace Tracker
                 user.RoleList.Add(role);
                 db.SubmitChanges();
 
-                UserId = user.Identification;
+                UserId = user.Id;
                 RoleId = role.Id;
             }
         }
@@ -214,7 +214,7 @@ namespace Tracker
                     .Where(u => u.LastLoginDate > lastLogin)
                     .First();
 
-                Assert.AreEqual(user1.Identification, user2.Identification);
+                Assert.AreEqual(user1.Id, user2.Id);
             }
         }
 
@@ -337,17 +337,17 @@ namespace Tracker
             {
                 var users = db.User
                     .ByFirstName(ContainmentOperator.NotEquals, "James")
-                    .OrderBy(u => u.Identification)
+                    .OrderBy(u => u.Id)
                     .Future();
 
                 var user = db.User
                     .ByFirstName(ContainmentOperator.NotEquals, "James")
-                    .OrderBy(u => u.Identification)
+                    .OrderBy(u => u.Id)
                     .FutureFirstOrDefault();
 
                 var value = users.FirstOrDefault();
 
-                Assert.AreEqual(value.Identification, user.Value.Identification);
+                Assert.AreEqual(value.Id, user.Value.Id);
             }
         }
 
@@ -358,31 +358,31 @@ namespace Tracker
             {
                 var u1 = db.User
                     .ByFirstName(ContainmentOperator.NotEquals, "James")
-                    .OrderBy(u => u.Identification)
+                    .OrderBy(u => u.Id)
                     .FutureCache();
 
                 var u2 = db.User
                     .ByFirstName(ContainmentOperator.NotEquals, "James")
-                    .OrderBy(u => u.Identification)
+                    .OrderBy(u => u.Id)
                     .FutureCache();
 
                 Assert.AreEqual(u1.First(), u2.First());
 
                 db.User
                     .ByFirstName(ContainmentOperator.NotEquals, "James")
-                    .OrderBy(u => u.Identification)
+                    .OrderBy(u => u.Id)
                     .ClearCache();
 
                 var u3 = db.User
                     .ByFirstName(ContainmentOperator.NotEquals, "James")
-                    .OrderBy(u => u.Identification)
+                    .OrderBy(u => u.Id)
                     .FutureCache();
 
                 Assert.AreEqual(u1.First(), u3.First());
 
                 var u4 = db.User
                     .ByFirstName(ContainmentOperator.NotEquals, "James")
-                    .OrderBy(u => u.Identification)
+                    .OrderBy(u => u.Id)
                     .FutureCache();
 
                 Assert.AreEqual(u3.First(), u4.First());
