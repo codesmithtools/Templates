@@ -114,22 +114,22 @@ namespace CodeSmith.SchemaHelper.NHibernate
             }
         }
 
-        private void LoadAssociation(XElement nameElement, XElement typeElement, AssociationType type)
+        private Association LoadAssociation(XElement nameElement, XElement typeElement, AssociationType type)
         {
             if (nameElement == null || typeElement == null)
-                return;
+                return null;
 
             var associationName = nameElement.Attribute("name");
             var associationType = typeElement.Attribute("class");
             if (associationName == null || associationType == null)
-                return;
+                return null;
 
             if (Configuration.Instance.ExcludeRegexIsMatch(associationName.Value) || AssociationMap.ContainsKey(associationName.Value))
-                return;
+                return null;
 
             var associationEntity = EntityStore.Instance.GetEntity(associationType.Value);
             if (associationEntity == null)
-                return;
+                return null;
 
             var association = new Association(associationName.Value, type, this, associationEntity, false);
             association.Name = associationName.Value;
@@ -165,6 +165,7 @@ namespace CodeSmith.SchemaHelper.NHibernate
                 association.ExtendedProperties.Add(customAttribute.Name.ToString(), customAttribute.Value);
 
             AssociationMap.Add(association.Name, association);
+            return association;
         }
 
         protected override void LoadExtendedProperties()
@@ -188,6 +189,14 @@ namespace CodeSmith.SchemaHelper.NHibernate
             {
                 var property = new NHibernateProperty(key, this);
                 Key.Properties.Add(property);
+            }
+
+            var foriegnKeys = compositeKey.Descendants("key-many-to-one", XmlNamespace);
+            foreach (var foriegnKey in foriegnKeys)
+            {
+                var association = LoadAssociation(foriegnKey, foriegnKey, AssociationType.ManyToOne);
+                if (association != null)
+                    Key.Associations.Add(association);
             }
         }
 
