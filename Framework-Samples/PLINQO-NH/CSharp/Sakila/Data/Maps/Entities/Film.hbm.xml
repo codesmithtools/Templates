@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" namespace="Sakila.Data.Entities" assembly="Sakila">
+    <class name="Film" table="film" >
+        <id name="FilmId" column="film_id" type="Int16" >
+            <generator class="native" />
+        </id>
+        <version name="LastUpdate" column="last_update" type="DateTime" generated="always" unsaved-value="null" />
+        <property name="Title" column="title" type="String" not-null="true" length="765" /> 
+        <property name="Description" column="description" type="String" not-null="false" length="65535" /> 
+        <property name="ReleaseYear" column="release_year" type="Int32" not-null="false" /> 
+        <property name="RentalDuration" column="rental_duration" type="Byte" not-null="true" /> 
+        <property name="RentalRate" column="rental_rate" type="Decimal" not-null="true" /> 
+        <property name="Length" column="length" type="Int16" not-null="false" /> 
+        <property name="ReplacementCost" column="replacement_cost" type="Decimal" not-null="true" /> 
+        <property name="Rating" column="rating" type="String" not-null="false" length="15" /> 
+        <property name="SpecialFeatures" column="special_features" type="String" not-null="false" length="162" /> 
+        <many-to-one name="Language1" class="Language" >
+            <column name="language_id" />
+        </many-to-one>
+        <many-to-one name="Language2" class="Language" >
+            <column name="original_language_id" />
+        </many-to-one>
+        <bag name="ActorList" table="film_actor" inverse="false" cascade="all" lazy="true" >
+            <key>
+                <column name="film_id" />
+            </key>
+            <many-to-many class="Actor" >
+                <column name="actor_id" />
+            </many-to-many>
+        </bag>
+        <bag name="CategoryList" table="film_category" inverse="false" cascade="all" lazy="true" >
+            <key>
+                <column name="film_id" />
+            </key>
+            <many-to-many class="Category" >
+                <column name="category_id" />
+            </many-to-many>
+        </bag>
+        <bag name="InventoryList" inverse="true" cascade="all-delete-orphan" lazy="true" >
+            <key>
+                <column name="film_id" />
+            </key>
+            <one-to-many class="Inventory" />
+        </bag>
+    </class>
+</hibernate-mapping>
+

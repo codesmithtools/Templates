@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" namespace="Sakila.Data.Entities" assembly="Sakila">
+    <class name="Address" table="address" >
+        <id name="AddressId" column="address_id" type="Int16" >
+            <generator class="native" />
+        </id>
+        <version name="LastUpdate" column="last_update" type="DateTime" generated="always" unsaved-value="null" />
+        <property name="AddressMember" column="address" type="String" not-null="true" length="150" /> 
+        <property name="Address2" column="address2" type="String" not-null="false" length="150" /> 
+        <property name="District" column="district" type="String" not-null="true" length="60" /> 
+        <property name="PostalCode" column="postal_code" type="String" not-null="false" length="30" /> 
+        <property name="Phone" column="phone" type="String" not-null="true" length="60" /> 
+        <many-to-one name="City" class="City" >
+            <column name="city_id" />
+        </many-to-one>
+        <bag name="CustomerList" inverse="true" cascade="all-delete-orphan" lazy="true" >
+            <key>
+                <column name="address_id" />
+            </key>
+            <one-to-many class="Customer" />
+        </bag>
+        <bag name="StaffList" inverse="true" cascade="all-delete-orphan" lazy="true" >
+            <key>
+                <column name="address_id" />
+            </key>
+            <one-to-many class="Staff" />
+        </bag>
+        <bag name="StoreList" inverse="true" cascade="all-delete-orphan" lazy="true" >
+            <key>
+                <column name="address_id" />
+            </key>
+            <one-to-many class="Store" />
+        </bag>
+    </class>
+</hibernate-mapping>
+

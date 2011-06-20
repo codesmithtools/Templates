@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" namespace="Sakila.Data.Entities" assembly="Sakila">
+    <class name="Store" table="store" >
+        <id name="StoreId" column="store_id" type="Byte" >
+            <generator class="native" />
+        </id>
+        <version name="LastUpdate" column="last_update" type="DateTime" generated="always" unsaved-value="null" />
+        <many-to-one name="Staff" class="Staff" >
+            <column name="manager_staff_id" />
+        </many-to-one>
+        <many-to-one name="Address" class="Address" >
+            <column name="address_id" />
+        </many-to-one>
+        <bag name="CustomerList" inverse="true" cascade="all-delete-orphan" lazy="true" >
+            <key>
+                <column name="store_id" />
+            </key>
+            <one-to-many class="Customer" />
+        </bag>
+        <bag name="InventoryList" inverse="true" cascade="all-delete-orphan" lazy="true" >
+            <key>
+                <column name="store_id" />
+            </key>
+            <one-to-many class="Inventory" />
+        </bag>
+        <bag name="StaffList" inverse="true" cascade="all-delete-orphan" lazy="true" >
+            <key>
+                <column name="store_id" />
+            </key>
+            <one-to-many class="Staff" />
+        </bag>
+    </class>
+</hibernate-mapping>
+

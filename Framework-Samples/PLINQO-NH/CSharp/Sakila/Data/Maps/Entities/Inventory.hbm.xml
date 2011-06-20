@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" namespace="Sakila.Data.Entities" assembly="Sakila">
+    <class name="Inventory" table="inventory" >
+        <id name="InventoryId" column="inventory_id" type="Int32" >
+            <generator class="native" />
+        </id>
+        <version name="LastUpdate" column="last_update" type="DateTime" generated="always" unsaved-value="null" />
+        <many-to-one name="Store" class="Store" >
+            <column name="store_id" />
+        </many-to-one>
+        <many-to-one name="Film" class="Film" >
+            <column name="film_id" />
+        </many-to-one>
+        <bag name="RentalList" inverse="true" cascade="all-delete-orphan" lazy="true" >
+            <key>
+                <column name="inventory_id" />
+            </key>
+            <one-to-many class="Rental" />
+        </bag>
+    </class>
+</hibernate-mapping>
+

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" namespace="Sakila.Data.Entities" assembly="Sakila">
+    <class name="Payment" table="payment" >
+        <id name="PaymentId" column="payment_id" type="Int16" >
+            <generator class="native" />
+        </id>
+        <version name="LastUpdate" column="last_update" type="DateTime" generated="always" unsaved-value="null" />
+        <property name="Amount" column="amount" type="Decimal" not-null="true" /> 
+        <property name="PaymentDate" column="payment_date" type="DateTime" not-null="true" /> 
+        <many-to-one name="Rental" class="Rental" >
+            <column name="rental_id" />
+        </many-to-one>
+        <many-to-one name="Customer" class="Customer" >
+            <column name="customer_id" />
+        </many-to-one>
+        <many-to-one name="Staff" class="Staff" >
+            <column name="staff_id" />
+        </many-to-one>
+    </class>
+</hibernate-mapping>
+

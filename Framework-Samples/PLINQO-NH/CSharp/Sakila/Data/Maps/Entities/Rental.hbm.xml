@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" namespace="Sakila.Data.Entities" assembly="Sakila">
+    <class name="Rental" table="rental" >
+        <id name="RentalId" column="rental_id" type="Int32" >
+            <generator class="native" />
+        </id>
+        <version name="LastUpdate" column="last_update" type="DateTime" generated="always" unsaved-value="null" />
+        <property name="RentalDate" column="rental_date" type="DateTime" not-null="true" /> 
+        <property name="ReturnDate" column="return_date" type="DateTime" not-null="false" /> 
+        <many-to-one name="Staff" class="Staff" >
+            <column name="staff_id" />
+        </many-to-one>
+        <many-to-one name="Inventory" class="Inventory" >
+            <column name="inventory_id" />
+        </many-to-one>
+        <many-to-one name="Customer" class="Customer" >
+            <column name="customer_id" />
+        </many-to-one>
+        <bag name="PaymentList" inverse="true" cascade="all-delete-orphan" lazy="true" >
+            <key>
+                <column name="rental_id" />
+            </key>
+            <one-to-many class="Payment" />
+        </bag>
+    </class>
+</hibernate-mapping>
+

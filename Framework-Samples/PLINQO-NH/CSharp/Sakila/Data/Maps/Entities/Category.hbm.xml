@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" namespace="Sakila.Data.Entities" assembly="Sakila">
+    <class name="Category" table="category" >
+        <id name="CategoryId" column="category_id" type="Byte" >
+            <generator class="native" />
+        </id>
+        <version name="LastUpdate" column="last_update" type="DateTime" generated="always" unsaved-value="null" />
+        <property name="Name" column="name" type="String" not-null="true" length="75" /> 
+        <bag name="FilmList" table="film_category" inverse="false" cascade="all" lazy="true" >
+            <key>
+                <column name="category_id" />
+            </key>
+            <many-to-many class="Film" >
+                <column name="film_id" />
+            </many-to-many>
+        </bag>
+    </class>
+</hibernate-mapping>
+
