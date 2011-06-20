@@ -24,5 +24,41 @@ namespace Sakila
                 Assert.AreEqual(5, actors.Count);
             }
         }
+
+        [Test]
+        public void FromCache()
+        {
+            using (var db = new SakilaDataContext())
+            {
+                var addresses = db.Address
+                    .ByDistrict("Alberta")
+                    .FromCache();
+
+                var cachedAddresses = db.Address
+                    .ByDistrict("Alberta")
+                    .FromCache();
+
+                Assert.AreEqual(addresses.Count(), cachedAddresses.Count());
+            }
+        }
+
+        [Test]
+        public void Future()
+        {
+            using (var db = new SakilaDataContext())
+            {
+                var action = db.Category
+                    .ByName("Action")
+                    .FutureFirstOrDefault();
+
+                var animation = db.Category
+                    .ByName("Animation")
+                    .FutureFirstOrDefault();
+
+                Assert.IsFalse(animation.IsLoaded);
+                Assert.IsNotNull(action.Value);
+                Assert.IsTrue(animation.IsLoaded);
+            }
+        }
     }
 }
