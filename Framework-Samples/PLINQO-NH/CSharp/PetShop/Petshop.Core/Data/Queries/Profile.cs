@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using CodeSmith.Data.Linq;
+using NHibernate.Linq;
 using Petshop.Data;
 using Petshop.Data.Entities;
 

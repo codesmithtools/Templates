@@ -4,6 +4,7 @@ using System.Web.UI.WebControls;
 using System.Linq;
 using System.Collections.Generic;
 using System.Data.Linq;
+using NHibernate.Linq;
 using Petshop.Data;
 using Petshop.Data.Entities;
 using CodeSmith.Data.Linq;

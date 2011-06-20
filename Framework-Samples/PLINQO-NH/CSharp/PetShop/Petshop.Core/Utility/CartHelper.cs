@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Data.Linq;
 using CodeSmith.Data.Linq;
+using NHibernate.Linq;
 using Petshop.Data;
 using Petshop.Data.Entities;
 
@@ -11,7 +12,6 @@ namespace PetShop.Core.Utility
 {
     public class CartHelper
     {
-
         public static void ClearCart(List<Cart> items)
         {
             using (var context = new PetshopDataContext())
@@ -149,7 +149,5 @@ namespace PetShop.Core.Utility
                 context.SubmitChanges();
             }
         }
-
-
     }
 }
