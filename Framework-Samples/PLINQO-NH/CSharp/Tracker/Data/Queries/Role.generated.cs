@@ -25,9 +25,13 @@ namespace Tracker.Data
         /// Gets an instance by the primary key.
         /// </summary>
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
-        public static Tracker.Data.Entities.Role GetByKey(this IQueryable<Tracker.Data.Entities.Role> queryable, System.Int32 id)
+        public static Tracker.Data.Entities.Role GetByKey(this IQueryable<Tracker.Data.Entities.Role> queryable
+            , System.Int32 identification
+            )
         {
-            return queryable.FirstOrDefault(r => r.Id == id);
+            return queryable
+                .Where(r => r.Id == identification)
+                .FirstOrDefault();
         }
         
         #endregion
@@ -39,38 +43,38 @@ namespace Tracker.Data
         /// Gets a query for <see cref="Tracker.Data.Entities.Role.Id"/>.
         /// </summary>
         /// <param name="queryable">Query to append where clause.</param>
-        /// <param name="id">Id to search for.</param>
+        /// <param name="identification">Id to search for.</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
-        public static IQueryable<Tracker.Data.Entities.Role> ById(this IQueryable<Tracker.Data.Entities.Role> queryable, System.Int32 id)
+        public static IQueryable<Tracker.Data.Entities.Role> ById(this IQueryable<Tracker.Data.Entities.Role> queryable, System.Int32 identification)
         {
-            return queryable.Where(r => r.Id == id);
+            return queryable.Where(r => r.Id == identification);
         }
 
         /// <summary>
         /// Gets a query for <see cref="Tracker.Data.Entities.Role.Id"/>.
         /// </summary>
         /// <param name="queryable">Query to append where clause.</param>
-        /// <param name="id">Id to search for. This is on the right side of the operator.</param>
+        /// <param name="identification">Id to search for. This is on the right side of the operator.</param>
         /// <param name="comparisonOperator">The comparison operator.</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
-        public static IQueryable<Tracker.Data.Entities.Role> ById(this IQueryable<Tracker.Data.Entities.Role> queryable, ComparisonOperator comparisonOperator, System.Int32 id)
+        public static IQueryable<Tracker.Data.Entities.Role> ById(this IQueryable<Tracker.Data.Entities.Role> queryable, ComparisonOperator comparisonOperator, System.Int32 identification)
         {
             switch (comparisonOperator)
             {
                 case ComparisonOperator.GreaterThan:
-                    return queryable.Where(r => r.Id > id);
+                    return queryable.Where(r => r.Id > identification);
                 case ComparisonOperator.GreaterThanOrEquals:
-                    return queryable.Where(r => r.Id >= id);
+                    return queryable.Where(r => r.Id >= identification);
                 case ComparisonOperator.LessThan:
-                    return queryable.Where(r => r.Id < id);
+                    return queryable.Where(r => r.Id < identification);
                 case ComparisonOperator.LessThanOrEquals:
-                    return queryable.Where(r => r.Id <= id);
+                    return queryable.Where(r => r.Id <= identification);
                 case ComparisonOperator.NotEquals:
-                    return queryable.Where(r => r.Id != id);
+                    return queryable.Where(r => r.Id != identification);
                 default:
-                    return queryable.Where(r => r.Id == id);
+                    return queryable.Where(r => r.Id == identification);
             }
         }
 
@@ -78,21 +82,21 @@ namespace Tracker.Data
         /// Gets a query for <see cref="Tracker.Data.Entities.Role.Id"/>.
         /// </summary>
         /// <param name="queryable">Query to append where clause.</param>
-        /// <param name="id">Id to search for.</param>
+        /// <param name="identification">Id to search for.</param>
         /// <param name="additionalValues">Additional values to search for.</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
-        public static IQueryable<Tracker.Data.Entities.Role> ById(this IQueryable<Tracker.Data.Entities.Role> queryable, System.Int32 id, params System.Int32[] additionalValues)
+        public static IQueryable<Tracker.Data.Entities.Role> ById(this IQueryable<Tracker.Data.Entities.Role> queryable, System.Int32 identification, params System.Int32[] additionalValues)
         {
-            var idList = new List<System.Int32> { id };
+            var identificationList = new List<System.Int32> { identification };
 
             if (additionalValues != null)
-                idList.AddRange(additionalValues);
+                identificationList.AddRange(additionalValues);
 
-            if (idList.Count == 1)
-                return queryable.ById(idList[0]);
+            if (identificationList.Count == 1)
+                return queryable.ById(identificationList[0]);
 
-            return queryable.ById(idList);
+            return queryable.ById(identificationList);
         }
 
         /// <summary>

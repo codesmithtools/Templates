@@ -8,9 +8,9 @@ namespace Tracker.Data.Entities
 {
 	public partial class RolesForUserResult
     {
-        public RolesForUserResult(System.Int32 id, System.String name, System.String description, System.DateTime createdDate, System.DateTime modifiedDate, System.Byte[] rowVersion, System.Int32 userId, System.Int32 roleId)
+        public RolesForUserResult(System.Int32 identification, System.String name, System.String description, System.DateTime createdDate, System.DateTime modifiedDate, System.Byte[] rowVersion, System.Int32 userId, System.Int32 roleId)
         {
-            Id = id;
+            Id = identification;
             Name = name;
             Description = description;
             CreatedDate = createdDate;

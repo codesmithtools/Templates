@@ -25,9 +25,13 @@ namespace Tracker.Data
         /// Gets an instance by the primary key.
         /// </summary>
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
-        public static Tracker.Data.Entities.TaskExtended GetByKey(this IQueryable<Tracker.Data.Entities.TaskExtended> queryable, System.Int32 taskId)
+        public static Tracker.Data.Entities.TaskExtended GetByKey(this IQueryable<Tracker.Data.Entities.TaskExtended> queryable
+            , System.Int32 taskId
+            )
         {
-            return queryable.FirstOrDefault(t => t.TaskId == taskId);
+            return queryable
+                .Where(t => t.TaskId == taskId)
+                .FirstOrDefault();
         }
         
         #endregion

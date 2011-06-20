@@ -18,7 +18,7 @@ namespace Tracker.Data.Entities
 {
     [System.Runtime.Serialization.DataContract(IsReference = true)]
     [System.ComponentModel.DataAnnotations.ScaffoldTable(true)]
-    [System.Diagnostics.DebuggerDisplay("Id: {Id}")]
+    [System.Diagnostics.DebuggerDisplay("Identification: {Identification}")]
     public partial class User : EntityBase
     {
         #region Static Constructor
@@ -56,20 +56,20 @@ namespace Tracker.Data.Entities
         #region Column Mapped Properties
         
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
-        private System.Int32 _id;
+        private System.Int32 _identification;
         
         [System.Runtime.Serialization.DataMember(Order = 1)]
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
-        public virtual System.Int32 Id
+        public virtual System.Int32 Identification
         {
-            get { return _id; }
+            get { return _identification; }
             set
             {
-                OnIdChanging(value, _id);
-                SendPropertyChanging("Id");
-                _id = value;
-                SendPropertyChanged("Id");
-                OnIdChanged(value);
+                OnIdentificationChanging(value, _identification);
+                SendPropertyChanging("Identification");
+                _identification = value;
+                SendPropertyChanged("Identification");
+                OnIdentificationChanged(value);
             }
         }
         
@@ -427,9 +427,9 @@ namespace Tracker.Data.Entities
         
         partial void OnCreated();
         
-        partial void OnIdChanging(System.Int32 newValue, System.Int32 oldValue);
+        partial void OnIdentificationChanging(System.Int32 newValue, System.Int32 oldValue);
         
-        partial void OnIdChanged(System.Int32 value);
+        partial void OnIdentificationChanged(System.Int32 value);
         
         partial void OnEmailAddressChanging(System.String newValue, System.String oldValue);
         

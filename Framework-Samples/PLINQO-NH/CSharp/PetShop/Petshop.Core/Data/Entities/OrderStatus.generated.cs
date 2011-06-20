@@ -18,7 +18,7 @@ namespace Petshop.Data.Entities
 {
     [System.Runtime.Serialization.DataContract(IsReference = true)]
     [System.ComponentModel.DataAnnotations.ScaffoldTable(true)]
-    [System.Diagnostics.DebuggerDisplay("OrderId: {OrderId}, LineNum: {LineNum}")]
+    [System.Diagnostics.DebuggerDisplay("LineNum: {LineNum}")]
     public partial class OrderStatus : EntityBase
     {
         #region Static Constructor
@@ -56,27 +56,9 @@ namespace Petshop.Data.Entities
         #region Column Mapped Properties
         
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
-        private System.Int32 _orderId;
-        
-        [System.Runtime.Serialization.DataMember(Order = 1)]
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
-        public virtual System.Int32 OrderId
-        {
-            get { return _orderId; }
-            set
-            {
-                OnOrderIdChanging(value, _orderId);
-                SendPropertyChanging("OrderId");
-                _orderId = value;
-                SendPropertyChanged("OrderId");
-                OnOrderIdChanged(value);
-            }
-        }
-        
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         private System.Int32 _lineNum;
         
-        [System.Runtime.Serialization.DataMember(Order = 2)]
+        [System.Runtime.Serialization.DataMember(Order = 1)]
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         public virtual System.Int32 LineNum
         {
@@ -94,7 +76,7 @@ namespace Petshop.Data.Entities
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         private System.DateTime _timestamp;
         
-        [System.Runtime.Serialization.DataMember(Order = 3)]
+        [System.Runtime.Serialization.DataMember(Order = 2)]
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         public virtual System.DateTime Timestamp
         {
@@ -112,7 +94,7 @@ namespace Petshop.Data.Entities
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         private System.String _status;
         
-        [System.Runtime.Serialization.DataMember(Order = 4)]
+        [System.Runtime.Serialization.DataMember(Order = 3)]
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         public virtual System.String Status
         {
@@ -134,7 +116,7 @@ namespace Petshop.Data.Entities
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         private Order _order;
         
-        [System.Runtime.Serialization.DataMember(Order = 5, EmitDefaultValue = false)]
+        [System.Runtime.Serialization.DataMember(Order = 4, EmitDefaultValue = false)]
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         public virtual Order Order
         {
@@ -161,16 +143,14 @@ namespace Petshop.Data.Entities
                 return false;
 
             return 
-                OrderId == entity.OrderId
-                && LineNum == entity.LineNum;
+                LineNum == entity.LineNum;
         }
 
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         public override int GetHashCode()
         {
             return (
-                OrderId
-                + "|" + LineNum
+                LineNum
                 ).GetHashCode();
         }
         
@@ -181,10 +161,6 @@ namespace Petshop.Data.Entities
         static partial void AddSharedRules();
         
         partial void OnCreated();
-        
-        partial void OnOrderIdChanging(System.Int32 newValue, System.Int32 oldValue);
-        
-        partial void OnOrderIdChanged(System.Int32 value);
         
         partial void OnLineNumChanging(System.Int32 newValue, System.Int32 oldValue);
         

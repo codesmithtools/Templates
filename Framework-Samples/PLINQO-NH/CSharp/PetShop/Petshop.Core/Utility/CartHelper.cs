@@ -133,14 +133,17 @@ namespace PetShop.Core.Utility
 
             using (var context = new PetshopDataContext())
             {
+                var order = context.Order.GetByKey(orderId);
                 foreach (var item in cart)
                 {
-                    var lineItem = new LineItem();
-                    lineItem.OrderId = orderId;
-                    lineItem.ItemId = item.ItemId;
-                    lineItem.LineNum = ++lineNum;
-                    lineItem.Quantity = item.Quantity;
-                    lineItem.UnitPrice = item.Price;
+                    var lineItem = new LineItem
+                    {
+                        Order = order,
+                        ItemId = item.ItemId,
+                        LineNum = ++lineNum,
+                        Quantity = item.Quantity,
+                        UnitPrice = item.Price,
+                    };
                     context.LineItem.InsertOnSubmit(lineItem);
                 }
                 context.SubmitChanges();

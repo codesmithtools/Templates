@@ -56,18 +56,18 @@ namespace Tracker.Data.Entities
         #region Column Mapped Properties
         
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
-        private System.Int32 _id;
+        private System.Int32 _identification;
         
         [System.Runtime.Serialization.DataMember(Order = 1)]
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         public virtual System.Int32 Id
         {
-            get { return _id; }
+            get { return _identification; }
             set
             {
-                OnIdChanging(value, _id);
+                OnIdChanging(value, _identification);
                 SendPropertyChanging("Id");
-                _id = value;
+                _identification = value;
                 SendPropertyChanged("Id");
                 OnIdChanged(value);
             }

@@ -25,9 +25,13 @@ namespace Petshop.Data
         /// Gets an instance by the primary key.
         /// </summary>
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
-        public static Petshop.Data.Entities.Cart GetByKey(this IQueryable<Petshop.Data.Entities.Cart> queryable, System.Int32 cartId)
+        public static Petshop.Data.Entities.Cart GetByKey(this IQueryable<Petshop.Data.Entities.Cart> queryable
+            , System.Int32 cartId
+            )
         {
-            return queryable.FirstOrDefault(c => c.CartId == cartId);
+            return queryable
+                .Where(c => c.CartId == cartId)
+                .FirstOrDefault();
         }
         
         #endregion

@@ -92,18 +92,18 @@ namespace Petshop.Data.Entities
         }
         
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
-        private System.String _descn;
+        private System.String _description;
         
         [System.Runtime.Serialization.DataMember(Order = 3)]
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         public virtual System.String Descn
         {
-            get { return _descn; }
+            get { return _description; }
             set
             {
-                OnDescnChanging(value, _descn);
+                OnDescnChanging(value, _description);
                 SendPropertyChanging("Descn");
-                _descn = value;
+                _description = value;
                 SendPropertyChanged("Descn");
                 OnDescnChanged(value);
             }

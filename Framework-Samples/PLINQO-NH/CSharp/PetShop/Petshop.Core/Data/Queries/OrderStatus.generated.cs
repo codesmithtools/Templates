@@ -25,88 +25,36 @@ namespace Petshop.Data
         /// Gets an instance by the primary key.
         /// </summary>
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
-        public static Petshop.Data.Entities.OrderStatus GetByKey(this IQueryable<Petshop.Data.Entities.OrderStatus> queryable, System.Int32 orderId, System.Int32 lineNum)
+        public static Petshop.Data.Entities.OrderStatus GetByKey(this IQueryable<Petshop.Data.Entities.OrderStatus> queryable
+            , System.Int32 lineNum
+            , System.Int32 orderId
+            )
         {
-            return queryable.FirstOrDefault(o => o.OrderId == orderId 
-					&& o.LineNum == lineNum);
+            return queryable
+                .Where(o => o.Order.OrderId == orderId)
+                .Where(o => o.LineNum == lineNum)
+                .FirstOrDefault();
+        }
+        
+        /// <summary>
+        /// Gets an instance by the primary key.
+        /// </summary>
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        public static Petshop.Data.Entities.OrderStatus GetByKey(this IQueryable<Petshop.Data.Entities.OrderStatus> queryable
+            , System.Int32 lineNum
+            , Petshop.Data.Entities.Order order
+            )
+        {
+            return queryable
+                .Where(o => o.Order != order)
+                .Where(o => o.LineNum == lineNum)
+                .FirstOrDefault();
         }
         
         #endregion
         
         #region By Property
         
-
-        /// <summary>
-        /// Gets a query for <see cref="Petshop.Data.Entities.OrderStatus.OrderId"/>.
-        /// </summary>
-        /// <param name="queryable">Query to append where clause.</param>
-        /// <param name="orderId">OrderId to search for.</param>
-        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
-        public static IQueryable<Petshop.Data.Entities.OrderStatus> ByOrderId(this IQueryable<Petshop.Data.Entities.OrderStatus> queryable, System.Int32 orderId)
-        {
-            return queryable.Where(o => o.OrderId == orderId);
-        }
-
-        /// <summary>
-        /// Gets a query for <see cref="Petshop.Data.Entities.OrderStatus.OrderId"/>.
-        /// </summary>
-        /// <param name="queryable">Query to append where clause.</param>
-        /// <param name="orderId">OrderId to search for. This is on the right side of the operator.</param>
-        /// <param name="comparisonOperator">The comparison operator.</param>
-        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
-        public static IQueryable<Petshop.Data.Entities.OrderStatus> ByOrderId(this IQueryable<Petshop.Data.Entities.OrderStatus> queryable, ComparisonOperator comparisonOperator, System.Int32 orderId)
-        {
-            switch (comparisonOperator)
-            {
-                case ComparisonOperator.GreaterThan:
-                    return queryable.Where(o => o.OrderId > orderId);
-                case ComparisonOperator.GreaterThanOrEquals:
-                    return queryable.Where(o => o.OrderId >= orderId);
-                case ComparisonOperator.LessThan:
-                    return queryable.Where(o => o.OrderId < orderId);
-                case ComparisonOperator.LessThanOrEquals:
-                    return queryable.Where(o => o.OrderId <= orderId);
-                case ComparisonOperator.NotEquals:
-                    return queryable.Where(o => o.OrderId != orderId);
-                default:
-                    return queryable.Where(o => o.OrderId == orderId);
-            }
-        }
-
-        /// <summary>
-        /// Gets a query for <see cref="Petshop.Data.Entities.OrderStatus.OrderId"/>.
-        /// </summary>
-        /// <param name="queryable">Query to append where clause.</param>
-        /// <param name="orderId">OrderId to search for.</param>
-        /// <param name="additionalValues">Additional values to search for.</param>
-        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
-        public static IQueryable<Petshop.Data.Entities.OrderStatus> ByOrderId(this IQueryable<Petshop.Data.Entities.OrderStatus> queryable, System.Int32 orderId, params System.Int32[] additionalValues)
-        {
-            var orderIdList = new List<System.Int32> { orderId };
-
-            if (additionalValues != null)
-                orderIdList.AddRange(additionalValues);
-
-            if (orderIdList.Count == 1)
-                return queryable.ByOrderId(orderIdList[0]);
-
-            return queryable.ByOrderId(orderIdList);
-        }
-
-        /// <summary>
-        /// Gets a query for <see cref="Petshop.Data.Entities.OrderStatus.OrderId"/>.
-        /// </summary>
-        /// <param name="queryable">Query to append where clause.</param>
-        /// <param name="values">The values to search for..</param>
-        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
-        public static IQueryable<Petshop.Data.Entities.OrderStatus> ByOrderId(this IQueryable<Petshop.Data.Entities.OrderStatus> queryable, IEnumerable<System.Int32> values)
-        {
-            return queryable.Where(o => values.Contains(o.OrderId));
-        }
 
         /// <summary>
         /// Gets a query for <see cref="Petshop.Data.Entities.OrderStatus.LineNum"/>.
