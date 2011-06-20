@@ -28,10 +28,22 @@
 <hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" namespace="<%= SourceEntity.Namespace %>" assembly="<%= AssemblyName %>">
     <class name="<%= SourceEntity.Name %>" table="<%= SourceEntity.GetSafeName() %>" <%= GetAttributes(SourceEntity) %>>
     <% // Primary Key %>
+    <% List<Association> foriegnKeyAssociations = new List<Association>(); %>
     <% if(SourceEntity.Key.IsComposite) { %>
         <composite-id>
-        <% foreach(IProperty property in SourceEntity.Key.Properties) { %>
+        <% IEnumerable<IProperty> keyProperties = SourceEntity.Key.Properties.Where(p => !IsAssociationKey(p)); %>
+        <% foreach(IProperty property in keyProperties) { %>
             <key-property name="<%= property.Name %>" column="<%= property.GetSafeName() %>" type="<%= property.ExtendedProperties[NHibernateUtilities.NHibernateType] %>" <%= GetAttributes(property) %>/> 
+        <% } %>
+        <% IEnumerable<IProperty> foriegnKeyProperties = SourceEntity.Key.Properties.Where(p => IsAssociationKey(p)); %>
+        <% foreach(IProperty property in foriegnKeyProperties) { %>
+            <% Association association = GetAssociationKey(property); %>
+            <% foriegnKeyAssociations.Add(association); %>
+            <key-many-to-one name="<%= association.Name %>" class="<%= association.ForeignEntity.Name %>" <%= GetAttributes(association) %>>
+                <% foreach(AssociationProperty associationProperty in association.Properties) { %>
+                <column name="<%= associationProperty.Property.GetSafeName() %>" />
+                <% } %>
+            </key-many-to-one>
         <% } %>
         </composite-id>
     <% } else { %>
@@ -51,7 +63,8 @@
         <property name="<%= property.Name %>" column="<%= property.GetSafeName() %>" type="<%= property.ExtendedProperties[NHibernateUtilities.NHibernateType] %>" not-null="<%= property.ExtendedProperties[NHibernateUtilities.NotNull] %>" <%= GetAttributes(property) %>/> 
     <% } %>
     <% // Associations %>
-    <% foreach(Association association in SourceEntity.Associations) { %>
+    <% IEnumerable<Association> associations = SourceEntity.Associations.Except(foriegnKeyAssociations); %>
+    <% foreach(Association association in associations) { %>
         <% // Many-To-One %>
         <% if (association.AssociationType == AssociationType.ManyToOne || association.AssociationType == AssociationType.ManyToZeroOrOne) { %>
         <many-to-one name="<%= association.Name %>" class="<%= association.ForeignEntity.Name %>" <%= GetAttributes(association) %>>
@@ -149,5 +162,24 @@
             return false;
         
         return sp.IsPrimaryKey || sp.IsForeignKey;
+    }
+        
+    public bool IsAssociationKey(IProperty property)
+    {
+        return GetAssociationKey(property) != null;
+    }
+    
+    public Association GetAssociationKey(IProperty property)
+    {
+        foreach(Association association in SourceEntity.Associations)
+        {
+            if (association.AssociationType != AssociationType.ManyToOne && association.AssociationType != AssociationType.ManyToZeroOrOne)
+                continue;
+                
+            if (association.Properties.Any(p => p.Property.GetSafeName() == property.GetSafeName()))
+                return association;
+        }
+        
+        return null;
     }
 </script>

@@ -47,6 +47,7 @@ using System.Linq;
 using CodeSmith.Data.Linq;
 using CodeSmith.Data.Linq.Dynamic;
 
+    <% string alias = GetAlias(); %>
 namespace <%= String.IsNullOrEmpty(QueryNamespace)? BaseNamespace : QueryNamespace %>
 {
     /// <summary>
@@ -61,10 +62,49 @@ namespace <%= String.IsNullOrEmpty(QueryNamespace)? BaseNamespace : QueryNamespa
         /// Gets an instance by the primary key.
         /// </summary>
         <%= GeneratedCodeAttribute %>
-        public static <%= Entity.Namespace %>.<%= Entity.Name %> <%= UniqueMethodPrefix %><%= MethodKeySuffix %>(this IQueryable<<%= Entity.Namespace %>.<%= Entity.Name %>> queryable, <%= GetParameters(Entity.Key.Properties) %>)
+        public static <%= Entity.Namespace %>.<%= Entity.Name %> <%= UniqueMethodPrefix %><%= MethodKeySuffix %>(this IQueryable<<%= Entity.Namespace %>.<%= Entity.Name %>> queryable
+        <% if(Entity.Key.Properties.Count > 0) { %>
+            , <%= GetParameters(Entity.Key.Properties) %>
+        <% } %>
+        <% if(Entity.Key.Associations.Count > 0) { %>
+            , <%= GetParametersPrimitives(Entity.Key.Associations) %>
+        <% } %>
+            )
         {
-            return queryable.FirstOrDefault(<%= GetLamba(Entity.Key.Properties, 5) %>);
+            return queryable
+        <% if(Entity.Key.Associations.Count > 0) { %>
+            <% foreach(Association association in Entity.Key.Associations) { %>
+                .Where(<%= GetLamba(association, 5, true) %>)
+            <% } %>
+        <% } %>
+        <% if(Entity.Key.Properties.Count > 0) { %>
+                .Where(<%= GetLamba(Entity.Key.Properties, 5) %>)
+        <% } %>
+                .FirstOrDefault();
         }
+        <% if (Entity.Key.Associations.Count > 0) { %>
+        
+        /// <summary>
+        /// Gets an instance by the primary key.
+        /// </summary>
+        <%= GeneratedCodeAttribute %>
+        public static <%= Entity.Namespace %>.<%= Entity.Name %> <%= UniqueMethodPrefix %><%= MethodKeySuffix %>(this IQueryable<<%= Entity.Namespace %>.<%= Entity.Name %>> queryable
+        <% if(Entity.Key.Properties.Count > 0) { %>
+            , <%= GetParameters(Entity.Key.Properties) %>
+        <% } %>
+            , <%= GetParametersAssociations(Entity.Key.Associations) %>
+            )
+        {
+            return queryable
+        <% foreach(Association association in Entity.Key.Associations) { %>
+                .Where(<%= alias %> => <%= alias %>.<%= association.Name %> != <%= association.VariableName %>)
+        <% } %>
+        <% if(Entity.Key.Properties.Count > 0) { %>
+                .Where(<%= GetLamba(Entity.Key.Properties, 5) %>)
+        <% } %>
+                .FirstOrDefault();
+        }
+        <% } %>
         
     <% } %>
     <% IEnumerable<IProperty> allProperties = Entity.Key.Properties.Concat(Entity.Properties); %>
@@ -91,7 +131,6 @@ namespace <%= String.IsNullOrEmpty(QueryNamespace)? BaseNamespace : QueryNamespa
         
     <% foreach(IProperty property in allProperties) { %>
         <% if (IsIgnoreType(property)) { continue; } %>
-        <% string alias = GetAlias(); %>
         <% string paramName = CleanParamName(property.VariableName); %>
 
         /// <summary>
@@ -258,7 +297,6 @@ namespace <%= String.IsNullOrEmpty(QueryNamespace)? BaseNamespace : QueryNamespa
         
         <% foreach(Association association in Entity.Associations) { %>
             <% if (association.AssociationType != AssociationType.ManyToOne && association.AssociationType != AssociationType.ManyToZeroOrOne) { continue; } %>
-            <% string alias = GetAlias(); %>
         /// <summary>
         /// Gets a query for <see cref="<%= Entity.Namespace %>.<%= Entity.Name %> by <%= association.Name %>'s primary key."/>.
         /// </summary>
@@ -266,7 +304,7 @@ namespace <%= String.IsNullOrEmpty(QueryNamespace)? BaseNamespace : QueryNamespa
         /// <param name="<%= CleanParamName(association.VariableName) %>"><%= association.Name %> to search for.</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
         <%= GeneratedCodeAttribute %>
-        public static IQueryable<<%= Entity.Namespace %>.<%= Entity.Name %>> <%= MethodPrefix %><%= association.Name %>(this IQueryable<<%= Entity.Namespace %>.<%= Entity.Name %>> queryable, <%= Entity.Namespace %>.<%= association.ForeignEntity.Name %> <%= association.VariableName %>)
+        public static IQueryable<<%= Entity.Namespace %>.<%= Entity.Name %>> <%= MethodPrefix %><%= association.Name %>(this IQueryable<<%= Entity.Namespace %>.<%= Entity.Name %>> queryable, <%= association.ForeignEntity.Namespace %>.<%= association.ForeignEntity.Name %> <%= association.VariableName %>)
         {
             return queryable.<%= MethodPrefix %><%= association.Name %>(ComparisonOperator.Equals, <%= association.VariableName %>);
         }
@@ -279,7 +317,7 @@ namespace <%= String.IsNullOrEmpty(QueryNamespace)? BaseNamespace : QueryNamespa
         /// <param name="<%= CleanParamName(association.VariableName) %>"><%= association.Name %> to search for.</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
         <%= GeneratedCodeAttribute %>
-        public static IQueryable<<%= Entity.Namespace %>.<%= Entity.Name %>> <%= MethodPrefix %><%= association.Name %>(this IQueryable<<%= Entity.Namespace %>.<%= Entity.Name %>> queryable, ComparisonOperator comparisonOperator, <%= Entity.Namespace %>.<%= association.ForeignEntity.Name %> <%= association.VariableName %>)
+        public static IQueryable<<%= Entity.Namespace %>.<%= Entity.Name %>> <%= MethodPrefix %><%= association.Name %>(this IQueryable<<%= Entity.Namespace %>.<%= Entity.Name %>> queryable, ComparisonOperator comparisonOperator, <%= association.ForeignEntity.Namespace %>.<%= association.ForeignEntity.Name %> <%= association.VariableName %>)
         {
             switch(comparisonOperator)
             {
@@ -393,6 +431,37 @@ namespace <%= String.IsNullOrEmpty(QueryNamespace)? BaseNamespace : QueryNamespa
                 args.Append(", ");
 
             args.AppendFormat("{0} {1}", property.SystemType, CleanParamName(property.VariableName));
+        }
+
+        return args.ToString();
+    }
+    
+    public string GetParametersPrimitives(IEnumerable<Association> associations)
+    {
+        StringBuilder args = new StringBuilder();
+        foreach(Association association in associations)
+        {
+            foreach(IProperty property in association.ForeignEntity.Key.Properties)
+            {
+                if (args.Length > 0)
+                    args.Append(", ");
+    
+                args.AppendFormat("{0} {1}", property.SystemType, CleanParamName(property.VariableName));
+            }
+        }
+
+        return args.ToString();
+    }
+    
+    public string GetParametersAssociations(IEnumerable<Association> associations)
+    {
+        StringBuilder args = new StringBuilder();
+        foreach(Association association in associations)
+        {
+            if (args.Length > 0)
+                args.Append(", ");
+
+            args.AppendFormat("{0}.{1} {2}", association.ForeignEntity.Namespace, association.Name, CleanParamName(association.VariableName));
         }
 
         return args.ToString();
