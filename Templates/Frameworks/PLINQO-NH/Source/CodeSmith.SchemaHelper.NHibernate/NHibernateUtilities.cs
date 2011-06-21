@@ -12,7 +12,7 @@ namespace CodeSmith.SchemaHelper.NHibernate
 {
     public static class NHibernateUtilities
     {
-        public static readonly string[] AssociationDefaultAttributes = new[] { "name", "table", "class", "inverse" };
+        public static readonly string[] AssociationDefaultAttributes = new[] { "name", "table", "class", "inverse", NotNull };
         private static Regex _nonCharRegex = new Regex(@"\W", RegexOptions.Compiled);
 
         private static MapCollection _toNHibernateTypeMap;
@@ -111,17 +111,22 @@ namespace CodeSmith.SchemaHelper.NHibernate
 
         private static void PrepAssociation(Association assocication)
         {
+            bool isNullable;
+
             switch (assocication.AssociationType)
             {
                 case AssociationType.ManyToOne:
                 case AssociationType.ManyToZeroOrOne:
+
+                    isNullable = assocication.Properties.All(ap => ap.Property.IsNullable);
+                    assocication.ExtendedProperties.Add(NotNull, !isNullable ? "true" : "false");
 
                     break;
 
                 case AssociationType.OneToMany:
                 case AssociationType.ZeroOrOneToMany:
 
-                    var isNullable = assocication.Properties.Any(ap => ap.Property.IsNullable);
+                    isNullable = assocication.Properties.Any(ap => ap.Property.IsNullable);
                     assocication.ExtendedProperties.Add(Cascade, isNullable ? "all" : "all-delete-orphan");
                     assocication.ExtendedProperties.Add(Lazy, "true");
 

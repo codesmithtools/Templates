@@ -29,9 +29,11 @@
     <class name="<%= SourceEntity.Name %>" table="<%= SourceEntity.GetSafeName() %>" <%= GetAttributes(SourceEntity) %>>
     <% // Primary Key %>
     <% List<Association> foriegnKeyAssociations = new List<Association>(); %>
-    <% if(SourceEntity.Key.IsComposite) { %>
+    <% if(SourceEntity.Key.IsComposite || IsViewCompositeKey()) { %>
         <composite-id>
-        <% IEnumerable<IProperty> keyProperties = SourceEntity.Key.Properties.Where(p => !IsAssociationKey(p)); %>
+        <% IEnumerable<IProperty> keyProperties = IsViewCompositeKey()
+            ? SourceEntity.Properties
+            : SourceEntity.Key.Properties.Where(p => !IsAssociationKey(p)); %>
         <% foreach(IProperty property in keyProperties) { %>
             <key-property name="<%= property.Name %>" column="<%= property.GetSafeName() %>" type="<%= property.ExtendedProperties[NHibernateUtilities.NHibernateType] %>" <%= GetAttributes(property) %>/> 
         <% } %>
@@ -59,7 +61,8 @@
     <% } %>
     <% // Properties %>
     <% foreach(IProperty property in SourceEntity.Properties) { %>
-        <% if(IsKey(property) || IsRowVersion(property)) { continue; } %>
+        <% if (IsViewCompositeKey()) { break; } %>
+        <% if (IsKey(property) || IsRowVersion(property)) { continue; } %>
         <property name="<%= property.Name %>" column="<%= property.GetSafeName() %>" type="<%= property.ExtendedProperties[NHibernateUtilities.NHibernateType] %>" not-null="<%= property.ExtendedProperties[NHibernateUtilities.NotNull] %>" <%= GetAttributes(property) %>/> 
     <% } %>
     <% // Associations %>
@@ -67,7 +70,7 @@
     <% foreach(Association association in associations) { %>
         <% // Many-To-One %>
         <% if (association.AssociationType == AssociationType.ManyToOne || association.AssociationType == AssociationType.ManyToZeroOrOne) { %>
-        <many-to-one name="<%= association.Name %>" class="<%= association.ForeignEntity.Name %>" <%= GetAttributes(association) %>>
+        <many-to-one name="<%= association.Name %>" class="<%= association.ForeignEntity.Name %>" not-null="<%= association.ExtendedProperties[NHibernateUtilities.NotNull] %>" <%= GetAttributes(association) %>>
             <% foreach(AssociationProperty associationProperty in association.Properties) { %>
             <column name="<%= associationProperty.Property.GetSafeName() %>" />
             <% } %>
@@ -181,5 +184,12 @@
         }
         
         return null;
+    }
+    
+    public bool IsViewCompositeKey()
+    {
+        return SourceEntity is ViewEntity
+            && SourceEntity.Key.Properties.Count == 0
+            && SourceEntity.Key.Associations.Count == 0;
     }
 </script>

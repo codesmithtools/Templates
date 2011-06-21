@@ -46,9 +46,9 @@ using System.Collections.Generic;
 using System.Linq;
 using CodeSmith.Data.Linq;
 using CodeSmith.Data.Linq.Dynamic;
+using <%= BaseNamespace %>;
 
-    <% string alias = GetAlias(); %>
-namespace <%= String.IsNullOrEmpty(QueryNamespace)? BaseNamespace : QueryNamespace %>
+namespace <%= String.IsNullOrEmpty(QueryNamespace)? Entity.Namespace : QueryNamespace %>
 {
     /// <summary>
     /// The query extension class for <%= Entity.Name %>.
@@ -57,6 +57,7 @@ namespace <%= String.IsNullOrEmpty(QueryNamespace)? BaseNamespace : QueryNamespa
     {
         #region Unique Results
         
+    <% string alias = GetAlias(); %>
     <% if (Entity.HasKey) { %>
         /// <summary>
         /// Gets an instance by the primary key.
