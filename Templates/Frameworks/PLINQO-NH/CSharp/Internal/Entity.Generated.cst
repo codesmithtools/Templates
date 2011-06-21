@@ -124,7 +124,7 @@ namespace <%= SourceEntity.Namespace %>
         
         <% } %>
         #endregion
-        <% if (SourceEntity.Key.IsComposite && SourceEntity.Key.Properties.Count > 0) { %>
+        <% if (SourceEntity.Key.IsComposite) { %>
         
         #region Composite Key Overrides
         
