@@ -122,6 +122,9 @@ Generating PLINQO for NHibernate Mapings...
     
     private void RenderFunction(CommandEntity command)
     {
+        if (NHibernateUtilities.IsIgnoredCommand(command))
+            return;
+        
         string fileName = command.ExtendedProperties[NHibernateUtilities.FileName] + NHibernateUtilities.MapExtension;
         string folder = GetFolder(MapsDirectory, NHibernateProvider.FunctionsSubFolder);
         string filePath = Path.Combine(folder, fileName);
