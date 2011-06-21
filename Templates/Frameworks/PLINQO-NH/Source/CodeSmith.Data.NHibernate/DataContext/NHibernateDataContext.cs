@@ -60,7 +60,7 @@ namespace CodeSmith.Data.NHibernate
 
         protected bool CompareConnectionName(ConnectionStringSettings connection, params string[] names)
         {
-            return names.Any(name => connection.Name.Contains(name.ToLower()));
+            return names.Any(name => connection.Name.ToLowerInvariant().Contains(name.ToLowerInvariant()));
         }
 
         protected ISessionFactory CreateSessionFactory(string databaseName, string assemblyName, string dialect, string connectionDriver)

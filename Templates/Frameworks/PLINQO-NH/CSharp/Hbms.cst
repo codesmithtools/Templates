@@ -12,7 +12,7 @@
     Description="The name of the Assembly that will contain the business entities." %>
 <%@ Property Category="2. Database" Name="IgnoreList" Type="CodeSmith.CustomProperties.StringCollection"
     Optional="True"
-    Description="List of regular expressions to ignore tables, views and commands when generating mapping." Default="sysdiagrams$, ^dbo.aspnet" %>
+    Description="List of regular expressions to ignore tables, views and commands when generating mapping." Default="sysdiagrams$, ^dbo.aspnet, ^dbo.vw_aspnet" %>
 <%@ Property Category="2. Database" Name="IncludeList" Type="CodeSmith.CustomProperties.StringCollection"
     Optional="True"
     Description="List of regular expressions to include tables and views when generating mapping." Default="" %> 
