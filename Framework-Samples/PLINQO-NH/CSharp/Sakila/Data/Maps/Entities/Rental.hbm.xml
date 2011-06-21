@@ -7,14 +7,14 @@
         <version name="LastUpdate" column="last_update" type="DateTime" generated="always" unsaved-value="null" />
         <property name="RentalDate" column="rental_date" type="DateTime" not-null="true" /> 
         <property name="ReturnDate" column="return_date" type="DateTime" not-null="false" /> 
-        <many-to-one name="Staff" class="Staff" >
-            <column name="staff_id" />
+        <many-to-one name="Customer" class="Customer" not-null="true" >
+            <column name="customer_id" />
         </many-to-one>
-        <many-to-one name="Inventory" class="Inventory" >
+        <many-to-one name="Inventory" class="Inventory" not-null="true" >
             <column name="inventory_id" />
         </many-to-one>
-        <many-to-one name="Customer" class="Customer" >
-            <column name="customer_id" />
+        <many-to-one name="Staff" class="Staff" not-null="true" >
+            <column name="staff_id" />
         </many-to-one>
         <bag name="PaymentList" inverse="true" cascade="all-delete-orphan" lazy="true" >
             <key>

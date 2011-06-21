@@ -10,10 +10,10 @@
         <property name="Email" column="email" type="String" not-null="false" length="150" /> 
         <property name="Active" column="active" type="String" not-null="true" /> 
         <property name="CreateDate" column="create_date" type="DateTime" not-null="true" /> 
-        <many-to-one name="Address" class="Address" >
+        <many-to-one name="Address" class="Address" not-null="true" >
             <column name="address_id" />
         </many-to-one>
-        <many-to-one name="Store" class="Store" >
+        <many-to-one name="Store" class="Store" not-null="true" >
             <column name="store_id" />
         </many-to-one>
         <bag name="PaymentList" inverse="true" cascade="all-delete-orphan" lazy="true" >

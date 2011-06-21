@@ -6,7 +6,7 @@
         </id>
         <version name="LastUpdate" column="last_update" type="DateTime" generated="always" unsaved-value="null" />
         <property name="CityMember" column="city" type="String" not-null="true" length="150" /> 
-        <many-to-one name="Country" class="Country" >
+        <many-to-one name="Country" class="Country" not-null="true" >
             <column name="country_id" />
         </many-to-one>
         <bag name="AddressList" inverse="true" cascade="all-delete-orphan" lazy="true" >

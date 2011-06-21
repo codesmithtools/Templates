@@ -132,20 +132,20 @@ namespace Sakila.Data.Entities
         #region Associations Mappings
         
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
-        private Staff _staff;
+        private Customer _customer;
         
         [System.Runtime.Serialization.DataMember(Order = 5, EmitDefaultValue = false)]
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
-        public virtual Staff Staff
+        public virtual Customer Customer
         {
-            get { return _staff; }
+            get { return _customer; }
             set
             {
-                OnStaffChanging(value, _staff);
-                SendPropertyChanging("Staff");
-                _staff = value;
-                SendPropertyChanged("Staff");
-                OnStaffChanged(value);
+                OnCustomerChanging(value, _customer);
+                SendPropertyChanging("Customer");
+                _customer = value;
+                SendPropertyChanged("Customer");
+                OnCustomerChanged(value);
             }
         }
         
@@ -168,20 +168,20 @@ namespace Sakila.Data.Entities
         }
         
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
-        private Customer _customer;
+        private Staff _staff;
         
         [System.Runtime.Serialization.DataMember(Order = 7, EmitDefaultValue = false)]
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
-        public virtual Customer Customer
+        public virtual Staff Staff
         {
-            get { return _customer; }
+            get { return _staff; }
             set
             {
-                OnCustomerChanging(value, _customer);
-                SendPropertyChanging("Customer");
-                _customer = value;
-                SendPropertyChanged("Customer");
-                OnCustomerChanged(value);
+                OnStaffChanging(value, _staff);
+                SendPropertyChanging("Staff");
+                _staff = value;
+                SendPropertyChanged("Staff");
+                OnStaffChanged(value);
             }
         }
         
@@ -228,17 +228,17 @@ namespace Sakila.Data.Entities
         partial void OnLastUpdateChanged(System.DateTime value);
         
         
-        partial void OnStaffChanging(Staff newValue, Staff oldValue);
+        partial void OnCustomerChanging(Customer newValue, Customer oldValue);
         
-        partial void OnStaffChanged(Staff value);
+        partial void OnCustomerChanged(Customer value);
         
         partial void OnInventoryChanging(Inventory newValue, Inventory oldValue);
         
         partial void OnInventoryChanged(Inventory value);
         
-        partial void OnCustomerChanging(Customer newValue, Customer oldValue);
+        partial void OnStaffChanging(Staff newValue, Staff oldValue);
         
-        partial void OnCustomerChanged(Customer value);
+        partial void OnStaffChanged(Staff value);
         
         partial void OnPaymentListChanging(IList<Payment> newValue, IList<Payment> oldValue);
         

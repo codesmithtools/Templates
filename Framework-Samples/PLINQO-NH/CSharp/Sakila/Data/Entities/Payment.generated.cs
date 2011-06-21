@@ -132,27 +132,9 @@ namespace Sakila.Data.Entities
         #region Associations Mappings
         
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
-        private Rental _rental;
-        
-        [System.Runtime.Serialization.DataMember(Order = 5, EmitDefaultValue = false)]
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
-        public virtual Rental Rental
-        {
-            get { return _rental; }
-            set
-            {
-                OnRentalChanging(value, _rental);
-                SendPropertyChanging("Rental");
-                _rental = value;
-                SendPropertyChanged("Rental");
-                OnRentalChanged(value);
-            }
-        }
-        
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         private Customer _customer;
         
-        [System.Runtime.Serialization.DataMember(Order = 6, EmitDefaultValue = false)]
+        [System.Runtime.Serialization.DataMember(Order = 5, EmitDefaultValue = false)]
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         public virtual Customer Customer
         {
@@ -164,6 +146,24 @@ namespace Sakila.Data.Entities
                 _customer = value;
                 SendPropertyChanged("Customer");
                 OnCustomerChanged(value);
+            }
+        }
+        
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        private Rental _rental;
+        
+        [System.Runtime.Serialization.DataMember(Order = 6, EmitDefaultValue = false)]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        public virtual Rental Rental
+        {
+            get { return _rental; }
+            set
+            {
+                OnRentalChanging(value, _rental);
+                SendPropertyChanging("Rental");
+                _rental = value;
+                SendPropertyChanged("Rental");
+                OnRentalChanged(value);
             }
         }
         
@@ -210,13 +210,13 @@ namespace Sakila.Data.Entities
         partial void OnLastUpdateChanged(System.DateTime value);
         
         
-        partial void OnRentalChanging(Rental newValue, Rental oldValue);
-        
-        partial void OnRentalChanged(Rental value);
-        
         partial void OnCustomerChanging(Customer newValue, Customer oldValue);
         
         partial void OnCustomerChanged(Customer value);
+        
+        partial void OnRentalChanging(Rental newValue, Rental oldValue);
+        
+        partial void OnRentalChanged(Rental value);
         
         partial void OnStaffChanging(Staff newValue, Staff oldValue);
         

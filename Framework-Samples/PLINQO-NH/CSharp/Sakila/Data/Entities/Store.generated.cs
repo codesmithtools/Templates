@@ -96,27 +96,9 @@ namespace Sakila.Data.Entities
         #region Associations Mappings
         
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
-        private Staff _staff;
-        
-        [System.Runtime.Serialization.DataMember(Order = 3, EmitDefaultValue = false)]
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
-        public virtual Staff Staff
-        {
-            get { return _staff; }
-            set
-            {
-                OnStaffChanging(value, _staff);
-                SendPropertyChanging("Staff");
-                _staff = value;
-                SendPropertyChanged("Staff");
-                OnStaffChanged(value);
-            }
-        }
-        
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         private Address _address;
         
-        [System.Runtime.Serialization.DataMember(Order = 4, EmitDefaultValue = false)]
+        [System.Runtime.Serialization.DataMember(Order = 3, EmitDefaultValue = false)]
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         public virtual Address Address
         {
@@ -128,6 +110,24 @@ namespace Sakila.Data.Entities
                 _address = value;
                 SendPropertyChanged("Address");
                 OnAddressChanged(value);
+            }
+        }
+        
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        private Staff _staff;
+        
+        [System.Runtime.Serialization.DataMember(Order = 4, EmitDefaultValue = false)]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        public virtual Staff Staff
+        {
+            get { return _staff; }
+            set
+            {
+                OnStaffChanging(value, _staff);
+                SendPropertyChanging("Staff");
+                _staff = value;
+                SendPropertyChanged("Staff");
+                OnStaffChanged(value);
             }
         }
         
@@ -202,13 +202,13 @@ namespace Sakila.Data.Entities
         partial void OnLastUpdateChanged(System.DateTime value);
         
         
-        partial void OnStaffChanging(Staff newValue, Staff oldValue);
-        
-        partial void OnStaffChanged(Staff value);
-        
         partial void OnAddressChanging(Address newValue, Address oldValue);
         
         partial void OnAddressChanged(Address value);
+        
+        partial void OnStaffChanging(Staff newValue, Staff oldValue);
+        
+        partial void OnStaffChanged(Staff value);
         
         partial void OnCustomerListChanging(IList<Customer> newValue, IList<Customer> oldValue);
         

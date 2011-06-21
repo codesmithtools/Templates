@@ -96,27 +96,9 @@ namespace Sakila.Data.Entities
         #region Associations Mappings
         
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
-        private Store _store;
-        
-        [System.Runtime.Serialization.DataMember(Order = 3, EmitDefaultValue = false)]
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
-        public virtual Store Store
-        {
-            get { return _store; }
-            set
-            {
-                OnStoreChanging(value, _store);
-                SendPropertyChanging("Store");
-                _store = value;
-                SendPropertyChanged("Store");
-                OnStoreChanged(value);
-            }
-        }
-        
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         private Film _film;
         
-        [System.Runtime.Serialization.DataMember(Order = 4, EmitDefaultValue = false)]
+        [System.Runtime.Serialization.DataMember(Order = 3, EmitDefaultValue = false)]
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         public virtual Film Film
         {
@@ -128,6 +110,24 @@ namespace Sakila.Data.Entities
                 _film = value;
                 SendPropertyChanged("Film");
                 OnFilmChanged(value);
+            }
+        }
+        
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        private Store _store;
+        
+        [System.Runtime.Serialization.DataMember(Order = 4, EmitDefaultValue = false)]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        public virtual Store Store
+        {
+            get { return _store; }
+            set
+            {
+                OnStoreChanging(value, _store);
+                SendPropertyChanging("Store");
+                _store = value;
+                SendPropertyChanged("Store");
+                OnStoreChanged(value);
             }
         }
         
@@ -166,13 +166,13 @@ namespace Sakila.Data.Entities
         partial void OnLastUpdateChanged(System.DateTime value);
         
         
-        partial void OnStoreChanging(Store newValue, Store oldValue);
-        
-        partial void OnStoreChanged(Store value);
-        
         partial void OnFilmChanging(Film newValue, Film oldValue);
         
         partial void OnFilmChanged(Film value);
+        
+        partial void OnStoreChanging(Store newValue, Store oldValue);
+        
+        partial void OnStoreChanged(Store value);
         
         partial void OnRentalListChanging(IList<Rental> newValue, IList<Rental> oldValue);
         

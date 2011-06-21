@@ -14,10 +14,10 @@
         <property name="ReplacementCost" column="replacement_cost" type="Decimal" not-null="true" /> 
         <property name="Rating" column="rating" type="String" not-null="false" length="15" /> 
         <property name="SpecialFeatures" column="special_features" type="String" not-null="false" length="162" /> 
-        <many-to-one name="Language1" class="Language" >
+        <many-to-one name="Language1" class="Language" not-null="true" >
             <column name="language_id" />
         </many-to-one>
-        <many-to-one name="Language2" class="Language" >
+        <many-to-one name="Language2" class="Language" not-null="false" >
             <column name="original_language_id" />
         </many-to-one>
         <bag name="ActorList" table="film_actor" inverse="false" cascade="all" lazy="true" >

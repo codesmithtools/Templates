@@ -5,6 +5,7 @@ using System.Text;
 using NUnit.Framework;
 using Sakila.Data;
 using CodeSmith.Data.Linq;
+using Sakila.Data.Entities;
 
 namespace Sakila
 {

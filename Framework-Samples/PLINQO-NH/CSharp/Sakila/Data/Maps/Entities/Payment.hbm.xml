@@ -7,13 +7,13 @@
         <version name="LastUpdate" column="last_update" type="DateTime" generated="always" unsaved-value="null" />
         <property name="Amount" column="amount" type="Decimal" not-null="true" /> 
         <property name="PaymentDate" column="payment_date" type="DateTime" not-null="true" /> 
-        <many-to-one name="Rental" class="Rental" >
-            <column name="rental_id" />
-        </many-to-one>
-        <many-to-one name="Customer" class="Customer" >
+        <many-to-one name="Customer" class="Customer" not-null="true" >
             <column name="customer_id" />
         </many-to-one>
-        <many-to-one name="Staff" class="Staff" >
+        <many-to-one name="Rental" class="Rental" not-null="false" >
+            <column name="rental_id" />
+        </many-to-one>
+        <many-to-one name="Staff" class="Staff" not-null="true" >
             <column name="staff_id" />
         </many-to-one>
     </class>

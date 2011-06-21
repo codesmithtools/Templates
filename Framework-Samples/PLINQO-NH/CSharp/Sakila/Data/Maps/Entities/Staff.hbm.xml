@@ -12,11 +12,11 @@
         <property name="Active" column="active" type="String" not-null="true" /> 
         <property name="Username" column="username" type="String" not-null="true" length="48" /> 
         <property name="Password" column="password" type="String" not-null="false" length="120" /> 
-        <many-to-one name="Store" class="Store" >
-            <column name="store_id" />
-        </many-to-one>
-        <many-to-one name="Address" class="Address" >
+        <many-to-one name="Address" class="Address" not-null="true" >
             <column name="address_id" />
+        </many-to-one>
+        <many-to-one name="Store" class="Store" not-null="true" >
+            <column name="store_id" />
         </many-to-one>
         <bag name="PaymentList" inverse="true" cascade="all-delete-orphan" lazy="true" >
             <key>

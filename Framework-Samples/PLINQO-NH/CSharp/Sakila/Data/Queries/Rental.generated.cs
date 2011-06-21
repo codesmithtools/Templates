@@ -11,8 +11,9 @@ using System.Collections.Generic;
 using System.Linq;
 using CodeSmith.Data.Linq;
 using CodeSmith.Data.Linq.Dynamic;
+using Sakila.Data;
 
-namespace Sakila.Data
+namespace Sakila.Data.Entities
 {
     /// <summary>
     /// The query extension class for Rental.
@@ -346,34 +347,34 @@ namespace Sakila.Data
         #region By Association
         
         /// <summary>
-        /// Gets a query for <see cref="Sakila.Data.Entities.Rental by Staff's primary key."/>.
+        /// Gets a query for <see cref="Sakila.Data.Entities.Rental by Customer's primary key."/>.
         /// </summary>
         /// <param name="queryable">Query to append where clause.</param>
-        /// <param name="staff">Staff to search for.</param>
+        /// <param name="customer">Customer to search for.</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
-        public static IQueryable<Sakila.Data.Entities.Rental> ByStaff(this IQueryable<Sakila.Data.Entities.Rental> queryable, Sakila.Data.Entities.Staff staff)
+        public static IQueryable<Sakila.Data.Entities.Rental> ByCustomer(this IQueryable<Sakila.Data.Entities.Rental> queryable, Sakila.Data.Entities.Customer customer)
         {
-            return queryable.ByStaff(ComparisonOperator.Equals, staff);
+            return queryable.ByCustomer(ComparisonOperator.Equals, customer);
         }
         
         /// <summary>
-        /// Gets a query for <see cref="Sakila.Data.Entities.Rental by Staff's primary key."/>.
+        /// Gets a query for <see cref="Sakila.Data.Entities.Rental by Customer's primary key."/>.
         /// </summary>
         /// <param name="queryable">Query to append where clause.</param>
         /// <param name="comparisonOperator">The comparison operator.</param>
-        /// <param name="staff">Staff to search for.</param>
+        /// <param name="customer">Customer to search for.</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
-        public static IQueryable<Sakila.Data.Entities.Rental> ByStaff(this IQueryable<Sakila.Data.Entities.Rental> queryable, ComparisonOperator comparisonOperator, Sakila.Data.Entities.Staff staff)
+        public static IQueryable<Sakila.Data.Entities.Rental> ByCustomer(this IQueryable<Sakila.Data.Entities.Rental> queryable, ComparisonOperator comparisonOperator, Sakila.Data.Entities.Customer customer)
         {
             switch(comparisonOperator)
             {
                 case ComparisonOperator.Equals:
-                    return queryable.Where(r => r.Staff == staff);
+                    return queryable.Where(r => r.Customer == customer);
                 
                 case ComparisonOperator.NotEquals:
-                    return queryable.Where(r => r.Staff != staff);
+                    return queryable.Where(r => r.Customer != customer);
                     
                 default:
                     throw new ArgumentException("Parameter 'comparisonOperator' must be ComparisonOperator.Equals or ComparisonOperator.NotEquals to support Association type.", "comparisonOperator");
@@ -381,34 +382,34 @@ namespace Sakila.Data
         }
             
         /// <summary>
-        /// Gets a query for <see cref="Sakila.Data.Entities.Rental by Staff's primary key."/>.
+        /// Gets a query for <see cref="Sakila.Data.Entities.Rental by Customer's primary key."/>.
         /// </summary>
         /// <param name="queryable">Query to append where clause.</param>
-        /// <param name="staffId">StaffId to search for.</param>
+        /// <param name="customerId">CustomerId to search for.</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
-        public static IQueryable<Sakila.Data.Entities.Rental> ByStaff(this IQueryable<Sakila.Data.Entities.Rental> queryable, System.Byte staffId)
+        public static IQueryable<Sakila.Data.Entities.Rental> ByCustomer(this IQueryable<Sakila.Data.Entities.Rental> queryable, System.Int16 customerId)
         {
-            return queryable.ByStaff(ComparisonOperator.Equals, staffId);
+            return queryable.ByCustomer(ComparisonOperator.Equals, customerId);
         }
         
         /// <summary>
-        /// Gets a query for <see cref="Sakila.Data.Entities.Rental by Staff's primary key."/>.
+        /// Gets a query for <see cref="Sakila.Data.Entities.Rental by Customer's primary key."/>.
         /// </summary>
         /// <param name="queryable">Query to append where clause.</param>
         /// <param name="comparisonOperator">The comparison operator.</param>
-        /// <param name="staffId">StaffId to search for.</param>
+        /// <param name="customerId">CustomerId to search for.</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
-        public static IQueryable<Sakila.Data.Entities.Rental> ByStaff(this IQueryable<Sakila.Data.Entities.Rental> queryable, ComparisonOperator comparisonOperator, System.Byte staffId)
+        public static IQueryable<Sakila.Data.Entities.Rental> ByCustomer(this IQueryable<Sakila.Data.Entities.Rental> queryable, ComparisonOperator comparisonOperator, System.Int16 customerId)
         {
             switch(comparisonOperator)
             {
                 case ComparisonOperator.Equals:
-                    return queryable.Where(r => r.Staff.StaffId == staffId);
+                    return queryable.Where(r => r.Customer.CustomerId == customerId);
                 
                 case ComparisonOperator.NotEquals:
-                    return queryable.Where(r => r.Staff.StaffId != staffId);
+                    return queryable.Where(r => r.Customer.CustomerId != customerId);
                     
                 default:
                     throw new ArgumentException("Parameter 'comparisonOperator' must be ComparisonOperator.Equals or ComparisonOperator.NotEquals to support Association type.", "comparisonOperator");
@@ -486,34 +487,34 @@ namespace Sakila.Data
         }
             
         /// <summary>
-        /// Gets a query for <see cref="Sakila.Data.Entities.Rental by Customer's primary key."/>.
+        /// Gets a query for <see cref="Sakila.Data.Entities.Rental by Staff's primary key."/>.
         /// </summary>
         /// <param name="queryable">Query to append where clause.</param>
-        /// <param name="customer">Customer to search for.</param>
+        /// <param name="staff">Staff to search for.</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
-        public static IQueryable<Sakila.Data.Entities.Rental> ByCustomer(this IQueryable<Sakila.Data.Entities.Rental> queryable, Sakila.Data.Entities.Customer customer)
+        public static IQueryable<Sakila.Data.Entities.Rental> ByStaff(this IQueryable<Sakila.Data.Entities.Rental> queryable, Sakila.Data.Entities.Staff staff)
         {
-            return queryable.ByCustomer(ComparisonOperator.Equals, customer);
+            return queryable.ByStaff(ComparisonOperator.Equals, staff);
         }
         
         /// <summary>
-        /// Gets a query for <see cref="Sakila.Data.Entities.Rental by Customer's primary key."/>.
+        /// Gets a query for <see cref="Sakila.Data.Entities.Rental by Staff's primary key."/>.
         /// </summary>
         /// <param name="queryable">Query to append where clause.</param>
         /// <param name="comparisonOperator">The comparison operator.</param>
-        /// <param name="customer">Customer to search for.</param>
+        /// <param name="staff">Staff to search for.</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
-        public static IQueryable<Sakila.Data.Entities.Rental> ByCustomer(this IQueryable<Sakila.Data.Entities.Rental> queryable, ComparisonOperator comparisonOperator, Sakila.Data.Entities.Customer customer)
+        public static IQueryable<Sakila.Data.Entities.Rental> ByStaff(this IQueryable<Sakila.Data.Entities.Rental> queryable, ComparisonOperator comparisonOperator, Sakila.Data.Entities.Staff staff)
         {
             switch(comparisonOperator)
             {
                 case ComparisonOperator.Equals:
-                    return queryable.Where(r => r.Customer == customer);
+                    return queryable.Where(r => r.Staff == staff);
                 
                 case ComparisonOperator.NotEquals:
-                    return queryable.Where(r => r.Customer != customer);
+                    return queryable.Where(r => r.Staff != staff);
                     
                 default:
                     throw new ArgumentException("Parameter 'comparisonOperator' must be ComparisonOperator.Equals or ComparisonOperator.NotEquals to support Association type.", "comparisonOperator");
@@ -521,34 +522,34 @@ namespace Sakila.Data
         }
             
         /// <summary>
-        /// Gets a query for <see cref="Sakila.Data.Entities.Rental by Customer's primary key."/>.
+        /// Gets a query for <see cref="Sakila.Data.Entities.Rental by Staff's primary key."/>.
         /// </summary>
         /// <param name="queryable">Query to append where clause.</param>
-        /// <param name="customerId">CustomerId to search for.</param>
+        /// <param name="staffId">StaffId to search for.</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
-        public static IQueryable<Sakila.Data.Entities.Rental> ByCustomer(this IQueryable<Sakila.Data.Entities.Rental> queryable, System.Int16 customerId)
+        public static IQueryable<Sakila.Data.Entities.Rental> ByStaff(this IQueryable<Sakila.Data.Entities.Rental> queryable, System.Byte staffId)
         {
-            return queryable.ByCustomer(ComparisonOperator.Equals, customerId);
+            return queryable.ByStaff(ComparisonOperator.Equals, staffId);
         }
         
         /// <summary>
-        /// Gets a query for <see cref="Sakila.Data.Entities.Rental by Customer's primary key."/>.
+        /// Gets a query for <see cref="Sakila.Data.Entities.Rental by Staff's primary key."/>.
         /// </summary>
         /// <param name="queryable">Query to append where clause.</param>
         /// <param name="comparisonOperator">The comparison operator.</param>
-        /// <param name="customerId">CustomerId to search for.</param>
+        /// <param name="staffId">StaffId to search for.</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
-        public static IQueryable<Sakila.Data.Entities.Rental> ByCustomer(this IQueryable<Sakila.Data.Entities.Rental> queryable, ComparisonOperator comparisonOperator, System.Int16 customerId)
+        public static IQueryable<Sakila.Data.Entities.Rental> ByStaff(this IQueryable<Sakila.Data.Entities.Rental> queryable, ComparisonOperator comparisonOperator, System.Byte staffId)
         {
             switch(comparisonOperator)
             {
                 case ComparisonOperator.Equals:
-                    return queryable.Where(r => r.Customer.CustomerId == customerId);
+                    return queryable.Where(r => r.Staff.StaffId == staffId);
                 
                 case ComparisonOperator.NotEquals:
-                    return queryable.Where(r => r.Customer.CustomerId != customerId);
+                    return queryable.Where(r => r.Staff.StaffId != staffId);
                     
                 default:
                     throw new ArgumentException("Parameter 'comparisonOperator' must be ComparisonOperator.Equals or ComparisonOperator.NotEquals to support Association type.", "comparisonOperator");

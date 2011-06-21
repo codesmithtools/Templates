@@ -222,27 +222,9 @@ namespace Sakila.Data.Entities
         #region Associations Mappings
         
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
-        private Store _store;
-        
-        [System.Runtime.Serialization.DataMember(Order = 10, EmitDefaultValue = false)]
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
-        public virtual Store Store
-        {
-            get { return _store; }
-            set
-            {
-                OnStoreChanging(value, _store);
-                SendPropertyChanging("Store");
-                _store = value;
-                SendPropertyChanged("Store");
-                OnStoreChanged(value);
-            }
-        }
-        
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         private Address _address;
         
-        [System.Runtime.Serialization.DataMember(Order = 11, EmitDefaultValue = false)]
+        [System.Runtime.Serialization.DataMember(Order = 10, EmitDefaultValue = false)]
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         public virtual Address Address
         {
@@ -254,6 +236,24 @@ namespace Sakila.Data.Entities
                 _address = value;
                 SendPropertyChanged("Address");
                 OnAddressChanged(value);
+            }
+        }
+        
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        private Store _store;
+        
+        [System.Runtime.Serialization.DataMember(Order = 11, EmitDefaultValue = false)]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        public virtual Store Store
+        {
+            get { return _store; }
+            set
+            {
+                OnStoreChanging(value, _store);
+                SendPropertyChanging("Store");
+                _store = value;
+                SendPropertyChanged("Store");
+                OnStoreChanged(value);
             }
         }
         
@@ -356,13 +356,13 @@ namespace Sakila.Data.Entities
         partial void OnLastUpdateChanged(System.DateTime value);
         
         
-        partial void OnStoreChanging(Store newValue, Store oldValue);
-        
-        partial void OnStoreChanged(Store value);
-        
         partial void OnAddressChanging(Address newValue, Address oldValue);
         
         partial void OnAddressChanged(Address value);
+        
+        partial void OnStoreChanging(Store newValue, Store oldValue);
+        
+        partial void OnStoreChanged(Store value);
         
         partial void OnPaymentListChanging(IList<Payment> newValue, IList<Payment> oldValue);
         

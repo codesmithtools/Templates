@@ -1,7 +1,7 @@
 ﻿using System;
 using Sakila.Data;
 
-namespace Sakila.Data
+namespace Sakila.Data.Entities
 {
     public static partial class CountryExtensions
     {

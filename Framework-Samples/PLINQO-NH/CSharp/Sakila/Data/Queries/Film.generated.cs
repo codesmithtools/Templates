@@ -11,8 +11,9 @@ using System.Collections.Generic;
 using System.Linq;
 using CodeSmith.Data.Linq;
 using CodeSmith.Data.Linq.Dynamic;
+using Sakila.Data;
 
-namespace Sakila.Data
+namespace Sakila.Data.Entities
 {
     /// <summary>
     /// The query extension class for Film.
