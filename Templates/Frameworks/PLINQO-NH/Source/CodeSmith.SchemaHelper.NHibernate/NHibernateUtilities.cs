@@ -201,25 +201,28 @@ namespace CodeSmith.SchemaHelper.NHibernate
         private static string GetAssociationKey(Association association)
         {
             IEnumerable<string> columns;
+            string type;
 
             switch(association.AssociationType)
             {
                 case AssociationType.ManyToOne:
                 case AssociationType.ManyToZeroOrOne:
                     columns = association.Properties.Select(p => p.Property.GetSafeName());
+                    type = "ManyTo";
                     break;
 
                 case AssociationType.ManyToMany:
                 case AssociationType.OneToMany:
                 case AssociationType.ZeroOrOneToMany:
                     columns = association.Properties.Select(p => p.ForeignProperty.GetSafeName());
+                    type = "ToMany";
                     break;
 
                 default:
                     return String.Empty;
             }
 
-            return columns.Aggregate(String.Empty, (current, column) => String.Concat(current, column, "|"));
+            return columns.Aggregate(String.Empty, (current, column) => String.Concat(current, column, "|")) + type;
         }
 
         public static bool IsIgnoredCommand(CommandEntity command)

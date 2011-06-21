@@ -131,7 +131,8 @@ namespace CodeSmith.SchemaHelper.NHibernate
             if (associationEntity == null)
                 return null;
 
-            var association = new Association(associationName.Value, type, this, associationEntity, false);
+            var isParentEntity = type == AssociationType.ManyToMany || type == AssociationType.OneToMany;
+            var association = new Association(associationName.Value, type, this, associationEntity, isParentEntity);
             association.Name = associationName.Value;
             
             switch(type)
