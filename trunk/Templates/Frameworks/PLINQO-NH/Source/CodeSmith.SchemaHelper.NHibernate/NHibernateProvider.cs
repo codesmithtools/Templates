@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Xml;
 using System.Xml.Linq;
@@ -40,10 +41,15 @@ namespace CodeSmith.SchemaHelper.NHibernate
                             var doc = XDocument.Load(reader);
                             var entity = new NHibernateEntity(doc, Path.GetFileName(file));
                             EntityStore.Instance.EntityCollection.Add(entity.Name, entity);
+                            
                         }
                         catch (Exception ex)
                         {
-                            throw new ApplicationException("Unable to load file: " + file, ex);
+                            Trace.WriteLine("Unable to load file: " + file);
+                            Trace.WriteLine(ex.ToString());
+
+                            Debug.WriteLine("Unable to load file " + file);
+                            Debug.WriteLine(ex.ToString());
                         }
 
             if (_viewPaths != null)
@@ -58,7 +64,11 @@ namespace CodeSmith.SchemaHelper.NHibernate
                         }
                         catch (Exception ex)
                         {
-                            throw new ApplicationException("Unable to load file: " + file, ex);
+                            Trace.WriteLine("Unable to load file " + file);
+                            Trace.WriteLine(ex.ToString());
+
+                            Debug.WriteLine("Unable to load file " + file);
+                            Debug.WriteLine(ex.ToString());
                         }
 
             if (_functionPaths != null)
@@ -73,7 +83,11 @@ namespace CodeSmith.SchemaHelper.NHibernate
                         }
                         catch (Exception ex)
                         {
-                            throw new ApplicationException("Unable to load file: " + file, ex);
+                            Trace.WriteLine("Unable to load file: " + file);
+                            Trace.WriteLine(ex.ToString());
+
+                            Debug.WriteLine("Unable to load file " + file);
+                            Debug.WriteLine(ex.ToString());
                         }
         }
 
