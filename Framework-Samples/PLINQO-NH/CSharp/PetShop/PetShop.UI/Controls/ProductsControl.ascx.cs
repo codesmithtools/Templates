@@ -3,6 +3,7 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.Linq;
 using Petshop.Data;
+using Petshop.Data.Entities;
 
 namespace PetShop.UI.Controls
 {

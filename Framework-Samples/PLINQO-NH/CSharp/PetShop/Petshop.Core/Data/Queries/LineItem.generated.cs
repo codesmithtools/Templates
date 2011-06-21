@@ -11,8 +11,9 @@ using System.Collections.Generic;
 using System.Linq;
 using CodeSmith.Data.Linq;
 using CodeSmith.Data.Linq.Dynamic;
+using Petshop.Data;
 
-namespace Petshop.Data
+namespace Petshop.Data.Entities
 {
     /// <summary>
     /// The query extension class for LineItem.

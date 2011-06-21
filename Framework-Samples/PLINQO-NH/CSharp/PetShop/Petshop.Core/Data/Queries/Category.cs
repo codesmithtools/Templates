@@ -1,7 +1,7 @@
 ﻿using System;
 using Petshop.Data;
 
-namespace Petshop.Data
+namespace Petshop.Data.Entities
 {
     public static partial class CategoryExtensions
     {

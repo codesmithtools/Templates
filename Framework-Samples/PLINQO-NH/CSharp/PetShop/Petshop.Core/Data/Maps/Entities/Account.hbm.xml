@@ -14,7 +14,7 @@
         <property name="Zip" column="[Zip]" type="AnsiString" not-null="true" length="20" /> 
         <property name="Country" column="[Country]" type="AnsiString" not-null="true" length="20" /> 
         <property name="Phone" column="[Phone]" type="AnsiString" not-null="false" length="20" /> 
-        <many-to-one name="Profile" class="Profile" >
+        <many-to-one name="Profile" class="Profile" not-null="true" >
             <column name="[UniqueID]" />
         </many-to-one>
     </class>

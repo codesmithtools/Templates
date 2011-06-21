@@ -7,7 +7,7 @@
         <property name="Name" column="[Name]" type="AnsiString" not-null="false" length="80" /> 
         <property name="Descn" column="[Descn]" type="AnsiString" not-null="false" length="255" /> 
         <property name="Image" column="[Image]" type="AnsiString" not-null="false" length="80" /> 
-        <many-to-one name="Category" class="Category" >
+        <many-to-one name="Category" class="Category" not-null="true" >
             <column name="[CategoryId]" />
         </many-to-one>
         <bag name="ItemList" inverse="true" cascade="all-delete-orphan" lazy="true" >

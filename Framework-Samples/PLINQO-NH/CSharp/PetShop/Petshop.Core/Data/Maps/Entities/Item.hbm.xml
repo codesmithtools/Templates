@@ -9,10 +9,10 @@
         <property name="Status" column="[Status]" type="AnsiString" not-null="false" length="2" /> 
         <property name="Name" column="[Name]" type="AnsiString" not-null="false" length="80" /> 
         <property name="Image" column="[Image]" type="AnsiString" not-null="false" length="80" /> 
-        <many-to-one name="Product" class="Product" >
+        <many-to-one name="Product" class="Product" not-null="true" >
             <column name="[ProductId]" />
         </many-to-one>
-        <many-to-one name="Supplier2" class="Supplier" >
+        <many-to-one name="Supplier2" class="Supplier" not-null="false" >
             <column name="[Supplier]" />
         </many-to-one>
     </class>

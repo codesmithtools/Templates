@@ -3,7 +3,7 @@ using System.Linq;
 using Petshop.Data;
 using Petshop.Data.Entities;
 
-namespace Petshop.Data
+namespace Petshop.Data.Entities
 {
     public static partial class CartExtensions
     {

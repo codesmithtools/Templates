@@ -4,6 +4,7 @@ using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Caching;
 using Petshop.Data;
+using Petshop.Data.Entities;
 
 namespace PetShop.Core.Controls
 {

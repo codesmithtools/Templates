@@ -12,7 +12,7 @@
         <property name="ProductId" column="[ProductId]" type="AnsiString" not-null="true" length="10" /> 
         <property name="IsShoppingCart" column="[IsShoppingCart]" type="Boolean" not-null="true" /> 
         <property name="Quantity" column="[Quantity]" type="Int32" not-null="true" /> 
-        <many-to-one name="Profile" class="Profile" >
+        <many-to-one name="Profile" class="Profile" not-null="true" >
             <column name="[UniqueID]" />
         </many-to-one>
     </class>

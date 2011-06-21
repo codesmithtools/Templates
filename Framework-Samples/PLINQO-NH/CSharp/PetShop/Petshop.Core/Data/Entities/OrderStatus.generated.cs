@@ -142,16 +142,14 @@ namespace Petshop.Data.Entities
             if (entity == null)
                 return false;
 
-            return 
-                LineNum == entity.LineNum;
+            return LineNum == entity.LineNum && Order == entity.Order;
         }
 
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         public override int GetHashCode()
         {
-            return (
-                LineNum
-                ).GetHashCode();
+            var hashString = String.Concat(LineNum, "|", Order.GetHashCode());
+            return hashString.GetHashCode();
         }
         
         #endregion

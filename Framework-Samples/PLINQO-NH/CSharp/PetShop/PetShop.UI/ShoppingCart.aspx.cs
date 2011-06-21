@@ -2,6 +2,7 @@
 using System.Web.UI;
 using PetShop.Core.Utility;
 using Petshop.Data;
+using Petshop.Data.Entities;
 
 namespace PetShop.UI
 {
