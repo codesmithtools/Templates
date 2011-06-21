@@ -4,13 +4,16 @@ using System.Data;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text.RegularExpressions;
 using CodeSmith.Engine;
+using CodeSmith.SchemaHelper.Util;
 
 namespace CodeSmith.SchemaHelper.NHibernate
 {
     public static class NHibernateUtilities
     {
         public static readonly string[] AssociationDefaultAttributes = new[] { "name", "table", "class", "inverse" };
+        private static Regex _nonCharRegex = new Regex(@"\W", RegexOptions.Compiled);
 
         private static MapCollection _toNHibernateTypeMap;
         private static MapCollection _fromNHibernateTypeMap;
@@ -34,9 +37,7 @@ namespace CodeSmith.SchemaHelper.NHibernate
 
             foreach (var sourceEntity in sourceManager.Entities)
             {
-                var safeTable = sourceEntity.GetSafeName();
-
-                var destinationEntity = destinationManager.Entities.FirstOrDefault(e => e.GetSafeName() == safeTable);
+                var destinationEntity = destinationManager.Entities.FirstOrDefault(e => IsMatchingEntity(e, sourceEntity));
                 if (destinationEntity == null)
                     continue;
 
@@ -44,12 +45,32 @@ namespace CodeSmith.SchemaHelper.NHibernate
             }
         }
 
+        private static bool IsMatchingEntity(IEntity destination, IEntity source)
+        {
+            string destinationName, sourceName;
+
+            if (destination is CommandEntity)
+            {
+                destinationName = NamingConventions.CleanName(destination.EntityKeyName, false);
+                sourceName = source.EntityKeyName;
+            }
+            else
+            {
+                destinationName = destination.GetSafeName();
+                sourceName = source.GetSafeName();
+            }
+
+            return destinationName == sourceName;
+        }
+
         private static void PrepDestination(IEntity entity, string defaultNamespace)
         {
             entity.Namespace = defaultNamespace;
 
-            entity.ExtendedProperties.Add(FileName, entity is CommandEntity ? entity.EntityKeyName : entity.Name);
             entity.ExtendedProperties.Add(Lazy, "true");
+            entity.ExtendedProperties.Add(FileName, entity is CommandEntity
+                ? NamingConventions.CleanName(entity.EntityKeyName, false)
+                : entity.Name);
 
             foreach (var property in entity.Key.Properties)
             {
@@ -131,7 +152,6 @@ namespace CodeSmith.SchemaHelper.NHibernate
 
             Merge(destinationEntity.Properties, sourceEntity.Properties);
             Merge(destinationEntity.Key.Properties, sourceEntity.Key.Properties);
-
             Merge(destinationEntity.Associations, sourceEntity.Associations);
         }
 
@@ -195,6 +215,11 @@ namespace CodeSmith.SchemaHelper.NHibernate
             }
 
             return columns.Aggregate(String.Empty, (current, column) => String.Concat(current, column, "|"));
+        }
+
+        public static bool IsIgnoredCommand(CommandEntity command)
+        {
+            return command.Properties.Any(p => _nonCharRegex.IsMatch(p.KeyName));
         }
 
         public static string ToNHibernateType(IProperty property)

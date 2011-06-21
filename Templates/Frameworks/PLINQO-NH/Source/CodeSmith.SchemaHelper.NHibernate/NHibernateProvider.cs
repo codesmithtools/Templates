@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Xml;
 using System.Xml.Linq;
 
@@ -34,31 +35,46 @@ namespace CodeSmith.SchemaHelper.NHibernate
                 foreach (var file in _entityPaths)
                     using (var stream = new FileStream(file, FileMode.Open))
                     using (var reader = XmlReader.Create(stream))
-                    {
-                        var doc = XDocument.Load(reader);
-                        var entity = new NHibernateEntity(doc, Path.GetFileName(file));
-                        EntityStore.Instance.EntityCollection.Add(entity.Name, entity);
-                    }
+                        try
+                        {
+                            var doc = XDocument.Load(reader);
+                            var entity = new NHibernateEntity(doc, Path.GetFileName(file));
+                            EntityStore.Instance.EntityCollection.Add(entity.Name, entity);
+                        }
+                        catch (Exception ex)
+                        {
+                            throw new ApplicationException("Unable to load file: " + file, ex);
+                        }
 
             if (_viewPaths != null)
                 foreach (var file in _viewPaths)
                     using (var stream = new FileStream(file, FileMode.Open))
                     using (var reader = XmlReader.Create(stream))
-                    {
-                        var doc = XDocument.Load(reader);
-                        var entity = new NHibernateEntity(doc, Path.GetFileName(file), true);
-                        EntityStore.Instance.EntityCollection.Add(entity.Name, entity);
-                    }
+                        try
+                        {
+                            var doc = XDocument.Load(reader);
+                            var entity = new NHibernateEntity(doc, Path.GetFileName(file), true);
+                            EntityStore.Instance.EntityCollection.Add(entity.Name, entity);
+                        }
+                        catch (Exception ex)
+                        {
+                            throw new ApplicationException("Unable to load file: " + file, ex);
+                        }
 
             if (_functionPaths != null)
                 foreach (var file in _functionPaths)
                     using (var stream = new FileStream(file, FileMode.Open))
                     using (var reader = XmlReader.Create(stream))
-                    {
-                        var doc = XDocument.Load(reader);
-                        var entity = new NHibernateCommandEntity(doc, Path.GetFileName(file));
-                        EntityStore.Instance.EntityCollection.Add(entity.Name, entity);
-                    }
+                        try
+                        {
+                            var doc = XDocument.Load(reader);
+                            var entity = new NHibernateCommandEntity(doc, Path.GetFileName(file));
+                            EntityStore.Instance.EntityCollection.Add(entity.Name, entity);
+                        }
+                        catch (Exception ex)
+                        {
+                            throw new ApplicationException("Unable to load file: " + file, ex);
+                        }
         }
 
         public string Name
