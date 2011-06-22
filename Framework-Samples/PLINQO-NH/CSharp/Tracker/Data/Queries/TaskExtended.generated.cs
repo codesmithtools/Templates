@@ -11,8 +11,9 @@ using System.Collections.Generic;
 using System.Linq;
 using CodeSmith.Data.Linq;
 using CodeSmith.Data.Linq.Dynamic;
+using Tracker.Data;
 
-namespace Tracker.Data
+namespace Tracker.Data.Entities
 {
     /// <summary>
     /// The query extension class for TaskExtended.

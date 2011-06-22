@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" namespace="Tracker.Data.Entities" assembly="Tracker">
+    <class name="Self" table="[dbo].[Self]" >
+        <id name="Id" column="[Id]" type="Int32" >
+            <generator class="native" />
+        </id>
+        <property name="Name" column="[Name]" type="String" not-null="true" length="50" /> 
+        <many-to-one name="MySelf" class="Self" not-null="false" >
+            <column name="[MySelfId]" />
+        </many-to-one>
+        <bag name="MySelfList" inverse="true" cascade="all-delete-orphan" lazy="true" >
+            <key>
+                <column name="[MySelfId]" />
+            </key>
+            <one-to-many class="Self" />
+        </bag>
+    </class>
+</hibernate-mapping>
+

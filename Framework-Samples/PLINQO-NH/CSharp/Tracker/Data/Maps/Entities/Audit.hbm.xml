@@ -10,10 +10,10 @@
         <property name="Username" column="[Username]" type="String" not-null="true" length="50" /> 
         <property name="CreatedDate" column="[CreatedDate]" type="DateTime" not-null="true" /> 
         <property name="Myxml" column="[myxml]" type="CodeSmith.Data.NHibernate.XmlType, CodeSmith.Data.NHibernate" not-null="false" /> 
-        <many-to-one name="Task" class="Task" >
+        <many-to-one name="Task" class="Task" not-null="false" >
             <column name="[TaskId]" />
         </many-to-one>
-        <many-to-one name="User" class="User" >
+        <many-to-one name="User" class="User" not-null="false" >
             <column name="[UserId]" />
         </many-to-one>
     </class>

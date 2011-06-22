@@ -82,6 +82,10 @@
     <Compile Include="Data\Entities\Role.generated.cs">
       <DependentUpon>Role.cs</DependentUpon>
     </Compile>
+    <Compile Include="Data\Entities\Self.cs" />
+    <Compile Include="Data\Entities\Self.generated.cs">
+      <DependentUpon>Self.cs</DependentUpon>
+    </Compile>
     <Compile Include="Data\Entities\Status.cs" />
     <Compile Include="Data\Entities\Status.generated.cs">
       <DependentUpon>Status.cs</DependentUpon>
@@ -126,6 +130,10 @@
     <Compile Include="Data\Queries\Role.generated.cs">
       <DependentUpon>Role.cs</DependentUpon>
     </Compile>
+    <Compile Include="Data\Queries\Self.cs" />
+    <Compile Include="Data\Queries\Self.generated.cs">
+      <DependentUpon>Self.cs</DependentUpon>
+    </Compile>
     <Compile Include="Data\Queries\Status.cs" />
     <Compile Include="Data\Queries\Status.generated.cs">
       <DependentUpon>Status.cs</DependentUpon>
@@ -160,6 +168,20 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Data\Maps\Views\TaskDetail.hbm.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Data\Maps\Functions\GetUsersWithRoles.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Data\Maps\Functions\RolesForUser.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
     <EmbeddedResource Include="Data\Maps\Entities\Audit.hbm.xml" />
   </ItemGroup>
   <ItemGroup>
@@ -172,6 +194,9 @@
     <EmbeddedResource Include="Data\Maps\Entities\Role.hbm.xml" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Data\Maps\Entities\Self.hbm.xml" />
+  </ItemGroup>
+  <ItemGroup>
     <EmbeddedResource Include="Data\Maps\Entities\Status.hbm.xml" />
   </ItemGroup>
   <ItemGroup>
@@ -181,23 +206,7 @@
     <EmbeddedResource Include="Data\Maps\Entities\TaskExtended.hbm.xml" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Data\Maps\Entities\User.hbm.xml">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Data\Maps\Views\TaskDetail.hbm.xml" />
-  </ItemGroup>
-  <ItemGroup />
-  <ItemGroup>
-    <EmbeddedResource Include="Data\Maps\Functions\GetUsersWithRoles.hbm.xml">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Data\Maps\Functions\RolesForUser.hbm.xml">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
+    <EmbeddedResource Include="Data\Maps\Entities\User.hbm.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

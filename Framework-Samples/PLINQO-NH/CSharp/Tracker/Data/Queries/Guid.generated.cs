@@ -11,8 +11,9 @@ using System.Collections.Generic;
 using System.Linq;
 using CodeSmith.Data.Linq;
 using CodeSmith.Data.Linq.Dynamic;
+using Tracker.Data;
 
-namespace Tracker.Data
+namespace Tracker.Data.Entities
 {
     /// <summary>
     /// The query extension class for Guid.
@@ -26,11 +27,11 @@ namespace Tracker.Data
         /// </summary>
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         public static Tracker.Data.Entities.Guid GetByKey(this IQueryable<Tracker.Data.Entities.Guid> queryable
-            , System.Guid identification
+            , System.Guid id
             )
         {
             return queryable
-                .Where(g => g.Id == identification)
+                .Where(g => g.Id == id)
                 .FirstOrDefault();
         }
         
@@ -43,23 +44,23 @@ namespace Tracker.Data
         /// Gets a query for <see cref="Tracker.Data.Entities.Guid.Id"/>.
         /// </summary>
         /// <param name="queryable">Query to append where clause.</param>
-        /// <param name="identification">Id to search for.</param>
+        /// <param name="id">Id to search for.</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
-        public static IQueryable<Tracker.Data.Entities.Guid> ById(this IQueryable<Tracker.Data.Entities.Guid> queryable, System.Guid identification)
+        public static IQueryable<Tracker.Data.Entities.Guid> ById(this IQueryable<Tracker.Data.Entities.Guid> queryable, System.Guid id)
         {
-            return queryable.Where(g => g.Id == identification);
+            return queryable.Where(g => g.Id == id);
         }
 
         /// <summary>
         /// Gets a query for <see cref="Tracker.Data.Entities.Guid.Id"/>.
         /// </summary>
         /// <param name="queryable">Query to append where clause.</param>
-        /// <param name="identification">Id to search for. This is on the right side of the operator.</param>
+        /// <param name="id">Id to search for. This is on the right side of the operator.</param>
         /// <param name="comparisonOperator">The comparison operator.</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
-        public static IQueryable<Tracker.Data.Entities.Guid> ById(this IQueryable<Tracker.Data.Entities.Guid> queryable, ComparisonOperator comparisonOperator, System.Guid identification)
+        public static IQueryable<Tracker.Data.Entities.Guid> ById(this IQueryable<Tracker.Data.Entities.Guid> queryable, ComparisonOperator comparisonOperator, System.Guid id)
         {
             switch (comparisonOperator)
             {
@@ -69,9 +70,9 @@ namespace Tracker.Data
                 case ComparisonOperator.LessThanOrEquals:
                     throw new ArgumentException("Parameter 'comparisonOperator' must be ComparisonOperator.Equals or ComparisonOperator.NotEquals to support System.Guid type.", "comparisonOperator");
                 case ComparisonOperator.NotEquals:
-                    return queryable.Where(g => g.Id != identification);
+                    return queryable.Where(g => g.Id != id);
                 default:
-                    return queryable.Where(g => g.Id == identification);
+                    return queryable.Where(g => g.Id == id);
             }
         }
 
@@ -79,21 +80,21 @@ namespace Tracker.Data
         /// Gets a query for <see cref="Tracker.Data.Entities.Guid.Id"/>.
         /// </summary>
         /// <param name="queryable">Query to append where clause.</param>
-        /// <param name="identification">Id to search for.</param>
+        /// <param name="id">Id to search for.</param>
         /// <param name="additionalValues">Additional values to search for.</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
-        public static IQueryable<Tracker.Data.Entities.Guid> ById(this IQueryable<Tracker.Data.Entities.Guid> queryable, System.Guid identification, params System.Guid[] additionalValues)
+        public static IQueryable<Tracker.Data.Entities.Guid> ById(this IQueryable<Tracker.Data.Entities.Guid> queryable, System.Guid id, params System.Guid[] additionalValues)
         {
-            var identificationList = new List<System.Guid> { identification };
+            var idList = new List<System.Guid> { id };
 
             if (additionalValues != null)
-                identificationList.AddRange(additionalValues);
+                idList.AddRange(additionalValues);
 
-            if (identificationList.Count == 1)
-                return queryable.ById(identificationList[0]);
+            if (idList.Count == 1)
+                return queryable.ById(idList[0]);
 
-            return queryable.ById(identificationList);
+            return queryable.ById(idList);
         }
 
         /// <summary>

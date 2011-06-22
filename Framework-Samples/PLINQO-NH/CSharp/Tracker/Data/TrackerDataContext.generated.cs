@@ -116,6 +116,20 @@ namespace Tracker.Data
         }
         
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        private ITable<Tracker.Data.Entities.Self> _self;
+        
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        public ITable<Tracker.Data.Entities.Self> Self
+        {
+            get
+            {
+                if (_self == null)
+                    _self = new Table<Tracker.Data.Entities.Self>(this);
+                return _self;
+            }
+        }
+        
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         private ITable<Tracker.Data.Entities.Status> _status;
         
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]

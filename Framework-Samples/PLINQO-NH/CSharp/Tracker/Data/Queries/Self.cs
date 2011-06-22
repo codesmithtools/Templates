@@ -3,7 +3,7 @@ using Tracker.Data;
 
 namespace Tracker.Data.Entities
 {
-    public static partial class AuditExtensions
+    public static partial class SelfExtensions
     {
         // Place custom query extensions here.
 

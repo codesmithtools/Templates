@@ -416,14 +416,54 @@ namespace Tracker
         [Test]
         public void Fetch()
         {
+            User user1, user2;
             using (var db = new TrackerDataContext())
             {
-                var user1 = db.User
+                user1 = db.User
+                    .Skip(1)
                     .FirstOrDefault();
 
-                var user2 = db.User
+                user2 = db.User
                     .FetchMany(u => u.TaskAssignedList)
                     .FirstOrDefault();
+
+                db.User.Detach(user1);
+                db.User.Detach(user2);
+            }
+
+            Assert.AreEqual(0, user1.TaskAssignedList.Count);
+            Assert.AreEqual(1, user2.TaskAssignedList.Count);
+        }
+
+        [Test]
+        public void Self()
+        {
+            int parentId;
+
+            using (var db = new TrackerDataContext())
+            {
+                var parent = new Self {Name = "Parent"};
+                db.Self.InsertOnSubmit(parent);
+                db.SubmitChanges();
+
+                parentId = parent.Id;
+
+                var child = new Self {Name = "Child", MySelf = parent};
+                db.Self.InsertOnSubmit(child);
+                db.SubmitChanges();
+            }
+
+            using (var db = new TrackerDataContext())
+            {
+                var child = db.Self
+                    .ByName("Child")
+                    .FirstOrDefault();
+
+                Assert.AreEqual(parentId, child.MySelf.Id);
+
+                db.Self.DeleteOnSubmit(child);
+                db.Self.DeleteOnSubmit(child.MySelf);
+                db.SubmitChanges();
             }
         }
     }

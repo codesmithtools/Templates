@@ -19,7 +19,7 @@ namespace Tracker.Data.Entities
     [System.Runtime.Serialization.DataContract(IsReference = true)]
     [System.ComponentModel.DataAnnotations.ScaffoldTable(true)]
     [System.Diagnostics.DebuggerDisplay("Id: {Id}")]
-    public partial class Status : EntityBase
+    public partial class Self : EntityBase
     {
         #region Static Constructor
         
@@ -27,7 +27,7 @@ namespace Tracker.Data.Entities
         /// Initializes the <see cref="Account"/> class.
         /// </summary>
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
-        static Status()
+        static Self()
         {
             AddSharedRules();
         }
@@ -40,7 +40,7 @@ namespace Tracker.Data.Entities
         /// </summary>
         [System.Diagnostics.DebuggerNonUserCode]
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
-        public Status()
+        public Self()
         {
             Initialize();
         }
@@ -91,115 +91,43 @@ namespace Tracker.Data.Entities
             }
         }
         
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
-        private System.String _description;
-        
-        [System.Runtime.Serialization.DataMember(Order = 3)]
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
-        public virtual System.String Description
-        {
-            get { return _description; }
-            set
-            {
-                OnDescriptionChanging(value, _description);
-                SendPropertyChanging("Description");
-                _description = value;
-                SendPropertyChanged("Description");
-                OnDescriptionChanged(value);
-            }
-        }
-        
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
-        private System.Int32 _order;
-        
-        [System.Runtime.Serialization.DataMember(Order = 4)]
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
-        public virtual System.Int32 Order
-        {
-            get { return _order; }
-            set
-            {
-                OnOrderChanging(value, _order);
-                SendPropertyChanging("Order");
-                _order = value;
-                SendPropertyChanged("Order");
-                OnOrderChanged(value);
-            }
-        }
-        
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
-        private System.DateTime _createdDate;
-        
-        [System.Runtime.Serialization.DataMember(Order = 5)]
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
-        public virtual System.DateTime CreatedDate
-        {
-            get { return _createdDate; }
-            set
-            {
-                OnCreatedDateChanging(value, _createdDate);
-                SendPropertyChanging("CreatedDate");
-                _createdDate = value;
-                SendPropertyChanged("CreatedDate");
-                OnCreatedDateChanged(value);
-            }
-        }
-        
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
-        private System.DateTime _modifiedDate;
-        
-        [System.Runtime.Serialization.DataMember(Order = 6)]
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
-        public virtual System.DateTime ModifiedDate
-        {
-            get { return _modifiedDate; }
-            set
-            {
-                OnModifiedDateChanging(value, _modifiedDate);
-                SendPropertyChanging("ModifiedDate");
-                _modifiedDate = value;
-                SendPropertyChanged("ModifiedDate");
-                OnModifiedDateChanged(value);
-            }
-        }
-        
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
-        private System.Byte[] _rowVersion;
-        
-        [System.Runtime.Serialization.DataMember(Order = 7)]
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
-        public virtual System.Byte[] RowVersion
-        {
-            get { return _rowVersion; }
-            set
-            {
-                OnRowVersionChanging(value, _rowVersion);
-                SendPropertyChanging("RowVersion");
-                _rowVersion = value;
-                SendPropertyChanged("RowVersion");
-                OnRowVersionChanged(value);
-            }
-        }
-        
         #endregion
         
         #region Associations Mappings
         
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
-        private IList<Task> _taskList;
+        private Self _mySelf;
         
-        [System.Runtime.Serialization.DataMember(Order = 8, EmitDefaultValue = false)]
+        [System.Runtime.Serialization.DataMember(Order = 3, EmitDefaultValue = false)]
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
-        public virtual IList<Task> TaskList
+        public virtual Self MySelf
         {
-            get { return _taskList; }
+            get { return _mySelf; }
             set
             {
-                OnTaskListChanging(value, _taskList);
-                SendPropertyChanging("TaskList");
-                _taskList = value;
-                SendPropertyChanged("TaskList");
-                OnTaskListChanged(value);
+                OnMySelfChanging(value, _mySelf);
+                SendPropertyChanging("MySelf");
+                _mySelf = value;
+                SendPropertyChanged("MySelf");
+                OnMySelfChanged(value);
+            }
+        }
+        
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        private IList<Self> _mySelfList;
+        
+        [System.Runtime.Serialization.DataMember(Order = 4, EmitDefaultValue = false)]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        public virtual IList<Self> MySelfList
+        {
+            get { return _mySelfList; }
+            set
+            {
+                OnMySelfListChanging(value, _mySelfList);
+                SendPropertyChanging("MySelfList");
+                _mySelfList = value;
+                SendPropertyChanged("MySelfList");
+                OnMySelfListChanged(value);
             }
         }
         
@@ -219,39 +147,23 @@ namespace Tracker.Data.Entities
         
         partial void OnNameChanged(System.String value);
         
-        partial void OnDescriptionChanging(System.String newValue, System.String oldValue);
         
-        partial void OnDescriptionChanged(System.String value);
+        partial void OnMySelfChanging(Self newValue, Self oldValue);
         
-        partial void OnOrderChanging(System.Int32 newValue, System.Int32 oldValue);
+        partial void OnMySelfChanged(Self value);
         
-        partial void OnOrderChanged(System.Int32 value);
+        partial void OnMySelfListChanging(IList<Self> newValue, IList<Self> oldValue);
         
-        partial void OnCreatedDateChanging(System.DateTime newValue, System.DateTime oldValue);
-        
-        partial void OnCreatedDateChanged(System.DateTime value);
-        
-        partial void OnModifiedDateChanging(System.DateTime newValue, System.DateTime oldValue);
-        
-        partial void OnModifiedDateChanged(System.DateTime value);
-        
-        partial void OnRowVersionChanging(System.Byte[] newValue, System.Byte[] oldValue);
-        
-        partial void OnRowVersionChanged(System.Byte[] value);
-        
-        
-        partial void OnTaskListChanging(IList<Task> newValue, IList<Task> oldValue);
-        
-        partial void OnTaskListChanged(IList<Task> value);
+        partial void OnMySelfListChanged(IList<Self> value);
         
         #endregion
         
         #region Clone
         
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
-        public virtual Status Clone()
+        public virtual Self Clone()
         {
-            return (Status)((ICloneable)this).Clone();
+            return (Self)((ICloneable)this).Clone();
         }
         
         #endregion
@@ -264,14 +176,14 @@ namespace Tracker.Data.Entities
         /// <param name="xml">The XML string representing a <see cref="Account"/> instance.</param>
         /// <returns>An instance of <see cref="Account"/> that is deserialized from the XML string.</returns>
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
-        public static Status FromXml(string xml)
+        public static Self FromXml(string xml)
         {
-            var deserializer = new System.Runtime.Serialization.DataContractSerializer(typeof(Status));
+            var deserializer = new System.Runtime.Serialization.DataContractSerializer(typeof(Self));
 
             using (var sr = new System.IO.StringReader(xml))
             using (var reader = System.Xml.XmlReader.Create(sr))
             {
-                return deserializer.ReadObject(reader) as Status;
+                return deserializer.ReadObject(reader) as Self;
             }
         }
 
@@ -281,14 +193,14 @@ namespace Tracker.Data.Entities
         /// <param name="buffer">The byte array representing a <see cref="Account"/> instance.</param>
         /// <returns>An instance of <see cref="Account"/> that is deserialized from the byte array.</returns>
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
-        public static Status FromBinary(byte[] buffer)
+        public static Self FromBinary(byte[] buffer)
         {
-            var deserializer = new System.Runtime.Serialization.DataContractSerializer(typeof(Status));
+            var deserializer = new System.Runtime.Serialization.DataContractSerializer(typeof(Self));
 
             using (var ms = new System.IO.MemoryStream(buffer))
             using (var reader = System.Xml.XmlDictionaryReader.CreateBinaryReader(ms, System.Xml.XmlDictionaryReaderQuotas.Max))
             {
-                return deserializer.ReadObject(reader) as Status;
+                return deserializer.ReadObject(reader) as Self;
             }
         }
         

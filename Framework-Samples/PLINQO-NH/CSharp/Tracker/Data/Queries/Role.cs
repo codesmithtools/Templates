@@ -1,7 +1,7 @@
 ﻿using System;
 using Tracker.Data;
 
-namespace Tracker.Data
+namespace Tracker.Data.Entities
 {
     public static partial class RoleExtensions
     {
