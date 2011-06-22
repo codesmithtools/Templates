@@ -233,6 +233,7 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <EmbeddedResource Include="Data\Maps\Entities\Account.hbm.xml" />
   </ItemGroup>
@@ -246,9 +247,7 @@
     <EmbeddedResource Include="Data\Maps\Entities\Inventory.hbm.xml" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Data\Maps\Entities\Item.hbm.xml">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
+    <EmbeddedResource Include="Data\Maps\Entities\Item.hbm.xml" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Data\Maps\Entities\LineItem.hbm.xml" />
@@ -257,9 +256,7 @@
     <EmbeddedResource Include="Data\Maps\Entities\Order.hbm.xml" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Data\Maps\Entities\OrderStatus.hbm.xml">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
+    <EmbeddedResource Include="Data\Maps\Entities\OrderStatus.hbm.xml" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Data\Maps\Entities\Product.hbm.xml" />
@@ -270,7 +267,6 @@
   <ItemGroup>
     <EmbeddedResource Include="Data\Maps\Entities\Supplier.hbm.xml" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -96,16 +96,16 @@ namespace Petshop.Data.Entities
         
         [System.Runtime.Serialization.DataMember(Order = 3)]
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
-        public virtual System.String Descn
+        public virtual System.String Description
         {
             get { return _description; }
             set
             {
-                OnDescnChanging(value, _description);
-                SendPropertyChanging("Descn");
+                OnDescriptionChanging(value, _description);
+                SendPropertyChanging("Description");
                 _description = value;
-                SendPropertyChanged("Descn");
-                OnDescnChanged(value);
+                SendPropertyChanged("Description");
+                OnDescriptionChanged(value);
             }
         }
         
@@ -183,9 +183,9 @@ namespace Petshop.Data.Entities
         
         partial void OnNameChanged(System.String value);
         
-        partial void OnDescnChanging(System.String newValue, System.String oldValue);
+        partial void OnDescriptionChanging(System.String newValue, System.String oldValue);
         
-        partial void OnDescnChanged(System.String value);
+        partial void OnDescriptionChanged(System.String value);
         
         partial void OnImageChanging(System.String newValue, System.String oldValue);
         

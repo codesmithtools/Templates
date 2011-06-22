@@ -202,29 +202,29 @@ namespace Petshop.Data.Entities
         }
 
         /// <summary>
-        /// Gets a query for <see cref="Petshop.Data.Entities.Product.Descn"/>.
+        /// Gets a query for <see cref="Petshop.Data.Entities.Product.Description"/>.
         /// </summary>
         /// <param name="queryable">Query to append where clause.</param>
-        /// <param name="description">Descn to search for.</param>
+        /// <param name="description">Description to search for.</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
-        public static IQueryable<Petshop.Data.Entities.Product> ByDescn(this IQueryable<Petshop.Data.Entities.Product> queryable, System.String description)
+        public static IQueryable<Petshop.Data.Entities.Product> ByDescription(this IQueryable<Petshop.Data.Entities.Product> queryable, System.String description)
         {
             // support nulls
             return description == null 
-                ? queryable.Where(p => p.Descn == null) 
-                : queryable.Where(p => p.Descn == description);
+                ? queryable.Where(p => p.Description == null) 
+                : queryable.Where(p => p.Description == description);
         }
 
         /// <summary>
-        /// Gets a query for <see cref="Petshop.Data.Entities.Product.Descn"/>.
+        /// Gets a query for <see cref="Petshop.Data.Entities.Product.Description"/>.
         /// </summary>
         /// <param name="queryable">Query to append where clause.</param>
-        /// <param name="description">Descn to search for.</param>
+        /// <param name="description">Description to search for.</param>
         /// <param name="containmentOperator">The containment operator.</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
-        public static IQueryable<Petshop.Data.Entities.Product> ByDescn(this IQueryable<Petshop.Data.Entities.Product> queryable, ContainmentOperator containmentOperator, System.String description)
+        public static IQueryable<Petshop.Data.Entities.Product> ByDescription(this IQueryable<Petshop.Data.Entities.Product> queryable, ContainmentOperator containmentOperator, System.String description)
         {
             if (description == null && containmentOperator != ContainmentOperator.Equals && containmentOperator != ContainmentOperator.NotEquals)
                 throw new ArgumentNullException("description", "Parameter 'description' cannot be null with the specified ContainmentOperator.  Parameter 'containmentOperator' must be ContainmentOperator.Equals or ContainmentOperator.NotEquals to support null.");
@@ -232,33 +232,33 @@ namespace Petshop.Data.Entities
             switch (containmentOperator)
             {
                 case ContainmentOperator.Contains:
-                    return queryable.Where(p => p.Descn.Contains(description));
+                    return queryable.Where(p => p.Description.Contains(description));
                 case ContainmentOperator.StartsWith:
-                    return queryable.Where(p => p.Descn.StartsWith(description));
+                    return queryable.Where(p => p.Description.StartsWith(description));
                 case ContainmentOperator.EndsWith:
-                    return queryable.Where(p => p.Descn.EndsWith(description));
+                    return queryable.Where(p => p.Description.EndsWith(description));
                 case ContainmentOperator.NotContains:
-                    return queryable.Where(p => p.Descn.Contains(description) == false);
+                    return queryable.Where(p => p.Description.Contains(description) == false);
                 case ContainmentOperator.NotEquals:
                     return description == null 
-                        ? queryable.Where(p => p.Descn != null) 
-                        : queryable.Where(p => p.Descn != description);
+                        ? queryable.Where(p => p.Description != null) 
+                        : queryable.Where(p => p.Description != description);
                 default:
                     return description == null 
-                        ? queryable.Where(p => p.Descn == null) 
-                        : queryable.Where(p => p.Descn == description);
+                        ? queryable.Where(p => p.Description == null) 
+                        : queryable.Where(p => p.Description == description);
             }
         }
 
         /// <summary>
-        /// Gets a query for <see cref="Petshop.Data.Entities.Product.Descn"/>.
+        /// Gets a query for <see cref="Petshop.Data.Entities.Product.Description"/>.
         /// </summary>
         /// <param name="queryable">Query to append where clause.</param>
-        /// <param name="description">Descn to search for.</param>
+        /// <param name="description">Description to search for.</param>
         /// <param name="additionalValues">Additional values to search for.</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
-        public static IQueryable<Petshop.Data.Entities.Product> ByDescn(this IQueryable<Petshop.Data.Entities.Product> queryable, System.String description, params System.String[] additionalValues)
+        public static IQueryable<Petshop.Data.Entities.Product> ByDescription(this IQueryable<Petshop.Data.Entities.Product> queryable, System.String description, params System.String[] additionalValues)
         {
             var descriptionList = new List<System.String> { description };
 
@@ -268,22 +268,22 @@ namespace Petshop.Data.Entities
                 descriptionList.Add(null);
 
             if (descriptionList.Count == 1)
-                return queryable.ByDescn(descriptionList[0]);
+                return queryable.ByDescription(descriptionList[0]);
 
-            return queryable.ByDescn(descriptionList);
+            return queryable.ByDescription(descriptionList);
         }
 
         /// <summary>
-        /// Gets a query for <see cref="Petshop.Data.Entities.Product.Descn"/>.
+        /// Gets a query for <see cref="Petshop.Data.Entities.Product.Description"/>.
         /// </summary>
         /// <param name="queryable">Query to append where clause.</param>
         /// <param name="values">The values to search for..</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
-        public static IQueryable<Petshop.Data.Entities.Product> ByDescn(this IQueryable<Petshop.Data.Entities.Product> queryable, IEnumerable<System.String> values)
+        public static IQueryable<Petshop.Data.Entities.Product> ByDescription(this IQueryable<Petshop.Data.Entities.Product> queryable, IEnumerable<System.String> values)
         {
             // creating dynmic expression to support nulls
-            var expression = DynamicExpression.BuildExpression<Petshop.Data.Entities.Product, bool>("Descn", values);
+            var expression = DynamicExpression.BuildExpression<Petshop.Data.Entities.Product, bool>("Description", values);
             return queryable.Where(expression);
         }
 

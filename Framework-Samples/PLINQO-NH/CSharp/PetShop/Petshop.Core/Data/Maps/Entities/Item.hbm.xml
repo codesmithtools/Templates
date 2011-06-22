@@ -12,7 +12,7 @@
         <many-to-one name="Product" class="Product" not-null="true" >
             <column name="[ProductId]" />
         </many-to-one>
-        <many-to-one name="Supplier2" class="Supplier" not-null="false" >
+        <many-to-one name="Supplier" class="Supplier" not-null="false" >
             <column name="[Supplier]" />
         </many-to-one>
     </class>

@@ -9,7 +9,7 @@ namespace Petshop.Data.Entities
     {
         public static IQueryable<Product> Search(this IQueryable<Product> queryable, string keywords)
         {
-            return queryable.Where(p => p.Name.ToLower().Contains(keywords.ToLower()) || p.Descn.ToLower().Contains(keywords.ToLower()));
+            return queryable.Where(p => p.Name.ToLower().Contains(keywords.ToLower()) || p.Description.ToLower().Contains(keywords.ToLower()));
         }
 
         #region Query

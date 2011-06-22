@@ -113,7 +113,7 @@ namespace PetShop.Test
             var category = new Category();
             category.CategoryId = ID;
             category.Name = "";
-            category.Descn = "";
+            category.Description = "";
 
             try
             {
@@ -164,13 +164,13 @@ namespace PetShop.Test
             using (var context = new PetshopDataContext())
             {
                 context.Category.Attach(category);
-                category.Descn = "This is a .";
+                category.Description = "This is a .";
                 context.SubmitChanges();
             }
 
             using (var context = new PetshopDataContext())
             {
-                Assert.IsTrue(context.Category.GetByKey(ID).Descn == "This is a .");
+                Assert.IsTrue(context.Category.GetByKey(ID).Description == "This is a .");
             }
 
             Console.WriteLine("Time: {0} ms", watch.ElapsedMilliseconds);
@@ -318,13 +318,13 @@ namespace PetShop.Test
             using (var context = new PetshopDataContext())
             {
                 context.Product.Attach(product);
-                product.Descn = "This is a ";
+                product.Description = "This is a ";
                 context.SubmitChanges();
             }
 
             using (var context = new PetshopDataContext())
             {
-                Assert.IsTrue(context.Product.GetByKey(ID).Descn == "This is a ");
+                Assert.IsTrue(context.Product.GetByKey(ID).Description == "This is a ");
             }
 
             Console.WriteLine("Time: {0} ms", watch.ElapsedMilliseconds);
