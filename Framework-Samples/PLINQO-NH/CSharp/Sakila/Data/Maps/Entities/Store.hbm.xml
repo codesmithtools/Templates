@@ -8,7 +8,7 @@
         <many-to-one name="Address" class="Address" not-null="true" >
             <column name="address_id" />
         </many-to-one>
-        <many-to-one name="Staff" class="Staff" not-null="true" >
+        <many-to-one name="ManagerStaff" class="Staff" not-null="true" >
             <column name="manager_staff_id" />
         </many-to-one>
         <bag name="CustomerList" inverse="true" cascade="all-delete-orphan" lazy="true" >

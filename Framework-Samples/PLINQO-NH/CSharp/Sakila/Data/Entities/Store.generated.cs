@@ -114,20 +114,20 @@ namespace Sakila.Data.Entities
         }
         
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
-        private Staff _staff;
+        private Staff _managerStaff;
         
         [System.Runtime.Serialization.DataMember(Order = 4, EmitDefaultValue = false)]
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
-        public virtual Staff Staff
+        public virtual Staff ManagerStaff
         {
-            get { return _staff; }
+            get { return _managerStaff; }
             set
             {
-                OnStaffChanging(value, _staff);
-                SendPropertyChanging("Staff");
-                _staff = value;
-                SendPropertyChanged("Staff");
-                OnStaffChanged(value);
+                OnManagerStaffChanging(value, _managerStaff);
+                SendPropertyChanging("ManagerStaff");
+                _managerStaff = value;
+                SendPropertyChanged("ManagerStaff");
+                OnManagerStaffChanged(value);
             }
         }
         
@@ -206,9 +206,9 @@ namespace Sakila.Data.Entities
         
         partial void OnAddressChanged(Address value);
         
-        partial void OnStaffChanging(Staff newValue, Staff oldValue);
+        partial void OnManagerStaffChanging(Staff newValue, Staff oldValue);
         
-        partial void OnStaffChanged(Staff value);
+        partial void OnManagerStaffChanged(Staff value);
         
         partial void OnCustomerListChanging(IList<Customer> newValue, IList<Customer> oldValue);
         

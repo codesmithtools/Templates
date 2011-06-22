@@ -258,38 +258,38 @@ namespace Sakila.Data.Entities
         #region Associations Mappings
         
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
-        private Language _language1;
+        private Language _language;
         
         [System.Runtime.Serialization.DataMember(Order = 12, EmitDefaultValue = false)]
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
-        public virtual Language Language1
+        public virtual Language Language
         {
-            get { return _language1; }
+            get { return _language; }
             set
             {
-                OnLanguage1Changing(value, _language1);
-                SendPropertyChanging("Language1");
-                _language1 = value;
-                SendPropertyChanged("Language1");
-                OnLanguage1Changed(value);
+                OnLanguageChanging(value, _language);
+                SendPropertyChanging("Language");
+                _language = value;
+                SendPropertyChanged("Language");
+                OnLanguageChanged(value);
             }
         }
         
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
-        private Language _language2;
+        private Language _originalLanguage;
         
         [System.Runtime.Serialization.DataMember(Order = 13, EmitDefaultValue = false)]
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
-        public virtual Language Language2
+        public virtual Language OriginalLanguage
         {
-            get { return _language2; }
+            get { return _originalLanguage; }
             set
             {
-                OnLanguage2Changing(value, _language2);
-                SendPropertyChanging("Language2");
-                _language2 = value;
-                SendPropertyChanged("Language2");
-                OnLanguage2Changed(value);
+                OnOriginalLanguageChanging(value, _originalLanguage);
+                SendPropertyChanging("OriginalLanguage");
+                _originalLanguage = value;
+                SendPropertyChanged("OriginalLanguage");
+                OnOriginalLanguageChanged(value);
             }
         }
         
@@ -400,13 +400,13 @@ namespace Sakila.Data.Entities
         partial void OnLastUpdateChanged(System.DateTime value);
         
         
-        partial void OnLanguage1Changing(Language newValue, Language oldValue);
+        partial void OnLanguageChanging(Language newValue, Language oldValue);
         
-        partial void OnLanguage1Changed(Language value);
+        partial void OnLanguageChanged(Language value);
         
-        partial void OnLanguage2Changing(Language newValue, Language oldValue);
+        partial void OnOriginalLanguageChanging(Language newValue, Language oldValue);
         
-        partial void OnLanguage2Changed(Language value);
+        partial void OnOriginalLanguageChanged(Language value);
         
         partial void OnActorListChanging(IList<Actor> newValue, IList<Actor> oldValue);
         

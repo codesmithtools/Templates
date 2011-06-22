@@ -189,13 +189,12 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Data\Maps\Entities\Actor.hbm.xml">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="App.config" />
     <None Include="Data\PLINQO.csp" />
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="Data\Maps\Entities\Actor.hbm.xml" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Data\Maps\Entities\Address.hbm.xml" />

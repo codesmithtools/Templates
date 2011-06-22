@@ -910,34 +910,34 @@ namespace Sakila.Data.Entities
         #region By Association
         
         /// <summary>
-        /// Gets a query for <see cref="Sakila.Data.Entities.Film by Language1's primary key."/>.
+        /// Gets a query for <see cref="Sakila.Data.Entities.Film by Language's primary key."/>.
         /// </summary>
         /// <param name="queryable">Query to append where clause.</param>
-        /// <param name="language1">Language1 to search for.</param>
+        /// <param name="language">Language to search for.</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
-        public static IQueryable<Sakila.Data.Entities.Film> ByLanguage1(this IQueryable<Sakila.Data.Entities.Film> queryable, Sakila.Data.Entities.Language language1)
+        public static IQueryable<Sakila.Data.Entities.Film> ByLanguage(this IQueryable<Sakila.Data.Entities.Film> queryable, Sakila.Data.Entities.Language language)
         {
-            return queryable.ByLanguage1(ComparisonOperator.Equals, language1);
+            return queryable.ByLanguage(ComparisonOperator.Equals, language);
         }
         
         /// <summary>
-        /// Gets a query for <see cref="Sakila.Data.Entities.Film by Language1's primary key."/>.
+        /// Gets a query for <see cref="Sakila.Data.Entities.Film by Language's primary key."/>.
         /// </summary>
         /// <param name="queryable">Query to append where clause.</param>
         /// <param name="comparisonOperator">The comparison operator.</param>
-        /// <param name="language1">Language1 to search for.</param>
+        /// <param name="language">Language to search for.</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
-        public static IQueryable<Sakila.Data.Entities.Film> ByLanguage1(this IQueryable<Sakila.Data.Entities.Film> queryable, ComparisonOperator comparisonOperator, Sakila.Data.Entities.Language language1)
+        public static IQueryable<Sakila.Data.Entities.Film> ByLanguage(this IQueryable<Sakila.Data.Entities.Film> queryable, ComparisonOperator comparisonOperator, Sakila.Data.Entities.Language language)
         {
             switch(comparisonOperator)
             {
                 case ComparisonOperator.Equals:
-                    return queryable.Where(f => f.Language1 == language1);
+                    return queryable.Where(f => f.Language == language);
                 
                 case ComparisonOperator.NotEquals:
-                    return queryable.Where(f => f.Language1 != language1);
+                    return queryable.Where(f => f.Language != language);
                     
                 default:
                     throw new ArgumentException("Parameter 'comparisonOperator' must be ComparisonOperator.Equals or ComparisonOperator.NotEquals to support Association type.", "comparisonOperator");
@@ -951,9 +951,9 @@ namespace Sakila.Data.Entities
         /// <param name="languageId">LanguageId to search for.</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
-        public static IQueryable<Sakila.Data.Entities.Film> ByLanguage1(this IQueryable<Sakila.Data.Entities.Film> queryable, System.Byte languageId)
+        public static IQueryable<Sakila.Data.Entities.Film> ByLanguage(this IQueryable<Sakila.Data.Entities.Film> queryable, System.Byte languageId)
         {
-            return queryable.ByLanguage1(ComparisonOperator.Equals, languageId);
+            return queryable.ByLanguage(ComparisonOperator.Equals, languageId);
         }
         
         /// <summary>
@@ -964,15 +964,15 @@ namespace Sakila.Data.Entities
         /// <param name="languageId">LanguageId to search for.</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
-        public static IQueryable<Sakila.Data.Entities.Film> ByLanguage1(this IQueryable<Sakila.Data.Entities.Film> queryable, ComparisonOperator comparisonOperator, System.Byte languageId)
+        public static IQueryable<Sakila.Data.Entities.Film> ByLanguage(this IQueryable<Sakila.Data.Entities.Film> queryable, ComparisonOperator comparisonOperator, System.Byte languageId)
         {
             switch(comparisonOperator)
             {
                 case ComparisonOperator.Equals:
-                    return queryable.Where(f => f.Language1.LanguageId == languageId);
+                    return queryable.Where(f => f.Language.LanguageId == languageId);
                 
                 case ComparisonOperator.NotEquals:
-                    return queryable.Where(f => f.Language1.LanguageId != languageId);
+                    return queryable.Where(f => f.Language.LanguageId != languageId);
                     
                 default:
                     throw new ArgumentException("Parameter 'comparisonOperator' must be ComparisonOperator.Equals or ComparisonOperator.NotEquals to support Association type.", "comparisonOperator");
@@ -980,34 +980,34 @@ namespace Sakila.Data.Entities
         }
             
         /// <summary>
-        /// Gets a query for <see cref="Sakila.Data.Entities.Film by Language2's primary key."/>.
+        /// Gets a query for <see cref="Sakila.Data.Entities.Film by OriginalLanguage's primary key."/>.
         /// </summary>
         /// <param name="queryable">Query to append where clause.</param>
-        /// <param name="language2">Language2 to search for.</param>
+        /// <param name="originalLanguage">OriginalLanguage to search for.</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
-        public static IQueryable<Sakila.Data.Entities.Film> ByLanguage2(this IQueryable<Sakila.Data.Entities.Film> queryable, Sakila.Data.Entities.Language language2)
+        public static IQueryable<Sakila.Data.Entities.Film> ByOriginalLanguage(this IQueryable<Sakila.Data.Entities.Film> queryable, Sakila.Data.Entities.Language originalLanguage)
         {
-            return queryable.ByLanguage2(ComparisonOperator.Equals, language2);
+            return queryable.ByOriginalLanguage(ComparisonOperator.Equals, originalLanguage);
         }
         
         /// <summary>
-        /// Gets a query for <see cref="Sakila.Data.Entities.Film by Language2's primary key."/>.
+        /// Gets a query for <see cref="Sakila.Data.Entities.Film by OriginalLanguage's primary key."/>.
         /// </summary>
         /// <param name="queryable">Query to append where clause.</param>
         /// <param name="comparisonOperator">The comparison operator.</param>
-        /// <param name="language2">Language2 to search for.</param>
+        /// <param name="originalLanguage">OriginalLanguage to search for.</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
-        public static IQueryable<Sakila.Data.Entities.Film> ByLanguage2(this IQueryable<Sakila.Data.Entities.Film> queryable, ComparisonOperator comparisonOperator, Sakila.Data.Entities.Language language2)
+        public static IQueryable<Sakila.Data.Entities.Film> ByOriginalLanguage(this IQueryable<Sakila.Data.Entities.Film> queryable, ComparisonOperator comparisonOperator, Sakila.Data.Entities.Language originalLanguage)
         {
             switch(comparisonOperator)
             {
                 case ComparisonOperator.Equals:
-                    return queryable.Where(f => f.Language2 == language2);
+                    return queryable.Where(f => f.OriginalLanguage == originalLanguage);
                 
                 case ComparisonOperator.NotEquals:
-                    return queryable.Where(f => f.Language2 != language2);
+                    return queryable.Where(f => f.OriginalLanguage != originalLanguage);
                     
                 default:
                     throw new ArgumentException("Parameter 'comparisonOperator' must be ComparisonOperator.Equals or ComparisonOperator.NotEquals to support Association type.", "comparisonOperator");
@@ -1021,9 +1021,9 @@ namespace Sakila.Data.Entities
         /// <param name="languageId">LanguageId to search for.</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
-        public static IQueryable<Sakila.Data.Entities.Film> ByLanguage2(this IQueryable<Sakila.Data.Entities.Film> queryable, System.Byte languageId)
+        public static IQueryable<Sakila.Data.Entities.Film> ByOriginalLanguage(this IQueryable<Sakila.Data.Entities.Film> queryable, System.Byte languageId)
         {
-            return queryable.ByLanguage2(ComparisonOperator.Equals, languageId);
+            return queryable.ByOriginalLanguage(ComparisonOperator.Equals, languageId);
         }
         
         /// <summary>
@@ -1034,15 +1034,15 @@ namespace Sakila.Data.Entities
         /// <param name="languageId">LanguageId to search for.</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
-        public static IQueryable<Sakila.Data.Entities.Film> ByLanguage2(this IQueryable<Sakila.Data.Entities.Film> queryable, ComparisonOperator comparisonOperator, System.Byte languageId)
+        public static IQueryable<Sakila.Data.Entities.Film> ByOriginalLanguage(this IQueryable<Sakila.Data.Entities.Film> queryable, ComparisonOperator comparisonOperator, System.Byte languageId)
         {
             switch(comparisonOperator)
             {
                 case ComparisonOperator.Equals:
-                    return queryable.Where(f => f.Language2.LanguageId == languageId);
+                    return queryable.Where(f => f.OriginalLanguage.LanguageId == languageId);
                 
                 case ComparisonOperator.NotEquals:
-                    return queryable.Where(f => f.Language2.LanguageId != languageId);
+                    return queryable.Where(f => f.OriginalLanguage.LanguageId != languageId);
                     
                 default:
                     throw new ArgumentException("Parameter 'comparisonOperator' must be ComparisonOperator.Equals or ComparisonOperator.NotEquals to support Association type.", "comparisonOperator");
