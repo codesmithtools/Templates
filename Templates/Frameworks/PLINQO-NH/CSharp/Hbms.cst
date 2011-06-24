@@ -112,6 +112,7 @@ Generating PLINQO for NHibernate Mapings...
             CodeSmith.SchemaHelper.Configuration.Instance.IncludeExpressions.Add(new Regex(".*"));
         
         CodeSmith.SchemaHelper.Configuration.Instance.ExcludeNonPrimaryKeyTables = true;
+        CodeSmith.SchemaHelper.Configuration.Instance.ExcludeForiegnKeyIdProperties = true;
         CodeSmith.SchemaHelper.Configuration.Instance.IncludeViews = IncludeViews;
         CodeSmith.SchemaHelper.Configuration.Instance.IncludeFunctions = IncludeFunctions;
         CodeSmith.SchemaHelper.Configuration.Instance.IncludeManyToManyEntity = false;
