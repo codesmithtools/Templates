@@ -1,0 +1,185 @@
+<%--
+Name: Quick Start
+Author: Blake Niemyjski
+Description: Used to Quick Start Visual Studio Projects
+--%>
+<%@ CodeTemplate Language="C#" TargetLanguage="Text" Debug="True" Description="PLINQO for NHibernate" CompilerVersion="v3.5" %>
+<%@ Assembly Name="System" %>
+<%@ Assembly Name="Generator.QuickStart" Path="Common\QuickStart"%>
+<%@ Assembly Name="SchemaExplorer" %>
+<%@ Assembly Name="CodeSmith.Engine" %>
+<%@ Import Namespace="System.IO" %>
+<%@ Import Namespace="Generator.QuickStart" %>
+
+<%@ Register Name="QuickStartSolution" Template="Common\QuickStart\QuickStartSolution.cst" %>
+<%@ Property Name="SourceDatabase" Type="SchemaExplorer.DatabaseSchema" Default="" Optional="False" Category="1.Database" Description="Source Database"  OnChanged="OnSourceDatabaseChanged" %>
+
+<%@ Property Name="Location" Type="System.String" Default="" Optional="False" Category="2.Solution" Description="This is the path to the Solution location." Editor="System.Windows.Forms.Design.FolderNameEditor, System.Design" %>
+<%@ Property Name="SolutionName" Type="System.String" Default="" Optional="False" Category="2.Solution" Description="Name of the project to be generated." %>
+<%@ Property Name="LaunchVisualStudio" Type="System.Boolean" Default="True" Optional="False" Category="2.Solution" Description="Launch Visual Studio after generation." %>
+
+<%@ Property Name="DataProjectName" Type="System.String" Default="" Optional="False" Category="3.Data Project" Description="Name Space for the Data Project." %>
+<%@ Property Name="DataContextName" Type="System.String"  Default="" Optional="True" Category="3.Data Project" Description="Name Space for the Data Project." %>
+<%@ Property Name="CopyTemplatesToFolder" Type="System.Boolean"  Default="False" Optional="False" Category="3.Data Project" Description="Include a copy of the LinqToSql Templates in the project directory" %>
+
+<%@ Property Name="IncludeWebProject" Type="System.Boolean" Default="True" Optional="False" Category="4.Web Project" Description="Include the DynamicData WebProject" %>
+<%@ Property Name="WebProjectName" Type="System.String" Default="" Optional="False" Category="4.Web Project" Description="Include the MVC2 WebProject" %>
+
+<%@ Property Name="TestProjectName" Type="System.String" Default="" Optional="False" Category="5.Test Project" Description="Name Space for the Test Project." %>
+<%@ Property Name="IncludeTestProject" Type="System.Boolean" Default="True" Optional="False" Category="5.Test Project" Description="Name Space for the Test Project." %>
+
+<% CreateQuickStart(); %>
+The <%= SolutionName %> Solution has been created at <%= Location %>.
+
+<script runat="template">
+
+    public void CreateQuickStart()
+    {
+        // Make sure Location is FullPath
+        Location = Path.GetFullPath(Location);
+
+        // Check For Existing Project
+        if(DirectoriesAlreadyExists)
+            throw new System.ApplicationException(AlreadyExistsMessage);
+
+        // Prep Directories
+        if(!Directory.Exists(Location))
+            Directory.CreateDirectory(Location);
+
+        // Copy Plinqo NH Templates
+        if(CopyTemplatesToFolder)
+            QuickStartUtils.CopyDirectory(CodeTemplateInfo.DirectoryName, Path.Combine(Location, @"Templates\"));
+
+        List<SolutionItem> solutionItems = new List<SolutionItem>();
+        ProjectBuilderSettings pbs = CreateProjectBuilderSettings();
+
+        // Create Data Project
+        DataProjectCreator dataProjectCreator = new DataProjectCreator(pbs)
+        {
+            QueryCsp = @"Common\QuickStart\QuickStartQuery.csp",
+            TemplateDirectory = @"..\..\Templates\"
+        };
+        dataProjectCreator.CreateProject(this.DataProjectName);
+        solutionItems.Add(dataProjectCreator.SolutionItem);
+
+        // Create UnitTests Project
+        if(IncludeTestProject)
+        {
+            TestProjectCreator testProjectCreator = new TestProjectCreator(pbs);
+            testProjectCreator.CreateProject(this.TestProjectName, pbs.DatabaseName, null, null, dataProjectCreator.SolutionItem);
+            solutionItems.Add(testProjectCreator.SolutionItem);
+            
+            QuickStartUtils.FindAndReplace(testProjectCreator.ProjectFile.FullName, @"\$" + DataProjectCreator.TemplatePathKey + @"\$", dataProjectCreator.TemplatePathValue);
+        }
+        
+        if(IncludeWebProject)
+        {
+            TestProjectCreator webProjectCreator = new TestProjectCreator(pbs, "WebProject.zip");
+            webProjectCreator.CreateProject(this.WebProjectName, pbs.DatabaseName, null, null, dataProjectCreator.SolutionItem);
+            solutionItems.Add(webProjectCreator.SolutionItem);
+            
+            QuickStartUtils.FindAndReplace(webProjectCreator.ProjectFile.FullName, @"\$" + DataProjectCreator.TemplatePathKey + @"\$", dataProjectCreator.TemplatePathValue);
+        }
+
+        // Create Solution
+        string solutionPath = CreateSolution(solutionItems);
+
+        // Launch Visual Studio
+        if(LaunchVisualStudio)
+            LaunchVisualStudioWithSolution(solutionPath);
+    }
+
+    private bool DirectoriesAlreadyExists
+    {
+        get
+        {
+            return (Directory.Exists(Path.Combine(Location, this.DataProjectName))
+            || Directory.Exists(Path.Combine(Location, this.TestProjectName))
+            || File.Exists(Path.Combine(Location, String.Concat(this.SolutionName, ".sln"))));
+        }
+    }
+    private string AlreadyExistsMessage
+    {
+        get
+        {
+            System.Text.StringBuilder sb = new System.Text.StringBuilder();
+            sb.AppendLine("It seems that a quick start already exists in specified directory:");
+            sb.AppendLine(Location);
+            sb.AppendLine("Please delete existing data or selected a different directory.");
+            return sb.ToString();
+        }
+    }
+
+    private ProjectBuilderSettings CreateProjectBuilderSettings()
+    {
+        ProjectBuilderSettings settings = new ProjectBuilderSettings()
+        {
+            EnsureMultipleResultSets = false,
+            ZipFileRoot = @"Common\QuickStart",
+            SourceDatabase = this.SourceDatabase,
+            FrameworkVersion = Generator.QuickStart.FrameworkVersion.v40,
+            Language = LanguageEnum.CSharp,
+            Location = this.Location,
+            SolutionName = this.SolutionName,
+            DataContextName = this.DataContextName,
+            DataProjectName = this.DataProjectName,
+            BaseNamespace = this.DataProjectName,
+            EntityNamespace = this.DataProjectName + ".Entities",
+            QueryPattern = QueryPatternEnum.QueryExtensions,
+            CopyTemplatesToFolder = this.CopyTemplatesToFolder,
+            IncludeDataServices = false,
+            InterfaceProjectName = String.Empty,
+            IncludeTestProject = this.IncludeTestProject,
+            ProjectType = ProjectTypeEnum.DynamicDataWebSite,
+            TestProjectName = this.TestProjectName,
+            WorkingDirectory = this.CopyTemplatesToFolder
+                ? Path.Combine(Location, @"Templates\")
+                : this.CodeTemplateInfo.DirectoryName
+        };
+        settings.SetConnetionProvider(this.SourceDatabase.Provider);
+        return settings;
+    }
+    private string CreateSolution(List<SolutionItem> solutionItems)
+    {
+        QuickStartSolution quickStartSolution = this.Create<QuickStartSolution>();
+        quickStartSolution.SolutionItems = solutionItems;
+        quickStartSolution.Framework = Generator.QuickStart.FrameworkVersion.v40;
+        quickStartSolution.Location = this.Location;
+
+        string filePathAboslute = Path.Combine(Location, String.Concat(SolutionName, ".sln"));
+        quickStartSolution.RenderToFile(filePathAboslute, true);
+
+        return filePathAboslute;
+    }
+    private void LaunchVisualStudioWithSolution(string solutionLink)
+    {
+        string args = "/build debug";
+        using (Process p = Process.Start(solutionLink, args)) { }
+    }
+
+    private void OnSourceDatabaseChanged(object sender, EventArgs e)
+    {
+        if (SourceDatabase == null)
+            return;
+
+        string name = StringUtil.ToPascalCase(SourceDatabase.Database.Name);
+
+        if(string.IsNullOrEmpty(SolutionName))
+            SolutionName = name;
+
+        if (string.IsNullOrEmpty(DataProjectName))
+            DataProjectName = name + ".Data";
+
+        if (string.IsNullOrEmpty(DataContextName))
+            DataContextName = name + "DataContext";
+
+        if (string.IsNullOrEmpty(TestProjectName))
+            TestProjectName = name + ".Test";
+            
+        if (string.IsNullOrEmpty(WebProjectName))
+            WebProjectName = name + ".UI";
+
+        if (string.IsNullOrEmpty(Location))
+            Location = Path.Combine(CodeSmith.Engine.Configuration.Instance.CodeSmithTemplatesDirectory, Path.Combine("PLINQO NH", name));
+    }
+</script>
