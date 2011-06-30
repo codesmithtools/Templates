@@ -114,6 +114,8 @@ The <%= SolutionName %> Solution has been created at <%= Location %>.
     {
         ProjectBuilderSettings settings = new ProjectBuilderSettings()
         {
+            IncludeViews = true,
+            IncludeFunctions = !this.SourceDatabase.Name.Contains("MySQL"),
             EnsureMultipleResultSets = false,
             ZipFileRoot = @"Common\QuickStart",
             SourceDatabase = this.SourceDatabase,

@@ -46,9 +46,11 @@ using System.Collections.Generic;
 using System.Linq;
 using CodeSmith.Data.Linq;
 using CodeSmith.Data.Linq.Dynamic;
+<% if (!String.IsNullOrEmpty(QueryNamespace)) { %>
 using <%= BaseNamespace %>;
+<% } %>
 
-namespace <%= String.IsNullOrEmpty(QueryNamespace)? Entity.Namespace : QueryNamespace %>
+namespace <%= String.IsNullOrEmpty(QueryNamespace)? BaseNamespace : QueryNamespace %>
 {
     /// <summary>
     /// The query extension class for <%= Entity.Name %>.

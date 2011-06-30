@@ -17,9 +17,11 @@
 <%@ Import Namespace="System.Collections.Generic" %>
 <%@ Import Namespace="CodeSmith.SchemaHelper" %>
 using System;
+<% if (!String.IsNullOrEmpty(QueryNamespace)) { %>
 using <%= BaseNamespace %>;
+<% } %>
 
-namespace <%= String.IsNullOrEmpty(QueryNamespace)? Entity.Namespace : QueryNamespace %>
+namespace <%= String.IsNullOrEmpty(QueryNamespace)? BaseNamespace : QueryNamespace %>
 {
     public static partial class <%= Entity.Name %>Extensions
     {
