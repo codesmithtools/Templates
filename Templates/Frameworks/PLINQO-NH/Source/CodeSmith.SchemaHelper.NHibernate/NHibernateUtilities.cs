@@ -66,6 +66,7 @@ namespace CodeSmith.SchemaHelper.NHibernate
         private static void PrepDestination(IEntity entity, string defaultNamespace)
         {
             entity.ExtendedProperties.Clear();
+            entity.Properties.ForEach(p => p.ExtendedProperties.Clear());
 
             entity.Namespace = defaultNamespace;
             
@@ -103,8 +104,6 @@ namespace CodeSmith.SchemaHelper.NHibernate
 
         private static void PrepProperty(IProperty property)
         {
-            property.ExtendedProperties.Clear();
-
             var nhibType = ToNHibernateType(property);
             property.ExtendedProperties[NHibernateType] = nhibType;
             property.ExtendedProperties[NotNull] = !property.IsNullable ? "true" : "false";
