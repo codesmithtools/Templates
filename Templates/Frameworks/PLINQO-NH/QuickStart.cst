@@ -57,7 +57,7 @@ The <%= SolutionName %> Solution has been created at <%= Location %>.
         DataProjectCreator dataProjectCreator = new DataProjectCreator(pbs)
         {
             QueryCsp = @"Common\QuickStart\QuickStartQuery.csp",
-            TemplateDirectory = @"..\..\Templates\"
+            TemplateDirectory = this.CopyTemplatesToFolder ? @"..\Templates\" : @"..\..\Templates\"
         };
         dataProjectCreator.CreateProject(this.DataProjectName);
         solutionItems.Add(dataProjectCreator.SolutionItem);
