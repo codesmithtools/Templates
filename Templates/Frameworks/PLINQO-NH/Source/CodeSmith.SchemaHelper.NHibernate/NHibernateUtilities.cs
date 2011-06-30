@@ -65,8 +65,10 @@ namespace CodeSmith.SchemaHelper.NHibernate
 
         private static void PrepDestination(IEntity entity, string defaultNamespace)
         {
-            entity.Namespace = defaultNamespace;
+            entity.ExtendedProperties.Clear();
 
+            entity.Namespace = defaultNamespace;
+            
             entity.ExtendedProperties.Add(Lazy, "true");
             entity.ExtendedProperties.Add(FileName, entity is CommandEntity
                 ? NamingConventions.CleanName(entity.EntityKeyName, false)
@@ -101,6 +103,8 @@ namespace CodeSmith.SchemaHelper.NHibernate
 
         private static void PrepProperty(IProperty property)
         {
+            property.ExtendedProperties.Clear();
+
             var nhibType = ToNHibernateType(property);
             property.ExtendedProperties[NHibernateType] = nhibType;
             property.ExtendedProperties[NotNull] = !property.IsNullable ? "true" : "false";
