@@ -11,9 +11,8 @@ using System.Collections.Generic;
 using System.Linq;
 using CodeSmith.Data.Linq;
 using CodeSmith.Data.Linq.Dynamic;
-using Sakila.Data;
 
-namespace Sakila.Data.Entities
+namespace Sakila.Data
 {
     /// <summary>
     /// The query extension class for Inventory.
