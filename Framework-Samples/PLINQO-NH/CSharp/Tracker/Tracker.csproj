@@ -182,7 +182,9 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
-    <EmbeddedResource Include="Data\Maps\Entities\Audit.hbm.xml" />
+    <EmbeddedResource Include="Data\Maps\Entities\Audit.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Data\Maps\Entities\Guid.hbm.xml" />

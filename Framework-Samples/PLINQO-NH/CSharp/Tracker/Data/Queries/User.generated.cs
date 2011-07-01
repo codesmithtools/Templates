@@ -11,9 +11,8 @@ using System.Collections.Generic;
 using System.Linq;
 using CodeSmith.Data.Linq;
 using CodeSmith.Data.Linq.Dynamic;
-using Tracker.Data;
 
-namespace Tracker.Data.Entities
+namespace Tracker.Data
 {
     /// <summary>
     /// The query extension class for User.
