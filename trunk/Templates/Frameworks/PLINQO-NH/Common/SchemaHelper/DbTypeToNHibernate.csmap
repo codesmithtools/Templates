@@ -103,7 +103,7 @@
     </item>
     <item>
       <key>SByte</key>
-      <value>String</value>
+      <value>Byte</value>
     </item>
     <item>
       <key>Currency</key>
