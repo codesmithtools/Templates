@@ -12,6 +12,9 @@ namespace CodeSmith.Data.LinqToSql
     {
         public static DataContext GetDataContext(IQueryable query)
         {
+            if (query == null)
+                return null;
+
             Type type = query.GetType();
             FieldInfo field = type.GetField("context", BindingFlags.NonPublic | BindingFlags.Instance);
             if (field == null)
