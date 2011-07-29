@@ -32,7 +32,7 @@ public class DBDocumenterTemplate : CodeTemplate
 		get
 		{
 			// default to the directory that the template is located in
-			if (_outputDirectory.Length == 0) return this.CodeTemplateInfo.DirectoryName + "output\\";
+			if (_outputDirectory.Length == 0) return Path.Combine(CodeTemplateInfo.DirectoryName, "output");
 			
 			return _outputDirectory;
 		}
