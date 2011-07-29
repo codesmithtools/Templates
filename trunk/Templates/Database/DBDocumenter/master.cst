@@ -18,84 +18,84 @@ private int _currentStep = 0;
 // Override the Render method and have it output the sub-templates to file.
 public override void Render(TextWriter writer)
 {
-	this.Progress.MaximumValue = 375;
-	
-	DateTime startTime = DateTime.Now;
-	
-	if (!Directory.Exists(this.OutputDirectory))
-	{
-		// Create output directory.
-		Trace.WriteLine("Creating output directory...");
-		Directory.CreateDirectory(this.OutputDirectory);
-	}
-	else
-	{
-		// Clean up the existing output directory.
-		Trace.WriteLine("Cleaning up existing output directory...");
-		this.DeleteFiles(this.OutputDirectory, "*.html");
-	}
-	this.Progress.Value = 25;
-	
-	if (String.Compare(Path.GetFullPath(this.OutputDirectory), this.CodeTemplateInfo.DirectoryName + "output\\", true) != 0)
-	{
-		// Copy static resources to output directory.
-		Trace.WriteLine("Copying static resources to output directory...");
-		
-		File.Copy(this.CodeTemplateInfo.DirectoryName + "output\\dbdocs.css", this.OutputDirectory + "dbdocs.css", true);
-		
-		if (!Directory.Exists(this.OutputDirectory + "images\\")) Directory.CreateDirectory(this.OutputDirectory + "images\\");
-		string[] imageFiles = Directory.GetFiles(this.CodeTemplateInfo.DirectoryName + "output\\images\\");
-		for (int i = 0; i < imageFiles.Length; i++)
-		{
-			FileInfo info = new FileInfo(imageFiles[i]);
-			File.Copy(info.FullName, this.OutputDirectory + "images\\" + info.Name, true);
-		}
-	}
-	this.Progress.Value = 50;
-	
-	// General
-	Trace.WriteLine("Building general documentation (index.html)...");
-	GeneralTemplate generalTemplate = this.Create<GeneralTemplate>();
-	generalTemplate.Progress.OnProgress += new ProgressEventHandler(this.OnProgress);
-	this.CopyPropertiesTo(generalTemplate);
-	generalTemplate.RenderToFile(this.OutputDirectory + "index.html", true);
-	this.Progress.Value = 75;
-	
-	// Tables
-	Trace.WriteLine("Building table documentation (tables.html)...");
-	TablesTemplate tablesTemplate = this.Create<TablesTemplate>();
-	tablesTemplate.Progress.OnProgress += new ProgressEventHandler(this.OnProgress);
-	this.CopyPropertiesTo(tablesTemplate);
-	tablesTemplate.RenderToFile(this.OutputDirectory + "tables.html", true);
-	this.Progress.Value = 175;
-	_currentStep++;
-	
-	// Sprocs
-	Trace.WriteLine("Building stored procedures documentation (sprocs.html)...");
-	SprocsTemplate sprocsTemplate = this.Create<SprocsTemplate>();
-	sprocsTemplate.Progress.OnProgress += new ProgressEventHandler(this.OnProgress);
-	this.CopyPropertiesTo(sprocsTemplate);
-	sprocsTemplate.RenderToFile(this.OutputDirectory + "sprocs.html", true);
-	this.Progress.Value = 275;
-	_currentStep++;
-	
-	// Views
-	Trace.WriteLine("Building views documentation (views.html)...");
-	ViewsTemplate viewsTemplate = this.Create<ViewsTemplate>();
-	viewsTemplate.Progress.OnProgress += new ProgressEventHandler(this.OnProgress);
-	this.CopyPropertiesTo(viewsTemplate);
-	viewsTemplate.RenderToFile(this.OutputDirectory + "views.html", true);
-	this.Progress.Value = 375;
-	
-	Trace.WriteLine("Generation complete. Execution time: " + (DateTime.Now - startTime).ToString());
-	Trace.WriteLine("To view the output go here: " + this.OutputDirectory + "index.html");
+    this.Progress.MaximumValue = 375;
+    
+    DateTime startTime = DateTime.Now;
+    
+    if (!Directory.Exists(this.OutputDirectory))
+    {
+        // Create output directory.
+        Trace.WriteLine("Creating output directory...");
+        Directory.CreateDirectory(this.OutputDirectory);
+    }
+    else
+    {
+        // Clean up the existing output directory.
+        Trace.WriteLine("Cleaning up existing output directory...");
+        this.DeleteFiles(this.OutputDirectory, "*.html");
+    }
+    this.Progress.Value = 25;
+    
+    if (String.Compare(Path.GetFullPath(this.OutputDirectory), this.CodeTemplateInfo.DirectoryName + "output\\", true) != 0)
+    {
+        // Copy static resources to output directory.
+        Trace.WriteLine("Copying static resources to output directory...");
+        
+        File.Copy(this.CodeTemplateInfo.DirectoryName + "output\\dbdocs.css", this.OutputDirectory + "dbdocs.css", true);
+        
+        if (!Directory.Exists(this.OutputDirectory + "images\\")) Directory.CreateDirectory(this.OutputDirectory + "images\\");
+        string[] imageFiles = Directory.GetFiles(this.CodeTemplateInfo.DirectoryName + "output\\images\\");
+        for (int i = 0; i < imageFiles.Length; i++)
+        {
+            FileInfo info = new FileInfo(imageFiles[i]);
+            File.Copy(info.FullName, this.OutputDirectory + "images\\" + info.Name, true);
+        }
+    }
+    this.Progress.Value = 50;
+    
+    // General
+    Trace.WriteLine("Building general documentation (index.html)...");
+    GeneralTemplate generalTemplate = this.Create<GeneralTemplate>();
+    generalTemplate.Progress.OnProgress += new ProgressEventHandler(this.OnProgress);
+    this.CopyPropertiesTo(generalTemplate);
+    generalTemplate.RenderToFile(this.OutputDirectory + "index.html", true);
+    this.Progress.Value = 75;
+    
+    // Tables
+    Trace.WriteLine("Building table documentation (tables.html)...");
+    TablesTemplate tablesTemplate = this.Create<TablesTemplate>();
+    tablesTemplate.Progress.OnProgress += new ProgressEventHandler(this.OnProgress);
+    this.CopyPropertiesTo(tablesTemplate);
+    tablesTemplate.RenderToFile(this.OutputDirectory + "tables.html", true);
+    this.Progress.Value = 175;
+    _currentStep++;
+    
+    // Sprocs
+    Trace.WriteLine("Building stored procedures documentation (sprocs.html)...");
+    SprocsTemplate sprocsTemplate = this.Create<SprocsTemplate>();
+    sprocsTemplate.Progress.OnProgress += new ProgressEventHandler(this.OnProgress);
+    this.CopyPropertiesTo(sprocsTemplate);
+    sprocsTemplate.RenderToFile(this.OutputDirectory + "sprocs.html", true);
+    this.Progress.Value = 275;
+    _currentStep++;
+    
+    // Views
+    Trace.WriteLine("Building views documentation (views.html)...");
+    ViewsTemplate viewsTemplate = this.Create<ViewsTemplate>();
+    viewsTemplate.Progress.OnProgress += new ProgressEventHandler(this.OnProgress);
+    this.CopyPropertiesTo(viewsTemplate);
+    viewsTemplate.RenderToFile(this.OutputDirectory + "views.html", true);
+    this.Progress.Value = 375;
+    
+    Trace.WriteLine("Generation complete. Execution time: " + (DateTime.Now - startTime).ToString());
+    Trace.WriteLine("To view the output go here: " + this.OutputDirectory + "index.html");
 }
 
 public void OnProgress(object sender, ProgressEventArgs e)
 {
-	if (e.Value > 0)
-	{
-		this.Progress.Value = 75 + (_currentStep * 100) + (int)(((Double)e.Value / (Double)e.MaximumValue) * 100);
-	}
+    if (e.Value > 0)
+    {
+        this.Progress.Value = 75 + (_currentStep * 100) + (int)(((Double)e.Value / (Double)e.MaximumValue) * 100);
+    }
 }
 </script>

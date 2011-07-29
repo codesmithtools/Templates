@@ -4,11 +4,8 @@
     <propertySet template="master.cst">
       <property name="DocumentationTitle">Database Documentation</property>
       <property name="ServerName">Server</property>
-      <property name="OutputDirectory">petshop\</property>
+      <property name="OutputDirectory">.\PetShop\</property>
       <property name="SourceDatabase">PetShop</property>
-
-
-
     </propertySet>
   </propertySets>
 </codeSmith>
