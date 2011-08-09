@@ -39,9 +39,13 @@
     <Reference Include="nunit.framework">
       <HintPath>..\..\Common\NUnit\nunit.framework.dll</HintPath>
     </Reference>
-    <Reference Include="SchemaExplorer, Version=5.0.0.0, Culture=neutral, PublicKeyToken=9fd61cdb91609a7a, processorArchitecture=x86">
+    <Reference Include="CodeSmith.Core">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>C:\Program Files (x86)\CodeSmith\v5.3\AddIns\SchemaExplorer.dll</HintPath>
+      <HintPath>..\..\Libraries\bin\CodeSmith.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="SchemaExplorer">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Libraries\AddIns\SchemaExplorer.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />

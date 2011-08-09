@@ -19,14 +19,11 @@ namespace CodeSmith.SchemaHelper
                                      : String.Empty;
 
 
-            using (CodeSmith.Engine.AssemblyResolver.Current.UseManagedAssemblyResolver)
-            {
-                AssociatedColumn = new Member(localColumn,
-                                              entity != null && entity.Table.FullName.Equals(localColumn.Table.FullName, StringComparison.InvariantCultureIgnoreCase)
-                                                  ? entity
-                                                  : new Entity(localColumn.Table));
-            }
-
+            AssociatedColumn = new Member(localColumn,
+                                          entity != null && entity.Table.FullName.Equals(localColumn.Table.FullName, StringComparison.InvariantCultureIgnoreCase)
+                                              ? entity
+                                              : new Entity(localColumn.Table));
+          
 
             Cascade = (associationType == SchemaHelper.AssociationType.OneToMany && !column.AllowDBNull);
             ClassName = table.ClassName();

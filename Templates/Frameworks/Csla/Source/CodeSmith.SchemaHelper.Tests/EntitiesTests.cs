@@ -33,8 +33,8 @@ namespace CodeSmith.SchemaHelper.Tests
         {
             Stopwatch watch = Stopwatch.StartNew();
 
-            DatabaseSchema DatabaseSource = new DatabaseSchema(new SqlSchemaProvider(), "server=.;database=test;integrated security=true;Connect Timeout=300");
-            List<Entity> Entities = new EntityManager(DatabaseSource).Entities;
+            var DatabaseSource = new DatabaseSchema(new SqlSchemaProvider(), "server=.;database=test;integrated security=true;Connect Timeout=300");
+            var Entities = new EntityManager(DatabaseSource).Entities;
             Assert.IsTrue(DatabaseSource.ConnectionString == "server=.;database=test;integrated security=true;Connect Timeout=300");
             Assert.IsTrue(DatabaseSource.Tables.Count > 0);
             Assert.IsTrue(Entities.Count == DatabaseSource.Tables.Count);

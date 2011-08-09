@@ -85,10 +85,22 @@
     <CodeAnalysisIgnoreBuiltInRules>true</CodeAnalysisIgnoreBuiltInRules>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="CodeSmith.Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=9fd61cdb91609a7a, processorArchitecture=MSIL" />
-    <Reference Include="CodeSmith.CustomProperties" />
-    <Reference Include="CodeSmith.Engine" />
-    <Reference Include="SchemaExplorer" />
+    <Reference Include="CodeSmith.Core">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Libraries\bin\CodeSmith.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="CodeSmith.CustomProperties">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Libraries\AddIns\CodeSmith.CustomProperties.dll</HintPath>
+    </Reference>
+    <Reference Include="CodeSmith.Engine">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Libraries\bin\CodeSmith.Engine.dll</HintPath>
+    </Reference>
+    <Reference Include="SchemaExplorer">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Libraries\AddIns\SchemaExplorer.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
