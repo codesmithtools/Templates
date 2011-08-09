@@ -56,9 +56,18 @@
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="CodeSmith.Core" />
-    <Reference Include="CodeSmith.Engine" />
-    <Reference Include="SchemaExplorer" />
+    <Reference Include="CodeSmith.Core">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Libraries\bin\CodeSmith.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="CodeSmith.Engine">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Libraries\bin\CodeSmith.Engine.dll</HintPath>
+    </Reference>
+    <Reference Include="SchemaExplorer">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Libraries\AddIns\SchemaExplorer.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
