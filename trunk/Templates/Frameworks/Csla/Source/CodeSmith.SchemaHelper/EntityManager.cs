@@ -37,10 +37,7 @@ namespace CodeSmith.SchemaHelper
                         Trace.WriteLine(string.Format("Skipping table: '{0}', no Primary Key was found!", table.Name));
                     else
                     {
-                        using (CodeSmith.Engine.AssemblyResolver.Current.UseManagedAssemblyResolver)
-                        {
-                            Entities.Add(new Entity(table));
-                        }
+                        Entities.Add(new Entity(table));
                     }
                 }
             }

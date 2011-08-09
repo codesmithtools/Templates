@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>CodeSmith.SchemaHelper.NHibernate</RootNamespace>
     <AssemblyName>CodeSmith.SchemaHelper.NHibernate</AssemblyName>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -33,23 +33,26 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="CodeSmith.Engine, Version=5.0.0.0, Culture=neutral, PublicKeyToken=9fd61cdb91609a7a, processorArchitecture=x86">
+    <Reference Include="CodeSmith.Core">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>C:\Program Files (x86)\CodeSmith\v5.3\bin\CodeSmith.Engine.dll</HintPath>
+      <HintPath>..\..\Libraries\bin\CodeSmith.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="CodeSmith.Engine">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Libraries\bin\CodeSmith.Engine.dll</HintPath>
     </Reference>
     <Reference Include="CodeSmith.SchemaHelper">
       <HintPath>..\..\Common\SchemaHelper\CodeSmith.SchemaHelper.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="SchemaExplorer, Version=5.0.0.0, Culture=neutral, PublicKeyToken=9fd61cdb91609a7a, processorArchitecture=x86">
+    <Reference Include="SchemaExplorer">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>C:\Program Files (x86)\CodeSmith\v5.3\AddIns\SchemaExplorer.dll</HintPath>
+      <HintPath>..\..\Libraries\AddIns\SchemaExplorer.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
   </ItemGroup>

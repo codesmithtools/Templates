@@ -1,8 +1,6 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 10.00
-# Visual Studio 2008
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeSmith.SchemaHelper", "CodeSmith.SchemaHelper\CodeSmith.SchemaHelper.csproj", "{29F4357A-A92D-458F-A266-A7231E75DA52}"
-EndProject
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{A3DD79D2-92AD-4BAF-893F-7230A4A7D1E6}"
 	ProjectSection(SolutionItems) = preProject
 		..\Master.proj = ..\Master.proj
@@ -242,8 +240,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Internal", "Internal", "{AA
 		..\VisualBasic\WebLayer\Internal\Default.aspx.vb.cst = ..\VisualBasic\WebLayer\Internal\Default.aspx.vb.cst
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeSmith.SchemaHelper.Tests", "CodeSmith.SchemaHelper.Tests\CodeSmith.SchemaHelper.Tests.csproj", "{209FCE36-FF4D-45C0-991A-D96B86ED3F1A}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Internal", "Internal", "{E90645D8-091B-47CE-9E4E-9528A4AB0C72}"
 	ProjectSection(SolutionItems) = preProject
 		..\CSharp\DataAccessLayer\Internal\ObjectFactory.cst = ..\CSharp\DataAccessLayer\Internal\ObjectFactory.cst
@@ -268,12 +264,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Internal", "Internal", "{19
 		..\CSharp\WebLayer\Internal\Default.aspx.cst = ..\CSharp\WebLayer\Internal\Default.aspx.cst
 		..\CSharp\WebLayer\Internal\Default.aspx.designer.cs.cst = ..\CSharp\WebLayer\Internal\Default.aspx.designer.cs.cst
 	EndProjectSection
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeSmith.SchemaHelper.Extensions", "CodeSmith.SchemaHelper.Extensions\CodeSmith.SchemaHelper.Extensions.csproj", "{830E1B3E-1BC8-4F16-8C47-260ACEF3B96D}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeSmith.SchemaHelper.CSharpExtensions", "CodeSmith.SchemaHelper.CSharpExtensions\CodeSmith.SchemaHelper.CSharpExtensions.csproj", "{41C50564-90B5-4566-946E-0C0513E7F2EB}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeSmith.SchemaHelper.VisualBasicExtensions", "CodeSmith.SchemaHelper.VisualBasicExtensions\CodeSmith.SchemaHelper.VisualBasicExtensions.csproj", "{E139EDCF-9BC6-40E1-8280-5C4C1D54AB6E}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Common", "Common", "{21833F6C-64ED-4E9F-91E4-414B3232FBDE}"
 	ProjectSection(SolutionItems) = preProject
@@ -417,6 +407,16 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Internal", "Internal", "{BA
 		..\CSharp\NUnitTests\Internal\TestSwitchable.cst = ..\CSharp\NUnitTests\Internal\TestSwitchable.cst
 		..\CSharp\NUnitTests\Internal\TestSwitchable.Generated.cst = ..\CSharp\NUnitTests\Internal\TestSwitchable.Generated.cst
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeSmith.SchemaHelper", "CodeSmith.SchemaHelper\CodeSmith.SchemaHelper.csproj", "{29F4357A-A92D-458F-A266-A7231E75DA52}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeSmith.SchemaHelper.Tests", "CodeSmith.SchemaHelper.Tests\CodeSmith.SchemaHelper.Tests.csproj", "{209FCE36-FF4D-45C0-991A-D96B86ED3F1A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeSmith.SchemaHelper.Extensions", "CodeSmith.SchemaHelper.Extensions\CodeSmith.SchemaHelper.Extensions.csproj", "{830E1B3E-1BC8-4F16-8C47-260ACEF3B96D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeSmith.SchemaHelper.CSharpExtensions", "CodeSmith.SchemaHelper.CSharpExtensions\CodeSmith.SchemaHelper.CSharpExtensions.csproj", "{41C50564-90B5-4566-946E-0C0513E7F2EB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeSmith.SchemaHelper.VisualBasicExtensions", "CodeSmith.SchemaHelper.VisualBasicExtensions\CodeSmith.SchemaHelper.VisualBasicExtensions.csproj", "{E139EDCF-9BC6-40E1-8280-5C4C1D54AB6E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeSmith.QuickStart", "CodeSmith.QuickStart\CodeSmith.QuickStart.csproj", "{2143D00C-842D-4B62-82E9-95D262A6F88E}"
 EndProject

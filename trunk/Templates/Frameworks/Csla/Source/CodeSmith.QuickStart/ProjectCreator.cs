@@ -47,7 +47,7 @@ namespace CodeSmith.QuickStart
             //4) replace project variables
             ReplaceVariables();
 
-            //5) add dependancies
+            //5) add dependencies
             if (dependancies != null && dependancies.Length > 0)
                 AddProjectReferences(dependancies);
 

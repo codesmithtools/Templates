@@ -88,11 +88,8 @@ namespace CodeSmith.QuickStart
                     }
                 }
 
-                using (CodeSmith.Engine.AssemblyResolver.Current.UseManagedAssemblyResolver)
-                {
-                    if (SourceTable != null)
-                        Entity = new Entity(SourceTable);
-                }
+                if (SourceTable != null)
+                    Entity = new Entity(SourceTable);
             }
         }
 
@@ -119,11 +116,8 @@ namespace CodeSmith.QuickStart
                     }
                 }
 
-                using (CodeSmith.Engine.AssemblyResolver.Current.UseManagedAssemblyResolver)
-                {
-                    if (SourceTable != null)
-                        Entity = new Entity(SourceTable);
-                }
+                if (SourceTable != null)
+                    Entity = new Entity(SourceTable);
             }
         }
 
@@ -400,16 +394,15 @@ namespace CodeSmith.QuickStart
 
         public virtual void OnTableChanged()
         {
-            using (CodeSmith.Engine.AssemblyResolver.Current.UseManagedAssemblyResolver)
-            {
-                Entity = new Entity(SourceTable);
+            Entity = new Entity(SourceTable);
 
             if (OnTableChanging()) return;
-            
+
             if (string.IsNullOrEmpty(BusinessClassName))
                 BusinessClassName = Entity.ClassName;
 
-            if (string.IsNullOrEmpty(CriteriaClassName) || CriteriaClassName.Equals("Criteria", StringComparison.InvariantCultureIgnoreCase))
+            if (string.IsNullOrEmpty(CriteriaClassName) ||
+                CriteriaClassName.Equals("Criteria", StringComparison.InvariantCultureIgnoreCase))
                 CriteriaClassName = String.Concat(Entity.ClassName, "Criteria");
 
             if (string.IsNullOrEmpty(BusinessProjectName))
@@ -420,7 +413,6 @@ namespace CodeSmith.QuickStart
 
             if (string.IsNullOrEmpty(ProcedurePrefix))
                 ProcedurePrefix = "CSLA_";
-            }
         }
 
         public virtual string GetTableOwner()
