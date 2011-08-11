@@ -14,7 +14,7 @@ Description: Generate C# classes from a JSON file.
 <%@ Property Category="General" Name="TargetNamespace"
     Type="System.String" Default="JsonClasses" Optional="False"
     Description="The name of the root class." %>
-<%@ Assembly Name="Newtonsoft.Json.Net35" %>
+<%@ Assembly Name="Newtonsoft.Json" %>
 <%@ Import Namespace="System.IO" %>
 <%@ Import Namespace="System.Collections.Generic" %>
 <%@ Import Namespace="Newtonsoft.Json" %>
