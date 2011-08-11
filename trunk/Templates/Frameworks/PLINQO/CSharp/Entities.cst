@@ -109,13 +109,15 @@
         }
 
         if (this.Framework == FrameworkEnum.v40)
-            this.RegisterReference(Path.GetFullPath(Path.Combine(
-                this.CodeTemplateInfo.DirectoryName,
-                "..\\Common\\v4.0\\CodeSmith.Data.dll")));
+        {
+            this.RegisterReference(Path.GetFullPath(Path.Combine(this.CodeTemplateInfo.DirectoryName, "..\\Common\\v4.0\\CodeSmith.Data.dll")));
+            this.RegisterReference(Path.GetFullPath(Path.Combine(this.CodeTemplateInfo.DirectoryName, "..\\Common\\v4.0\\CodeSmith.Data.LinqToSql.dll")));
+        }
         else
-            this.RegisterReference(Path.GetFullPath(Path.Combine(
-                this.CodeTemplateInfo.DirectoryName,
-                "..\\Common\\v3.5\\CodeSmith.Data.dll")));
+        {
+            this.RegisterReference(Path.GetFullPath(Path.Combine(this.CodeTemplateInfo.DirectoryName, "..\\Common\\v3.5\\CodeSmith.Data.dll")));
+            this.RegisterReference(Path.GetFullPath(Path.Combine(this.CodeTemplateInfo.DirectoryName, "..\\Common\\v3.5\\CodeSmith.Data.LinqToSql.dll")));
+        }
     }
 
     public void CreateEntityBaseClass(Database database)

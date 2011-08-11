@@ -110,8 +110,10 @@ Public Sub Generate()
 
     If (Me.Framework = FrameworkEnum.v40) Then
         Me.RegisterReference(Path.GetFullPath(Path.Combine(Me.CodeTemplateInfo.DirectoryName, "..\Common\v4.0\CodeSmith.Data.dll")))
+        Me.RegisterReference(Path.GetFullPath(Path.Combine(Me.CodeTemplateInfo.DirectoryName, "..\Common\v4.0\CodeSmith.Data.LinqToSql.dll")))
     Else
         Me.RegisterReference(Path.GetFullPath(Path.Combine(Me.CodeTemplateInfo.DirectoryName, "..\Common\v3.5\CodeSmith.Data.dll")))
+        Me.RegisterReference(Path.GetFullPath(Path.Combine(Me.CodeTemplateInfo.DirectoryName, "..\Common\v3.5\CodeSmith.Data.LinqToSql.dll")))
     End If
 End Sub
 
