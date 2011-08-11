@@ -13,12 +13,11 @@ Global
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{3C898093-D813-4476-8228-A565A17F4AA4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{3C898093-D813-4476-8228-A565A17F4AA4}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{3C898093-D813-4476-8228-A565A17F4AA4}.Debug|x86.ActiveCfg = Debug|x86
-		{3C898093-D813-4476-8228-A565A17F4AA4}.Debug|x86.Build.0 = Debug|x86
-		{3C898093-D813-4476-8228-A565A17F4AA4}.Release|Any CPU.ActiveCfg = Release|x86
-		{3C898093-D813-4476-8228-A565A17F4AA4}.Release|Any CPU.Build.0 = Release|x86
-		{3C898093-D813-4476-8228-A565A17F4AA4}.Release|x86.ActiveCfg = Release|x86
-		{3C898093-D813-4476-8228-A565A17F4AA4}.Release|x86.Build.0 = Release|x86
+		{3C898093-D813-4476-8228-A565A17F4AA4}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{3C898093-D813-4476-8228-A565A17F4AA4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3C898093-D813-4476-8228-A565A17F4AA4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3C898093-D813-4476-8228-A565A17F4AA4}.Release|x86.ActiveCfg = Release|Any CPU
+		{3C898093-D813-4476-8228-A565A17F4AA4}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
