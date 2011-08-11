@@ -3,7 +3,7 @@ Name: Default.aspx.designer.cs
 Author: Blake Niemyjski
 Description: The following template will generate a ASP.Net designer file.
 --%>
-<%@ CodeTemplate Language="C#" TargetLanguage="C#" Inherits="CodeSmith.QuickStart.InterfaceCodeTemplate"s Description="The following template will generate a default ASP.Net designer file." %>
+<%@ CodeTemplate Language="C#" TargetLanguage="C#" Inherits="CodeSmith.QuickStart.InterfaceCodeTemplate" Description="The following template will generate a default ASP.Net designer file." %>
 
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\..\Common" %>
 <%@ Assembly Name="CodeSmith.QuickStart" Path="..\..\..\Common" %>
