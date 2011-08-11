@@ -182,6 +182,16 @@ namespace QuickStartUtils
 
             item.SetMetadata("HintPath", relativePath);
 
+            item = project.AddNewItem("Reference", "CodeSmith.Data.LinqToSql");
+
+            fullPath = Path.Combine(ProjectBuilder.WorkingDirectory, "Common");
+            fullPath = Path.Combine(fullPath, ProjectBuilder.FrameworkFolder);
+            fullPath = Path.Combine(fullPath, "CodeSmith.Data.LinqToSql.dll");
+
+            relativePath = CodeSmith.Engine.Utility.PathUtil.RelativePathTo(ProjectDirectory, fullPath);
+
+            item.SetMetadata("HintPath", relativePath);
+
             project.Save(ProjectFile.FullName);
         }
 
