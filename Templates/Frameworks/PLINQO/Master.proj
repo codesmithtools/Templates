@@ -95,9 +95,11 @@
   <ItemGroup>
     <CommitFiles Include="Common\CodeSmith.CodeParser.dll" />
     <CommitFiles Include="Common\v3.5\CodeSmith.Data.dll" />
+    <CommitFiles Include="Common\v3.5\CodeSmith.Data.LinqToSql.dll" />
     <CommitFiles Include="Common\v3.5\CodeSmith.Data.Memcached.dll" />
     <CommitFiles Include="Common\v3.5\CodeSmith.Data.xml" />
     <CommitFiles Include="Common\v4.0\CodeSmith.Data.dll" />
+    <CommitFiles Include="Common\v4.0\CodeSmith.Data.LinqToSql.dll" />
     <CommitFiles Include="Common\v4.0\CodeSmith.Data.Memcached.dll" />
     <CommitFiles Include="Common\v4.0\CodeSmith.Data.xml" />
     <CommitFiles Include="Common\CodeSmith.Data.chm" />
