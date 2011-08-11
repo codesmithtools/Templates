@@ -1026,17 +1026,6 @@
             By default, this does nothing.
             </summary>
         </member>
-        <member name="M:CodeSmith.SchemaHelper.EntityBase`1.ToString">
-            <summary>
-            Return the Name of the class.
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:CodeSmith.SchemaHelper.EntityBase`1.PopulateInheritanceProperties">
-            <summary>
-            Override to populate the Inheritance properties for the implemented entity.
-            </summary>
-        </member>
         <member name="M:CodeSmith.SchemaHelper.EntityBase`1.LoadKeys">
             <summary>
             Override to populate the keys from the implemented entity.
@@ -1060,6 +1049,17 @@
         <member name="M:CodeSmith.SchemaHelper.EntityBase`1.AddSearchCriteria">
             <summary>
             Override to populate the SearchCriteria from the implemented entity.
+            </summary>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.EntityBase`1.ToString">
+            <summary>
+            Return the Name of the class.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.EntityBase`1.PopulateInheritanceProperties">
+            <summary>
+            Override to populate the Inheritance properties for the implemented entity.
             </summary>
         </member>
         <member name="M:CodeSmith.SchemaHelper.EntityBase`1.GetSearchCriteria(CodeSmith.SchemaHelper.SearchCriteriaType)">
@@ -1275,6 +1275,11 @@
         <member name="P:CodeSmith.SchemaHelper.IKey.Properties">
             <summary>
             Properties that make up the Key.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.IKey.Associations">
+            <summary>
+            Associations that make up the Key.
             </summary>
         </member>
         <member name="T:CodeSmith.SchemaHelper.EntityStore">
@@ -2000,6 +2005,11 @@
             </summary>
         </member>
         <member name="P:CodeSmith.SchemaHelper.EntityKey.Properties">
+            <summary>
+            Properties that make up the Key.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.EntityKey.Associations">
             <summary>
             Properties that make up the Key.
             </summary>
