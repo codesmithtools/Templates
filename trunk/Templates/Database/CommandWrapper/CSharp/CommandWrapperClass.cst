@@ -1093,6 +1093,7 @@ public string GetReaderAssignmentStatement(CommandResultColumnSchema column, int
 
 #region Lookups
 
+[Browsable(false)]
 public bool IsTableValuedFunction
 {
     get
