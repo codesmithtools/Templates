@@ -67,8 +67,6 @@ namespace CodeSmith.SchemaHelper
             Precision = PropertySource.Precision ?? 0;
             FixedLength = PropertySource.FixedLength ?? false;
 
-            IsUnique = Boolean.TrueString.Equals(PropertySource.GetAttributeValue(EdmxConstants.IsIndexCustomAttribute));
-
             int temp;
             if (PropertySource.MaxLength != null && Int32.TryParse(PropertySource.MaxLength.ToString(), out temp))
             {
@@ -96,7 +94,11 @@ namespace CodeSmith.SchemaHelper
             // Concurrency
             if (!string.IsNullOrEmpty(PropertySource.ConcurrencyMode) && PropertySource.ConcurrencyMode.Equals(EdmxConstants.ConcurrencyModeFixed, StringComparison.InvariantCultureIgnoreCase))
             {
-                type |= PropertyType.Concurrency;
+                type = PropertyType.Concurrency;
+            }
+            else if (Boolean.TrueString.Equals(PropertySource.GetAttributeValue(EdmxConstants.IsIndexCustomAttribute)))
+            {
+                type = PropertyType.Index;
             }
 
             //if (IsForeignKey) type &= Enums.PropertyType.Foreign;
@@ -105,7 +107,5 @@ namespace CodeSmith.SchemaHelper
         }
 
         #endregion
-
-        public bool IsUnique { get; private set; }
     }
 }
