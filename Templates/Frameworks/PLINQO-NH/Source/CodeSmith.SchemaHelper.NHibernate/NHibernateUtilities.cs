@@ -260,10 +260,10 @@ namespace CodeSmith.SchemaHelper.NHibernate
                 if (_toNHibernateTypeMap == null)
                 {
                     string path;
-                    if (!Map.TryResolvePath("DbTypeToNHibernate", String.Empty, out path))
+                    if (!Map.TryResolvePath("DbTypeToNHibernate", String.Empty, out path) && TemplateContext.Current != null)
                     {
                         // If the mapping file wasn't found in the maps folder than look it up in the common folder.
-                        var baseDirectory = new DirectoryInfo(Assembly.GetExecutingAssembly().Location).Parent.FullName;
+                        string baseDirectory = Path.Combine(TemplateContext.Current.RootCodeTemplate.CodeTemplateInfo.DirectoryName, "..\\Common\\");
                         Map.TryResolvePath("DbTypeToNHibernate", baseDirectory, out path);
                     }
 
@@ -296,10 +296,10 @@ namespace CodeSmith.SchemaHelper.NHibernate
                 if (_fromNHibernateTypeMap == null)
                 {
                     string path;
-                    if (!Map.TryResolvePath("NHibernateToSystemType", String.Empty, out path))
+                    if (!Map.TryResolvePath("NHibernateToSystemType", String.Empty, out path) && TemplateContext.Current != null)
                     {
                         // If the mapping file wasn't found in the maps folder than look it up in the common folder.
-                        var baseDirectory = new DirectoryInfo(Assembly.GetExecutingAssembly().Location).Parent.FullName;
+                        string baseDirectory = Path.Combine(TemplateContext.Current.RootCodeTemplate.CodeTemplateInfo.DirectoryName, "..\\Common\\");
                         Map.TryResolvePath("NHibernateToSystemType", baseDirectory, out path);
                     }
 
@@ -332,10 +332,10 @@ namespace CodeSmith.SchemaHelper.NHibernate
                 if (_fromNHibernateNullableTypeMap == null)
                 {
                     string path;
-                    if (!Map.TryResolvePath("NHibernateToNullableType", String.Empty, out path))
+                    if (!Map.TryResolvePath("NHibernateToNullableType", String.Empty, out path) && TemplateContext.Current != null)
                     {
                         // If the mapping file wasn't found in the maps folder than look it up in the common folder.
-                        var baseDirectory = new DirectoryInfo(Assembly.GetExecutingAssembly().Location).Parent.FullName;
+                        string baseDirectory = Path.Combine(TemplateContext.Current.RootCodeTemplate.CodeTemplateInfo.DirectoryName, "..\\Common\\");
                         Map.TryResolvePath("NHibernateToNullableType", baseDirectory, out path);
                     }
 

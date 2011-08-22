@@ -1208,7 +1208,7 @@
         </member>
         <member name="T:CodeSmith.SchemaHelper.Util.TypeHelper">
             <summary>
-            This class aids in the resolving of Types from the Codesmith into .NET related types
+            This class aids in the resolving of Types from the CodeSmith Generator into .NET related types as well.
             </summary>
         </member>
         <member name="M:CodeSmith.SchemaHelper.Util.TypeHelper.ResolveSystemType(SchemaExplorer.ColumnSchema)">
