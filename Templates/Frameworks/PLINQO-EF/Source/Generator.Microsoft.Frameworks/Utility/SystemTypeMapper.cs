@@ -32,9 +32,10 @@ namespace Generator.Microsoft.Frameworks.Utility
                 if (_efConceptualTypeToSystemType == null)
                 {
                     string path;
-                    if (!Map.TryResolvePath("EF-System", string.Empty, out path))
+                    if (!Map.TryResolvePath("EF-System", string.Empty, out path) && TemplateContext.Current != null)
                     {
-                        string baseDirectory = new DirectoryInfo(Assembly.GetExecutingAssembly().Location).Parent.FullName;
+                        // If the mapping file wasn't found in the maps folder than look it up in the common folder.
+                        string baseDirectory = Path.Combine(TemplateContext.Current.RootCodeTemplate.CodeTemplateInfo.DirectoryName, "..\\Common\\");
                         Map.TryResolvePath("EF-System", baseDirectory, out path);
                     }
 

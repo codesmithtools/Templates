@@ -1,4 +1,4 @@
-﻿<%@ CodeTemplate Language="C#" TargetLanguage="C#" Inherits="EntityCodeTemplate" CompilerVersion="v3.5" Encoding="UTF-8" Description="EF Query Extension Class." %>
+<%@ CodeTemplate Language="C#" TargetLanguage="C#" Inherits="EntityCodeTemplate" CompilerVersion="v3.5" Encoding="UTF-8" Description="EF Query Extension Class." %>
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\Common" %>
 <%@ Assembly Name="Generator.QuickStart" Path="..\..\Common" %>
 <%@ Assembly Name="Generator.Microsoft.Frameworks" Path="..\..\Common" %>
@@ -75,7 +75,7 @@ foreach(IProperty property in Entity.Properties) {
         public static <%= EntityNamespace %>.<%= Entity.Name %> <%= UniqueMethodPrefix %><%= property.Name %>(this IQueryable<<%= EntityNamespace %>.<%= Entity.Name %>> queryable, <%= GetParameters(new List<IProperty>() { property }) %>)
         {
             var entity = queryable as System.Data.Objects.ObjectSet<<%= EntityNamespace %>.<%= Entity.Name %>>;
-            if (entity != null && && !entity.Context.ContextOptions.LazyLoadingEnabled)
+            if (entity != null && !entity.Context.ContextOptions.LazyLoadingEnabled)
                 return Query.<%= UniqueMethodPrefix %><%= property.Name %>.Invoke((<%= ContextNamespace %>.<%= DataContextName %>)entity.Context, <%= GetParametersNames(new List<IProperty>() { property }) %>);
 
             return queryable.FirstOrDefault(<%= GetLamba(new List<IProperty>() { property }, 5) %>);
@@ -252,7 +252,7 @@ foreach(IProperty property in Entity.Properties) {
         /// </summary>
         private static partial class Query
         {
-<% if(Entity.Properties.Count < 4) {
+<% //if(Entity.Properties.Count > 0) {
     if (Entity.HasKey) { %>
             <%= GeneratedCodeAttribute %>
             internal static readonly Func<<%= ContextNamespace %>.<%= DataContextName %>, <%= GetParametersTypes(Entity.Key.Properties) %>, <%= EntityNamespace %>.<%= Entity.Name %>> <%= UniqueMethodPrefix %><%= MethodKeySuffix %> =
@@ -271,7 +271,7 @@ foreach(IProperty property in Entity.Properties) {
 
 <%  } 
   }
-}// foreach method%>
+//}// foreach method%>
         }
         #endregion
     }
