@@ -290,7 +290,7 @@ foreach(IProperty property in Entity.Properties) {
         if (property.SystemType.Contains("Byte[]"))
             return true;
         
-        if ((property.PropertyType & PropertyType.Concurrency) != PropertyType.Concurrency && property.BaseSystemType != "System.Byte[]")
+        if ((property.PropertyType & PropertyType.Concurrency) == PropertyType.Concurrency || property.BaseSystemType == "System.Byte[]")
             return true;
         
         return false;
