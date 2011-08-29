@@ -34,7 +34,7 @@ namespace QuickStartUtils
                                        ? @"..\Templates\LinqToSql\"
                                        : ProjectBuilder.WorkingDirectory;
 
-            linqToSqlPath = CodeSmith.Engine.Utility.PathUtil.RelativePathTo(ProjectDirectory, linqToSqlPath);
+            linqToSqlPath = CodeSmith.Core.IO.PathHelper.RelativePathTo(ProjectDirectory, linqToSqlPath);
 
             if (!linqToSqlPath.EndsWith(@"\"))
                 linqToSqlPath += @"\";

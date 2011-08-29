@@ -25,7 +25,7 @@ namespace CodeSmith.QuickStart
         {
             string templateCspFile = System.IO.Path.Combine("Common", CspFileName);
 
-            string templatePath = CodeSmith.Engine.Utility.PathUtil.RelativePathTo(ProjectDirectory, ProjectBuilder.WorkingDirectory);
+            string templatePath = Core.IO.PathHelper.RelativePathTo(ProjectDirectory, ProjectBuilder.WorkingDirectory);
 
             if (!templatePath.EndsWith(@"\"))
                 templatePath += @"\";
