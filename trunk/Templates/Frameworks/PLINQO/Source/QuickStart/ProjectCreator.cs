@@ -111,7 +111,7 @@ namespace QuickStartUtils
 
             foreach (var solutionItem in solutionItems)
             {
-                string path = CodeSmith.Engine.Utility.PathUtil.RelativePathTo(ProjectDirectory, solutionItem.Path);
+                string path = CodeSmith.Core.IO.PathHelper.RelativePathTo(ProjectDirectory, solutionItem.Path);
                 var buildItem = project.AddNewItem("ProjectReference", path);
                 buildItem.SetMetadata("Project", solutionItem.Guid.ToString("B"));
                 buildItem.SetMetadata("Name", solutionItem.Name);
@@ -178,7 +178,7 @@ namespace QuickStartUtils
             fullPath = Path.Combine(fullPath, ProjectBuilder.FrameworkFolder);
             fullPath = Path.Combine(fullPath, "CodeSmith.Data.dll");
 
-            string relativePath = CodeSmith.Engine.Utility.PathUtil.RelativePathTo(ProjectDirectory, fullPath);
+            string relativePath = CodeSmith.Core.IO.PathHelper.RelativePathTo(ProjectDirectory, fullPath);
 
             item.SetMetadata("HintPath", relativePath);
 
@@ -188,7 +188,7 @@ namespace QuickStartUtils
             fullPath = Path.Combine(fullPath, ProjectBuilder.FrameworkFolder);
             fullPath = Path.Combine(fullPath, "CodeSmith.Data.LinqToSql.dll");
 
-            relativePath = CodeSmith.Engine.Utility.PathUtil.RelativePathTo(ProjectDirectory, fullPath);
+            relativePath = CodeSmith.Core.IO.PathHelper.RelativePathTo(ProjectDirectory, fullPath);
 
             item.SetMetadata("HintPath", relativePath);
 

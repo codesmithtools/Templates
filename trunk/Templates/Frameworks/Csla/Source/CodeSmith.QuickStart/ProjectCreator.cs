@@ -111,7 +111,7 @@ namespace CodeSmith.QuickStart
 
             foreach (var solutionItem in solutionItems)
             {
-                string path = CodeSmith.Engine.Utility.PathUtil.RelativePathTo(ProjectDirectory, solutionItem.Path);
+                string path = Core.IO.PathHelper.RelativePathTo(ProjectDirectory, solutionItem.Path);
                 var buildItem = project.AddNewItem("ProjectReference", path);
                 buildItem.SetMetadata("Project", solutionItem.Guid.ToString("B"));
                 buildItem.SetMetadata("Name", solutionItem.Name);
