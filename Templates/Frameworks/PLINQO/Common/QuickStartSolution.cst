@@ -1,4 +1,4 @@
-﻿<%@ CodeTemplate Language="C#" TargetLanguage="Text" Src="" Encoding="UTF-8" Inherits="" Debug="True" Description="Template description here." CompilerVersion="v3.5" %>
+<%@ CodeTemplate Language="C#" TargetLanguage="Text" Src="" Encoding="UTF-8" Inherits="" Debug="True" Description="Template description here." CompilerVersion="v3.5" %>
 <%@ Assembly Name="QuickStartUtils" %>
 <%@ Import Namespace="System.Collections.Generic" %>
 <%@ Import Namespace="QuickStartUtils" %>
@@ -23,7 +23,7 @@ Microsoft Visual Studio Solution File, Format Version 10.00
 <% foreach(SolutionItem solutionItem in SolutionItems) { 
     string path = solutionItem.Path;
     if (!string.IsNullOrEmpty(Location))    
-        path = CodeSmith.Engine.Utility.PathUtil.RelativePathTo(Location, path);
+        path = CodeSmith.Core.IO.PathHelper.RelativePathTo(Location, path);
     
 	if (solutionItem.Website) { %>
 Project("{<%= solutionItem.LanguageGuidString %>}") = "<%= solutionItem.Name %>", "<%= solutionItem.Name %>\", "{<%= solutionItem.GuidString %>}"
