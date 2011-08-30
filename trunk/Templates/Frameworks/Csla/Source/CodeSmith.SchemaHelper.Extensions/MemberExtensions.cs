@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using CodeSmith.Engine;
 
 namespace CodeSmith.SchemaHelper
@@ -46,9 +47,17 @@ namespace CodeSmith.SchemaHelper
                 if (_dbTypeToDataReaderMethod == null)
                 {
                     string path;
-                    if (Map.TryResolvePath("DbType-DataReaderMethod", "", out path))
+                    if (!Map.TryResolvePath("DbType-DataReaderMethod", String.Empty, out path) && TemplateContext.Current != null)
+                    {
+                        // If the mapping file wasn't found in the maps folder than look it up in the common folder.
+                        string baseDirectory = Path.GetFullPath(Path.Combine(TemplateContext.Current.RootCodeTemplate.CodeTemplateInfo.DirectoryName, @"..\Common"));
+                        Map.TryResolvePath("DbType-DataReaderMethod", baseDirectory, out path);
+                    }
+
+                    if (File.Exists(path))
                         _dbTypeToDataReaderMethod = Map.Load(path);
                 }
+
                 return _dbTypeToDataReaderMethod;
             }
         }

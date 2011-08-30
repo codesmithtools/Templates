@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
-using System.Linq;
-using System.Reflection;
+using System.IO;
 using System.Text.RegularExpressions;
 
 using CodeSmith.Engine;
@@ -63,16 +61,14 @@ namespace CodeSmith.SchemaHelper
         [Browsable(false)]
         public MapCollection SystemTypeEscape
         {
-
             get
             {
                 string mapFileName = TargetLanguage == LanguageEnum.CSharp ? "CSharpKeywordEscape" : "VBKeywordEscape";
-
                 if (_systemTypeEscape == null)
                 {
                     string path;
-                    Map.TryResolvePath(mapFileName, "", out path);
-                    _systemTypeEscape = Map.Load(path);
+                    Map.TryResolvePath(mapFileName, String.Empty, out path);
+                    _systemTypeEscape = File.Exists(path) ? Map.Load(path) : new MapCollection();
                 }
 
                 return _systemTypeEscape;
@@ -91,13 +87,19 @@ namespace CodeSmith.SchemaHelper
                 if (_keywordRenameAlias == null)
                 {
                     string path;
-                    if(!Map.TryResolvePath("KeywordRenameAlias", string.Empty, out path))
+                    if (!Map.TryResolvePath("KeywordRenameAlias", String.Empty, out path) && TemplateContext.Current != null)
                     {
-                        string baseDirectory = new System.IO.DirectoryInfo(Assembly.GetExecutingAssembly().Location).Parent.FullName;
-                        Map.TryResolvePath("KeywordRenameAlias", baseDirectory, out path);
+                        // If the mapping file wasn't found in the maps folder than look it up in the common folder.
+                        string baseDirectory = Path.GetFullPath(Path.Combine(TemplateContext.Current.RootCodeTemplate.CodeTemplateInfo.DirectoryName, @"..\Common"));
+                        if (!Map.TryResolvePath("KeywordRenameAlias", baseDirectory, out path))
+                        {
+                            baseDirectory = Path.Combine(TemplateContext.Current.RootCodeTemplate.CodeTemplateInfo.DirectoryName, "Common");
+                            Map.TryResolvePath("KeywordRenameAlias", baseDirectory, out path);
+                        }
                     }
 
-                    _keywordRenameAlias = Map.Load(path);
+                    // Prevents a NullReferenceException from occurring.
+                    _keywordRenameAlias = File.Exists(path) ? Map.Load(path) : new MapCollection();
                 }
 
                 return _keywordRenameAlias;

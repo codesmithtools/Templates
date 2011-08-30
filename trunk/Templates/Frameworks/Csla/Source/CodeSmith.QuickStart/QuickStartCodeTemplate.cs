@@ -378,7 +378,10 @@ namespace CodeSmith.QuickStart
                 }
             }
 
-            Entities = new EntityManager(SourceDatabase).Entities;
+            using (TemplateContext.SetContext(this))
+            {
+                Entities = new EntityManager(SourceDatabase).Entities;
+            }
 
             //if (string.IsNullOrEmpty(DataClassName))
             //    DataClassName = "DataAccessLayer";
@@ -437,7 +440,6 @@ namespace CodeSmith.QuickStart
                 LinqToSQLDataContextName = string.Empty;
 
             }
-
         }
 
         #endregion
