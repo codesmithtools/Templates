@@ -3,7 +3,7 @@ CodeSmith DBDocumenter Templates
 Author:  Jason Alexander (jalexander@telligent.com), Eric J. Smith
 --%>
 <%@ CodeTemplate Language="C#" TargetLanguage="HTML" Src="DBDocumenterTemplate.cs" Inherits="DBDocumenterTemplate" Description="Generates a set of HTML-based database documentation." OutputType="None" %>
-<%@ Property Name="SourceDatabase" Type="SchemaExplorer.DatabaseSchema" Category="Context" Description="Database that the documentation should be based on." %>
+<%@ Property Name="SourceDatabase" Type="SchemaExplorer.DatabaseSchema" Category="Context" Description="Database that the documentation should be based on." DeepLoad="True" %>
 <%@ Property Name="ServerName" Type="System.String" Category="Output" Description="The name of the actual database server that is being documented." %>
 <%@ Property Name="DocumentationTitle" Type="System.String" Default="Database Documentation" Category="Output" Description="Defines what the title of the HTML page that will be generated will be." %>
 <%@ Register Name="GeneralTemplate" Template="general.cst" %>
