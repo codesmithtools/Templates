@@ -11,6 +11,7 @@
 //
 //------------------------------------------------------------------------------
 
+using System;
 using System.IO;
 using System.Reflection;
 using CodeSmith.Engine;
@@ -32,14 +33,19 @@ namespace Generator.Microsoft.Frameworks.Utility
                 if (_efConceptualTypeToSystemType == null)
                 {
                     string path;
-                    if (!Map.TryResolvePath("EF-System", string.Empty, out path) && TemplateContext.Current != null)
+                    if (!Map.TryResolvePath("EF-System", String.Empty, out path) && TemplateContext.Current != null)
                     {
                         // If the mapping file wasn't found in the maps folder than look it up in the common folder.
-                        string baseDirectory = Path.Combine(TemplateContext.Current.RootCodeTemplate.CodeTemplateInfo.DirectoryName, "..\\Common\\");
-                        Map.TryResolvePath("EF-System", baseDirectory, out path);
+                        string baseDirectory = Path.GetFullPath(Path.Combine(TemplateContext.Current.RootCodeTemplate.CodeTemplateInfo.DirectoryName, @"..\Common"));
+                        if (!Map.TryResolvePath("EF-System", baseDirectory, out path))
+                        {
+                            baseDirectory = Path.Combine(TemplateContext.Current.RootCodeTemplate.CodeTemplateInfo.DirectoryName, "Common");
+                            Map.TryResolvePath("EF-System", baseDirectory, out path);
+                        }
                     }
 
-                    _efConceptualTypeToSystemType = Map.Load(path);
+                    // Prevents a NullReferenceException from occurring.
+                    _efConceptualTypeToSystemType = File.Exists(path) ? Map.Load(path) : new MapCollection();
                 }
 
                 return _efConceptualTypeToSystemType;
