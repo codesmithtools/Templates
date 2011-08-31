@@ -257,7 +257,7 @@ namespace CodeSmith.SchemaHelper.NHibernate
                     if (!Map.TryResolvePath("DbTypeToNHibernate", String.Empty, out path) && TemplateContext.Current != null)
                     {
                         // If the mapping file wasn't found in the maps folder than look it up in the common folder.
-                        string baseDirectory = Path.GetFullPath(Path.Combine(TemplateContext.Current.RootCodeTemplate.CodeTemplateInfo.DirectoryName, @"..\Common"));
+                        string baseDirectory = Path.GetFullPath(Path.Combine(TemplateContext.Current.RootCodeTemplate.CodeTemplateInfo.DirectoryName, @"..\..\Common"));
                         if (!Map.TryResolvePath("DbTypeToNHibernate", baseDirectory, out path))
                         {
                             baseDirectory = Path.Combine(TemplateContext.Current.RootCodeTemplate.CodeTemplateInfo.DirectoryName, "Common");
@@ -298,7 +298,7 @@ namespace CodeSmith.SchemaHelper.NHibernate
                     if (!Map.TryResolvePath("NHibernateToSystemType", String.Empty, out path) && TemplateContext.Current != null)
                     {
                         // If the mapping file wasn't found in the maps folder than look it up in the common folder.
-                        string baseDirectory = Path.GetFullPath(Path.Combine(TemplateContext.Current.RootCodeTemplate.CodeTemplateInfo.DirectoryName, @"..\Common"));
+                        string baseDirectory = Path.GetFullPath(Path.Combine(TemplateContext.Current.RootCodeTemplate.CodeTemplateInfo.DirectoryName, @"..\..\Common"));
                         if (!Map.TryResolvePath("NHibernateToSystemType", baseDirectory, out path))
                         {
                             baseDirectory = Path.Combine(TemplateContext.Current.RootCodeTemplate.CodeTemplateInfo.DirectoryName, "Common");
