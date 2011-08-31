@@ -67,12 +67,8 @@
   </Target>
 
   <Target Name="Libaries">
-    <Copy Condition="Exists('..\..\Libraries\AddIns\CodeSmith.CodeParser.dll')"
-          SourceFiles="..\..\Libraries\AddIns\CodeSmith.CodeParser.dll"
-          DestinationFolder="Common" />
-    <Copy Condition="Exists('..\..\Libraries\AddIns\CodeSmith.InsertClassMergeStrategy.dll')"
-          SourceFiles="..\..\Libraries\AddIns\CodeSmith.InsertClassMergeStrategy.dll"
-          DestinationFolder="Common" />
+    <Copy SourceFiles="..\..\Libraries\AddIns\CodeSmith.CodeParser.dll" DestinationFolder="Common" />
+    <Copy SourceFiles="..\..\Libraries\AddIns\CodeSmith.InsertClassMergeStrategy.dll" DestinationFolder="Common" />
   </Target>
 
   <Target Name="Compile" DependsOnTargets="Libaries">
