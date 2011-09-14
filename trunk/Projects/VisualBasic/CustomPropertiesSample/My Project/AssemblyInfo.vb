@@ -7,7 +7,7 @@ Imports System.Runtime.InteropServices
 <Assembly: AssemblyConfiguration("")> 
 <Assembly: AssemblyCompany("CodeSmith Tools, LLC")> 
 <Assembly: AssemblyProduct("CodeSmith")> 
-<Assembly: AssemblyCopyright("Copyright (c) 2002-2009 CodeSmith Tools, LLC.  All rights reserved.")> 
+<Assembly: AssemblyCopyright("Copyright (c) 2002-2011 CodeSmith Tools, LLC.  All rights reserved.")> 
 <Assembly: AssemblyTrademark("")> 
 <Assembly: AssemblyCulture("")> 
 <Assembly: ComVisible(False)> 

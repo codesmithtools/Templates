@@ -11,16 +11,19 @@ Imports System.Collections
   </defaultProperties>
   <propertySets>
     <propertySet name="StringHashtable.vb" output="StringHashtable.vb">
+      <property name="SingleFileMode">True</property>
       <property name="KeyType">String</property>
       <property name="ItemType">String</property>
       <property name="ClassName">StringHashtable</property>
     </propertySet>
     <propertySet name="StringIntegerHashtable.vb" output="StringIntegerHashtable.vb">
+      <property name="SingleFileMode">True</property>
       <property name="KeyType">String</property>
       <property name="ItemType">Integer</property>
       <property name="ClassName">StringIntegerHashtable</property>
     </propertySet>
     <propertySet name="IntegerHashtable.vb" output="IntegerHashtable.vb">
+      <property name="SingleFileMode">True</property>
       <property name="KeyType">Integer</property>
       <property name="ItemType">Integer</property>
       <property name="ClassName">IntegerHashtable</property>

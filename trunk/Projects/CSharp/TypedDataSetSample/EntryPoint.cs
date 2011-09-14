@@ -1,6 +1,6 @@
 //------------------------------------------------------------------------------
 //
-// Copyright (c) 2002-2008 CodeSmith Tools, LLC.  All rights reserved.
+// Copyright (c) 2002-2011 CodeSmith Tools, LLC.  All rights reserved.
 // 
 // The terms of use for this software are contained in the file
 // named sourcelicense.txt, which can be found in the root of this distribution.
@@ -13,17 +13,16 @@
 
 using System;
 using System.Data;
-using System.Data.Common;
 using System.Collections;
 
 namespace TypedDataSetSample
 {
-	public class EntryPoint
-	{
-		[STAThread]
-		static void Main(string[] args)
-		{
-			// PetShop
+    public class EntryPoint
+    {
+        [STAThread]
+        static void Main(string[] args)
+        {
+            // PetShop
             OrdersDataSet cds = new OrdersDataSet();
             OrdersDataAdapter cda = new OrdersDataAdapter();
             ProductDataSet pds = new ProductDataSet();
@@ -78,7 +77,7 @@ namespace TypedDataSetSample
             cds.Orders.AddOrdersRow(newRow);
                 
             Console.In.Read();
-			// make some changes and save
+            // make some changes and save
             //OrdersDataSet.OrdersRow editRow = cds.Orders.FindByOrderId(19);
             //editRow.BillZip = "33333";
             //editRow.Courier = "USPS";
@@ -94,7 +93,7 @@ namespace TypedDataSetSample
             //deleteRow.Delete();
             //cda.Update(cds);
             //Console.In.Read();
-			
-		}
-	}
+            
+        }
+    }
 }
