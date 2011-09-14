@@ -1,18 +1,56 @@
 <?xml version="1.0"?>
 <codeSmith xmlns="http://www.codesmithtools.com/schema/csp.xsd">
+  <variables>
+    <add key="ConnectionString1" value="Data Source=(local);Initial Catalog=PetShop;Integrated Security=True" />
+  </variables>
   <propertySets>
     <propertySet name="Product.vb" output="Product.vb" template="BusinessObject.cst">
-      <property name="SourceTable">PetShop.dbo.Product</property>
+      <property name="SingleFileMode">False</property>
+      <property name="ClassNamespace">VSIntegrationSample</property>
+      <property name="SourceTable">
+        <connectionString>$(ConnectionString1)</connectionString>
+        <providerType>SchemaExplorer.SqlSchemaProvider,SchemaExplorer.SqlSchemaProvider</providerType>
+        <table>
+      <owner>dbo</owner>
+      <name>Product</name>
+    </table>
+      </property>
     </propertySet>
     <propertySet name="Orders.vb" output="Orders.vb" template="BusinessObject.cst">
-      <property name="SourceTable">PetShop.dbo.Orders</property>
+      <property name="SingleFileMode">False</property>
+      <property name="ClassNamespace">VSIntegrationSample</property>
+      <property name="SourceTable">
+        <connectionString>$(ConnectionString1)</connectionString>
+        <providerType>SchemaExplorer.SqlSchemaProvider,SchemaExplorer.SqlSchemaProvider</providerType>
+        <table>
+      <owner>dbo</owner>
+      <name>Orders</name>
+    </table>
+      </property>
     </propertySet>
     <propertySet name="Profiles.vb" output="Profiles.vb" template="BusinessObject.cst">
-      <property name="SourceTable">PetShop.dbo.Profiles</table>
+      <property name="SingleFileMode">False</property>
+      <property name="ClassNamespace">VSIntegrationSample</property>
+      <property name="SourceTable">
+        <connectionString>$(ConnectionString1)</connectionString>
+        <providerType>SchemaExplorer.SqlSchemaProvider,SchemaExplorer.SqlSchemaProvider</providerType>
+        <table>
+      <owner>dbo</owner>
+      <name>Profiles</name>
+    </table>
       </property>
     </propertySet>
     <propertySet name="Supplier.vb" output="Supplier.vb" template="BusinessObject.cst">
-      <property name="SourceTable">PetShop.dbo.Supplier</property>
+      <property name="SingleFileMode">False</property>
+      <property name="ClassNamespace">VSIntegrationSample</property>
+      <property name="SourceTable">
+        <connectionString>$(ConnectionString1)</connectionString>
+        <providerType>SchemaExplorer.SqlSchemaProvider,SchemaExplorer.SqlSchemaProvider</providerType>
+        <table>
+      <owner>dbo</owner>
+      <name>Supplier</name>
+    </table>
+      </property>
     </propertySet>
   </propertySets>
 </codeSmith>

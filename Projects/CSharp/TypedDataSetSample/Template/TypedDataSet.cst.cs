@@ -1,6 +1,17 @@
+//------------------------------------------------------------------------------
+//
+// Copyright (c) 2002-2011 CodeSmith Tools, LLC.  All rights reserved.
+// 
+// The terms of use for this software are contained in the file
+// named sourcelicense.txt, which can be found in the root of this distribution.
+// By using this software in any fashion, you are agreeing to be bound by the
+// terms of this license.
+// 
+// You must not remove this notice, or any other, from this software.
+//
+//------------------------------------------------------------------------------
 using System;
 using System.Text;
-using System.ComponentModel;
 using CodeSmith.Engine;
 using System.Data;
 using SchemaExplorer;
@@ -8,276 +19,276 @@ using System.Collections.Generic;
 
 namespace CodeSmith.BaseTemplates
 {
-	public class SqlCodeTemplate : CodeTemplate
-	{
-		
-		public string GetCamelCaseName(string value)
-		{
-			return value.Substring(0, 1).ToLower() + value.Substring(1);
-		}
-		
-		public string GetSpacedName(string value)
-		{
-			StringBuilder spacedName = new StringBuilder();
-			
-			for (int i = 0; i < value.Length; i++)
-			{
-				if (i > 0 && i < value.Length - 1 && value.Substring(i, 1).ToUpper() == value.Substring(i, 1))
-				{
-					spacedName.Append(" ");
-				}
-				spacedName.Append(value[i]);
-			}
-			
-			return spacedName.ToString();
-		}
-		
-		public string GetClassName(string value)
-		{
-			return value.Replace(" ", "");
-		}
-		
-		
-		public string GetMemberVariableName(string value)
-		{
-			string memberVariableName = "_" + GetCamelCaseName(value);
-			
-			return memberVariableName;
-		}
-		
-		public bool SizeMatters(ColumnSchema column)
-		{
-			switch (column.DataType)
-			{
-				case DbType.String:
-				case DbType.AnsiString:
-				case DbType.AnsiStringFixedLength:
-				case DbType.Decimal:
-				{
-					return true;
-				}
-				default:
-				{
-					return false;
-				}
-			}
-		}
-		
-		public bool PrecisionMatters(ColumnSchema column)
-		{
-			switch (column.DataType)
-			{
-				case DbType.Decimal:
-				{
-					return true;
-				}
-				default:
-				{
-					return false;
-				}
-			}
-		}
-		
-		
-		public string GetSqlReaderAssignmentStatement(ColumnSchema column, int index)
-		{
-			string statement = "if (!reader.IsDBNull(" + index.ToString() + ")) ";
-			statement += GetMemberVariableName(column.Name) + " = ";
-			
-			if (column.Name.EndsWith("TypeCode")) statement += "(" + column.Name + ")";
-			
-			statement += "reader." + GetReaderMethod(column) + "(" + index.ToString() + ");";
-			
-			return statement;
-		}
-		
-		public string GetValidateStatements(TableSchema table, string statementPrefix)
-		{
-			string statements = "";
-			
-			foreach (ColumnSchema column in table.Columns)
-			{
-				if (IncludeEmptyCheck(column))
-				{
-					statements += "\r\n" + statementPrefix + "if (" + GetMemberVariableName(column.Name) + " == " + GetMemberVariableDefaultValue(column) + ") this.ValidationErrors.Add(new ValidationError(ValidationTypeCode.Required, \"" + table.Name + "\", \"" + column.Name + "\", \"" + column.Name + " is required.\"));";
-				}
-				if (IncludeMaxLengthCheck(column))
-				{
-					statements += "\r\n" + statementPrefix + "if (" + GetMemberVariableName(column.Name) + ".Length > " + column.Size.ToString() + ") this.ValidationErrors.Add(new ValidationError(ValidationTypeCode.MaxLength, \"" + table.Name + "\", \"" + column.Name + "\", \"" + column.Name + " is too long.\"));";
-				}
-			}
-			
-			return statements.Substring(statementPrefix.Length + 2);
-		}
-		
-		public string GetPropertyName(ColumnSchema column)
-		{
-			string propertyName = column.Name;
-			
-			if (propertyName == column.Table.Name + "Name") return "Name";
-			if (propertyName == column.Table.Name + "Description") return "Description";
-			
-			if (propertyName.EndsWith("TypeCode")) propertyName = propertyName.Substring(0, propertyName.Length - 4);
-			
-			return propertyName;
-		}
-		
-		
-		
-		public string GetReaderMethod(ColumnSchema column)
-		{
-			switch (column.DataType)
-			{
-				case DbType.Byte:
-				{
-					return "GetByte";
-				}
-				case DbType.Int16:
-				{
-					return "GetInt16";
-				}
-				case DbType.Int32:
-				{
-					return "GetInt32";
-				}
-				case DbType.Int64:
-				{
-					return "GetInt64";
-				}
-				case DbType.AnsiStringFixedLength:
-				case DbType.AnsiString:
-				case DbType.String:
-				case DbType.StringFixedLength:
-				{
-					return "GetString";
-				}
-				case DbType.Boolean:
-				{
-					return "GetBoolean";
-				}
-				case DbType.Guid:
-				{
-					return "GetGuid";
-				}
-				case DbType.Currency:
-				case DbType.Decimal:
-				{
-					return "GetDecimal";
-				}
-				case DbType.DateTime:
-				case DbType.Date:
-				{
-					return "GetDateTime";
-				}
-				default:
-				{
-					return "__SQL__" + column.DataType;
-				}
-			}
-		}
-		
-		
-		
-		public string GetMemberVariableDefaultValue(ColumnSchema column)
-		{
-			switch (column.DataType)
-			{
-				case DbType.Guid:
-				{
-					return "Guid.Empty";
-				}
-				case DbType.AnsiString:
-				case DbType.AnsiStringFixedLength:
-				case DbType.String:
-				case DbType.StringFixedLength:
-				{
-					return "String.Empty";
-				}
-				default:
-				{
-					return "";
-				}
-			}
-		}
-		
-		public bool IncludeMaxLengthCheck(ColumnSchema column)
-		{
-			switch (column.DataType)
-			{
-				case DbType.AnsiString:
-				case DbType.AnsiStringFixedLength:
-				case DbType.String:
-				case DbType.StringFixedLength:
-				{
-					return true;
-				}
-				default:
-				{
-					return false;
-				}
-			}
-		}
-		
-		public bool IncludeEmptyCheck(ColumnSchema column)
-		{
-			if (column.IsPrimaryKeyMember || column.AllowDBNull || column.Name.EndsWith("TypeCode")) return false;
-	
-			switch (column.DataType)
-			{
-				case DbType.Guid:
-				{
-					return true;
-				}
-				case DbType.AnsiString:
-				case DbType.AnsiStringFixedLength:
-				case DbType.String:
-				case DbType.StringFixedLength:
-				{
-					return true;
-				}
-				default:
-				{
-					return false;
-				}
-			}
-		}
-		
-		public string GetSqlParameterStatement(ColumnSchema column)
-		{
-			return GetSqlParameterStatement(column, false);
-		}
-		
-		public string GetSqlParameterStatement(ColumnSchema column, bool isOutput)
-		{
-			string param = "@" + column.Name + " " + column.NativeType;
-			
-			switch (column.DataType)
-			{
-				case DbType.Decimal:
-				{
-					param += "(" + column.Precision + ", " + column.Scale + ")";
-					break;
-				}
-				case DbType.AnsiString:
-				case DbType.AnsiStringFixedLength:
-				case DbType.String:
-				case DbType.StringFixedLength:
-				{
-					if (column.Size > 0)
-					{
-						param += "(" + column.Size + ")";
-					}
-					break;
-				}
-			}
-			
-			if (isOutput)
-			{
-				param += " OUTPUT";
-			}
-			
-			return param;
-		}
+    public class SqlCodeTemplate : CodeTemplate
+    {
+        
+        public string GetCamelCaseName(string value)
+        {
+            return value.Substring(0, 1).ToLower() + value.Substring(1);
+        }
+        
+        public string GetSpacedName(string value)
+        {
+            StringBuilder spacedName = new StringBuilder();
+            
+            for (int i = 0; i < value.Length; i++)
+            {
+                if (i > 0 && i < value.Length - 1 && value.Substring(i, 1).ToUpper() == value.Substring(i, 1))
+                {
+                    spacedName.Append(" ");
+                }
+                spacedName.Append(value[i]);
+            }
+            
+            return spacedName.ToString();
+        }
+        
+        public string GetClassName(string value)
+        {
+            return value.Replace(" ", "");
+        }
+        
+        
+        public string GetMemberVariableName(string value)
+        {
+            string memberVariableName = "_" + GetCamelCaseName(value);
+            
+            return memberVariableName;
+        }
+        
+        public bool SizeMatters(ColumnSchema column)
+        {
+            switch (column.DataType)
+            {
+                case DbType.String:
+                case DbType.AnsiString:
+                case DbType.AnsiStringFixedLength:
+                case DbType.Decimal:
+                {
+                    return true;
+                }
+                default:
+                {
+                    return false;
+                }
+            }
+        }
+        
+        public bool PrecisionMatters(ColumnSchema column)
+        {
+            switch (column.DataType)
+            {
+                case DbType.Decimal:
+                {
+                    return true;
+                }
+                default:
+                {
+                    return false;
+                }
+            }
+        }
+        
+        
+        public string GetSqlReaderAssignmentStatement(ColumnSchema column, int index)
+        {
+            string statement = "if (!reader.IsDBNull(" + index.ToString() + ")) ";
+            statement += GetMemberVariableName(column.Name) + " = ";
+            
+            if (column.Name.EndsWith("TypeCode")) statement += "(" + column.Name + ")";
+            
+            statement += "reader." + GetReaderMethod(column) + "(" + index.ToString() + ");";
+            
+            return statement;
+        }
+        
+        public string GetValidateStatements(TableSchema table, string statementPrefix)
+        {
+            string statements = "";
+            
+            foreach (ColumnSchema column in table.Columns)
+            {
+                if (IncludeEmptyCheck(column))
+                {
+                    statements += "\r\n" + statementPrefix + "if (" + GetMemberVariableName(column.Name) + " == " + GetMemberVariableDefaultValue(column) + ") this.ValidationErrors.Add(new ValidationError(ValidationTypeCode.Required, \"" + table.Name + "\", \"" + column.Name + "\", \"" + column.Name + " is required.\"));";
+                }
+                if (IncludeMaxLengthCheck(column))
+                {
+                    statements += "\r\n" + statementPrefix + "if (" + GetMemberVariableName(column.Name) + ".Length > " + column.Size.ToString() + ") this.ValidationErrors.Add(new ValidationError(ValidationTypeCode.MaxLength, \"" + table.Name + "\", \"" + column.Name + "\", \"" + column.Name + " is too long.\"));";
+                }
+            }
+            
+            return statements.Substring(statementPrefix.Length + 2);
+        }
+        
+        public string GetPropertyName(ColumnSchema column)
+        {
+            string propertyName = column.Name;
+            
+            if (propertyName == column.Table.Name + "Name") return "Name";
+            if (propertyName == column.Table.Name + "Description") return "Description";
+            
+            if (propertyName.EndsWith("TypeCode")) propertyName = propertyName.Substring(0, propertyName.Length - 4);
+            
+            return propertyName;
+        }
+        
+        
+        
+        public string GetReaderMethod(ColumnSchema column)
+        {
+            switch (column.DataType)
+            {
+                case DbType.Byte:
+                {
+                    return "GetByte";
+                }
+                case DbType.Int16:
+                {
+                    return "GetInt16";
+                }
+                case DbType.Int32:
+                {
+                    return "GetInt32";
+                }
+                case DbType.Int64:
+                {
+                    return "GetInt64";
+                }
+                case DbType.AnsiStringFixedLength:
+                case DbType.AnsiString:
+                case DbType.String:
+                case DbType.StringFixedLength:
+                {
+                    return "GetString";
+                }
+                case DbType.Boolean:
+                {
+                    return "GetBoolean";
+                }
+                case DbType.Guid:
+                {
+                    return "GetGuid";
+                }
+                case DbType.Currency:
+                case DbType.Decimal:
+                {
+                    return "GetDecimal";
+                }
+                case DbType.DateTime:
+                case DbType.Date:
+                {
+                    return "GetDateTime";
+                }
+                default:
+                {
+                    return "__SQL__" + column.DataType;
+                }
+            }
+        }
+        
+        
+        
+        public string GetMemberVariableDefaultValue(ColumnSchema column)
+        {
+            switch (column.DataType)
+            {
+                case DbType.Guid:
+                {
+                    return "Guid.Empty";
+                }
+                case DbType.AnsiString:
+                case DbType.AnsiStringFixedLength:
+                case DbType.String:
+                case DbType.StringFixedLength:
+                {
+                    return "String.Empty";
+                }
+                default:
+                {
+                    return "";
+                }
+            }
+        }
+        
+        public bool IncludeMaxLengthCheck(ColumnSchema column)
+        {
+            switch (column.DataType)
+            {
+                case DbType.AnsiString:
+                case DbType.AnsiStringFixedLength:
+                case DbType.String:
+                case DbType.StringFixedLength:
+                {
+                    return true;
+                }
+                default:
+                {
+                    return false;
+                }
+            }
+        }
+        
+        public bool IncludeEmptyCheck(ColumnSchema column)
+        {
+            if (column.IsPrimaryKeyMember || column.AllowDBNull || column.Name.EndsWith("TypeCode")) return false;
+    
+            switch (column.DataType)
+            {
+                case DbType.Guid:
+                {
+                    return true;
+                }
+                case DbType.AnsiString:
+                case DbType.AnsiStringFixedLength:
+                case DbType.String:
+                case DbType.StringFixedLength:
+                {
+                    return true;
+                }
+                default:
+                {
+                    return false;
+                }
+            }
+        }
+        
+        public string GetSqlParameterStatement(ColumnSchema column)
+        {
+            return GetSqlParameterStatement(column, false);
+        }
+        
+        public string GetSqlParameterStatement(ColumnSchema column, bool isOutput)
+        {
+            string param = "@" + column.Name + " " + column.NativeType;
+            
+            switch (column.DataType)
+            {
+                case DbType.Decimal:
+                {
+                    param += "(" + column.Precision + ", " + column.Scale + ")";
+                    break;
+                }
+                case DbType.AnsiString:
+                case DbType.AnsiStringFixedLength:
+                case DbType.String:
+                case DbType.StringFixedLength:
+                {
+                    if (column.Size > 0)
+                    {
+                        param += "(" + column.Size + ")";
+                    }
+                    break;
+                }
+            }
+            
+            if (isOutput)
+            {
+                param += " OUTPUT";
+            }
+            
+            return param;
+        }
 
         #region SearchCriteria Class
 
@@ -441,7 +452,7 @@ namespace CodeSmith.BaseTemplates
             }
             public string MethodName
             {
-                get { return this.ToString(); }
+                get { return ToString(); }
             }
             public MethodNameGenerationMode MethodNameGeneration
             {
@@ -485,7 +496,7 @@ namespace CodeSmith.BaseTemplates
 
                 public TableSearchCriteria(TableSchema sourceTable)
                 {
-                    this.table = sourceTable;
+                    table = sourceTable;
                 }
                 public TableSearchCriteria(TableSchema sourceTable, string extendedProperty)
                     : this(sourceTable)
@@ -611,5 +622,5 @@ namespace CodeSmith.BaseTemplates
 
         #endregion
 
-	}
+    }
 }

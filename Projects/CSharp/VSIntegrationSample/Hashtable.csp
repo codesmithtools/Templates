@@ -17,16 +17,19 @@ namespace VSIntegrationSample
   </defaultProperties>
   <propertySets>
     <propertySet name="StringHashtable.cs" output="StringHashtable.cs">
+      <property name="SingleFileMode">True</property>
       <property name="KeyType">string</property>
       <property name="ItemType">string</property>
       <property name="ClassName">StringHashtable</property>
     </propertySet>
     <propertySet name="StringIntegerHashtable.cs" output="StringIntegerHashtable.cs">
+      <property name="SingleFileMode">True</property>
       <property name="KeyType">string</property>
       <property name="ItemType">int</property>
       <property name="ClassName">StringIntegerHashtable</property>
     </propertySet>
     <propertySet name="IntegerHashtable.cs" output="IntegerHashtable.cs">
+      <property name="SingleFileMode">True</property>
       <property name="KeyType">int</property>
       <property name="ItemType">int</property>
       <property name="ClassName">IntegerHashtable</property>

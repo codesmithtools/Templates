@@ -4,11 +4,6 @@ Imports SchemaExplorer
 
 Module EntryPoint
     Sub Main()
-
-        ' Disables CodeSmith's Error Tracking for SDK Customers.
-        ' It is recommended that you leave this enabled so we can continue to improve the quality and experience of CodeSmith.
-        'CodeSmith.Engine.Insight.Disable()
-
         Dim compiler As CodeTemplateCompiler
         compiler = New CodeTemplateCompiler ("..\\..\\StoredProcedures.cst")
         compiler.Compile()
@@ -18,7 +13,7 @@ Module EntryPoint
 
             Dim database As DatabaseSchema
             database = _
-                New DatabaseSchema (New SqlSchemaProvider(), "Data Source=.\SQLEXPRESS;AttachDbFilename=PetShop.mdf;Integrated Security=True;Connect Timeout=30;User Instance=True")
+                New DatabaseSchema(New SqlSchemaProvider(), "Server=(local);Database=PetShop;Integrated Security=True;")
             Dim table As TableSchema
             table = database.Tables ("Inventory")
 
@@ -34,5 +29,8 @@ Module EntryPoint
                 Console.Read()
             Next
         End If
+
+        Console.WriteLine(Environment.NewLine + "Please press any key to continue.")
+        Console.ReadKey()
     End Sub
 End Module

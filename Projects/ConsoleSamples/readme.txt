@@ -1,1 +1,2 @@
-This folder contains samples of using the cs.exe CodeSmith console client.  Check the GenerateCode.bat file for samples.
+This folder contains samples of using the cs.exe CodeSmith Generator Console client.  
+Check the GenerateCode.bat file for samples.

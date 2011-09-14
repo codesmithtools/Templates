@@ -1,6 +1,6 @@
 ﻿'------------------------------------------------------------------------------
 '
-' Copyright (c) 2002-2008 CodeSmith Tools, LLC.  All rights reserved.
+' Copyright (c) 2002-2011 CodeSmith Tools, LLC.  All rights reserved.
 ' 
 ' The terms of use for this software are contained in the file
 ' named sourcelicense.txt, which can be found in the root of this distribution.

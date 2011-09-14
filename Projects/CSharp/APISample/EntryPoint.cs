@@ -11,10 +11,6 @@ namespace APISample
         [STAThread]
         public static void Main(string[] args)
         {
-            // Disables CodeSmith's Error Tracking for SDK Customers.
-            // It is recommended that you leave this enabled so we can continue to improve the quality and experience of CodeSmith.
-            //CodeSmith.Engine.Insight.Disable();
-
             CodeTemplateCompiler compiler = new CodeTemplateCompiler("..\\..\\StoredProcedures.cst");
             compiler.Compile();
 
@@ -22,7 +18,7 @@ namespace APISample
             {
                 CodeTemplate template = compiler.CreateInstance();
 
-                DatabaseSchema database = new DatabaseSchema(new SqlSchemaProvider(), @"Data Source=.\SQLEXPRESS;AttachDbFilename=PetShop.mdf;Integrated Security=True;Connect Timeout=30;User Instance=True;");
+                DatabaseSchema database = new DatabaseSchema(new SqlSchemaProvider(), @"Server=.;Database=PetShop;Integrated Security=True;");
                 TableSchema table = database.Tables["Inventory"];
 
                 template.SetProperty("SourceTable", table);
@@ -38,6 +34,9 @@ namespace APISample
                     Console.Error.WriteLine(compiler.Errors[i].ToString());
                 }
             }
+
+            Console.WriteLine("\r\nPress any key to continue.");
+            Console.ReadKey();
         }
     }
 }

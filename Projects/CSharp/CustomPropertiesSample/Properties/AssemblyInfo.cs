@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("CodeSmith Tools, LLC")]
 [assembly: AssemblyProduct("CodeSmith")]
-[assembly: AssemblyCopyright("Copyright (c) 2002-2009 CodeSmith Tools, LLC.  All rights reserved.")]
+[assembly: AssemblyCopyright("Copyright (c) 2002-2011 CodeSmith Tools, LLC.  All rights reserved.")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 [assembly: ComVisible(false)]
