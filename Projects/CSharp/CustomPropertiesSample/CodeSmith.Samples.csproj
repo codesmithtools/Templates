@@ -32,7 +32,7 @@
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="CodeSmith.Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=9fd61cdb91609a7a, processorArchitecture=MSIL" />
+    <Reference Include="CodeSmith.Core" />
     <Reference Include="CodeSmith.CustomProperties" />
     <Reference Include="CodeSmith.Engine" />
     <Reference Include="SchemaExplorer" />
@@ -108,7 +108,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="readme.txt" />
-    <Content Include="testpo.xml" />
+    <Content Include="testpo.xml">
+      <SubType>Designer</SubType>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
