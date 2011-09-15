@@ -5,7 +5,7 @@
 <%@ Assembly Name="SchemaExplorer" %>
 
 <%@ Import Namespace="CodeSmith.CustomProperties" %>
-<%@ Import Namespace="CodeSmith.Samples.SchemaCollections" %>
+<%@ Import Namespace="CodeSmith.Samples" %>
 <%@ Import Namespace="SchemaExplorer" %>
 
 Tables in the collection: <%= Collection.ToString() %>
