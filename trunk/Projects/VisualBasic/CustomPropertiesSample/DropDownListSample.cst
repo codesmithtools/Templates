@@ -5,7 +5,7 @@ Description: An example of a custom UIType a DropDownList.
 --%>
 <%@ CodeTemplate Language="VB" TargetLanguage="Text"CompilerVersion="v3.5" %>
 <%@ Property Name="SourceDatabase" Type="SchemaExplorer.DatabaseSchema" Optional="False" Category="Required" OnChanged="OnSourceDatabaseChanged" %>
-<%@ Property Name="SelectedTable" Type="CodeSmith.Samples.DropDownList.DropDownListProperty" Optional="True" Category="DropDownList Example" %>
+<%@ Property Name="SelectedTable" Type="CodeSmith.Samples.DropDownListProperty" Optional="True" Category="DropDownList Example" %>
 
 <%@ Assembly Name="CodeSmith.CustomProperties" %>
 <%@ Assembly Name="CodeSmith.Samples" %>
@@ -13,7 +13,7 @@ Description: An example of a custom UIType a DropDownList.
 
 <%@ Import Namespace="System.Collections.Generic" %>
 <%@ Import Namespace="CodeSmith.CustomProperties" %>
-<%@ Import Namespace="CodeSmith.Samples.DropDownList" %>
+<%@ Import Namespace="CodeSmith.Samples" %>
 <%@ Import Namespace="SchemaExplorer" %>
 
 <% For Each str As String In SelectedTable.Values %>
