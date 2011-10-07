@@ -260,7 +260,7 @@ namespace CodeSmith.SchemaHelper.NHibernate
                         string baseDirectory = Path.GetFullPath(Path.Combine(TemplateContext.Current.RootCodeTemplate.CodeTemplateInfo.DirectoryName, @"..\..\Common"));
                         if (!Map.TryResolvePath("DbTypeToNHibernate", baseDirectory, out path))
                         {
-                            baseDirectory = Path.Combine(TemplateContext.Current.RootCodeTemplate.CodeTemplateInfo.DirectoryName, "Common");
+                            baseDirectory = Path.Combine(TemplateContext.Current.RootCodeTemplate.CodeTemplateInfo.DirectoryName, "..\\Common");
                             Map.TryResolvePath("DbTypeToNHibernate", baseDirectory, out path);
                         }
                     }
@@ -301,7 +301,7 @@ namespace CodeSmith.SchemaHelper.NHibernate
                         string baseDirectory = Path.GetFullPath(Path.Combine(TemplateContext.Current.RootCodeTemplate.CodeTemplateInfo.DirectoryName, @"..\..\Common"));
                         if (!Map.TryResolvePath("NHibernateToSystemType", baseDirectory, out path))
                         {
-                            baseDirectory = Path.Combine(TemplateContext.Current.RootCodeTemplate.CodeTemplateInfo.DirectoryName, "Common");
+                            baseDirectory = Path.Combine(TemplateContext.Current.RootCodeTemplate.CodeTemplateInfo.DirectoryName, "..\\Common");
                             Map.TryResolvePath("NHibernateToSystemType", baseDirectory, out path);
                         }
                     }
@@ -342,7 +342,7 @@ namespace CodeSmith.SchemaHelper.NHibernate
                         string baseDirectory = Path.GetFullPath(Path.Combine(TemplateContext.Current.RootCodeTemplate.CodeTemplateInfo.DirectoryName, @"..\Common"));
                         if (!Map.TryResolvePath("NHibernateToNullableType", baseDirectory, out path))
                         {
-                            baseDirectory = Path.Combine(TemplateContext.Current.RootCodeTemplate.CodeTemplateInfo.DirectoryName, "Common");
+                            baseDirectory = Path.Combine(TemplateContext.Current.RootCodeTemplate.CodeTemplateInfo.DirectoryName, "..\\Common");
                             Map.TryResolvePath("NHibernateToNullableType", baseDirectory, out path);
                         }
                     }
