@@ -14,6 +14,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
+    <BuildConfiguration>Release</BuildConfiguration>
     <DeployFolder>\\WEB02\nightly\PLINQOEF</DeployFolder>
   </PropertyGroup>
 
