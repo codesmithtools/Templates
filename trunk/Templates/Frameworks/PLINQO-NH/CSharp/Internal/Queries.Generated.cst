@@ -1,4 +1,4 @@
-﻿<%-- Author: Blake Niemyjski & Tom DuPont --%>
+<%-- Author: Blake Niemyjski & Tom DuPont --%>
 <%@ CodeTemplate Language="C#" TargetLanguage="C#" CompilerVersion="v3.5" Encoding="UTF-8"
     Src="NHibernateHelper.cs" Inherits="NHibernateHelper"
     Description="EF Query Extension Class." %>
@@ -87,6 +87,7 @@ namespace <%= String.IsNullOrEmpty(QueryNamespace)? BaseNamespace : QueryNamespa
         }
         <% if (Entity.Key.Associations.Count > 0) { %>
         
+        <%--
         /// <summary>
         /// Gets an instance by the primary key.
         /// </summary>
@@ -107,6 +108,7 @@ namespace <%= String.IsNullOrEmpty(QueryNamespace)? BaseNamespace : QueryNamespa
         <% } %>
                 .FirstOrDefault();
         }
+        --%>
         <% } %>
         
     <% } %>
