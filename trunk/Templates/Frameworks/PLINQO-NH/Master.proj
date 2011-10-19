@@ -30,6 +30,28 @@
       <Output TaskParameter="Year" PropertyName="Year" />
     </Time>
 
+    <AssemblyInfo CodeLanguage="CS"
+      OutputFile="$(MSBuildProjectDirectory)\Source\CodeSmith.Data.NHibernate\Properties\AssemblyInfo.cs"
+      AssemblyCompany="CodeSmith Tools, LLC"
+      AssemblyProduct="nHibernate"
+      AssemblyCopyright="Copyright (c) 2002-$(Year) CodeSmith Tools, LLC.  All rights reserved."
+      AssemblyConfiguration="$(BuildConfiguration)"
+      AssemblyVersion="$(Major).$(BindMinor).$(BindBuild).$(BindRevision)"
+      AssemblyFileVersion="$(Major).$(Minor).$(Build).$(Revision)"
+      AssemblyInformationalVersion="$(Major).$(Minor).$(Build).$(Revision)"
+      GenerateClass="true" />
+
+    <AssemblyInfo CodeLanguage="CS"
+      OutputFile="$(MSBuildProjectDirectory)\Source\CodeSmith.SchemaHelper.NHibernate\Properties\AssemblyInfo.cs"
+      AssemblyCompany="CodeSmith Tools, LLC"
+      AssemblyProduct="nHibernate"
+      AssemblyCopyright="Copyright (c) 2002-$(Year) CodeSmith Tools, LLC.  All rights reserved."
+      AssemblyConfiguration="$(BuildConfiguration)"
+      AssemblyVersion="$(Major).$(BindMinor).$(BindBuild).$(BindRevision)"
+      AssemblyFileVersion="$(Major).$(Minor).$(Build).$(Revision)"
+      AssemblyInformationalVersion="$(Major).$(Minor).$(Build).$(Revision)"
+      GenerateClass="true" />
+
   </Target>
 
   <ItemGroup>
@@ -53,12 +75,38 @@
 
     <ZipFiles Include="**\*.*" Exclude="@(DefaultExclude)" />
   </ItemGroup>
+  
+  <Target Name="Compile" DependsOnTargets="Version">
+    <MSBuild Projects="Source\CodeSmith.Data.NHibernate.sln"
+             Properties="Configuration=$(BuildConfiguration)" />
+  </Target>
 
-  <Target Name="Zip">
+  <ItemGroup>
+    <CommitFiles Include="Common\CodeSmith.Data\CodeSmith.Data.NHibernate.dll" />
+    <CommitFiles Include="Common\SchemaHelper\CodeSmith.SchemaHelper.NHibernate.dll" />
+  </ItemGroup>
+
+  <Target Name="Zip" DependsOnTargets="Version;Compile">
     <Zip Files="@(ZipFiles)" ZipFileName="plinqo-nhibernate-r$(Revision).zip" />
   </Target>
 
-  <Target Name="Nightly" DependsOnTargets="Version;Zip">
+<Target Name="Commit" DependsOnTargets="Compile">
+    <RegistryRead KeyName="HKEY_LOCAL_MACHINE\SOFTWARE\BuildServer" ValueName="GoogleUser">
+      <Output TaskParameter="Value" PropertyName="GoogleUser" />
+    </RegistryRead>
+    <RegistryRead KeyName="HKEY_LOCAL_MACHINE\SOFTWARE\BuildServer" ValueName="GooglePassword">
+      <Output TaskParameter="Value" PropertyName="GooglePassword" />
+    </RegistryRead>
+
+    <SvnCommit
+      Targets="@(CommitFiles)"
+      Message="Auto commit from MSBuild."
+      Username="$(GoogleUser)"
+      Password="$(GooglePassword)" />
+
+  </Target>
+
+  <Target Name="Nightly" DependsOnTargets="Zip;Commit">
     <Copy SourceFiles="plinqo-nhibernate-r$(Revision).zip"
           DestinationFiles="$(DeployFolder)\plinqo-nhibernate-r$(Revision).zip" />
   </Target>
