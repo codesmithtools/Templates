@@ -1,0 +1,111 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{B1729527-5608-4E98-9A3B-C76AE9DFC1F3}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>SchemaMapper</RootNamespace>
+    <AssemblyName>SchemaMapper</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Accessibility">
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="CodeSmith.Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=9fd61cdb91609a7a, processorArchitecture=MSIL" />
+    <Reference Include="CodeSmith.Engine, Version=6.0.0.0, Culture=neutral, PublicKeyToken=9fd61cdb91609a7a, processorArchitecture=MSIL">
+      <HintPath>C:\Program Files (x86)\CodeSmith\v6.0\bin\CodeSmith.Engine.dll</HintPath>
+    </Reference>
+    <Reference Include="ICSharpCode.NRefactory, Version=5.0.0.0, Culture=neutral, PublicKeyToken=d4bfe873e7598c49, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Common\ICSharpCode.NRefactory.dll</HintPath>
+    </Reference>
+    <Reference Include="ICSharpCode.NRefactory.CSharp">
+      <HintPath>..\..\Common\ICSharpCode.NRefactory.CSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Cecil">
+      <HintPath>..\..\Common\Mono.Cecil.dll</HintPath>
+    </Reference>
+    <Reference Include="SchemaExplorer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=9fd61cdb91609a7a, processorArchitecture=MSIL">
+      <HintPath>C:\Program Files (x86)\CodeSmith\v6.0\AddIns\SchemaExplorer.dll</HintPath>
+    </Reference>
+    <Reference Include="SchemaExplorer.SqlSchemaProvider, Version=6.0.0.0, Culture=neutral, PublicKeyToken=9fd61cdb91609a7a, processorArchitecture=MSIL">
+      <HintPath>C:\Program Files (x86)\CodeSmith\v6.0\SchemaProviders\SchemaExplorer.SqlSchemaProvider.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\CSharp\Internal\Extensions.cs">
+      <Link>Internal\Extensions.cs</Link>
+    </Compile>
+    <Compile Include="..\..\CSharp\Internal\Generator.cs">
+      <Link>Internal\Generator.cs</Link>
+    </Compile>
+    <Compile Include="..\..\CSharp\Internal\Model.cs">
+      <Link>Internal\Model.cs</Link>
+    </Compile>
+    <Compile Include="..\..\CSharp\Internal\Parser.cs">
+      <Link>Internal\Parser.cs</Link>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\CSharp\Entity.cst">
+      <Link>Entity.cst</Link>
+    </None>
+    <None Include="..\..\CSharp\Internal\Context.Editable.cst">
+      <Link>Internal\Context.Editable.cst</Link>
+    </None>
+    <None Include="..\..\CSharp\Internal\Context.Generated.cst">
+      <Link>Internal\Context.Generated.cst</Link>
+    </None>
+    <None Include="..\..\CSharp\Internal\Entity.Editable.cst">
+      <Link>Internal\Entity.Editable.cst</Link>
+    </None>
+    <None Include="..\..\CSharp\Internal\Entity.Generated.cst">
+      <Link>Internal\Entity.Generated.cst</Link>
+    </None>
+    <None Include="..\..\CSharp\Internal\Mapping.Editable.cst">
+      <Link>Internal\Mapping.Editable.cst</Link>
+    </None>
+    <None Include="..\..\CSharp\Internal\Mapping.Generated.cst">
+      <Link>Internal\Mapping.Generated.cst</Link>
+    </None>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
