@@ -1,4 +1,0 @@
-<%@ CodeTemplate Language="C#" Debug="True" LinePragmas="True" %>
-<!-- #include file="HeaderInclude.cst" -->
-<%@ Property Name="SomeValue" Type="String" %>
-<script runat="template"><!-- #include file="ScriptInclude.cs" --></script><%= GetDefaultCommentHeader() %>
