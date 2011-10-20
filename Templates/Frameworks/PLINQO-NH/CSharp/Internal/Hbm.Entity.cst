@@ -40,6 +40,7 @@
         <% IEnumerable<IProperty> foriegnKeyProperties = SourceEntity.Key.Properties.Where(p => IsAssociationKey(p)); %>
         <% foreach(IProperty property in foriegnKeyProperties) { %>
             <% Association association = GetAssociationKey(property); %>
+            <% if(foriegnKeyAssociations.Contains(association)) continue; // TODO This needs to be rewritten.. %>
             <% foriegnKeyAssociations.Add(association); %>
             <key-many-to-one name="<%= association.Name %>" class="<%= association.ForeignEntity.Name %>" <%= GetAttributes(association) %>>
                 <% foreach(AssociationProperty associationProperty in association.Properties) { %>
