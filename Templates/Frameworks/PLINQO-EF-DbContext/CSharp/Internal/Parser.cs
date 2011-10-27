@@ -437,13 +437,30 @@ namespace SchemaMapper
       if (parsedContext == null)
         return;
 
-      generatedContext.ClassName = parsedContext.ContextClass;
+      if (generatedContext.ClassName != parsedContext.ContextClass)
+      {
+        Debug.WriteLine("Rename Context Class'{0}' to '{1}'.",
+                        generatedContext.ClassName,
+                        parsedContext.ContextClass);
+
+        generatedContext.ClassName = parsedContext.ContextClass;
+      }
 
       foreach (var parsedProperty in parsedContext.Properties)
       {
         var entity = generatedContext.Entities.ByClass(parsedProperty.EntityClass);
-        if (entity != null)
-          entity.ContextName = parsedProperty.ContextProperty;
+        if (entity == null)
+          continue;
+
+
+        if (entity.ContextName == parsedProperty.ContextProperty)
+          continue;
+
+        Debug.WriteLine("Rename Context Property'{0}' to '{1}'.",
+                        entity.ContextName,
+                        parsedProperty.ContextProperty);
+
+        entity.ContextName = parsedProperty.ContextProperty;
       }
     }
 
@@ -474,7 +491,15 @@ namespace SchemaMapper
           continue;
 
         // sync names
-        entity.MappingName = parsedEntity.MappingClass;
+        if (entity.MappingName != parsedEntity.MappingClass)
+        {
+          Debug.WriteLine("Rename Mapping Class'{0}' to '{1}'.",
+                entity.MappingName,
+                parsedEntity.MappingClass);
+
+          entity.MappingName = parsedEntity.MappingClass;
+        }
+
         // use rename api to make sure all instances are renamed
         generatedContext.RenameEntity(entity.ClassName, parsedEntity.EntityClass);
 
@@ -515,8 +540,30 @@ namespace SchemaMapper
         if (relationship == null)
           continue;
 
-        relationship.ThisPropertyName = parsedRelationship.ThisPropertyName;
-        relationship.OtherPropertyName = parsedRelationship.OtherPropertyName;
+        bool isThisSame = relationship.ThisPropertyName == parsedRelationship.ThisPropertyName;
+        bool isOtherSame = relationship.OtherPropertyName == parsedRelationship.OtherPropertyName;
+
+        if (isThisSame && isOtherSame)
+          continue;
+
+        if (!isThisSame)
+        {
+          Debug.WriteLine("Rename Relationship Property '{0}.{1}' to '{0}.{2}'.",
+                relationship.ThisEntity,
+                relationship.ThisPropertyName,
+                parsedRelationship.ThisPropertyName);
+
+          relationship.ThisPropertyName = parsedRelationship.ThisPropertyName;
+        }
+        if (!isOtherSame)
+        {
+          Debug.WriteLine("Rename Relationship Property '{0}.{1}' to '{0}.{2}'.",
+                relationship.OtherEntity,
+                relationship.OtherPropertyName,
+                parsedRelationship.OtherPropertyName);
+
+          relationship.OtherPropertyName = parsedRelationship.OtherPropertyName;
+        }
 
         // sync other relationship
         var otherEntity = generatedContext.Entities.ByClass(relationship.OtherEntity);
@@ -548,8 +595,31 @@ namespace SchemaMapper
         if (relationship == null)
           continue;
 
-        relationship.ThisPropertyName = parsedRelationship.ThisPropertyName;
-        relationship.OtherPropertyName = parsedRelationship.OtherPropertyName;
+
+        bool isThisSame = relationship.ThisPropertyName == parsedRelationship.ThisPropertyName;
+        bool isOtherSame = relationship.OtherPropertyName == parsedRelationship.OtherPropertyName;
+
+        if (isThisSame && isOtherSame)
+          continue;
+
+        if (!isThisSame)
+        {
+          Debug.WriteLine("Rename Relationship Property '{0}.{1}' to '{0}.{2}'.",
+                relationship.ThisEntity,
+                relationship.ThisPropertyName,
+                parsedRelationship.ThisPropertyName);
+
+          relationship.ThisPropertyName = parsedRelationship.ThisPropertyName;
+        }
+        if (!isOtherSame)
+        {
+          Debug.WriteLine("Rename Relationship Property '{0}.{1}' to '{0}.{2}'.",
+                relationship.OtherEntity,
+                relationship.OtherPropertyName,
+                parsedRelationship.OtherPropertyName);
+
+          relationship.OtherPropertyName = parsedRelationship.OtherPropertyName;
+        }
 
         // sync other relationship
         var otherEntity = generatedContext.Entities.ByClass(relationship.OtherEntity);
