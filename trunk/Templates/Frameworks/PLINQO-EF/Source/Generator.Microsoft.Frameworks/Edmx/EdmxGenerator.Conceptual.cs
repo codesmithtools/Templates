@@ -964,7 +964,20 @@ namespace Generator.Microsoft.Frameworks
             string fromRole;
             ResolveConceptualAssociationValues(association, out principalEntity, out dependentEntity, out isParentEntity, out key, out toRole, out fromRole);
 
-            var navigationProperty = entity.NavigationProperties.Where(n => n.Relationship.Equals(string.Concat(ConceptualSchema.Namespace, ".", key))).FirstOrDefault();
+            //11/4/2011 If an entity has an association to itself then we will modify the key if it's the child association.
+            bool isSelfReferencingChild = !isParentEntity && principalEntity == dependentEntity;
+            if (!isSelfReferencingChild && !association.IsParentManyToMany())
+            {
+                var temp = fromRole;
+                fromRole = toRole;
+                toRole = temp;
+            }
+
+            // 11/4/2011 Updated to check to see if a self referencing entity exists then we check the too and from roles. By checking only the to and from roles if it's a self referencing this allows custom names to be picked up.
+            var navigationProperty = principalEntity == dependentEntity 
+                ? entity.NavigationProperties.FirstOrDefault(n => n.Relationship.Equals(String.Concat(ConceptualSchema.Namespace, ".", key)) && n.ToRole.Equals(toRole) && n.FromRole.Equals(fromRole))
+                : entity.NavigationProperties.FirstOrDefault(n => n.Relationship.Equals(String.Concat(ConceptualSchema.Namespace, ".", key)));
+
             if (navigationProperty == null)
             {
                 navigationProperty = new NavigationProperty() { Name = association.Name };
@@ -975,8 +988,8 @@ namespace Generator.Microsoft.Frameworks
                 navigationProperty.Name = association.Name;
 
             navigationProperty.Relationship = string.Concat(ConceptualSchema.Namespace, ".", key);
-            navigationProperty.FromRole = !association.IsParentManyToMany() ? toRole : fromRole;
-            navigationProperty.ToRole = !association.IsParentManyToMany() ? fromRole : toRole;
+            navigationProperty.FromRole = fromRole;
+            navigationProperty.ToRole = toRole;
         }
 
         /// <summary>
@@ -1010,10 +1023,12 @@ namespace Generator.Microsoft.Frameworks
         private bool ValidateConceptualNavigationProperty(NavigationProperty nav)
         {
             var associationSet = ConceptualSchemaEntityContainer.AssociationSets.Where(a => a.Association == nav.Relationship).FirstOrDefault();
-            if (associationSet == null) return false;
+            if (associationSet == null) 
+                return false;
 
             var association = ConceptualSchema.Associations.Where(a => a.Name == associationSet.Association.Replace(string.Concat(ConceptualSchema.Namespace, "."), "")).FirstOrDefault();
-            if (association == null) return false;
+            if (association == null) 
+                return false;
 
             var fromRoleEnd = association.Ends.Where(e => e.Role.Equals(nav.FromRole, StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault();
             var toRoleEnd = association.Ends.Where(e => e.Role.Equals(nav.ToRole, StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault();
