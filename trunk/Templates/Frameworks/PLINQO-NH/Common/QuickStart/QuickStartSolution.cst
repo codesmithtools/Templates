@@ -1,4 +1,4 @@
-﻿<%@ CodeTemplate Language="C#" TargetLanguage="Text" Src="" Encoding="UTF-8" Inherits="" Debug="True" Description="Template description here." CompilerVersion="v3.5" %>
+<%@ CodeTemplate Language="C#" TargetLanguage="Text" Src="" Encoding="UTF-8" Inherits="" Debug="True" Description="Template description here." CompilerVersion="v3.5" %>
 
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="../SchemaHelper/" %>
 <%@ Assembly Name="Generator.QuickStart" %>
@@ -11,14 +11,8 @@
 <%@ Property Name="Language" Type="LanguageEnum" Default="CSharp" Optional="False" Category="1.Project" Description="Language the project will be in." %>
 <%@ Property Name="Framework" Type="Generator.QuickStart.FrameworkVersion" Default="v40" Optional="False" Category="1.Project"  Description="The .net Framework version." %>
 <%@ Property Name="Location" Type="System.String" Default="" Optional="True" Category="1.Project" Description="This is the path to the Solution location." %>
-
-<% if (Framework == Generator.QuickStart.FrameworkVersion.v40) { %>
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
-<% } else { %>
-Microsoft Visual Studio Solution File, Format Version 10.00
-# Visual Studio 2008
-<% } %>
 <% foreach(SolutionItem solutionItem in SolutionItems) { 
 	if(solutionItem.Website) { %>
 Project("{<%= solutionItem.LanguageGuidString %>}") = "<%= solutionItem.Name %>", "<%= solutionItem.Name %>\", "{<%= solutionItem.GuidString %>}"

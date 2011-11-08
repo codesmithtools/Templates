@@ -12,14 +12,8 @@
 <%@ Property Name="Location" Type="System.String" 
     Default="" Optional="True" Category="1.Project" 
     Description="This is the path to the Solution location." %>
-
-<% if (Framework == FrameworkVersion.v40) { %>
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
-<% } else { %>
-Microsoft Visual Studio Solution File, Format Version 10.00
-# Visual Studio 2008
-<% } %>
 <% foreach(SolutionItem solutionItem in SolutionItems) { 
     string path = solutionItem.Path;
     if (!string.IsNullOrEmpty(Location))    
