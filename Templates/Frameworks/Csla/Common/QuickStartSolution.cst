@@ -1,4 +1,4 @@
-﻿<%@ CodeTemplate Language="C#" TargetLanguage="Text" Src="" Encoding="UTF-8" Inherits="" Debug="True" Description="Template description here." CompilerVersion="v3.5" %>
+<%@ CodeTemplate Language="C#" TargetLanguage="Text" Src="" Encoding="UTF-8" Inherits="" Debug="True" Description="Template description here." CompilerVersion="v3.5" %>
 
 <%@ Assembly Name="CodeSmith.SchemaHelper" %>
 <%@ Assembly Name="CodeSmith.QuickStart" %>
@@ -10,14 +10,8 @@
 <%@ Property Name="SolutionItems" Type="List<SolutionItem>" Optional="False" Category="1.Project" Description="" %>
 <%@ Property Name="Language" Type="LanguageEnum" Default="CSharp" Optional="False" Category="1.Project" Description="Language the project will be in." %>
 <%@ Property Name="IsCSLA40" Type="System.Boolean" Optional="False" Category="1.Project" Description="" %>
-
-<% if(IsCSLA40) { %>
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
-<% } else { %>
-Microsoft Visual Studio Solution File, Format Version 10.00
-# Visual Studio 2008
-<% } %>
 <% foreach(SolutionItem solutionItem in SolutionItems) { 
 	if(solutionItem.Website) { %>
 Project("{<%= solutionItem.LanguageGuidString %>}") = "<%= solutionItem.Name %>", "<%= solutionItem.Name %>\", "{<%= solutionItem.GuidString %>}"
