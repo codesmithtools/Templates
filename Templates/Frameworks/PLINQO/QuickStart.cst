@@ -56,7 +56,7 @@ Description: Used to Quick Start Visual Studio Projects
     Default="" Optional="False" Category="5.Test Project"
     Description="Name Space for the Test Project." %>
 <%@ Property Name="IncludeTestProject" Type="System.Boolean"
-    Default="True" Optional="False" Category="5.Test Project"
+    Default="False" Optional="False" Category="5.Test Project"
     Description="Name Space for the Test Project." %>
 
 <% CreateQuickStart(); %>
