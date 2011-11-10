@@ -44,7 +44,6 @@
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="CodeSmith.Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=9fd61cdb91609a7a, processorArchitecture=MSIL" />
     <Reference Include="System">
       <Name>System</Name>
     </Reference>
@@ -56,6 +55,9 @@
     </Reference>
     <Reference Include="System.Xml">
       <Name>System.XML</Name>
+    </Reference>
+    <Reference Include="CodeSmith.Core">
+      <Name>CodeSmith.Core</Name>
     </Reference>
     <Reference Include="CodeSmith.Engine">
       <Name>CodeSmith.Engine</Name>
