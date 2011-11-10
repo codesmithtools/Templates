@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<codeSmith xmlns="http://www.codesmithtools.com/schema/csp.xsd">
+  <variables>
+    <add key="ConnectionString2" value="Data Source=(local);Initial Catalog=Ugly;Integrated Security=True" />
+  </variables>
+  <propertySets>
+    <propertySet name="Entity" output="Entity.txt" template="..\..\Templates\CSharp\Entity.cst">
+      <property name="ContextDirectory">.\</property>
+      <property name="EntityDirectory">.\Entities</property>
+      <property name="MappingDirectory">.\Mapping</property>
+      <property name="TableNaming">Mixed</property>
+      <property name="EntityNaming">Singular</property>
+      <property name="RelationshipNaming">ListSuffix</property>
+      <property name="ContextNaming">Plural</property>
+      <property name="IgnoreList">
+        <stringList>
+      <string>sysdiagrams$</string>
+    </stringList>
+      </property>
+      <property name="CleanExpressions">
+        <stringList>
+      <string>^(sp|tbl|udf|vw)_</string>
+    </stringList>
+      </property>
+      <property name="ContextNamespace">Ugly.Data</property>
+      <property name="SourceDatabase">
+        <connectionString>$(ConnectionString2)</connectionString>
+        <providerType>SchemaExplorer.SqlSchemaProvider,SchemaExplorer.SqlSchemaProvider</providerType>
+      </property>
+      <property name="MappingNamespace">Ugly.Data.Mapping</property>
+      <property name="EntityNamespace">Ugly.Data.Entities</property>
+    </propertySet>
+  </propertySets>
+</codeSmith>
