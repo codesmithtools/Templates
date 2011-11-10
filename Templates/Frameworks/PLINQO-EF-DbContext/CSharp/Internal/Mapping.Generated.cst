@@ -71,6 +71,7 @@ public string PropertyExpression(Property property)
 {
     bool isString = property.SystemType == typeof(string);
     bool isByteArray = property.SystemType == typeof(byte[]);    
+    bool isDecimal = property.SystemType == typeof(Decimal);    
     
     StringBuilder sb = new StringBuilder();
     sb.Append(' ', 3 * 4);
@@ -105,12 +106,14 @@ public string PropertyExpression(Property property)
       sb.Append(property.MaxLength);
       sb.Append(")");
     }
-    if (property.Precision.HasValue)
+    if (isDecimal && property.Precision.HasValue && property.Scale.HasValue)
     {
       sb.AppendLine();
       sb.Append(' ', 4 * 4);
       sb.Append(".HasPrecision(");
       sb.Append(property.Precision);
+      sb.Append(", ");
+      sb.Append(property.Scale);
       sb.Append(")");
     }    
     if (property.IsRowVersion == true && isByteArray)

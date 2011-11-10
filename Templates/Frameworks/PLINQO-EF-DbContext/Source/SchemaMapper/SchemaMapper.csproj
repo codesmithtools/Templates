@@ -34,7 +34,9 @@
     <Reference Include="Accessibility">
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
-    <Reference Include="CodeSmith.Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=9fd61cdb91609a7a, processorArchitecture=MSIL" />
+    <Reference Include="CodeSmith.Core, Version=1.1.0.0, Culture=neutral, PublicKeyToken=9fd61cdb91609a7a, processorArchitecture=MSIL">
+      <HintPath>C:\Program Files (x86)\CodeSmith\v6.0\bin\CodeSmith.Core.dll</HintPath>
+    </Reference>
     <Reference Include="CodeSmith.Engine, Version=6.0.0.0, Culture=neutral, PublicKeyToken=9fd61cdb91609a7a, processorArchitecture=MSIL">
       <HintPath>C:\Program Files (x86)\CodeSmith\v6.0\bin\CodeSmith.Engine.dll</HintPath>
     </Reference>
@@ -50,9 +52,6 @@
     </Reference>
     <Reference Include="SchemaExplorer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=9fd61cdb91609a7a, processorArchitecture=MSIL">
       <HintPath>C:\Program Files (x86)\CodeSmith\v6.0\AddIns\SchemaExplorer.dll</HintPath>
-    </Reference>
-    <Reference Include="SchemaExplorer.SqlSchemaProvider, Version=6.0.0.0, Culture=neutral, PublicKeyToken=9fd61cdb91609a7a, processorArchitecture=MSIL">
-      <HintPath>C:\Program Files (x86)\CodeSmith\v6.0\SchemaProviders\SchemaExplorer.SqlSchemaProvider.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />

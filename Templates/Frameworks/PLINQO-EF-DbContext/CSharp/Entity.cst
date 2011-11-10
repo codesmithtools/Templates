@@ -1,4 +1,4 @@
-<%@ Template Language="C#" TargetLanguage="Text" Debug="True" OutputType="None" %>
+<%@ Template Language="C#" TargetLanguage="Text" Debug="True" OutputType="None"  %>
 
 <%@ Assembly Name="SchemaExplorer" %>
 <%@ Assembly Name="CodeSmith.CustomProperties" %>
