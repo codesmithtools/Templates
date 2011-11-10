@@ -32,16 +32,16 @@
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="CodeSmith.Core" />
-    <Reference Include="CodeSmith.CustomProperties" />
-    <Reference Include="CodeSmith.Engine" />
-    <Reference Include="SchemaExplorer" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Drawing.Design" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
+    <Reference Include="CodeSmith.Core" />
+    <Reference Include="CodeSmith.CustomProperties" />
+    <Reference Include="CodeSmith.Engine" />
+    <Reference Include="SchemaExplorer" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DropDownEditor\DropDownEditorProperty.cs">
