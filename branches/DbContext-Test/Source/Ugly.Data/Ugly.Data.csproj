@@ -1,0 +1,243 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{D4AB4C47-913C-45A2-BCB9-DC50E1255AEC}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Ugly.Data</RootNamespace>
+    <AssemblyName>Ugly.Data</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\EntityFramework.4.2.0.0\lib\net40\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.Entity" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Entities\ContactImport.cs" />
+    <Compile Include="Entities\ContactImport.Generated.cs">
+      <DependentUpon>ContactImport.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\Department.cs" />
+    <Compile Include="Entities\Department.Generated.cs">
+      <DependentUpon>Department.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\Duplicate.cs" />
+    <Compile Include="Entities\Duplicate.Generated.cs">
+      <DependentUpon>Duplicate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\Duplicate1.cs" />
+    <Compile Include="Entities\Duplicate1.Generated.cs">
+      <DependentUpon>Duplicate1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\Employee.cs" />
+    <Compile Include="Entities\Employee.Generated.cs">
+      <DependentUpon>Employee.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\EmployeeDepartment.cs" />
+    <Compile Include="Entities\EmployeeDepartment.Generated.cs">
+      <DependentUpon>EmployeeDepartment.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\GuidAuto.cs" />
+    <Compile Include="Entities\GuidAuto.Generated.cs">
+      <DependentUpon>GuidAuto.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\Keyword.cs" />
+    <Compile Include="Entities\Keyword.Generated.cs">
+      <DependentUpon>Keyword.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\Membership.cs" />
+    <Compile Include="Entities\Membership.Generated.cs">
+      <DependentUpon>Membership.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\Object.cs" />
+    <Compile Include="Entities\Object.Generated.cs">
+      <DependentUpon>Object.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\OrderDocument.cs" />
+    <Compile Include="Entities\OrderDocument.Generated.cs">
+      <DependentUpon>OrderDocument.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\Provider.cs" />
+    <Compile Include="Entities\Provider.Generated.cs">
+      <DependentUpon>Provider.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\Query.cs" />
+    <Compile Include="Entities\Query.Generated.cs">
+      <DependentUpon>Query.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\Role.cs" />
+    <Compile Include="Entities\Role.Generated.cs">
+      <DependentUpon>Role.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\SqlType.cs" />
+    <Compile Include="Entities\SqlType.Generated.cs">
+      <DependentUpon>SqlType.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\Table1Test.cs" />
+    <Compile Include="Entities\Table1Test.Generated.cs">
+      <DependentUpon>Table1Test.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\TableExample.cs" />
+    <Compile Include="Entities\TableExample.Generated.cs">
+      <DependentUpon>TableExample.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\Template.cs" />
+    <Compile Include="Entities\Template.Generated.cs">
+      <DependentUpon>Template.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\TwoForeignKey.cs" />
+    <Compile Include="Entities\TwoForeignKey.Generated.cs">
+      <DependentUpon>TwoForeignKey.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\TwoKey.cs" />
+    <Compile Include="Entities\TwoKey.Generated.cs">
+      <DependentUpon>TwoKey.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\User.cs" />
+    <Compile Include="Entities\User.Generated.cs">
+      <DependentUpon>User.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\UserRole.cs" />
+    <Compile Include="Entities\UserRole.Generated.cs">
+      <DependentUpon>UserRole.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Mapping\ContactImportMap.cs" />
+    <Compile Include="Mapping\ContactImportMap.Generated.cs">
+      <DependentUpon>ContactImportMap.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Mapping\DepartmentMap.cs" />
+    <Compile Include="Mapping\DepartmentMap.Generated.cs">
+      <DependentUpon>DepartmentMap.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Mapping\Duplicate1Map.cs" />
+    <Compile Include="Mapping\Duplicate1Map.Generated.cs">
+      <DependentUpon>Duplicate1Map.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Mapping\DuplicateMap.cs" />
+    <Compile Include="Mapping\DuplicateMap.Generated.cs">
+      <DependentUpon>DuplicateMap.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Mapping\EmployeeDepartmentMap.cs" />
+    <Compile Include="Mapping\EmployeeDepartmentMap.Generated.cs">
+      <DependentUpon>EmployeeDepartmentMap.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Mapping\EmployeeMap.cs" />
+    <Compile Include="Mapping\EmployeeMap.Generated.cs">
+      <DependentUpon>EmployeeMap.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Mapping\GuidAutoMap.cs" />
+    <Compile Include="Mapping\GuidAutoMap.Generated.cs">
+      <DependentUpon>GuidAutoMap.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Mapping\KeywordMap.cs" />
+    <Compile Include="Mapping\KeywordMap.Generated.cs">
+      <DependentUpon>KeywordMap.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Mapping\MembershipMap.cs" />
+    <Compile Include="Mapping\MembershipMap.Generated.cs">
+      <DependentUpon>MembershipMap.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Mapping\ObjectMap.cs" />
+    <Compile Include="Mapping\ObjectMap.Generated.cs">
+      <DependentUpon>ObjectMap.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Mapping\OrderDocumentMap.cs" />
+    <Compile Include="Mapping\OrderDocumentMap.Generated.cs">
+      <DependentUpon>OrderDocumentMap.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Mapping\ProviderMap.cs" />
+    <Compile Include="Mapping\ProviderMap.Generated.cs">
+      <DependentUpon>ProviderMap.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Mapping\QueryMap.cs" />
+    <Compile Include="Mapping\QueryMap.Generated.cs">
+      <DependentUpon>QueryMap.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Mapping\RoleMap.cs" />
+    <Compile Include="Mapping\RoleMap.Generated.cs">
+      <DependentUpon>RoleMap.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Mapping\SqlTypeMap.cs" />
+    <Compile Include="Mapping\SqlTypeMap.Generated.cs">
+      <DependentUpon>SqlTypeMap.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Mapping\Table1TestMap.cs" />
+    <Compile Include="Mapping\Table1TestMap.Generated.cs">
+      <DependentUpon>Table1TestMap.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Mapping\TableExampleMap.cs" />
+    <Compile Include="Mapping\TableExampleMap.Generated.cs">
+      <DependentUpon>TableExampleMap.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Mapping\TemplateMap.cs" />
+    <Compile Include="Mapping\TemplateMap.Generated.cs">
+      <DependentUpon>TemplateMap.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Mapping\TwoForeignKeyMap.cs" />
+    <Compile Include="Mapping\TwoForeignKeyMap.Generated.cs">
+      <DependentUpon>TwoForeignKeyMap.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Mapping\TwoKeyMap.cs" />
+    <Compile Include="Mapping\TwoKeyMap.Generated.cs">
+      <DependentUpon>TwoKeyMap.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Mapping\UserMap.cs" />
+    <Compile Include="Mapping\UserMap.Generated.cs">
+      <DependentUpon>UserMap.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Mapping\UserRoleMap.cs" />
+    <Compile Include="Mapping\UserRoleMap.Generated.cs">
+      <DependentUpon>UserRoleMap.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UglyContext.cs" />
+    <Compile Include="UglyContext.Generated.cs">
+      <DependentUpon>UglyContext.cs</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Entity.csp" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
