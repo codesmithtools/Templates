@@ -12,6 +12,52 @@ namespace CodeSmith.Data.Linq.Dynamic
 {
     public static class DynamicQueryable
     {
+        public static IQueryable<T> AppendSort<T>(this IQueryable<T> query, string sort, string dir) {
+            if (!string.IsNullOrEmpty(sort)) {
+                if (!string.IsNullOrEmpty(dir) &&
+                    dir.Equals("desc", StringComparison.OrdinalIgnoreCase))
+                    query = query.OrderBy(sort + " desc");
+                else
+                    query = query.OrderBy(sort);
+            }
+
+            return query;
+        }
+
+        public static IQueryable AppendPageSort(this IQueryable query, int? start, int? limit, string sort, string dir) {
+            if (!string.IsNullOrEmpty(sort)) {
+                if (!string.IsNullOrEmpty(dir) &&
+                    dir.Equals("desc", StringComparison.OrdinalIgnoreCase))
+                    query = query.OrderBy(sort + " desc");
+                else
+                    query = query.OrderBy(sort);
+            }
+
+            if (start.HasValue && start > 0)
+                query = query.Skip(start.Value);
+
+            if (limit.HasValue && limit > 0)
+                query = query.Take(limit.Value);
+
+            return query;
+        }
+
+        public static IQueryable<T> AppendPageSort<T>(this IQueryable<T> query, int? start, int? limit, string sort, string dir) {
+            return ((IQueryable)query).AppendPageSort(start, limit, sort, dir) as IQueryable<T>;
+        }
+
+        public static IQueryable<T> AppendWhereClause<T>(this IQueryable<T> query, IList<string> clauses) {
+            if (clauses == null || clauses.Count == 0)
+                return query;
+
+            foreach (string clause in clauses) {
+                if (!String.IsNullOrEmpty(clause))
+                    query = query.Where(clause);
+            }
+
+            return query;
+        }
+
         public static IQueryable<T> Where<T>(this IQueryable<T> source, string predicate, params object[] values)
         {
             return (IQueryable<T>)Where((IQueryable)source, predicate, values);
