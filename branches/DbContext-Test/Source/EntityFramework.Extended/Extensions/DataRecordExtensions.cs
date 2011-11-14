@@ -1,14 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.Common;
 using System.Linq;
 using System.Text;
 
-namespace EntityFramework.Extentions
+namespace EntityFramework.Extensions
 {
-  public static class DbDataRecordExtensions
+  public static class DataRecordExtensions
   {
-    public static object GetValue(this DbDataRecord record, string name)
+    public static object GetValue(this IDataRecord record, string name)
     {
       int ordinal = record.GetOrdinal(name);
       if (record.IsDBNull(ordinal))

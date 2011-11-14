@@ -2074,7 +2074,7 @@ namespace Tracker.Entity
         /// Create a new User object.
         /// </summary>
         /// <param name="id">Initial value of the Id property.</param>
-        /// <param name="emailAddress">Initial value of the EmailAddress property.</param>
+        /// <param name="email">Initial value of the Email property.</param>
         /// <param name="createdDate">Initial value of the CreatedDate property.</param>
         /// <param name="modifiedDate">Initial value of the ModifiedDate property.</param>
         /// <param name="rowVersion">Initial value of the RowVersion property.</param>
@@ -2082,11 +2082,11 @@ namespace Tracker.Entity
         /// <param name="passwordSalt">Initial value of the PasswordSalt property.</param>
         /// <param name="isApproved">Initial value of the IsApproved property.</param>
         /// <param name="lastActivityDate">Initial value of the LastActivityDate property.</param>
-        public static User CreateUser(global::System.Int32 id, global::System.String emailAddress, global::System.DateTime createdDate, global::System.DateTime modifiedDate, global::System.Byte[] rowVersion, global::System.String passwordHash, global::System.String passwordSalt, global::System.Boolean isApproved, global::System.DateTime lastActivityDate)
+        public static User CreateUser(global::System.Int32 id, global::System.String email, global::System.DateTime createdDate, global::System.DateTime modifiedDate, global::System.Byte[] rowVersion, global::System.String passwordHash, global::System.String passwordSalt, global::System.Boolean isApproved, global::System.DateTime lastActivityDate)
         {
             User user = new User();
             user.Id = id;
-            user.EmailAddress = emailAddress;
+            user.Email = email;
             user.CreatedDate = createdDate;
             user.ModifiedDate = modifiedDate;
             user.RowVersion = rowVersion;
@@ -2132,24 +2132,24 @@ namespace Tracker.Entity
         /// </summary>
         [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
         [DataMemberAttribute()]
-        public global::System.String EmailAddress
+        public global::System.String Email
         {
             get
             {
-                return _EmailAddress;
+                return _Email;
             }
             set
             {
-                OnEmailAddressChanging(value);
-                ReportPropertyChanging("EmailAddress");
-                _EmailAddress = StructuralObject.SetValidValue(value, false);
-                ReportPropertyChanged("EmailAddress");
-                OnEmailAddressChanged();
+                OnEmailChanging(value);
+                ReportPropertyChanging("Email");
+                _Email = StructuralObject.SetValidValue(value, false);
+                ReportPropertyChanged("Email");
+                OnEmailChanged();
             }
         }
-        private global::System.String _EmailAddress;
-        partial void OnEmailAddressChanging(global::System.String value);
-        partial void OnEmailAddressChanged();
+        private global::System.String _Email;
+        partial void OnEmailChanging(global::System.String value);
+        partial void OnEmailChanged();
     
         /// <summary>
         /// No Metadata Documentation available.

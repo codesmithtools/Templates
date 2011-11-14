@@ -42,6 +42,7 @@
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
+    <Reference Include="System.Data" />
     <Reference Include="System.Data.Entity" />
   </ItemGroup>
   <ItemGroup>
@@ -50,6 +51,8 @@
     </CodeAnalysisDependentAssemblyPaths>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BatchTest.cs" />
+    <Compile Include="FutureTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="AuditTest.cs" />
   </ItemGroup>
@@ -61,6 +64,10 @@
     <ProjectReference Include="..\Tracker.Core\Tracker.Core.csproj">
       <Project>{0D803E5F-819F-4395-B166-114A79F187A9}</Project>
       <Name>Tracker.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Tracker.Entity\Tracker.Entity.csproj">
+      <Project>{A5374210-7C81-4EF8-8D27-3C9C15C95A67}</Project>
+      <Name>Tracker.Entity</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

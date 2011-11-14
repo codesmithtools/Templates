@@ -8,7 +8,7 @@ namespace EntityFramework.Reflection
   /// <summary>
   /// A class used to wrap an object as a <see cref="T:System.Dynamic.DynamicObject"/> allowing access to internal and private members.
   /// </summary>
-  public class AccessProxy : DynamicObject
+  public class DynamicProxy : DynamicObject
   {
     private readonly object _wrapped;
     private readonly TypeAccessor _typeAccessor;
@@ -16,19 +16,19 @@ namespace EntityFramework.Reflection
     private const BindingFlags _flags = BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="AccessProxy"/> class.
+    /// Initializes a new instance of the <see cref="DynamicProxy"/> class.
     /// </summary>
     /// <param name="wrapped">The wrapped object.</param>
-    public AccessProxy(object wrapped)
+    public DynamicProxy(object wrapped)
       : this(wrapped, true)
     { }
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="AccessProxy"/> class.
+    /// Initializes a new instance of the <see cref="DynamicProxy"/> class.
     /// </summary>
     /// <param name="wrapped">The wrapped object.</param>
     /// <param name="safeMode">if set to <c>true</c>, return null when name not found.</param>
-    public AccessProxy(object wrapped, bool safeMode)
+    public DynamicProxy(object wrapped, bool safeMode)
     {
       if (wrapped == null)
         throw new ArgumentNullException("wrapped");
@@ -73,9 +73,13 @@ namespace EntityFramework.Reflection
       var method = _typeAccessor.FindMethod(binder.Name, types, _flags);
 
       if (method == null)
-        return false;
+        return SafeMode;
 
-      result = method.Invoke(_wrapped, args);
+      var value = method.Invoke(_wrapped, args);
+      if (value == null)
+        return true;
+
+      result = new DynamicProxy(value, SafeMode);
       return true;
     }
 
@@ -102,7 +106,7 @@ namespace EntityFramework.Reflection
       if (value == null)
         return true;
 
-      result = new AccessProxy(value, SafeMode);      
+      result = new DynamicProxy(value, SafeMode);      
       return true;
     }
 
