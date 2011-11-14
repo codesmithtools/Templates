@@ -1,10 +1,11 @@
 using System;
 using System.Data.Entity;
 using System.Data.Objects;
+using EntityFramework.Audit;
 
-namespace EntityFramework.Audit
+namespace EntityFramework.Extensions
 {
-  public static class AuditLoggerExtensions
+  public static class AuditExtensions
   {
     public static AuditLogger BeginAudit(this ObjectContext objectContext, AuditConfiguration configuration = null)
     {

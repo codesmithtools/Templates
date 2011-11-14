@@ -3,6 +3,7 @@ using System.Data.Entity.Infrastructure;
 using System.Data.Objects;
 using System.Linq;
 using EntityFramework.Audit;
+using EntityFramework.Extensions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Tracker.Core;
 using Tracker.Core.Entities;

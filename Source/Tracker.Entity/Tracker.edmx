@@ -407,7 +407,7 @@
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="EmailAddress" Type="String" Nullable="false" MaxLength="250" Unicode="true" FixedLength="false" />
+          <Property Name="Email" Type="String" Nullable="false" MaxLength="250" Unicode="true" FixedLength="false" />
           <Property Name="FirstName" Type="String" MaxLength="200" Unicode="true" FixedLength="false" />
           <Property Name="LastName" Type="String" MaxLength="200" Unicode="true" FixedLength="false" />
           <Property Name="Avatar" Type="Binary" MaxLength="Max" FixedLength="false" />
@@ -583,7 +583,7 @@
           </MappingFragment></EntityTypeMapping></EntitySetMapping>
           <EntitySetMapping Name="Users"><EntityTypeMapping TypeName="TrackerModel.User"><MappingFragment StoreEntitySet="User">
             <ScalarProperty Name="Id" ColumnName="Id" />
-            <ScalarProperty Name="EmailAddress" ColumnName="EmailAddress" />
+            <ScalarProperty Name="Email" ColumnName="EmailAddress" />
             <ScalarProperty Name="FirstName" ColumnName="FirstName" />
             <ScalarProperty Name="LastName" ColumnName="LastName" />
             <ScalarProperty Name="Avatar" ColumnName="Avatar" />

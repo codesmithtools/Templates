@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 
 namespace EntityFramework.Reflection
 {
@@ -37,7 +38,8 @@ namespace EntityFramework.Reflection
       object target;
 
       // check if this object has already been cloned 
-      int hashCode = source.GetHashCode();
+      // using RuntimeHelpers.GetHashCode to get object identity
+      int hashCode = RuntimeHelpers.GetHashCode(source);
       if (_objectReferences.TryGetValue(hashCode, out target))
         return target;
 
@@ -183,7 +185,8 @@ namespace EntityFramework.Reflection
       object targetValue;
 
       // check if this object has already been cloned 
-      int hashCode = originalValue.GetHashCode();
+      // using RuntimeHelpers.GetHashCode to get object identity
+      int hashCode = RuntimeHelpers.GetHashCode(originalValue);
       if (_objectReferences.TryGetValue(hashCode, out targetValue))
       {
         accessor.SetValue(target, targetValue);

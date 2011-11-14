@@ -53,9 +53,17 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\EntityFramework.Extended\EntityFramework.Extended.csproj">
+      <Project>{D390C235-242C-4E92-9E0B-D2463E87B0F0}</Project>
+      <Name>EntityFramework.Extended</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Tracker.Core\Tracker.Core.csproj">
       <Project>{0D803E5F-819F-4395-B166-114A79F187A9}</Project>
       <Name>Tracker.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Tracker.Entity\Tracker.Entity.csproj">
+      <Project>{A5374210-7C81-4EF8-8D27-3C9C15C95A67}</Project>
+      <Name>Tracker.Entity</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
