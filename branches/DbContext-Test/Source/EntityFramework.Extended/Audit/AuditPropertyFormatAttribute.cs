@@ -70,8 +70,8 @@ namespace EntityFramework.Audit
 
     public class AuditPropertyContext
     {
-      public object Entity { get; set; }
-      public object Value { get; set; }
-      public Type ValueType { get; set; }      
+        public object Entity { get; set; }
+        public object Value { get; set; }
+        public Type ValueType { get; set; }
     }
 }

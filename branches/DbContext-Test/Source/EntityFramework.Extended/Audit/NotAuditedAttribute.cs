@@ -11,7 +11,6 @@ namespace EntityFramework.Audit
     /// </remarks>
     /// <seealso cref="AuditAttribute"/>
     /// <seealso cref="AlwaysAuditAttribute"/>
-    /// <seealso cref="AuditManager"/>
     [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field, AllowMultiple = false)]
     public class NotAuditedAttribute : Attribute
     { }

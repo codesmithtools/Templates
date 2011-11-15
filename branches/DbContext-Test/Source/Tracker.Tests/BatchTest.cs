@@ -10,20 +10,25 @@ using System.Linq.Dynamic;
 
 namespace Tracker.Tests
 {
-  [TestClass]
-  public class BatchTest
-  {
-    [TestMethod]
-    public void Delete()
+    [TestClass]
+    public class BatchTest
     {
-      var db = new TrackerEntities();
+        [TestMethod]
+        public void Delete()
+        {
+            var db = new TrackerEntities();
+            string emailDomain = "@test.com";
+            db.Users.Delete(u => u.Email.EndsWith(emailDomain));
+        }
 
-      var users = DynamicQueryable.Select(db.Users, "new(Id, Email)");
-
-      var q = users as ObjectQuery;
-      string sql = q.ToTraceString();
-
-      db.Users.Delete(u => u.Email.EndsWith("@test.com"));
+        [TestMethod]
+        public void Update()
+        {
+            var db = new TrackerEntities();
+            string emailDomain = "@test.com";
+            int count = db.Users.Update(
+                u => u.Email.EndsWith(emailDomain), 
+                u => new User { IsApproved = false, LastActivityDate = DateTime.Now });
+        }
     }
-  }
 }
