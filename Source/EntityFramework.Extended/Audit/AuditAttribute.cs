@@ -9,7 +9,6 @@ namespace EntityFramework.Audit
     /// <remarks>
     /// Use the <see cref="NotAuditedAttribute"/> attribute to prevent a field from being included in the audit
     /// </remarks>
-    /// <seealso cref="AuditManager"/>
     /// <seealso cref="NotAuditedAttribute"/>
     /// <seealso cref="AlwaysAuditAttribute"/>
     [AttributeUsage(AttributeTargets.Struct | AttributeTargets.Class, AllowMultiple = false)]
