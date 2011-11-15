@@ -521,84 +521,112 @@
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2008/09/mapping/cs">
         <EntityContainerMapping StorageEntityContainer="TrackerModelStoreContainer" CdmEntityContainer="TrackerEntities">
-          <EntitySetMapping Name="Audits"><EntityTypeMapping TypeName="TrackerModel.Audit"><MappingFragment StoreEntitySet="Audit">
-            <ScalarProperty Name="Id" ColumnName="Id" />
-            <ScalarProperty Name="Date" ColumnName="Date" />
-            <ScalarProperty Name="UserId" ColumnName="UserId" />
-            <ScalarProperty Name="TaskId" ColumnName="TaskId" />
-            <ScalarProperty Name="Content" ColumnName="Content" />
-            <ScalarProperty Name="Username" ColumnName="Username" />
-            <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
-            <ScalarProperty Name="RowVersion" ColumnName="RowVersion" />
-          </MappingFragment></EntityTypeMapping></EntitySetMapping>
-          <EntitySetMapping Name="Priorities"><EntityTypeMapping TypeName="TrackerModel.Priority"><MappingFragment StoreEntitySet="Priority">
-            <ScalarProperty Name="Id" ColumnName="Id" />
-            <ScalarProperty Name="Name" ColumnName="Name" />
-            <ScalarProperty Name="Order" ColumnName="Order" />
-            <ScalarProperty Name="Description" ColumnName="Description" />
-            <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
-            <ScalarProperty Name="ModifiedDate" ColumnName="ModifiedDate" />
-            <ScalarProperty Name="RowVersion" ColumnName="RowVersion" />
-          </MappingFragment></EntityTypeMapping></EntitySetMapping>
-          <EntitySetMapping Name="Roles"><EntityTypeMapping TypeName="TrackerModel.Role"><MappingFragment StoreEntitySet="Role">
-            <ScalarProperty Name="Id" ColumnName="Id" />
-            <ScalarProperty Name="Name" ColumnName="Name" />
-            <ScalarProperty Name="Description" ColumnName="Description" />
-            <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
-            <ScalarProperty Name="ModifiedDate" ColumnName="ModifiedDate" />
-            <ScalarProperty Name="RowVersion" ColumnName="RowVersion" />
-          </MappingFragment></EntityTypeMapping></EntitySetMapping>
-          <EntitySetMapping Name="Status"><EntityTypeMapping TypeName="TrackerModel.Status"><MappingFragment StoreEntitySet="Status">
-            <ScalarProperty Name="Id" ColumnName="Id" />
-            <ScalarProperty Name="Name" ColumnName="Name" />
-            <ScalarProperty Name="Description" ColumnName="Description" />
-            <ScalarProperty Name="Order" ColumnName="Order" />
-            <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
-            <ScalarProperty Name="ModifiedDate" ColumnName="ModifiedDate" />
-            <ScalarProperty Name="RowVersion" ColumnName="RowVersion" />
-          </MappingFragment></EntityTypeMapping></EntitySetMapping>
-          <EntitySetMapping Name="Tasks"><EntityTypeMapping TypeName="TrackerModel.Task"><MappingFragment StoreEntitySet="Task">
-            <ScalarProperty Name="Id" ColumnName="Id" />
-            <ScalarProperty Name="StatusId" ColumnName="StatusId" />
-            <ScalarProperty Name="PriorityId" ColumnName="PriorityId" />
-            <ScalarProperty Name="CreatedId" ColumnName="CreatedId" />
-            <ScalarProperty Name="Summary" ColumnName="Summary" />
-            <ScalarProperty Name="Details" ColumnName="Details" />
-            <ScalarProperty Name="StartDate" ColumnName="StartDate" />
-            <ScalarProperty Name="DueDate" ColumnName="DueDate" />
-            <ScalarProperty Name="CompleteDate" ColumnName="CompleteDate" />
-            <ScalarProperty Name="AssignedId" ColumnName="AssignedId" />
-            <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
-            <ScalarProperty Name="ModifiedDate" ColumnName="ModifiedDate" />
-            <ScalarProperty Name="RowVersion" ColumnName="RowVersion" />
-            <ScalarProperty Name="LastModifiedBy" ColumnName="LastModifiedBy" />
-          </MappingFragment></EntityTypeMapping></EntitySetMapping>
-          <EntitySetMapping Name="TaskExtendeds"><EntityTypeMapping TypeName="TrackerModel.TaskExtended"><MappingFragment StoreEntitySet="TaskExtended">
-            <ScalarProperty Name="TaskId" ColumnName="TaskId" />
-            <ScalarProperty Name="Browser" ColumnName="Browser" />
-            <ScalarProperty Name="OS" ColumnName="OS" />
-            <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
-            <ScalarProperty Name="ModifiedDate" ColumnName="ModifiedDate" />
-            <ScalarProperty Name="RowVersion" ColumnName="RowVersion" />
-          </MappingFragment></EntityTypeMapping></EntitySetMapping>
-          <EntitySetMapping Name="Users"><EntityTypeMapping TypeName="TrackerModel.User"><MappingFragment StoreEntitySet="User">
-            <ScalarProperty Name="Id" ColumnName="Id" />
-            <ScalarProperty Name="Email" ColumnName="EmailAddress" />
-            <ScalarProperty Name="FirstName" ColumnName="FirstName" />
-            <ScalarProperty Name="LastName" ColumnName="LastName" />
-            <ScalarProperty Name="Avatar" ColumnName="Avatar" />
-            <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
-            <ScalarProperty Name="ModifiedDate" ColumnName="ModifiedDate" />
-            <ScalarProperty Name="RowVersion" ColumnName="RowVersion" />
-            <ScalarProperty Name="PasswordHash" ColumnName="PasswordHash" />
-            <ScalarProperty Name="PasswordSalt" ColumnName="PasswordSalt" />
-            <ScalarProperty Name="Comment" ColumnName="Comment" />
-            <ScalarProperty Name="IsApproved" ColumnName="IsApproved" />
-            <ScalarProperty Name="LastLoginDate" ColumnName="LastLoginDate" />
-            <ScalarProperty Name="LastActivityDate" ColumnName="LastActivityDate" />
-            <ScalarProperty Name="LastPasswordChangeDate" ColumnName="LastPasswordChangeDate" />
-            <ScalarProperty Name="AvatarType" ColumnName="AvatarType" />
-          </MappingFragment></EntityTypeMapping></EntitySetMapping>
+          <EntitySetMapping Name="Audits">
+            <EntityTypeMapping TypeName="TrackerModel.Audit">
+              <MappingFragment StoreEntitySet="Audit">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="TaskId" ColumnName="TaskId" />
+                <ScalarProperty Name="Content" ColumnName="Content" />
+                <ScalarProperty Name="Username" ColumnName="Username" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="RowVersion" ColumnName="RowVersion" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Priorities">
+            <EntityTypeMapping TypeName="TrackerModel.Priority">
+              <MappingFragment StoreEntitySet="Priority">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Order" ColumnName="Order" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="ModifiedDate" ColumnName="ModifiedDate" />
+                <ScalarProperty Name="RowVersion" ColumnName="RowVersion" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Roles">
+            <EntityTypeMapping TypeName="TrackerModel.Role">
+              <MappingFragment StoreEntitySet="Role">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="ModifiedDate" ColumnName="ModifiedDate" />
+                <ScalarProperty Name="RowVersion" ColumnName="RowVersion" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Status">
+            <EntityTypeMapping TypeName="TrackerModel.Status">
+              <MappingFragment StoreEntitySet="Status">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Order" ColumnName="Order" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="ModifiedDate" ColumnName="ModifiedDate" />
+                <ScalarProperty Name="RowVersion" ColumnName="RowVersion" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Tasks">
+            <EntityTypeMapping TypeName="TrackerModel.Task">
+              <MappingFragment StoreEntitySet="Task">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="StatusId" ColumnName="StatusId" />
+                <ScalarProperty Name="PriorityId" ColumnName="PriorityId" />
+                <ScalarProperty Name="CreatedId" ColumnName="CreatedId" />
+                <ScalarProperty Name="Summary" ColumnName="Summary" />
+                <ScalarProperty Name="Details" ColumnName="Details" />
+                <ScalarProperty Name="StartDate" ColumnName="StartDate" />
+                <ScalarProperty Name="DueDate" ColumnName="DueDate" />
+                <ScalarProperty Name="CompleteDate" ColumnName="CompleteDate" />
+                <ScalarProperty Name="AssignedId" ColumnName="AssignedId" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="ModifiedDate" ColumnName="ModifiedDate" />
+                <ScalarProperty Name="RowVersion" ColumnName="RowVersion" />
+                <ScalarProperty Name="LastModifiedBy" ColumnName="LastModifiedBy" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TaskExtendeds">
+            <EntityTypeMapping TypeName="TrackerModel.TaskExtended">
+              <MappingFragment StoreEntitySet="TaskExtended">
+                <ScalarProperty Name="TaskId" ColumnName="TaskId" />
+                <ScalarProperty Name="Browser" ColumnName="Browser" />
+                <ScalarProperty Name="OS" ColumnName="OS" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="ModifiedDate" ColumnName="ModifiedDate" />
+                <ScalarProperty Name="RowVersion" ColumnName="RowVersion" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Users">
+            <EntityTypeMapping TypeName="TrackerModel.User">
+              <MappingFragment StoreEntitySet="User">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Email" ColumnName="EmailAddress" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+                <ScalarProperty Name="Avatar" ColumnName="Avatar" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="ModifiedDate" ColumnName="ModifiedDate" />
+                <ScalarProperty Name="RowVersion" ColumnName="RowVersion" />
+                <ScalarProperty Name="PasswordHash" ColumnName="PasswordHash" />
+                <ScalarProperty Name="PasswordSalt" ColumnName="PasswordSalt" />
+                <ScalarProperty Name="Comment" ColumnName="Comment" />
+                <ScalarProperty Name="IsApproved" ColumnName="IsApproved" />
+                <ScalarProperty Name="LastLoginDate" ColumnName="LastLoginDate" />
+                <ScalarProperty Name="LastActivityDate" ColumnName="LastActivityDate" />
+                <ScalarProperty Name="LastPasswordChangeDate" ColumnName="LastPasswordChangeDate" />
+                <ScalarProperty Name="AvatarType" ColumnName="AvatarType" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <AssociationSetMapping Name="UserRole" TypeName="TrackerModel.UserRole" StoreEntitySet="UserRole">
             <EndProperty Name="Role">
               <ScalarProperty Name="Id" ColumnName="RoleId" />
