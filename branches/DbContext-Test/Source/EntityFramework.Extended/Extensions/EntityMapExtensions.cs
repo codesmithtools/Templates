@@ -14,6 +14,17 @@ namespace EntityFramework.Extensions
     {
         private static readonly ConcurrentDictionary<Type, EntityMap> _mapCache = new ConcurrentDictionary<Type, EntityMap>();
 
+        /// <summary>
+        /// Gets entity to database mapping information.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the entity.</typeparam>
+        /// <param name="query">The query to use as a base to extract the mapping information..</param>
+        /// <returns>An EntityMap class with the mapping information,</returns>
+        /// <remarks>
+        /// Since there is no public way to get mapping, this is a hack to get the entity to table
+        /// mapping from the metadata and is highly subject to breaking on update to the
+        /// Entity Frame work internals.
+        /// </remarks>
         public static EntityMap GetEntityMap<TEntity>(this ObjectQuery query)
         {
             return _mapCache.GetOrAdd(
@@ -25,7 +36,7 @@ namespace EntityFramework.Extensions
         {
             var entityMap = new EntityMap(typeof(TEntity));
 
-            // hack to get execution plan
+            // get execution plan
             dynamic queryProxy = new DynamicProxy(query);
             dynamic queryState = queryProxy.QueryState;
             if (queryState == null)
