@@ -474,9 +474,9 @@ namespace EntityFramework.Audit
                 return false;
 
             var toProperties = referentialConstraint
-              .ToProperties
-              .Select(p => p.Name)
-              .ToList();
+                .ToProperties
+                .Select(p => p.Name)
+                .ToList();
 
             return modifiedMembers.Intersect(toProperties).Any();
         }
@@ -486,10 +486,10 @@ namespace EntityFramework.Audit
             var relationshipManager = state.ObjectStateEntry.RelationshipManager;
             var getEntityReference = _relatedAccessor.Value.MakeGenericMethod(accessor.MemberType);
             var parameters = new[]
-      {
-        navigationProperty.RelationshipType.FullName,
-        navigationProperty.ToEndMember.Name
-      };
+            {
+                navigationProperty.RelationshipType.FullName,
+                navigationProperty.ToEndMember.Name
+            };
 
             var entityReference = getEntityReference.Invoke(relationshipManager, parameters) as EntityReference;
             return (entityReference != null && entityReference.IsLoaded);
