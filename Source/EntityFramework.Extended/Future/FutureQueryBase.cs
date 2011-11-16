@@ -1,12 +1,9 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Data.Common;
-using System.Data.Metadata.Edm;
 using System.Data.Objects;
 using System.Diagnostics;
 using System.Linq;
-using EntityFramework.Extensions;
 using EntityFramework.Reflection;
 
 namespace EntityFramework.Future
@@ -16,7 +13,7 @@ namespace EntityFramework.Future
     /// </summary>
     /// <typeparam name="T">The type for the future query.</typeparam>
     [DebuggerDisplay("IsLoaded={IsLoaded}")]
-    public class FutureQueryBase<T> : IFutureQuery
+    public abstract class FutureQueryBase<T> : IFutureQuery
     {
         private readonly Action _loadAction;
         private readonly IQueryable _query;
@@ -28,7 +25,7 @@ namespace EntityFramework.Future
         /// </summary>
         /// <param name="query">The query source to use when materializing.</param>
         /// <param name="loadAction">The action to execute when the query is accessed.</param>
-        public FutureQueryBase(IQueryable query, Action loadAction)
+        protected FutureQueryBase(IQueryable query, Action loadAction)
         {
             _query = query;
             _loadAction = loadAction;
@@ -156,10 +153,14 @@ namespace EntityFramework.Future
 
                 // create execution plan
                 dynamic queryProxy = new DynamicProxy(q);
+                // ObjectQueryState
                 dynamic queryState = queryProxy.QueryState;
+                // ObjectQueryExecutionPlan
                 dynamic executionPlan = queryState.GetExecutionPlan(null);
-                // create shaper
+                
+                // ShaperFactory
                 dynamic shaperFactory = executionPlan.ResultShaperFactory;
+                // Shaper<T>
                 dynamic shaper = shaperFactory.Create(reader, dataContext, dataContext.MetadataWorkspace, MergeOption.AppendOnly, false);
 
                 var list = new List<T>();
@@ -178,11 +179,5 @@ namespace EntityFramework.Future
                 Exception = ex;
             }
         }
-    }
-
-    public class FuturePlan
-    {
-        public string CommandText { get; set; }
-        public ObjectParameterCollection Parameters { get; set; }
     }
 }

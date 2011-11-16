@@ -1,11 +1,6 @@
 ﻿using System;
-using System.Data.Common;
-using System.Data.Objects;
 using System.Diagnostics;
 using System.Linq;
-using System.Linq.Expressions;
-using System.Reflection;
-using EntityFramework.Extensions;
 
 namespace EntityFramework.Future
 {
@@ -31,14 +26,12 @@ namespace EntityFramework.Future
     [DebuggerDisplay("IsLoaded={IsLoaded}, Value={ValueForDebugDisplay}")]
     public class FutureCount : FutureValue<int>
     {
-        private static readonly Lazy<MethodInfo> _countMethod = new Lazy<MethodInfo>(FindCountMethod);
-
         /// <summary>
         /// Initializes a new instance of the <see cref="FutureCount"/> class.
         /// </summary>
         /// <param name="query">The query source to use when materializing.</param>
         /// <param name="loadAction">The action to execute when the query is accessed.</param>
-        public FutureCount(IQueryable query, Action loadAction)
+        internal FutureCount(IQueryable query, Action loadAction)
             : base(query, loadAction)
         { }
 
@@ -49,49 +42,6 @@ namespace EntityFramework.Future
         public FutureCount(int underlyingValue)
             : base(underlyingValue)
         { }
-
-        /// <summary>
-        /// Gets the data command for this query.
-        /// </summary>
-        /// <param name="dataContext">The data context to get the command from.</param>
-        /// <returns>The requested command object.</returns>
-        protected override FuturePlan GetPlan(ObjectContext dataContext)
-        {
-            IFutureQuery futureQuery = this;
-            var source = futureQuery.Query;
-
-            // create count expression
-            var expression = Expression.Call(
-              typeof(Queryable),
-              "Count",
-              new[] { source.ElementType },
-              source.Expression);
-
-            source = source.Provider.CreateQuery(expression);
-
-            var q = source as ObjectQuery;
-            if (q == null)
-                throw new InvalidOperationException("The future query is not of type ObjectQuery.");
-
-            var plan = new FuturePlan
-            {
-                CommandText = q.ToTraceString(),
-                Parameters = q.Parameters
-            };
-
-            return plan;
-        }
-
-        private static MethodInfo FindCountMethod()
-        {
-            var type = typeof(Queryable);
-
-            return (from m in type.GetMethods(BindingFlags.Static | BindingFlags.Public)
-                    where m.Name == "Count"
-                      && m.IsGenericMethod
-                      && m.GetParameters().Length == 1
-                    select m).FirstOrDefault();
-        }
     }
 
 

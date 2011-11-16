@@ -18,7 +18,7 @@ namespace Tracker.Tests
         {
             var db = new TrackerEntities();
             string emailDomain = "@test.com";
-            db.Users.Delete(u => u.Email.EndsWith(emailDomain));
+            int count = db.Users.Delete(u => u.Email.EndsWith(emailDomain));
         }
 
         [TestMethod]

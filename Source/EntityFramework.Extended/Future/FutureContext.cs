@@ -1,11 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.Common;
-using System.Data.EntityClient;
 using System.Data.Objects;
-using System.Text;
-using EntityFramework.Reflection;
 
 namespace EntityFramework.Future
 {
@@ -29,6 +25,9 @@ namespace EntityFramework.Future
         /// <param name="objectContext">The object context for the future queries.</param>
         public FutureContext(ObjectContext objectContext)
         {
+            if (objectContext == null)
+                throw new ArgumentNullException("objectContext");
+
             _objectContext = new WeakReference(objectContext);
             _futureQueries = new List<IFutureQuery>();
         }
@@ -76,88 +75,23 @@ namespace EntityFramework.Future
         /// </summary>
         public void ExecuteFutureQueries()
         {
-            var context = ObjectContext;
+            ObjectContext context = ObjectContext;
             if (context == null)
                 throw new ObjectDisposedException("ObjectContext", "The ObjectContext for the future queries has been displosed.");
 
-            // used to call internal methods
-            dynamic contextProxy = new DynamicProxy(context);
-            contextProxy.EnsureConnection();
-
-            try
-            {
-                using (var command = CreateFutureCommand(context))
-                using (var reader = command.ExecuteReader())
-                {
-                    foreach (var futureQuery in FutureQueries)
-                    {
-                        futureQuery.SetResult(context, reader);
-                        reader.NextResult();
-                    }
-                }
-            }
-            finally
-            {
-                contextProxy.ReleaseConnection();
-                // once all queries processed, clear from queue
-                _futureQueries.Clear();
-            }
+            FutureRunner.ExecuteFutureQueries(context, FutureQueries);
         }
 
-        private DbCommand CreateFutureCommand(ObjectContext context)
+        /// <summary>
+        /// Adds the future query to the waiting queries list on this context.
+        /// </summary>
+        /// <param name="query">The future query.</param>
+        public void AddQuery(IFutureQuery query)
         {
-            DbConnection dbConnection = context.Connection;
-            var entityConnection = dbConnection as EntityConnection;
+            if (query == null)
+                throw new ArgumentNullException("query");
 
-            // by-pass entity connection, doesn't support multiple results.
-            var command = entityConnection == null
-              ? dbConnection.CreateCommand()
-              : entityConnection.StoreConnection.CreateCommand();
-
-            var futureSql = new StringBuilder();
-            int paramCount = 0;
-            int queryCount = 0;
-
-            foreach (IFutureQuery futureQuery in FutureQueries)
-            {
-                var plan = futureQuery.GetPlan(context);
-                string sql = plan.CommandText;
-
-                // clean up params
-                foreach (var parameter in plan.Parameters)
-                {
-                    string orginal = parameter.Name;
-                    string updated = string.Format("{0}__f__{1}", orginal, paramCount++);
-
-                    sql = sql.Replace("@" + orginal, "@" + updated);
-
-                    var dbParameter = command.CreateParameter();
-                    dbParameter.ParameterName = updated;
-                    dbParameter.Value = parameter.Value;
-
-                    command.Parameters.Add(dbParameter);
-                }
-
-                // add sql
-                if (futureSql.Length > 0)
-                    futureSql.AppendLine();
-
-                futureSql.Append("-- Query #");
-                futureSql.Append(queryCount + 1);
-                futureSql.AppendLine();
-                futureSql.AppendLine();
-
-                futureSql.Append(sql.Trim());
-                futureSql.AppendLine(";"); // TODO, config this by provider?
-
-                queryCount++;
-            } // foreach query
-
-            command.CommandText = futureSql.ToString();
-            if (context.CommandTimeout.HasValue)
-                command.CommandTimeout = context.CommandTimeout.Value;
-
-            return command;
+            FutureQueries.Add(query);
         }
     }
 }

@@ -18,5 +18,11 @@ namespace EntityFramework.Future
         /// Executes the future queries.
         /// </summary>
         void ExecuteFutureQueries();
+
+        /// <summary>
+        /// Adds the future query to the waiting queries list on this context.
+        /// </summary>
+        /// <param name="query">The future query.</param>
+        void AddQuery(IFutureQuery query);
     }
 }

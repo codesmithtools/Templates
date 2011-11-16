@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Data.Objects;
 using System.Linq;
+using System.Linq.Expressions;
 using EntityFramework.Future;
+using EntityFramework.Reflection;
 
 namespace EntityFramework.Extensions
 {
@@ -45,8 +47,19 @@ namespace EntityFramework.Extensions
             if (source == null)
                 return new FutureCount(0);
 
+            // create count expression
+            var expression = Expression.Call(
+              typeof(Queryable),
+              "Count",
+              new[] { source.ElementType },
+              source.Expression);
+
+            // ObjectQueryProvider
+            dynamic providerProxy = new DynamicProxy(source.Provider);
+            IQueryable countQuery = providerProxy.CreateQuery(expression, typeof(int));
+
             var futureContext = GetFutureContext(source);
-            var future = new FutureCount(source, futureContext.ExecuteFutureQueries);
+            var future = new FutureCount(countQuery, futureContext.ExecuteFutureQueries);
             futureContext.FutureQueries.Add(future);
             return future;
         }
@@ -58,7 +71,7 @@ namespace EntityFramework.Extensions
         /// <param name="source">An <see cref="T:System.Linq.IQueryable`1" /> to add to the batch of future queries.</param>
         /// <returns>An instance of <see cref="T:EntityFramework.Future.FutureValue`1"/> that contains the result of the query.</returns>
         /// <seealso cref="T:EntityFramework.Future.FutureValue`1"/>
-        public static FutureValue<TEntity> FutureValue<TEntity>(this IQueryable<TEntity> source)
+        public static FutureValue<TEntity> FutureFirstOrDefault<TEntity>(this IQueryable<TEntity> source)
           where TEntity : class
         {
             if (source == null)
