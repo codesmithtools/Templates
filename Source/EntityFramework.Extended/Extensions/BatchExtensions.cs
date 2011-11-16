@@ -1,7 +1,8 @@
-﻿ using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data.Common;
 using System.Data.Common.CommandTrees;
+using System.Data.Entity;
 using System.Data.EntityClient;
 using System.Data.Metadata.Edm;
 using System.Data.Objects.DataClasses;
@@ -23,8 +24,175 @@ namespace EntityFramework.Extensions
             IQueryable<TEntity> query)
             where TEntity : class
         {
-            ObjectContext objectContext = source.Context;
+            if (source == null)
+                throw new ArgumentNullException("source");
 
+            if (query == null)
+                throw new ArgumentNullException("query");
+
+            ObjectContext objectContext = source.Context;
+            if (objectContext == null)
+                throw new ArgumentException("The ObjectContext for the source query can not be null.", "source");
+
+            EntityMap entityMap = source.GetEntityMap<TEntity>();
+            if (entityMap == null)
+                throw new ArgumentException("Could not load the entity mapping information for the source ObjectSet.", "source");
+
+            ObjectQuery<TEntity> objectQuery = query.ToObjectQuery();
+            if (objectQuery == null)
+                throw new ArgumentException("The query must be of type ObjectQuery or DbQuery.", "query");
+
+            return Delete(objectContext, entityMap, objectQuery);
+        }
+
+        public static int Delete<TEntity>(
+            this ObjectSet<TEntity> source,
+            Expression<Func<TEntity, bool>> filterExpression)
+            where TEntity : class
+        {
+            if (source == null)
+                throw new ArgumentNullException("source");
+            if (filterExpression == null)
+                throw new ArgumentNullException("filterExpression");
+
+            return source.Delete(source.Where(filterExpression));
+        }
+
+        public static int Delete<TEntity>(
+           this DbSet<TEntity> source,
+           IQueryable<TEntity> query)
+           where TEntity : class
+        {
+            if (source == null)
+                throw new ArgumentNullException("source");
+            if (query == null)
+                throw new ArgumentNullException("query");
+
+            ObjectQuery<TEntity> sourceQuery = source.ToObjectQuery();
+            if (sourceQuery == null)
+                throw new ArgumentException("The query must be of type ObjectQuery or DbQuery.", "source");
+
+            ObjectContext objectContext = sourceQuery.Context;
+            if (objectContext == null)
+                throw new ArgumentException("The ObjectContext for the source query can not be null.", "source");
+
+            EntityMap entityMap = sourceQuery.GetEntityMap<TEntity>();
+            if (entityMap == null)
+                throw new ArgumentException("Could not load the entity mapping information for the source ObjectSet.", "source");
+
+            ObjectQuery<TEntity> objectQuery = query.ToObjectQuery();
+            if (objectQuery == null)
+                throw new ArgumentException("The query must be of type ObjectQuery or DbQuery.", "query");
+
+            return Delete(objectContext, entityMap, objectQuery);
+        }
+
+        public static int Delete<TEntity>(
+            this DbSet<TEntity> source,
+            Expression<Func<TEntity, bool>> filterExpression)
+            where TEntity : class
+        {
+            if (source == null)
+                throw new ArgumentNullException("source");
+            if (filterExpression == null)
+                throw new ArgumentNullException("filterExpression");
+
+            return source.Delete(source.Where(filterExpression));
+        }
+
+
+        public static int Update<TEntity>(
+            this ObjectSet<TEntity> source,
+            IQueryable<TEntity> query,
+            Expression<Func<TEntity, TEntity>> updateExpression)
+            where TEntity : class
+        {
+            if (source == null)
+                throw new ArgumentNullException("source");
+            if (query == null)
+                throw new ArgumentNullException("query");
+            if (updateExpression == null)
+                throw new ArgumentNullException("updateExpression");
+
+            ObjectContext objectContext = source.Context;
+            if (objectContext == null)
+                throw new ArgumentException("The ObjectContext for the source query can not be null.", "source");
+
+            EntityMap entityMap = source.GetEntityMap<TEntity>();
+            if (entityMap == null)
+                throw new ArgumentException("Could not load the entity mapping information for the source ObjectSet.", "source");
+
+            ObjectQuery<TEntity> objectQuery = query.ToObjectQuery();
+            if (objectQuery == null)
+                throw new ArgumentException("The query must be of type ObjectQuery or DbQuery.", "query");
+
+            return Update(objectContext, entityMap, objectQuery, updateExpression);
+        }
+
+        public static int Update<TEntity>(
+            this ObjectSet<TEntity> source,
+            Expression<Func<TEntity, bool>> filterExpression,
+            Expression<Func<TEntity, TEntity>> updateExpression)
+            where TEntity : class
+        {
+            if (source == null)
+                throw new ArgumentNullException("source");
+            if (filterExpression == null)
+                throw new ArgumentNullException("filterExpression");
+
+            return source.Update(source.Where(filterExpression), updateExpression);
+        }
+
+        public static int Update<TEntity>(
+            this DbSet<TEntity> source,
+            IQueryable<TEntity> query,
+            Expression<Func<TEntity, TEntity>> updateExpression)
+            where TEntity : class
+        {
+            if (source == null)
+                throw new ArgumentNullException("source");
+            if (query == null)
+                throw new ArgumentNullException("query");
+            if (updateExpression == null)
+                throw new ArgumentNullException("updateExpression");
+
+            ObjectQuery<TEntity> sourceQuery = source.ToObjectQuery();
+            if (sourceQuery == null)
+                throw new ArgumentException("The query must be of type ObjectQuery or DbQuery.", "source");
+
+            ObjectContext objectContext = sourceQuery.Context;
+            if (objectContext == null)
+                throw new ArgumentException("The ObjectContext for the source query can not be null.", "source");
+
+            EntityMap entityMap = sourceQuery.GetEntityMap<TEntity>();
+            if (entityMap == null)
+                throw new ArgumentException("Could not load the entity mapping information for the source.", "source");
+
+            ObjectQuery<TEntity> objectQuery = query.ToObjectQuery();
+            if (objectQuery == null)
+                throw new ArgumentException("The query must be of type ObjectQuery or DbQuery.", "query");
+
+            return Update(objectContext, entityMap, objectQuery, updateExpression);
+        }
+
+        public static int Update<TEntity>(
+            this DbSet<TEntity> source,
+            Expression<Func<TEntity, bool>> filterExpression,
+            Expression<Func<TEntity, TEntity>> updateExpression)
+            where TEntity : class
+        {
+            if (source == null)
+                throw new ArgumentNullException("source");
+            if (filterExpression == null)
+                throw new ArgumentNullException("filterExpression");
+
+            return source.Update(source.Where(filterExpression), updateExpression);
+        }
+
+
+        private static int Delete<TEntity>(ObjectContext objectContext, EntityMap entityMap, ObjectQuery<TEntity> query)
+            where TEntity : class
+        {
             DbConnection deleteConnection = null;
             DbTransaction deleteTransaction = null;
             DbCommand deleteCommand = null;
@@ -41,7 +209,6 @@ namespace EntityFramework.Extensions
                 if (objectContext.CommandTimeout.HasValue)
                     deleteCommand.CommandTimeout = objectContext.CommandTimeout.Value;
 
-                var entityMap = source.GetEntityMap<TEntity>();
                 var innerSelect = GetSelectSql(query, entityMap, deleteCommand);
 
                 var sqlBuilder = new StringBuilder(innerSelect.Length * 2);
@@ -84,24 +251,9 @@ namespace EntityFramework.Extensions
             }
         }
 
-
-        public static int Delete<TEntity>(
-            this ObjectSet<TEntity> source,
-            Expression<Func<TEntity, bool>> filterExpression)
+        private static int Update<TEntity>(ObjectContext objectContext, EntityMap entityMap, ObjectQuery<TEntity> query, Expression<Func<TEntity, TEntity>> updateExpression)
             where TEntity : class
         {
-            return source.Delete(source.Where(filterExpression));
-        }
-
-        
-        public static int Update<TEntity>(
-            this ObjectSet<TEntity> source,
-            IQueryable<TEntity> query,
-            Expression<Func<TEntity, TEntity>> updateExpression)
-            where TEntity : class
-        {
-            ObjectContext objectContext = source.Context;
-
             DbConnection updateConnection = null;
             DbTransaction updateTransaction = null;
             DbCommand updateCommand = null;
@@ -118,7 +270,6 @@ namespace EntityFramework.Extensions
                 if (objectContext.CommandTimeout.HasValue)
                     updateCommand.CommandTimeout = objectContext.CommandTimeout.Value;
 
-                var entityMap = source.GetEntityMap<TEntity>();
                 var innerSelect = GetSelectSql(query, entityMap, updateCommand);
                 var sqlBuilder = new StringBuilder(innerSelect.Length * 2);
 
@@ -149,7 +300,7 @@ namespace EntityFramework.Extensions
                     if (memberAssignment == null)
                         throw new ArgumentException("The update expression MemberBinding must only by type MemberAssignment.", "updateExpression");
 
-                    object value = null;
+                    object value;
                     if (memberAssignment.Expression.NodeType == ExpressionType.Constant)
                     {
                         var constantExpression = memberAssignment.Expression as ConstantExpression;
@@ -207,16 +358,6 @@ namespace EntityFramework.Extensions
                     updateConnection.Dispose();
             }
         }
-        
-        public static int Update<TEntity>(
-            this ObjectSet<TEntity> source,
-            Expression<Func<TEntity, bool>> filterExpression,
-            Expression<Func<TEntity, TEntity>> updateExpression)
-            where TEntity : class
-        {
-            return source.Update(source.Where(filterExpression), updateExpression);
-        }
-
 
         private static DbConnection GetStoreConnection(ObjectContext objectContext)
         {
@@ -231,7 +372,7 @@ namespace EntityFramework.Extensions
             return connection;
         }
 
-        private static string GetSelectSql<TEntity>(IQueryable<TEntity> query, EntityMap entityMap, DbCommand command)
+        private static string GetSelectSql<TEntity>(ObjectQuery<TEntity> query, EntityMap entityMap, DbCommand command)
             where TEntity : class
         {
             // changing query to only select keys
@@ -246,7 +387,7 @@ namespace EntityFramework.Extensions
             }
             selector.Append(")");
 
-            var selectQuery = query.Select(selector.ToString());
+            var selectQuery = DynamicQueryable.Select(query, selector.ToString());
             var objectQuery = selectQuery as ObjectQuery;
 
             if (objectQuery == null)

@@ -11,7 +11,7 @@ using System.Linq.Dynamic;
 namespace Tracker.Tests
 {
     [TestClass]
-    public class BatchTest
+    public class BatchObjectContext
     {
         [TestMethod]
         public void Delete()

@@ -7,7 +7,6 @@ using EntityFramework.Extensions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Tracker.Core;
 using Tracker.Core.Entities;
-using System;
 
 namespace Tracker.Tests
 {

@@ -28,9 +28,14 @@ namespace EntityFramework.Extensions
             if (source == null)
                 throw new ArgumentNullException("source");
 
-            var futureContext = GetFutureContext(source);
-            var future = new FutureQuery<TEntity>(source, futureContext.ExecuteFutureQueries);
-            futureContext.FutureQueries.Add(future);
+            ObjectQuery<TEntity> sourceQuery = source.ToObjectQuery();
+            if (sourceQuery == null)
+                throw new ArgumentException("The source query must be of type ObjectQuery or DbQuery.", "source");
+
+            var futureContext = GetFutureContext(sourceQuery);
+            var future = new FutureQuery<TEntity>(sourceQuery, futureContext.ExecuteFutureQueries);
+            futureContext.AddQuery(future);
+
             return future;
         }
 
@@ -47,6 +52,10 @@ namespace EntityFramework.Extensions
             if (source == null)
                 return new FutureCount(0);
 
+            ObjectQuery sourceQuery = source.ToObjectQuery();
+            if (sourceQuery == null)
+                throw new ArgumentException("The source query must be of type ObjectQuery or DbQuery.", "source");
+
             // create count expression
             var expression = Expression.Call(
               typeof(Queryable),
@@ -54,13 +63,14 @@ namespace EntityFramework.Extensions
               new[] { source.ElementType },
               source.Expression);
 
-            // ObjectQueryProvider
-            dynamic providerProxy = new DynamicProxy(source.Provider);
-            IQueryable countQuery = providerProxy.CreateQuery(expression, typeof(int));
+            // create query from expression using internal ObjectQueryProvider
+            ObjectQuery countQuery = sourceQuery.CreateQuery(expression, typeof(int));
+            if (countQuery == null)
+                throw new ArgumentException("The source query must be of type ObjectQuery or DbQuery.", "source");
 
-            var futureContext = GetFutureContext(source);
+            var futureContext = GetFutureContext(sourceQuery);
             var future = new FutureCount(countQuery, futureContext.ExecuteFutureQueries);
-            futureContext.FutureQueries.Add(future);
+            futureContext.AddQuery(future);
             return future;
         }
 
@@ -77,30 +87,33 @@ namespace EntityFramework.Extensions
             if (source == null)
                 return new FutureValue<TEntity>(default(TEntity));
 
-            // make sure to only get the first value
-            var firstQuery = source.Take(1);
+            ObjectQuery sourceQuery = source.ToObjectQuery();
+            if (sourceQuery == null)
+                throw new ArgumentException("The source query must be of type ObjectQuery or DbQuery.", "source");
 
-            var futureContext = GetFutureContext(source);
-            var future = new FutureValue<TEntity>(firstQuery, futureContext.ExecuteFutureQueries);
-            futureContext.FutureQueries.Add(future);
+            // make sure to only get the first value
+            IQueryable<TEntity> firstQuery = source.Take(1);
+
+            ObjectQuery<TEntity> objectQuery = firstQuery.ToObjectQuery();
+            if (objectQuery == null)
+                throw new ArgumentException("The source query must be of type ObjectQuery or DbQuery.", "source");
+
+            var futureContext = GetFutureContext(sourceQuery);
+            var future = new FutureValue<TEntity>(objectQuery, futureContext.ExecuteFutureQueries);
+            futureContext.AddQuery(future);
             return future;
         }
 
-        private static IFutureContext GetFutureContext<TEntity>(IQueryable<TEntity> source) where TEntity : class
+        private static IFutureContext GetFutureContext(ObjectQuery objectQuery)
         {
             // first try getting IFutureContext directly off ObjectContext
-            var objectQuery = source as ObjectQuery;
-            if (objectQuery != null)
-            {
-                var objectContext = objectQuery.Context as IFutureContext;
-                if (objectContext != null)
-                    return objectContext;
-            }
+            var objectContext = objectQuery.Context as IFutureContext;
+            if (objectContext != null)
+                return objectContext;
 
             // next use FutureStore
-            var futureContext = FutureStore.Default.GetOrCreate(source);
+            var futureContext = FutureStore.Default.GetOrCreate(objectQuery);
             return futureContext;
         }
-
     }
 }
