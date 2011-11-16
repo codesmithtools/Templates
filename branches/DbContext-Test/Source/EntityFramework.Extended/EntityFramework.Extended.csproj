@@ -65,7 +65,7 @@
     <Compile Include="Extensions\DataRecordExtensions.cs" />
     <Compile Include="Extensions\BatchExtensions.cs" />
     <Compile Include="Extensions\ExpressionExtensions.cs" />
-    <Compile Include="Extensions\ObjectContextExtensions.cs" />
+    <Compile Include="Extensions\ObjectQueryExtensions.cs" />
     <Compile Include="Extensions\EntityMapExtensions.cs" />
     <Compile Include="Future\FutureCount.cs" />
     <Compile Include="Future\FutureException.cs" />

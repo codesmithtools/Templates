@@ -51,8 +51,10 @@
     </CodeAnalysisDependentAssemblyPaths>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BatchTest.cs" />
-    <Compile Include="FutureTest.cs" />
+    <Compile Include="BatchDbContext.cs" />
+    <Compile Include="BatchObjectContext.cs" />
+    <Compile Include="FutureDbContext.cs" />
+    <Compile Include="FutureObjectContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="AuditTest.cs" />
   </ItemGroup>

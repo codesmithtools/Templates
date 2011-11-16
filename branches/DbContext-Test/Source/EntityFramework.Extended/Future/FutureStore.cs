@@ -25,17 +25,16 @@ namespace EntityFramework.Future
         /// <summary>
         /// Gets or create the future context that is linked to the underlying ObjectContext.
         /// </summary>
-        /// <param name="source">The query source to get the future context from.</param>
+        /// <param name="objectQuery">The query source to get the future context from.</param>
         /// <returns>An instance of <see cref="IFutureContext"/> to store waiting future queries.</returns>
-        public IFutureContext GetOrCreate(IQueryable source)
+        public IFutureContext GetOrCreate(ObjectQuery objectQuery)
         {
-            var objectQuery = source as ObjectQuery;
             if (objectQuery == null)
-                throw new ArgumentException("The source must originate from an ObjectQuery.", "source");
+                throw new ArgumentNullException("objectQuery");
 
             var objectContext = objectQuery.Context;
             if (objectContext == null)
-                throw new ArgumentException("The source ObjectContext has been displosed.", "source");
+                throw new ArgumentException("The source ObjectContext can not be null.", "objectQuery");
 
             MaybeCleanup();
 

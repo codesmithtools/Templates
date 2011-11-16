@@ -10,7 +10,7 @@ using Tracker.Entity;
 namespace Tracker.Tests
 {
   [TestClass]
-  public class FutureTest
+  public class FutureObjectContext
   {
     
     [TestMethod]
