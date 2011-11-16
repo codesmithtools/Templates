@@ -30,7 +30,7 @@ namespace EntityFramework.Future
         /// </summary>
         /// <param name="query">The query source to use when materializing.</param>
         /// <param name="loadAction">The action to execute when the query is accessed.</param>
-        public FutureQuery(IQueryable query, Action loadAction)
+        internal FutureQuery(IQueryable query, Action loadAction)
             : base(query, loadAction)
         { }
 

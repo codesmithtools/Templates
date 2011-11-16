@@ -70,8 +70,10 @@
     <Compile Include="Future\FutureCount.cs" />
     <Compile Include="Future\FutureException.cs" />
     <Compile Include="Extensions\FutureExtensions.cs" />
+    <Compile Include="Future\FuturePlan.cs" />
     <Compile Include="Future\FutureQuery.cs" />
     <Compile Include="Future\FutureQueryBase.cs" />
+    <Compile Include="Future\FutureRunner.cs" />
     <Compile Include="Future\FutureStore.cs" />
     <Compile Include="Future\FutureValue.cs" />
     <Compile Include="Future\IFutureContext.cs" />

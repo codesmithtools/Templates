@@ -30,7 +30,7 @@ namespace EntityFramework.Future
         /// </summary>
         /// <param name="query">The query source to use when materializing.</param>
         /// <param name="loadAction">The action to execute when the query is accessed.</param>
-        public FutureValue(IQueryable query, Action loadAction)
+        internal FutureValue(IQueryable query, Action loadAction)
             : base(query, loadAction)
         { }
 
@@ -92,7 +92,4 @@ namespace EntityFramework.Future
         /// <value>The underling value.</value>
         internal T UnderlingValue { get; private set; }
     }
-
-
-
 }

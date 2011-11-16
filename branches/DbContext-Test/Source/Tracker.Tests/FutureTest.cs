@@ -12,21 +12,7 @@ namespace Tracker.Tests
   [TestClass]
   public class FutureTest
   {
-    [TestMethod]
-    public void TestMethod1()
-    {
-      var db = new TrackerEntities();
-
-      // build up queries
-
-      var q1 = db.Users
-        .Where(p => p.Email == "one@test.com");
-
-
-      var command = db.GetCommand(q1);
-      Assert.IsNotNull(command);
-    }
-
+    
     [TestMethod]
     public void PageTest()
     {
@@ -90,12 +76,14 @@ namespace Tracker.Tests
 
       // build up queries
 
+      string emailDomain = "@battlestar.com";
       var q1 = db.Users
-          .Where(p => p.Email == "one@test.com")
+          .Where(p => p.Email.EndsWith(emailDomain))
           .Future();
 
+      string search = "Earth";
       var q2 = db.Tasks
-          .Where(t => t.Summary == "Test")
+          .Where(t => t.Summary.Contains(search))
           .FutureCount();
 
       // should be 2 queries 
@@ -122,12 +110,14 @@ namespace Tracker.Tests
 
       // build up queries
 
+      string emailDomain = "@battlestar.com";
       var q1 = db.Users
-          .Where(p => p.Email == "one@test.com")
+          .Where(p => p.Email.EndsWith(emailDomain))
           .Future();
 
+      string search = "Earth";
       var q2 = db.Tasks
-          .Where(t => t.Summary == "Test")
+          .Where(t => t.Summary.Contains(search))
           .FutureCount();
 
       // should be 2 queries 
@@ -154,17 +144,19 @@ namespace Tracker.Tests
       var db = new TrackerEntities();
 
       // build up queries
+      string emailDomain = "@battlestar.com";
       var q1 = db.Users
-          .Where(p => p.Email == "one@test.com")
-          .FutureValue();
+          .Where(p => p.Email.EndsWith(emailDomain))
+          .FutureFirstOrDefault();
 
+      string search = "Earth";
       var q2 = db.Tasks
-          .Where(t => t.Summary == "Test")
+          .Where(t => t.Summary.Contains(search))
           .FutureCount();
 
       // duplicate query except count
       var q3 = db.Tasks
-          .Where(t => t.Summary == "Test")
+          .Where(t => t.Summary.Contains(search))
           .Future();
 
       // should be 3 queries 
@@ -193,17 +185,19 @@ namespace Tracker.Tests
       var db = new TrackerEntities();
       // build up queries
 
+      string emailDomain = "@battlestar.com";
       var q1 = db.Users
-          .Where(u => u.Email == "one@test.com")
-          .FutureValue();
+          .Where(p => p.Email.EndsWith(emailDomain))
+          .FutureFirstOrDefault();
 
+      string search = "Earth";
       var q2 = db.Tasks
-          .Where(t => t.Summary == "Test")
+          .Where(t => t.Summary.Contains(search))
           .FutureCount();
 
       // duplicate query except count
       var q3 = db.Tasks
-          .Where(t => t.Summary == "Test")
+          .Where(t => t.Summary.Contains(search))
           .Future();
 
       // should be 3 queries 
