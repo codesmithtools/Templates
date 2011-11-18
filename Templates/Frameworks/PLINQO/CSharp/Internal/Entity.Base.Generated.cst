@@ -142,6 +142,9 @@ namespace <%= ClassNamespace %>
             if (set == null || !set.HasLoadedOrAssignedValues)
                 return new System.Data.Linq.EntitySet<TEntity>(onAdd, onRemove);
 
+            // make sure that no lazy loading happens.
+            LateBinder.SetField(set, "isLoaded", true);
+
             // copy list and detach all entities
             var list = set.ToList();
             list.ForEach(t => t.Detach());
