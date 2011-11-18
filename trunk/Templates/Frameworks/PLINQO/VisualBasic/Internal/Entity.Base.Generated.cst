@@ -136,6 +136,9 @@ Namespace <%= ClassNamespace %>
                 Return New System.Data.Linq.EntitySet(Of TEntity)(onAdd, onRemove)
             End If
 
+            ' make sure that no lazy loading happens.
+            LateBinder.SetField(entitySet, "isLoaded", true)
+
             ' copy list and detach all entities
             Dim list = entitySet.ToList()
             For Each t As TEntity In list
