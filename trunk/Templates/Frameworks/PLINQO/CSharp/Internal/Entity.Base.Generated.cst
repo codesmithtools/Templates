@@ -1,4 +1,4 @@
-﻿<%@ CodeTemplate Language="C#" TargetLanguage="C#" Debug="True" Encoding="UTF-8"
+<%@ CodeTemplate Language="C#" TargetLanguage="C#" Debug="True" Encoding="UTF-8"
     Description="Linq to Sql Entity Class." %>
     
 <%@ Assembly Name="Generator" Path="..\..\Common"%>
@@ -35,6 +35,7 @@
 
 using System;
 using System.Linq;
+using CodeSmith.Core.Reflection;
 
 namespace <%= ClassNamespace %>
 {

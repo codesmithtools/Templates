@@ -34,6 +34,7 @@
 
 Imports System
 Imports System.Linq
+Imports CodeSmith.Core.Reflection
 
 Namespace <%= ClassNamespace %>
 
