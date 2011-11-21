@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -95,7 +94,7 @@ namespace CodeSmith.Data.Caching
             db.Detach(results);
         }
 
-        private static readonly ConcurrentDictionary<string, string> _uniqueInfos = new ConcurrentDictionary<string, string>();
+        private static readonly Dictionary<string, string> _uniqueInfos = new Dictionary<string, string>();
         private static string GetConnectionUniqueInfo(IQueryable query)
         {
             var db = DataContextProvider.GetDataConext(query);
@@ -106,8 +105,7 @@ namespace CodeSmith.Data.Caching
             if (String.IsNullOrEmpty(connectionString))
                 return "NA";
 
-            // cache so that we aren't parsing config string every single time.
-            return _uniqueInfos.GetOrAdd(connectionString, s => {
+            if (!_uniqueInfos.ContainsKey(connectionString)) {
                 var sb = new StringBuilder();
 
                 var config = ParseConfigValues(connectionString);
@@ -129,8 +127,14 @@ namespace CodeSmith.Data.Caching
                 if (sb.Length == 0)
                     sb.Append("NA");
 
-                return sb.ToString();
-            });
+                if (_uniqueInfos.ContainsKey(connectionString))
+                    _uniqueInfos[connectionString] = sb.ToString();
+                else
+                    _uniqueInfos.Add(connectionString, sb.ToString());
+            }
+
+            // cache so that we aren't parsing config string every single time.
+            return _uniqueInfos[connectionString];
         }
 
         private static Dictionary<string, string> ParseConfigValues(string value) {
