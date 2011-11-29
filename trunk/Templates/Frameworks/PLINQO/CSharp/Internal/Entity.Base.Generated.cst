@@ -35,7 +35,6 @@
 
 using System;
 using System.Linq;
-using CodeSmith.Core.Reflection;
 
 namespace <%= ClassNamespace %>
 {
@@ -144,7 +143,8 @@ namespace <%= ClassNamespace %>
                 return new System.Data.Linq.EntitySet<TEntity>(onAdd, onRemove);
 
             // make sure that no lazy loading happens.
-            LateBinder.SetField(set, "isLoaded", true);
+            System.Reflection.FieldInfo field = set.GetType().GetField("isLoaded", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+            field.SetValue(set, true);
 
             // copy list and detach all entities
             var list = set.ToList();
