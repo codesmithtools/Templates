@@ -34,7 +34,6 @@
 
 Imports System
 Imports System.Linq
-Imports CodeSmith.Core.Reflection
 
 Namespace <%= ClassNamespace %>
 
@@ -138,7 +137,8 @@ Namespace <%= ClassNamespace %>
             End If
 
             ' make sure that no lazy loading happens.
-            LateBinder.SetField(entitySet, "isLoaded", true)
+            Dim field As System.Reflection.FieldInfo = entitySet.GetType().GetField("isLoaded", System.Reflection.BindingFlags.NonPublic Or System.Reflection.BindingFlags.Instance)
+            field.SetValue(entitySet, True)
 
             ' copy list and detach all entities
             Dim list = entitySet.ToList()
