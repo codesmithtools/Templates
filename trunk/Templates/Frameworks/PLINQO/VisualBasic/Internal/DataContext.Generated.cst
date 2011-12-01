@@ -1,4 +1,4 @@
-﻿<%@ CodeTemplate Language="VB" TargetLanguage="VB" Debug="False" Encoding="UTF-8"
+<%@ CodeTemplate Language="VB" TargetLanguage="VB" Debug="False" Encoding="UTF-8"
     Description="Linq to Sql DataContext Class." CompilerVersion="v3.5" %>
 
 <%@ Assembly Name="Dbml" Path="..\..\Common" %>
@@ -189,7 +189,7 @@ Namespace <%= Database.ContextNamespace %>
         ''' <returns></returns>
         <%= CreateAttribute(f) %>
         <%= GeneratedCodeAttribute %>
-        <%= StringUtil.ToPascalCase(Naming.GetModifier(f.AccessModifier, f.Modifier)) %> Function <%= f.Method %>(<%= GetArguments(f) %>) As <%= GetReturnType(f) %>
+        <%= StringUtil.ToPascalCase(Naming.GetModifier(f.AccessModifier, f.Modifier)) %> Function <%= f.Method %>(<%= GetArguments(f) %>) As <%= GetReturnType(f, True) %>
             Dim methodInfo = DirectCast(System.Reflection.MethodInfo.GetCurrentMethod(), System.Reflection.MethodInfo)
 <% If (IsTableFunction(f)) Then %>
             Dim result = Me.CreateMethodCallQuery(Of <%= GetResultName(f) %>)(Me, methodInfo<%= GetArgumentNames(f) %>)
@@ -662,9 +662,7 @@ Public Function CreateAttribute(ByVal f As [Function]) As String
     End If
     s.Append(")> _")
 
-If f.Types.Count = 0 AndAlso f.[Return] IsNot Nothing Then
-	s.AppendFormat(vbCr & vbLf & "        <return: System.Data.Linq.Mapping.Parameter(DbType := ""{0}"")> _", f.[Return].DbType)
-ElseIf f.HasMultipleResults = True Then
+    If f.HasMultipleResults = True Then
 	For Each t As LinqToSqlShared.DbmlObjectModel.Type In f.Types
             s.AppendFormat(vbCr & vbLf & "        <System.Data.Linq.Mapping.ResultType(GetType({0}.{1}))> _", Database.EntityNamespace, t.Name)
         Next
@@ -677,9 +675,16 @@ Public Function GetName(ByVal table As Table) As String
     Return name
 End Function
 
-
 Public Function GetReturnType(ByVal f As [Function]) As String
+    Return GetReturnType(f, False)
+End Function
+
+Public Function GetReturnType(ByVal f As [Function], ByVal includeAttributes As Boolean) As String
     Dim s As New StringBuilder()
+
+    If includeAttributes AndAlso f.Types.Count = 0 AndAlso f.[Return] IsNot Nothing Then
+	    s.AppendFormat("<System.Data.Linq.Mapping.Parameter(DbType := ""{0}"")> ", f.[Return].DbType)
+    End If
 
     If IsTableFunction(f) Then
         s.AppendFormat("System.Linq.IQueryable(Of {0})", GetResultName(f))
