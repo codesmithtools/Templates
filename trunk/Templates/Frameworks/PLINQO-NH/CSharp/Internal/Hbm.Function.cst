@@ -40,7 +40,7 @@
 <% } %>
 <% if (HasSearchCriteria()) { %>
     <% foreach(IProperty property in GetSearchCriteria().Properties) { %>
-    <query-param name="<%= property.Name %>" type="<%= property.ExtendedProperties[NHibernateUtilities.NHibernateType] %>" />
+    <query-param name="<%= property.KeyName %>" type="<%= property.ExtendedProperties[NHibernateUtilities.NHibernateType] %>" />
     <% } %>
 <% } %>
     exec <%= SourceCommand.GetSafeName() %> <%= GetSearchCriteriaParams() %>

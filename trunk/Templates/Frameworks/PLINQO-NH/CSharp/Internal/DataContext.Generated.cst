@@ -142,7 +142,7 @@ namespace <%= BaseNamespace %>
             IQuery query = Advanced.DefaultSession.GetNamedQuery("<%= command.Name %>");
             
             <% foreach(IProperty property in searchCriteria.Properties) { %>
-            query.SetParameter("<%= property.Name %>", <%= CleanParamName(entity, property.VariableName) %>);
+            query.SetParameter("<%= property.KeyName %>", <%= CleanParamName(entity, property.VariableName) %>);
             
             <% } %>
             <% if (!command.IsAssociated) { %>
