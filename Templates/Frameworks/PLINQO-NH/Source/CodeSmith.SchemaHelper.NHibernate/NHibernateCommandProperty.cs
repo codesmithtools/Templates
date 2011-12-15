@@ -16,7 +16,7 @@ namespace CodeSmith.SchemaHelper.NHibernate
         public override void Initialize()
         {
             var nameAttribute = PropertySource.Attribute("name");
-            Name = nameAttribute != null
+            KeyName = nameAttribute != null
                 ? nameAttribute.Value
                 : PropertySource.Attribute("column").Value;
 
