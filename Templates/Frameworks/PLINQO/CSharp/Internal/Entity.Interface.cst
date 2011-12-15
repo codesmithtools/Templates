@@ -1,4 +1,4 @@
-﻿<%@ CodeTemplate Language="C#" TargetLanguage="C#" Debug="True" Encoding="UTF-8"
+<%@ CodeTemplate Language="C#" TargetLanguage="C#" Debug="True" Encoding="UTF-8"
     Description="Linq to Sql Entity Class." CompilerVersion="v3.5" %>
 
 <%@ Assembly Name="ICSharpCode.NRefactory, Version=4.0.0.9999, Culture=neutral, PublicKeyToken=efe927acf176eea2, processorArchitecture=MSIL" Path="..\..\Common" %>
@@ -49,6 +49,10 @@
 //------------------------------------------------------------------------------
 using System;
 using System.Linq;
+<% if(!String.IsNullOrEmpty(this.InterfaceNamespace) && !this.InterfaceNamespace.Equals(Database.EntityNamespace, StringComparison.OrdinalIgnoreCase)) { %>
+
+using <%= Database.EntityNamespace %>
+<% } %>
 
 namespace <%= this.InterfaceNamespace %>
 {

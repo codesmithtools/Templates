@@ -1,4 +1,4 @@
-﻿<%@ CodeTemplate Language="VB" TargetLanguage="VB" Debug="True" Encoding="UTF-8"
+<%@ CodeTemplate Language="VB" TargetLanguage="VB" Debug="True" Encoding="UTF-8"
     Description="Linq to Sql Entity Class." CompilerVersion="v3.5" %>
 
 <%@ Assembly Name="ICSharpCode.NRefactory, Version=4.0.0.9999, Culture=neutral, PublicKeyToken=efe927acf176eea2, processorArchitecture=MSIL" Path="..\..\Common" %>
@@ -49,6 +49,10 @@
 ''------------------------------------------------------------------------------
 Imports System
 Imports System.Linq
+<% If(Not String.IsNullOrEmpty(Me.InterfaceNamespace) AndAlso Not Me.InterfaceNamespace.Equals(Database.EntityNamespace, StringComparison.OrdinalIgnoreCase)) Then %>
+
+using <%= Database.EntityNamespace %>
+<% End If %>
 
 Namespace <%= Me.InterfaceNamespace %>
 
