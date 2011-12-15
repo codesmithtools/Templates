@@ -66,7 +66,6 @@
             return String.Empty;
         
         StringBuilder sb = new StringBuilder();
-        sb.Append(":");
         
         bool isFirst = true;
         foreach(IProperty property in GetSearchCriteria().Properties)
@@ -76,7 +75,7 @@
             else
                 sb.Append(", ");
                 
-            sb.Append(property.KeyName);
+            sb.AppendFormat(":{0}", property.KeyName);
         }
         
         return sb.ToString();
