@@ -51,7 +51,7 @@ using System;
 using System.Linq;
 <% if(!String.IsNullOrEmpty(this.InterfaceNamespace) && !this.InterfaceNamespace.Equals(Database.EntityNamespace, StringComparison.OrdinalIgnoreCase)) { %>
 
-using <%= Database.EntityNamespace %>
+using <%= Database.EntityNamespace %>;
 <% } %>
 
 namespace <%= this.InterfaceNamespace %>
