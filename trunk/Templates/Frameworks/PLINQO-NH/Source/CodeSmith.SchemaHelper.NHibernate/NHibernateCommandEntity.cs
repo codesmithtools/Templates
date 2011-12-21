@@ -81,7 +81,8 @@ namespace CodeSmith.SchemaHelper.NHibernate
             foreach (var queryParam in queryParams)
             {
                 var property = new NHibernateCommandProperty(queryParam, this);
-                PropertyMap.Add(property.Name, property);
+                if (!PropertyMap.ContainsKey(property.Name))
+                    PropertyMap.Add(property.Name, property);
             }
         }
 
