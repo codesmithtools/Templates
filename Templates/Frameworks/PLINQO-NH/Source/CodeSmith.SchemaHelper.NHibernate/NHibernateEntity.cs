@@ -85,9 +85,10 @@ namespace CodeSmith.SchemaHelper.NHibernate
 
                 if (Configuration.Instance.ExcludeRegexIsMatch(propName.Value) || PropertyMap.ContainsKey(propName.Value))
                     continue;
-                
+
                 var property = new NHibernateProperty(prop, this);
-                PropertyMap.Add(property.Name, property);
+                if (!PropertyMap.ContainsKey(property.Name))
+                    PropertyMap.Add(property.Name, property);
             }
 
             if (PropertyMap.Values.Where(em => (em.PropertyType & PropertyType.Concurrency) == PropertyType.Concurrency).Count() > 1)
