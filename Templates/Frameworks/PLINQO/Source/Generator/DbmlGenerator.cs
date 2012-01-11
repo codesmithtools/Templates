@@ -916,8 +916,9 @@ namespace LinqToSqlShared.Generator
             if (!PropertyNames.ContainsKey(className))
                 PropertyNames.Add(className, new List<string>());
 
-            //Column/@Member is edit safe
-            if (string.IsNullOrEmpty(column.Member))
+            //Column/@Member is edit safe if it is NullOrEmpty.
+            // However, if the column starts with a digit, then we ARE going to update it.
+            if (string.IsNullOrEmpty(column.Member) || CleanNumberPrefix.IsMatch(column.Member))
             {
                 column.Member = ToPropertyName(className, columnSchema.Name);
                 column.Storage = CommonUtility.GetFieldName(column.Member);
@@ -1078,8 +1079,20 @@ namespace LinqToSqlShared.Generator
         private string ToLegalName(string name)
         {
             string legalName = Settings.CleanName(name);
+            string cleanName = CleanNumberPrefix.Replace(legalName, string.Empty, 1).Trim();
 
-            legalName = CleanNumberPrefix.Replace(legalName, string.Empty, 1);
+            // If a column's name is 123, then this will ensure that the name is valid by making the name Member123.
+            if (String.IsNullOrEmpty(cleanName))
+                legalName = String.Format("Member{0}", legalName);
+            else if (cleanName.Equals("."))
+                legalName = "Period";
+            else if (cleanName.Equals("'"))
+                legalName = "Apostrophe";
+            else if (cleanName.Equals("_"))
+                legalName = "Underscore";
+            else
+                legalName = cleanName;
+
             legalName = StringUtil.ToPascalCase(legalName);
             return legalName;
         }
