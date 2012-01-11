@@ -5,6 +5,9 @@ using CodeSmith.Data.LinqToSql;
 
 namespace CodeSmith.Data.Linq
 {
+    /// <summary>
+    /// Extension Methods for Future Cache FirstOrDefault.
+    /// </summary>
     public static class FromCacheFirstOrDefaultExtensions
     {
         /// <summary>

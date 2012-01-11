@@ -1,20 +1,15 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
 using System.Linq;
-using System.Linq.Expressions;
-using System.Runtime.Serialization;
-using System.Security.Cryptography;
-using System.Text;
-using System.Xml;
 using CodeSmith.Data.Caching;
 using System.Data.Linq;
 using CodeSmith.Data.LinqToSql;
 
 namespace CodeSmith.Data.Linq
 {
+    /// <summary>
+    /// Extension methods for FromCache
+    /// </summary>
     public static class FromCacheExtensions
     {
         /// <summary>

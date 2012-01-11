@@ -168,7 +168,7 @@ namespace CodeSmith.Data.Linq
         /// <value>The future queries.</value>
         IEnumerable<IFutureQuery> IFutureContext.FutureQueries
         {
-            get { return _futureQueries; }
+            get { return _futureQueries as IEnumerable<IFutureQuery>; }
         }
 
         IEnumerable<T> IFutureContext.Future<T>(IQueryable<T> query, CacheSettings cacheSettings)

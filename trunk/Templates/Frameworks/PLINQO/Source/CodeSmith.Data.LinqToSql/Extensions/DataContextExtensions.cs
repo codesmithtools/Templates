@@ -5,17 +5,16 @@ using System.Data.Common;
 using System.Data.Linq;
 using System.Data.Linq.Mapping;
 using System.Data.SqlClient;
-using System.Globalization;
-using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
-using System.Text.RegularExpressions;
 
 namespace CodeSmith.Data.Linq
 {
-    //http://www.aneyfamily.com/terryandann/post/2008/04/LINQ-to-SQL-Batch-UpdatesDeletes-Fix-for-Could-not-translate-expression.aspx
+    /// <summary>
+    /// http://www.aneyfamily.com/terryandann/post/2008/04/LINQ-to-SQL-Batch-UpdatesDeletes-Fix-for-Could-not-translate-expression.aspx
+    /// </summary>
     public static class DataContextExtensions
     {
         /// <summary>

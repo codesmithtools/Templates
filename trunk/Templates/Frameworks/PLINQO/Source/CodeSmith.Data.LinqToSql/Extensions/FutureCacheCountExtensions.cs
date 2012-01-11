@@ -4,6 +4,9 @@ using CodeSmith.Data.Future;
 
 namespace CodeSmith.Data.Linq
 {
+    /// <summary>
+    /// Extension Methods for Future Cache Count.
+    /// </summary>
     public static class FutureCacheCountExtensions
     {
         /// <summary>

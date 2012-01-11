@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Linq;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Reflection;
-using CodeSmith.Data.Caching;
 using CodeSmith.Data.LinqToSql;
 
 namespace CodeSmith.Data.Linq
 {
+    /// <summary>
+    /// Extension Methods.
+    /// </summary>
     public static class UtilityExtensions
     {
         /// <summary>
