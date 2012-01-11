@@ -1,13 +1,13 @@
 ﻿using System;
-using System.Data.Linq;
 using System.Linq;
-using System.Reflection;
-using System.Text;
 using CodeSmith.Data.Caching;
 using CodeSmith.Data.Future;
 
 namespace CodeSmith.Data.Linq
 {
+    /// <summary>
+    /// Extension Methods for Future Cache FirstOrDefault.
+    /// </summary>
     public static class FutureCacheFirstOrDefaultExtensions
     {
         /// <summary>
