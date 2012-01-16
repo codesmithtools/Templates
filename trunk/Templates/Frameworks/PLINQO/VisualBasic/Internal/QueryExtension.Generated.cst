@@ -250,6 +250,8 @@ Namespace <%= QueryNamespace %>
 <% End If 'CanBeNull %>
             End Select
         End Function
+<% End If 'if type string %>
+        
         ''' <summary>
         ''' Gets a query for <see cref="<%= safeName %>"/>.
         ''' </summary>
@@ -296,7 +298,6 @@ Namespace <%= QueryNamespace %>
 <% End If %>
         End Function
 
-<% End If 'if type string %>
 <% End If ' if is  not key
  Next ' foreach method%>
 
