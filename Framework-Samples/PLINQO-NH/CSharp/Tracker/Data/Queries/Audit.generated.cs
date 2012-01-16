@@ -24,7 +24,7 @@ namespace Tracker.Data
         /// <summary>
         /// Gets an instance by the primary key.
         /// </summary>
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         public static Tracker.Data.Entities.Audit GetByKey(this IQueryable<Tracker.Data.Entities.Audit> queryable
             , System.Int32 id
             )
@@ -45,7 +45,7 @@ namespace Tracker.Data
         /// <param name="queryable">Query to append where clause.</param>
         /// <param name="id">Id to search for.</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         public static IQueryable<Tracker.Data.Entities.Audit> ById(this IQueryable<Tracker.Data.Entities.Audit> queryable, System.Int32 id)
         {
             return queryable.Where(a => a.Id == id);
@@ -58,7 +58,7 @@ namespace Tracker.Data
         /// <param name="id">Id to search for. This is on the right side of the operator.</param>
         /// <param name="comparisonOperator">The comparison operator.</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         public static IQueryable<Tracker.Data.Entities.Audit> ById(this IQueryable<Tracker.Data.Entities.Audit> queryable, ComparisonOperator comparisonOperator, System.Int32 id)
         {
             switch (comparisonOperator)
@@ -85,7 +85,7 @@ namespace Tracker.Data
         /// <param name="id">Id to search for.</param>
         /// <param name="additionalValues">Additional values to search for.</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         public static IQueryable<Tracker.Data.Entities.Audit> ById(this IQueryable<Tracker.Data.Entities.Audit> queryable, System.Int32 id, params System.Int32[] additionalValues)
         {
             var idList = new List<System.Int32> { id };
@@ -105,7 +105,7 @@ namespace Tracker.Data
         /// <param name="queryable">Query to append where clause.</param>
         /// <param name="values">The values to search for..</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         public static IQueryable<Tracker.Data.Entities.Audit> ById(this IQueryable<Tracker.Data.Entities.Audit> queryable, IEnumerable<System.Int32> values)
         {
             return queryable.Where(a => values.Contains(a.Id));
@@ -117,7 +117,7 @@ namespace Tracker.Data
         /// <param name="queryable">Query to append where clause.</param>
         /// <param name="date">Date to search for.</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         public static IQueryable<Tracker.Data.Entities.Audit> ByDate(this IQueryable<Tracker.Data.Entities.Audit> queryable, System.DateTime date)
         {
             return queryable.Where(a => a.Date == date);
@@ -130,7 +130,7 @@ namespace Tracker.Data
         /// <param name="date">Date to search for. This is on the right side of the operator.</param>
         /// <param name="comparisonOperator">The comparison operator.</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         public static IQueryable<Tracker.Data.Entities.Audit> ByDate(this IQueryable<Tracker.Data.Entities.Audit> queryable, ComparisonOperator comparisonOperator, System.DateTime date)
         {
             switch (comparisonOperator)
@@ -157,7 +157,7 @@ namespace Tracker.Data
         /// <param name="date">Date to search for.</param>
         /// <param name="additionalValues">Additional values to search for.</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         public static IQueryable<Tracker.Data.Entities.Audit> ByDate(this IQueryable<Tracker.Data.Entities.Audit> queryable, System.DateTime date, params System.DateTime[] additionalValues)
         {
             var dateList = new List<System.DateTime> { date };
@@ -177,7 +177,7 @@ namespace Tracker.Data
         /// <param name="queryable">Query to append where clause.</param>
         /// <param name="values">The values to search for..</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         public static IQueryable<Tracker.Data.Entities.Audit> ByDate(this IQueryable<Tracker.Data.Entities.Audit> queryable, IEnumerable<System.DateTime> values)
         {
             return queryable.Where(a => values.Contains(a.Date));
@@ -189,7 +189,7 @@ namespace Tracker.Data
         /// <param name="queryable">Query to append where clause.</param>
         /// <param name="content">Content to search for.</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         public static IQueryable<Tracker.Data.Entities.Audit> ByContent(this IQueryable<Tracker.Data.Entities.Audit> queryable, System.String content)
         {
             return queryable.Where(a => a.Content == content);
@@ -202,7 +202,7 @@ namespace Tracker.Data
         /// <param name="content">Content to search for.</param>
         /// <param name="containmentOperator">The containment operator.</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         public static IQueryable<Tracker.Data.Entities.Audit> ByContent(this IQueryable<Tracker.Data.Entities.Audit> queryable, ContainmentOperator containmentOperator, System.String content)
         {
             if (content == null && containmentOperator != ContainmentOperator.Equals && containmentOperator != ContainmentOperator.NotEquals)
@@ -232,7 +232,7 @@ namespace Tracker.Data
         /// <param name="content">Content to search for.</param>
         /// <param name="additionalValues">Additional values to search for.</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         public static IQueryable<Tracker.Data.Entities.Audit> ByContent(this IQueryable<Tracker.Data.Entities.Audit> queryable, System.String content, params System.String[] additionalValues)
         {
             var contentList = new List<System.String> { content };
@@ -252,7 +252,7 @@ namespace Tracker.Data
         /// <param name="queryable">Query to append where clause.</param>
         /// <param name="values">The values to search for..</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         public static IQueryable<Tracker.Data.Entities.Audit> ByContent(this IQueryable<Tracker.Data.Entities.Audit> queryable, IEnumerable<System.String> values)
         {
             return queryable.Where(a => values.Contains(a.Content));
@@ -264,7 +264,7 @@ namespace Tracker.Data
         /// <param name="queryable">Query to append where clause.</param>
         /// <param name="username">Username to search for.</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         public static IQueryable<Tracker.Data.Entities.Audit> ByUsername(this IQueryable<Tracker.Data.Entities.Audit> queryable, System.String username)
         {
             return queryable.Where(a => a.Username == username);
@@ -277,7 +277,7 @@ namespace Tracker.Data
         /// <param name="username">Username to search for.</param>
         /// <param name="containmentOperator">The containment operator.</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         public static IQueryable<Tracker.Data.Entities.Audit> ByUsername(this IQueryable<Tracker.Data.Entities.Audit> queryable, ContainmentOperator containmentOperator, System.String username)
         {
             if (username == null && containmentOperator != ContainmentOperator.Equals && containmentOperator != ContainmentOperator.NotEquals)
@@ -307,7 +307,7 @@ namespace Tracker.Data
         /// <param name="username">Username to search for.</param>
         /// <param name="additionalValues">Additional values to search for.</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         public static IQueryable<Tracker.Data.Entities.Audit> ByUsername(this IQueryable<Tracker.Data.Entities.Audit> queryable, System.String username, params System.String[] additionalValues)
         {
             var usernameList = new List<System.String> { username };
@@ -327,7 +327,7 @@ namespace Tracker.Data
         /// <param name="queryable">Query to append where clause.</param>
         /// <param name="values">The values to search for..</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         public static IQueryable<Tracker.Data.Entities.Audit> ByUsername(this IQueryable<Tracker.Data.Entities.Audit> queryable, IEnumerable<System.String> values)
         {
             return queryable.Where(a => values.Contains(a.Username));
@@ -339,7 +339,7 @@ namespace Tracker.Data
         /// <param name="queryable">Query to append where clause.</param>
         /// <param name="createdDate">CreatedDate to search for.</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         public static IQueryable<Tracker.Data.Entities.Audit> ByCreatedDate(this IQueryable<Tracker.Data.Entities.Audit> queryable, System.DateTime createdDate)
         {
             return queryable.Where(a => a.CreatedDate == createdDate);
@@ -352,7 +352,7 @@ namespace Tracker.Data
         /// <param name="createdDate">CreatedDate to search for. This is on the right side of the operator.</param>
         /// <param name="comparisonOperator">The comparison operator.</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         public static IQueryable<Tracker.Data.Entities.Audit> ByCreatedDate(this IQueryable<Tracker.Data.Entities.Audit> queryable, ComparisonOperator comparisonOperator, System.DateTime createdDate)
         {
             switch (comparisonOperator)
@@ -379,7 +379,7 @@ namespace Tracker.Data
         /// <param name="createdDate">CreatedDate to search for.</param>
         /// <param name="additionalValues">Additional values to search for.</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         public static IQueryable<Tracker.Data.Entities.Audit> ByCreatedDate(this IQueryable<Tracker.Data.Entities.Audit> queryable, System.DateTime createdDate, params System.DateTime[] additionalValues)
         {
             var createdDateList = new List<System.DateTime> { createdDate };
@@ -399,7 +399,7 @@ namespace Tracker.Data
         /// <param name="queryable">Query to append where clause.</param>
         /// <param name="values">The values to search for..</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         public static IQueryable<Tracker.Data.Entities.Audit> ByCreatedDate(this IQueryable<Tracker.Data.Entities.Audit> queryable, IEnumerable<System.DateTime> values)
         {
             return queryable.Where(a => values.Contains(a.CreatedDate));
@@ -411,7 +411,7 @@ namespace Tracker.Data
         /// <param name="queryable">Query to append where clause.</param>
         /// <param name="myxml">Myxml to search for.</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         public static IQueryable<Tracker.Data.Entities.Audit> ByMyxml(this IQueryable<Tracker.Data.Entities.Audit> queryable, System.String myxml)
         {
             // support nulls
@@ -427,7 +427,7 @@ namespace Tracker.Data
         /// <param name="myxml">Myxml to search for.</param>
         /// <param name="containmentOperator">The containment operator.</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         public static IQueryable<Tracker.Data.Entities.Audit> ByMyxml(this IQueryable<Tracker.Data.Entities.Audit> queryable, ContainmentOperator containmentOperator, System.String myxml)
         {
             if (myxml == null && containmentOperator != ContainmentOperator.Equals && containmentOperator != ContainmentOperator.NotEquals)
@@ -461,7 +461,7 @@ namespace Tracker.Data
         /// <param name="myxml">Myxml to search for.</param>
         /// <param name="additionalValues">Additional values to search for.</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         public static IQueryable<Tracker.Data.Entities.Audit> ByMyxml(this IQueryable<Tracker.Data.Entities.Audit> queryable, System.String myxml, params System.String[] additionalValues)
         {
             var myxmlList = new List<System.String> { myxml };
@@ -483,7 +483,7 @@ namespace Tracker.Data
         /// <param name="queryable">Query to append where clause.</param>
         /// <param name="values">The values to search for..</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         public static IQueryable<Tracker.Data.Entities.Audit> ByMyxml(this IQueryable<Tracker.Data.Entities.Audit> queryable, IEnumerable<System.String> values)
         {
             // creating dynmic expression to support nulls
@@ -501,7 +501,7 @@ namespace Tracker.Data
         /// <param name="queryable">Query to append where clause.</param>
         /// <param name="task">Task to search for.</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         public static IQueryable<Tracker.Data.Entities.Audit> ByTask(this IQueryable<Tracker.Data.Entities.Audit> queryable, Tracker.Data.Entities.Task task)
         {
             return queryable.ByTask(ComparisonOperator.Equals, task);
@@ -514,7 +514,7 @@ namespace Tracker.Data
         /// <param name="comparisonOperator">The comparison operator.</param>
         /// <param name="task">Task to search for.</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         public static IQueryable<Tracker.Data.Entities.Audit> ByTask(this IQueryable<Tracker.Data.Entities.Audit> queryable, ComparisonOperator comparisonOperator, Tracker.Data.Entities.Task task)
         {
             switch(comparisonOperator)
@@ -536,7 +536,7 @@ namespace Tracker.Data
         /// <param name="queryable">Query to append where clause.</param>
         /// <param name="id">Id to search for.</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         public static IQueryable<Tracker.Data.Entities.Audit> ByTask(this IQueryable<Tracker.Data.Entities.Audit> queryable, System.Int32 id)
         {
             return queryable.ByTask(ComparisonOperator.Equals, id);
@@ -549,7 +549,7 @@ namespace Tracker.Data
         /// <param name="comparisonOperator">The comparison operator.</param>
         /// <param name="id">Id to search for.</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         public static IQueryable<Tracker.Data.Entities.Audit> ByTask(this IQueryable<Tracker.Data.Entities.Audit> queryable, ComparisonOperator comparisonOperator, System.Int32 id)
         {
             switch(comparisonOperator)
@@ -571,7 +571,7 @@ namespace Tracker.Data
         /// <param name="queryable">Query to append where clause.</param>
         /// <param name="user">User to search for.</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         public static IQueryable<Tracker.Data.Entities.Audit> ByUser(this IQueryable<Tracker.Data.Entities.Audit> queryable, Tracker.Data.Entities.User user)
         {
             return queryable.ByUser(ComparisonOperator.Equals, user);
@@ -584,7 +584,7 @@ namespace Tracker.Data
         /// <param name="comparisonOperator">The comparison operator.</param>
         /// <param name="user">User to search for.</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         public static IQueryable<Tracker.Data.Entities.Audit> ByUser(this IQueryable<Tracker.Data.Entities.Audit> queryable, ComparisonOperator comparisonOperator, Tracker.Data.Entities.User user)
         {
             switch(comparisonOperator)
@@ -606,7 +606,7 @@ namespace Tracker.Data
         /// <param name="queryable">Query to append where clause.</param>
         /// <param name="id">Id to search for.</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         public static IQueryable<Tracker.Data.Entities.Audit> ByUser(this IQueryable<Tracker.Data.Entities.Audit> queryable, System.Int32 id)
         {
             return queryable.ByUser(ComparisonOperator.Equals, id);
@@ -619,7 +619,7 @@ namespace Tracker.Data
         /// <param name="comparisonOperator">The comparison operator.</param>
         /// <param name="id">Id to search for.</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         public static IQueryable<Tracker.Data.Entities.Audit> ByUser(this IQueryable<Tracker.Data.Entities.Audit> queryable, ComparisonOperator comparisonOperator, System.Int32 id)
         {
             switch(comparisonOperator)

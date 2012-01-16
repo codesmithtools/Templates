@@ -24,7 +24,7 @@ namespace Tracker.Data
         /// <summary>
         /// Gets an instance by the primary key.
         /// </summary>
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         public static Tracker.Data.Entities.Guid GetByKey(this IQueryable<Tracker.Data.Entities.Guid> queryable
             , System.Guid id
             )
@@ -45,7 +45,7 @@ namespace Tracker.Data
         /// <param name="queryable">Query to append where clause.</param>
         /// <param name="id">Id to search for.</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         public static IQueryable<Tracker.Data.Entities.Guid> ById(this IQueryable<Tracker.Data.Entities.Guid> queryable, System.Guid id)
         {
             return queryable.Where(g => g.Id == id);
@@ -58,7 +58,7 @@ namespace Tracker.Data
         /// <param name="id">Id to search for. This is on the right side of the operator.</param>
         /// <param name="comparisonOperator">The comparison operator.</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         public static IQueryable<Tracker.Data.Entities.Guid> ById(this IQueryable<Tracker.Data.Entities.Guid> queryable, ComparisonOperator comparisonOperator, System.Guid id)
         {
             switch (comparisonOperator)
@@ -82,7 +82,7 @@ namespace Tracker.Data
         /// <param name="id">Id to search for.</param>
         /// <param name="additionalValues">Additional values to search for.</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         public static IQueryable<Tracker.Data.Entities.Guid> ById(this IQueryable<Tracker.Data.Entities.Guid> queryable, System.Guid id, params System.Guid[] additionalValues)
         {
             var idList = new List<System.Guid> { id };
@@ -102,7 +102,7 @@ namespace Tracker.Data
         /// <param name="queryable">Query to append where clause.</param>
         /// <param name="values">The values to search for..</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         public static IQueryable<Tracker.Data.Entities.Guid> ById(this IQueryable<Tracker.Data.Entities.Guid> queryable, IEnumerable<System.Guid> values)
         {
             return queryable.Where(g => values.Contains(g.Id));
@@ -114,7 +114,7 @@ namespace Tracker.Data
         /// <param name="queryable">Query to append where clause.</param>
         /// <param name="alternateId">AlternateId to search for.</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         public static IQueryable<Tracker.Data.Entities.Guid> ByAlternateId(this IQueryable<Tracker.Data.Entities.Guid> queryable, System.Guid? alternateId)
         {
             // support nulls
@@ -130,7 +130,7 @@ namespace Tracker.Data
         /// <param name="alternateId">AlternateId to search for. This is on the right side of the operator.</param>
         /// <param name="comparisonOperator">The comparison operator.</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         public static IQueryable<Tracker.Data.Entities.Guid> ByAlternateId(this IQueryable<Tracker.Data.Entities.Guid> queryable, ComparisonOperator comparisonOperator, System.Guid? alternateId)
         {
             if (alternateId == null && comparisonOperator != ComparisonOperator.Equals && comparisonOperator != ComparisonOperator.NotEquals)
@@ -161,7 +161,7 @@ namespace Tracker.Data
         /// <param name="alternateId">AlternateId to search for.</param>
         /// <param name="additionalValues">Additional values to search for.</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         public static IQueryable<Tracker.Data.Entities.Guid> ByAlternateId(this IQueryable<Tracker.Data.Entities.Guid> queryable, System.Guid? alternateId, params System.Guid?[] additionalValues)
         {
             var alternateIdList = new List<System.Guid?> { alternateId };
@@ -183,7 +183,7 @@ namespace Tracker.Data
         /// <param name="queryable">Query to append where clause.</param>
         /// <param name="values">The values to search for..</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         public static IQueryable<Tracker.Data.Entities.Guid> ByAlternateId(this IQueryable<Tracker.Data.Entities.Guid> queryable, IEnumerable<System.Guid?> values)
         {
             // creating dynmic expression to support nulls

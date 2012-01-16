@@ -80,7 +80,7 @@
                                         <tr>
                                             <td class="label">
                                                 Expiration Date (MM/YYYY)<br />
-                                                <asp:TextBox ID="txtExpDate" runat="server" CssClass="checkoutTextbox" Width="155px">12/2009</asp:TextBox><br />
+                                                <asp:TextBox ID="txtExpDate" runat="server" CssClass="checkoutTextbox" Width="155px">12/2014</asp:TextBox><br />
                                                 <asp:RequiredFieldValidator ID="valExpDate" runat="server" ControlToValidate="txtExpDate"
                                                     Display="Dynamic" ErrorMessage="Please enter expiration date."></asp:RequiredFieldValidator><asp:RegularExpressionValidator
                                                         ID="valExpDate1" runat="server" ControlToValidate="txtExpDate" ErrorMessage="Invalid date format."

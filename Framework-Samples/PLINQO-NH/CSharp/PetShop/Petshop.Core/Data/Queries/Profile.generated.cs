@@ -24,7 +24,7 @@ namespace Petshop.Data
         /// <summary>
         /// Gets an instance by the primary key.
         /// </summary>
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         public static Petshop.Data.Entities.Profile GetByKey(this IQueryable<Petshop.Data.Entities.Profile> queryable
             , System.Int32 uniqueID
             )
@@ -45,7 +45,7 @@ namespace Petshop.Data
         /// <param name="queryable">Query to append where clause.</param>
         /// <param name="uniqueID">UniqueID to search for.</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         public static IQueryable<Petshop.Data.Entities.Profile> ByUniqueID(this IQueryable<Petshop.Data.Entities.Profile> queryable, System.Int32 uniqueID)
         {
             return queryable.Where(p => p.UniqueID == uniqueID);
@@ -58,7 +58,7 @@ namespace Petshop.Data
         /// <param name="uniqueID">UniqueID to search for. This is on the right side of the operator.</param>
         /// <param name="comparisonOperator">The comparison operator.</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         public static IQueryable<Petshop.Data.Entities.Profile> ByUniqueID(this IQueryable<Petshop.Data.Entities.Profile> queryable, ComparisonOperator comparisonOperator, System.Int32 uniqueID)
         {
             switch (comparisonOperator)
@@ -85,7 +85,7 @@ namespace Petshop.Data
         /// <param name="uniqueID">UniqueID to search for.</param>
         /// <param name="additionalValues">Additional values to search for.</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         public static IQueryable<Petshop.Data.Entities.Profile> ByUniqueID(this IQueryable<Petshop.Data.Entities.Profile> queryable, System.Int32 uniqueID, params System.Int32[] additionalValues)
         {
             var uniqueIDList = new List<System.Int32> { uniqueID };
@@ -105,7 +105,7 @@ namespace Petshop.Data
         /// <param name="queryable">Query to append where clause.</param>
         /// <param name="values">The values to search for..</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         public static IQueryable<Petshop.Data.Entities.Profile> ByUniqueID(this IQueryable<Petshop.Data.Entities.Profile> queryable, IEnumerable<System.Int32> values)
         {
             return queryable.Where(p => values.Contains(p.UniqueID));
@@ -117,7 +117,7 @@ namespace Petshop.Data
         /// <param name="queryable">Query to append where clause.</param>
         /// <param name="username">Username to search for.</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         public static IQueryable<Petshop.Data.Entities.Profile> ByUsername(this IQueryable<Petshop.Data.Entities.Profile> queryable, System.String username)
         {
             return queryable.Where(p => p.Username == username);
@@ -130,7 +130,7 @@ namespace Petshop.Data
         /// <param name="username">Username to search for.</param>
         /// <param name="containmentOperator">The containment operator.</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         public static IQueryable<Petshop.Data.Entities.Profile> ByUsername(this IQueryable<Petshop.Data.Entities.Profile> queryable, ContainmentOperator containmentOperator, System.String username)
         {
             if (username == null && containmentOperator != ContainmentOperator.Equals && containmentOperator != ContainmentOperator.NotEquals)
@@ -160,7 +160,7 @@ namespace Petshop.Data
         /// <param name="username">Username to search for.</param>
         /// <param name="additionalValues">Additional values to search for.</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         public static IQueryable<Petshop.Data.Entities.Profile> ByUsername(this IQueryable<Petshop.Data.Entities.Profile> queryable, System.String username, params System.String[] additionalValues)
         {
             var usernameList = new List<System.String> { username };
@@ -180,7 +180,7 @@ namespace Petshop.Data
         /// <param name="queryable">Query to append where clause.</param>
         /// <param name="values">The values to search for..</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         public static IQueryable<Petshop.Data.Entities.Profile> ByUsername(this IQueryable<Petshop.Data.Entities.Profile> queryable, IEnumerable<System.String> values)
         {
             return queryable.Where(p => values.Contains(p.Username));
@@ -192,7 +192,7 @@ namespace Petshop.Data
         /// <param name="queryable">Query to append where clause.</param>
         /// <param name="applicationName">ApplicationName to search for.</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         public static IQueryable<Petshop.Data.Entities.Profile> ByApplicationName(this IQueryable<Petshop.Data.Entities.Profile> queryable, System.String applicationName)
         {
             return queryable.Where(p => p.ApplicationName == applicationName);
@@ -205,7 +205,7 @@ namespace Petshop.Data
         /// <param name="applicationName">ApplicationName to search for.</param>
         /// <param name="containmentOperator">The containment operator.</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         public static IQueryable<Petshop.Data.Entities.Profile> ByApplicationName(this IQueryable<Petshop.Data.Entities.Profile> queryable, ContainmentOperator containmentOperator, System.String applicationName)
         {
             if (applicationName == null && containmentOperator != ContainmentOperator.Equals && containmentOperator != ContainmentOperator.NotEquals)
@@ -235,7 +235,7 @@ namespace Petshop.Data
         /// <param name="applicationName">ApplicationName to search for.</param>
         /// <param name="additionalValues">Additional values to search for.</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         public static IQueryable<Petshop.Data.Entities.Profile> ByApplicationName(this IQueryable<Petshop.Data.Entities.Profile> queryable, System.String applicationName, params System.String[] additionalValues)
         {
             var applicationNameList = new List<System.String> { applicationName };
@@ -255,7 +255,7 @@ namespace Petshop.Data
         /// <param name="queryable">Query to append where clause.</param>
         /// <param name="values">The values to search for..</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         public static IQueryable<Petshop.Data.Entities.Profile> ByApplicationName(this IQueryable<Petshop.Data.Entities.Profile> queryable, IEnumerable<System.String> values)
         {
             return queryable.Where(p => values.Contains(p.ApplicationName));
@@ -267,7 +267,7 @@ namespace Petshop.Data
         /// <param name="queryable">Query to append where clause.</param>
         /// <param name="isAnonymous">IsAnonymous to search for.</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         public static IQueryable<Petshop.Data.Entities.Profile> ByIsAnonymous(this IQueryable<Petshop.Data.Entities.Profile> queryable, System.Boolean? isAnonymous)
         {
             // support nulls
@@ -283,7 +283,7 @@ namespace Petshop.Data
         /// <param name="isAnonymous">IsAnonymous to search for. This is on the right side of the operator.</param>
         /// <param name="comparisonOperator">The comparison operator.</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         public static IQueryable<Petshop.Data.Entities.Profile> ByIsAnonymous(this IQueryable<Petshop.Data.Entities.Profile> queryable, ComparisonOperator comparisonOperator, System.Boolean? isAnonymous)
         {
             if (isAnonymous == null && comparisonOperator != ComparisonOperator.Equals && comparisonOperator != ComparisonOperator.NotEquals)
@@ -314,7 +314,7 @@ namespace Petshop.Data
         /// <param name="isAnonymous">IsAnonymous to search for.</param>
         /// <param name="additionalValues">Additional values to search for.</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         public static IQueryable<Petshop.Data.Entities.Profile> ByIsAnonymous(this IQueryable<Petshop.Data.Entities.Profile> queryable, System.Boolean? isAnonymous, params System.Boolean?[] additionalValues)
         {
             var isAnonymousList = new List<System.Boolean?> { isAnonymous };
@@ -336,7 +336,7 @@ namespace Petshop.Data
         /// <param name="queryable">Query to append where clause.</param>
         /// <param name="values">The values to search for..</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         public static IQueryable<Petshop.Data.Entities.Profile> ByIsAnonymous(this IQueryable<Petshop.Data.Entities.Profile> queryable, IEnumerable<System.Boolean?> values)
         {
             // creating dynmic expression to support nulls
@@ -350,7 +350,7 @@ namespace Petshop.Data
         /// <param name="queryable">Query to append where clause.</param>
         /// <param name="lastActivityDate">LastActivityDate to search for.</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         public static IQueryable<Petshop.Data.Entities.Profile> ByLastActivityDate(this IQueryable<Petshop.Data.Entities.Profile> queryable, System.DateTime? lastActivityDate)
         {
             // support nulls
@@ -366,7 +366,7 @@ namespace Petshop.Data
         /// <param name="lastActivityDate">LastActivityDate to search for. This is on the right side of the operator.</param>
         /// <param name="comparisonOperator">The comparison operator.</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         public static IQueryable<Petshop.Data.Entities.Profile> ByLastActivityDate(this IQueryable<Petshop.Data.Entities.Profile> queryable, ComparisonOperator comparisonOperator, System.DateTime? lastActivityDate)
         {
             if (lastActivityDate == null && comparisonOperator != ComparisonOperator.Equals && comparisonOperator != ComparisonOperator.NotEquals)
@@ -400,7 +400,7 @@ namespace Petshop.Data
         /// <param name="lastActivityDate">LastActivityDate to search for.</param>
         /// <param name="additionalValues">Additional values to search for.</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         public static IQueryable<Petshop.Data.Entities.Profile> ByLastActivityDate(this IQueryable<Petshop.Data.Entities.Profile> queryable, System.DateTime? lastActivityDate, params System.DateTime?[] additionalValues)
         {
             var lastActivityDateList = new List<System.DateTime?> { lastActivityDate };
@@ -422,7 +422,7 @@ namespace Petshop.Data
         /// <param name="queryable">Query to append where clause.</param>
         /// <param name="values">The values to search for..</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         public static IQueryable<Petshop.Data.Entities.Profile> ByLastActivityDate(this IQueryable<Petshop.Data.Entities.Profile> queryable, IEnumerable<System.DateTime?> values)
         {
             // creating dynmic expression to support nulls
@@ -436,7 +436,7 @@ namespace Petshop.Data
         /// <param name="queryable">Query to append where clause.</param>
         /// <param name="lastUpdatedDate">LastUpdatedDate to search for.</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         public static IQueryable<Petshop.Data.Entities.Profile> ByLastUpdatedDate(this IQueryable<Petshop.Data.Entities.Profile> queryable, System.DateTime? lastUpdatedDate)
         {
             // support nulls
@@ -452,7 +452,7 @@ namespace Petshop.Data
         /// <param name="lastUpdatedDate">LastUpdatedDate to search for. This is on the right side of the operator.</param>
         /// <param name="comparisonOperator">The comparison operator.</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         public static IQueryable<Petshop.Data.Entities.Profile> ByLastUpdatedDate(this IQueryable<Petshop.Data.Entities.Profile> queryable, ComparisonOperator comparisonOperator, System.DateTime? lastUpdatedDate)
         {
             if (lastUpdatedDate == null && comparisonOperator != ComparisonOperator.Equals && comparisonOperator != ComparisonOperator.NotEquals)
@@ -486,7 +486,7 @@ namespace Petshop.Data
         /// <param name="lastUpdatedDate">LastUpdatedDate to search for.</param>
         /// <param name="additionalValues">Additional values to search for.</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         public static IQueryable<Petshop.Data.Entities.Profile> ByLastUpdatedDate(this IQueryable<Petshop.Data.Entities.Profile> queryable, System.DateTime? lastUpdatedDate, params System.DateTime?[] additionalValues)
         {
             var lastUpdatedDateList = new List<System.DateTime?> { lastUpdatedDate };
@@ -508,7 +508,7 @@ namespace Petshop.Data
         /// <param name="queryable">Query to append where clause.</param>
         /// <param name="values">The values to search for..</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         public static IQueryable<Petshop.Data.Entities.Profile> ByLastUpdatedDate(this IQueryable<Petshop.Data.Entities.Profile> queryable, IEnumerable<System.DateTime?> values)
         {
             // creating dynmic expression to support nulls
