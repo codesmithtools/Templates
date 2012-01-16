@@ -21,7 +21,7 @@ Namespace Tracker.Core.Data
         
         <CodeSmith.Data.Audit.Audit()> _
         Friend Class Metadata
-            ' Only Attributes in the class will be preserved.
+            ' WARNING: Only attributes inside of this class will be preserved.
             
             Public Property UserId() As Object
                 Get

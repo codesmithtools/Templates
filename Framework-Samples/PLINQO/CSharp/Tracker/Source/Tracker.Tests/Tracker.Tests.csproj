@@ -83,17 +83,14 @@
     <CodeAnalysisIgnoreBuiltInRules>true</CodeAnalysisIgnoreBuiltInRules>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="HibernatingRhinos.Profiler.Appender, Version=1.0.0.0, Culture=neutral, PublicKeyToken=0774796e73ebf640, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\..\..\..\..\..\Insight\trunk\Libraries\L2SProfiler\HibernatingRhinos.Profiler.Appender.dll</HintPath>
+    <Reference Include="CodeSmith.Data">
+      <HintPath>..\..\..\..\Templates\Common\v3.5\CodeSmith.Data.dll</HintPath>
     </Reference>
-    <Reference Include="nunit.framework, Version=2.4.8.0, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Libraries\nunit.framework.dll</HintPath>
+    <Reference Include="CodeSmith.Data.LinqToSql">
+      <HintPath>..\..\..\..\Templates\Common\v3.5\CodeSmith.Data.LinqToSql.dll</HintPath>
     </Reference>
-    <Reference Include="nunit.framework.extensions, Version=2.4.8.0, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Libraries\nunit.framework.extensions.dll</HintPath>
+    <Reference Include="nunit.framework">
+      <HintPath>..\..\..\..\Libraries\nunit.framework.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations">
@@ -144,10 +141,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Templates\PLINQO\Source\CodeSmith.Data\CodeSmith.Data.csproj">
-      <Project>{389DE9AF-2491-4C91-A3A3-FB15FFD8515B}</Project>
-      <Name>CodeSmith.Data</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Tracker.Core\Tracker.Core.csproj">
       <Project>{2DF2FB49-6A04-4FD5-80D9-C662825787E3}</Project>
       <Name>Tracker.Core</Name>

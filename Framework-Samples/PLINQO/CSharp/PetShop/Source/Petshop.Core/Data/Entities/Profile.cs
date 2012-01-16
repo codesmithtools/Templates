@@ -57,7 +57,7 @@ namespace PetShop.Core.Data
         [CodeSmith.Data.Audit.Audit]
         internal class Metadata
         {
-            // Only Attributes in the class will be preserved.
+             // WARNING: Only attributes inside of this class will be preserved.
 
             public int UniqueID { get; set; }
 
@@ -67,11 +67,11 @@ namespace PetShop.Core.Data
             [Required]
             public string ApplicationName { get; set; }
 
-            public bool IsAnonymous { get; set; }
+            public bool? IsAnonymous { get; set; }
 
-            public System.DateTime LastActivityDate { get; set; }
+            public System.DateTime? LastActivityDate { get; set; }
 
-            public System.DateTime LastUpdatedDate { get; set; }
+            public System.DateTime? LastUpdatedDate { get; set; }
 
             public EntitySet<Account> AccountList { get; set; }
 

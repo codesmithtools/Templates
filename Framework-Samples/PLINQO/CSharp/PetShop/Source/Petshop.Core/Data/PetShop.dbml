@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Database Name="C:\CODE\CODESMITH\GOOGLECODE\PETSHOP\SOURCE\PETSHOP.UI\APP_DATA\PETSHOP.MDF" EntityNamespace="PetShop.Core.Data" ContextNamespace="PetShop.Core.Data" Class="PetShopDataContext" EntityBase="LinqEntityBase" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+<Database Name="PetShop" EntityNamespace="PetShop.Core.Data" ContextNamespace="PetShop.Core.Data" Class="PetShopDataContext" EntityBase="LinqEntityBase" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
   <Connection Mode="ConnectionString" ConnectionString="Server=.\SQLEXPRESS;Database=Petshop;Integrated Security=True" SettingsObjectName="Properties.Settings" SettingsPropertyName="PetShopConnectionString" Provider="System.Data.SqlClient" />
   <Table Name="dbo.Account" Member="Account">
     <Type Name="Account">

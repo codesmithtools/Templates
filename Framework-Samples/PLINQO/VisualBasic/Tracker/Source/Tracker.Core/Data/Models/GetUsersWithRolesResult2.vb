@@ -1,27 +1,24 @@
-﻿    
-Imports System
+﻿Imports System
 Imports System.Linq
+Imports System.Data.Linq
 Imports System.Collections.Generic
 Imports System.Text
-Imports System.Data.Linq
 Imports System.ComponentModel.DataAnnotations
 Imports CodeSmith.Data.Attributes
 Imports CodeSmith.Data.Rules
 
 Namespace Tracker.Core.Data
     
-    public Partial Class GetUsersWithRolesResult2
+    Public Partial Class GetUsersWithRolesResult2
         
-        ' For more information about the features contained in this class, please visit our GoogleCode Wiki at...
-        ' http://code.google.com/p/codesmith/wiki/PLINQO
-        ' Also, you can watch our Video Tutorials at...
-        ' http://community.codesmithtools.com/
+        ' Place custom code here.
         
         #Region "Metadata"
-        
+        ' For more information about how to use the metadata class visit:
+        ' http://www.plinqo.com/metadata.ashx
         <CodeSmith.Data.Audit.Audit()> _
         Friend Class Metadata
-            ' Only Attributes in the class will be preserved.
+            ' WARNING: Only attributes inside of this class will be preserved.
             
             Public Property UserId() As Object
                 Get

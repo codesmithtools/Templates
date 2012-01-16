@@ -4,6 +4,7 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using CodeSmith.Data.Caching;
+using CodeSmith.Data.Future;
 using NUnit.Framework;
 using Tracker.Core.Data;
 using CodeSmith.Data.Linq;
@@ -116,7 +117,7 @@ namespace Tracker.Tests.FutureTests
 
             // should be loaded because it came from cache
             Assert.IsTrue(((IFutureQuery)c1).IsLoaded);
-            Assert.IsTrue(((IFutureQuery)c2).IsLoaded);
+            Assert.IsTrue(c2.IsLoaded);
 
             users = c1.ToList();
             Assert.IsNotNull(users);
@@ -220,9 +221,9 @@ namespace Tracker.Tests.FutureTests
                 .FutureCache(cache);
 
             // should be loaded because it came from cache
-            Assert.IsTrue(((IFutureQuery)c1).IsLoaded);
-            Assert.IsTrue(((IFutureQuery)c2).IsLoaded);
-            Assert.IsTrue(((IFutureQuery)c3).IsLoaded);
+            Assert.IsTrue(c1.IsLoaded);
+            Assert.IsTrue(c2.IsLoaded);
+            Assert.IsTrue(((IFutureQuery<Task>)c3).IsLoaded);
 
             user = c1.Value;
             Assert.IsNotNull(user);
@@ -283,8 +284,8 @@ namespace Tracker.Tests.FutureTests
                 .FutureCache(cache);
 
             // should be loaded because it came from cache
-            Assert.IsTrue(((IFutureQuery)c1).IsLoaded);
-            Assert.IsTrue(((IFutureQuery)c2).IsLoaded);
+            Assert.IsTrue(c1.IsLoaded);
+            Assert.IsTrue(c2.IsLoaded);
             Assert.IsTrue(((IFutureQuery)c3).IsLoaded);
 
             user = c1.Value;

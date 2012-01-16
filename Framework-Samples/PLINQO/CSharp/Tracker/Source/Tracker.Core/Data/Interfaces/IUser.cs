@@ -9,6 +9,8 @@
 using System;
 using System.Linq;
 
+using Tracker.Core.Data;
+
 namespace Tracker.Core.Data.Interfaces
 {
     /// <summary>
@@ -81,20 +83,20 @@ namespace Tracker.Core.Data.Interfaces
         /// </summary>
         string AvatarType { get; set; }
         /// <summary>
-        /// Gets or sets the <see cref="T:Tracker.Core.Data.Audit"/> association.
+        /// Gets or sets the <see cref="T:Tracker.Core.Data.Interfaces.IAudit"/> association.
         /// </summary>
-        System.Data.Linq.EntitySet<Tracker.Core.Data.Audit> AuditList { get; set; }
+        System.Collections.Generic.IEnumerable<Tracker.Core.Data.Interfaces.IAudit> AuditList { get; set; }
         /// <summary>
-        /// Gets or sets the <see cref="T:Tracker.Core.Data.Task"/> association.
+        /// Gets or sets the <see cref="T:Tracker.Core.Data.Interfaces.ITask"/> association.
         /// </summary>
-        System.Data.Linq.EntitySet<Tracker.Core.Data.Task> AssignedTaskList { get; set; }
+        System.Collections.Generic.IEnumerable<Tracker.Core.Data.Interfaces.ITask> AssignedTaskList { get; set; }
         /// <summary>
-        /// Gets or sets the <see cref="T:Tracker.Core.Data.Task"/> association.
+        /// Gets or sets the <see cref="T:Tracker.Core.Data.Interfaces.ITask"/> association.
         /// </summary>
-        System.Data.Linq.EntitySet<Tracker.Core.Data.Task> CreatedTaskList { get; set; }
+        System.Collections.Generic.IEnumerable<Tracker.Core.Data.Interfaces.ITask> CreatedTaskList { get; set; }
         /// <summary>
-        /// Gets or sets the <see cref="T:Tracker.Core.Data.UserRole"/> association.
+        /// Gets or sets the <see cref="T:Tracker.Core.Data.Interfaces.IUserRole"/> association.
         /// </summary>
-        System.Data.Linq.EntitySet<Tracker.Core.Data.UserRole> UserRoleList { get; set; }
+        System.Collections.Generic.IEnumerable<Tracker.Core.Data.Interfaces.IUserRole> UserRoleList { get; set; }
     }
 }

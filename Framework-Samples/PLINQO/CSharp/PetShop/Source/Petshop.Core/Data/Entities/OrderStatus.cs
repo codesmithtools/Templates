@@ -21,7 +21,7 @@ namespace PetShop.Core.Data
         [CodeSmith.Data.Audit.Audit]
         internal class Metadata
         {
-            // Only Attributes in the class will be preserved.
+             // WARNING: Only attributes inside of this class will be preserved.
 
             public int OrderId { get; set; }
 

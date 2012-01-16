@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Web.UI.WebControls;
 using System.Linq;
-using System.Data;
-using System.Data.Linq;
-using System.Collections.Generic;
-using PetShop.Core.Data;
 using CodeSmith.Data.Linq;
+using PetShop.Core.Data;
 
 namespace PetShop.UI.Controls
 {
@@ -55,7 +52,6 @@ namespace PetShop.UI.Controls
         // Bind categories
         private void BindCategories()
         {
-            
             using (var context = new PetShopDataContext())
             {
                 rePCategories.DataSource = context.Category.OrderBy(c => c.Name).FromCache().ToList();

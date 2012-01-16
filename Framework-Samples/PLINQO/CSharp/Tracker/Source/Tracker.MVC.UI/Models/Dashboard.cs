@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using CodeSmith.Data.Future;
 using CodeSmith.Data.Linq;
 using Tracker.Core.Data;
 
@@ -39,25 +40,25 @@ namespace Tracker.MVC.UI.Models
             set;
         }
 
-        public FutureValue<int> TotalTasks
+        public IFutureValue<int> TotalTasks
         {
             get;
             set;
         }
 
-        public FutureValue<int> TotalTasksCreatedByMe
+        public IFutureValue<int> TotalTasksCreatedByMe
         {
             get;
             set;
         }
 
-        public FutureValue<int> TotalTasksAssignedToMe
+        public IFutureValue<int> TotalTasksAssignedToMe
         {
             get;
             set;
         }
 
-        public FutureValue<int> TotalTasksCompleted
+        public IFutureValue<int> TotalTasksCompleted
         {
             get;
             set;

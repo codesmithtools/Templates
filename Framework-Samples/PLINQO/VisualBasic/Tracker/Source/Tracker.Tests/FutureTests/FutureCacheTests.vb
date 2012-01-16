@@ -4,6 +4,7 @@ Imports System.Data
 Imports System.Linq
 Imports System.Text
 Imports CodeSmith.Data.Caching
+Imports CodeSmith.Data.Future
 Imports NUnit.Framework
 Imports Tracker.Core.Data
 Imports CodeSmith.Data.Linq

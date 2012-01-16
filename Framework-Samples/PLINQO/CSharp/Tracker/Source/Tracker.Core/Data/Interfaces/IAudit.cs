@@ -9,6 +9,8 @@
 using System;
 using System.Linq;
 
+using Tracker.Core.Data;
+
 namespace Tracker.Core.Data.Interfaces
 {
     /// <summary>
@@ -53,12 +55,12 @@ namespace Tracker.Core.Data.Interfaces
         /// </summary>
         System.Xml.Linq.XElement Myxml { get; set; }
         /// <summary>
-        /// Gets or sets the <see cref="T:Tracker.Core.Data.Task"/> association.
+        /// Gets or sets the <see cref="T:Tracker.Core.Data.Interfaces.ITask"/> association.
         /// </summary>
-        Tracker.Core.Data.Task Task { get; set; }
+        Tracker.Core.Data.Interfaces.ITask Task { get; set; }
         /// <summary>
-        /// Gets or sets the <see cref="T:Tracker.Core.Data.User"/> association.
+        /// Gets or sets the <see cref="T:Tracker.Core.Data.Interfaces.IUser"/> association.
         /// </summary>
-        Tracker.Core.Data.User User { get; set; }
+        Tracker.Core.Data.Interfaces.IUser User { get; set; }
     }
 }

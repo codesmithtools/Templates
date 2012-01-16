@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Diagnostics;
 using NUnit.Framework;
+using PetShop.Core;
 using PetShop.Core.Data;
-using System.Linq;
-using System.Data.Linq;
 using PetShop.Core.Utility;
 
 namespace PetShop.Test
@@ -14,11 +13,14 @@ namespace PetShop.Test
         [SetUp]
         public void Setup()
         {
+            DeleteProfile();
+            CreateProfile();
         }
 
         [TearDown]
         public void TearDown()
         {
+            DeleteProfile();
         }
 
         private const string NAME = "UnitTests";
@@ -27,14 +29,13 @@ namespace PetShop.Test
 
         #region Profile
 
-        [Test]
         public void CreateProfile()
         {
             Stopwatch watch = Stopwatch.StartNew();
 
             var profile = new Profile();
             profile.Username = NAME;
-            profile.ApplicationName = "PetShop..Businesss";
+            profile.ApplicationName = PetShopConstants.APPLICATION_NAME;
             profile.IsAnonymous = false;
             profile.LastActivityDate = DateTime.Now;
             profile.LastUpdatedDate = DateTime.Now;
@@ -715,7 +716,6 @@ namespace PetShop.Test
 
         #region Delete Profile
 
-        [Test]
         public void DeleteProfile()
         {
             Stopwatch watch = Stopwatch.StartNew();
@@ -723,7 +723,9 @@ namespace PetShop.Test
             using (var context = new PetShopDataContext())
             {
                 var profile = context.Profile.GetProfile(NAME);
-                context.Profile.Delete(profile.UniqueID);
+
+                if(profile != null)
+                    context.Profile.Delete(profile.UniqueID);
             }
 
             Console.WriteLine("Time: {0} ms", watch.ElapsedMilliseconds);

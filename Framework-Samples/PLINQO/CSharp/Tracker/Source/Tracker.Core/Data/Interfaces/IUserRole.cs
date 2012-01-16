@@ -9,6 +9,8 @@
 using System;
 using System.Linq;
 
+using Tracker.Core.Data;
+
 namespace Tracker.Core.Data.Interfaces
 {
     /// <summary>
@@ -25,12 +27,12 @@ namespace Tracker.Core.Data.Interfaces
         /// </summary>
         int RoleId { get; set; }
         /// <summary>
-        /// Gets or sets the <see cref="T:Tracker.Core.Data.Role"/> association.
+        /// Gets or sets the <see cref="T:Tracker.Core.Data.Interfaces.IRole"/> association.
         /// </summary>
-        Tracker.Core.Data.Role Role { get; set; }
+        Tracker.Core.Data.Interfaces.IRole Role { get; set; }
         /// <summary>
-        /// Gets or sets the <see cref="T:Tracker.Core.Data.User"/> association.
+        /// Gets or sets the <see cref="T:Tracker.Core.Data.Interfaces.IUser"/> association.
         /// </summary>
-        Tracker.Core.Data.User User { get; set; }
+        Tracker.Core.Data.Interfaces.IUser User { get; set; }
     }
 }

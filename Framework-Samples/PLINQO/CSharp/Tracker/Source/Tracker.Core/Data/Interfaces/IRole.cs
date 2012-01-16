@@ -9,6 +9,8 @@
 using System;
 using System.Linq;
 
+using Tracker.Core.Data;
+
 namespace Tracker.Core.Data.Interfaces
 {
     /// <summary>
@@ -41,8 +43,8 @@ namespace Tracker.Core.Data.Interfaces
         /// </summary>
         System.Data.Linq.Binary RowVersion { get; set; }
         /// <summary>
-        /// Gets or sets the <see cref="T:Tracker.Core.Data.UserRole"/> association.
+        /// Gets or sets the <see cref="T:Tracker.Core.Data.Interfaces.IUserRole"/> association.
         /// </summary>
-        System.Data.Linq.EntitySet<Tracker.Core.Data.UserRole> UserRoleList { get; set; }
+        System.Collections.Generic.IEnumerable<Tracker.Core.Data.Interfaces.IUserRole> UserRoleList { get; set; }
     }
 }

@@ -146,13 +146,8 @@ namespace Tracker.Tests
             var db = new TrackerDataContext { Log = Console.Out };
 
             var user = db.User.GetByKey(1);
-            var role = db.Role.GetByKey(1);
-
-            user.RoleList.Add(role);
-
-            role = db.Role.GetByKey(2);
-
-            user.RoleList.Add(role);
+            user.RoleList.Add(db.Role.GetByKey(1));
+            user.RoleList.Add(db.Role.GetByKey(2));
 
             db.SubmitChanges();
 

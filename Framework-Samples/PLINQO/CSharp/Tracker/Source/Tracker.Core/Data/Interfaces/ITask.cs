@@ -9,6 +9,8 @@
 using System;
 using System.Linq;
 
+using Tracker.Core.Data;
+
 namespace Tracker.Core.Data.Interfaces
 {
     /// <summary>
@@ -73,20 +75,20 @@ namespace Tracker.Core.Data.Interfaces
         /// </summary>
         Nullable<Priority> Priority { get; set; }
         /// <summary>
-        /// Gets or sets the <see cref="T:Tracker.Core.Data.TaskExtended"/> association.
+        /// Gets or sets the <see cref="T:Tracker.Core.Data.Interfaces.ITaskExtended"/> association.
         /// </summary>
-        Tracker.Core.Data.TaskExtended TaskExtended { get; set; }
+        Tracker.Core.Data.Interfaces.ITaskExtended TaskExtended { get; set; }
         /// <summary>
-        /// Gets or sets the <see cref="T:Tracker.Core.Data.User"/> association.
+        /// Gets or sets the <see cref="T:Tracker.Core.Data.Interfaces.IUser"/> association.
         /// </summary>
-        Tracker.Core.Data.User AssignedUser { get; set; }
+        Tracker.Core.Data.Interfaces.IUser AssignedUser { get; set; }
         /// <summary>
-        /// Gets or sets the <see cref="T:Tracker.Core.Data.User"/> association.
+        /// Gets or sets the <see cref="T:Tracker.Core.Data.Interfaces.IUser"/> association.
         /// </summary>
-        Tracker.Core.Data.User CreatedUser { get; set; }
+        Tracker.Core.Data.Interfaces.IUser CreatedUser { get; set; }
         /// <summary>
-        /// Gets or sets the <see cref="T:Tracker.Core.Data.Audit"/> association.
+        /// Gets or sets the <see cref="T:Tracker.Core.Data.Interfaces.IAudit"/> association.
         /// </summary>
-        System.Data.Linq.EntitySet<Tracker.Core.Data.Audit> AuditList { get; set; }
+        System.Collections.Generic.IEnumerable<Tracker.Core.Data.Interfaces.IAudit> AuditList { get; set; }
     }
 }

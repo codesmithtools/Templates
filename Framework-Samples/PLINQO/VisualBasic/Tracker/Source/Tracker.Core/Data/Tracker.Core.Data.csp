@@ -1,14 +1,14 @@
 <?xml version="1.0"?>
 <codeSmith xmlns="http://www.codesmithtools.com/schema/csp.xsd">
   <variables>
-    <add key="TrackerConnectionString" value="Data Source=.;Initial Catalog=Tracker;Integrated Security=True" />
+    <add key="TrackerConnectionString" value="Data Source=.;Initial Catalog=Tracker;Integrated Security=True;Application Name=Tracker;MultipleActiveResultSets=true;" />
   </variables>
   <defaultProperties>
     <property name="DbmlFile">Tracker.dbml</property>
     <property name="Framework">v35_SP1</property>
   </defaultProperties>
   <propertySets>
-    <propertySet name="DBML" template="..\..\Templates\PLINQO\VisualBasic\Dbml.cst">
+    <propertySet name="DBML" template="..\..\..\..\..\Templates\VisualBasic\Dbml.cst">
       <property name="IncludeViews">False</property>
       <property name="IncludeFunctions">True</property>
       <property name="IgnoreList">
@@ -53,7 +53,7 @@
       <property name="EntityNamespace">Tracker.Core.Data</property>
       <property name="ContextNamespace">Tracker.Core.Data</property>
     </propertySet>
-    <propertySet name="Entities" template="..\..\Templates\PLINQO\VisualBasic\Entities.cst">
+    <propertySet name="Entities" template="..\..\..\..\..\Templates\VisualBasic\Entities.cst">
       <property name="IncludeDataServices">True</property>
       <property name="IncludeDataRules">True</property>
       <property name="AuditingEnabled">True</property>
@@ -61,9 +61,9 @@
       <property name="AssociationNamingSuffix">ListSuffix</property>
       <property name="OutputDirectory">.\Entities</property>
       <property name="BaseDirectory">.\</property>
-      <property name="ViewDirectory">.\Views</property>
+      <property name="ModelDirectory">.\Models</property>
     </propertySet>
-    <propertySet name="Managers" template="..\..\Templates\PLINQO\VisualBasic\Managers.cst">
+    <propertySet name="Managers" template="..\..\..\..\..\Templates\VisualBasic\Managers.cst">
       <property name="ManagerDirectory">.\Managers</property>
       <property name="MethodPrefix">GetBy</property>
       <property name="MethodKeySuffix">Key</property>
@@ -75,7 +75,7 @@
       <property name="DataManagerName">TrackerDataManager</property>
       <property name="ManagerNamespace">Tracker.Core.Data</property>
     </propertySet>
-    <propertySet name="Queries" template="..\..\Templates\PLINQO\VisualBasic\Queries.cst">
+    <propertySet name="Queries" template="..\..\..\..\..\Templates\VisualBasic\Queries.cst">
       <property name="QueryDirectory">Queries</property>
       <property name="MethodPrefix">By</property>
       <property name="MethodKeySuffix">Key</property>

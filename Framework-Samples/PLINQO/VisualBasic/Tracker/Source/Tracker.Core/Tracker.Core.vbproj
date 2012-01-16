@@ -40,9 +40,11 @@
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="CodeSmith.Data, Version=4.0.0.0, Culture=neutral, PublicKeyToken=596a5eee5d207fdd, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Templates\PLINQO\Common\v4.0\CodeSmith.Data.dll</HintPath>
+    <Reference Include="CodeSmith.Data">
+      <HintPath>..\..\..\..\Templates\Common\v3.5\CodeSmith.Data.dll</HintPath>
+    </Reference>
+    <Reference Include="CodeSmith.Data.LinqToSql">
+      <HintPath>..\..\..\..\Templates\Common\v3.5\CodeSmith.Data.LinqToSql.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations">
@@ -148,6 +150,14 @@
       <DependentUpon>UserRoleManager.vb</DependentUpon>
     </Compile>
     <Compile Include="Data\Managers\UserRoleManager.vb" />
+    <Compile Include="Data\Models\GetUsersWithRolesResult1.Generated.vb">
+      <DependentUpon>GetUsersWithRolesResult1.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Models\GetUsersWithRolesResult1.vb" />
+    <Compile Include="Data\Models\GetUsersWithRolesResult2.Generated.vb">
+      <DependentUpon>GetUsersWithRolesResult2.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Models\GetUsersWithRolesResult2.vb" />
     <Compile Include="Data\Queries\AuditExtensions.vb" />
     <Compile Include="Data\Queries\GuidExtensions.vb" />
     <Compile Include="Data\Queries\RoleExtensions.vb" />
@@ -163,14 +173,6 @@
     </Compile>
     <Compile Include="Data\TrackerDataContext.Manager.vb" />
     <Compile Include="Data\TrackerDataContext.vb" />
-    <Compile Include="Data\Views\GetUsersWithRolesResult1.Generated.vb">
-      <DependentUpon>GetUsersWithRolesResult1.vb</DependentUpon>
-    </Compile>
-    <Compile Include="Data\Views\GetUsersWithRolesResult1.vb" />
-    <Compile Include="Data\Views\GetUsersWithRolesResult2.Generated.vb">
-      <DependentUpon>GetUsersWithRolesResult2.vb</DependentUpon>
-    </Compile>
-    <Compile Include="Data\Views\GetUsersWithRolesResult2.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
       <AutoGen>True</AutoGen>
@@ -219,11 +221,6 @@
     <Service Include="{3259AA49-8AA1-44D3-9025-A0B520596A8C}" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Data\Tracker.enum.xml">
-      <DependentUpon>Tracker.dbml</DependentUpon>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
       <Visible>False</Visible>
       <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
@@ -239,6 +236,11 @@
       <ProductName>Windows Installer 3.1</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Data\Tracker.enum.xml">
+      <DependentUpon>Tracker.dbml</DependentUpon>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -26,7 +26,7 @@ namespace Tracker.Core.Data
         /// <summary>
         /// Initializes the <see cref="GetUsersWithRolesResult2"/> class.
         /// </summary>
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         static GetUsersWithRolesResult2()
         {
             AddSharedRules();
@@ -38,13 +38,13 @@ namespace Tracker.Core.Data
         /// Initializes a new instance of the <see cref="GetUsersWithRolesResult2"/> class.
         /// </summary>
         [System.Diagnostics.DebuggerNonUserCode]
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         public GetUsersWithRolesResult2()
         {
             Initialize();
         }
 
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         private void Initialize()
         {
             OnCreated();
@@ -53,7 +53,7 @@ namespace Tracker.Core.Data
 
         #region Column Mapped Properties
 
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         private int _userId;
 
         /// <summary>
@@ -61,7 +61,7 @@ namespace Tracker.Core.Data
         /// </summary>
         [System.Data.Linq.Mapping.Column(Name = "UserId", Storage = "_userId", DbType = "int NOT NULL", CanBeNull = false)]
         [System.Runtime.Serialization.DataMember(Order = 1)]
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         public int UserId
         {
             get { return _userId; }
@@ -76,7 +76,7 @@ namespace Tracker.Core.Data
             }
         }
 
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         private int _roleId;
 
         /// <summary>
@@ -84,7 +84,7 @@ namespace Tracker.Core.Data
         /// </summary>
         [System.Data.Linq.Mapping.Column(Name = "RoleId", Storage = "_roleId", DbType = "int NOT NULL", CanBeNull = false)]
         [System.Runtime.Serialization.DataMember(Order = 2)]
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         public int RoleId
         {
             get { return _roleId; }
@@ -105,36 +105,36 @@ namespace Tracker.Core.Data
 
         #region Extensibility Method Definitions
         /// <summary>Called by the static constructor to add shared rules.</summary>
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         static partial void AddSharedRules();
         /// <summary>Called when this instance is loaded.</summary>
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         partial void OnLoaded();
         /// <summary>Called when this instance is being saved.</summary>
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         partial void OnValidate(System.Data.Linq.ChangeAction action);
         /// <summary>Called when this instance is created.</summary>
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         partial void OnCreated();
         /// <summary>Called when <see cref="UserId"/> is changing.</summary>
         /// <param name="value">The new value.</param>
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         partial void OnUserIdChanging(int value);
         /// <summary>Called after <see cref="UserId"/> has Changed.</summary>
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         partial void OnUserIdChanged();
         /// <summary>Called when <see cref="RoleId"/> is changing.</summary>
         /// <param name="value">The new value.</param>
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         partial void OnRoleIdChanging(int value);
         /// <summary>Called after <see cref="RoleId"/> has Changed.</summary>
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         partial void OnRoleIdChanged();
 
         #endregion
 
         #region Serialization
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         private bool serializing;
 
         /// <summary>
@@ -143,7 +143,7 @@ namespace Tracker.Core.Data
         /// <param name="context">The <see cref="System.Runtime.Serialization.StreamingContext"/> for the serialization.</param>
         [System.Runtime.Serialization.OnSerializing]
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         public void OnSerializing(System.Runtime.Serialization.StreamingContext context) {
             serializing = true;
         }
@@ -154,7 +154,7 @@ namespace Tracker.Core.Data
         /// <param name="context">The <see cref="System.Runtime.Serialization.StreamingContext"/> for the serialization.</param>
         [System.Runtime.Serialization.OnSerialized]
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         public void OnSerialized(System.Runtime.Serialization.StreamingContext context) {
             serializing = false;
         }
@@ -165,7 +165,7 @@ namespace Tracker.Core.Data
         /// <param name="context">The <see cref="System.Runtime.Serialization.StreamingContext"/> for the serialization.</param>
         [System.Runtime.Serialization.OnDeserializing]
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         public void OnDeserializing(System.Runtime.Serialization.StreamingContext context) {
             Initialize();
         }
@@ -175,7 +175,7 @@ namespace Tracker.Core.Data
         /// </summary>
         /// <param name="xml">The XML string representing a <see cref="GetUsersWithRolesResult2"/> instance.</param>
         /// <returns>An instance of <see cref="GetUsersWithRolesResult2"/> that is deserialized from the XML string.</returns>
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         public static GetUsersWithRolesResult2 FromXml(string xml)
         {
             var deserializer = new System.Runtime.Serialization.DataContractSerializer(typeof(GetUsersWithRolesResult2));
@@ -192,7 +192,7 @@ namespace Tracker.Core.Data
         /// </summary>
         /// <param name="buffer">The byte array representing a <see cref="GetUsersWithRolesResult2"/> instance.</param>
         /// <returns>An instance of <see cref="GetUsersWithRolesResult2"/> that is deserialized from the byte array.</returns>
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         public static GetUsersWithRolesResult2 FromBinary(byte[] buffer)
         {
             var deserializer = new System.Runtime.Serialization.DataContractSerializer(typeof(GetUsersWithRolesResult2));

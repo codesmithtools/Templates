@@ -21,7 +21,7 @@ namespace PetShop.Core.Data
         [CodeSmith.Data.Audit.Audit]
         internal class Metadata
         {
-            // Only Attributes in the class will be preserved.
+             // WARNING: Only attributes inside of this class will be preserved.
 
             [Required]
             public string ItemId { get; set; }
@@ -29,11 +29,11 @@ namespace PetShop.Core.Data
             [Required]
             public string ProductId { get; set; }
 
-            public decimal ListPrice { get; set; }
+            public decimal? ListPrice { get; set; }
 
-            public decimal UnitCost { get; set; }
+            public decimal? UnitCost { get; set; }
 
-            public int Supplier { get; set; }
+            public int? Supplier { get; set; }
 
             public string Status { get; set; }
 

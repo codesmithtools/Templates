@@ -18,15 +18,15 @@ namespace Tracker.Core.Data
     public partial class TrackerDataContext
         : CodeSmith.Data.Linq.DataContextBase, System.Data.Services.IUpdatable
     {
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         public static readonly System.Data.Linq.Mapping.MappingSource MappingCache = new System.Data.Linq.Mapping.AttributeMappingSource();
 
         #region ConnectionString
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         private const string CONNECTION_NAME = "TrackerConnectionString";
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         private static volatile string _connectionString;
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         private static object _connectionLock = new Object();
 
         /// <summary>The application connection string read from web.config or app.config</summary>
@@ -42,7 +42,7 @@ namespace Tracker.Core.Data
         /// </configuration>
         /// ]]></code>
         /// </example>
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         public static string ConnectionString
         {
             get
@@ -59,7 +59,7 @@ namespace Tracker.Core.Data
             }
         }
 
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         private static string GetDefaultConnectionString()
         {
             var settings = System.Configuration.ConfigurationManager.ConnectionStrings[CONNECTION_NAME];
@@ -78,7 +78,7 @@ namespace Tracker.Core.Data
         /// Initializes a new instance of the <see cref="TrackerDataContext"/> class.
         /// </summary>
         [System.Diagnostics.DebuggerNonUserCode]
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         public TrackerDataContext()
             : base(ConnectionString, MappingCache)
         {
@@ -90,7 +90,7 @@ namespace Tracker.Core.Data
         /// </summary>
         /// <param name="connection">The connection string.</param>
         [System.Diagnostics.DebuggerNonUserCode]
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         public TrackerDataContext(string connection)
             : base(connection, MappingCache)
         {
@@ -102,7 +102,7 @@ namespace Tracker.Core.Data
         /// </summary>
         /// <param name="connection">The database connection.</param>
         [System.Diagnostics.DebuggerNonUserCode]
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         public TrackerDataContext(System.Data.IDbConnection connection)
             : base(connection, MappingCache)
         {
@@ -115,7 +115,7 @@ namespace Tracker.Core.Data
         /// <param name="connection">The connection string.</param>
         /// <param name="mappingSource">The mapping source.</param>
         [System.Diagnostics.DebuggerNonUserCode]
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         public TrackerDataContext(string connection, System.Data.Linq.Mapping.MappingSource mappingSource)
             : base(connection, mappingSource)
         {
@@ -128,7 +128,7 @@ namespace Tracker.Core.Data
         /// <param name="connection">The database connection.</param>
         /// <param name="mappingSource">The mapping source.</param>
         [System.Diagnostics.DebuggerNonUserCode]
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         public TrackerDataContext(System.Data.IDbConnection connection, System.Data.Linq.Mapping.MappingSource mappingSource)
             : base(connection, mappingSource)
         {
@@ -138,49 +138,49 @@ namespace Tracker.Core.Data
 
         #region Tables
         /// <summary>Represents the dbo.Audit table in the underlying database.</summary>
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         public System.Data.Linq.Table<Tracker.Core.Data.Audit> Audit
         {
             get { return GetTable<Tracker.Core.Data.Audit>(); }
         }
 
         /// <summary>Represents the dbo.Guid table in the underlying database.</summary>
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         public System.Data.Linq.Table<Tracker.Core.Data.Guid> Guid
         {
             get { return GetTable<Tracker.Core.Data.Guid>(); }
         }
 
         /// <summary>Represents the dbo.Role table in the underlying database.</summary>
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         public System.Data.Linq.Table<Tracker.Core.Data.Role> Role
         {
             get { return GetTable<Tracker.Core.Data.Role>(); }
         }
 
         /// <summary>Represents the dbo.Task table in the underlying database.</summary>
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         public System.Data.Linq.Table<Tracker.Core.Data.Task> Task
         {
             get { return GetTable<Tracker.Core.Data.Task>(); }
         }
 
         /// <summary>Represents the dbo.TaskExtended table in the underlying database.</summary>
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         public System.Data.Linq.Table<Tracker.Core.Data.TaskExtended> TaskExtended
         {
             get { return GetTable<Tracker.Core.Data.TaskExtended>(); }
         }
 
         /// <summary>Represents the dbo.User table in the underlying database.</summary>
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         public System.Data.Linq.Table<Tracker.Core.Data.User> User
         {
             get { return GetTable<Tracker.Core.Data.User>(); }
         }
 
         /// <summary>Represents the dbo.UserRole table in the underlying database.</summary>
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         public System.Data.Linq.Table<Tracker.Core.Data.UserRole> UserRole
         {
             get { return GetTable<Tracker.Core.Data.UserRole>(); }
@@ -191,10 +191,10 @@ namespace Tracker.Core.Data
         #region Functions
         /// <summary>Method that is mapped to the dbo.GetUsersWithRoles database procedure.</summary>
         /// <returns></returns>
-        [System.Data.Linq.Mapping.Function(Name="dbo.GetUsersWithRoles")]
+        [System.Data.Linq.Mapping.Function(Name = "dbo.GetUsersWithRoles")]
         [System.Data.Linq.Mapping.ResultType(typeof(Tracker.Core.Data.GetUsersWithRolesResult1))]
         [System.Data.Linq.Mapping.ResultType(typeof(Tracker.Core.Data.GetUsersWithRolesResult2))]
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         public System.Data.Linq.IMultipleResults GetUsersWithRoles()
         {
             var methodInfo = (System.Reflection.MethodInfo)System.Reflection.MethodInfo.GetCurrentMethod();
@@ -205,11 +205,11 @@ namespace Tracker.Core.Data
 
         /// <summary>Method that is mapped to the dbo.GetOne database procedure.</summary>
         /// <returns></returns>
-        [System.Data.Linq.Mapping.Function(Name="dbo.GetOne", IsComposable=true)]
-        [return: System.Data.Linq.Mapping.Parameter(DbType="int")]
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        [System.Data.Linq.Mapping.Function(Name = "dbo.GetOne", IsComposable = true)]
+        [return: System.Data.Linq.Mapping.Parameter(DbType = "int")]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         public int GetOne(
-            [System.Data.Linq.Mapping.Parameter(Name="@param", DbType="int")] int? param)
+            [System.Data.Linq.Mapping.Parameter(Name = "@param", DbType = "int")] int? param)
         {
             var methodInfo = (System.Reflection.MethodInfo)System.Reflection.MethodInfo.GetCurrentMethod();
             var result = this.ExecuteMethodCall(this, methodInfo, param);
@@ -221,91 +221,112 @@ namespace Tracker.Core.Data
 
         #region Extensibility Method Definitions
         /// <summary>Called after this instance is created.</summary>
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         partial void OnCreated();
+
         /// <summary>Called before a <see cref="Audit"/> is inserted.</summary>
         /// <param name="instance">The instance.</param>
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         partial void InsertAudit(Tracker.Core.Data.Audit instance);
+
         /// <summary>Called before a <see cref="Audit"/> is updated.</summary>
         /// <param name="instance">The instance.</param>
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         partial void UpdateAudit(Tracker.Core.Data.Audit instance);
+
         /// <summary>Called before a <see cref="Audit"/> is deleted.</summary>
         /// <param name="instance">The instance.</param>
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         partial void DeleteAudit(Tracker.Core.Data.Audit instance);
+
         /// <summary>Called before a <see cref="Guid"/> is inserted.</summary>
         /// <param name="instance">The instance.</param>
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         partial void InsertGuid(Tracker.Core.Data.Guid instance);
+
         /// <summary>Called before a <see cref="Guid"/> is updated.</summary>
         /// <param name="instance">The instance.</param>
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         partial void UpdateGuid(Tracker.Core.Data.Guid instance);
+
         /// <summary>Called before a <see cref="Guid"/> is deleted.</summary>
         /// <param name="instance">The instance.</param>
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         partial void DeleteGuid(Tracker.Core.Data.Guid instance);
+
         /// <summary>Called before a <see cref="Role"/> is inserted.</summary>
         /// <param name="instance">The instance.</param>
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         partial void InsertRole(Tracker.Core.Data.Role instance);
+
         /// <summary>Called before a <see cref="Role"/> is updated.</summary>
         /// <param name="instance">The instance.</param>
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         partial void UpdateRole(Tracker.Core.Data.Role instance);
+
         /// <summary>Called before a <see cref="Role"/> is deleted.</summary>
         /// <param name="instance">The instance.</param>
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         partial void DeleteRole(Tracker.Core.Data.Role instance);
+
         /// <summary>Called before a <see cref="Task"/> is inserted.</summary>
         /// <param name="instance">The instance.</param>
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         partial void InsertTask(Tracker.Core.Data.Task instance);
+
         /// <summary>Called before a <see cref="Task"/> is updated.</summary>
         /// <param name="instance">The instance.</param>
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         partial void UpdateTask(Tracker.Core.Data.Task instance);
+
         /// <summary>Called before a <see cref="Task"/> is deleted.</summary>
         /// <param name="instance">The instance.</param>
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         partial void DeleteTask(Tracker.Core.Data.Task instance);
+
         /// <summary>Called before a <see cref="TaskExtended"/> is inserted.</summary>
         /// <param name="instance">The instance.</param>
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         partial void InsertTaskExtended(Tracker.Core.Data.TaskExtended instance);
+
         /// <summary>Called before a <see cref="TaskExtended"/> is updated.</summary>
         /// <param name="instance">The instance.</param>
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         partial void UpdateTaskExtended(Tracker.Core.Data.TaskExtended instance);
+
         /// <summary>Called before a <see cref="TaskExtended"/> is deleted.</summary>
         /// <param name="instance">The instance.</param>
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         partial void DeleteTaskExtended(Tracker.Core.Data.TaskExtended instance);
+
         /// <summary>Called before a <see cref="User"/> is inserted.</summary>
         /// <param name="instance">The instance.</param>
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         partial void InsertUser(Tracker.Core.Data.User instance);
+
         /// <summary>Called before a <see cref="User"/> is updated.</summary>
         /// <param name="instance">The instance.</param>
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         partial void UpdateUser(Tracker.Core.Data.User instance);
+
         /// <summary>Called before a <see cref="User"/> is deleted.</summary>
         /// <param name="instance">The instance.</param>
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         partial void DeleteUser(Tracker.Core.Data.User instance);
+
         /// <summary>Called before a <see cref="UserRole"/> is inserted.</summary>
         /// <param name="instance">The instance.</param>
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         partial void InsertUserRole(Tracker.Core.Data.UserRole instance);
+
         /// <summary>Called before a <see cref="UserRole"/> is updated.</summary>
         /// <param name="instance">The instance.</param>
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         partial void UpdateUserRole(Tracker.Core.Data.UserRole instance);
+
         /// <summary>Called before a <see cref="UserRole"/> is deleted.</summary>
         /// <param name="instance">The instance.</param>
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         partial void DeleteUserRole(Tracker.Core.Data.UserRole instance);
         #endregion
 
@@ -316,7 +337,7 @@ namespace Tracker.Core.Data
         /// <param name="targetResource">Target object that defines the property.</param>
         /// <param name="propertyName">The name of the collection property to which the resource should be added..</param>
         /// <param name="resourceToBeAdded">The opaque object representing the resource to be added.</param>
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         void System.Data.Services.IUpdatable.AddReferenceToCollection(object targetResource, string propertyName, object resourceToBeAdded)
         {
             var t = targetResource.GetType();
@@ -332,7 +353,7 @@ namespace Tracker.Core.Data
         /// <summary>
         /// Cancels a change to the data.
         /// </summary>
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         void System.Data.Services.IUpdatable.ClearChanges()
         {
             var mi = GetType().GetMethod("ClearCache",
@@ -352,7 +373,7 @@ namespace Tracker.Core.Data
         /// <returns>
         /// The object representing a resource of specified type and belonging to the specified container.
         /// </returns>
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         object System.Data.Services.IUpdatable.CreateResource(string containerName, string fullTypeName)
         {
             var t = Type.GetType(fullTypeName);
@@ -368,7 +389,7 @@ namespace Tracker.Core.Data
         /// Deletes the specified resource.
         /// </summary>
         /// <param name="targetResource">The resource to be deleted.</param>
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         void System.Data.Services.IUpdatable.DeleteResource(object targetResource)
         {
             var t = targetResource.GetType();
@@ -384,7 +405,7 @@ namespace Tracker.Core.Data
         /// <returns>
         /// An opaque object representing a resource of the specified type, referenced by the specified query.
         /// </returns>
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         object System.Data.Services.IUpdatable.GetResource(System.Linq.IQueryable query, string fullTypeName)
         {
             object result = null;
@@ -411,7 +432,7 @@ namespace Tracker.Core.Data
         /// <param name="targetResource">An opaque object that represents a resource.</param>
         /// <param name="propertyName">The name of the property whose value needs to be retrieved.</param>
         /// <returns></returns>
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         object System.Data.Services.IUpdatable.GetValue(object targetResource, string propertyName)
         {
             var t = targetResource.GetType();
@@ -437,7 +458,7 @@ namespace Tracker.Core.Data
         /// <param name="targetResource">The target object that defines the property.</param>
         /// <param name="propertyName">The name of the property whose value needs to be updated.</param>
         /// <param name="resourceToBeRemoved">The property value that needs to be removed.</param>
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         void System.Data.Services.IUpdatable.RemoveReferenceFromCollection(object targetResource, string propertyName, object resourceToBeRemoved)
         {
             var t = targetResource.GetType();
@@ -457,7 +478,7 @@ namespace Tracker.Core.Data
         /// <returns>
         /// Returns the instance of the resource represented by the specified resource object.
         /// </returns>
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         object System.Data.Services.IUpdatable.ResolveResource(object resource)
         {
             return resource;
@@ -466,7 +487,7 @@ namespace Tracker.Core.Data
         /// <summary>
         /// Saves all the changes that have been made by using the <see cref="T:System.Data.Services.IUpdatable"/> APIs.
         /// </summary>
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         void System.Data.Services.IUpdatable.SaveChanges()
         {
             try
@@ -485,7 +506,7 @@ namespace Tracker.Core.Data
         /// <param name="targetResource">The target object that defines the property.</param>
         /// <param name="propertyName">The name of the property whose value needs to be updated.</param>
         /// <param name="propertyValue">The property value to be updated.</param>
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         void System.Data.Services.IUpdatable.SetReference(object targetResource, string propertyName, object propertyValue)
         {
             ((System.Data.Services.IUpdatable)this).SetValue(targetResource, propertyName, propertyValue);
@@ -497,7 +518,7 @@ namespace Tracker.Core.Data
         /// <param name="targetResource">The target object that defines the property.</param>
         /// <param name="propertyName">The name of the property whose value needs to be updated.</param>
         /// <param name="propertyValue">The property value for update.</param>
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         void System.Data.Services.IUpdatable.SetValue(object targetResource, string propertyName, object propertyValue)
         {
             var t = targetResource.GetType();
@@ -519,7 +540,7 @@ namespace Tracker.Core.Data
         /// </summary>
         /// <param name="resource">The resource to be updated.</param>
         /// <returns></returns>
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         object System.Data.Services.IUpdatable.ResetResource(object resource)
         {
             var t = resource.GetType();
@@ -527,7 +548,7 @@ namespace Tracker.Core.Data
             return table.GetOriginalEntityState(resource);
         }
 
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         private System.Reflection.PropertyInfo GetPropertyInfoForType(Type t, string propertyName, bool setter)
         {
             System.Reflection.PropertyInfo pi;
@@ -552,7 +573,7 @@ namespace Tracker.Core.Data
             return (pi);
         }
 
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         private System.Data.Linq.ITable GetTableForType(Type t)
         {
             var table = GetTable(t);
@@ -562,7 +583,7 @@ namespace Tracker.Core.Data
             return (table);
         }
 
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         private static object Construct(Type t)
         {
             var ci = t.GetConstructor(Type.EmptyTypes);
@@ -576,13 +597,13 @@ namespace Tracker.Core.Data
         #endregion
 
         #region RuleManager
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         private readonly CodeSmith.Data.Rules.RuleManager _ruleManager = new CodeSmith.Data.Rules.RuleManager();
 
         /// <summary>
         /// Gets the current <see cref="CodeSmith.Data.Rules.RuleManager"/> for the <see cref="System.Data.Linq.DataContext"/>.
         /// </summary>
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         public CodeSmith.Data.Rules.RuleManager RuleManager
         {
             get { return _ruleManager; }
@@ -592,7 +613,7 @@ namespace Tracker.Core.Data
         /// Sends changes made to retrieved objects to the underlying database.
         /// </summary>
         /// <param name="failureMode">How concurrency conflicts should be reported.</param>
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         public override void SubmitChanges(System.Data.Linq.ConflictMode failureMode)
         {
             bool isValid = RuleManager.Run(this);
@@ -603,38 +624,35 @@ namespace Tracker.Core.Data
             PopulateLastAudit();
             BeforeSubmitChanges();
             base.SubmitChanges(failureMode);
-            ResetLastAudit();
+            RefreshLastAudit();
             AfterSubmitChanges();
         }
         #endregion
 
         #region Auditing
         /// <summary>Called before the underlying DataContext.SubmitChanges is called.</summary>
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         partial void BeforeSubmitChanges();
 
         /// <summary>Called after the underlying DataContext.SubmitChanges is called.</summary>
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         partial void AfterSubmitChanges();
 
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         private bool _auditingEnabled = true;
 
         /// <summary>
         /// Gets or sets a value indicating whether auditing is enabled.
         /// </summary>
         /// <value><c>true</c> if auditing is enabled; otherwise, <c>false</c>.</value>
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         public bool AuditingEnabled
         {
             get { return _auditingEnabled; }
             set { _auditingEnabled = value; }
         }
 
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
-        private System.Data.Linq.ChangeSet _lastChangeSet;
-
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         private CodeSmith.Data.Audit.AuditLog _lastAudit;
 
         /// <summary>
@@ -644,16 +662,10 @@ namespace Tracker.Core.Data
         /// <remarks>
         /// <see cref="AuditingEnabled"/> must be <c>true</c> for <see cref="LastAudit"/> to be populated.
         /// </remarks>
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         public CodeSmith.Data.Audit.AuditLog LastAudit
         {
-            get
-            {
-                if (_lastAudit == null && _lastChangeSet != null)
-                    _lastAudit = CodeSmith.Data.Audit.AuditManager.CreateAuditLog(this, _lastChangeSet);
-
-                return _lastAudit;
-            }
+            get { return _lastAudit; }
         }
 
         /// <summary>
@@ -663,23 +675,23 @@ namespace Tracker.Core.Data
         /// <remarks>
         /// <see cref="AuditingEnabled"/> must be <c>true</c> for <see cref="LastAudit"/> to be populated.
         /// </remarks>
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         protected virtual void PopulateLastAudit()
         {
             if (!AuditingEnabled)
                 return;
 
-            _lastAudit = null;
-            _lastChangeSet = this.GetChangeSet();
+            _lastAudit = CodeSmith.Data.Audit.AuditManager.CreateAuditLog(this);
         }
 
         /// <summary>
-        /// Resets the <see cref="LastAudit"/> property.
+        /// Refresh the <see cref="AuditLog"/> values stored in the <see cref="LastAudit"/> after SubmitChanges call.
         /// </summary>
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
-        protected virtual void ResetLastAudit()
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
+        protected virtual void RefreshLastAudit()
         {
-            _lastAudit = null;
+            if (_lastAudit != null) 
+                CodeSmith.Data.Audit.AuditManager.Refresh(_lastAudit);
         }
         #endregion
 
@@ -687,7 +699,7 @@ namespace Tracker.Core.Data
         /// Sends changes made to retrieved objects to the underlying database.
         /// </summary>
         /// <param name="refreshMode">Defines how to handle optimistic concurrency conflicts.</param>
-        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         public void SubmitChanges(System.Data.Linq.RefreshMode refreshMode)
         {
             try
