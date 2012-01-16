@@ -16,7 +16,7 @@ Description: Used to Quick Start Visual Studio Projects
 
 <%@ Property Name="Location" Type="System.String" Default="" Optional="False" Category="2.Solution" Description="This is the path to the Solution location." Editor="System.Windows.Forms.Design.FolderNameEditor, System.Design" %>
 <%@ Property Name="SolutionName" Type="System.String" Default="" Optional="False" Category="2.Solution" Description="Name of the project to be generated." %>
-<%@ Property Name="Language" Type="LanguageEnum" Default="CSharp" Optional="False" Category="2.Solution" Description="Language the project will be in" %>
+<%--<%@ Property Name="Language" Type="LanguageEnum" Default="CSharp" Optional="False" Category="2.Solution" Description="Language the project will be in" %>--%>
 <%-- <%@ Property Name="Framework" Type="Generator.QuickStart.FrameworkVersion" Default="v40" Optional="False" Category="2.Solution" Description="The .net Framework version." %> --%>
 <%@ Property Name="LaunchVisualStudio" Type="System.Boolean" Default="True" Optional="False" Category="2.Solution" Description="Launch Visual Studio after generation." %>
 
@@ -112,7 +112,7 @@ The <%= SolutionName %> Solution has been created at <%= Location %>.
         {
             SourceDatabase = this.SourceDatabase,
             FrameworkVersion = Generator.QuickStart.FrameworkVersion.v40,
-            Language = this.Language,
+            Language = LanguageEnum.CSharp,
             Location = this.Location,
             SolutionName = this.SolutionName,
             DataContextName = this.DataContextName,
