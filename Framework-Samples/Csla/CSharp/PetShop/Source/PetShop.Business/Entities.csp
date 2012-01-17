@@ -4,7 +4,7 @@
     <add key="ConnectionString1" value="Data Source=.;Integrated Security=True;Database=PetShop;" />
   </variables>
   <propertySets>
-    <propertySet name="Entities.cs" output="Entities.cs" template="..\..\..\..\Templates\CSharp\BusinessLayer\Entities.cst">
+    <propertySet name="Entities.cs" output="Entities.cs" template="..\..\..\..\Templates\VisualBasic\BusinessLayer\Entities.cst">
       <property name="Criteria">
         <connectionString>$(ConnectionString1)</connectionString>
         <providerType>SchemaExplorer.SqlSchemaProvider,SchemaExplorer.SqlSchemaProvider</providerType>
@@ -199,15 +199,14 @@
       <property name="ParameterPrefix">@p_</property>
       <property name="UseLazyLoading">True</property>
       <property name="InterfaceProjectName">PetShop.UI</property>
+      <property name="NameValueList" />
+      <property name="DynamicListBase" />
+      <property name="FrameworkVersion">v40</property>
+      <property name="IncludeSilverlightSupport">True</property>
       <property name="ProcedurePrefix">CSLA_</property>
       <property name="AutoExecuteStoredProcedures">False</property>
       <property name="IsolationLevel">ReadCommitted</property>
-      <property name="NameValueList" />
-      <property name="FrameworkVersion">v40</property>
-      <property name="IncludeSilverlightSupport">True</property>
       <property name="TestProjectName">PetShop.Test</property>
-      <property name="CommandObject" />
-      <property name="DynamicListBase" />
     </propertySet>
   </propertySets>
 </codeSmith>

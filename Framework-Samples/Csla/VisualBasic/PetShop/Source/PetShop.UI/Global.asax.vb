@@ -21,7 +21,6 @@ Public Class Global_asax
 
         profile = profile.Save()
 
-        'Clear the cart.
         anonymousProfile.ShoppingCart.Clear()
         anonymousProfile.WishList.Clear()
         anonymousProfile = anonymousProfile.Save()

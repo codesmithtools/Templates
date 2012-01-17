@@ -2,10 +2,9 @@
 <codeSmith xmlns="http://www.codesmithtools.com/schema/csp.xsd">
   <variables>
     <add key="ConnectionString1" value="Data Source=.;Integrated Security=True;Database=PetShop;" />
-    <add key="ConnectionString2" value="Data Source=.;Initial Catalog=PetShop;Integrated Security=True" />
   </variables>
   <propertySets>
-    <propertySet name="Entities.cs" output="Entities.cs" template="..\..\..\..\..\..\..\Templates\Frameworks\Csla\VisualBasic\BusinessLayer\Entities.cst">
+    <propertySet name="Entities.cs" output="Entities.cs" template="..\..\..\..\Templates\VisualBasic\BusinessLayer\Entities.cst">
       <property name="Criteria">
         <connectionString>$(ConnectionString1)</connectionString>
         <providerType>SchemaExplorer.SqlSchemaProvider,SchemaExplorer.SqlSchemaProvider</providerType>
@@ -72,13 +71,9 @@
     </tableList>
       </property>
       <property name="EditableRoot">
-        <connectionString>$(ConnectionString2)</connectionString>
+        <connectionString>$(ConnectionString1)</connectionString>
         <providerType>SchemaExplorer.SqlSchemaProvider,SchemaExplorer.SqlSchemaProvider</providerType>
         <tableList>
-      <table>
-        <owner>dbo</owner>
-        <name>Category</name>
-      </table>
       <table>
         <owner>dbo</owner>
         <name>Inventory</name>
@@ -96,9 +91,13 @@
       <property name="ReadOnlyChild" />
       <property name="ReadOnlyRoot" />
       <property name="SwitchableObject">
-        <connectionString>$(ConnectionString2)</connectionString>
+        <connectionString>$(ConnectionString1)</connectionString>
         <providerType>SchemaExplorer.SqlSchemaProvider,SchemaExplorer.SqlSchemaProvider</providerType>
         <tableList>
+      <table>
+        <owner>dbo</owner>
+        <name>Category</name>
+      </table>
       <table>
         <owner>dbo</owner>
         <name>Item</name>
@@ -150,7 +149,7 @@
     </tableList>
       </property>
       <property name="EditableChildList">
-        <connectionString>$(ConnectionString2)</connectionString>
+        <connectionString>$(ConnectionString1)</connectionString>
         <providerType>SchemaExplorer.SqlSchemaProvider,SchemaExplorer.SqlSchemaProvider</providerType>
         <tableList>
       <table>
@@ -202,8 +201,8 @@
       <property name="InterfaceProjectName">PetShop.UI</property>
       <property name="NameValueList" />
       <property name="DynamicListBase" />
-      <property name="FrameworkVersion">v35</property>
-      <property name="IncludeSilverlightSupport">False</property>
+      <property name="FrameworkVersion">v40</property>
+      <property name="IncludeSilverlightSupport">True</property>
       <property name="ProcedurePrefix">CSLA_</property>
       <property name="AutoExecuteStoredProcedures">False</property>
       <property name="IsolationLevel">ReadCommitted</property>

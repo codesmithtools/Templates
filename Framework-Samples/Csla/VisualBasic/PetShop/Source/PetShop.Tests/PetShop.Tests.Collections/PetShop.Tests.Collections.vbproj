@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -12,11 +12,31 @@
     <AssemblyName>PetShop.Tests.Collections</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <MyType>Windows</MyType>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <OptionExplicit>On</OptionExplicit>
-    <OptionCompare>Binary</OptionCompare>
+    <OptionCompare>Text</OptionCompare>
     <OptionStrict>Off</OptionStrict>
     <OptionInfer>On</OptionInfer>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>4.0</OldToolsVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <TargetFrameworkProfile />
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+    <UpgradeBackupLocation />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -25,7 +45,8 @@
     <DefineTrace>true</DefineTrace>
     <OutputPath>bin\Debug\</OutputPath>
     <DocumentationFile>PetShop.Tests.Collections.xml</DocumentationFile>
-    <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
+    <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022,42353,42354,42355</NoWarn>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -34,16 +55,15 @@
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
     <DocumentationFile>PetShop.Tests.Collections.xml</DocumentationFile>
-    <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
+    <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022,42353,42354,42355</NoWarn>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Csla, Version=3.8.4.0, Culture=neutral, PublicKeyToken=93be5fdc093e4c30, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\Libraries\Csla\Csla.dll</HintPath>
+    <Reference Include="Csla">
+      <HintPath>..\..\..\..\..\Templates\Common\Csla\4.0\Client\Csla.dll</HintPath>
     </Reference>
-    <Reference Include="nunit.framework, Version=2.5.5.10112, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\Libraries\nunit.framework.dll</HintPath>
+    <Reference Include="nunit.framework">
+      <HintPath>..\..\..\..\..\Templates\Common\nunit.framework.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
@@ -202,37 +222,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <None Include="Generated\DynamicRoot\Collections\CategoryList.StoredProcedures.sql">
-      <DependentUpon>CategoryList.vb</DependentUpon>
-    </None>
-    <None Include="Generated\DynamicRoot\Entities\Category.StoredProcedures.sql">
-      <DependentUpon>Category.vb</DependentUpon>
-    </None>
-    <None Include="Generated\EditableChild\Collections\CategoryList.StoredProcedures.sql">
-      <DependentUpon>CategoryList.vb</DependentUpon>
-    </None>
-    <None Include="Generated\EditableChild\Entities\Category.StoredProcedures.sql">
-      <DependentUpon>Category.vb</DependentUpon>
-    </None>
-    <None Include="Generated\EditableRoot\Collections\CategoryList.StoredProcedures.sql">
-      <DependentUpon>CategoryList.vb</DependentUpon>
-    </None>
-    <None Include="Generated\EditableRoot\Entities\Category.StoredProcedures.sql">
-      <DependentUpon>Category.vb</DependentUpon>
-    </None>
     <None Include="Generated\Entities.csp" />
-    <None Include="Generated\ReadOnlyChild\Collections\CategoryInfoList.StoredProcedures.sql">
-      <DependentUpon>CategoryInfoList.vb</DependentUpon>
-    </None>
-    <None Include="Generated\ReadOnlyChild\Entities\CategoryInfo.StoredProcedures.sql">
-      <DependentUpon>CategoryInfo.vb</DependentUpon>
-    </None>
-    <None Include="Generated\ReadOnlyRoot\Collections\CategoryInfoList.StoredProcedures.sql">
-      <DependentUpon>CategoryInfoList.vb</DependentUpon>
-    </None>
-    <None Include="Generated\ReadOnlyRoot\Entities\CategoryInfo.StoredProcedures.sql">
-      <DependentUpon>CategoryInfo.vb</DependentUpon>
-    </None>
     <None Include="My Project\Application.myapp">
       <Generator>MyApplicationCodeGenerator</Generator>
       <LastGenOutput>Application.Designer.vb</LastGenOutput>
@@ -249,6 +239,55 @@
     <Compile Include="EditableRootTests.vb" />
     <Compile Include="ReadOnlyChildTests.vb" />
     <Compile Include="ReadOnlyRootTests.vb" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 3.1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Generated\DynamicRoot\Collections\CategoryList.StoredProcedures.sql">
+      <DependentUpon>CategoryList.vb</DependentUpon>
+    </Content>
+    <Content Include="Generated\DynamicRoot\Entities\Category.StoredProcedures.sql">
+      <DependentUpon>Category.vb</DependentUpon>
+    </Content>
+    <Content Include="Generated\EditableChild\Collections\CategoryList.StoredProcedures.sql">
+      <DependentUpon>CategoryList.vb</DependentUpon>
+    </Content>
+    <Content Include="Generated\EditableChild\Entities\Category.StoredProcedures.sql">
+      <DependentUpon>Category.vb</DependentUpon>
+    </Content>
+    <Content Include="Generated\EditableRoot\Collections\CategoryList.StoredProcedures.sql">
+      <DependentUpon>CategoryList.vb</DependentUpon>
+    </Content>
+    <Content Include="Generated\EditableRoot\Entities\Category.StoredProcedures.sql">
+      <DependentUpon>Category.vb</DependentUpon>
+    </Content>
+    <Content Include="Generated\ReadOnlyChild\Collections\CategoryInfoList.StoredProcedures.sql">
+      <DependentUpon>CategoryInfoList.vb</DependentUpon>
+    </Content>
+    <Content Include="Generated\ReadOnlyChild\Entities\CategoryInfo.StoredProcedures.sql">
+      <DependentUpon>CategoryInfo.vb</DependentUpon>
+    </Content>
+    <Content Include="Generated\ReadOnlyRoot\Collections\CategoryInfoList.StoredProcedures.sql">
+      <DependentUpon>CategoryInfoList.vb</DependentUpon>
+    </Content>
+    <Content Include="Generated\ReadOnlyRoot\Entities\CategoryInfo.StoredProcedures.sql">
+      <DependentUpon>CategoryInfo.vb</DependentUpon>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
