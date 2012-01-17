@@ -10,11 +10,7 @@
 #region Using declarations
 
 using System;
-using System.Data.SqlClient;
 using Csla;
-using Csla.Data;
-using Csla.Security;
-using Csla.Validation;
 
 #endregion
 
@@ -40,7 +36,11 @@ namespace PetShop.Business
 
         #region Authorization Rules
 
-        protected override void AddAuthorizationRules()
+        /// <summary>
+        /// Allows the specification of CSLA based authorization rules.  Specifies what roles can 
+        /// perform which operations for a given business object
+        /// </summary>
+        protected static void AddObjectAuthorizationRules()
         {
             //// More information on these rules can be found here (http://www.devx.com/codemag/Article/40663/1763/page/2).
 
@@ -84,37 +84,23 @@ namespace PetShop.Business
 
         #region Custom Factory Methods
 
-        public static Profile GetProfile(string username)
+#if !SILVERLIGHT
+        public static Profile GetByUsername(System.String username)
         {
-            return DataPortal.Fetch<Profile>(
-                new ProfileCriteria { Username = username });
+            var criteria = new ProfileCriteria { Username = username };
+
+            return DataPortal.Fetch<Profile>(criteria);
         }
-
-        #endregion
-
-        #region Custom Data Access
-
-        partial void OnFetching(ProfileCriteria criteria, ref bool cancel)
+#else
+        public static void GetByUsername(System.String username, EventHandler<DataPortalResult<Profile>> handler)
         {
-            string commandText = string.Format("SELECT [UniqueID], [Username], [ApplicationName], [IsAnonymous], [LastActivityDate], [LastUpdatedDate] FROM [dbo].[Profiles] {0}", ADOHelper.BuildWhereStatement(criteria.StateBag));
-            using (SqlConnection connection = new SqlConnection(ADOHelper.ConnectionString))
-            {
-                connection.Open();
-                using (SqlCommand command = new SqlCommand(commandText, connection))
-                {
-                    command.Parameters.AddRange(ADOHelper.SqlParameters(criteria.StateBag));
-                    using (var reader = new SafeDataReader(command.ExecuteReader()))
-                    {
-                        if (reader.Read())
-                            Map(reader);
-                    }
-                }
-            }
-
-            OnFetched();
-
-            cancel = true;
+            var criteria = new ProfileCriteria{Username = username};
+        
+            var dp = new DataPortal< Profile >();
+            dp.FetchCompleted += handler;
+            dp.BeginFetch(criteria);
         }
+#endif
 
         #endregion
 
@@ -127,11 +113,38 @@ namespace PetShop.Business
             {
                 if (!FieldManager.FieldExists(_shoppingCart))
                 {
+#if SILVERLIGHT
+                    MarkBusy();
+                    
+                    if(IsNew)
+                        PetShop.Business.CartList.NewListAsync((o, e) =>
+                            {
+                                if (e.Error != null)
+                                    throw e.Error; 
+
+                                this.LoadProperty(_shoppingCart, e.Object);
+
+                                MarkIdle();
+                                OnPropertyChanged(_shoppingCart);
+                            });
+                    else
+                        PetShop.Business.CartList.GetCartAsync(UniqueID, true, (o, e) =>
+                            {
+                                if (e.Error != null)
+                                    throw e.Error; 
+
+                                this.LoadProperty(_shoppingCart, e.Object);
+
+                                MarkIdle();
+                                OnPropertyChanged(_shoppingCart);
+                            });
+#else
                     if (IsNew)
                         LoadProperty(_shoppingCart, PetShop.Business.CartList.NewList());
                     else
 
                         LoadProperty(_shoppingCart, PetShop.Business.CartList.GetCart(UniqueID, true));
+#endif
                 }
 
                 return GetProperty(_shoppingCart);
@@ -145,11 +158,38 @@ namespace PetShop.Business
             {
                 if (!FieldManager.FieldExists(_wishList))
                 {
+#if SILVERLIGHT
+                    MarkBusy();
+                    
+                    if(IsNew)
+                        PetShop.Business.CartList.NewListAsync((o, e) =>
+                            {
+                                if (e.Error != null)
+                                    throw e.Error; 
+
+                                this.LoadProperty(_wishList, e.Object);
+
+                                MarkIdle();
+                                OnPropertyChanged(_wishList);
+                            });
+                    else
+                        PetShop.Business.CartList.GetCartAsync(UniqueID, false, (o, e) =>
+                            {
+                                if (e.Error != null)
+                                    throw e.Error; 
+
+                                this.LoadProperty(_wishList, e.Object);
+
+                                MarkIdle();
+                                OnPropertyChanged(_wishList);
+                            });
+#else
                     if (IsNew)
                         LoadProperty(_wishList, PetShop.Business.CartList.NewList());
                     else
 
                         LoadProperty(_wishList, PetShop.Business.CartList.GetCart(UniqueID, false));
+#endif
                 }
 
                 return GetProperty(_wishList);

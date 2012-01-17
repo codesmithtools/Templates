@@ -4,7 +4,7 @@
     <add key="ConnectionString1" value="Data Source=.;Integrated Security=True;Database=PetShop;" />
   </variables>
   <propertySets>
-    <propertySet name="DynamicRoot" template="..\..\..\..\..\..\..\..\..\Templates\Frameworks\Csla\CSharp\BusinessLayer\DynamicRoot.cst">
+    <propertySet name="DynamicRoot" template="..\..\..\..\..\..\Templates\CSharp\BusinessLayer\DynamicRoot.cst">
       <property name="CleanExpressions">
         <stringList>
           <string>^\w+_</string>
@@ -35,12 +35,12 @@
         </stringList>
       </property>
       <property name="Location">.\DynamicRoot\</property>
-      <property name="FrameworkVersion">v35</property>
+      <property name="FrameworkVersion">v40</property>
       <property name="BusinessClassName">Category</property>
       <property name="CriteriaClassName">CategoryCriteria</property>
       <property name="IncludeSilverlightSupport">False</property>
     </propertySet>
-    <propertySet name="DynamicRootList" template="..\..\..\..\..\..\..\..\..\Templates\Frameworks\Csla\CSharp\BusinessLayer\DynamicRootList.cst">
+    <propertySet name="DynamicRootList" template="..\..\..\..\..\..\Templates\CSharp\BusinessLayer\DynamicRootList.cst">
       <property name="CleanExpressions">
         <stringList>
           <string>^\w+_</string>
@@ -70,13 +70,13 @@
         </stringList>
       </property>
       <property name="Location">.\DynamicRoot\</property>
-      <property name="FrameworkVersion">v35</property>
+      <property name="FrameworkVersion">v40</property>
       <property name="BusinessClassName">CategoryList</property>
       <property name="CriteriaClassName">CategoryCriteria</property>
       <property name="IncludeSilverlightSupport">False</property>
       <property name="ChildBusinessClassName">Category</property>
     </propertySet>
-    <propertySet name="DynmaicRootCriteria" template="..\..\..\..\..\..\..\..\..\Templates\Frameworks\Csla\CSharp\BusinessLayer\Criteria.cst">
+    <propertySet name="DynmaicRootCriteria" template="..\..\..\..\..\..\Templates\CSharp\BusinessLayer\Criteria.cst">
       <property name="CleanExpressions">
         <stringList>
           <string>^\w+_</string>
@@ -106,13 +106,13 @@
         </stringList>
       </property>
       <property name="Location">.\DynamicRoot\</property>
-      <property name="FrameworkVersion">v35</property>
+      <property name="FrameworkVersion">v40</property>
       <property name="BusinessClassName">CategoryCriteria</property>
       <property name="CriteriaClassName">CategoryCriteria</property>
       <property name="IncludeSilverlightSupport">False</property>
       <property name="ChildBusinessClassName">Category</property>
     </propertySet>
-    <propertySet name="EditableChild" template="..\..\..\..\..\..\..\..\..\Templates\Frameworks\Csla\CSharp\BusinessLayer\EditableChild.cst">
+    <propertySet name="EditableChild" template="..\..\..\..\..\..\Templates\CSharp\BusinessLayer\EditableChild.cst">
       <property name="CleanExpressions">
         <stringList>
           <string>^\w+_</string>
@@ -142,13 +142,13 @@
         </stringList>
       </property>
       <property name="Location">.\EditableChild\</property>
-      <property name="FrameworkVersion">v35</property>
+      <property name="FrameworkVersion">v40</property>
       <property name="BusinessClassName">Category</property>
       <property name="CriteriaClassName">CategoryCriteria</property>
       <property name="UseDeferredDeletion">False</property>
       <property name="IncludeSilverlightSupport">False</property>
     </propertySet>
-    <propertySet name="EditableChildList" template="..\..\..\..\..\..\..\..\..\Templates\Frameworks\Csla\CSharp\BusinessLayer\EditableChildList.cst">
+    <propertySet name="EditableChildList" template="..\..\..\..\..\..\Templates\CSharp\BusinessLayer\EditableChildList.cst">
       <property name="CleanExpressions">
         <stringList>
           <string>^\w+_</string>
@@ -178,13 +178,13 @@
           <name>Category</name>
         </table>
       </property>
-      <property name="FrameworkVersion">v35</property>
+      <property name="FrameworkVersion">v40</property>
       <property name="BusinessClassName">CategoryList</property>
       <property name="IncludeSilverlightSupport">False</property>
       <property name="CriteriaClassName">CategoryCriteria</property>
       <property name="ChildBusinessClassName">Category</property>
     </propertySet>
-    <propertySet name="EditableChildCriteria" template="..\..\..\..\..\..\..\..\..\Templates\Frameworks\Csla\CSharp\BusinessLayer\Criteria.cst">
+    <propertySet name="EditableChildCriteria" template="..\..\..\..\..\..\Templates\CSharp\BusinessLayer\Criteria.cst">
       <property name="CleanExpressions">
         <stringList>
           <string>^\w+_</string>
@@ -214,13 +214,13 @@
         </stringList>
       </property>
       <property name="Location">.\EditableChild\</property>
-      <property name="FrameworkVersion">v35</property>
+      <property name="FrameworkVersion">v40</property>
       <property name="BusinessClassName">CategoryCriteria</property>
       <property name="CriteriaClassName">CategoryCriteria</property>
       <property name="IncludeSilverlightSupport">False</property>
       <property name="ChildBusinessClassName">Category</property>
     </propertySet>
-    <propertySet name="EditableRoot" template="..\..\..\..\..\..\..\..\..\Templates\Frameworks\Csla\CSharp\BusinessLayer\EditableRoot.cst">
+    <propertySet name="EditableRoot" template="..\..\..\..\..\..\Templates\CSharp\BusinessLayer\EditableRoot.cst">
       <property name="CleanExpressions">
         <stringList>
           <string>^\w+_</string>
@@ -251,12 +251,12 @@
         </stringList>
       </property>
       <property name="Location">.\EditableRoot\</property>
-      <property name="FrameworkVersion">v35</property>
+      <property name="FrameworkVersion">v40</property>
       <property name="BusinessClassName">Category</property>
       <property name="CriteriaClassName">CategoryCriteria</property>
       <property name="IncludeSilverlightSupport">False</property>
     </propertySet>
-    <propertySet name="DynamicListBase" template="..\..\..\..\..\..\..\..\..\Templates\Frameworks\Csla\CSharp\BusinessLayer\DynamicListBase.cst">
+    <propertySet name="DynamicListBase" template="..\..\..\..\..\..\Templates\CSharp\BusinessLayer\DynamicListBase.cst">
       <property name="CleanExpressions">
         <stringList>
           <string>^\w+_</string>
@@ -285,14 +285,14 @@
         </stringList>
       </property>
       <property name="Location">.\EditableRoot\</property>
-      <property name="FrameworkVersion">v35</property>
+      <property name="FrameworkVersion">v40</property>
       <property name="BusinessClassName">CategoryList</property>
       <property name="CriteriaClassName">CategoryCriteria</property>
       <property name="UseDeferredDeletion">False</property>
       <property name="IncludeSilverlightSupport">False</property>
       <property name="ChildBusinessClassName">Category</property>
     </propertySet>
-    <propertySet name="EditableRootCriteria" template="..\..\..\..\..\..\..\..\..\Templates\Frameworks\Csla\CSharp\BusinessLayer\Criteria.cst">
+    <propertySet name="EditableRootCriteria" template="..\..\..\..\..\..\Templates\CSharp\BusinessLayer\Criteria.cst">
       <property name="CleanExpressions">
         <stringList>
           <string>^\w+_</string>
@@ -322,13 +322,13 @@
         </stringList>
       </property>
       <property name="Location">.\EditableRoot\</property>
-      <property name="FrameworkVersion">v35</property>
+      <property name="FrameworkVersion">v40</property>
       <property name="BusinessClassName">CategoryCriteria</property>
       <property name="CriteriaClassName">CategoryCriteria</property>
       <property name="IncludeSilverlightSupport">False</property>
       <property name="ChildBusinessClassName">Category</property>
     </propertySet>
-    <propertySet name="ReadOnlyChild" template="..\..\..\..\..\..\..\..\..\Templates\Frameworks\Csla\CSharp\BusinessLayer\ReadOnlyChild.cst">
+    <propertySet name="ReadOnlyChild" template="..\..\..\..\..\..\Templates\CSharp\BusinessLayer\ReadOnlyChild.cst">
       <property name="CleanExpressions">
         <stringList>
           <string>^\w+_</string>
@@ -359,13 +359,13 @@
         </stringList>
       </property>
       <property name="Location">.\ReadOnlyChild\</property>
-      <property name="FrameworkVersion">v35</property>
+      <property name="FrameworkVersion">v40</property>
       <property name="BusinessClassName">CategoryInfo</property>
       <property name="CriteriaClassName">CategoryCriteria</property>
       <property name="IncludeSilverlightSupport">False</property>
       <property name="ChildBusinessClassName">CategoryInfo</property>
     </propertySet>
-    <propertySet name="ReadOnlyChildList" template="..\..\..\..\..\..\..\..\..\Templates\Frameworks\Csla\CSharp\BusinessLayer\ReadOnlyChildList.cst">
+    <propertySet name="ReadOnlyChildList" template="..\..\..\..\..\..\Templates\CSharp\BusinessLayer\ReadOnlyChildList.cst">
       <property name="CleanExpressions">
         <stringList>
           <string>^\w+_</string>
@@ -394,14 +394,14 @@
         </stringList>
       </property>
       <property name="Location">.\ReadOnlyChild\</property>
-      <property name="FrameworkVersion">v35</property>
+      <property name="FrameworkVersion">v40</property>
       <property name="BusinessClassName">CategoryInfoList</property>
       <property name="CriteriaClassName">CategoryCriteria</property>
       <property name="UseDeferredDeletion">False</property>
       <property name="IncludeSilverlightSupport">False</property>
       <property name="ChildBusinessClassName">CategoryInfo</property>
     </propertySet>
-    <propertySet name="ReadOnlyChildCriteria" template="..\..\..\..\..\..\..\..\..\Templates\Frameworks\Csla\CSharp\BusinessLayer\Criteria.cst">
+    <propertySet name="ReadOnlyChildCriteria" template="..\..\..\..\..\..\Templates\CSharp\BusinessLayer\Criteria.cst">
       <property name="CleanExpressions">
         <stringList>
           <string>^\w+_</string>
@@ -431,13 +431,13 @@
         </stringList>
       </property>
       <property name="Location">.\ReadOnlyChild\</property>
-      <property name="FrameworkVersion">v35</property>
+      <property name="FrameworkVersion">v40</property>
       <property name="BusinessClassName">CategoryCriteria</property>
       <property name="CriteriaClassName">CategoryCriteria</property>
       <property name="IncludeSilverlightSupport">False</property>
       <property name="ChildBusinessClassName">CategoryInfo</property>
     </propertySet>
-    <propertySet name="ReadOnlyRoot" template="..\..\..\..\..\..\..\..\..\Templates\Frameworks\Csla\CSharp\BusinessLayer\ReadOnlyRoot.cst">
+    <propertySet name="ReadOnlyRoot" template="..\..\..\..\..\..\Templates\CSharp\BusinessLayer\ReadOnlyRoot.cst">
       <property name="CleanExpressions">
         <stringList>
           <string>^\w+_</string>
@@ -467,14 +467,14 @@
         </stringList>
       </property>
       <property name="Location">.\ReadOnlyRoot\</property>
-      <property name="FrameworkVersion">v35</property>
+      <property name="FrameworkVersion">v40</property>
       <property name="BusinessClassName">CategoryInfo</property>
       <property name="CriteriaClassName">CategoryCriteria</property>
       <property name="UseDeferredDeletion">False</property>
       <property name="IncludeSilverlightSupport">False</property>
       <property name="ChildBusinessClassName">CategoryInfo</property>
     </propertySet>
-    <propertySet name="ReadOnlyList" template="..\..\..\..\..\..\..\..\..\Templates\Frameworks\Csla\CSharp\BusinessLayer\ReadOnlyList.cst">
+    <propertySet name="ReadOnlyList" template="..\..\..\..\..\..\Templates\CSharp\BusinessLayer\ReadOnlyList.cst">
       <property name="CleanExpressions">
         <stringList>
           <string>^\w+_</string>
@@ -503,14 +503,14 @@
         </stringList>
       </property>
       <property name="Location">.\ReadOnlyRoot\</property>
-      <property name="FrameworkVersion">v35</property>
+      <property name="FrameworkVersion">v40</property>
       <property name="BusinessClassName">CategoryInfoList</property>
       <property name="CriteriaClassName">CategoryCriteria</property>
       <property name="UseDeferredDeletion">False</property>
       <property name="IncludeSilverlightSupport">False</property>
       <property name="ChildBusinessClassName">CategoryInfo</property>
     </propertySet>
-    <propertySet name="ReadOnlyRootCriteria" template="..\..\..\..\..\..\..\..\..\Templates\Frameworks\Csla\CSharp\BusinessLayer\Criteria.cst">
+    <propertySet name="ReadOnlyRootCriteria" template="..\..\..\..\..\..\Templates\CSharp\BusinessLayer\Criteria.cst">
       <property name="CleanExpressions">
         <stringList>
           <string>^\w+_</string>
@@ -540,7 +540,7 @@
         </stringList>
       </property>
       <property name="Location">.\ReadOnlyRoot\</property>
-      <property name="FrameworkVersion">v35</property>
+      <property name="FrameworkVersion">v40</property>
       <property name="BusinessClassName">CategoryCriteria</property>
       <property name="CriteriaClassName">CategoryCriteria</property>
       <property name="IncludeSilverlightSupport">False</property>

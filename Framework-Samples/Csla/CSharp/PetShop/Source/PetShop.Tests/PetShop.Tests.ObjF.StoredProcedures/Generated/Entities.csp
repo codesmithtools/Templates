@@ -4,7 +4,7 @@
     <add key="ConnectionString1" value="Data Source=.;Integrated Security=True;Database=PetShop;" />
   </variables>
   <propertySets>
-    <propertySet name="Entities.cs" output="Entities.cs" template="..\..\..\..\..\..\..\..\..\Templates\Frameworks\Csla\CSharp\BusinessLayer\Entities.cst">
+    <propertySet name="Entities.cs" output="Entities.cs" template="..\..\..\..\..\..\Templates\CSharp\BusinessLayer\Entities.cst">
       <property name="Criteria">
         <connectionString>$(ConnectionString1)</connectionString>
         <providerType>SchemaExplorer.SqlSchemaProvider,SchemaExplorer.SqlSchemaProvider</providerType>
@@ -203,7 +203,7 @@
       <property name="AutoExecuteStoredProcedures">False</property>
       <property name="IsolationLevel">ReadCommitted</property>
       <property name="NameValueList" />
-      <property name="FrameworkVersion">v35</property>
+      <property name="FrameworkVersion">v40</property>
       <property name="IncludeSilverlightSupport">False</property>
       <property name="TestProjectName">PetShop.Test</property>
       <property name="CommandObject" />

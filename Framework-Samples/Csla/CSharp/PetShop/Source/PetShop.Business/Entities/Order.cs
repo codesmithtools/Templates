@@ -13,7 +13,7 @@ using System;
 
 using Csla;
 using Csla.Security;
-using Csla.Validation;
+using Csla.Rules;
 
 #endregion
 
@@ -39,7 +39,11 @@ namespace PetShop.Business
 
         #region Authorization Rules
 
-        protected override void AddAuthorizationRules()
+        /// <summary>
+        /// Allows the specification of CSLA based authorization rules.  Specifies what roles can 
+        /// perform which operations for a given business object
+        /// </summary>
+        protected static void AddObjectAuthorizationRules()
         {
             //// More information on these rules can be found here (http://www.devx.com/codemag/Article/40663/1763/page/2).
 
@@ -134,6 +138,7 @@ namespace PetShop.Business
 
         #region Custom Factory Methods
 
+#if !SILVERLIGHT
         /// <summary>
         /// Uses the profile's uniqueID to look up the order.
         /// </summary>
@@ -143,6 +148,17 @@ namespace PetShop.Business
         {
             return DataPortal.Fetch<Order>(new OrderCriteria { UserId = uniqueId });
         }
+#else
+        public static void GetOrder(string uniqueId, EventHandler<DataPortalResult<Order>> handler)
+        {
+            var criteria = new OrderCriteria{UserId = uniqueId};
+            
+
+            var dp = new DataPortal< Order >();
+            dp.FetchCompleted += handler;
+            dp.BeginFetch(criteria);
+        }
+#endif
 
         #endregion
 
@@ -154,7 +170,24 @@ namespace PetShop.Business
             get
             {
                 if (!FieldManager.FieldExists(_itemsProperty))
+                {
+#if SILVERLIGHT
+                    MarkBusy();
+                    
+                    PetShop.Business.LineItemList.GetByOrderIdAsync(OrderId, (o, e) =>
+                        {
+                            if (e.Error != null)
+                                throw e.Error; 
+
+                            this.LoadProperty(_itemsProperty, e.Object);
+
+                            MarkIdle();
+                            OnPropertyChanged(_itemsProperty);
+                        });
+#else
                     SetProperty(_itemsProperty, LineItemList.GetByOrderId(OrderId));
+#endif
+                }
 
                 return GetProperty(_itemsProperty);
             }

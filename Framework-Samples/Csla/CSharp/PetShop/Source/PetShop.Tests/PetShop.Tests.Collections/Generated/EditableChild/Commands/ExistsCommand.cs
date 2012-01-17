@@ -20,7 +20,7 @@ using Csla.Data;
 namespace PetShop.Tests.Collections.EditableChild
 {
     [Serializable]
-    public class ExistsCommand : CommandBase
+    public class ExistsCommand : CommandBase<ExistsCommand>
     {
         #region Constructor(s)
 

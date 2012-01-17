@@ -5,7 +5,9 @@ namespace PetShop.Business
     /// <summary>
     /// Business entity used to model credit card information.
     /// </summary>
+#if !SILVERLIGHT
     [Serializable]
+#endif
     public class CreditCard
     {
         #region Constructor(s)
