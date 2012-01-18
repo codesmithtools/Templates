@@ -49,10 +49,15 @@ Public Class ProfileManager
         End If
 
         'Get the profile.
-        Dim profile As Profile = profile.GetProfile(username)
+        Dim profile As Profile = Nothing
+        Dim userNotFound = False
+        Try
+            profile = profile.GetProfile(username)
+        Catch generatedExceptionName As Exception
+            userNotFound = True
+        End Try
 
-        'Check to see if the profile exists.
-        If String.IsNullOrEmpty(profile.Username) Then
+        If userNotFound Then
             'If the username is the Anonymous user then create it.
             If username = _ANONYMOUS_USERNAME Then
                 Return CreateUser(username, True)
