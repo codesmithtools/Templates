@@ -1,4 +1,7 @@
-Imports CodeSmith.Data.Caching
+Imports System
+Imports System.Collections.Generic
+Imports System.Data.Linq
+Imports System.Linq
 Imports CodeSmith.Data.Linq
 Imports NUnit.Framework
 Imports Tracker.Core.Data
@@ -15,7 +18,7 @@ Namespace Tracker.Tests.CacheTests
 
                 Dim key = query.GetHashKey()
 
-                Dim cache = CacheManager.Get(Of ICollection(Of Role))(key)
+                Dim cache = CodeSmith.Data.Caching.CacheManager.Get(Of ICollection(Of Role))(key)
                 Assert.IsNotNull(cache)
                 Assert.AreEqual(roles.Count, cache.Count)
             End Using
@@ -28,7 +31,7 @@ Namespace Tracker.Tests.CacheTests
                 Dim key = query.GetHashKey()
                 Dim roles = query.FromCache("Long").ToList()
 
-                Dim cache = CacheManager.Get(Of ICollection(Of Role))(key)
+                Dim cache = CodeSmith.Data.Caching.CacheManager.Get(Of ICollection(Of Role))(key)
                 Assert.IsNotNull(cache)
                 Assert.AreEqual(roles.Count, cache.Count)
             End Using
@@ -39,15 +42,15 @@ Namespace Tracker.Tests.CacheTests
             Using db = New TrackerDataContext()
                 Dim query = db.Role.Where(Function(r) r.Name = "Test Role")
                 Dim key = query.GetHashKey()
-                Dim roles = query.FromCache(CacheSettings.FromDuration(2)).ToList()
+                Dim roles = query.FromCache(CodeSmith.Data.Caching.CacheSettings.FromDuration(2)).ToList()
 
-                Dim cache = CacheManager.Get(Of ICollection(Of Role))(key)
+                Dim cache = CodeSmith.Data.Caching.CacheManager.Get(Of ICollection(Of Role))(key)
                 Assert.IsNotNull(cache)
                 Assert.AreEqual(roles.Count, cache.Count)
 
                 System.Threading.Thread.Sleep(3000)
 
-                cache = CacheManager.Get(Of ICollection(Of Role))(key)
+                cache = CodeSmith.Data.Caching.CacheManager.Get(Of ICollection(Of Role))(key)
                 Assert.IsNull(cache)
             End Using
         End Sub
@@ -57,15 +60,15 @@ Namespace Tracker.Tests.CacheTests
             Using db = New TrackerDataContext()
                 Dim query = db.Role.Where(Function(r) r.Name = "Test Role")
                 Dim key = query.GetHashKey()
-                Dim roles = query.FromCache(New CacheSettings(DateTime.Now.AddSeconds(2))).ToList()
+                Dim roles = query.FromCache(New CodeSmith.Data.Caching.CacheSettings(DateTime.Now.AddSeconds(2))).ToList()
 
-                Dim cache = CacheManager.Get(Of ICollection(Of Role))(key)
+                Dim cache = CodeSmith.Data.Caching.CacheManager.Get(Of ICollection(Of Role))(key)
                 Assert.IsNotNull(cache)
                 Assert.AreEqual(roles.Count, cache.Count)
 
                 System.Threading.Thread.Sleep(3000)
 
-                cache = CacheManager.Get(Of ICollection(Of Role))(key)
+                cache = CodeSmith.Data.Caching.CacheManager.Get(Of ICollection(Of Role))(key)
                 Assert.IsNull(cache)
             End Using
         End Sub
@@ -78,27 +81,27 @@ Namespace Tracker.Tests.CacheTests
 
             Dim query = db.Role.Where(Function(r) r.Name = "Test Role")
             Dim key = query.GetHashKey()
-            Dim roles = query.FromCache(New CacheSettings(TimeSpan.FromSeconds(2))).ToList()
+            Dim roles = query.FromCache(New CodeSmith.Data.Caching.CacheSettings(TimeSpan.FromSeconds(2))).ToList()
 
-            Dim cache = CacheManager.Get(Of ICollection(Of Role))(key)
+            Dim cache = CodeSmith.Data.Caching.CacheManager.Get(Of ICollection(Of Role))(key)
             Assert.IsNotNull(cache)
             Assert.AreEqual(roles.Count, cache.Count)
 
             System.Threading.Thread.Sleep(1500)
 
-            cache = CacheManager.Get(Of ICollection(Of Role))(key)
+            cache = CodeSmith.Data.Caching.CacheManager.Get(Of ICollection(Of Role))(key)
             Assert.IsNotNull(cache)
             Assert.AreEqual(roles.Count, cache.Count)
 
             System.Threading.Thread.Sleep(1500)
 
-            cache = CacheManager.Get(Of ICollection(Of Role))(key)
+            cache = CodeSmith.Data.Caching.CacheManager.Get(Of ICollection(Of Role))(key)
             Assert.IsNotNull(cache)
             Assert.AreEqual(roles.Count, cache.Count)
 
             System.Threading.Thread.Sleep(2500)
 
-            cache = CacheManager.Get(Of ICollection(Of Role))(key)
+            cache = CodeSmith.Data.Caching.CacheManager.Get(Of ICollection(Of Role))(key)
             Assert.IsNull(cache)
 
         End Sub
@@ -109,14 +112,14 @@ Namespace Tracker.Tests.CacheTests
                 Dim guid = System.Guid.NewGuid().ToString()
                 Dim query = db.Role.Where(Function(r) r.Name = guid)
                 Dim key = query.GetHashKey()
-                Dim roles = query.FromCache(New CacheSettings(2) With { _
+                Dim roles = query.FromCache(New CodeSmith.Data.Caching.CacheSettings(2) With { _
                  .CacheEmptyResult = False _
                 })
 
                 Assert.IsNotNull(roles)
                 Assert.AreEqual(0, roles.Count())
 
-                Dim cache = CacheManager.Get(Of ICollection(Of Role))(key)
+                Dim cache = CodeSmith.Data.Caching.CacheManager.Get(Of ICollection(Of Role))(key)
                 Assert.IsNull(cache)
             End Using
         End Sub
@@ -130,7 +133,7 @@ Namespace Tracker.Tests.CacheTests
             Dim guid = System.Guid.NewGuid().ToString()
             Dim query = db.Role.Where(Function(r) r.Name = guid)
             Dim key = query.GetHashKey()
-            Dim roles = query.FromCache(New CacheSettings(2) With { _
+            Dim roles = query.FromCache(New CodeSmith.Data.Caching.CacheSettings(2) With { _
              .CacheEmptyResult = True _
             }).ToList()
 
@@ -138,7 +141,7 @@ Namespace Tracker.Tests.CacheTests
 
             Assert.IsNotNull(roles)
 
-            Dim cache = CacheManager.Get(Of ICollection(Of Role))(key)
+            Dim cache = CodeSmith.Data.Caching.CacheManager.Get(Of ICollection(Of Role))(key)
             Assert.IsNotNull(cache)
             Assert.AreEqual(0, cache.Count)
 

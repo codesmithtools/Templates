@@ -54,10 +54,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="CodeSmith.Data">
-      <HintPath>..\..\..\..\Templates\Common\v3.5\CodeSmith.Data.dll</HintPath>
+      <HintPath>..\..\..\..\Templates\Common\v4.0\CodeSmith.Data.dll</HintPath>
     </Reference>
     <Reference Include="CodeSmith.Data.LinqToSql">
-      <HintPath>..\..\..\..\Templates\Common\v3.5\CodeSmith.Data.LinqToSql.dll</HintPath>
+      <HintPath>..\..\..\..\Templates\Common\v4.0\CodeSmith.Data.LinqToSql.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />

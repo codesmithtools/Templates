@@ -41,10 +41,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="CodeSmith.Data">
-      <HintPath>..\..\..\..\Templates\Common\v3.5\CodeSmith.Data.dll</HintPath>
+      <HintPath>..\..\..\..\Templates\Common\v4.0\CodeSmith.Data.dll</HintPath>
     </Reference>
     <Reference Include="CodeSmith.Data.LinqToSql">
-      <HintPath>..\..\..\..\Templates\Common\v3.5\CodeSmith.Data.LinqToSql.dll</HintPath>
+      <HintPath>..\..\..\..\Templates\Common\v4.0\CodeSmith.Data.LinqToSql.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations">
@@ -101,6 +101,10 @@
       <DependentUpon>Role.vb</DependentUpon>
     </Compile>
     <Compile Include="Data\Entities\Role.vb" />
+    <Compile Include="Data\Entities\Self.Generated.vb">
+      <DependentUpon>Self.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Entities\Self.vb" />
     <Compile Include="Data\Entities\Task.Generated.vb">
       <DependentUpon>Task.vb</DependentUpon>
     </Compile>
@@ -133,6 +137,10 @@
       <DependentUpon>RoleManager.vb</DependentUpon>
     </Compile>
     <Compile Include="Data\Managers\RoleManager.vb" />
+    <Compile Include="Data\Managers\SelfManager.Generated.vb">
+      <DependentUpon>SelfManager.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Managers\SelfManager.vb" />
     <Compile Include="Data\Managers\TaskExtendedManager.Generated.vb">
       <DependentUpon>TaskExtendedManager.vb</DependentUpon>
     </Compile>
@@ -158,9 +166,14 @@
       <DependentUpon>GetUsersWithRolesResult2.vb</DependentUpon>
     </Compile>
     <Compile Include="Data\Models\GetUsersWithRolesResult2.vb" />
+    <Compile Include="Data\Models\RolesForUserResult.Generated.vb">
+      <DependentUpon>RolesForUserResult.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Models\RolesForUserResult.vb" />
     <Compile Include="Data\Queries\AuditExtensions.vb" />
     <Compile Include="Data\Queries\GuidExtensions.vb" />
     <Compile Include="Data\Queries\RoleExtensions.vb" />
+    <Compile Include="Data\Queries\SelfExtensions.vb" />
     <Compile Include="Data\Queries\TaskExtendedExtensions.vb" />
     <Compile Include="Data\Queries\TaskExtensions.vb" />
     <Compile Include="Data\Queries\UserExtensions.vb" />

@@ -9,7 +9,7 @@ Imports CodeSmith.Data.Rules
 
 Namespace Tracker.Core.Data
     
-    Public Partial Class UserRole
+    Public Partial Class Self
         
         ' Place custom code here.
         
@@ -20,7 +20,7 @@ Namespace Tracker.Core.Data
         Friend Class Metadata
             ' WARNING: Only attributes inside of this class will be preserved.
             
-            Public Property UserId() As Object
+            Public Property Id() As Object
                 Get
                     Return Nothing
                 End Get
@@ -28,7 +28,7 @@ Namespace Tracker.Core.Data
                 End Set
             End Property
             
-            Public Property RoleId() As Object
+            Public Property MySelfId() As Object
                 Get
                     Return Nothing
                 End Get
@@ -36,7 +36,8 @@ Namespace Tracker.Core.Data
                 End Set
             End Property
             
-            Public Property Role() As Object
+            <Required> _
+            Public Property Name() As Object
                 Get
                     Return Nothing
                 End Get
@@ -44,7 +45,15 @@ Namespace Tracker.Core.Data
                 End Set
             End Property
             
-            Public Property User() As Object
+            Public Property MySelf() As Object
+                Get
+                    Return Nothing
+                End Get
+                Set(ByVal value As Object)
+                End Set
+            End Property
+            
+            Public Property MySelfList() As Object
                 Get
                     Return Nothing
                 End Get

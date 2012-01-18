@@ -55,7 +55,7 @@ namespace Tracker.Tests.FutureTests
             Assert.IsNotNull(users);
 
             // this should already be loaded
-            Assert.IsTrue(((IFutureQuery)q2).IsLoaded);
+            Assert.IsNotNull(q2);
 
             var tasks = q2.ToList();
             Assert.IsNotNull(tasks);
@@ -70,8 +70,8 @@ namespace Tracker.Tests.FutureTests
                 .FutureCache(cache);
 
             // should be loaded because it came from cache
-            Assert.IsTrue(((IFutureQuery)c1).IsLoaded);
-            Assert.IsTrue(((IFutureQuery)c2).IsLoaded);
+            Assert.IsNotNull(c1);
+            Assert.IsNotNull(c2);
 
             users = c1.ToList();
             Assert.IsNotNull(users);
@@ -116,7 +116,7 @@ namespace Tracker.Tests.FutureTests
                 .FutureCacheCount(cache);
 
             // should be loaded because it came from cache
-            Assert.IsTrue(((IFutureQuery)c1).IsLoaded);
+            Assert.IsNotNull(c1);
             Assert.IsTrue(c2.IsLoaded);
 
             users = c1.ToList();
@@ -163,8 +163,8 @@ namespace Tracker.Tests.FutureTests
                 .FutureCacheCount(cache);
 
             // should be loaded because it came from cache
-            Assert.IsTrue(((IFutureQuery)c1).IsLoaded);
-            Assert.IsTrue(((IFutureQuery)c2).IsLoaded);
+            Assert.IsNotNull(c1);
+            Assert.IsTrue(c2.IsLoaded);
 
             count = c2.Value;
             Assert.Greater(count, 0);
@@ -223,7 +223,7 @@ namespace Tracker.Tests.FutureTests
             // should be loaded because it came from cache
             Assert.IsTrue(c1.IsLoaded);
             Assert.IsTrue(c2.IsLoaded);
-            Assert.IsTrue(((IFutureQuery<Task>)c3).IsLoaded);
+            Assert.IsNotNull(c3);
 
             user = c1.Value;
             Assert.IsNotNull(user);
@@ -286,7 +286,7 @@ namespace Tracker.Tests.FutureTests
             // should be loaded because it came from cache
             Assert.IsTrue(c1.IsLoaded);
             Assert.IsTrue(c2.IsLoaded);
-            Assert.IsTrue(((IFutureQuery)c3).IsLoaded);
+            Assert.IsNotNull(c3);
 
             user = c1.Value;
             Assert.IsNotNull(user);

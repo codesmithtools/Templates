@@ -66,6 +66,20 @@ Namespace Tracker.Core.Data
                 Return _roleManager
             End Get
         End Property
+        Private  _selfManager As SelfManager
+
+        ''' <summary>
+        ''' Gets the manager for Self.
+        ''' </summary>
+        Public ReadOnly Property Self As SelfManager
+            Get
+        If (_selfManager Is Nothing) Then
+                    _selfManager = New SelfManager(Me)
+        End If
+
+                Return _selfManager
+            End Get
+        End Property
         Private  _taskManager As TaskManager
 
         ''' <summary>

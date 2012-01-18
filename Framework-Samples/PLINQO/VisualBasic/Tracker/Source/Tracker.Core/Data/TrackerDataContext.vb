@@ -1,11 +1,10 @@
-﻿
-Imports System
+﻿Imports System
 Imports System.Linq
 Imports System.Collections.Generic
 Imports System.Text
 
 Namespace Tracker.Core.Data
-    public Partial Class TrackerDataContext
+    Public Partial Class TrackerDataContext
         #Region "Extensibility Method Definitions"
         'TODO: Uncomment and implement partial method
         'partial void OnCreated()

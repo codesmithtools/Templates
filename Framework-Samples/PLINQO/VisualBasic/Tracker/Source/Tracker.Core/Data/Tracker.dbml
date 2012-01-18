@@ -33,6 +33,15 @@
       <Association Name="Role_UserRole" Member="UserRoleList" Storage="_userRoleList" OtherKey="RoleId" Type="UserRole" DeleteOnNull="false" />
     </Type>
   </Table>
+  <Table Name="dbo.Self" Member="Self">
+    <Type Name="Self">
+      <Column Name="Id" Storage="_id" Type="System.Int32" DbType="int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="MySelfId" Storage="_mySelfId" Type="System.Int32" DbType="int" CanBeNull="true" />
+      <Column Name="Name" Storage="_name" Type="System.String" DbType="nvarchar(50) NOT NULL" CanBeNull="false" />
+      <Association Name="Self_Self" Member="MySelf" Storage="_mySelf" ThisKey="MySelfId" Type="Self" IsForeignKey="true" />
+      <Association Name="Self_Self" Member="MySelfList" Storage="_mySelfList" OtherKey="MySelfId" Type="Self" />
+    </Type>
+  </Table>
   <Table Name="dbo.Task" Member="Task">
     <Type Name="Task">
       <Column Name="Id" Storage="_id" Type="System.Int32" DbType="int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
@@ -125,5 +134,18 @@
   <Function Name="dbo.GetOne" Method="GetOne" IsComposable="true">
     <Parameter Name="@param" Parameter="param" Type="System.Int32" DbType="int" />
     <Return Type="System.Int32" DbType="int" />
+  </Function>
+  <Function Name="dbo.RolesForUser" Method="RolesForUser">
+    <Parameter Name="@UserId" Parameter="userId" Type="System.Int32" DbType="int" />
+    <ElementType Name="RolesForUserResult">
+      <Column Name="Id" Storage="_id" Type="System.Int32" DbType="int NOT NULL" CanBeNull="false" />
+      <Column Name="Name" Storage="_name" Type="System.String" DbType="nvarchar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="Description" Storage="_description" Type="System.String" DbType="nvarchar(150)" CanBeNull="true" />
+      <Column Name="CreatedDate" Storage="_createdDate" Type="System.DateTime" DbType="datetime NOT NULL" CanBeNull="false" />
+      <Column Name="ModifiedDate" Storage="_modifiedDate" Type="System.DateTime" DbType="datetime NOT NULL" CanBeNull="false" />
+      <Column Name="RowVersion" Storage="_rowVersion" Type="System.Data.Linq.Binary" DbType="timestamp NOT NULL" CanBeNull="false" IsVersion="true" />
+      <Column Name="UserId" Storage="_userId" Type="System.Int32" DbType="int NOT NULL" CanBeNull="false" />
+      <Column Name="RoleId" Storage="_roleId" Type="System.Int32" DbType="int NOT NULL" CanBeNull="false" />
+    </ElementType>
   </Function>
 </Database>

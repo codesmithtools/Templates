@@ -5,7 +5,7 @@
   </variables>
   <defaultProperties>
     <property name="DbmlFile">Tracker.dbml</property>
-    <property name="Framework">v35_SP1</property>
+    <property name="Framework">v40</property>
   </defaultProperties>
   <propertySets>
     <propertySet name="DBML" template="..\..\..\..\..\Templates\VisualBasic\Dbml.cst">

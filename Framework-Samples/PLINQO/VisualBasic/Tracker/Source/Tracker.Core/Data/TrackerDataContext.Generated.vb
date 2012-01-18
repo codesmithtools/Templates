@@ -152,6 +152,14 @@ Namespace Tracker.Core.Data
             End Get
         End Property
 
+        ''' <summary>Represents the dbo.Self table in the underlying database.</summary>
+        <System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")> _
+        Public ReadOnly Property Self As System.Data.Linq.Table(Of Tracker.Core.Data.Self)
+            Get
+                Return GetTable(Of Tracker.Core.Data.Self)()
+            End Get
+        End Property
+
         ''' <summary>Represents the dbo.Task table in the underlying database.</summary>
         <System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")> _
         Public ReadOnly Property Task As System.Data.Linq.Table(Of Tracker.Core.Data.Task)
@@ -208,6 +216,17 @@ Namespace Tracker.Core.Data
             Dim methodInfo = DirectCast(System.Reflection.MethodInfo.GetCurrentMethod(), System.Reflection.MethodInfo)
             Dim result As System.Data.Linq.IExecuteResult = Me.ExecuteMethodCall(Me, methodInfo, param)
             Return (DirectCast((result.ReturnValue),Integer))
+        End Function
+
+        ''' <summary>Method that is mapped to the dbo.RolesForUser database procedure.</summary>
+        ''' <returns></returns>
+        <System.Data.Linq.Mapping.Function(Name:="dbo.RolesForUser")> _
+        <System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")> _
+        Public Function RolesForUser( _
+            <System.Data.Linq.Mapping.Parameter(Name:="@UserId", DbType:="int")> ByVal userId As Integer?) As System.Data.Linq.ISingleResult(Of Tracker.Core.Data.RolesForUserResult)
+            Dim methodInfo = DirectCast(System.Reflection.MethodInfo.GetCurrentMethod(), System.Reflection.MethodInfo)
+            Dim result As System.Data.Linq.IExecuteResult = Me.ExecuteMethodCall(Me, methodInfo, userId)
+            Return (DirectCast((result.ReturnValue),System.Data.Linq.ISingleResult(Of Tracker.Core.Data.RolesForUserResult)))
         End Function
 
         #End Region
@@ -267,6 +286,23 @@ Namespace Tracker.Core.Data
         ''' <param name="instance">The instance.</param>
         <System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")> _
         Partial Private Sub DeleteRole(ByVal instance As Tracker.Core.Data.Role)
+        End Sub
+        ''' <summary>Called before a Self is inserted.</summary>
+        ''' <param name="instance">The instance.</param>
+        <System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")> _
+        Partial Private Sub InsertSelf(ByVal instance As Tracker.Core.Data.Self)
+        End Sub
+
+        ''' <summary>Called before a <see cref="Self"/> is updated.</summary>
+        ''' <param name="instance">The instance.</param>
+        <System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")> _
+        Partial Private Sub UpdateSelf(ByVal instance As Tracker.Core.Data.Self)
+        End Sub
+
+        ''' <summary>Called before a <see cref="Self"/> is deleted.</summary>
+        ''' <param name="instance">The instance.</param>
+        <System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")> _
+        Partial Private Sub DeleteSelf(ByVal instance As Tracker.Core.Data.Self)
         End Sub
         ''' <summary>Called before a Task is inserted.</summary>
         ''' <param name="instance">The instance.</param>

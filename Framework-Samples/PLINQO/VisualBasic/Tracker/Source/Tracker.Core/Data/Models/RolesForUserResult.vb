@@ -9,7 +9,7 @@ Imports CodeSmith.Data.Rules
 
 Namespace Tracker.Core.Data
     
-    Public Partial Class UserRole
+    Public Partial Class RolesForUserResult
         
         ' Place custom code here.
         
@@ -20,6 +20,59 @@ Namespace Tracker.Core.Data
         Friend Class Metadata
             ' WARNING: Only attributes inside of this class will be preserved.
             
+            Public Property Id() As Object
+                Get
+                    Return Nothing
+                End Get
+                Set(ByVal value As Object)
+                End Set
+            End Property
+            
+            <Required> _
+            Public Property Name() As Object
+                Get
+                    Return Nothing
+                End Get
+                Set(ByVal value As Object)
+                End Set
+            End Property
+            
+            Public Property Description() As Object
+                Get
+                    Return Nothing
+                End Get
+                Set(ByVal value As Object)
+                End Set
+            End Property
+            
+            <Now(EntityState.New)> _
+            <CodeSmith.Data.Audit.NotAudited> _
+            Public Property CreatedDate() As Object
+                Get
+                    Return Nothing
+                End Get
+                Set(ByVal value As Object)
+                End Set
+            End Property
+            
+            <Now(EntityState.Dirty)> _
+            <CodeSmith.Data.Audit.NotAudited> _
+            Public Property ModifiedDate() As Object
+                Get
+                    Return Nothing
+                End Get
+                Set(ByVal value As Object)
+                End Set
+            End Property
+            
+            Public Property RowVersion() As Object
+                Get
+                    Return Nothing
+                End Get
+                Set(ByVal value As Object)
+                End Set
+            End Property
+            
             Public Property UserId() As Object
                 Get
                     Return Nothing
@@ -29,22 +82,6 @@ Namespace Tracker.Core.Data
             End Property
             
             Public Property RoleId() As Object
-                Get
-                    Return Nothing
-                End Get
-                Set(ByVal value As Object)
-                End Set
-            End Property
-            
-            Public Property Role() As Object
-                Get
-                    Return Nothing
-                End Get
-                Set(ByVal value As Object)
-                End Set
-            End Property
-            
-            Public Property User() As Object
                 Get
                     Return Nothing
                 End Get

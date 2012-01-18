@@ -2,7 +2,6 @@ Imports System.Collections.Generic
 Imports System.Data.Linq
 Imports System.Linq
 Imports CodeSmith.Data.Linq
-Imports CodeSmith.Data.Rules
 Imports NUnit.Framework
 Imports Tracker.Core.Data
 
@@ -233,7 +232,7 @@ Namespace Tracker.Tests
                     db.User.InsertOnSubmit(user)
                     db.SubmitChanges()
                 End Using
-            Catch e As BrokenRuleException
+            Catch e As CodeSmith.Data.Rules.BrokenRuleException
                 brokenRules = e.BrokenRules.Count
                 Console.Write(e.ToString())
             End Try

@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Linq;
 using System.Linq;
 using CodeSmith.Data.Rules;
-using NUnit.Framework;
-using Tracker.Core.Data;
-using System.Data.Linq;
 using CodeSmith.Data.Linq;
+using Tracker.Core.Data;
+using NUnit.Framework;
 
 namespace Tracker.Tests
 {

@@ -7,7 +7,7 @@ Imports CodeSmith.Data.Rules
 Imports CodeSmith.Data.Rules.Validation
 
 Namespace Tracker.Core.Data
-     Partial public Class AuditManager
+     Partial public Class SelfManager
         #Region "Query"
         ' A private class for lazy loading static compiled queries.
         Private Partial Class Query

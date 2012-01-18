@@ -29,9 +29,9 @@ Namespace Tracker.Core.Data
         <EnumMember()> _
         Normal = 2
         ''' <summary>
-        ''' A Low Priority 2
+        ''' A Low Priority
         ''' </summary>
-        <Description("A Low Priority 2")> _
+        <Description("A Low Priority")> _
         <EnumMember()> _
         Low = 3
     End Enum
@@ -42,32 +42,14 @@ Namespace Tracker.Core.Data
         NotStarted = 1
         <EnumMember()> _
         InProgress = 2
-        ''' <summary>
-        ''' Test
-        ''' </summary>
-        <Description("Test")> _
         <EnumMember()> _
         Completed = 3
-        ''' <summary>
-        ''' test
-        ''' </summary>
-        <Description("test")> _
         <EnumMember()> _
         WaitingOnSomeoneElse = 4
-        ''' <summary>
-        ''' asdf 234
-        ''' </summary>
-        <Description("asdf 234")> _
         <EnumMember()> _
         Deferred = 5
         <EnumMember()> _
         Done = 6
-        ''' <summary>
-        ''' test
-        ''' </summary>
-        <Description("test")> _
-        <EnumMember()> _
-        Test = 7
     End Enum
     
 End Namespace

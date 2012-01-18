@@ -1,5 +1,4 @@
-﻿
-Imports System
+﻿Imports System
 Imports System.ComponentModel
 
 Namespace Tracker.Core.Data

@@ -1,5 +1,4 @@
-﻿
-Imports System
+﻿Imports System
 Imports System.Collections.Generic
 Imports System.Data.Linq
 Imports System.Linq
@@ -8,7 +7,7 @@ Imports CodeSmith.Data.Rules
 Imports CodeSmith.Data.Rules.Validation
 
 Namespace Tracker.Core.Data
-    Public Partial Class UserRoleManager
+     Partial public Class UserRoleManager
         #Region "Query"
         ' A private class for lazy loading static compiled queries.
         Private Partial Class Query
