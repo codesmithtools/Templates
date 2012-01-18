@@ -186,6 +186,12 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\PetShop.Business.Silverlight\PetShop.Business.Silverlight.vbproj">
+      <Project>{57578FD7-3C92-4234-813C-7BCC837C940C}</Project>
+      <Name>PetShop.Business.Silverlight</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Silverlight\$(SilverlightVersion)\Microsoft.Silverlight.VisualBasic.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
