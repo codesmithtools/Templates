@@ -4,8 +4,8 @@
 
   <PropertyGroup>
     <Major>3</Major>
-    <Minor>0</Minor>
-    <Build>3</Build>
+    <Minor>1</Minor>
+    <Build>0</Build>
     <Revision>1</Revision>
 
     <BindMinor>0</BindMinor>
