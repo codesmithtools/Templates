@@ -1,4 +1,4 @@
-﻿<%@ CodeTemplate Language="C#" TargetLanguage="C#" Debug="True" Encoding="UTF-8"
+<%@ CodeTemplate Language="C#" TargetLanguage="C#" Debug="True" Encoding="UTF-8"
     Description="Linq to Sql Entity Class." CompilerVersion="v3.5" %>
 
 <%@ Assembly Name="Dbml" Path="..\..\Common" %>
@@ -31,7 +31,7 @@
     Description="The base class for the entity." %>
 
 <%@ Property Category="2.Class" Name="Framework"
-    Type="LinqToSqlShared.Generator.FrameworkEnum" Default="v35_SP1" Optional="False"
+    Type="LinqToSqlShared.Generator.FrameworkEnum" Default="v40" Optional="False"
     Description="Which version of the .Net Framework is being generated for." %>
 
 <%@ Property Category="2.Class" Name="IncludeDataContract"
@@ -170,9 +170,10 @@ namespace <%= Database.EntityNamespace %>
 <% foreach(Association a in Type.EntitySetAssociations) { %>
             <%= a.Storage %> = new System.Data.Linq.EntitySet<<%= a.Type %>>(On<%= a.Member %>Add, On<%= a.Member %>Remove);
 <% } // foreach Association%>
-<% foreach(Column c in Type.Columns) { %>
+<% foreach(Column c in Type.Columns) {
+    string dataType = IncludeXmlSerialization && c.Type.Equals("System.Data.Linq.Binary") ? "byte[]" : c.Type; %>
 <% if (c.IsDelayLoaded == true) { %>
-            <%= c.Storage %> = default(System.Data.Linq.Link<<%= c.Type %>>);
+            <%= c.Storage %> = default(System.Data.Linq.Link<<%= CSharpAlias[dataType] %>>);
 <% } // IsDelayLoaded%>
 <% } // foreach Column%>
             OnCreated();
