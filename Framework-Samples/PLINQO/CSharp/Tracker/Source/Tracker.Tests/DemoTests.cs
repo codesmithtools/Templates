@@ -269,6 +269,37 @@ namespace Tracker.Tests
         }
 
         [Test]
+        public void Test_Entity_Dirty_Attach()
+        {
+            Task task = null;
+            using (var db = new TrackerDataContext { Log = Console.Out })
+            {
+                task = db.Task.GetByKey(TaskId);
+                task.Detach();
+            }
+            task.Status = Status.Done;
+
+            // Let's update the task in a seperate DataContext.
+            using (var db = new TrackerDataContext())
+            {
+                db.Log = Console.Out;
+
+                task = db.Task.GetByKey(TaskId);
+                task.Status = Status.InProgress;
+                db.SubmitChanges();
+            }
+
+            // Attach the original task and send it to the database.
+            using (var db = new TrackerDataContext())
+            {
+                db.Log = Console.Out;
+
+                db.Task.Attach(task, true);
+                db.SubmitChanges();
+            }
+        }
+
+        [Test]
         public void Test_Entity_Detach_Update()
         {
             Task task = null;

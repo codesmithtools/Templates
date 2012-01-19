@@ -105,6 +105,10 @@
       <DependentUpon>Role.cs</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Data\Entities\Self.cs" />
+    <Compile Include="Data\Entities\Self.Generated.cs">
+      <DependentUpon>Self.cs</DependentUpon>
+    </Compile>
     <Compile Include="Data\Entities\Task.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -119,12 +123,9 @@
       <DependentUpon>TaskExtended.cs</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Data\Entities\User.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="Data\Entities\User.cs" />
     <Compile Include="Data\Entities\User.Generated.cs">
       <DependentUpon>User.cs</DependentUpon>
-      <SubType>Code</SubType>
     </Compile>
     <Compile Include="Data\Entities\UserRole.cs">
       <SubType>Code</SubType>
@@ -142,6 +143,7 @@
     <Compile Include="Data\Interfaces\IRole.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Data\Interfaces\ISelf.cs" />
     <Compile Include="Data\Interfaces\ITask.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -181,6 +183,10 @@
     <Compile Include="Data\Managers\RoleManager.Generated.cs">
       <DependentUpon>RoleManager.cs</DependentUpon>
       <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Data\Managers\SelfManager.cs" />
+    <Compile Include="Data\Managers\SelfManager.Generated.cs">
+      <DependentUpon>SelfManager.cs</DependentUpon>
     </Compile>
     <Compile Include="Data\Managers\TaskExtendedManager.cs">
       <SubType>Code</SubType>
@@ -223,6 +229,10 @@
       <SubType>Code</SubType>
       <DependentUpon>GetUsersWithRolesResult2.cs</DependentUpon>
     </Compile>
+    <Compile Include="Data\Models\RolesForUserResult.cs" />
+    <Compile Include="Data\Models\RolesForUserResult.Generated.cs">
+      <DependentUpon>RolesForUserResult.cs</DependentUpon>
+    </Compile>
     <Compile Include="Data\Queries\AuditExtensions.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -243,6 +253,10 @@
     <Compile Include="Data\Queries\RoleExtensions.Generated.cs">
       <DependentUpon>RoleExtensions.cs</DependentUpon>
       <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Data\Queries\SelfExtensions.cs" />
+    <Compile Include="Data\Queries\SelfExtensions.Generated.cs">
+      <DependentUpon>SelfExtensions.cs</DependentUpon>
     </Compile>
     <Compile Include="Data\Queries\TaskExtendedExtensions.cs">
       <SubType>Code</SubType>
@@ -323,7 +337,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <None Include="Data\Tracker.Core.Data.csp" />
+    <None Include="Data\Tracker.Core.Data.csp">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Data\Tracker.dbml">
       <SubType>Designer</SubType>
     </None>

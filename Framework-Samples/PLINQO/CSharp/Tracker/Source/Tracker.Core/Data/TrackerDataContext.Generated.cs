@@ -158,6 +158,13 @@ namespace Tracker.Core.Data
             get { return GetTable<Tracker.Core.Data.Role>(); }
         }
 
+        /// <summary>Represents the dbo.Self table in the underlying database.</summary>
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
+        public System.Data.Linq.Table<Tracker.Core.Data.Self> Self
+        {
+            get { return GetTable<Tracker.Core.Data.Self>(); }
+        }
+
         /// <summary>Represents the dbo.Task table in the underlying database.</summary>
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         public System.Data.Linq.Table<Tracker.Core.Data.Task> Task
@@ -217,6 +224,19 @@ namespace Tracker.Core.Data
             return ((int)(result.ReturnValue));
         }
 
+        /// <summary>Method that is mapped to the dbo.RolesForUser database procedure.</summary>
+        /// <returns></returns>
+        [System.Data.Linq.Mapping.Function(Name = "dbo.RolesForUser")]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
+        public System.Data.Linq.ISingleResult<Tracker.Core.Data.RolesForUserResult> RolesForUser(
+            [System.Data.Linq.Mapping.Parameter(Name = "@UserId", DbType = "int")] int? userId)
+        {
+            var methodInfo = (System.Reflection.MethodInfo)System.Reflection.MethodInfo.GetCurrentMethod();
+            var result = this.ExecuteMethodCall(this, methodInfo, userId);
+
+            return ((System.Data.Linq.ISingleResult<Tracker.Core.Data.RolesForUserResult>)(result.ReturnValue));
+        }
+
         #endregion
 
         #region Extensibility Method Definitions
@@ -268,6 +288,21 @@ namespace Tracker.Core.Data
         /// <param name="instance">The instance.</param>
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         partial void DeleteRole(Tracker.Core.Data.Role instance);
+
+        /// <summary>Called before a <see cref="Self"/> is inserted.</summary>
+        /// <param name="instance">The instance.</param>
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
+        partial void InsertSelf(Tracker.Core.Data.Self instance);
+
+        /// <summary>Called before a <see cref="Self"/> is updated.</summary>
+        /// <param name="instance">The instance.</param>
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
+        partial void UpdateSelf(Tracker.Core.Data.Self instance);
+
+        /// <summary>Called before a <see cref="Self"/> is deleted.</summary>
+        /// <param name="instance">The instance.</param>
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
+        partial void DeleteSelf(Tracker.Core.Data.Self instance);
 
         /// <summary>Called before a <see cref="Task"/> is inserted.</summary>
         /// <param name="instance">The instance.</param>

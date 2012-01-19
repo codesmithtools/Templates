@@ -70,6 +70,21 @@ namespace Tracker.Core.Data
                 return _roleManager;
             }
         }
+        private SelfManager _selfManager;
+
+        /// <summary>
+        /// Gets the manager for Self.
+        /// </summary>
+        public SelfManager Self
+        {
+            get
+            {
+                if (_selfManager == null)
+                    _selfManager = new SelfManager(this);
+
+                return _selfManager;
+            }
+        }
         private TaskManager _taskManager;
 
         /// <summary>

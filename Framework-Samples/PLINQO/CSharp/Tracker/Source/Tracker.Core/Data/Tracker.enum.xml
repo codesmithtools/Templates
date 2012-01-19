@@ -3,7 +3,7 @@
   <Enum Name="Priority" Table="dbo.Priority" Type="System.Int32" AccessModifier="Public" Flags="false" IncludeDataContract="true">
     <Item Name="High" Value="1" Description="A High Priority" DataContractMember="true" />
     <Item Name="Normal" Value="2" Description="A Normal Priority" DataContractMember="true" />
-    <Item Name="Low" Value="3" Description="A Low Priority 2" DataContractMember="true" />
+    <Item Name="Low" Value="3" Description="A Low Priority" DataContractMember="true" />
   </Enum>
   <Enum Name="Status" Table="dbo.Status" Type="System.Int32" AccessModifier="Public" Flags="false" IncludeDataContract="true">
     <Item Name="NotStarted" Value="1" Description="Not Started" DataContractMember="true" />
@@ -12,6 +12,5 @@
     <Item Name="WaitingOnSomeoneElse" Value="4" Description="test" DataContractMember="true" />
     <Item Name="Deferred" Value="5" Description="asdf 234" DataContractMember="true" />
     <Item Name="Done" Value="6" Description="Done" DataContractMember="true" />
-    <Item Name="Test" Value="7" Description="test" DataContractMember="true" />
   </Enum>
 </Database>
