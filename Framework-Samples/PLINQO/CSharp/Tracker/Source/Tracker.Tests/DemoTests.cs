@@ -278,14 +278,15 @@ namespace Tracker.Tests
                 task.Detach();
             }
             task.Status = Status.Done;
+            Assert.IsFalse(task.IsAttached());
 
             // Let's update the task in a seperate DataContext.
             using (var db = new TrackerDataContext())
             {
                 db.Log = Console.Out;
 
-                task = db.Task.GetByKey(TaskId);
-                task.Status = Status.InProgress;
+                var task2 = db.Task.GetByKey(TaskId);
+                task2.Status = Status.InProgress;
                 db.SubmitChanges();
             }
 
@@ -294,7 +295,10 @@ namespace Tracker.Tests
             {
                 db.Log = Console.Out;
 
+                Assert.IsFalse(task.IsAttached());
                 db.Task.Attach(task, true);
+                db.Refresh(RefreshMode.KeepCurrentValues, task);
+                Assert.IsTrue(task.IsAttached());
                 db.SubmitChanges();
             }
         }
