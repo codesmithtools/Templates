@@ -18,9 +18,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyProduct("PLINQO")]
 [assembly: AssemblyCopyright("Copyright (c) 2002-2011 CodeSmith Tools, LLC.  All rights reserved.")]
 [assembly: AssemblyConfiguration("Release")]
-[assembly: AssemblyVersion("5.0.0.0")]
-[assembly: AssemblyFileVersion("5.0.0.1494")]
-[assembly: AssemblyInformationalVersion("5.0.0.1494")]
+[assembly: AssemblyVersion("5.1.0.0")]
+[assembly: AssemblyFileVersion("5.1.0.1494")]
+[assembly: AssemblyInformationalVersion("5.1.0.1494")]
 
 
 
@@ -30,15 +30,15 @@ internal sealed partial class ThisAssembly {
     
     internal const string AssemblyProduct = "PLINQO";
     
-    internal const string AssemblyCopyright = "Copyright (c) 2002-2011 CodeSmith Tools, LLC.  All rights reserved.";
+    internal const string AssemblyCopyright = "Copyright (c) 2002-2012 CodeSmith Tools, LLC.  All rights reserved.";
     
     internal const string AssemblyConfiguration = "Release";
     
-    internal const string AssemblyVersion = "5.0.0.0";
+    internal const string AssemblyVersion = "5.1.0.0";
     
-    internal const string AssemblyFileVersion = "5.0.0.1494";
+    internal const string AssemblyFileVersion = "5.1.0.1494";
     
-    internal const string AssemblyInformationalVersion = "5.0.0.1494";
+    internal const string AssemblyInformationalVersion = "5.1.0.1494";
     
     private ThisAssembly() {
     }
