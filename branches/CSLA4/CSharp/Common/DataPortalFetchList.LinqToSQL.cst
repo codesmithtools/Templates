@@ -1,0 +1,38 @@
+﻿<%-- Author: Blake Niemyjski --%>
+<%-- 		 Joe McPherson   --%>
+<%@ CodeTemplate Language="C#" TargetLanguage="C#" Inherits="CodeSmith.QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Encoding="UTF-8" Description="CSLA Map" %>
+
+<%@ Assembly Name="SchemaExplorer" %>
+<%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\Common" %>
+<%@ Assembly Name="CodeSmith.SchemaHelper.Extensions" Path="..\..\Common" %>
+<%@ Assembly Name="CodeSmith.SchemaHelper.CSharpExtensions" Path="..\..\Common" %>
+<%@ Assembly Name="CodeSmith.QuickStart" Path="..\..\Common" %>
+
+<%@ Import Namespace="SchemaExplorer" %>
+<%@ Import Namespace="CodeSmith.SchemaHelper" %>
+<%@ Import Namespace="CodeSmith.QuickStart" %>
+			//LinqToSQL Modification
+			bool cancel = false;
+            OnFetching(criteria, ref cancel);
+            if (cancel) return;
+			
+			RaiseListChangedEvents = false;
+			
+			// Build a collection of <%= StringUtil.ToPascalCase(Entity.Table.Name) %> objects based on a specified criteria
+            using (var ctx = ContextManager<DAL.PetshopDataContext>.GetManager(LinqToSQLHelper.ConnectionString, true))
+			{		
+				var items = ctx.DataContext.<%= StringUtil.ToPascalCase(Entity.Table.Name) %>
+					.Where(LinqToSQLHelper.BuildWhereStatement(criteria.StateBag), criteria.StateBag.Values.ToArray());
+	
+				// Add each item retrieved from the data base to the current collection object
+				foreach(var item in items)
+				{
+					//<%= BusinessClassName%>
+					this.Add(new <%= ChildBusinessClassName%>(item));
+					//<% if(BusinessClassName.Contains("InfoList")) { %>Info<% }%>(item));
+				}
+				
+				RaiseListChangedEvents = true;
+							
+				OnFetched();
+			}
