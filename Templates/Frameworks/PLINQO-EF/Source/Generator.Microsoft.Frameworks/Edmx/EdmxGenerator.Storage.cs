@@ -59,7 +59,7 @@ namespace Generator.Microsoft.Frameworks
             foreach (var property in properties)
             {
                 var propertyName = ResolveConceptualPropertyNameFromStorageColumnName(entityType.Name, property.Name);
-                _removedStorageEntityProperties.Add(string.Format(PROPERTY_KEY, entity.EntityKeyName, propertyName).ToLower());
+                _removedStorageEntityProperties.Add(String.Format(PROPERTY_KEY, entity.EntityKeyName, propertyName).ToLower());
                 entityType.Properties.Remove(property);
             }
 
@@ -477,7 +477,7 @@ namespace Generator.Microsoft.Frameworks
                     entityProperty = new EntityProperty() { Name = property.KeyName };
                     entityType.Properties.Add(entityProperty);
 
-                    _newStorageEntityProperties.Add(string.Format("{0}-{1}", entity.Name, property.Name));
+                    _newStorageEntityProperties.Add(String.Format("{0}-{1}", entity.Name, property.Name));
                 }
                 else if (ExcludeProperty(property))
                 {

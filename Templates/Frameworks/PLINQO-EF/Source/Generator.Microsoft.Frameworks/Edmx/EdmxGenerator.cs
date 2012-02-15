@@ -67,13 +67,13 @@ namespace Generator.Microsoft.Frameworks
             {
                 if (!entity.HasKey)
                 {
-                    var message = string.Format("warning 6013: The table/view '{0}' does not have a primary key defined and no valid primary key could be inferred. This table/view has been excluded. To use the entity, you will need to review your schema, add the correct keys, and regenerate it.", entity.EntityKeyName);
+                    var message = String.Format("warning 6013: The table/view '{0}' does not have a primary key defined and no valid primary key could be inferred. This table/view has been excluded. To use the entity, you will need to review your schema, add the correct keys, and regenerate it.", entity.EntityKeyName);
                     Debug.WriteLine(message);
                     Trace.WriteLine(message);
                 }
                 else if (entity is CommandEntity && IsValidFunction(entity as CommandEntity))
                 {
-                    var message = string.Format("warning 6005: The function '{0}' has a parameter that has a data type (E.G., 'sql_variant') which is not supported. The function was excluded.", entity.EntityKeyName);
+                    var message = String.Format("warning 6005: The function '{0}' has a parameter that has a data type (E.G., 'sql_variant') which is not supported. The function was excluded.", entity.EntityKeyName);
                     Debug.WriteLine(message);
                     Trace.WriteLine(message);
                 }
@@ -244,7 +244,7 @@ namespace Generator.Microsoft.Frameworks
                 property.NativeType.Equals("geometry", StringComparison.InvariantCultureIgnoreCase) ||
                 property.NativeType.Equals("hierarchyid", StringComparison.InvariantCultureIgnoreCase))
             {
-                Trace.WriteLine(string.Format("Skipping Property '{0}.{1}' because the type '{2}' is not supported.", property.Entity.Name, property.Name, property.NativeType));
+                Trace.WriteLine(String.Format("Skipping Property '{0}.{1}' because the type '{2}' is not supported.", property.Entity.Name, property.Name, property.NativeType));
                 return true;
             }
 

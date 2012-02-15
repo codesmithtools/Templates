@@ -158,7 +158,7 @@ namespace CodeSmith.SchemaHelper
                     else if (principalRole.Multiplicity == MultiplicityConstants.Many)
                         type = dependentRole.Multiplicity == MultiplicityConstants.ZeroToOne ? AssociationType.ManyToZeroOrOne : dependentRole.Multiplicity == MultiplicityConstants.One ? AssociationType.ManyToOne : AssociationType.ManyToMany;
                     else
-                        throw new ArgumentException(string.Format("Invalid Multiplicity detected in the {0} Association.", rel.Association.Name));
+                        throw new ArgumentException(String.Format("Invalid Multiplicity detected in the {0} Association.", rel.Association.Name));
 
                     // Note: There is no second association for ManyToMany associations...
                     association = new Association(rel.Association.Name, type, principalEntity, dependentEntity, true, Namespace) { Name = rel.NavigationProperty.Name };
@@ -185,7 +185,7 @@ namespace CodeSmith.SchemaHelper
                     else if (dependentRole.Multiplicity == MultiplicityConstants.Many)
                         type = principalRole.Multiplicity == MultiplicityConstants.ZeroToOne ? AssociationType.ManyToZeroOrOne : principalRole.Multiplicity == MultiplicityConstants.One ? AssociationType.ManyToOne : AssociationType.ManyToMany;
                     else
-                        throw new ArgumentException(string.Format("Invalid Multiplicity detected in the {0} Association.", rel.Association.Name));
+                        throw new ArgumentException(String.Format("Invalid Multiplicity detected in the {0} Association.", rel.Association.Name));
 
                     // Note: There is no second association for ManyToMany associations...
                     association = new Association(rel.Association.Name, type, dependentEntity, principalEntity, rel.Association.ReferentialConstraint != null ? false : true, Namespace) { Name = rel.NavigationProperty.Name };

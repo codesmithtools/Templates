@@ -23,7 +23,7 @@
         </member>
         <member name="P:CodeSmith.SchemaHelper.ICommonEntityProperty.Name">
             <summary>
-            The resolved Name for this IEntity.
+            The resolved Name for this Entity.
             </summary>
         </member>
         <member name="P:CodeSmith.SchemaHelper.ICommonEntityProperty.PrivateMemberVariableName">
@@ -50,6 +50,13 @@
             <summary>
             Collection of Extended properties.
             </summary>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.IProperty.IsType(CodeSmith.SchemaHelper.PropertyType)">
+            <summary>
+            Checks to see if a property is a specific property type.
+            </summary>
+            <param name="type"></param>
+            <returns></returns>
         </member>
         <member name="M:CodeSmith.SchemaHelper.IProperty.SetName(System.String)">
             <summary>
@@ -303,7 +310,7 @@
         </member>
         <member name="P:CodeSmith.SchemaHelper.Association.Name">
             <summary>
-            The resolved Name for this IEntity.
+            The resolved Name for this Entity.
             </summary>
         </member>
         <member name="P:CodeSmith.SchemaHelper.Association.PrivateMemberVariableName">
@@ -366,7 +373,7 @@
             </summary>
             <returns></returns>
         </member>
-        <member name="M:CodeSmith.SchemaHelper.PropertyBase`1.LoadExtendedProperties(System.Collections.Generic.IEnumerable{SchemaExplorer.ExtendedProperty})">
+        <member name="M:CodeSmith.SchemaHelper.PropertyBase`1.LoadExtendedProperties(System.Collections.Generic.IEnumerable{SchemaExplorer.IExtendedProperty})">
             <summary>
             Load the extended properties from the ExtendedPropertyCollection.
             </summary>
@@ -535,7 +542,7 @@
             Computed by looking at IsIdentity, IsRowVersion, and IsComputed.
             </summary>
         </member>
-        <member name="M:CodeSmith.SchemaHelper.ViewProperty.#ctor(SchemaExplorer.ViewColumnSchema,CodeSmith.SchemaHelper.IEntity)">
+        <member name="M:CodeSmith.SchemaHelper.ViewProperty.#ctor(SchemaExplorer.IViewColumnSchema,CodeSmith.SchemaHelper.IEntity)">
             <summary>
             Creates a ViewProperty from a ViewColumnSchema.
             </summary>
@@ -932,12 +939,12 @@
         </member>
         <member name="P:CodeSmith.SchemaHelper.IEntity.Key">
             <summary>
-            Returns the Key for the IEntity.
+            Returns the Key for the Entity.
             </summary>
         </member>
         <member name="P:CodeSmith.SchemaHelper.IEntity.Properties">
             <summary>
-            Returns a list of all the Properties of this IEntity.
+            Returns a list of all the Properties of this Entity.
             </summary>
         </member>
         <member name="P:CodeSmith.SchemaHelper.IEntity.HasConcurrencyProperty">
@@ -962,7 +969,7 @@
         </member>
         <member name="P:CodeSmith.SchemaHelper.IEntity.Associations">
             <summary>
-            Collection of Associations for this IEntity.
+            Collection of Associations for this Entity.
             </summary>
         </member>
         <member name="P:CodeSmith.SchemaHelper.IEntity.SearchCriteria">
@@ -1093,7 +1100,7 @@
         </member>
         <member name="P:CodeSmith.SchemaHelper.EntityBase`1.Name">
             <summary>
-            The resolved Name for this IEntity.
+            The resolved Name for this Entity.
             </summary>
         </member>
         <member name="P:CodeSmith.SchemaHelper.EntityBase`1.PrivateMemberVariableName">
@@ -1108,12 +1115,12 @@
         </member>
         <member name="P:CodeSmith.SchemaHelper.EntityBase`1.GenericProperty">
             <summary>
-            Resolved GenericProperty for this IEntity.
+            Resolved GenericProperty for this Entity.
             </summary>
         </member>
         <member name="P:CodeSmith.SchemaHelper.EntityBase`1.Description">
             <summary>
-            Resolved Description for this IEntity.
+            Resolved Description for this Entity.
             </summary>
         </member>
         <member name="P:CodeSmith.SchemaHelper.EntityBase`1.HasDescription">
@@ -1153,12 +1160,12 @@
         </member>
         <member name="P:CodeSmith.SchemaHelper.EntityBase`1.AssociationMap">
             <summary>
-            Collection of Associations for this IEntity.
+            Collection of Associations for this Entity.
             </summary>
         </member>
         <member name="P:CodeSmith.SchemaHelper.EntityBase`1.PropertyMap">
             <summary>
-            Collection of Properties for this IEntity.
+            Collection of Properties for this Entity.
             </summary>
         </member>
         <member name="P:CodeSmith.SchemaHelper.EntityBase`1.ExtendedProperties">
@@ -1183,7 +1190,7 @@
         </member>
         <member name="P:CodeSmith.SchemaHelper.EntityBase`1.Associations">
             <summary>
-            Returns a list of all the Associations of this IEntity.
+            Returns a list of all the Associations of this Entity.
             </summary>
         </member>
         <member name="P:CodeSmith.SchemaHelper.EntityBase`1.SearchCriteria">
@@ -1203,7 +1210,7 @@
         </member>
         <member name="P:CodeSmith.SchemaHelper.EntityBase`1.Properties">
             <summary>
-            Returns a list of all the Properties of this IEntity.
+            Returns a list of all the Properties of this Entity.
             </summary>
         </member>
         <member name="T:CodeSmith.SchemaHelper.Util.TypeHelper">
@@ -1211,28 +1218,28 @@
             This class aids in the resolving of Types from the CodeSmith Generator into .NET related types as well.
             </summary>
         </member>
-        <member name="M:CodeSmith.SchemaHelper.Util.TypeHelper.ResolveSystemType(SchemaExplorer.ColumnSchema)">
+        <member name="M:CodeSmith.SchemaHelper.Util.TypeHelper.ResolveSystemType(SchemaExplorer.IColumnSchema)">
             <summary>
             
             </summary>
             <param name="column"></param>
             <returns></returns>
         </member>
-        <member name="M:CodeSmith.SchemaHelper.Util.TypeHelper.ResolveSystemType(SchemaExplorer.ParameterSchema)">
+        <member name="M:CodeSmith.SchemaHelper.Util.TypeHelper.ResolveSystemType(SchemaExplorer.IParameterSchema)">
             <summary>
             
             </summary>
             <param name="column"></param>
             <returns></returns>
         </member>
-        <member name="M:CodeSmith.SchemaHelper.Util.TypeHelper.ResolveSystemType(SchemaExplorer.ViewColumnSchema)">
+        <member name="M:CodeSmith.SchemaHelper.Util.TypeHelper.ResolveSystemType(SchemaExplorer.IViewColumnSchema)">
             <summary>
             
             </summary>
             <param name="column"></param>
             <returns></returns>
         </member>
-        <member name="M:CodeSmith.SchemaHelper.Util.TypeHelper.ResolveSystemType(SchemaExplorer.CommandResultColumnSchema)">
+        <member name="M:CodeSmith.SchemaHelper.Util.TypeHelper.ResolveSystemType(SchemaExplorer.ICommandResultColumnSchema)">
             <summary>
             
             </summary>
@@ -1493,7 +1500,12 @@
             </summary>
             <returns></returns>
         </member>
-        <member name="M:CodeSmith.SchemaHelper.TableEntity.#ctor(SchemaExplorer.TableSchema)">
+        <member name="P:CodeSmith.SchemaHelper.ISchemaEntity.ConnectionString">
+            <summary>
+            Returns the connection string information.
+            </summary>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.TableEntity.#ctor(SchemaExplorer.ITableSchema)">
             <summary>
             Constructor that passes in the Table that this class will represent.
             </summary>
@@ -1543,7 +1555,7 @@
             Load all the custom commands for this Entity.
             </summary>
         </member>
-        <member name="M:CodeSmith.SchemaHelper.TableEntity.GetToManyTable(SchemaExplorer.TableSchema,SchemaExplorer.TableSchema)">
+        <member name="M:CodeSmith.SchemaHelper.TableEntity.GetToManyTable(SchemaExplorer.ITableSchema,SchemaExplorer.ITableSchema)">
             <summary>
             
             </summary>
@@ -1575,7 +1587,7 @@
         </member>
         <member name="P:CodeSmith.SchemaHelper.TableEntity.Commands">
             <summary>
-            List of custom commands (Stored Procedures) for this Entity
+            List of custom commands (Stored Procedures) for this IEntity
             </summary>
         </member>
         <member name="T:CodeSmith.SchemaHelper.AssociationProperty">
@@ -1585,7 +1597,7 @@
         </member>
         <member name="M:CodeSmith.SchemaHelper.AssociationProperty.#ctor(CodeSmith.SchemaHelper.Association,CodeSmith.SchemaHelper.IProperty,CodeSmith.SchemaHelper.IProperty)">
             <summary>
-            Creates an AssociationMember from the supplied data.
+            Creates an AssociationProperty from the supplied data.
             </summary>
             <param name="association"></param>
             <param name="property"></param>
@@ -1616,9 +1628,9 @@
             Class that wraps a Stored Procedure into an Entity
             </summary>
         </member>
-        <member name="M:CodeSmith.SchemaHelper.CommandEntity.#ctor(SchemaExplorer.CommandSchema)">
+        <member name="M:CodeSmith.SchemaHelper.CommandEntity.#ctor(SchemaExplorer.ICommandSchema)">
             <summary>
-            Construct the CommandEntity from the CommandSchema.
+            Construct the CommandEntity from the ICommandSchema.
             </summary>
             <param name="command"></param>
         </member>
@@ -1639,12 +1651,12 @@
         </member>
         <member name="M:CodeSmith.SchemaHelper.CommandEntity.AddSearchCriteria">
             <summary>
-            Get all the parameters from the CommandSchema and store them in the parameter collection.
+            Get all the parameters from the ICommandSchema and store them in the parameter collection.
             </summary>
         </member>
         <member name="M:CodeSmith.SchemaHelper.CommandEntity.MatchesEntity(CodeSmith.SchemaHelper.IEntity)">
             <summary>
-            Does the name of the Entity that is passed in match the name of the Entity from the Command.
+            Does the name of the IEntity that is passed in match the name of the IEntity from the Command.
             </summary>
             <param name="entity"></param>
             <returns></returns>
@@ -1682,17 +1694,17 @@
             If this is the default schema, it will return an empty string.
             </summary>
         </member>
-        <member name="M:CodeSmith.SchemaHelper.TableEnumEntity.#ctor(SchemaExplorer.TableSchema)">
+        <member name="M:CodeSmith.SchemaHelper.TableEnumEntity.#ctor(SchemaExplorer.ITableSchema)">
             <summary>
             Constructor that passes in the Table that this class will represent.
             </summary>
         </member>
         <member name="T:CodeSmith.SchemaHelper.SchemaExplorerExtensions">
             <summary>
-            Extension Methods for TableSchema
+            Extension Methods for ITableSchema
             </summary>
         </member>
-        <member name="M:CodeSmith.SchemaHelper.SchemaExplorerExtensions.IsManyToMany(SchemaExplorer.TableSchema)">
+        <member name="M:CodeSmith.SchemaHelper.SchemaExplorerExtensions.IsManyToMany(SchemaExplorer.ITableSchema)">
             <summary>
             Checks to see if a Table is part of a ManyToMany relationship. It checks for the following:
             
@@ -1706,35 +1718,35 @@
             <param name="table"></param>
             <returns></returns>
         </member>
-        <member name="M:CodeSmith.SchemaHelper.SchemaExplorerExtensions.IsColumnIdentity(SchemaExplorer.DataObjectBase)">
+        <member name="M:CodeSmith.SchemaHelper.SchemaExplorerExtensions.IsColumnIdentity(SchemaExplorer.IDataObject)">
             <summary>
             Is the column an Identity column.
             </summary>
             <param name="column"></param>
             <returns></returns>
         </member>
-        <member name="M:CodeSmith.SchemaHelper.SchemaExplorerExtensions.IsColumnComputed(SchemaExplorer.DataObjectBase)">
+        <member name="M:CodeSmith.SchemaHelper.SchemaExplorerExtensions.IsColumnComputed(SchemaExplorer.IDataObject)">
             <summary>
             Is the column a computed column.
             </summary>
             <param name="column"></param>
             <returns></returns>
         </member>
-        <member name="M:CodeSmith.SchemaHelper.SchemaExplorerExtensions.IsColumnRowVersion(SchemaExplorer.DataObjectBase)">
+        <member name="M:CodeSmith.SchemaHelper.SchemaExplorerExtensions.IsColumnRowVersion(SchemaExplorer.IDataObject)">
             <summary>
             Is the column a RowVersion column.
             </summary>
             <param name="column"></param>
             <returns></returns>
         </member>
-        <member name="M:CodeSmith.SchemaHelper.SchemaExplorerExtensions.IsUnicode(SchemaExplorer.DataObjectBase)">
+        <member name="M:CodeSmith.SchemaHelper.SchemaExplorerExtensions.IsUnicode(SchemaExplorer.IDataObject)">
             <summary>
             Is the column a Unicode column.
             </summary>
             <param name="column"></param>
             <returns></returns>
         </member>
-        <member name="M:CodeSmith.SchemaHelper.SchemaExplorerExtensions.IsFixedLength(SchemaExplorer.DataObjectBase)">
+        <member name="M:CodeSmith.SchemaHelper.SchemaExplorerExtensions.IsFixedLength(SchemaExplorer.IDataObject)">
             <summary>
             Is the column a FixedLength column.
             
@@ -1800,7 +1812,7 @@
             The Command property.
             </summary>
         </member>
-        <member name="M:CodeSmith.SchemaHelper.CommandProperty.#ctor(SchemaExplorer.CommandResultColumnSchema,CodeSmith.SchemaHelper.IEntity)">
+        <member name="M:CodeSmith.SchemaHelper.CommandProperty.#ctor(SchemaExplorer.ICommandResultColumnSchema,CodeSmith.SchemaHelper.IEntity)">
             <summary>
             Creates an CommandMember from the supplied data.
             </summary>
@@ -1863,7 +1875,7 @@
             This represents a Parameter to a command object from the Database.  Using a property to inherit the naming Functionality from the Schema Helper.
             </summary>
         </member>
-        <member name="M:CodeSmith.SchemaHelper.CommandParameter.#ctor(SchemaExplorer.ParameterSchema,CodeSmith.SchemaHelper.IEntity)">
+        <member name="M:CodeSmith.SchemaHelper.CommandParameter.#ctor(SchemaExplorer.IParameterSchema,CodeSmith.SchemaHelper.IEntity)">
             <summary>
             Creates a CommandParameter from a ParameterSchema.
             </summary>
@@ -1931,9 +1943,9 @@
             TableMember represents a column from a Table
             </summary>
         </member>
-        <member name="M:CodeSmith.SchemaHelper.TableProperty.#ctor(SchemaExplorer.ColumnSchema,CodeSmith.SchemaHelper.IEntity)">
+        <member name="M:CodeSmith.SchemaHelper.TableProperty.#ctor(SchemaExplorer.IColumnSchema,CodeSmith.SchemaHelper.IEntity)">
             <summary>
-            Creates a ColumnSchema from a TableSchema.
+            Creates a IColumnSchema from a TableSchema.
             </summary>
             <param name="column"></param>
             <param name="entity"></param>
@@ -2024,7 +2036,7 @@
             A View Entity.
             </summary>
         </member>
-        <member name="M:CodeSmith.SchemaHelper.ViewEntity.#ctor(SchemaExplorer.ViewSchema)">
+        <member name="M:CodeSmith.SchemaHelper.ViewEntity.#ctor(SchemaExplorer.IViewSchema)">
             <summary>
             Constructor that passes in the Table that this class will represent.
             </summary>
