@@ -91,7 +91,7 @@ namespace CodeSmith.SchemaHelper.NHibernate
                     PropertyMap.Add(property.Name, property);
             }
 
-            if (PropertyMap.Values.Where(em => (em.PropertyType & PropertyType.Concurrency) == PropertyType.Concurrency).Count() > 1)
+            if (PropertyMap.Values.Count(em => em.IsType(PropertyType.Concurrency)) > 1)
                 throw new Exception(String.Format("More than one Concurrency property in {0}", EntityKeyName));
         }
         
