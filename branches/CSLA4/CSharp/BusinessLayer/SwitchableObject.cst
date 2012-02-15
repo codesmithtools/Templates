@@ -1,24 +1,19 @@
 ﻿<%-- Author: Blake Niemyjski --%>
-<%@ CodeTemplate Language="C#" TargetLanguage="C#" OutputType="None" Inherits="CodeSmith.QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Encoding="UTF-8" Description="CSLA SwitchableObject" %>
-
+<%@ CodeTemplate Language="C#" TargetLanguage="C#" OutputType="None" Inherits="Generator.CSLA.EntityCodeTemplate" %>
 <%@ Register Name="SwitchableObject" Template="Internal\SwitchableObject.cst" %>
 <%@ Register Name="SwitchableObjectDataAccess" Template="Internal\SwitchableObject.DataAccess.cst" %>
 <%@ Register Name="SwitchableObjectDataAccessParameterized" Template="Internal\SwitchableObject.DataAccess.ParameterizedSQL.cst" %>
 <%@ Register Name="SwitchableObjectDataAccessLinqToSQL" Template="Internal\SwitchableObject.DataAccess.LinqToSQL.cst" %>
 <%@ Register Name="SwitchableObjectDataAccessStoredProcedures" Template="Internal\SwitchableObject.DataAccess.StoredProcedures.cst" %>
 <%@ Register Name="SwitchableObjectGenerated" Template="Internal\SwitchableObject.Generated.cst" %>
-
 <%@ Register Name="SqlStoredProcedures" Template="..\DataAccessLayer\Internal\SQLStoredProcedures.cst" %>
 
 <%@ Assembly Name="CodeSmith.CustomProperties" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\Common" %>
-<%@ Assembly Name="CodeSmith.QuickStart" Path="..\..\Common" %>
-<%@ Assembly Name="SchemaExplorer" %>
+<%@ Assembly Name="Generator.CSLA" Path="..\..\Common" %>
 
 <%@ Import Namespace="CodeSmith.CustomProperties" %>
 <%@ Import Namespace="CodeSmith.SchemaHelper" %>
-<%@ Import Namespace="CodeSmith.QuickStart" %>
-<%@ Import Namespace="SchemaExplorer" %>
 
 <script runat="template">
 
@@ -31,7 +26,7 @@ public override void Render(System.IO.TextWriter writer)
     SwitchableObject switchableObject = this.Create<SwitchableObject>();
     this.CopyPropertiesTo(switchableObject);
     
-    string parentFileName = System.IO.Path.Combine(this.Location, string.Format("Entities\\{0}.cs", switchableObject.BusinessClassName));
+    string parentFileName = System.IO.Path.Combine(this.Location, String.Format("Entities\\{0}.cs", switchableObject.BusinessClassName));
     if (!System.IO.File.Exists(parentFileName))
     {
         switchableObject.RenderToFile(parentFileName, false);
@@ -39,7 +34,7 @@ public override void Render(System.IO.TextWriter writer)
     
     #region SwitchableObject.Generated
     
-    string fileName = System.IO.Path.Combine(Location, string.Format("Entities\\{0}.Generated.cs", switchableObject.BusinessClassName));
+    string fileName = System.IO.Path.Combine(Location, String.Format("Entities\\{0}.Generated.cs", switchableObject.BusinessClassName));
     
     SwitchableObjectGenerated switchableObjectGenerated = this.Create<SwitchableObjectGenerated>();
     this.CopyPropertiesTo(switchableObjectGenerated);
@@ -50,7 +45,7 @@ public override void Render(System.IO.TextWriter writer)
     
     #region SwitchableObject.DataAccess
     
-    fileName = System.IO.Path.Combine(Location, string.Format("Entities\\{0}.DataAccess.cs", switchableObject.BusinessClassName));
+    fileName = System.IO.Path.Combine(Location, String.Format("Entities\\{0}.DataAccess.cs", switchableObject.BusinessClassName));
     if(DataAccessImplementation == DataAccessMethod.None)
     {
         SwitchableObjectDataAccess switchableObjectDataAccess = this.Create<SwitchableObjectDataAccess>();
@@ -80,7 +75,7 @@ public override void Render(System.IO.TextWriter writer)
         switchableObjectDataAccessStoredProcedures.RenderToFile(fileName, parentFileName, true);
 
         //StoredProcedures
-        fileName = System.IO.Path.Combine(Location, string.Format("Entities\\{0}.StoredProcedures.sql", switchableObject.BusinessClassName));
+        fileName = System.IO.Path.Combine(Location, String.Format("Entities\\{0}.StoredProcedures.sql", switchableObject.BusinessClassName));
         SqlStoredProcedures sqlStoredProcedures = this.Create<SqlStoredProcedures>();
         this.CopyPropertiesTo(sqlStoredProcedures);
         sqlStoredProcedures.DataProjectName = "Not needed for sql stored procedures.";

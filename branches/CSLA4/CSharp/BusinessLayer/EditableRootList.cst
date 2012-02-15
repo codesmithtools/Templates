@@ -1,5 +1,5 @@
 ﻿<%-- Author: Blake Niemyjski --%>
-<%@ CodeTemplate Language="C#" TargetLanguage="C#" OutputType="None" Inherits="CodeSmith.QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Encoding="UTF-8" Description="CSLA EditableRootList" %>
+<%@ CodeTemplate Language="C#" TargetLanguage="C#" OutputType="None" Inherits="Generator.CSLA.EntityCodeTemplate" %>
 
 <%@ Register Name="EditableRootList" Template="Internal\EditableRootList.cst" %>
 <%@ Register Name="EditableRootListDataAccess" Template="Internal\EditableRootList.DataAccess.cst" %>
@@ -7,18 +7,15 @@
 <%@ Register Name="EditableRootListDataAccessLinqToSQL" Template="Internal\EditableRootList.DataAccess.LinqToSQL.cst" %>
 <%@ Register Name="EditableRootListDataAccessStoredProcedures" Template="Internal\EditableRootList.DataAccess.StoredProcedures.cst" %>
 <%@ Register Name="EditableRootListGenerated" Template="Internal\EditableRootList.Generated.cst" %>
-
 <%@ Register Name="SqlStoredProcedures" Template="..\DataAccessLayer\Internal\SQLStoredProcedures.cst" %>
 
 <%@ Assembly Name="CodeSmith.CustomProperties" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\Common" %>
-<%@ Assembly Name="CodeSmith.QuickStart" Path="..\..\Common" %>
-<%@ Assembly Name="SchemaExplorer" %>
+<%@ Assembly Name="Generator.CSLA" Path="..\..\Common" %>
+
 
 <%@ Import Namespace="CodeSmith.CustomProperties" %>
 <%@ Import Namespace="CodeSmith.SchemaHelper" %>
-<%@ Import Namespace="CodeSmith.QuickStart" %>
-<%@ Import Namespace="SchemaExplorer" %>
 
 <script runat="template">
 
@@ -31,7 +28,7 @@ public override void Render(System.IO.TextWriter writer)
     EditableRootList editableRootList = this.Create<EditableRootList>();
     this.CopyPropertiesTo(editableRootList);
     
-    string parentFileName = System.IO.Path.Combine(this.Location, string.Format("Collections\\{0}.cs", editableRootList.BusinessClassName));
+    string parentFileName = System.IO.Path.Combine(this.Location, String.Format("Collections\\{0}.cs", editableRootList.BusinessClassName));
     if (!System.IO.File.Exists(parentFileName))
     {
         editableRootList.RenderToFile(parentFileName, false);
@@ -39,7 +36,7 @@ public override void Render(System.IO.TextWriter writer)
     
     #region EditableRootList.Generated
     
-    string fileName = System.IO.Path.Combine(Location, string.Format("Collections\\{0}.Generated.cs", editableRootList.BusinessClassName));
+    string fileName = System.IO.Path.Combine(Location, String.Format("Collections\\{0}.Generated.cs", editableRootList.BusinessClassName));
     
     EditableRootListGenerated editableRootListGenerated = this.Create<EditableRootListGenerated>();
     this.CopyPropertiesTo(editableRootListGenerated);
@@ -50,7 +47,7 @@ public override void Render(System.IO.TextWriter writer)
     
     #region EditableRootList.DataAccess
     
-    fileName = System.IO.Path.Combine(Location, string.Format("Collections\\{0}.DataAccess.cs", editableRootList.BusinessClassName));
+    fileName = System.IO.Path.Combine(Location, String.Format("Collections\\{0}.DataAccess.cs", editableRootList.BusinessClassName));
     if(DataAccessImplementation == DataAccessMethod.None)
     {
         EditableRootListDataAccess editableRootListDataAccess = this.Create<EditableRootListDataAccess>();
@@ -80,7 +77,7 @@ public override void Render(System.IO.TextWriter writer)
         editableRootListDataAccessStoredProcedures.RenderToFile(fileName, parentFileName, true);
 
         //StoredProcedures
-        fileName = System.IO.Path.Combine(Location, string.Format("Collections\\{0}.StoredProcedures.sql", editableRootList.BusinessClassName));
+        fileName = System.IO.Path.Combine(Location, String.Format("Collections\\{0}.StoredProcedures.sql", editableRootList.BusinessClassName));
         SqlStoredProcedures sqlStoredProcedures = this.Create<SqlStoredProcedures>();
         this.CopyPropertiesTo(sqlStoredProcedures);
         
@@ -98,12 +95,12 @@ public override bool OnTableChanging()
 {
     if (string.IsNullOrEmpty(BusinessClassName))
     {
-        BusinessClassName = string.Concat(Entity.ClassName, "List");
-        ChildBusinessClassName = Entity.ClassName;
+        BusinessClassName = string.Concat(Entity.Name, "List");
+        ChildBusinessClassName = Entity.Name;
     }
 
     if (string.IsNullOrEmpty(CriteriaClassName) || CriteriaClassName.Equals("Criteria", StringComparison.InvariantCultureIgnoreCase))
-        CriteriaClassName = String.Concat(Entity.ClassName, "Criteria");
+        CriteriaClassName = String.Concat(Entity.Name, "Criteria");
 
     return false;
 }

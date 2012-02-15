@@ -8,73 +8,73 @@ namespace CodeSmith.SchemaHelper
     /// </summary>
     public static class MemberCollectionExtensions
     {
-        public static string BuildVariableArguments(this List<Member> members)
+        public static string BuildVariableArguments(this List<IProperty> members)
         {
             string parameters = string.Empty;
 
-            foreach (Member member in members)
+            foreach (IProperty property in members)
             {
-                parameters += string.Format(", {0}{1}", member.VariableName, member.IsNullable && member.SystemType != "System.String" && member.SystemType != "System.Byte[]" ? ".Value" : string.Empty);
+                parameters += String.Format(", {0}{1}", property.VariableName, property.IsNullable && property.SystemType != "System.String" && property.SystemType != "System.Byte[]" ? ".Value" : string.Empty);
             }
 
             return parameters.TrimStart(new[] { ',', ' ' });
         }
 
-        public static string BuildPropertyVariableArguments(this List<Member> members)
+        public static string BuildPropertyVariableArguments(this List<IProperty> members)
         {
             string parameters = string.Empty;
 
-            foreach (Member member in members)
+            foreach (IProperty property in members)
             {
-                parameters += string.Format(", {0}{1}", member.PropertyName, member.IsNullable && member.SystemType != "System.String" && member.SystemType != "System.Byte[]" ? ".Value" : string.Empty);
+                parameters += String.Format(", {0}{1}", property.Name, property.IsNullable && property.SystemType != "System.String" && property.SystemType != "System.Byte[]" ? ".Value" : string.Empty);
             }
 
             return parameters.TrimStart(new[] { ',', ' ' });
         }
 
-        public static string BuildPrivateMemberVariableArguments(this List<Member> members)
+        public static string BuildPrivateMemberVariableArguments(this List<IProperty> members)
         {
             string parameters = string.Empty;
 
-            foreach (Member member in members)
+            foreach (IProperty property in members)
             {
-                parameters += string.Format(", {0}{1}", member.PrivateMemberVariableName, member.IsNullable && member.SystemType != "System.String" && member.SystemType != "System.Byte[]" ? ".Value" : string.Empty);
+                parameters += String.Format(", {0}{1}", property.PrivateMemberVariableName, property.IsNullable && property.SystemType != "System.String" && property.SystemType != "System.Byte[]" ? ".Value" : string.Empty);
             }
 
             return parameters.TrimStart(new[] { ',', ' ' });
         }
 
-        public static string BuildDataBaseColumns(this List<Member> members)
+        public static string BuildDataBaseColumns(this List<IProperty> members)
         {
             string columnNames = string.Empty;
 
-            foreach (Member member in members)
+            foreach (IProperty property in members)
             {
-                columnNames += string.Format(", [{0}]", member.ColumnName);
+                columnNames += String.Format(", [{0}]", property.KeyName);
             }
 
             return columnNames.TrimStart(new[] { ',', ' ' });
         }
 
-        public static string BuildDataBaseParameters(this List<Member> members)
+        public static string BuildDataBaseParameters(this List<IProperty> members)
         {
-            return BuildDataBaseParameters(members, new List<AssociationMember>());
+            return BuildDataBaseParameters(members, new List<AssociationProperty>());
         }
 
-        public static string BuildDataBaseParameters(this List<Member> members, List<AssociationMember> associationMembers)
+        public static string BuildDataBaseParameters(this List<IProperty> members, List<AssociationProperty> associationMembers)
         {
             string columnNames = string.Empty;
 
-            foreach (Member member in members)
+            foreach (IProperty property in members)
             {
-                columnNames += string.Format(", {0}{1}", Configuration.Instance.ParameterPrefix, member.ColumnName);
+                columnNames += String.Format(", {0}{1}", Configuration.Instance.ParameterPrefix, property.KeyName);
             }
 
-            foreach (AssociationMember associationMember in associationMembers)
+            foreach (AssociationProperty associationProperty in associationMembers)
             {
-                if (!associationMember.IsIdentity)
+                if (!associationProperty.Property.IsType(PropertyType.Identity))
                 {
-                    string output = string.Format(", {0}{1}", Configuration.Instance.ParameterPrefix, associationMember.ColumnName);
+                    string output = String.Format(", {0}{1}", Configuration.Instance.ParameterPrefix, associationProperty.Property.KeyName);
 
                     if (!columnNames.Contains(output))
                         columnNames += output;
@@ -84,36 +84,36 @@ namespace CodeSmith.SchemaHelper
             return columnNames.TrimStart(new[] { ',', ' ' });
         }
 
-        public static string BuildSetStatements(this List<Member> members)
+        public static string BuildSetStatements(this List<IProperty> members)
         {
             string setStatements = "\t\t\t\t\t\t SET";
 
-            foreach (Member member in members)
+            foreach (IProperty property in members)
             {
-                setStatements += string.Format(" [{0}] = {1},", member.ColumnName, member.BuildParameterVariableName());
+                setStatements += String.Format(" [{0}] = {1},", property.KeyName, property.BuildParameterVariableName());
             }
 
             return setStatements.TrimStart(new[] { '\t', '\n' }).TrimEnd(new[] { ',' });
         }
 
-        public static string BuildWhereStatements(this List<Member> members)
+        public static string BuildWhereStatements(this List<IProperty> members)
         {
             return members.BuildWhereStatements(false);
         }
 
-        public static string BuildWhereStatements(this List<Member> members, bool isUpdate)
+        public static string BuildWhereStatements(this List<IProperty> members, bool isUpdate)
         {
             string columnNames = string.Empty;
 
-            foreach (Member member in members)
+            foreach (var property in members)
             {
-                if(isUpdate && !member.IsIdentity)
-                    columnNames += string.Format("[{0}] = {1} AND ", member.ColumnName, string.Format("{0}Original{1}", Configuration.Instance.ParameterPrefix, member.ColumnName));
+                if (isUpdate && !property.IsType(PropertyType.Identity))
+                    columnNames += String.Format("[{0}] = {1} AND ", property.KeyName, String.Format("{0}Original{1}", Configuration.Instance.ParameterPrefix, property.KeyName));
                 else
-                    columnNames += string.Format("[{0}] = {1} AND ", member.ColumnName, member.BuildParameterVariableName());
+                    columnNames += String.Format("[{0}] = {1} AND ", property.KeyName, property.BuildParameterVariableName());
             }
 
-            return string.Format("WHERE {0}", columnNames.Remove(columnNames.Length - 5, 5));
+            return String.Format("WHERE {0}", columnNames.Remove(columnNames.Length - 5, 5));
         }
     }
 }

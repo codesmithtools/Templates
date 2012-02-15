@@ -1,24 +1,19 @@
 ﻿<%-- Author: Blake Niemyjski --%>
-<%@ CodeTemplate Language="C#" TargetLanguage="C#" OutputType="None" Inherits="CodeSmith.QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Encoding="UTF-8" Description="CSLA ReadOnlyList" %>
-
+<%@ CodeTemplate Language="C#" TargetLanguage="C#" OutputType="None" Inherits="Generator.CSLA.EntityCodeTemplate" %>
 <%@ Register Name="ReadOnlyList" Template="Internal\ReadOnlyList.cst" %>
 <%@ Register Name="ReadOnlyListDataAccess" Template="Internal\ReadOnlyList.DataAccess.cst" %>
 <%@ Register Name="ReadOnlyListDataAccessParameterized" Template="Internal\ReadOnlyList.DataAccess.ParameterizedSQL.cst" %>
 <%@ Register Name="ReadOnlyListDataAccessLinqToSQL" Template="Internal\ReadOnlyList.DataAccess.LinqToSQL.cst" %>
 <%@ Register Name="ReadOnlyListDataAccessStoredProcedures" Template="Internal\ReadOnlyList.DataAccess.StoredProcedures.cst" %>
 <%@ Register Name="ReadOnlyListGenerated" Template="Internal\ReadOnlyList.Generated.cst" %>
-
 <%@ Register Name="SqlStoredProcedures" Template="..\DataAccessLayer\Internal\SQLStoredProcedures.cst" %>
 
 <%@ Assembly Name="CodeSmith.CustomProperties" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\Common" %>
-<%@ Assembly Name="CodeSmith.QuickStart" Path="..\..\Common" %>
-<%@ Assembly Name="SchemaExplorer" %>
+<%@ Assembly Name="Generator.CSLA" Path="..\..\Common" %>
 
 <%@ Import Namespace="CodeSmith.CustomProperties" %>
 <%@ Import Namespace="CodeSmith.SchemaHelper" %>
-<%@ Import Namespace="CodeSmith.QuickStart" %>
-<%@ Import Namespace="SchemaExplorer" %>
 
 <script runat="template">
 
@@ -31,7 +26,7 @@ public override void Render(System.IO.TextWriter writer)
     ReadOnlyList readOnlyList = this.Create<ReadOnlyList>();
     this.CopyPropertiesTo(readOnlyList);
     
-    string parentFileName = System.IO.Path.Combine(Location, string.Format("Collections\\{0}.cs", readOnlyList.BusinessClassName));
+    string parentFileName = System.IO.Path.Combine(Location, String.Format("Collections\\{0}.cs", readOnlyList.BusinessClassName));
     if (!System.IO.File.Exists(parentFileName))
     {
         readOnlyList.RenderToFile(parentFileName, false);
@@ -39,7 +34,7 @@ public override void Render(System.IO.TextWriter writer)
     
     #region ReadOnlyList.Generated
     
-    string fileName = System.IO.Path.Combine(Location, string.Format("Collections\\{0}.Generated.cs", readOnlyList.BusinessClassName));
+    string fileName = System.IO.Path.Combine(Location, String.Format("Collections\\{0}.Generated.cs", readOnlyList.BusinessClassName));
     
     ReadOnlyListGenerated readOnlyListGenerated = this.Create<ReadOnlyListGenerated>();
     this.CopyPropertiesTo(readOnlyListGenerated);
@@ -50,7 +45,7 @@ public override void Render(System.IO.TextWriter writer)
     
     #region ReadOnlyList.DataAccess
     
-    fileName = System.IO.Path.Combine(Location, string.Format("Collections\\{0}.DataAccess.cs", readOnlyList.BusinessClassName));
+    fileName = System.IO.Path.Combine(Location, String.Format("Collections\\{0}.DataAccess.cs", readOnlyList.BusinessClassName));
     if(DataAccessImplementation == DataAccessMethod.None)
     {
         ReadOnlyListDataAccess readOnlyListDataAccess = this.Create<ReadOnlyListDataAccess>();
@@ -80,7 +75,7 @@ public override void Render(System.IO.TextWriter writer)
         readOnlyListDataAccessStoredProcedures.RenderToFile(fileName, parentFileName, true);
 
         //StoredProcedures
-        fileName = System.IO.Path.Combine(Location, string.Format("Collections\\{0}.StoredProcedures.sql", readOnlyList.BusinessClassName));
+        fileName = System.IO.Path.Combine(Location, String.Format("Collections\\{0}.StoredProcedures.sql", readOnlyList.BusinessClassName));
         SqlStoredProcedures sqlStoredProcedures = this.Create<SqlStoredProcedures>();
         this.CopyPropertiesTo(sqlStoredProcedures);
         sqlStoredProcedures.DataProjectName = "Not needed for sql stored procedures.";
@@ -97,12 +92,12 @@ public override bool OnTableChanging()
 {
     if (string.IsNullOrEmpty(BusinessClassName))
     {
-        BusinessClassName = string.Concat(Entity.ClassName, "InfoList");
-        ChildBusinessClassName = string.Concat(Entity.ClassName, "Info");
+        BusinessClassName = string.Concat(Entity.Name, "InfoList");
+        ChildBusinessClassName = string.Concat(Entity.Name, "Info");
     }
 
     if (string.IsNullOrEmpty(CriteriaClassName) || CriteriaClassName.Equals("Criteria", StringComparison.InvariantCultureIgnoreCase))
-        CriteriaClassName = String.Concat(Entity.ClassName, "Criteria");
+        CriteriaClassName = String.Concat(Entity.Name, "Criteria");
 
     return false;
 }

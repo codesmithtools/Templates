@@ -1,5 +1,5 @@
 ﻿<%-- Author: Blake Niemyjski --%>
-<%@ CodeTemplate Language="VB" TargetLanguage="VB" Inherits="CodeSmith.QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Encoding="UTF-8" Description="CSLA DynamicRootList" %>
+<%@ CodeTemplate Language="VB" TargetLanguage="VB" Inherits="CodeSmith.QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Encoding="UTF-8" %>
 <%@ Register Name="Exists" Template="..\..\Common\ExistsList.cst" MergeProperties="False" ExcludeProperties="" %>
 <%@ Register Name="IsDirty" Template="..\..\Common\IsDirtyList.cst" MergeProperties="False" ExcludeProperties="" %>
 <%@ Register Name="AddNewCore" Template="..\..\Common\ListSimpleAddNewCore.cst" MergeProperties="False" ExcludeProperties="" %>
@@ -86,11 +86,11 @@ Namespace <%= BusinessProjectName %>
             Return DataPortal.Fetch(Of <%= BusinessClassName %><%= Entity.GenericProperty %>)(New <%= CriteriaClassName %><%= Entity.GenericProperty %>())
         End Function
 
-    <% For Each sc As SearchCriteria In  Entity.SearchCriteria() %>
+    <% For Each sc As SearchCriteria In  Entity.SearchCriteria %>
     
-        Public Shared Function <%= sc.MethodName %>(<%= sc.Members.BuildParametersVariables() %>) As <%= BusinessClassName %><%= Entity.GenericProperty %> 
+        Public Shared Function <%= sc.MethodName %>(<%= sc.Properties.BuildParametersVariables() %>) As <%= BusinessClassName %><%= Entity.GenericProperty %> 
             Dim criteria As New <%= CriteriaClassName %><%= Entity.GenericProperty %>()
-            <%= sc.Members.BuildObjectInitializer() %>
+            <%= sc.Properties.BuildObjectInitializer() %>
 
             Return DataPortal.Fetch(Of <%= BusinessClassName %><%= Entity.GenericProperty %>)(criteria)
         End Function
@@ -118,14 +118,14 @@ Namespace <%= BusinessProjectName %>
             AddHandler dp.CreateCompleted, handler
             dp.BeginCreate()
         End Sub
-    <% For Each sc As SearchCriteria In Entity.SearchCriteria() %>
+    <% For Each sc As SearchCriteria In Entity.SearchCriteria %>
     
-        Public Shared Sub <%= sc.MethodName %>Async(<%= sc.Members.BuildParametersVariables() %>, ByVal handler As EventHandler(Of DataPortalResult(Of <%= BusinessClassName %><%= Entity.GenericProperty %>)))
+        Public Shared Sub <%= sc.MethodName %>Async(<%= sc.Properties.BuildParametersVariables() %>, ByVal handler As EventHandler(Of DataPortalResult(Of <%= BusinessClassName %><%= Entity.GenericProperty %>)))
             Dim dp As New DataPortal(Of <%= BusinessClassName %><%= Entity.GenericProperty %>)()
             AddHandler dp.FetchCompleted, handler
         
             Dim criteria As New <%= CriteriaClassName %><%= Entity.GenericProperty %>()
-    <%For Each member As Member in sc.Members %>
+    <%For Each member As Member in sc.Properties %>
             criteria.<%= member.PropertyName %> = <%= member.VariableName %>
     <% Next %>
     

@@ -10,21 +10,21 @@ namespace CodeSmith.SchemaHelper
     /// </summary>
     public static class EntityExtensions
     {
-        public static List<Member> GetUniqueSearchCriteriaMembers(this Entity entity)
+        public static List<IProperty> GetUniqueSearchCriteriaMembers(this IEntity entity)
         {
-            List<Member> members = new List<Member>();
+            var members = new List<IProperty>();
 
-            foreach (SearchCriteria sc in entity.SearchCriteria(SearchCriteriaEnum.All))
+            foreach (SearchCriteria sc in entity.SearchCriteria)
             {
-                members = members.Union(sc.Members).ToList();
+                members = members.Union(sc.Properties).ToList();
             }
 
-            foreach (Member member in entity.PrimaryKey.KeyMembers)
+            foreach (IProperty property in entity.Key.Properties)
             {
-                Member member1 = member;
+                IProperty member1 = property;
                 if (members.Exists(m => m.Name == member1.Name) == false)
                 {
-                    members.Add(member);
+                    members.Add(property);
                 }
             }
 
@@ -36,67 +36,67 @@ namespace CodeSmith.SchemaHelper
         /// </summary>
         /// <param name="entity">The Entity.</param>
         /// <returns>Returns the select for the insert parameterized sql.</returns>
-        public static string BuildInsertSelectStatement(this Entity entity)
+        public static string BuildInsertSelectStatement(this IEntity entity)
         {
-            Member guidColumn = entity.PrimaryKey.KeyMember;
-            if (entity.HasGuidPrimaryKeyMember)
-            {
-                foreach (Member primaryKey in entity.PrimaryKey.KeyMembers)
-                {
-                    if (primaryKey.DataType == DbType.Guid.ToString())
-                    {
-                        guidColumn = primaryKey;
-                        break;
-                    }
-                }
-            }
+            //IProperty guidColumn = entity.PrimaryKey.KeyMember;
+            //if (entity.HasGuidPrimaryKeyMember)
+            //{
+            //    foreach (IProperty primaryKey in entity.Key.Properties)
+            //    {
+            //        if (primaryKey.DataType == DbType.Guid.ToString())
+            //        {
+            //            guidColumn = primaryKey;
+            //            break;
+            //        }
+            //    }
+            //}
 
-            if (entity.HasIdentityMember && entity.HasRowVersionMember)
-            {
-                return string.Format("; SELECT {0}, {1} FROM [{2}].[{3}] WHERE {4} = SCOPE_IDENTITY()",
-                                      entity.PrimaryKey.KeyMembers.BuildDataBaseColumns(),
-                                      entity.RowVersionMember.BuildDataBaseColumn(),
-                                      entity.Table.Owner,
-                                      entity.Table.Name,
-                                      entity.IdentityMember.ColumnName);
-            }
-            if (entity.HasIdentityMember)
-            {
-                return string.Format("; SELECT {0} FROM [{1}].[{2}] WHERE {3} = SCOPE_IDENTITY()",
-                                      entity.PrimaryKey.KeyMembers.BuildDataBaseColumns(),
-                                      entity.Table.Owner,
-                                      entity.Table.Name,
-                                      entity.IdentityMember.ColumnName);
-            }
-            if (entity.HasGuidPrimaryKeyMember && entity.HasRowVersionMember)
-            {
-                return string.Format("; SELECT {0}, {1} FROM [{2}].[{3}] WHERE {5} = {4}{5}",
-                                      entity.PrimaryKey.KeyMembers.BuildDataBaseColumns(),
-                                      entity.RowVersionMember.BuildDataBaseColumn(),
-                                      entity.Table.Owner,
-                                      entity.Table.Name,
-                                      Configuration.Instance.ParameterPrefix,
-                                      guidColumn.ColumnName);
-            }
-            if (entity.HasGuidPrimaryKeyMember && entity.PrimaryKey.KeyMembers.Count > 1)
-            {
-                return string.Format("; SELECT {0} FROM [{1}].[{2}] WHERE {4} = {3}{4}",
-                                      entity.PrimaryKey.KeyMembers.BuildDataBaseColumns(),
-                                      entity.Table.Owner,
-                                      entity.Table.Name,
-                                      Configuration.Instance.ParameterPrefix,
-                                      guidColumn.ColumnName);
-            }
-            if (entity.HasRowVersionMember)
-            {
-                return string.Format("; SELECT {0} FROM [{1}].[{2}] WHERE {3} = {4}{5}",
-                                      entity.RowVersionMember.BuildDataBaseColumn(),
-                                      entity.Table.Owner,
-                                      entity.Table.Name,
-                                      entity.PrimaryKey.KeyMember.ColumnName,
-                                      Configuration.Instance.ParameterPrefix,
-                                      entity.PrimaryKey.KeyMember.ColumnName);
-            }
+            //if (entity.HasIdentityMember && entity.HasRowVersionMember)
+            //{
+            //    return String.Format("; SELECT {0}, {1} FROM [{2}].[{3}] WHERE {4} = SCOPE_IDENTITY()",
+            //                          entity.Key.Properties.BuildDataBaseColumns(),
+            //                          entity.RowVersionMember.BuildDataBaseColumn(),
+            //                          entity.Table.Owner,
+            //                          entity.Table.Name,
+            //                          entity.IdentityMember.KeyName);
+            //}
+            //if (entity.HasIdentityMember)
+            //{
+            //    return String.Format("; SELECT {0} FROM [{1}].[{2}] WHERE {3} = SCOPE_IDENTITY()",
+            //                          entity.Key.Properties.BuildDataBaseColumns(),
+            //                          entity.Table.Owner,
+            //                          entity.Table.Name,
+            //                          entity.IdentityMember.KeyName);
+            //}
+            //if (entity.HasGuidPrimaryKeyMember && entity.HasRowVersionMember)
+            //{
+            //    return String.Format("; SELECT {0}, {1} FROM [{2}].[{3}] WHERE {5} = {4}{5}",
+            //                          entity.Key.Properties.BuildDataBaseColumns(),
+            //                          entity.RowVersionMember.BuildDataBaseColumn(),
+            //                          entity.Table.Owner,
+            //                          entity.Table.Name,
+            //                          Configuration.Instance.ParameterPrefix,
+            //                          guidColumn.KeyName);
+            //}
+            //if (entity.HasGuidPrimaryKeyMember && entity.Key.Properties.Count > 1)
+            //{
+            //    return String.Format("; SELECT {0} FROM [{1}].[{2}] WHERE {4} = {3}{4}",
+            //                          entity.Key.Properties.BuildDataBaseColumns(),
+            //                          entity.Table.Owner,
+            //                          entity.Table.Name,
+            //                          Configuration.Instance.ParameterPrefix,
+            //                          guidColumn.KeyName);
+            //}
+            //if (entity.HasRowVersionMember)
+            //{
+            //    return String.Format("; SELECT {0} FROM [{1}].[{2}] WHERE {3} = {4}{5}",
+            //                          entity.RowVersionMember.BuildDataBaseColumn(),
+            //                          entity.Table.Owner,
+            //                          entity.Table.Name,
+            //                          entity.PrimaryKey.KeyMember.KeyName,
+            //                          Configuration.Instance.ParameterPrefix,
+            //                          entity.PrimaryKey.KeyMember.KeyName);
+            //}
 
             return string.Empty;
         }
@@ -106,67 +106,67 @@ namespace CodeSmith.SchemaHelper
         /// </summary>
         /// <param name="entity">The Entity.</param>
         /// <returns>Returns the select for the update parameterized sql.</returns>
-        public static string BuildUpdateSelectStatement(this Entity entity)
+        public static string BuildUpdateSelectStatement(this IEntity entity)
         {
-            Member guidColumn = entity.PrimaryKey.KeyMember;
-            if (entity.HasGuidPrimaryKeyMember)
-            {
-                foreach (Member primaryKey in entity.PrimaryKey.KeyMembers)
-                {
-                    if (primaryKey.DataType == DbType.Guid.ToString())
-                    {
-                        guidColumn = primaryKey;
-                        break;
-                    }
-                }
-            }
+            IProperty guidColumn = entity.Key.Properties.FirstOrDefault();
+            //if (entity.HasGuidPrimaryKeyMember)
+            //{
+            //    foreach (IProperty primaryKey in entity.Key.Properties)
+            //    {
+            //        if (primaryKey.DataType == DbType.Guid.ToString())
+            //        {
+            //            guidColumn = primaryKey;
+            //            break;
+            //        }
+            //    }
+            //}
 
-            if ((entity.MembersNonIdentityPrimaryKeys.Count > 0) && entity.HasRowVersionMember)
-            {
-                return string.Format("; SELECT {0}, {1} FROM [{2}].[{3}] {4}",
-                                      entity.MembersNonIdentityPrimaryKeys.BuildDataBaseColumns(),
-                                      entity.RowVersionMember.BuildDataBaseColumn(),
-                                      entity.Table.Owner,
-                                      entity.Table.Name,
-                                      entity.PrimaryKey.KeyMembers.BuildWhereStatements(true));
-            }
-            if (entity.MembersNonIdentityPrimaryKeys.Count > 0)
-            {
-                return string.Format("; SELECT {0} FROM [{1}].[{2}] {3}",
-                    entity.MembersNonIdentityPrimaryKeys.BuildDataBaseColumns(),
-                    entity.Table.Owner,
-                    entity.Table.Name,
-                    entity.PrimaryKey.KeyMembers.BuildWhereStatements(true));
-            }
-            if (entity.HasGuidPrimaryKeyMember && entity.HasRowVersionMember)
-            {
-                return string.Format("; SELECT {0}, {1} FROM [{2}].[{3}] WHERE {5} = {4}{5}",
-                                      entity.PrimaryKey.KeyMembers.BuildDataBaseColumns(),
-                                      entity.RowVersionMember.BuildDataBaseColumn(),
-                                      entity.Table.Owner,
-                                      entity.Table.Name,
-                                      Configuration.Instance.ParameterPrefix,
-                                      guidColumn.ColumnName);
-            }
-            if (entity.HasGuidPrimaryKeyMember && entity.PrimaryKey.KeyMembers.Count > 0)
-            {
-                return string.Format("; SELECT {0} FROM [{1}].[{2}] WHERE {4} = {3}{4}",
-                                      entity.PrimaryKey.KeyMembers.BuildDataBaseColumns(),
-                                      entity.Table.Owner,
-                                      entity.Table.Name,
-                                      Configuration.Instance.ParameterPrefix,
-                                      guidColumn.ColumnName);
-            }
-            if (entity.HasRowVersionMember)
-            {
-                return string.Format("; SELECT {0} FROM [{1}].[{2}] WHERE {3} = {4}{5}",
-                    entity.RowVersionMember.BuildDataBaseColumn(),
-                    entity.Table.Owner,
-                    entity.Table.Name,
-                    entity.PrimaryKey.KeyMember.ColumnName,
-                    Configuration.Instance.ParameterPrefix,
-                    entity.PrimaryKey.KeyMember.ColumnName);
-            }
+            //if ((entity.MembersNonIdentityPrimaryKeys.Count > 0) && entity.HasRowVersionMember)
+            //{
+            //    return String.Format("; SELECT {0}, {1} FROM [{2}].[{3}] {4}",
+            //                          entity.MembersNonIdentityPrimaryKeys.BuildDataBaseColumns(),
+            //                          entity.RowVersionMember.BuildDataBaseColumn(),
+            //                          entity.Table.Owner,
+            //                          entity.Table.Name,
+            //                          entity.Key.Properties.BuildWhereStatements(true));
+            //}
+            //if (entity.MembersNonIdentityPrimaryKeys.Count > 0)
+            //{
+            //    return String.Format("; SELECT {0} FROM [{1}].[{2}] {3}",
+            //        entity.MembersNonIdentityPrimaryKeys.BuildDataBaseColumns(),
+            //        entity.Table.Owner,
+            //        entity.Table.Name,
+            //        entity.Key.Properties.BuildWhereStatements(true));
+            //}
+            //if (entity.HasGuidPrimaryKeyMember && entity.HasRowVersionMember)
+            //{
+            //    return String.Format("; SELECT {0}, {1} FROM [{2}].[{3}] WHERE {5} = {4}{5}",
+            //                          entity.Key.Properties.BuildDataBaseColumns(),
+            //                          entity.RowVersionMember.BuildDataBaseColumn(),
+            //                          entity.Table.Owner,
+            //                          entity.Table.Name,
+            //                          Configuration.Instance.ParameterPrefix,
+            //                          guidColumn.KeyName);
+            //}
+            //if (entity.HasGuidPrimaryKeyMember && entity.Key.Properties.Count > 0)
+            //{
+            //    return String.Format("; SELECT {0} FROM [{1}].[{2}] WHERE {4} = {3}{4}",
+            //                          entity.Key.Properties.BuildDataBaseColumns(),
+            //                          entity.Table.Owner,
+            //                          entity.Table.Name,
+            //                          Configuration.Instance.ParameterPrefix,
+            //                          guidColumn.KeyName);
+            //}
+            //if (entity.HasRowVersionMember)
+            //{
+            //    return String.Format("; SELECT {0} FROM [{1}].[{2}] WHERE {3} = {4}{5}",
+            //        entity.RowVersionMember.BuildDataBaseColumn(),
+            //        entity.Table.Owner,
+            //        entity.Table.Name,
+            //        entity.PrimaryKey.KeyMember.KeyName,
+            //        Configuration.Instance.ParameterPrefix,
+            //        entity.PrimaryKey.KeyMember.KeyName);
+            //}
 
             return string.Empty;
         }

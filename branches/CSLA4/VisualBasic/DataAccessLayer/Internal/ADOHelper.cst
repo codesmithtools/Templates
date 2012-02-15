@@ -1,5 +1,5 @@
 ﻿<%-- Author: Blake Niemyjski --%>
-<%@ CodeTemplate Language="VB" TargetLanguage="VB" Inherits="CodeSmith.QuickStart.DataCodeTemplate" Debug="False" CompilerVersion="v3.5" Encoding="UTF-8" Description="CSLA DataAccessLayer" %>
+<%@ CodeTemplate Language="VB" TargetLanguage="VB" Inherits="CodeSmith.QuickStart.DataCodeTemplate" Debug="False" CompilerVersion="v3.5" Encoding="UTF-8" %>
 
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\..\Common" %>
 <%@ Assembly Name="CodeSmith.QuickStart" Path="..\..\..\Common" %>
@@ -79,11 +79,11 @@ Namespace <%= DataProjectName %>
         End Function
     
         ''' <summary>
-        ''' Returns the Bytes stored in a binary column.
+        ''' Returns the Bytes stored in a binary property.
         ''' </summary>
         ''' <param name="reader">The reader.</param>
-        ''' <param name="columnName">The column name.</param>
-        ''' <returns>Bytes Stored in a column.</returns>
+        ''' <param name="columnName">The property name.</param>
+        ''' <returns>Bytes Stored in a property.</returns>
         Public Shared Function GetBytes(ByVal reader As SafeDataReader, ByVal columnName As String) As Byte()
             Using stream As MemoryStream = New MemoryStream()
                 Dim bufferSize As Integer = 1024

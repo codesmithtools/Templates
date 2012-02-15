@@ -1,15 +1,11 @@
 ﻿<%-- Author: Blake Niemyjski --%>
 <%--         Joe McPherson   --%>
-<%@ CodeTemplate Language="C#" TargetLanguage="C#" Inherits="CodeSmith.QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Encoding="UTF-8" Description="CSLA Map" %>
-
-<%@ Assembly Name="SchemaExplorer" %>
+<%@ CodeTemplate Language="C#" TargetLanguage="C#" Inherits="Generator.CSLA.EntityCodeTemplate" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\Common" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper.Extensions" Path="..\..\Common" %>
-<%@ Assembly Name="CodeSmith.QuickStart" Path="..\..\Common" %>
-
-<%@ Import Namespace="SchemaExplorer" %>
+<%@ Assembly Name="Generator.CSLA" Path="..\..\Common" %>
 <%@ Import Namespace="CodeSmith.SchemaHelper" %>
-<%@ Import Namespace="CodeSmith.QuickStart" %>
+
 			//LinqToSQL Modification
             bool cancel = false;
 			OnMapping(ref cancel);
@@ -17,37 +13,37 @@
 
             using(BypassPropertyChecks)
             {
-<% 	if(Entity.HasRowVersionMember) 
+<% 	if(Entity.ConcurrencyProperty != null) 
 	{ %>
-                <%= Entity.RowVersionMember.PropertyName %> = LinqToSQLHelper.GetBytes(DataSource, "<%= Entity.RowVersionMember.ColumnName %>");
+                <%= Entity.ConcurrencyProperty.Name %> = LinqToSQLHelper.GetBytes(DataSource, "<%= Entity.ConcurrencyProperty.KeyName %>");
 <% 	} %>
-<% 	foreach(Member member in Entity.MembersNoRowVersion) 
+<% 	foreach(IProperty property in Entity.GetProperties(PropertyType.NoConcurrency)) 
 	{ 
 		if(UseMemberVariables) 
 		{ %>
-<% 			if( member.IsNullable && member.SystemType != "System.String" && member.SystemType != "System.Byte[]") 
+<% 			if(property.IsNullable && property.SystemType != "System.String" && property.SystemType != "System.Byte[]") 
 			{%>
-                <%= member.PrivateMemberVariableName %> = DataSource.IsDBNull("<%= member.ColumnName %>") ? (<%= member.SystemType %>)null : <%if(!member.HasByteArrayColumn()) { %>DataSource.<%= member.PropertyName %>);<% } else { %>LinqToSQLHelper.GetByteArray(DataSource.<%= member.ColumnName %>);<% } %>
-<%				if (member.IsPrimaryKey && !member.IsIdentity) 
+                <%= property.PrivateMemberVariableName %> = DataSource.IsDBNull("<%= property.KeyName %>") ? (<%= property.SystemType %>)null : <%if(!property.HasByteArrayColumn()) { %>DataSource.<%= property.Name %>);<% } else { %>LinqToSQLHelper.GetByteArray(DataSource.<%= property.KeyName %>);<% } %>
+<%				if (property.IsType(PropertyType.Key) && !property.IsType(PropertyType.Identity)) 
 				{ %>
-                _original<%= member.PropertyName %> = DataSource.IsDBNull("<%= member.ColumnName %>") ? (<%= member.SystemType %>)null : <%if(!member.HasByteArrayColumn()) { %>DataSource.<%= member.PropertyName %>);<% } else { %>LinqToSQLHelper.GetByteArray(DataSource.<%= member.ColumnName %>);<% } %>
+                _original<%= property.Name %> = DataSource.IsDBNull("<%= property.KeyName %>") ? (<%= property.SystemType %>)null : <%if(!property.HasByteArrayColumn()) { %>DataSource.<%= property.Name %>);<% } else { %>LinqToSQLHelper.GetByteArray(DataSource.<%= property.KeyName %>);<% } %>
 <% 				}
 			} 
 			else 
 			{%>
-                <%= member.PrivateMemberVariableName %> = <%if(!member.HasByteArrayColumn()) { %>DataSource.<%= member.PropertyName %>);<% } else { %>LinqToSQLHelper.GetByteArray(DataSource.<%= member.ColumnName %>);<% } %>
-<%				if (member.IsPrimaryKey && !member.IsIdentity) 
+                <%= property.PrivateMemberVariableName %> = <%if(!property.HasByteArrayColumn()) { %>DataSource.<%= property.Name %>);<% } else { %>LinqToSQLHelper.GetByteArray(DataSource.<%= property.KeyName %>);<% } %>
+<%				if (property.IsType(PropertyType.Key) && !property.IsType(PropertyType.Identity)) 
 				{ %>
-                _original<%= member.PropertyName %> = <%if(!member.HasByteArrayColumn()) { %>DataSource.<%= member.PropertyName %>);<% } else { %>LinqToSQLHelper.GetByteArray(DataSource.<%= member.ColumnName %>);<% } %>
+                _original<%= property.Name %> = <%if(!property.HasByteArrayColumn()) { %>DataSource.<%= property.Name %>);<% } else { %>LinqToSQLHelper.GetByteArray(DataSource.<%= property.KeyName %>);<% } %>
 <% 				} 
 			} 
 		} 
 		else 
 		{ %>
-                LoadProperty(<%= member.PrivateMemberVariableName %>Property, <%if(!member.HasByteArrayColumn()) { %>DataSource.<%= member.PropertyName %>);<% } else { %>LinqToSQLHelper.GetByteArray(DataSource.<%= member.ColumnName %>));<% } %>
-<%			if (member.IsPrimaryKey && !member.IsIdentity) 
+                LoadProperty(<%= property.PrivateMemberVariableName %>Property, <%if(!property.HasByteArrayColumn()) { %>DataSource.<%= property.Name %>);<% } else { %>LinqToSQLHelper.GetByteArray(DataSource.<%= property.KeyName %>));<% } %>
+<%			if (property.IsType(PropertyType.Key) && !property.IsType(PropertyType.Identity)) 
 			{ %>
-                LoadProperty(_original<%= member.PropertyName %>Property, <%if(!member.HasByteArrayColumn()) { %>DataSource.<%= member.PropertyName %>);<% } else { %>LinqToSQLHelper.GetByteArray(DataSource.<%= member.ColumnName %>));<% } %>
+                LoadProperty(_original<%= property.Name %>Property, <%if(!property.HasByteArrayColumn()) { %>DataSource.<%= property.Name %>);<% } else { %>LinqToSQLHelper.GetByteArray(DataSource.<%= property.KeyName %>));<% } %>
 <% 			} 
 		} 
 	} %>

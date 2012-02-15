@@ -1,15 +1,11 @@
 ﻿<%-- Author: Blake Niemyjski --%>
-<%@ CodeTemplate Language="C#" TargetLanguage="C#" Inherits="CodeSmith.QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Encoding="UTF-8" Description="CSLA Map" %>
-
-<%@ Assembly Name="SchemaExplorer" %>
+<%@ CodeTemplate Language="C#" TargetLanguage="C#" Inherits="Generator.CSLA.EntityCodeTemplate" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\Common" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper.Extensions" Path="..\..\Common" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper.CSharpExtensions" Path="..\..\Common" %>
-<%@ Assembly Name="CodeSmith.QuickStart" Path="..\..\Common" %>
-
-<%@ Import Namespace="SchemaExplorer" %>
+<%@ Assembly Name="Generator.CSLA" Path="..\..\Common" %>
 <%@ Import Namespace="CodeSmith.SchemaHelper" %>
-<%@ Import Namespace="CodeSmith.QuickStart" %>
+
 <% if(!RenderOptionalContent) { %>  
             <%= ChildBusinessClassName %> item = <%= BusinessProjectName %>.<%= ChildBusinessClassName %>.New<%= ChildBusinessClassName %>();
 

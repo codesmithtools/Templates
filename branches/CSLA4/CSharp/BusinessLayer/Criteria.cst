@@ -1,5 +1,5 @@
 ﻿<%-- Author: Blake Niemyjski --%>
-<%@ CodeTemplate Language="C#" TargetLanguage="C#" OutputType="None" Inherits="CodeSmith.QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Encoding="UTF-8" Description="CSLA Criteria" %>
+<%@ CodeTemplate Language="C#" TargetLanguage="C#" OutputType="None" Inherits="Generator.CSLA.EntityCodeTemplate" %>
 
 <%@ Register Name="Criteria" Template="Internal\Criteria.cst" %>
 <%@ Register Name="CriteriaGenerated" Template="Internal\Criteria.Generated.cst" %>
@@ -7,13 +7,10 @@
 
 <%@ Assembly Name="CodeSmith.CustomProperties" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\Common" %>
-<%@ Assembly Name="CodeSmith.QuickStart" Path="..\..\Common" %>
-<%@ Assembly Name="SchemaExplorer" %>
+<%@ Assembly Name="Generator.CSLA" Path="..\..\Common" %>
 
 <%@ Import Namespace="CodeSmith.CustomProperties" %>
 <%@ Import Namespace="CodeSmith.SchemaHelper" %>
-<%@ Import Namespace="CodeSmith.QuickStart" %>
-<%@ Import Namespace="SchemaExplorer" %>
 
 <script runat="template">
 
@@ -26,7 +23,7 @@ public override void Render(System.IO.TextWriter writer)
     Criteria criteria = this.Create<Criteria>();
     this.CopyPropertiesTo(criteria);
     
-    string parentFileName = System.IO.Path.Combine(this.Location, string.Format("Criteria\\{0}.cs", criteria.BusinessClassName));
+    string parentFileName = System.IO.Path.Combine(this.Location, String.Format("Criteria\\{0}.cs", criteria.BusinessClassName));
     if (!System.IO.File.Exists(parentFileName))
     {
         criteria.RenderToFile(parentFileName, false);
@@ -34,7 +31,7 @@ public override void Render(System.IO.TextWriter writer)
     
     #region Criteria.Generated
     
-    string fileName = System.IO.Path.Combine(Location, string.Format("Criteria\\{0}.Generated.cs", criteria.BusinessClassName));
+    string fileName = System.IO.Path.Combine(Location, String.Format("Criteria\\{0}.Generated.cs", criteria.BusinessClassName));
     
     CriteriaGenerated criteriaGenerated = this.Create<CriteriaGenerated>();
     this.CopyPropertiesTo(criteriaGenerated);
@@ -58,11 +55,11 @@ public override bool OnTableChanging()
 {
     if (string.IsNullOrEmpty(BusinessClassName))
     {
-        BusinessClassName = string.Concat(Entity.ClassName, "Criteria");
+        BusinessClassName = string.Concat(Entity.Name, "Criteria");
     }
 
     if (string.IsNullOrEmpty(CriteriaClassName) || CriteriaClassName.Equals("Criteria", StringComparison.InvariantCultureIgnoreCase))
-        CriteriaClassName = String.Concat(Entity.ClassName, "Criteria");
+        CriteriaClassName = String.Concat(Entity.Name, "Criteria");
 
     return false;
 }

@@ -1,32 +1,28 @@
 ﻿<%-- Author: Blake Niemyjski --%>
 <%-- 		 Joe McPherson   --%>
-<%@ CodeTemplate Language="C#" TargetLanguage="C#" Inherits="CodeSmith.QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Encoding="UTF-8" Description="CSLA Map" %>
-
-<%@ Assembly Name="SchemaExplorer" %>
+<%@ CodeTemplate Language="C#" TargetLanguage="C#" Inherits="Generator.CSLA.EntityCodeTemplate" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\Common" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper.Extensions" Path="..\..\Common" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper.CSharpExtensions" Path="..\..\Common" %>
-<%@ Assembly Name="CodeSmith.QuickStart" Path="..\..\Common" %>
-
-<%@ Import Namespace="SchemaExplorer" %>
+<%@ Assembly Name="Generator.CSLA" Path="..\..\Common" %>
 <%@ Import Namespace="CodeSmith.SchemaHelper" %>
-<%@ Import Namespace="CodeSmith.QuickStart" %>
+
 			//LinqToSQL Modification
 			bool cancel = false;
             OnChildFetching(criteria, ref cancel);
             if (cancel) return;
 			
-			// Get <%= StringUtil.ToPascalCase(Entity.Table.Name) %> data for a single criteria
+			// Get <%= Entity.Name %> data for a single criteria
             using (var ctx = ContextManager<DAL.PetshopDataContext>.GetManager(LinqToSQLHelper.ConnectionString, true))
 			{
 <%	string PrimaryKeyCriteria = "";	
 	string PrimaryKeyFields = "";
  	int memberCount = 0 ; 
-	foreach (Member member in Entity.PrimaryKey.KeyMembers) 
+	foreach (IProperty property in Entity.Key.Properties) 
 	{
-		PrimaryKeyCriteria += "criteria." + member.PropertyName.ToString() ;
-		PrimaryKeyFields += member.PropertyName.ToString() ;
-		if ( memberCount < (Entity.PrimaryKey.KeyMembers.Count - 1))
+		PrimaryKeyCriteria += "criteria." + property.Name.ToString() ;
+		PrimaryKeyFields += property.Name.ToString() ;
+		if ( memberCount < (Entity.Key.Properties.Count - 1))
 		{
 			PrimaryKeyCriteria += ", " ;
 			PrimaryKeyFields += ", ";
@@ -34,7 +30,7 @@
  		memberCount = memberCount + 1 ; 
  	} 
 %>		
-				DAL.<%= StringUtil.ToPascalCase(Entity.Table.Name) %> item = ctx.DataContext.<%= StringUtil.ToPascalCase(Entity.Table.Name) %>.GetByKey(<%=PrimaryKeyCriteria%>);
+				DAL.<%= Entity.Name %> item = ctx.DataContext.<%= Entity.Name %>.GetByKey(<%=PrimaryKeyCriteria%>);
 	
 				// Raise an error if the record was not found.  Otherwise, map the data retrieved to the current object
 				if (item == null)

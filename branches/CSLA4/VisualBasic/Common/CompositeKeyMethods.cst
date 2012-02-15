@@ -9,7 +9,7 @@
 <%@ Import Namespace="SchemaExplorer" %>
 <%@ Import Namespace="CodeSmith.SchemaHelper" %>
 <%@ Import Namespace="CodeSmith.QuickStart" %>
-    <% If(Entity.PrimaryKey.IsCompositeKey) Then %>
+    <% If(Entity.Key.IsComposite) Then %>
 
 #Region "Protected Overriden Method(s)"
         

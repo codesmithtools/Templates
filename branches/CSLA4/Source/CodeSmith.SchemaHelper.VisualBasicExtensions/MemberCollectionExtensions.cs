@@ -105,7 +105,7 @@ namespace CodeSmith.SchemaHelper
                 // Resolve property Name from relationship.
                 if(isChildInsertUpdate && member.IsForeignKey)
                 {
-                    foreach (Association association in member.Entity.AssociatedManyToOne)
+                    foreach (Association association in member.Entity.Associations.Where(a => a.AssociationType == AssociationType.ManyToOne))
                     {
                         foreach (AssociationMember associationMember in association)
                         {

@@ -47,7 +47,7 @@ namespace CodeSmith.SchemaHelper
         /// <returns></returns>
         public static string ResolveAssociationPropertyVariable(this Member member)
         {
-            foreach (Association association in member.Entity.AssociatedManyToOne.Distinct())
+            foreach (Association association in member.Entity.Associations.Where(a => a.AssociationType == AssociationType.ManyToOne).Distinct())
             {
                 foreach (AssociationMember associationMember in association)
                 {
@@ -72,7 +72,7 @@ namespace CodeSmith.SchemaHelper
         /// <returns></returns>
         public static string ResolveAssociationPropertyClassName(this Member member)
         {
-            foreach (Association association in member.Entity.AssociatedManyToOne.Distinct())
+            foreach (Association association in member.Entity.Associations.Where(a => a.AssociationType == AssociationType.ManyToOne).Distinct())
             {
                 foreach (AssociationMember associationMember in association)
                 {
@@ -93,7 +93,7 @@ namespace CodeSmith.SchemaHelper
         /// <returns></returns>
         public static string ResolveAssociationPropertyVariableWithChildProperty(this Member member)
         {
-            foreach (Association association in member.Entity.AssociatedManyToOne.Distinct())
+            foreach (Association association in member.Entity.Associations.Where(a => a.AssociationType == AssociationType.ManyToOne).Distinct())
             {
                 foreach (AssociationMember associationMember in association)
                 {

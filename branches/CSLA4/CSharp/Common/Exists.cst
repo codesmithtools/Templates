@@ -1,22 +1,16 @@
 ﻿<%-- Author: Blake Niemyjski --%>
-<%@ CodeTemplate Language="C#" TargetLanguage="C#" Inherits="CodeSmith.QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Encoding="UTF-8" Description="CSLA Map" %>
-
-<%@ Assembly Name="SchemaExplorer" %>
+<%@ CodeTemplate Language="C#" TargetLanguage="C#" Inherits="Generator.CSLA.EntityCodeTemplate" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\Common" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper.Extensions" Path="..\..\Common" %>
-<%@ Assembly Name="CodeSmith.QuickStart" Path="..\..\Common" %>
-
-<%@ Import Namespace="SchemaExplorer" %>
+<%@ Assembly Name="Generator.CSLA" Path="..\..\Common" %>
 <%@ Import Namespace="CodeSmith.SchemaHelper" %>
-<%@ Import Namespace="CodeSmith.QuickStart" %>
 
-        #region Exists Command
+
 <% if(IncludeSilverlightSupport) { %>
 #if !SILVERLIGHT
 <% } %>
-
         /// <summary>
-        /// Determines if a record exists in the <%=Entity.Table.Name%> table in the database for the specified criteria. 
+        /// Determines if a record exists in the <%= Entity.EntityKeyName %> table in the database for the specified criteria. 
         /// </summary>
         /// <param name="criteria">The criteria parameter is an <see cref="<%=BusinessClassName%><%= Entity.GenericProperty %>"/> object.</param>
         /// <returns>A boolean value of true is returned if a record is found.</returns>
@@ -24,17 +18,14 @@
         {
             return <%= BusinessProjectName %>.ExistsCommand.Execute(criteria);
 		}
-
-<% if(IncludeSilverlightSupport) { %>
-#else
-
+        
+        /// <summary>
+        /// Determines if a record exists in the <%= Entity.EntityKeyName %> table in the database for the specified criteria. 
+        /// </summary>
         public static void Exists(<%= CriteriaClassName %><%= Entity.GenericProperty %> criteria, EventHandler<DataPortalResult<ExistsCommand>> handler)
         {
             <%= BusinessProjectName %>.ExistsCommand.Execute(criteria, handler);
         }
-
+<% if(IncludeSilverlightSupport) { %>
 #endif
-
 <% } %>
-        #endregion
-

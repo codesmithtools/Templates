@@ -1,17 +1,5 @@
 ﻿<%-- Author: Blake Niemyjski --%>
-<%@ CodeTemplate Language="C#" TargetLanguage="C#" OutputType="None" Debug="False" Inherits="CodeSmith.QuickStart.EntityMasterCodeTemplate" CompilerVersion="v3.5" Encoding="UTF-8" Description="CSLA Entities" %>
-
-<%@ Assembly Name="CodeSmith.CustomProperties" %>
-<%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\Common" %>
-<%@ Assembly Name="CodeSmith.QuickStart" Path="..\..\Common" %>
-<%@ Assembly Name="SchemaExplorer" %>
-
-<%@ Import Namespace="CodeSmith.CustomProperties" %>
-<%@ Import Namespace="CodeSmith.SchemaHelper" %>
-<%@ Import Namespace="CodeSmith.QuickStart" %>
-<%@ Import Namespace="SchemaExplorer" %>
-<%@ Import Namespace="System.Collections.Generic" %>
-
+<%@ CodeTemplate Language="C#" TargetLanguage="C#" OutputType="None" Inherits="Generator.CSLA.EntityMasterCodeTemplate" %>
 <%@ Register Name="CommandObjectTemplate" Template="CommandObject.cst" %>
 <%@ Register Name="CriteriaTemplate" Template="Criteria.cst" %>
 <%@ Register Name="DynamicListBaseTemplate" Template="DynamicListBase.cst" %>
@@ -27,12 +15,19 @@
 <%@ Register Name="ReadOnlyListTemplate" Template="ReadOnlyList.cst" %>
 <%@ Register Name="ReadOnlyRootTemplate" Template="ReadOnlyRoot.cst" %>
 <%@ Register Name="SwitchableObjectTemplate" Template="SwitchableObject.cst" %>
-
 <%@ Register Name="ADOHelperTemplate" Template="Internal\ADOHelper.cst" %>
 <%@ Register Name="LinqToSQLHelperTemplate" Template="Internal\LinqToSQLHelper.cst" %>
 <%@ Register Name="FactoryNamesTemplate" Template="Internal\FactoryNames.cst" %>
 <%@ Register Name="ExistsCommandTemplate" Template="Internal\ExistsCommand.cst" %>
 <%@ Register Name="AsyncChildLoaderTemplate" Template="Internal\AsyncChildLoader.cst" %>
+
+<%@ Assembly Name="CodeSmith.CustomProperties" %>
+<%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\Common" %>
+<%@ Assembly Name="Generator.CSLA" Path="..\..\Common" %>
+
+<%@ Import Namespace="CodeSmith.CustomProperties" %>
+<%@ Import Namespace="CodeSmith.SchemaHelper" %>
+<%@ Import Namespace="System.Collections.Generic" %>
 
 <% Generate(); %>
 

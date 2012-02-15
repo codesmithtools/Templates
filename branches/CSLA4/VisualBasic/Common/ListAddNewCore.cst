@@ -22,8 +22,8 @@
                 End If
     <%  Dim list As New System.Collections.Generic.List(Of String) 
         Dim isObjectFactory As Boolean = DataAccessImplementation = DataAccessMethod.ObjectFactoryNone OrElse DataAccessImplementation = DataAccessMethod.ObjectFactoryParameterizedSQL OrElse DataAccessImplementation = DataAccessMethod.ObjectFactoryStoredProcedures
-        For Each member As Member In Entity.Members
-        If member.IsForeignKey AndAlso Not member.IsIdentity Then
+        For Each member As Member In Entity.Properties
+        If member.IsType(PropertyType.Foreign) AndAlso Not member.IsType(PropertyType.Identity) Then
     
             Dim className As String = member.ResolveAssociationPropertyClassName()
             If String.IsNullOrEmpty(className) Then
@@ -61,8 +61,8 @@
                         End If
     <%  Dim list As New System.Collections.Generic.List(Of String) 
         Dim isObjectFactory As Boolean = DataAccessImplementation = DataAccessMethod.ObjectFactoryNone OrElse DataAccessImplementation = DataAccessMethod.ObjectFactoryParameterizedSQL OrElse DataAccessImplementation = DataAccessMethod.ObjectFactoryStoredProcedures
-        For Each member As Member In Entity.Members
-        If member.IsForeignKey AndAlso Not member.IsIdentity Then
+        For Each member As Member In Entity.Properties
+        If member.IsType(PropertyType.Foreign) AndAlso Not member.IsType(PropertyType.Identity) Then
     
             Dim className As String = member.ResolveAssociationPropertyClassName()
             If String.IsNullOrEmpty(className) Then

@@ -1,5 +1,5 @@
 ﻿<%-- Author: Blake Niemyjski --%>
-<%@ CodeTemplate Language="C#" TargetLanguage="C#" OutputType="None" Inherits="CodeSmith.QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Encoding="UTF-8" Description="CSLA DynamicRoot" %>
+<%@ CodeTemplate Language="C#" TargetLanguage="C#" OutputType="None" Inherits="Generator.CSLA.EntityCodeTemplate" %>
 
 <%@ Register Name="DynamicRoot" Template="Internal\DynamicRoot.cst" %>
 <%@ Register Name="DynamicRootDataAccess" Template="Internal\DynamicRoot.DataAccess.cst" %>
@@ -12,13 +12,10 @@
 
 <%@ Assembly Name="CodeSmith.CustomProperties" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\Common" %>
-<%@ Assembly Name="CodeSmith.QuickStart" Path="..\..\Common" %>
-<%@ Assembly Name="SchemaExplorer" %>
+<%@ Assembly Name="Generator.CSLA" Path="..\..\Common" %>
 
 <%@ Import Namespace="CodeSmith.CustomProperties" %>
 <%@ Import Namespace="CodeSmith.SchemaHelper" %>
-<%@ Import Namespace="CodeSmith.QuickStart" %>
-<%@ Import Namespace="SchemaExplorer" %>
 
 <script runat="template">
 
@@ -31,7 +28,7 @@ public override void Render(System.IO.TextWriter writer)
     DynamicRoot dynamicRoot = this.Create<DynamicRoot>();
     this.CopyPropertiesTo(dynamicRoot);
     
-    string parentFileName = System.IO.Path.Combine(this.Location, string.Format("Entities\\{0}.cs", dynamicRoot.BusinessClassName));
+    string parentFileName = System.IO.Path.Combine(this.Location, String.Format("Entities\\{0}.cs", dynamicRoot.BusinessClassName));
     if (!System.IO.File.Exists(parentFileName))
     {
         dynamicRoot.RenderToFile(parentFileName, false);
@@ -39,7 +36,7 @@ public override void Render(System.IO.TextWriter writer)
     
     #region DynamicRoot.Generated
     
-    string fileName = System.IO.Path.Combine(Location, string.Format("Entities\\{0}.Generated.cs", dynamicRoot.BusinessClassName));
+    string fileName = System.IO.Path.Combine(Location, String.Format("Entities\\{0}.Generated.cs", dynamicRoot.BusinessClassName));
     
     DynamicRootGenerated dynamicRootGenerated = this.Create<DynamicRootGenerated>();
     this.CopyPropertiesTo(dynamicRootGenerated);
@@ -50,7 +47,7 @@ public override void Render(System.IO.TextWriter writer)
     
     #region DynamicRoot.DataAccess
     
-    fileName = System.IO.Path.Combine(Location, string.Format("Entities\\{0}.DataAccess.cs", dynamicRoot.BusinessClassName));
+    fileName = System.IO.Path.Combine(Location, String.Format("Entities\\{0}.DataAccess.cs", dynamicRoot.BusinessClassName));
     if(DataAccessImplementation == DataAccessMethod.None)
     {
         DynamicRootDataAccess dynamicRootDataAccess = this.Create<DynamicRootDataAccess>();
@@ -80,7 +77,7 @@ public override void Render(System.IO.TextWriter writer)
         dynamicRootDataAccessStoredProcedures.RenderToFile(fileName, parentFileName, true);
 
         //StoredProcedures
-        fileName = System.IO.Path.Combine(Location, string.Format("Entities\\{0}.StoredProcedures.sql", dynamicRoot.BusinessClassName));
+        fileName = System.IO.Path.Combine(Location, String.Format("Entities\\{0}.StoredProcedures.sql", dynamicRoot.BusinessClassName));
         SqlStoredProcedures sqlStoredProcedures = this.Create<SqlStoredProcedures>();
         this.CopyPropertiesTo(sqlStoredProcedures);
         sqlStoredProcedures.DataProjectName = "Not needed for sql stored procedures.";

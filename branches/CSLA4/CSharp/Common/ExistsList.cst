@@ -1,39 +1,31 @@
 ﻿<%-- Author: Blake Niemyjski --%>
-<%@ CodeTemplate Language="C#" TargetLanguage="C#" Inherits="CodeSmith.QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Encoding="UTF-8" Description="CSLA Map" %>
-
-<%@ Assembly Name="SchemaExplorer" %>
+<%@ CodeTemplate Language="C#" TargetLanguage="C#" Inherits="Generator.CSLA.EntityCodeTemplate" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\Common" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper.Extensions" Path="..\..\Common" %>
-<%@ Assembly Name="CodeSmith.QuickStart" Path="..\..\Common" %>
-
-<%@ Import Namespace="SchemaExplorer" %>
+<%@ Assembly Name="Generator.CSLA" Path="..\..\Common" %>
 <%@ Import Namespace="CodeSmith.SchemaHelper" %>
-<%@ Import Namespace="CodeSmith.QuickStart" %>
 
-        #region Exists Command
 
+<% if(IncludeSilverlightSupport) { %>
+#if !SILVERLIGHT
+<% } %>
         /// <summary>
         /// Determines if a record exists in the <%=ChildBusinessClassName%><%= Entity.GenericProperty %> in the database for the specified criteria. 
         /// </summary>
         /// <param name="criteria">The criteria parameter is a <see cref="<%=BusinessClassName%><%= Entity.GenericProperty %>"/> object.</param>
         /// <returns>A boolean value of true is returned if a record is found.</returns>
-<% if(IncludeSilverlightSupport) { %>
-#if !SILVERLIGHT
-<% } %>
         public static bool Exists(<%= CriteriaClassName %><%= Entity.GenericProperty %> criteria)
         {
             return <%= BusinessProjectName %>.<%= ChildBusinessClassName %>.Exists(criteria);
         }
 
-<% if(IncludeSilverlightSupport) { %>
-#else
-
+        /// <summary>
+        /// Determines if a record exists in the <%=ChildBusinessClassName%><%= Entity.GenericProperty %> in the database for the specified criteria. 
+        /// </summary>
         public static void Exists(<%= CriteriaClassName %><%= Entity.GenericProperty %> criteria, EventHandler<DataPortalResult<ExistsCommand>> handler)
         {
             <%= BusinessProjectName %>.<%= ChildBusinessClassName %>.Exists(criteria,handler);
         }
-
+<% if(IncludeSilverlightSupport) { %>
 #endif
 <% } %>
-        #endregion
-

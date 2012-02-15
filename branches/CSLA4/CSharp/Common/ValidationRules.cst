@@ -1,15 +1,10 @@
 ﻿<%-- Author: Blake Niemyjski --%>
-<%@ CodeTemplate Language="C#" TargetLanguage="C#" Inherits="CodeSmith.QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Encoding="UTF-8" Description="CSLA Map" %>
-
-<%@ Assembly Name="SchemaExplorer" %>
+<%@ CodeTemplate Language="C#" TargetLanguage="C#" Inherits="Generator.CSLA.EntityCodeTemplate" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\Common" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper.Extensions" Path="..\..\Common" %>
-<%@ Assembly Name="CodeSmith.QuickStart" Path="..\..\Common" %>
-
-<%@ Import Namespace="SchemaExplorer" %>
+<%@ Assembly Name="Generator.CSLA" Path="..\..\Common" %>
 <%@ Import Namespace="CodeSmith.SchemaHelper" %>
-<%@ Import Namespace="CodeSmith.QuickStart" %>
-        #region Business Rules
+
 
         /// <summary>
         /// Contains the Codesmith generated validation rules.
@@ -22,20 +17,18 @@
             if(AddBusinessValidationRules())
                 return;
 
-<%     foreach(Member member in Entity.MembersNoRowVersion){ %>
-<% if(member.SystemType == "System.String" ) { %>
-<% if(!member.IsNullable) { %>
+<%     foreach(IProperty property in Entity.GetProperties(PropertyType.NoConcurrency)){ %>
+<% if(property.SystemType == "System.String" ) { %>
+<% if(!property.IsNullable) { %>
 <% if(IsCSLA40) { %>
-            BusinessRules.AddRule(new Csla.Rules.CommonRules.Required(<%= member.PrivateMemberVariableName %>Property));
+            BusinessRules.AddRule(new Csla.Rules.CommonRules.Required(<%= property.PrivateMemberVariableName %>IProperty));
 <% } else { %>
-            ValidationRules.AddRule(CommonRules.StringRequired, <%= member.PrivateMemberVariableName %>Property);
+            ValidationRules.AddRule(CommonRules.StringRequired, <%= property.PrivateMemberVariableName %>IProperty);
 <% } }
-if(!member.ExcludeBusinessSizeRule()) { %>
+if(!property.ExcludeBusinessSizeRule()) { %>
 <% if(IsCSLA40) { %>
-            BusinessRules.AddRule(new Csla.Rules.CommonRules.MaxLength(<%= member.PrivateMemberVariableName %>Property, <%= member.Size %>));
+            BusinessRules.AddRule(new Csla.Rules.CommonRules.MaxLength(<%= property.PrivateMemberVariableName %>IProperty, <%= property.Size %>));
 <% } else { %>
-            ValidationRules.AddRule(CommonRules.StringMaxLength, new CommonRules.MaxLengthRuleArgs(<%= member.PrivateMemberVariableName %>Property, <%= member.Size %>));
+            ValidationRules.AddRule(CommonRules.StringMaxLength, new CommonRules.MaxLengthRuleArgs(<%= property.PrivateMemberVariableName %>IProperty, <%= property.Size %>));
 <% } } } } %>
         }
-
-        #endregion
