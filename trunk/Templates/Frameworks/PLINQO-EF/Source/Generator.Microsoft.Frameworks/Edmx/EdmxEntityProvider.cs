@@ -107,7 +107,7 @@ namespace Generator.Microsoft.Frameworks
 
                 if (Configuration.Instance.ExcludeRegexIsMatch(entity.Name))
                 {
-                    Trace.WriteLine(string.Format("Skipping EntityType: '{0}', the EntityType was excluded!", entity.Name));
+                    Trace.WriteLine(String.Format("Skipping EntityType: '{0}', the EntityType was excluded!", entity.Name));
 
                     EntityStore.Instance.ExcludedEntityCollection.Add(entity.Name, new ConceptualEntity(entity, conceptualNamespace));
                     continue;
@@ -127,7 +127,7 @@ namespace Generator.Microsoft.Frameworks
 
                 if (Configuration.Instance.ExcludeRegexIsMatch(entity.Name))
                 {
-                    Trace.WriteLine(string.Format("Skipping EntityType: '{0}', the EntityType was excluded!", entity.Name));
+                    Trace.WriteLine(String.Format("Skipping EntityType: '{0}', the EntityType was excluded!", entity.Name));
 
                     EntityStore.Instance.ExcludedEntityCollection.Add(entity.Name, new FunctionEntity(entity, conceptualNamespace));
                     continue;
@@ -147,7 +147,7 @@ namespace Generator.Microsoft.Frameworks
 
                 if (Configuration.Instance.ExcludeRegexIsMatch(entity.Name))
                 {
-                    Trace.WriteLine(string.Format("Skipping EntityType: '{0}', the EntityType was excluded!", entity.Name));
+                    Trace.WriteLine(String.Format("Skipping EntityType: '{0}', the EntityType was excluded!", entity.Name));
 
                     EntityStore.Instance.ExcludedEntityCollection.Add(entity.Name, new ComplexEntity(entity, conceptualNamespace));
                     continue;

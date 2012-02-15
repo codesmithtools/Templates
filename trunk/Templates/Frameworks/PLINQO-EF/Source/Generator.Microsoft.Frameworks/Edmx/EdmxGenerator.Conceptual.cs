@@ -55,7 +55,7 @@ namespace Generator.Microsoft.Frameworks
             // Remove extra properties values.
             var properties = from property in entityType.Properties
                              where !(from prop in entity.Properties select prop.KeyName).Contains(property.Name) &&
-                             _removedStorageEntityProperties.Contains(string.Format(PROPERTY_KEY, entity.EntityKeyName, property.Name).ToLower()) // And it has been removed from the storage model.
+                             _removedStorageEntityProperties.Contains(String.Format(PROPERTY_KEY, entity.EntityKeyName, property.Name).ToLower()) // And it has been removed from the storage model.
                              select property;
 
             // Remove all of the key properties that don't exist in the table entity.
@@ -165,12 +165,12 @@ namespace Generator.Microsoft.Frameworks
                 if (entity.IsStronglyTypedAssociatedEntity)
                 {
                     function.EntitySet = entitySetName;
-                    function.ReturnType = string.Format("Collection({0}.{1})", ConceptualSchema.Namespace, entitySetName);
+                    function.ReturnType = String.Format("Collection({0}.{1})", ConceptualSchema.Namespace, entitySetName);
                 }
                 else if (function.IsComplexType(ConceptualSchema.Namespace) && ConceptualSchema.ComplexTypes.Exists(complexTypeName) && entity.Properties.Count > 0)
                 {
                     function.EntitySet = null;
-                    function.ReturnType = string.Format("Collection({0}.{1})", ConceptualSchema.Namespace, complexTypeName);
+                    function.ReturnType = String.Format("Collection({0}.{1})", ConceptualSchema.Namespace, complexTypeName);
                     CreateConceptualComplexType(entity, complexTypeName);
                 }
                 else if (!string.IsNullOrEmpty(type) && !SystemTypeMapper.EfConceptualTypeToSystemType.ContainsKey(type))
@@ -182,13 +182,13 @@ namespace Generator.Microsoft.Frameworks
             else if (entity.IsStronglyTypedAssociatedEntity)
             {
                 function.EntitySet = entitySetName;
-                function.ReturnType = string.Format("Collection({0}.{1})", ConceptualSchema.Namespace, entitySetName);
+                function.ReturnType = String.Format("Collection({0}.{1})", ConceptualSchema.Namespace, entitySetName);
             }
             else if(entity.Properties.Count > 0)
             {
                 function.ReturnType = null;
                 //By default create a new ComplexType for a procedure's resultset if it contains more a column in the result set.
-                function.ReturnType = string.Format("Collection({0}.{1}Result)", ConceptualSchema.Namespace, ResolveEntityMappedName(entity.EntityKey(), entity.Name));
+                function.ReturnType = String.Format("Collection({0}.{1}Result)", ConceptualSchema.Namespace, ResolveEntityMappedName(entity.EntityKey(), entity.Name));
                 CreateConceptualComplexType(entity);
             }
             else
@@ -598,7 +598,7 @@ namespace Generator.Microsoft.Frameworks
                 var entityProperty = entityType.Properties.Where(p => propertyName.Equals(p.Name, StringComparison.InvariantCultureIgnoreCase) || property.KeyName.Equals(p.Name, StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault();
                 if (entityProperty == null)
                 {
-                    if (ExcludeProperty(property) || !isNewEntityType && !_newStorageEntityProperties.Contains(string.Format("{0}-{1}", entity.Name, property.Name)))
+                    if (ExcludeProperty(property) || !isNewEntityType && !_newStorageEntityProperties.Contains(String.Format("{0}-{1}", entity.Name, property.Name)))
                         continue;
 
                     entityProperty = new EntityProperty() { Name = ResolveEntityPropertyMappedName(entity.Name, property.KeyName, property.Name) };
@@ -683,17 +683,17 @@ namespace Generator.Microsoft.Frameworks
                     processed.Add(property.Name);
             }
 
-            // Remove extra properties contained in the ComplexType that are not in the IEntity.
+            // Remove extra properties contained in the ComplexType that are not in the Entity.
             propertiesToRemove.AddRange(from property in type.Properties
                                         where
                                             !(from prop in entity.Properties select prop.KeyName).Contains(property.Name) &&
-                                            _removedStorageEntityProperties.Contains(string.Format(PROPERTY_KEY, entity.EntityKeyName, property.Name).ToLower()) && // And it has been removed from the storage model.
+                                            _removedStorageEntityProperties.Contains(String.Format(PROPERTY_KEY, entity.EntityKeyName, property.Name).ToLower()) && // And it has been removed from the storage model.
                                             !propertiesToRemove.Contains(property)
                                         select property);
 
             if (entityType != null)
             {
-                // Remove extra properties contained in the ComplexType that are not in the IEntity.
+                // Remove extra properties contained in the ComplexType that are not in the Entity.
                 propertiesToRemove.AddRange(from property in type.Properties
                                             where !(from prop in entityType.Properties select entityType.Name).Contains(property.Name) && !propertiesToRemove.Contains(property)
                                             select property);
@@ -716,7 +716,7 @@ namespace Generator.Microsoft.Frameworks
                 var entityProperty = type.Properties.Where(p => propertyName.Equals(p.Name, StringComparison.InvariantCultureIgnoreCase) || property.KeyName.Equals(p.Name, StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault();
                 if (entityProperty == null)
                 {
-                    if (ExcludeProperty(property) && !_newStorageEntityProperties.Contains(string.Format("{0}-{1}", entity.Name, property.Name)))
+                    if (ExcludeProperty(property) && !_newStorageEntityProperties.Contains(String.Format("{0}-{1}", entity.Name, property.Name)))
                         continue;
 
                     entityProperty = new ComplexTypeProperty() { Name = ResolveEntityPropertyMappedName(entity.Name, property.KeyName, property.Name) };

@@ -78,7 +78,7 @@ namespace Generator.Microsoft.Frameworks
         {
             if (_mappingEntitys.Contains(entity.Name))
             {
-                Debug.WriteLine(string.Format("Already Processed Mapping Model Entity {0}", entity.Name), MappingCategory);
+                Debug.WriteLine(String.Format("Already Processed Mapping Model Entity {0}", entity.Name), MappingCategory);
                 return;
             }
 
@@ -91,8 +91,8 @@ namespace Generator.Microsoft.Frameworks
                 (e.EntityTypeMappings.Count > 0 &&
                     e.EntityTypeMappings.Count(et => et.TypeName.Equals(string.Concat(ConceptualSchema.Namespace, ".", entity.Name), StringComparison.InvariantCultureIgnoreCase)) > 0 ||
                     e.EntityTypeMappings.Count(et => et.TypeName.Equals(string.Concat(ConceptualSchema.Namespace, ".", entity.EntityKeyName), StringComparison.InvariantCultureIgnoreCase)) > 0 ||
-                    e.EntityTypeMappings.Count(et => et.TypeName.Equals(string.Format("IsTypeOf({0}.{1})", ConceptualSchema.Namespace, entity.Name), StringComparison.InvariantCultureIgnoreCase)) > 0 ||
-                    e.EntityTypeMappings.Count(et => et.TypeName.Equals(string.Format("IsTypeOf({0}.{1})", ConceptualSchema.Namespace, entity.EntityKeyName), StringComparison.InvariantCultureIgnoreCase)) > 0 ||
+                    e.EntityTypeMappings.Count(et => et.TypeName.Equals(String.Format("IsTypeOf({0}.{1})", ConceptualSchema.Namespace, entity.Name), StringComparison.InvariantCultureIgnoreCase)) > 0 ||
+                    e.EntityTypeMappings.Count(et => et.TypeName.Equals(String.Format("IsTypeOf({0}.{1})", ConceptualSchema.Namespace, entity.EntityKeyName), StringComparison.InvariantCultureIgnoreCase)) > 0 ||
                     e.EntityTypeMappings.Count(et => et.MappingFragments.Count > 0 && et.MappingFragments.Count(mf => mf.StoreEntitySet.Equals(entity.EntityKeyName, StringComparison.InvariantCultureIgnoreCase)) > 0) > 0)
                     ).FirstOrDefault();
 
@@ -120,7 +120,7 @@ namespace Generator.Microsoft.Frameworks
             }
             else if (!string.IsNullOrEmpty(mapping.TypeName))
             {
-                entityName = mapping.TypeName.Replace("IsTypeOf(", "").Replace(string.Format("{0}.", ConceptualSchema.Namespace), "").Replace(")", "");
+                entityName = mapping.TypeName.Replace("IsTypeOf(", "").Replace(String.Format("{0}.", ConceptualSchema.Namespace), "").Replace(")", "");
                 entityName = entityName.Equals(entity.Name, StringComparison.InvariantCultureIgnoreCase)
                                  ? entity.Name
                                  : entityName;
@@ -130,7 +130,7 @@ namespace Generator.Microsoft.Frameworks
 
             // Check for inheritance.
             mapping.TypeName = mapping.TypeName != null && mapping.TypeName.StartsWith("IsTypeOf") ?
-                string.Format("IsTypeOf({0}.{1})", ConceptualSchema.Namespace, entityName) :
+                String.Format("IsTypeOf({0}.{1})", ConceptualSchema.Namespace, entityName) :
                 string.Concat(ConceptualSchema.Namespace, ".", entityName);
 
             _mappingEntityNames.Add(entity.EntityKey(), entityName);
@@ -200,7 +200,7 @@ namespace Generator.Microsoft.Frameworks
                 }
                 else if (!string.IsNullOrEmpty(associationSetMapping.TypeName))
                 {
-                    typeName = associationSetMapping.TypeName.Replace(string.Format("{0}.", ConceptualSchema.Namespace), "");
+                    typeName = associationSetMapping.TypeName.Replace(String.Format("{0}.", ConceptualSchema.Namespace), "");
                     typeName = typeName.Equals(association.Entity.EntityKeyName, StringComparison.InvariantCultureIgnoreCase)
                                      ? association.Entity.EntityKeyName : typeName;
                 }
@@ -366,7 +366,7 @@ namespace Generator.Microsoft.Frameworks
         {
             if (entity.IsFunction || _mappingEntitys.Contains(entity.Name) || !Configuration.Instance.IncludeFunctions)
             {
-                Debug.WriteLine(string.Format("Already Processed Mapping Model Entity {0}", entity.Name), MappingCategory);
+                Debug.WriteLine(String.Format("Already Processed Mapping Model Entity {0}", entity.Name), MappingCategory);
                 return;
             }
 
@@ -439,12 +439,12 @@ namespace Generator.Microsoft.Frameworks
             }
             else if (!string.IsNullOrEmpty(mapping.TypeName))
             {
-                entityName = mapping.TypeName.Replace("IsTypeOf(", "").Replace(string.Format("{0}.", ConceptualSchema.Namespace), "").Replace(")", "");
+                entityName = mapping.TypeName.Replace("IsTypeOf(", "").Replace(String.Format("{0}.", ConceptualSchema.Namespace), "").Replace(")", "");
                 entityName = entityName.Equals(entity.Name, StringComparison.InvariantCultureIgnoreCase) ? entity.Name : entityName;
             }
 
             // Check for inheritance.
-            mapping.TypeName = string.Format("{0}.{1}", ConceptualSchema.Namespace, entityName);
+            mapping.TypeName = String.Format("{0}.{1}", ConceptualSchema.Namespace, entityName);
 
             _mappingEntityNames.Add(entity.EntityKey(), importMapping.FunctionImportName);
 
@@ -477,7 +477,7 @@ namespace Generator.Microsoft.Frameworks
             }
             else if (!string.IsNullOrEmpty(mapping.TypeName))
             {
-                entityName = mapping.TypeName.Replace("IsTypeOf(", "").Replace(string.Format("{0}.", ConceptualSchema.Namespace), "").Replace(")", "");
+                entityName = mapping.TypeName.Replace("IsTypeOf(", "").Replace(String.Format("{0}.", ConceptualSchema.Namespace), "").Replace(")", "");
                 entityName = entityName.Equals(entity.Name, StringComparison.InvariantCultureIgnoreCase) ? entity.Name : entityName;
             }
 
@@ -485,7 +485,7 @@ namespace Generator.Microsoft.Frameworks
                 entityName = string.Concat(entity.Name, "Result");
 
             // Check for inheritance.
-            mapping.TypeName = string.Format("{0}.{1}", ConceptualSchema.Namespace, entityName);
+            mapping.TypeName = String.Format("{0}.{1}", ConceptualSchema.Namespace, entityName);
 
             _mappingEntityNames.Add(entity.EntityKey(), importMapping.FunctionImportName);
             _mappingEntityNames.Add(entity.EntityKey() + "complex", entityName);
@@ -508,7 +508,7 @@ namespace Generator.Microsoft.Frameworks
         private void MergeScalarProperties(MappingFragment mappingFragment, IEntity entity)
         {
             foreach (var property in mappingFragment.ScalarProperties.Where(p => entity.Properties.Count(prop => prop.KeyName.Equals(p.ColumnName, StringComparison.InvariantCultureIgnoreCase)) == 0))
-                _mappingDroppedEntityPropertyNames[string.Format(PROPERTY_KEY, entity.EntityKeyName, property.ColumnName)] = property.Name;
+                _mappingDroppedEntityPropertyNames[String.Format(PROPERTY_KEY, entity.EntityKeyName, property.ColumnName)] = property.Name;
         
             var properties = new List<ScalarProperty>();
             foreach (var property in entity.Properties)
@@ -546,12 +546,12 @@ namespace Generator.Microsoft.Frameworks
                 if (complexProperty != null)
                 {
                     complexProperty.ColumnName = property.KeyName;
-                    _mappingEntityPropertyNames[string.Format("{0}-{1}", entity.Name, property.KeyName)] = complexProperty.Name;
+                    _mappingEntityPropertyNames[String.Format("{0}-{1}", entity.Name, property.KeyName)] = complexProperty.Name;
                 }
                 else
                 {
                     prop.ColumnName = property.KeyName;
-                    _mappingEntityPropertyNames[string.Format("{0}-{1}", entity.Name, property.KeyName)] = prop.Name;
+                    _mappingEntityPropertyNames[String.Format("{0}-{1}", entity.Name, property.KeyName)] = prop.Name;
 
                     if (!ExcludeProperty(property as ISchemaProperty))
                         properties.Add(prop);
@@ -564,7 +564,7 @@ namespace Generator.Microsoft.Frameworks
         private void MergeScalarProperties(FunctionImportEntityTypeMapping mappingFragment, CommandEntity entity)
         {
             foreach (var property in mappingFragment.ScalarProperties.Where(p => entity.Properties.Count(prop => prop.KeyName.Equals(p.ColumnName, StringComparison.InvariantCultureIgnoreCase)) == 0))
-                _mappingDroppedEntityPropertyNames[string.Format(PROPERTY_KEY, entity.EntityKeyName, property.ColumnName)] = property.Name;
+                _mappingDroppedEntityPropertyNames[String.Format(PROPERTY_KEY, entity.EntityKeyName, property.ColumnName)] = property.Name;
 
             var properties = new List<ScalarProperty>();
             foreach (var property in entity.Properties)
@@ -591,7 +591,7 @@ namespace Generator.Microsoft.Frameworks
                 if (!ExcludeProperty(property as ISchemaProperty) && properties.Count(p => p.Name.Equals(prop.Name, StringComparison.InvariantCultureIgnoreCase)) == 0)
                 {
                     properties.Add(prop);
-                    _mappingEntityPropertyNames[string.Format("{0}-{1}", entity.Name, property.KeyName)] = prop.Name;
+                    _mappingEntityPropertyNames[String.Format("{0}-{1}", entity.Name, property.KeyName)] = prop.Name;
                 }
             }
 
@@ -601,7 +601,7 @@ namespace Generator.Microsoft.Frameworks
         private void MergeScalarProperties(FunctionImportComplexTypeMapping mappingFragment, CommandEntity entity)
         {
             foreach (var property in mappingFragment.ScalarProperties.Where(p => entity.Properties.Count(prop => prop.KeyName.Equals(p.ColumnName, StringComparison.InvariantCultureIgnoreCase)) == 0))
-                _mappingDroppedEntityPropertyNames[string.Format(PROPERTY_KEY, entity.EntityKeyName, property.ColumnName)] = property.Name;
+                _mappingDroppedEntityPropertyNames[String.Format(PROPERTY_KEY, entity.EntityKeyName, property.ColumnName)] = property.Name;
 
             var properties = new List<ScalarProperty>();
             foreach (var property in entity.Properties)
@@ -628,7 +628,7 @@ namespace Generator.Microsoft.Frameworks
                 if (!ExcludeProperty(property as ISchemaProperty) && properties.Count(p => p.Name.Equals(prop.Name, StringComparison.InvariantCultureIgnoreCase)) == 0)
                 {
                     properties.Add(prop);
-                    _mappingEntityPropertyNames[string.Format("{0}-{1}", entity.Name, property.KeyName)] = prop.Name;
+                    _mappingEntityPropertyNames[String.Format("{0}-{1}", entity.Name, property.KeyName)] = prop.Name;
                 }
             }
 
@@ -668,7 +668,7 @@ namespace Generator.Microsoft.Frameworks
                 }
 
                 prop.ColumnName = columnProperty.KeyName;
-                _mappingEntityPropertyNames[string.Format("{0}-{1}", associationProperty.Entity.Name, associationProperty.KeyName)] = prop.Name;
+                _mappingEntityPropertyNames[String.Format("{0}-{1}", associationProperty.Entity.Name, associationProperty.KeyName)] = prop.Name;
 
                 properties.Add(prop);
             }
@@ -694,7 +694,7 @@ namespace Generator.Microsoft.Frameworks
 
         private string ResolveEntityPropertyMappedName(string entityName, string keyName, string propertyName)
         {
-            string key = string.Format("{0}-{1}", entityName, keyName);
+            string key = String.Format("{0}-{1}", entityName, keyName);
 
             if (_mappingEntityPropertyNames.ContainsKey(key))
                 return _mappingEntityPropertyNames[key];
@@ -704,7 +704,7 @@ namespace Generator.Microsoft.Frameworks
 
         private string ResolveConceptualPropertyNameFromStorageColumnName(string storageName, string columnName)
         {
-            var key = string.Format(PROPERTY_KEY, storageName, columnName);
+            var key = String.Format(PROPERTY_KEY, storageName, columnName);
             return _mappingDroppedEntityPropertyNames.ContainsKey(key) ? _mappingDroppedEntityPropertyNames[key] : columnName;
         }
 
