@@ -1,5 +1,5 @@
 ﻿<%-- Author: Blake Niemyjski --%>
-<%@ CodeTemplate Language="VB" TargetLanguage="VB" Inherits="CodeSmith.QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Encoding="UTF-8" Description="CSLA EditableRoot" %>
+<%@ CodeTemplate Language="VB" TargetLanguage="VB" Inherits="CodeSmith.QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Encoding="UTF-8" %>
 <%@ Register Name="CompositeKeyMethods" Template="..\..\Common\CompositeKeyMethods.cst" MergeProperties="False" ExcludeProperties="" %>
 <%@ Register Name="Constructor" Template="..\..\Common\ChildConstructor.cst" MergeProperties="False" ExcludeProperties="" %>
 <%@ Register Name="Exists" Template="..\..\Common\Exists.cst" MergeProperties="False" ExcludeProperties="" %>
@@ -70,11 +70,11 @@ Namespace <%= BusinessProjectName %>
         Friend Shared Function New<%= ChildBusinessClassName %><%= Entity.GenericProperty %>() As <%= ChildBusinessClassName %> 
             Return DataPortal.Create(Of <%= BusinessClassName %>)()
         End Function
-    <% For Each sc As SearchCriteria In  Entity.SearchCriteria() %>
+    <% For Each sc As SearchCriteria In  Entity.SearchCriteria %>
     
-        Friend Shared Function <%= sc.MethodName %>(<%= sc.Members.BuildParametersVariables() %>) As <%= BusinessClassName %><%= Entity.GenericProperty %>
+        Friend Shared Function <%= sc.MethodName %>(<%= sc.Properties.BuildParametersVariables() %>) As <%= BusinessClassName %><%= Entity.GenericProperty %>
             Dim criteria As New <%= CriteriaClassName %><%= Entity.GenericProperty %>()
-            <%= sc.Members.BuildObjectInitializer() %>
+            <%= sc.Properties.BuildObjectInitializer() %>
     
             Return DataPortal.Fetch<% If( Not DataAccessImplementation = DataAccessMethod.ObjectFactoryNone AndAlso Not DataAccessImplementation = DataAccessMethod.ObjectFactoryParameterizedSQL AndAlso Not DataAccessImplementation = DataAccessMethod.ObjectFactoryStoredProcedures) Then %>Child<% End If %>(Of <%= ChildBusinessClassName %><%= Entity.GenericProperty %>)(criteria)
         End Function
@@ -94,11 +94,11 @@ Namespace <%= BusinessProjectName %>
             AddHandler dp.CreateCompleted, handler
             dp.BeginCreate()
         End Sub
-    <% For Each sc As SearchCriteria In  Entity.SearchCriteria() %>
+    <% For Each sc As SearchCriteria In  Entity.SearchCriteria %>
     
-        Friend Shared Sub <%= sc.MethodName %>Async(<%= sc.Members.BuildParametersVariables() %>, ByVal handler As EventHandler(Of DataPortalResult(Of AsyncChildLoader(Of <%= BusinessClassName %><%= Entity.GenericProperty %>))))
+        Friend Shared Sub <%= sc.MethodName %>Async(<%= sc.Properties.BuildParametersVariables() %>, ByVal handler As EventHandler(Of DataPortalResult(Of AsyncChildLoader(Of <%= BusinessClassName %><%= Entity.GenericProperty %>))))
             Dim criteria As New <%= CriteriaClassName %><%= Entity.GenericProperty %>()
-    <%For Each member As Member in sc.Members %>
+    <%For Each member As Member in sc.Properties %>
             criteria.<%= member.PropertyName %> = <%= member.VariableName %>
     <% Next %>
 

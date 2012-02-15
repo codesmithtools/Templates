@@ -508,7 +508,7 @@ namespace CodeSmith.SchemaHelper
             }
         }
 
-        public List<Member> MembersNoPrimaryKeys
+        public List<Member> GetProperties(PropertyType.NoKey)
         {
             get
             {
@@ -552,7 +552,7 @@ namespace CodeSmith.SchemaHelper
             }
         }
 
-        public List<Association> AssociatedManyToOne
+        public List<Association> Associations.Where(a => a.AssociationType == AssociationType.ManyToOne)
         {
             get
             {
@@ -562,7 +562,7 @@ namespace CodeSmith.SchemaHelper
             }
         }
 
-        public List<Association> AssociatedOneToZeroOrOne
+        public List<Association> Associations.Where(a => a.AssociationType == AssociationType.OneToZeroOrOne)
         {
             get
             {

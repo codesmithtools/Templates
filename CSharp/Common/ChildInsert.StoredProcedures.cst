@@ -1,66 +1,62 @@
 ﻿<%-- Author: Blake Niemyjski --%>
-<%@ CodeTemplate Language="C#" TargetLanguage="C#" Inherits="CodeSmith.QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Encoding="UTF-8" Description="CSLA Map" %>
-
-<%@ Assembly Name="SchemaExplorer" %>
+<%@ CodeTemplate Language="C#" TargetLanguage="C#" Inherits="Generator.CSLA.EntityCodeTemplate" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\Common" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper.Extensions" Path="..\..\Common" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper.CSharpExtensions" Path="..\..\Common" %>
-<%@ Assembly Name="CodeSmith.QuickStart" Path="..\..\Common" %>
-
-<%@ Import Namespace="SchemaExplorer" %>
+<%@ Assembly Name="Generator.CSLA" Path="..\..\Common" %>
 <%@ Import Namespace="CodeSmith.SchemaHelper" %>
-<%@ Import Namespace="CodeSmith.QuickStart" %>
+<%@ Import Namespace="System.Linq" %>
             bool cancel = false;
             OnChildInserting(connection, ref cancel);
             if (cancel) return;
 
             if(connection.State != ConnectionState.Open) connection.Open();
-            using(SqlCommand command = new SqlCommand("<%= GetInsertStoredProcedureName() %>", connection))
+            using(var command = new SqlCommand("<%= GetInsertStoredProcedureName() %>", connection))
             {
                 command.CommandType = CommandType.StoredProcedure;
-                <%= Entity.MembersNoRowVersion.BuildCommandParameters(false, false, !RenderOptionalContent, true) %>
-<% if(Entity.HasRowVersionMember) { %>
-                command.Parameters.AddWithValue("<%= ParameterPrefix  %><%= Entity.RowVersionMember.ColumnName %>", SqlDbType.Timestamp);
-                command.Parameters["<%= ParameterPrefix  %><%= Entity.RowVersionMember.ColumnName %>"].Value = this.<%= Entity.RowVersionMember.PropertyName %>;
-                command.Parameters["<%= ParameterPrefix  %><%= Entity.RowVersionMember.ColumnName %>"].Direction = ParameterDirection.InputOutput;
+                <%= Entity.GetProperties(PropertyType.NoConcurrency).BuildCommandParameters(false, false, !RenderOptionalContent, true) %>
+<% if(Entity.ConcurrencyProperty != null) { %>
+                command.Parameters.AddWithValue("<%= ParameterPrefix  %><%= Entity.ConcurrencyProperty.KeyName %>", SqlDbType.Timestamp);
+                command.Parameters["<%= ParameterPrefix  %><%= Entity.ConcurrencyProperty.KeyName %>"].Value = this.<%= Entity.ConcurrencyProperty.Name %>;
+                command.Parameters["<%= ParameterPrefix  %><%= Entity.ConcurrencyProperty.KeyName %>"].Direction = ParameterDirection.InputOutput;
 <% } %>
 
                 command.ExecuteNonQuery();
-<% if(Entity.HasRowVersionMember) { %>
+<% if(Entity.ConcurrencyProperty != null) { %>
 
-                <%= Entity.RowVersionMember.PropertyName %> = (<%= Entity.RowVersionMember.SystemType %>)command.Parameters["<%= ParameterPrefix  %><%= Entity.RowVersionMember.ColumnName %>"].Value;
+                <%= Entity.ConcurrencyProperty.Name %> = (<%= Entity.ConcurrencyProperty.SystemType %>)command.Parameters["<%= ParameterPrefix  %><%= Entity.ConcurrencyProperty.KeyName %>"].Value;
 <% }%> 
-<% foreach(Member member in Entity.PrimaryKey.KeyMembers) { if(member.IsIdentity || (member.DataType == DbType.Guid.ToString() && !member.IsForeignKey)) { %> 
+<% foreach(IProperty property in Entity.Key.Properties) { if(property.IsType(PropertyType.Identity) || (property.IsDbType(DbType.Guid) && !property.IsType(PropertyType.Foreign))) { %> 
                
                 // Update identity primary key value.
 <%if(UseMemberVariables) { %>
-                <%= member.PrivateMemberVariableName %> = (<%= member.SystemType %>)command.Parameters["<%= member.BuildParameterVariableName() %>"].Value;
+                <%= property.PrivateMemberVariableName %> = (<%= property.SystemType %>)command.Parameters["<%= property.BuildParameterVariableName() %>"].Value;
 <% } else { %>
-                LoadProperty(<%= member.PrivateMemberVariableName %>Property,(<%= member.SystemType %>)command.Parameters["<%= member.BuildParameterVariableName() %>"].Value);
+                LoadProperty(<%= property.PrivateMemberVariableName %>Property,(<%= property.SystemType %>)command.Parameters["<%= property.BuildParameterVariableName() %>"].Value);
 <% } } } %>
-<%  if(!RenderOptionalContent) { foreach(Member member in Entity.Members) { if(member.IsForeignKey) { if(string.IsNullOrEmpty(member.ResolveAssociationPropertyClassName())) continue; %> 
+<%  if(!RenderOptionalContent) { foreach(IProperty property in Entity.Properties) { if(property.IsType(PropertyType.Foreign)) { if(string.IsNullOrEmpty(property.ResolveAssociationPropertyClassName())) continue; %> 
 
             // Update foreign keys values. This code will update the values passed in from the parent only if no errors occurred after executing the query.
-<% string localParameterName = member.ResolveAssociationPropertyVariable();
-   string localParameterNameWithChildProperty = member.ResolveAssociationPropertyVariableWithChildProperty();%>
-            if(<%= localParameterName %> != null && <%= localParameterNameWithChildProperty %> != this.<%= member.PropertyName %>)
+<% string localParameterName = property.ResolveAssociationPropertyVariable();
+   string localParameterNameWithChildProperty = property.ResolveAssociationPropertyVariableWithChildProperty();%>
+            if(<%= localParameterName %> != null && <%= localParameterNameWithChildProperty %> != this.<%= property.Name %>)
 <% if(UseMemberVariables) { %>
-                <%= member.PrivateMemberVariableName %> = <%= localParameterNameWithChildProperty %>;
+                <%= property.PrivateMemberVariableName %> = <%= localParameterNameWithChildProperty %>;
 <% } else { %>
-                LoadProperty(<%= member.PrivateMemberVariableName %>Property, <%= localParameterNameWithChildProperty %>);
+                LoadProperty(<%= property.PrivateMemberVariableName %>Property, <%= localParameterNameWithChildProperty %>);
 <% } } } } %>
-<% foreach(Member member in Entity.PrimaryKey.KeyMembers) { if(!member.IsIdentity || member.DataType == DbType.Guid.ToString()) {%> 
+<% foreach(IProperty property in Entity.Key.Properties) { if(!property.IsType(PropertyType.Identity) || property.IsDbType(DbType.Guid)) {%> 
 
                 // Update the original non-identity primary key value.
 <% if(UseMemberVariables) { %>
-                _original<%= member.PropertyName %> = this.<%= member.PropertyName %>;
+                _original<%= property.Name %> = this.<%= property.Name %>;
 <% } else { %>
-                LoadProperty(_original<%= member.PropertyName %>Property, this.<%= member.PropertyName %>);
+                LoadProperty(_original<%= property.Name %>Property, this.<%= property.Name %>);
 <% } } } %>
             }
-<% if(Entity.AssociatedToManyUnion.Count > 0 || Entity.AssociatedManyToOne.Count > 0 || Entity.AssociatedOneToZeroOrOne.Count > 0){ if(!RenderOptionalContent) { 
+<% if(Entity.Associations.Count(a => a.AssociationType == AssociationType.OneToMany) > 0 || Entity.Associations.Count(a => a.AssociationType == AssociationType.ManyToOne) > 0 || Entity.Associations.Count(a => a.AssociationType == AssociationType.OneToZeroOrOne) > 0){ if(!RenderOptionalContent) { 
     int childCount = 0;
-    foreach(Association a in Entity.AssociatedOneToMany) {
+    foreach(Association a in Entity.Associations.Where(a => a.AssociationType == AssociationType.OneToMany)) {
         if(IsChildBusinessObject(a)) childCount++; 
     }%>
 <% if(childCount > 0) { %>

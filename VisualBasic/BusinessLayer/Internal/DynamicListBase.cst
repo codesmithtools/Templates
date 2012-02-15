@@ -1,5 +1,5 @@
 ﻿<%-- Author: Blake Niemyjski --%>
-<%@ CodeTemplate Language="VB" TargetLanguage="VB" Inherits="CodeSmith.QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Encoding="UTF-8" Description="CSLA DynamicListBase" %>
+<%@ CodeTemplate Language="VB" TargetLanguage="VB" Inherits="CodeSmith.QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Encoding="UTF-8" %>
 <%@ Register Name="AuthorizationRules" Template="..\..\Common\ListAuthorizationRules.cst" MergeProperties="False" ExcludeProperties="" %>
 
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\..\Common" %>

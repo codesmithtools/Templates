@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 
 namespace CodeSmith.SchemaHelper
 {
@@ -11,42 +12,42 @@ namespace CodeSmith.SchemaHelper
     {
         #region BuildObjectInitializer
 
-        public static string BuildObjectInitializer(this List<Member> members)
+        public static string BuildObjectInitializer(this List<IProperty> members)
         {
             return members.BuildObjectInitializer(false);
         }
 
-        public static string BuildObjectInitializer(this List<Member> members, bool isObjectFactory)
+        public static string BuildObjectInitializer(this List<IProperty> members, bool isObjectFactory)
         {
             return members.BuildObjectInitializer(isObjectFactory, false);
         }
 
-        public static string BuildObjectInitializer(this List<Member> members, bool isObjectFactory, bool usePropertyName)
+        public static string BuildObjectInitializer(this List<IProperty> members, bool isObjectFactory, bool usePropertyName)
         {
             return members.BuildObjectInitializer(isObjectFactory, usePropertyName, false);
         }
 
-        public static string BuildObjectInitializer(this List<Member> members, bool isObjectFactory, bool usePropertyName, bool includeOriginal)
+        public static string BuildObjectInitializer(this List<IProperty> members, bool isObjectFactory, bool usePropertyName, bool includeOriginal)
         {
             return members.BuildObjectInitializer(isObjectFactory, usePropertyName, includeOriginal, "criteria.");
         }
-        
-        public static string BuildObjectInitializer(this List<Member> members, bool isObjectFactory, bool usePropertyName, bool includeOriginal, string prefix)
+
+        public static string BuildObjectInitializer(this List<IProperty> members, bool isObjectFactory, bool usePropertyName, bool includeOriginal, string prefix)
         {
             string parameters = string.Empty;
 
-            foreach (Member member in members)
+            foreach (var property in members)
             {
-                if(member.IsNullable && member.SystemType != "System.String" && member.SystemType != "System.Byte[]") continue;
+                if(property.IsNullable && property.SystemType != "System.String" && property.SystemType != "System.Byte[]") continue;
 
                 var propertyName = isObjectFactory ? 
-                                string.Format("item.{0}", member.PropertyName) : 
-                                usePropertyName ? member.PropertyName : member.VariableName;
+                                String.Format("item.{0}", property.Name) : 
+                                usePropertyName ? property.Name : property.VariableName;
 
-                if (includeOriginal && member.IsPrimaryKey && !member.IsIdentity)
-                    propertyName = isObjectFactory ? string.Format("item.Original{0}", member.PropertyName) : string.Format("Original{0}", member.PropertyName);
+                if (includeOriginal && property.IsType(PropertyType.Key) && !property.IsType(PropertyType.Identity))
+                    propertyName = isObjectFactory ? String.Format("item.Original{0}", property.Name) : String.Format("Original{0}", property.Name);
                 
-                parameters += string.Format(", {0} = {1}", member.PropertyName, propertyName);
+                parameters += String.Format(", {0} = {1}", property.Name, propertyName);
             }
 
             return parameters.TrimStart(new[] { ',', ' ' });
@@ -56,42 +57,42 @@ namespace CodeSmith.SchemaHelper
 
         #region BuildNullableObjectInitializer
 
-        public static string BuildNullableObjectInitializer(this List<Member> members)
+        public static string BuildNullableObjectInitializer(this List<IProperty> members)
         {
             return members.BuildNullableObjectInitializer(false);
         }
 
-        public static string BuildNullableObjectInitializer(this List<Member> members, bool isObjectFactory)
+        public static string BuildNullableObjectInitializer(this List<IProperty> members, bool isObjectFactory)
         {
             return members.BuildNullableObjectInitializer(isObjectFactory, false);
         }
 
-        public static string BuildNullableObjectInitializer(this List<Member> members, bool isObjectFactory, bool usePropertyName)
+        public static string BuildNullableObjectInitializer(this List<IProperty> members, bool isObjectFactory, bool usePropertyName)
         {
             return members.BuildNullableObjectInitializer(isObjectFactory, usePropertyName, false);
         }
 
-        public static string BuildNullableObjectInitializer(this List<Member> members, bool isObjectFactory, bool usePropertyName, bool includeOriginal)
+        public static string BuildNullableObjectInitializer(this List<IProperty> members, bool isObjectFactory, bool usePropertyName, bool includeOriginal)
         {
             return members.BuildNullableObjectInitializer(isObjectFactory, usePropertyName, includeOriginal, "criteria.");
         }
 
-        public static string BuildNullableObjectInitializer(this List<Member> members, bool isObjectFactory, bool usePropertyName, bool includeOriginal, string prefix)
+        public static string BuildNullableObjectInitializer(this List<IProperty> members, bool isObjectFactory, bool usePropertyName, bool includeOriginal, string prefix)
         {
             string parameters = string.Empty;
 
-            foreach (Member member in members)
+            foreach (var property in members)
             {
-                if ((member.IsNullable && member.SystemType != "System.String" && member.SystemType != "System.Byte[]") == false) continue;
+                if ((property.IsNullable && property.SystemType != "System.String" && property.SystemType != "System.Byte[]") == false) continue;
 
                 var propertyName = isObjectFactory ?
-                                string.Format("item.{0}", member.PropertyName) :
-                                usePropertyName ? member.PropertyName : member.VariableName;
+                                String.Format("item.{0}", property.Name) :
+                                usePropertyName ? property.Name : property.VariableName;
 
-                if (includeOriginal && member.IsPrimaryKey && !member.IsIdentity)
-                    propertyName = isObjectFactory ? string.Format("item.Original{0}", member.PropertyName) : string.Format("Original{0}", member.PropertyName);
+                if (includeOriginal && property.IsType(PropertyType.Key) && !property.IsType(PropertyType.Identity))
+                    propertyName = isObjectFactory ? String.Format("item.Original{0}", property.Name) : String.Format("Original{0}", property.Name);
 
-                parameters += string.Format("\r\n\t\t\t\tif({1}.HasValue) {2}{0} = {1}.Value;", member.PropertyName, propertyName, prefix);
+                parameters += String.Format("\r\n\t\t\t\tif({1}.HasValue) {2}{0} = {1}.Value;", property.Name, propertyName, prefix);
             }
 
             return parameters.TrimStart(new[] { '\r', '\n', '\t' });
@@ -101,19 +102,19 @@ namespace CodeSmith.SchemaHelper
 
         #region BuildParametersVariables
 
-        public static string BuildParametersVariables(this List<Member> members)
+        public static string BuildParametersVariables(this List<IProperty> members)
         {
             return members.BuildParametersVariables(true);
         }
 
-        public static string BuildParametersVariables(this List<Member> members, bool isNullable)
+        public static string BuildParametersVariables(this List<IProperty> members, bool isNullable)
         {
             string parameters = string.Empty;
 
-            foreach (Member member in members)
+            foreach (IProperty property in members)
             {
-                string systemType = isNullable ? member.SystemType : member.SystemType.TrimEnd(new[] {'?'});
-                parameters += string.Format(", {0} {1}", systemType, member.VariableName);
+                string systemType = isNullable ? property.SystemType : property.SystemType.TrimEnd(new[] {'?'});
+                parameters += String.Format(", {0} {1}", systemType, property.VariableName);
             }
 
             return parameters.TrimStart(new[] { ',', ' ' });
@@ -123,58 +124,58 @@ namespace CodeSmith.SchemaHelper
 
         #region BuildCommandParameters
 
-        public static string BuildCommandParameters(this List<Member> members)
+        public static string BuildCommandParameters(this List<IProperty> members)
         {
             return BuildCommandParameters(members, false);
         }
 
-        public static string BuildCommandParameters(this List<Member> members, bool isObjectFactory)
+        public static string BuildCommandParameters(this List<IProperty> members, bool isObjectFactory)
         {
             return BuildCommandParameters(members, isObjectFactory, false);
         }
 
-        public static string BuildCommandParameters(this List<Member> members, bool isObjectFactory, bool usePropertyName)
+        public static string BuildCommandParameters(this List<IProperty> members, bool isObjectFactory, bool usePropertyName)
         {
             return BuildCommandParameters(members, isObjectFactory, usePropertyName, false);
         }
 
-        public static string BuildCommandParameters(this List<Member> members, bool isObjectFactory, bool usePropertyName, bool isChildInsertUpdate)
+        public static string BuildCommandParameters(this List<IProperty> members, bool isObjectFactory, bool usePropertyName, bool isChildInsertUpdate)
         {
             return members.BuildCommandParameters(isObjectFactory, usePropertyName, isChildInsertUpdate, false);
         }
 
-        public static string BuildCommandParameters(this List<Member> members, bool isObjectFactory, bool usePropertyName, bool isChildInsertUpdate, bool includeOutPutParameters)
+        public static string BuildCommandParameters(this List<IProperty> members, bool isObjectFactory, bool usePropertyName, bool isChildInsertUpdate, bool includeOutPutParameters)
         {
             return members.BuildCommandParameters(isObjectFactory, usePropertyName, isChildInsertUpdate, includeOutPutParameters, false);
         }
 
-        public static string BuildCommandParameters(this List<Member> members, bool isObjectFactory, bool usePropertyName, bool isChildInsertUpdate, bool includeOutPutParameters, bool isUpdateStatement)
+        public static string BuildCommandParameters(this List<IProperty> members, bool isObjectFactory, bool usePropertyName, bool isChildInsertUpdate, bool includeOutPutParameters, bool isUpdateStatement)
         {
             string commandParameters = string.Empty;
             string castPrefix = isObjectFactory ? "item." : string.Empty;
 
-            foreach (Member member in members)
+            foreach (var property in members)
             {
                 string className = string.Empty;
                 string includeThisPrefix = !isObjectFactory ? "this." : string.Empty;
-                string propertyName = member.PropertyName;
-                string originalPropertyName = string.Format("Original{0}", member.PropertyName);
+                string propertyName = property.Name;
+                string originalPropertyName = String.Format("Original{0}", property.Name);
                 
                 // Resolve property Name from relationship.
-                if (isChildInsertUpdate && member.IsForeignKey)
+                if (isChildInsertUpdate && property.IsType(PropertyType.Foreign))
                 {
-                    foreach (Association association in member.Entity.AssociatedManyToOne)
+                    foreach (Association association in property.Entity.Associations.Where(a => a.AssociationType == AssociationType.ManyToOne))
                     {
-                        foreach (AssociationMember associationMember in association)
+                        foreach (AssociationProperty associationProperty in association.Properties)
                         {
-                            if (member.ColumnName == associationMember.AssociatedColumn.ColumnName && member.TableName == associationMember.AssociatedColumn.TableName)
+                            if (property.KeyName == associationProperty.ForeignProperty.KeyName)// && property.ForeignProperty == associationProperty.ForeignProperty.ForeignProperty)
                             {
-                                propertyName = string.Format("{0}.{1}", Util.NamingConventions.VariableName(associationMember.ClassName), associationMember.MemberPropertyName);
+                                propertyName = String.Format("{0}.{1}", Util.NamingConventions.VariableName(associationProperty.Property.Name), associationProperty.Property.Name);
 
-                                var format = associationMember.IsPrimaryKey && !associationMember.IsIdentity ? "{0}.Original{1}" : "{0}.{1}";
-                                originalPropertyName = string.Format(format, Util.NamingConventions.VariableName(associationMember.ClassName), associationMember.MemberPropertyName);
+                                var format = associationProperty.Property.IsType(PropertyType.Key) && !associationProperty.Property.IsType(PropertyType.Identity) ? "{0}.Original{1}" : "{0}.{1}";
+                                originalPropertyName = String.Format(format, Util.NamingConventions.VariableName(associationProperty.Property.Name), associationProperty.Property.Name);
 
-                                className = Util.NamingConventions.VariableName(associationMember.ClassName);
+                                className = Util.NamingConventions.VariableName(associationProperty.Property.Name);
                                 includeThisPrefix = string.Empty;
                                 break;
                             }
@@ -182,56 +183,56 @@ namespace CodeSmith.SchemaHelper
                     }
                 }
 
-                var nullableType = string.Format("{0}{1}", !isObjectFactory ? "this." : string.Empty, member.PropertyName);
-                var originalNullableType = string.Format("{0}Original{1}", !isObjectFactory ? "this." : string.Empty, member.PropertyName);
-                //var nullableType = string.Format("new {0}()", member.SystemType);
-                //if (member.SystemType == "System.String" || member.SystemType == "System.Byte[]")
+                var nullableType = String.Format("{0}{1}", !isObjectFactory ? "this." : string.Empty, property.Name);
+                var originalNullableType = String.Format("{0}Original{1}", !isObjectFactory ? "this." : string.Empty, property.Name);
+                //var nullableType = String.Format("new {0}()", property.SystemType);
+                //if (property.SystemType == "System.String" || property.SystemType == "System.Byte[]")
                 //    nullableType = "null";
 
                 string originalCast;
                 string cast;
-                if (member.IsNullable && member.SystemType != "System.Byte[]")
+                if (property.IsNullable && property.SystemType != "System.Byte[]")
                 {
                     //includeThisPrefix = this.
                     //castprefix = item.
                     //propertyName = bo.propertyname or propertyname
                     if (!string.IsNullOrEmpty(className))
                     {
-                        cast = string.Format("ADOHelper.NullCheck({3} != null ? {0}{1}{2} : {4}));", includeThisPrefix, castPrefix, propertyName, className, nullableType);
-                        originalCast = string.Format("ADOHelper.NullCheck({3} != null ? {0}{1}{2} : {4}));", includeThisPrefix, castPrefix, originalPropertyName, className, originalNullableType);
+                        cast = String.Format("ADOHelper.NullCheck({3} != null ? {0}{1}{2} : {4}));", includeThisPrefix, castPrefix, propertyName, className, nullableType);
+                        originalCast = String.Format("ADOHelper.NullCheck({3} != null ? {0}{1}{2} : {4}));", includeThisPrefix, castPrefix, originalPropertyName, className, originalNullableType);
                     }
                     else
                     {
-                        cast = string.Format("ADOHelper.NullCheck({0}{1}{2}));", includeThisPrefix, castPrefix, propertyName);
-                        originalCast = string.Format("ADOHelper.NullCheck({0}{1}{2}));", includeThisPrefix, castPrefix, originalPropertyName);
+                        cast = String.Format("ADOHelper.NullCheck({0}{1}{2}));", includeThisPrefix, castPrefix, propertyName);
+                        originalCast = String.Format("ADOHelper.NullCheck({0}{1}{2}));", includeThisPrefix, castPrefix, originalPropertyName);
                     }
                 }
                 else
                 {
                     if (!string.IsNullOrEmpty(className))
                     {
-                        cast = string.Format("{3} != null ? {0}{1}{2} : {4});", includeThisPrefix, castPrefix, propertyName, className, nullableType);
-                        originalCast = string.Format("{3} != null ? {0}{1}{2} : {4});", includeThisPrefix, castPrefix, originalPropertyName, className, originalNullableType);
+                        cast = String.Format("{3} != null ? {0}{1}{2} : {4});", includeThisPrefix, castPrefix, propertyName, className, nullableType);
+                        originalCast = String.Format("{3} != null ? {0}{1}{2} : {4});", includeThisPrefix, castPrefix, originalPropertyName, className, originalNullableType);
                     }
                     else
                     {
-                        cast = string.Format("{0}{1}{2});", includeThisPrefix, castPrefix, propertyName);
-                        originalCast = string.Format("{0}{1}{2});", includeThisPrefix, castPrefix, originalPropertyName);
+                        cast = String.Format("{0}{1}{2});", includeThisPrefix, castPrefix, propertyName);
+                        originalCast = String.Format("{0}{1}{2});", includeThisPrefix, castPrefix, originalPropertyName);
                     }
                 }
 
-                bool includeOriginalPropertyName = isUpdateStatement && member.IsPrimaryKey && !member.IsIdentity;
+                bool includeOriginalPropertyName = isUpdateStatement && property.IsType(PropertyType.Key) && !property.IsType(PropertyType.Identity);
                 if (isUpdateStatement && includeOriginalPropertyName)
-                    commandParameters += string.Format(Environment.NewLine + "\t\t\t\t\tcommand.Parameters.AddWithValue(\"{0}Original{1}\", {2}", Configuration.Instance.ParameterPrefix, member.ColumnName, originalCast);
+                    commandParameters += String.Format(Environment.NewLine + "\t\t\t\t\tcommand.Parameters.AddWithValue(\"{0}Original{1}\", {2}", Configuration.Instance.ParameterPrefix, property.KeyName, originalCast);
 
-                commandParameters += string.Format(Environment.NewLine + "\t\t\t\t\tcommand.Parameters.AddWithValue(\"{0}{1}\", {2}", Configuration.Instance.ParameterPrefix, member.ColumnName, cast);
+                commandParameters += String.Format(Environment.NewLine + "\t\t\t\t\tcommand.Parameters.AddWithValue(\"{0}{1}\", {2}", Configuration.Instance.ParameterPrefix, property.KeyName, cast);
 
-                if ((member.IsIdentity || (member.DataType == DbType.Guid.ToString() && member.IsPrimaryKey && !member.IsForeignKey)) && includeOutPutParameters)
+                if ((property.IsType(PropertyType.Identity) || (property.IsDbType(DbType.Guid) && property.IsType(PropertyType.Key) && !property.IsType(PropertyType.Foreign))) && includeOutPutParameters)
                 {
                     if (isUpdateStatement)
-                        commandParameters += string.Format(Environment.NewLine + "\t\t\t\t\tcommand.Parameters[\"{0}{1}\"].Direction = ParameterDirection.Input;", Configuration.Instance.ParameterPrefix, member.ColumnName);
+                        commandParameters += String.Format(Environment.NewLine + "\t\t\t\t\tcommand.Parameters[\"{0}{1}\"].Direction = ParameterDirection.Input;", Configuration.Instance.ParameterPrefix, property.KeyName);
                     else
-                        commandParameters += string.Format(Environment.NewLine + "\t\t\t\t\tcommand.Parameters[\"{0}{1}\"].Direction = ParameterDirection.Output;", Configuration.Instance.ParameterPrefix, member.ColumnName);
+                        commandParameters += String.Format(Environment.NewLine + "\t\t\t\t\tcommand.Parameters[\"{0}{1}\"].Direction = ParameterDirection.Output;", Configuration.Instance.ParameterPrefix, property.KeyName);
                 }
             }
 
@@ -240,34 +241,34 @@ namespace CodeSmith.SchemaHelper
 
         #endregion
 
-        public static string BuildHasValueCommandParameters(this List<Member> members)
+        public static string BuildHasValueCommandParameters(this List<IProperty> members)
         {
             string commandParameters = string.Empty;
 
-            foreach (Member member in members)
+            foreach (IProperty property in members)
             {
-                if(member.IsNullable)
-                    commandParameters += string.Format(Environment.NewLine + "\t\t\t\t\tcommand.Parameters.AddWithValue(\"{0}{1}HasValue\", criteria.{2}HasValue);", Configuration.Instance.ParameterPrefix, member.ColumnName, member.PropertyName);
+                if(property.IsNullable)
+                    commandParameters += String.Format(Environment.NewLine + "\t\t\t\t\tcommand.Parameters.AddWithValue(\"{0}{1}HasValue\", criteria.{2}HasValue);", Configuration.Instance.ParameterPrefix, property.KeyName, property.Name);
             }
 
             return commandParameters.TrimStart(new[] { '\t', '\r', '\n' });
         }
 
-        public static string BuildIdentityKeyEqualityStatements(this List<Member> members)
+        public static string BuildIdentityKeyEqualityStatements(this List<IProperty> members)
         {
             return members.BuildIdentityKeyEqualityStatements("");
         }
 
-        public static string BuildIdentityKeyEqualityStatements(this List<Member> members, string prefix)
+        public static string BuildIdentityKeyEqualityStatements(this List<IProperty> members, string prefix)
         {
             if (members == null || members.Count == 0) return string.Empty;
 
             string statement = string.Empty;
 
-            foreach (Member member in members)
+            foreach (var property in members)
             {
-                if(member.IsPrimaryKey && !member.IsIdentity)
-                    statement += string.Format(" || {1}Original{0} != {1}{0}", member.PropertyName, prefix);
+                if (property.IsType(PropertyType.Key) && !property.IsType(PropertyType.Identity))
+                    statement += String.Format(" || {1}Original{0} != {1}{0}", property.Name, prefix);
             }
 
             return statement.TrimStart(new[] { '|', ' ' });
@@ -282,19 +283,19 @@ namespace CodeSmith.SchemaHelper
         /// <param name="isUpdateStatement"></param>
         /// <param name="indentLevel"></param>
         /// <returns></returns>
-        public static string BuildLinqToSQLCommandParameters( this List<Member> members, bool usePropertyName,  bool isChildInsertUpdate, bool isUpdateStatement, int indentLevel)
+        public static string BuildLinqToSQLCommandParameters(this List<IProperty> members, bool usePropertyName, bool isChildInsertUpdate, bool isUpdateStatement, int indentLevel)
         {
             string commandParameters = string.Empty;
             string tabLevel = new string((char)9,indentLevel);
-            foreach (Member member in members)
+            foreach (var property in members)
             {
                 
                 string includeThisPrefix =  "this." ;
-                string propertyName = member.PropertyName;
-                string strPropertyName = member.PropertyName;
-                string originalPropertyName = isUpdateStatement && member.IsPrimaryKey && !member.IsIdentity ? string.Format("Original{0}", member.PropertyName) : string.Empty;
-                string columnName = member.ColumnName;
-                if (member.HasByteArrayColumn())
+                string propertyName = property.Name;
+                string strPropertyName = property.Name;
+                string originalPropertyName = isUpdateStatement && property.IsType(PropertyType.Key) && !property.IsType(PropertyType.Identity) ? String.Format("Original{0}", property.Name) : string.Empty;
+                string columnName = property.KeyName;
+                if (property.HasByteArrayColumn())
                 {
                     strPropertyName = "LinqToSQLHelper.GetBinary(" + includeThisPrefix + propertyName + ")";
                 }
@@ -303,7 +304,7 @@ namespace CodeSmith.SchemaHelper
                     strPropertyName = includeThisPrefix + propertyName;
 
                 }
-                commandParameters += string.Format("\r\n{0}item.{1} = {2};", tabLevel, propertyName, strPropertyName);
+                commandParameters += String.Format("\r\n{0}item.{1} = {2};", tabLevel, propertyName, strPropertyName);
             }
 
             return commandParameters.TrimStart(new[] { '\r', '\n' });

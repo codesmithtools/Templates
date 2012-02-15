@@ -22,13 +22,13 @@ namespace CodeSmith.SchemaHelper
             bool isFirst = true;
 
             // AssociatedOneToMany, contains properties that need to be passed into child entity update/insert.
-            // AssociatedManyToOne, contains properties in the current entity.
+            // Associations.Where(a => a.AssociationType == AssociationType.ManyToOne), contains properties in the current entity.
 
             //In child class. Check its associations.. (Item)
             foreach (Association association in entity.AssociatedOneToMany)
             {
                 //Child's Parameter List. (Product, supplier)
-                foreach (Association childAssociation in GetRelatedEntity(association[0]).AssociatedManyToOne)
+                foreach (Association childAssociation in GetRelatedEntity(association[0]).Associations.Where(a => a.AssociationType == AssociationType.ManyToOne))
                 {
                     // see if we already passed in the param.
                     var childParameter = string.Format(", {0}", Util.NamingConventions.VariableName(childAssociation[0].ClassName));
@@ -71,7 +71,7 @@ namespace CodeSmith.SchemaHelper
                     if (childMember.AssociatedColumn.TableName.Equals(member.TableName) || childMember.TableName.Equals(member.TableName))
                     {
                         found = true;
-                        foreach (Association association2 in entity.AssociatedManyToOne)
+                        foreach (Association association2 in entity.Associations.Where(a => a.AssociationType == AssociationType.ManyToOne))
                         {
                             foreach (AssociationMember rootMember in association2)
                             {

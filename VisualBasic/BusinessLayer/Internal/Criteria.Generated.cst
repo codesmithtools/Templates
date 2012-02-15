@@ -1,5 +1,5 @@
 ﻿<%-- Author: Blake Niemyjski --%>
-<%@ CodeTemplate Language="VB" TargetLanguage="VB" Inherits="CodeSmith.QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Encoding="UTF-8" Description="CSLA Criteria" %>
+<%@ CodeTemplate Language="VB" TargetLanguage="VB" Inherits="CodeSmith.QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Encoding="UTF-8" %>
 
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\..\Common" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper.Extensions" Path="..\..\..\Common" %>
@@ -66,10 +66,10 @@ Namespace <%= BusinessProjectName %>
         <% If Not(IsCSLA40) Then %>MyBase.New(GetType(<%= BusinessProjectName %>.<%= ChildBusinessClassName %><%= Entity.GenericProperty %>))<% End If %>
         End Sub
         
-        Public Sub New(<%= Entity.PrimaryKey.KeyMembers.BuildParametersVariables() %>) 
+        Public Sub New(<%= Entity.Key.Properties.BuildParametersVariables() %>) 
             <% If Not(IsCSLA40) Then %>MyBase.New(GetType(<%= BusinessProjectName %>.<%= ChildBusinessClassName %><%= Entity.GenericProperty %>))<% End If %>
             
-    <% For Each member As Member In Entity.PrimaryKey.KeyMembers %>
+    <% For Each member As Member In Entity.Key.Properties %>
             Me.<%= member.PropertyName %> = <%= member.VariableName %>
     <% Next %>
         End Sub
@@ -80,7 +80,7 @@ Namespace <%= BusinessProjectName %>
         
 #Region "Read-Write"
     
-    <% For Each member As Member In Entity.MembersNoRowVersion %>
+    <% For Each member As Member In Entity.GetProperties(PropertyType.NoConcurrency) %>
         
         Public Property <%= member.PropertyName %>() As <%= member.SystemType %>
             Get
@@ -96,7 +96,7 @@ Namespace <%= BusinessProjectName %>
         
 #Region "Read-Only"
     <% If(DataAccessImplementation = DataAccessMethod.StoredProcedures Or DataAccessImplementation = DataAccessMethod.ObjectFactoryStoredProcedures)
-        For Each member As Member In Entity.MembersNoRowVersion
+        For Each member As Member In Entity.GetProperties(PropertyType.NoConcurrency)
             If(member.IsNullable) Then
     %>
     
@@ -124,7 +124,7 @@ Namespace <%= BusinessProjectName %>
         ''' </summary>
         Public ReadOnly Property TableFullName() As String Implements IGeneratedCriteria.TableFullName
             Get
-                Return "[<%= Entity.Table.Owner%>].[<%= Entity.Table.Name%>]"
+                Return "[<%= Entity.Table.Owner%>].[<%= Entity.EntityKeyName%>]"
             End Get
         End Property
     
@@ -182,7 +182,7 @@ Namespace <%= BusinessProjectName %>
         Protected Overrides Sub OnGetState(ByVal info As SerializationInfo, ByVal mode As StateMode)
             MyBase.OnGetState(info, mode)
             
-<% For Each member As Member In Entity.MembersNoRowVersion %>
+<% For Each member As Member In Entity.GetProperties(PropertyType.NoConcurrency) %>
             If _bag.ContainsKey("<%= member.ColumnName %>") Then
                 info.AddValue("<%= member.ColumnName %>", GetValue(Of <%= member.SystemType %>)("<%= member.ColumnName %>"))
             End If
@@ -192,7 +192,7 @@ Namespace <%= BusinessProjectName %>
         Protected Overrides Sub OnSetState(ByVal info As SerializationInfo, ByVal mode As StateMode)
             MyBase.OnSetState(info, mode)
             
-<% For Each member As Member In Entity.MembersNoRowVersion %>
+<% For Each member As Member In Entity.GetProperties(PropertyType.NoConcurrency) %>
             If info.Values.ContainsKey("<%= member.ColumnName %>") Then
                 _bag("<%= member.ColumnName %>") = info.GetValue(Of <%= member.SystemType %>)("<%= member.ColumnName %>")
             End If

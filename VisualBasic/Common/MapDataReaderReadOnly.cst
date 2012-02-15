@@ -15,7 +15,7 @@
                 Return
             End If
     
-    <% for each [member] as Member in Entity.MembersNoRowVersion 
+    <% for each [member] as Member in Entity.GetProperties(PropertyType.NoConcurrency) 
     If UseMemberVariables Then 
         If member.IsNullable And Not member.SystemType = "System.String" And Not member.SystemType = "System.Byte()" Then %>
             <%= [member].PrivateMemberVariableName %> = If(reader.IsDBNull("<%= [member].ColumnName %>"), Nothing, <%If not [member].HasByteArrayColumn() Then %>reader.<%= [member].GetReaderMethod() %>("<%= [member].ColumnName %>")<% else %>ADOHelper.GetBytes(reader)<% End If %>)

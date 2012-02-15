@@ -1,33 +1,28 @@
-<%-- Author: Blake Niemyjski --%>
-<%@ CodeTemplate Language="C#" TargetLanguage="C#" Inherits="CodeSmith.QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Encoding="UTF-8" Description="CSLA Map" %>
-
-<%@ Assembly Name="SchemaExplorer" %>
+﻿<%-- Author: Blake Niemyjski --%>
+<%@ CodeTemplate Language="C#" TargetLanguage="C#" Inherits="Generator.CSLA.EntityCodeTemplate" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\Common" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper.Extensions" Path="..\..\Common" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper.CSharpExtensions" Path="..\..\Common" %>
-<%@ Assembly Name="CodeSmith.QuickStart" Path="..\..\Common" %>
-
-<%@ Import Namespace="SchemaExplorer" %>
+<%@ Assembly Name="Generator.CSLA" Path="..\..\Common" %>
 <%@ Import Namespace="CodeSmith.SchemaHelper" %>
-<%@ Import Namespace="CodeSmith.QuickStart" %>
             bool cancel = false;
             OnChildFetching(criteria, ref cancel);
             if (cancel) return;
 
-            using (SqlConnection connection = new SqlConnection(ADOHelper.ConnectionString))
+            using (var connection = new SqlConnection(ADOHelper.ConnectionString))
             {
                 connection.Open();
-                using (SqlCommand command = new SqlCommand("<%= GetSelectStoredProcedureName() %>", connection))
+                using (var command = new SqlCommand("<%= GetSelectStoredProcedureName() %>", connection))
                 {
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.AddRange(ADOHelper.SqlParameters(criteria.StateBag));
-                    <%= Entity.MembersNoRowVersion.BuildHasValueCommandParameters() %>
+                    <%= Entity.GetProperties(PropertyType.NoConcurrency).BuildHasValueCommandParameters() %>
                     using(var reader = new SafeDataReader(command.ExecuteReader()))
                     {
                         if(reader.Read())
                             Map(reader);
                         else
-                            throw new Exception(string.Format("The record was not found in '<%= Entity.Table.Name %>' using the following criteria: {0}.", criteria));
+                            throw new Exception(String.Format("The record was not found in '<%= Entity.EntityKeyName %>' using the following criteria: {0}.", criteria));
                     }
                 }
             }

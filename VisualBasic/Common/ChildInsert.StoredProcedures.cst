@@ -19,20 +19,20 @@
             If Not (connection.State = ConnectionState.Open) Then connection.Open()
             Using command As New SqlCommand("<%= GetInsertStoredProcedureName() %>", connection)
                 command.CommandType = CommandType.StoredProcedure
-                <%= entity.MembersNoRowVersion.BuildCommandParameters(False, False, Not RenderOptionalContent, True) %>
-    <% If(Entity.HasRowVersionMember) Then %>
-                command.Parameters.AddWithValue("<%= ParameterPrefix  %><%= Entity.RowVersionMember.ColumnName %>", SqlDbType.Timestamp)
-                command.Parameters("<%= ParameterPrefix  %><%= Entity.RowVersionMember.ColumnName %>").Value = Me.<%= Entity.RowVersionMember.PropertyName %>
-                command.Parameters("<%= ParameterPrefix  %><%= Entity.RowVersionMember.ColumnName %>").Direction = ParameterDirection.InputOutput
+                <%= entity.GetProperties(PropertyType.NoConcurrency).BuildCommandParameters(False, False, Not RenderOptionalContent, True) %>
+    <% If(Entity.ConcurrencyProperty != null) Then %>
+                command.Parameters.AddWithValue("<%= ParameterPrefix  %><%= Entity.ConcurrencyProperty.ColumnName %>", SqlDbType.Timestamp)
+                command.Parameters("<%= ParameterPrefix  %><%= Entity.ConcurrencyProperty.ColumnName %>").Value = Me.<%= Entity.ConcurrencyProperty.PropertyName %>
+                command.Parameters("<%= ParameterPrefix  %><%= Entity.ConcurrencyProperty.ColumnName %>").Direction = ParameterDirection.InputOutput
     <% End If %>
     
                 command.ExecuteNonQuery()
     
-    <% If (Entity.HasRowVersionMember) Then %>
-                <%= Entity.RowVersionMember.PropertyName %> = DirectCast(command.Parameters("<%= ParameterPrefix  %><%= Entity.RowVersionMember.ColumnName %>").Value, <%= Entity.RowVersionMember.SystemType %>)
+    <% If (Entity.ConcurrencyProperty != null) Then %>
+                <%= Entity.ConcurrencyProperty.PropertyName %> = DirectCast(command.Parameters("<%= ParameterPrefix  %><%= Entity.ConcurrencyProperty.ColumnName %>").Value, <%= Entity.ConcurrencyProperty.SystemType %>)
     <% End If %>
-    <% For Each member As Member In Entity.PrimaryKey.KeyMembers
-        If(member.IsIdentity OrElse member.DataType = DbType.Guid.ToString()) Then %>
+    <% For Each member As Member In Entity.Key.Properties
+        If(member.IsType(PropertyType.Identity) OrElse member.DataType = DbType.Guid) Then %>
     
                 ' Update identity or guid primary key value.
             <% If(UseMemberVariables) Then %>
@@ -53,8 +53,8 @@
     
             End Using
     <% If Not RenderOptionalContent Then
-        For Each member As Member In Entity.Members
-                If member.IsForeignKey AndAlso Not member.IsPrimaryKey Then
+        For Each member As Member In Entity.Properties
+                If member.IsType(PropertyType.Foreign) AndAlso Not member.IsType(PropertyType.Key) Then
             If String.IsNullOrEmpty(member.ResolveAssociationPropertyClassName()) Then
                 Continue For
             End If  %>
@@ -74,10 +74,10 @@
         Next
     End If %>
     
-    <% If (Entity.AssociatedToManyUnion.Count > 0 OrElse Entity.AssociatedManyToOne.Count > 0 OrElse Entity.AssociatedOneToZeroOrOne.Count > 0) Then
+    <% If (Entity.Associations.Count(a => a.AssociationType == AssociationType.OneToMany) > 0 OrElse Entity.Associations.Count(a => a.AssociationType == AssociationType.ManyToOne) > 0 OrElse Entity.Associations.Count(a => a.AssociationType == AssociationType.OneToZeroOrOne) > 0) Then
         If (Not RenderOptionalContent) Then
         Dim childCount As Integer = 0
-        For Each a As Association In Entity.AssociatedOneToMany
+        For Each a As Association In Entity.Associations.Where(a => a.AssociationType == AssociationType.OneToMany)
             If IsChildBusinessObject(a) Then
                 childCount += 1
             End If

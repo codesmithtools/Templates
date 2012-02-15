@@ -37,7 +37,7 @@
 <% case "TestDynamicRoot.Generated.cst": %>
 <% case "TestEditableRoot.Generated.cst": %>
 <% case "TestSwitchable.Generated.cst": %>
-<% if(Entity.PrimaryKey.KeyMember.DataType == "Int32") {%>
+<% if(Entity.Key.Properties.DataType == "Int32") {%>
             using(System.Transactions.TransactionScope transactionScope = new System.Transactions.TransactionScope())
             {
                 int idToUse = 1;
@@ -48,7 +48,7 @@
                 Assert.True(testObject.IsValid);
                 Console.WriteLine("Deleting test object");
                 testObject.Delete();
-                Assert.False(<%= BusinessClassName %>.Exists(new <%= CriteriaClassName %>(testObject.<%= Entity.PrimaryKey.KeyMember %>)));
+                Assert.False(<%= BusinessClassName %>.Exists(new <%= CriteriaClassName %>(testObject.<%= Entity.Key.Properties %>)));
             }
 <% } else {%>
             //Non-integer foreign key detected. Unable to generate DELETE test.
@@ -91,7 +91,7 @@
 <% case "TestDynamicRoot.Generated.cst": %>
 <% case "TestEditableRoot.Generated.cst": %>
 <% case "TestSwitchable.Generated.cst": %>
-<% if(Entity.PrimaryKey.KeyMember.DataType == "Int32") {%>
+<% if(Entity.Key.Properties.DataType == "Int32") {%>
             using(System.Transactions.TransactionScope transactionScope = new System.Transactions.TransactionScope())
             {
                 int idToUse = 1;
@@ -102,7 +102,7 @@
                 Assert.True(testObject.IsValid);
                 Console.WriteLine("Deleting test object");
                 testObject.Delete();
-                Assert.False(<%= BusinessClassName %>.Exists(new <%= CriteriaClassName %>(testObject.<%= Entity.PrimaryKey.KeyMember %>)));
+                Assert.False(<%= BusinessClassName %>.Exists(new <%= CriteriaClassName %>(testObject.<%= Entity.Key.Properties %>)));
             }
 <% } else {%>
             //Non-integer foreign key detected. Unable to generate DELETE test.

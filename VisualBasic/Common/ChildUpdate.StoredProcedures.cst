@@ -19,11 +19,11 @@
             If Not connection.State = ConnectionState.Open Then connection.Open()
             Using command As New SqlCommand("<%= GetUpdateStoredProcedureName() %>", connection)
                 command.CommandType = CommandType.StoredProcedure
-                <%= entity.MembersNoRowVersion.BuildCommandParameters(False, False, Not RenderOptionalContent, True, True) %>
-    <% If(Entity.HasRowVersionMember) Then %>
-                command.Parameters.AddWithValue("<%= ParameterPrefix  %><%= Entity.RowVersionMember.ColumnName %>", SqlDbType.Timestamp)
-                command.Parameters("<%= ParameterPrefix  %><%= Entity.RowVersionMember.ColumnName %>").Value = Me.<%= Entity.RowVersionMember.PropertyName %>
-                command.Parameters("<%= ParameterPrefix  %><%= Entity.RowVersionMember.ColumnName %>").Direction = ParameterDirection.InputOutput
+                <%= entity.GetProperties(PropertyType.NoConcurrency).BuildCommandParameters(False, False, Not RenderOptionalContent, True, True) %>
+    <% If(Entity.ConcurrencyProperty != null) Then %>
+                command.Parameters.AddWithValue("<%= ParameterPrefix  %><%= Entity.ConcurrencyProperty.ColumnName %>", SqlDbType.Timestamp)
+                command.Parameters("<%= ParameterPrefix  %><%= Entity.ConcurrencyProperty.ColumnName %>").Value = Me.<%= Entity.ConcurrencyProperty.PropertyName %>
+                command.Parameters("<%= ParameterPrefix  %><%= Entity.ConcurrencyProperty.ColumnName %>").Direction = ParameterDirection.InputOutput
     <% End If %>
     
                 'result: The number of rows changed, inserted, or deleted. -1 for select statements; 0 if no rows were affected, or the statement failed. 
@@ -32,11 +32,11 @@
                     throw new DBConcurrencyException("The entity is out of date on the client. Please update the entity and try again. This could also be thrown if the sql statement failed to execute.")
                 End If
     
-    <% If (Entity.HasRowVersionMember) Then %>
-                <%= Entity.RowVersionMember.PropertyName %> = DirectCast(command.Parameters("<%= ParameterPrefix  %><%= Entity.RowVersionMember.ColumnName %>").Value, <%= Entity.RowVersionMember.SystemType %>)
+    <% If (Entity.ConcurrencyProperty != null) Then %>
+                <%= Entity.ConcurrencyProperty.PropertyName %> = DirectCast(command.Parameters("<%= ParameterPrefix  %><%= Entity.ConcurrencyProperty.ColumnName %>").Value, <%= Entity.ConcurrencyProperty.SystemType %>)
     <% End If %>
-    <% For Each member As Member In Entity.PrimaryKey.KeyMembers
-        If(Not member.IsIdentity) Then %> 
+    <% For Each member As Member In Entity.Key.Properties
+        If(Not member.IsType(PropertyType.Identity)) Then %> 
                 ' Update non-identity primary key value.
         <% If(UseMemberVariables) Then %>
                 <%= member.PrivateMemberVariableName %> = DirectCast(command.Parameters("<%= member.BuildParameterVariableName() %>").Value, <%= member.SystemType %>)
@@ -46,8 +46,8 @@
         End If
     Next %>
     <% If Not RenderOptionalContent Then
-        For Each member As Member In Entity.Members
-            If member.IsForeignKey Then
+        For Each member As Member In Entity.Properties
+            If member.IsType(PropertyType.Foreign) Then
                 If String.IsNullOrEmpty(member.ResolveAssociationPropertyClassName()) Then
                     Continue For
                 End If  %>
@@ -65,8 +65,8 @@
             <% End If
         Next
     End If %>
-    <% For Each member As Member In Entity.PrimaryKey.KeyMembers
-        If Not (member.IsIdentity) Then %>
+    <% For Each member As Member In Entity.Key.Properties
+        If Not (member.IsType(PropertyType.Identity)) Then %>
                 ' Update non-identity primary key value.
             <% If(UseMemberVariables) Then %>
                 _original<%= member.PropertyName %> = Me.<%= member.PropertyName %>
@@ -76,10 +76,10 @@
         End If
     Next %>
             End Using
-    <% If (Entity.AssociatedToManyUnion.Count > 0 OrElse Entity.AssociatedManyToOne.Count > 0 OrElse Entity.AssociatedOneToZeroOrOne.Count > 0) Then
+    <% If (Entity.Associations.Count(a => a.AssociationType == AssociationType.OneToMany) > 0 OrElse Entity.Associations.Count(a => a.AssociationType == AssociationType.ManyToOne) > 0 OrElse Entity.Associations.Count(a => a.AssociationType == AssociationType.OneToZeroOrOne) > 0) Then
         If (Not RenderOptionalContent) Then
         Dim childCount As Integer = 0
-        For Each a As Association In Entity.AssociatedOneToMany
+        For Each a As Association In Entity.Associations.Where(a => a.AssociationType == AssociationType.OneToMany)
             If IsChildBusinessObject(a) Or IsSwitchableObject(a) Then
                 childCount += 1
             End If

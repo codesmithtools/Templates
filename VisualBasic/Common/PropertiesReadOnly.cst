@@ -13,7 +13,7 @@
 
 #Region "Properties"
     
-    <%  For Each member As Member in Entity.MembersNoRowVersion
+    <%  For Each member As Member in Entity.GetProperties(PropertyType.NoConcurrency)
     If UseMemberVariables Then %>
         Private Shared ReadOnly <%= member.PrivateMemberVariableName %>Property As PropertyInfo(Of <%= member.SystemType %>) = RegisterProperty(Of <%= member.SystemType %>)(Function(p As <%= BusinessClassName %>) p.<%= member.PropertyName %>, String.Empty<% If(member.IsNullable And member.SystemType = "System.String") Then %>, vbNullString<% Else If(member.CanGenerateNullDefault()) Then %>, CType(Nothing, <%= member.SystemType %>)<%End If%><% If (IsCSLA40) Then %>, RelationshipTypes.PrivateField<% End If %>)
         Private <%= member.PrivateMemberVariableName %> As <%= member.SystemType %> = <%= member.PrivateMemberVariableName %>Property.DefaultValue
@@ -22,12 +22,12 @@
         ''' <%= member.Description %>
         ''' </summary>
     <% End If %>
-    <%If IncludeSilverlightSupport And member.IsPrimaryKey Then %>
+    <%If IncludeSilverlightSupport And member.IsType(PropertyType.Key) Then %>
 #If Not SILVERLIGHT Then
     <% End If %>
-        <%If member.IsPrimaryKey Then %><%= member.BuildDataObjectField(IncludeSilverlightSupport) %><% End If %>
+        <%If member.IsType(PropertyType.Key) Then %><%= member.BuildDataObjectField(IncludeSilverlightSupport) %><% End If %>
         Public Readonly Property <%= member.PropertyName %>() As <%= member.SystemType %>
-    <%If IncludeSilverlightSupport And member.IsPrimaryKey Then %>
+    <%If IncludeSilverlightSupport And member.IsType(PropertyType.Key) Then %>
 #Else
         Public Readonly Property <%= member.PropertyName %>() As <%= member.SystemType %>
 #End If
@@ -42,12 +42,12 @@
         ''' <%= member.Description %>
         ''' </summary>
     <% End If %>
-    <%If IncludeSilverlightSupport And member.IsPrimaryKey Then %>
+    <%If IncludeSilverlightSupport And member.IsType(PropertyType.Key) Then %>
 #If Not SILVERLIGHT Then
     <% End If %>
-        <%If member.IsPrimaryKey Then %><%= member.BuildDataObjectField(IncludeSilverlightSupport) %><% End If %>
+        <%If member.IsType(PropertyType.Key) Then %><%= member.BuildDataObjectField(IncludeSilverlightSupport) %><% End If %>
         Public Readonly Property <%= member.PropertyName %>() As <%= member.SystemType %>
-    <%If IncludeSilverlightSupport And member.IsPrimaryKey Then %>
+    <%If IncludeSilverlightSupport And member.IsType(PropertyType.Key) Then %>
 #Else
         Public ReadOnly Property <%= member.PropertyName %>() As <%= member.SystemType %>
 #End If
@@ -60,14 +60,14 @@
         
     <% Next %>
     <%-- One-To-Zero-Or-One --%>
-    <% For Each association As Association in Entity.AssociatedOneToZeroOrOne 
+    <% For Each association As Association in Entity.Associations.Where(a => a.AssociationType == AssociationType.OneToZeroOrOne) 
         ' For now, don't generate properties based on tables generated as generics.
         If(association.GenericProperty = string.Empty) Then
     Dim associationClassName As String = association.ClassName
     If(IsReadOnlyBusinessObject( association, "Info")) Then
         associationClassName += "Info"
     End If %>
-        'AssociatedOneToZeroOrOne
+        'Associations.Where(a => a.AssociationType == AssociationType.OneToZeroOrOne)
         Private Shared ReadOnly <%= association.PrivateMemberVariableName %>Property As PropertyInfo(Of <%= associationClassName %><%= association.GenericProperty %>) = RegisterProperty(Of <%= associationClassName %><%= association.GenericProperty %>)(Function(p As <%= BusinessClassName %>) p.<%= association.PropertyName %>, "<%= association.PropertyName %>")
     <% If(association.HasDescription) Then %>
         ''' <summary>
@@ -94,7 +94,7 @@
                                 End If
                                 
                                 If Not (e.Object.Result) Then
-                                    <%= associationClassName %><%= association.GenericProperty %>.<%= association.SearchCriteria.MethodName%>Async(<%= association.SearchCriteria.Members.BuildPropertyVariableArguments() %>, Sub(o1, e1)
+                                    <%= associationClassName %><%= association.GenericProperty %>.<%= association.SearchCriteria.MethodName%>Async(<%= association.SearchCriteria.Properties.BuildPropertyVariableArguments() %>, Sub(o1, e1)
                                         If Not (e1.Error Is Nothing) Then
                                             Throw e1.Error
                                         End If
@@ -110,7 +110,7 @@
 #Else
 <% End If %>
                         If(<%= association.BuildNullCheckStatement(true, false, false, false) %><%= BusinessProjectName %>.<%= associationClassName %><%= association.GenericProperty %>.Exists(criteria)) Then
-                            LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= associationClassName %><%= association.GenericProperty %>.<%= association.SearchCriteria.MethodName%>(<%= association.SearchCriteria.Members.BuildPropertyVariableArguments() %>))
+                            LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= associationClassName %><%= association.GenericProperty %>.<%= association.SearchCriteria.MethodName%>(<%= association.SearchCriteria.Properties.BuildPropertyVariableArguments() %>))
                         End If
 <% If(IncludeSilverlightSupport) Then %>
 #End If
@@ -126,14 +126,14 @@
     <% End If
     Next %>
     <%-- Many-To-One --%>
-    <% For Each association  As Association in Entity.AssociatedManyToOne 
+    <% For Each association  As Association in Entity.Associations.Where(a => a.AssociationType == AssociationType.ManyToOne) 
         ' For now, don't generate properties based on tables generated as generics.
         If(association.GenericProperty = string.Empty) Then
     Dim associationClassName As String = association.ClassName
     If(IsReadOnlyBusinessObject(association, "Info")) Then
         associationClassName += "Info"
     End If %>
-        'AssociatedManyToOne
+        'Associations.Where(a => a.AssociationType == AssociationType.ManyToOne)
         Private Shared ReadOnly <%= association.PrivateMemberVariableName %>Property As PropertyInfo(Of <%= associationClassName %>) = RegisterProperty(Of <%= associationClassName %>)(Function(p As <%= BusinessClassName %>) p.<%= association.PropertyName %>, "<%= association.PropertyName %>")
     <% If(association.HasDescription) Then %>
         ''' <summary>
@@ -164,7 +164,7 @@
                             End If
                             
                             If (e.Object.Result) Then
-                                <%= BusinessProjectName %>.<%= associationClassName %><%= association.GenericProperty %>.<%= association.SearchCriteria.MethodName%>Async(<%= association.SearchCriteria.Members.BuildPropertyVariableArguments() %>, Sub(o1, e1)
+                                <%= BusinessProjectName %>.<%= associationClassName %><%= association.GenericProperty %>.<%= association.SearchCriteria.MethodName%>Async(<%= association.SearchCriteria.Properties.BuildPropertyVariableArguments() %>, Sub(o1, e1)
                                     If Not (e1.Error Is Nothing) Then
                                         Throw e1.Error
                                     End If
@@ -179,7 +179,7 @@
 #Else
 <% End If %>
                         If (<%= BusinessProjectName %>.<%= associationClassName %><%= association.GenericProperty %>.Exists(criteria)) Then
-                            LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= BusinessProjectName %>.<%= associationClassName %><%= association.GenericProperty %>.<%= association.SearchCriteria.MethodName%>(<%= association.SearchCriteria.Members.BuildPropertyVariableArguments() %>))
+                            LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= BusinessProjectName %>.<%= associationClassName %><%= association.GenericProperty %>.<%= association.SearchCriteria.MethodName%>(<%= association.SearchCriteria.Properties.BuildPropertyVariableArguments() %>))
                         End If
 <% If(IncludeSilverlightSupport) Then %>
 #End If
@@ -195,14 +195,14 @@
     <% End If
     Next %>
     <%-- One-To-Many & Many-To-Many --%>
-    <% For Each association As Association in Entity.AssociatedOneToMany 
+    <% For Each association As Association in Entity.Associations.Where(a => a.AssociationType == AssociationType.OneToMany) 
         ' For now, don't generate properties based on tables generated as generics.
         If(association.GenericProperty = string.Empty) Then
         Dim associationClassName As String = association.ClassName
         If(IsReadOnlyBusinessObject( association, "InfoList")) Then
             associationClassName += "Info"
         End If %>
-        'AssociatedOneToMany
+        'Where(a => a.AssociationType == AssociationType.OneToMany)
         Private Shared ReadOnly <%= association.PrivateMemberVariableName %>Property As PropertyInfo(Of <%= associationClassName %>List<%= association.GenericProperty %>) = RegisterProperty(Of <%= associationClassName %>List<%= association.GenericProperty %>)(Function(p As <%= BusinessClassName %>) p.<%= association.PropertyName %>, "<%= association.PropertyName %>")
     <% If(association.HasDescription) Then %>
         ''' <summary>
@@ -242,7 +242,7 @@
                                 End If
                             
                                 If Not (e.Object.Result) Then
-                                    <%= BusinessProjectName %>.<%= associationClassName %>List.<%= association.SearchCriteria.MethodName%>Async(<%= association.SearchCriteria.Members.BuildPropertyVariableArguments() %>, Sub(o1, e1)
+                                    <%= BusinessProjectName %>.<%= associationClassName %>List.<%= association.SearchCriteria.MethodName%>Async(<%= association.SearchCriteria.Properties.BuildPropertyVariableArguments() %>, Sub(o1, e1)
                                         If Not (e1.Error Is Nothing) Then
                                             Throw e1.Error
                                         End If
@@ -265,7 +265,7 @@
                         <%= association.BuildObjectInitializer(true) %>
     
                         If(<%= association.BuildNullCheckStatement(true, false, false, false) %><%= BusinessProjectName %>.<%= associationClassName %>List<%= association.GenericProperty %>.Exists(criteria)) Then
-                            LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= BusinessProjectName %>.<%= associationClassName %>List.<%= association.SearchCriteria.MethodName%>(<%= association.SearchCriteria.Members.BuildPropertyVariableArguments() %>))
+                            LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= BusinessProjectName %>.<%= associationClassName %>List.<%= association.SearchCriteria.MethodName%>(<%= association.SearchCriteria.Properties.BuildPropertyVariableArguments() %>))
                         End If
     <% End If %>
 <% If(IncludeSilverlightSupport) Then %>

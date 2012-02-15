@@ -31,7 +31,7 @@
             'AuthorizationRules.AllowEdit(GetType(<%= BusinessClassName %>), canWrite)
             'AuthorizationRules.AllowGet(GetType(<%= BusinessClassName %>), canRead)
     
-    <% For Each member As Member in Entity.MembersNoRowVersion %>
+    <% For Each member As Member in Entity.GetProperties(PropertyType.NoConcurrency) %>
             ''<%= member.PropertyName %>
     <% If Not member.IsReadOnly Then %>
             'AuthorizationRules.AllowWrite(<%= member.PrivateMemberVariableName %>Property, canWrite)
@@ -40,20 +40,20 @@
     
     <% Next %>
     <%-- One-To-Zero-Or-One --%>
-    <% For Each association As Association in Entity.AssociatedOneToZeroOrOne %>
+    <% For Each association As Association in Entity.Associations.Where(a => a.AssociationType == AssociationType.OneToZeroOrOne) %>
             ''<%= association.PropertyName %>
             'AuthorizationRules.AllowRead(<%= association.PrivateMemberVariableName %>Property, canRead)
     
     <% Next %>
     <%-- Many-To-One --%>
-    <% For Each association As Association in Entity.AssociatedManyToOne %>
+    <% For Each association As Association in Entity.Associations.Where(a => a.AssociationType == AssociationType.ManyToOne) %>
             ''<%= association.PropertyName %>
             'AuthorizationRules.AllowRead(<%= association.PrivateMemberVariableName %>Property, canRead)
     
     <% Next %>
     <%-- One-To-Many & Many-To-Many --%>
     ' NOTE: Many-To-Many support coming soon.
-    <% For Each association As Association in Entity.AssociatedOneToMany %>
+    <% For Each association As Association in Entity.Associations.Where(a => a.AssociationType == AssociationType.OneToMany) %>
             ''<%= association.PropertyName %>
             'AuthorizationRules.AllowRead(<%= association.PrivateMemberVariableName %>Property, canRead)
     

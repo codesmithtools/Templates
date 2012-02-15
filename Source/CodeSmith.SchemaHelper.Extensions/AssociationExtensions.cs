@@ -16,12 +16,12 @@ namespace CodeSmith.SchemaHelper
         {
             string parameters = string.Empty;
 
-            foreach (AssociationMember member in association)
+            foreach (AssociationProperty property in association.Properties)
             {
                 if (useAssociatedColumn)
-                    parameters += string.Format(", {0}", member.AssociatedColumn.PropertyName);
+                    parameters += String.Format(", {0}", property.ForeignProperty.Name);
                 else
-                    parameters += string.Format(", {0}", member.PropertyName);
+                    parameters += String.Format(", {0}", property.Property);
             }
 
             return parameters.TrimStart(new[] { ',', ' ' });
@@ -31,9 +31,9 @@ namespace CodeSmith.SchemaHelper
         {
             string parameters = string.Empty;
 
-            foreach (AssociationMember member in association)
+            foreach (AssociationProperty property in association.Properties)
             {
-                parameters += member.AssociatedColumn.PropertyName;
+                parameters += property.ForeignProperty.Name;
             }
 
             return parameters;

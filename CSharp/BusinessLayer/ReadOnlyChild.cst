@@ -1,24 +1,19 @@
 ﻿<%-- Author: Blake Niemyjski --%>
-<%@ CodeTemplate Language="C#" TargetLanguage="C#" OutputType="None" Inherits="CodeSmith.QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Encoding="UTF-8" Description="CSLA ReadOnlyChild" %>
-
+<%@ CodeTemplate Language="C#" TargetLanguage="C#" OutputType="None" Inherits="Generator.CSLA.EntityCodeTemplate" %>
 <%@ Register Name="ReadOnlyChild" Template="Internal\ReadOnlyChild.cst" %>
 <%@ Register Name="ReadOnlyChildDataAccess" Template="Internal\ReadOnlyChild.DataAccess.cst" %>
 <%@ Register Name="ReadOnlyChildDataAccessParameterized" Template="Internal\ReadOnlyChild.DataAccess.ParameterizedSQL.cst" %>
 <%@ Register Name="ReadOnlyChildDataAccessLinqToSQL" Template="Internal\ReadOnlyChild.DataAccess.LinqToSQL.cst" %>
 <%@ Register Name="ReadOnlyChildDataAccessStoredProcedures" Template="Internal\ReadOnlyChild.DataAccess.StoredProcedures.cst" %>
 <%@ Register Name="ReadOnlyChildGenerated" Template="Internal\ReadOnlyChild.Generated.cst" %>
-
 <%@ Register Name="SqlStoredProcedures" Template="..\DataAccessLayer\Internal\SQLStoredProcedures.cst" %>
 
 <%@ Assembly Name="CodeSmith.CustomProperties" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\Common" %>
-<%@ Assembly Name="CodeSmith.QuickStart" Path="..\..\Common" %>
-<%@ Assembly Name="SchemaExplorer" %>
+<%@ Assembly Name="Generator.CSLA" Path="..\..\Common" %>
 
 <%@ Import Namespace="CodeSmith.CustomProperties" %>
 <%@ Import Namespace="CodeSmith.SchemaHelper" %>
-<%@ Import Namespace="CodeSmith.QuickStart" %>
-<%@ Import Namespace="SchemaExplorer" %>
 
 <script runat="template">
 
@@ -31,7 +26,7 @@ public override void Render(System.IO.TextWriter writer)
     ReadOnlyChild readOnlyChild = this.Create<ReadOnlyChild>();
     this.CopyPropertiesTo(readOnlyChild);
     
-    string parentFileName = System.IO.Path.Combine(this.Location, string.Format("Entities\\{0}.cs", readOnlyChild.BusinessClassName));
+    string parentFileName = System.IO.Path.Combine(this.Location, String.Format("Entities\\{0}.cs", readOnlyChild.BusinessClassName));
     if (!System.IO.File.Exists(parentFileName))
     {
         readOnlyChild.RenderToFile(parentFileName, false);
@@ -39,7 +34,7 @@ public override void Render(System.IO.TextWriter writer)
     
     #region ReadOnlyChild.Generated
     
-    string fileName = System.IO.Path.Combine(Location, string.Format("Entities\\{0}.Generated.cs", readOnlyChild.BusinessClassName));
+    string fileName = System.IO.Path.Combine(Location, String.Format("Entities\\{0}.Generated.cs", readOnlyChild.BusinessClassName));
     
     ReadOnlyChildGenerated readOnlyChildGenerated = this.Create<ReadOnlyChildGenerated>();
     this.CopyPropertiesTo(readOnlyChildGenerated);
@@ -50,7 +45,7 @@ public override void Render(System.IO.TextWriter writer)
     
     #region ReadOnlyChild.DataAccess
     
-    fileName = System.IO.Path.Combine(Location, string.Format("Entities\\{0}.DataAccess.cs", readOnlyChild.BusinessClassName));
+    fileName = System.IO.Path.Combine(Location, String.Format("Entities\\{0}.DataAccess.cs", readOnlyChild.BusinessClassName));
     if(DataAccessImplementation == DataAccessMethod.None)
     {
         ReadOnlyChildDataAccess readOnlyChildDataAccess = this.Create<ReadOnlyChildDataAccess>();
@@ -80,7 +75,7 @@ public override void Render(System.IO.TextWriter writer)
         readOnlyChildDataAccessStoredProcedures.RenderToFile(fileName, parentFileName, true);
 
         //StoredProcedures
-        fileName = System.IO.Path.Combine(Location, string.Format("Entities\\{0}.StoredProcedures.sql", readOnlyChild.BusinessClassName));
+        fileName = System.IO.Path.Combine(Location, String.Format("Entities\\{0}.StoredProcedures.sql", readOnlyChild.BusinessClassName));
         SqlStoredProcedures sqlStoredProcedures = this.Create<SqlStoredProcedures>();
         this.CopyPropertiesTo(sqlStoredProcedures);
         sqlStoredProcedures.DataProjectName = "Not needed for sql stored procedures.";
@@ -97,11 +92,11 @@ public override bool OnTableChanging()
 {
     if (string.IsNullOrEmpty(BusinessClassName))
     {
-        BusinessClassName = string.Concat(Entity.ClassName, "Info");
+        BusinessClassName = string.Concat(Entity.Name, "Info");
     }
 
     if (string.IsNullOrEmpty(CriteriaClassName) || CriteriaClassName.Equals("Criteria", StringComparison.InvariantCultureIgnoreCase))
-        CriteriaClassName = String.Concat(Entity.ClassName, "Criteria");
+        CriteriaClassName = String.Concat(Entity.Name, "Criteria");
 
     return false;
 }

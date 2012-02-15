@@ -1,5 +1,5 @@
 ﻿<%-- Author: Blake Niemyjski --%>
-<%@ CodeTemplate Language="VB" TargetLanguage="VB" OutputType="None" Inherits="CodeSmith.QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Encoding="UTF-8" Description="CSLA DynamicRootList" %>
+<%@ CodeTemplate Language="VB" TargetLanguage="VB" OutputType="None" Inherits="CodeSmith.QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Encoding="UTF-8" %>
 
 <%@ Register Name="DynamicRootList" Template="Internal\DynamicRootList.cst" %>
 <%@ Register Name="DynamicRootListDataAccess" Template="Internal\DynamicRootList.DataAccess.cst" %>

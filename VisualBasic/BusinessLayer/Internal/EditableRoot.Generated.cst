@@ -1,5 +1,5 @@
 ﻿<%-- Author: Blake Niemyjski --%>
-<%@ CodeTemplate Language="VB" TargetLanguage="VB" Inherits="CodeSmith.QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Encoding="UTF-8" Description="CSLA EditableRoot" %>
+<%@ CodeTemplate Language="VB" TargetLanguage="VB" Inherits="CodeSmith.QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Encoding="UTF-8" %>
 <%@ Register Name="CompositeKeyMethods" Template="..\..\Common\CompositeKeyMethods.cst" MergeProperties="False" ExcludeProperties="" %>
 <%@ Register Name="Constructor" Template="..\..\Common\Constructor.cst" MergeProperties="False" ExcludeProperties="" %>
 <%@ Register Name="DataPortalCreate" Template="..\..\Common\DataPortalCreate.cst" MergeProperties="False" ExcludeProperties="" %>
@@ -70,23 +70,23 @@ Namespace <%= BusinessProjectName %>
         Public Shared Function New<%= BusinessClassName %>() As <%= BusinessClassName %><%= Entity.GenericProperty %>
             Return DataPortal.Create(Of <%= BusinessClassName %><%= Entity.GenericProperty %>)()
         End Function
-    <% For Each sc As SearchCriteria In  Entity.SearchCriteria() %>
+    <% For Each sc As SearchCriteria In  Entity.SearchCriteria %>
     
-        Public Shared Function <%= sc.MethodName %>(<%= sc.Members.BuildParametersVariables() %>) As <%= BusinessClassName %><%= Entity.GenericProperty %>
+        Public Shared Function <%= sc.MethodName %>(<%= sc.Properties.BuildParametersVariables() %>) As <%= BusinessClassName %><%= Entity.GenericProperty %>
             Dim criteria As New <%= CriteriaClassName %><%= Entity.GenericProperty %>()
-            <%= sc.Members.BuildObjectInitializer() %>
+            <%= sc.Properties.BuildObjectInitializer() %>
             
             Return DataPortal.Fetch(Of <%= BusinessClassName %><%= Entity.GenericProperty %>)(criteria)
         End Function
     <% Next %>
     
     <% If(UseDeferredDeletion)Then %>
-        'Public Shared Sub Delete<%= BusinessClassName %>(<%= Entity.PrimaryKey.KeyMembers.BuildParametersVariables() %>)
-        '   DataPortal.Delete<% If (IsCSLA40) Then %>(Of <%= BusinessClassName %><%= Entity.GenericProperty %>)<% End If %>(New <%= CriteriaClassName %><%= Entity.GenericProperty %> (<%= Entity.PrimaryKey.KeyMembers.BuildVariableArguments() %>))
+        'Public Shared Sub Delete<%= BusinessClassName %>(<%= Entity.Key.Properties.BuildParametersVariables() %>)
+        '   DataPortal.Delete<% If (IsCSLA40) Then %>(Of <%= BusinessClassName %><%= Entity.GenericProperty %>)<% End If %>(New <%= CriteriaClassName %><%= Entity.GenericProperty %> (<%= Entity.Key.Properties.BuildVariableArguments() %>))
         'End Sub
     <% Else %>
-        Public Shared Sub Delete<%= BusinessClassName %>(<%= Entity.PrimaryKey.KeyMembers.BuildParametersVariables() %>)
-            DataPortal.Delete<% If (IsCSLA40) Then %>(Of <%= BusinessClassName %><%= Entity.GenericProperty %>)<% End If %>(New <%= CriteriaClassName %><%= Entity.GenericProperty %>(<%= Entity.PrimaryKey.KeyMembers.BuildVariableArguments() %>))
+        Public Shared Sub Delete<%= BusinessClassName %>(<%= Entity.Key.Properties.BuildParametersVariables() %>)
+            DataPortal.Delete<% If (IsCSLA40) Then %>(Of <%= BusinessClassName %><%= Entity.GenericProperty %>)<% End If %>(New <%= CriteriaClassName %><%= Entity.GenericProperty %>(<%= Entity.Key.Properties.BuildVariableArguments() %>))
         End Sub
     <%End If%>
     
@@ -102,14 +102,14 @@ Namespace <%= BusinessProjectName %>
             AddHandler dp.CreateCompleted, handler
             dp.BeginCreate()
         End Sub
-    <% For Each sc As SearchCriteria In Entity.SearchCriteria() %>
+    <% For Each sc As SearchCriteria In Entity.SearchCriteria %>
     
-        Public Shared Sub <%= sc.MethodName %>Async(<%= sc.Members.BuildParametersVariables() %>, ByVal handler As EventHandler(Of DataPortalResult(Of <%= BusinessClassName %><%= Entity.GenericProperty %>)))
+        Public Shared Sub <%= sc.MethodName %>Async(<%= sc.Properties.BuildParametersVariables() %>, ByVal handler As EventHandler(Of DataPortalResult(Of <%= BusinessClassName %><%= Entity.GenericProperty %>)))
             Dim dp As New DataPortal(Of <%= BusinessClassName %><%= Entity.GenericProperty %>)()
             AddHandler dp.FetchCompleted, handler
         
             Dim criteria As New <%= CriteriaClassName %><%= Entity.GenericProperty %>()
-    <%For Each member As Member in sc.Members %>
+    <%For Each member As Member in sc.Properties %>
             criteria.<%= member.PropertyName %> = <%= member.VariableName %>
     <% Next %>
     
@@ -118,15 +118,15 @@ Namespace <%= BusinessProjectName %>
     <% Next %> 
     
     <% If (UseDeferredDeletion) Then %>
-        'Public Shared Sub Delete<%= BusinessClassName %>Delete<%= BusinessClassName %>(<%= Entity.PrimaryKey.KeyMembers.BuildParametersVariables() %>)
+        'Public Shared Sub Delete<%= BusinessClassName %>Delete<%= BusinessClassName %>(<%= Entity.Key.Properties.BuildParametersVariables() %>)
             'Dim dp As New DataPortal(Of <%= BusinessClassName %><%= Entity.GenericProperty %>)()
-            'dp.BeginDelete(New <%= CriteriaClassName %><%= Entity.GenericProperty %> (<%= Entity.PrimaryKey.KeyMembers.BuildVariableArguments() %>))
+            'dp.BeginDelete(New <%= CriteriaClassName %><%= Entity.GenericProperty %> (<%= Entity.Key.Properties.BuildVariableArguments() %>))
         'End Sub
     <% Else %>
-        Public Shared Sub Delete<%= BusinessClassName %>Delete<%= BusinessClassName %>Async(<%= Entity.PrimaryKey.KeyMembers.BuildParametersVariables()%>, ByVal handler As EventHandler(Of DataPortalResult(Of <%= BusinessClassName %><%= Entity.GenericProperty %>)))
+        Public Shared Sub Delete<%= BusinessClassName %>Delete<%= BusinessClassName %>Async(<%= Entity.Key.Properties.BuildParametersVariables()%>, ByVal handler As EventHandler(Of DataPortalResult(Of <%= BusinessClassName %><%= Entity.GenericProperty %>)))
             Dim dp As New DataPortal(Of <%= BusinessClassName %><%= Entity.GenericProperty %>)()
             AddHandler dp.DeleteCompleted, handler
-            dp.BeginDelete(New <%= CriteriaClassName %><%= Entity.GenericProperty %> (<%= Entity.PrimaryKey.KeyMembers.BuildVariableArguments() %>))
+            dp.BeginDelete(New <%= CriteriaClassName %><%= Entity.GenericProperty %> (<%= Entity.Key.Properties.BuildVariableArguments() %>))
         End Sub
     
     <% End If %> 

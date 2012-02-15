@@ -1,5 +1,5 @@
 ﻿<%-- Author: Blake Niemyjski --%>
-<%@ CodeTemplate Language="VB" TargetLanguage="VB" Inherits="CodeSmith.QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Encoding="UTF-8" Description="CSLA EditableRoot" %>
+<%@ CodeTemplate Language="VB" TargetLanguage="VB" Inherits="CodeSmith.QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Encoding="UTF-8" %>
 <%@ Register Name="MapDataReader" Template="..\..\Common\MapDataReader.cst" MergeProperties="False" ExcludeProperties="" %>
 <%@ Register Name="DataPortalCreate" Template="..\..\Common\DataPortalCreate.cst" MergeProperties="False" ExcludeProperties="" %>
 <%@ Register Name="DataPortalFetch" Template="..\..\Common\DataPortalFetch.ParameterizedSQL.cst" MergeProperties="False" ExcludeProperties="" %>
@@ -72,7 +72,7 @@ Namespace <%= BusinessProjectName %>
                 Return
             End If
         
-            DataPortal_Delete(New <%= CriteriaClassName %><%= Entity.GenericProperty %> (<% If (UseMemberVariables) Then %><%= Entity.PrimaryKey.KeyMembers.BuildPrivateMemberVariableArguments() %><% else %><%= Entity.PrimaryKey.KeyMembers.BuildPropertyVariableArguments() %><% End If %>))
+            DataPortal_Delete(New <%= CriteriaClassName %><%= Entity.GenericProperty %> (<% If (UseMemberVariables) Then %><%= Entity.Key.Properties.BuildPrivateMemberVariableArguments() %><% else %><%= Entity.Key.Properties.BuildPropertyVariableArguments() %><% End If %>))
         
             OnSelfDeleted()
         End Sub

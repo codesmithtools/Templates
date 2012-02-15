@@ -35,13 +35,13 @@
 <% case "TestReadOnlyRoot.Generated.cst": %>
 <% case "TestReadOnlyRootList.Generated.cst": %>
 <% case "TestSwitchable.Generated.cst": %>
-<% if(Entity.PrimaryKey.KeyMember.DataType == "Int32") {%>
+<% if(Entity.Key.Properties.DataType == "Int32") {%>
             int idToUse = 1;
             <%= BusinessClassName %> testObject = <%= BusinessClassName %>.Get<%= BusinessClassName %>(idToUse, true, true);
             Console.WriteLine("Ensuring not null after fetch");
             Assert.IsNotNull(testObject);
             Console.WriteLine("Ensuring proper object was fetch by checking primary key");
-            Assert.AreEqual(testObject.<%= Entity.PrimaryKey.KeyMember %>, idToUse);
+            Assert.AreEqual(testObject.<%= Entity.Key.Properties %>, idToUse);
 <% } else {%>
             //Non-integer foreign key detected. Unable to generate FETCH test.
 <% }%>
@@ -83,13 +83,13 @@
 <% case "TestReadOnlyRoot.Generated.cst": %>
 <% case "TestReadOnlyRootList.Generated.cst": %>
 <% case "TestSwitchable.Generated.cst": %>
-<% if(Entity.PrimaryKey.KeyMember.DataType == "Int32") {%>
+<% if(Entity.Key.Properties.DataType == "Int32") {%>
             int idToUse = 1;
             <%= BusinessClassName %> testObject = <%= BusinessClassName %>.Get<%= BusinessClassName %>(idToUse, true, false);
             Console.WriteLine("Ensuring not null after fetch");
             Assert.IsNotNull(testObject);
             Console.WriteLine("Ensuring proper object was fetch by checking primary key");
-            Assert.AreEqual(testObject.<%= Entity.PrimaryKey.KeyMember %>, idToUse);
+            Assert.AreEqual(testObject.<%= Entity.Key.Properties %>, idToUse);
 <% } else {%>
             //Non-integer foreign key detected. Unable to generate FETCH test.
 <% }%>
@@ -131,13 +131,13 @@
 <% case "TestReadOnlyRoot.Generated.cst": %>
 <% case "TestReadOnlyRootList.Generated.cst": %>
 <% case "TestSwitchable.Generated.cst": %>
-<% if(Entity.PrimaryKey.KeyMember.DataType == "Int32") {%>
+<% if(Entity.Key.Properties.DataType == "Int32") {%>
             int idToUse = 1;
             <%= BusinessClassName %> testObject = <%= BusinessClassName %>.Get<%= BusinessClassName %>(idToUse, false, true);
             Console.WriteLine("Ensuring not null after fetch");
             Assert.IsNotNull(testObject);
             Console.WriteLine("Ensuring proper object was fetch by checking primary key");
-            Assert.AreEqual(testObject.<%= Entity.PrimaryKey.KeyMember %>, idToUse);
+            Assert.AreEqual(testObject.<%= Entity.Key.Properties %>, idToUse);
 <% } else {%>
             //Non-integer foreign key detected. Unable to generate FETCH test.
 <% }%>
@@ -179,13 +179,13 @@
 <% case "TestReadOnlyRoot.Generated.cst": %>
 <% case "TestReadOnlyRootList.Generated.cst": %>
 <% case "TestSwitchable.Generated.cst": %>
-<% if(Entity.PrimaryKey.KeyMember.DataType == "Int32") {%>
+<% if(Entity.Key.Properties.DataType == "Int32") {%>
             int idToUse = 1;
             <%= BusinessClassName %> testObject = <%= BusinessClassName %>.Get<%= BusinessClassName %>(idToUse);
             Console.WriteLine("Ensuring not null after fetch");
             Assert.IsNotNull(testObject);
             Console.WriteLine("Ensuring proper object was fetch by checking primary key");
-            Assert.AreEqual(testObject.<%= Entity.PrimaryKey.KeyMember %>, idToUse);
+            Assert.AreEqual(testObject.<%= Entity.Key.Properties %>, idToUse);
 <% } else {%>
             //Non-integer foreign key detected. Unable to generate FETCH test.
 <% }%>
@@ -233,14 +233,14 @@
 <% case "TestReadOnlyRoot.Generated.cst": %>
 <% case "TestReadOnlyRootList.Generated.cst": %>
 <% case "TestSwitchable.Generated.cst": %>
-<% if(Entity.PrimaryKey.KeyMember.DataType == "Int32") {%>
+<% if(Entity.Key.Properties.DataType == "Int32") {%>
             /*
             int idToUse = 1;
             <%= BusinessClassName %> testObject = <%= BusinessClassName %>.Get<%= BusinessClassName %>Async(idToUse, true, true);
             Console.WriteLine("Ensuring not null after fetch");
             Assert.IsNotNull(testObject);
             Console.WriteLine("Ensuring proper object was fetch by checking primary key");
-            Assert.AreEqual(testObject.<%= Entity.PrimaryKey.KeyMember %>, idToUse);
+            Assert.AreEqual(testObject.<%= Entity.Key.Properties %>, idToUse);
             */
 <% } else {%>
             //Non-integer foreign key detected. Unable to generate FETCH test.
@@ -283,14 +283,14 @@
 <% case "TestReadOnlyRoot.Generated.cst": %>
 <% case "TestReadOnlyRootList.Generated.cst": %>
 <% case "TestSwitchable.Generated.cst": %>
-<% if(Entity.PrimaryKey.KeyMember.DataType == "Int32") {%>
+<% if(Entity.Key.Properties.DataType == "Int32") {%>
             /*
             int idToUse = 1;
             <%= BusinessClassName %> testObject = <%= BusinessClassName %>.Get<%= BusinessClassName %>Async(idToUse, true, false);
             Console.WriteLine("Ensuring not null after fetch");
             Assert.IsNotNull(testObject);
             Console.WriteLine("Ensuring proper object was fetch by checking primary key");
-            Assert.AreEqual(testObject.<%= Entity.PrimaryKey.KeyMember %>, idToUse);
+            Assert.AreEqual(testObject.<%= Entity.Key.Properties %>, idToUse);
             */
 <% } else {%>
             //Non-integer foreign key detected. Unable to generate FETCH test.
@@ -333,14 +333,14 @@
 <% case "TestReadOnlyRoot.Generated.cst": %>
 <% case "TestReadOnlyRootList.Generated.cst": %>
 <% case "TestSwitchable.Generated.cst": %>
-<% if(Entity.PrimaryKey.KeyMember.DataType == "Int32") {%>
+<% if(Entity.Key.Properties.DataType == "Int32") {%>
             /*
             int idToUse = 1;
             <%= BusinessClassName %> testObject = <%= BusinessClassName %>.Get<%= BusinessClassName %>Async(idToUse, false, true);
             Console.WriteLine("Ensuring not null after fetch");
             Assert.IsNotNull(testObject);
             Console.WriteLine("Ensuring proper object was fetch by checking primary key");
-            Assert.AreEqual(testObject.<%= Entity.PrimaryKey.KeyMember %>, idToUse);
+            Assert.AreEqual(testObject.<%= Entity.Key.Properties %>, idToUse);
             */
 <% } else {%>
             //Non-integer foreign key detected. Unable to generate FETCH test.
@@ -383,14 +383,14 @@
 <% case "TestReadOnlyRoot.Generated.cst": %>
 <% case "TestReadOnlyRootList.Generated.cst": %>
 <% case "TestSwitchable.Generated.cst": %>
-<% if(Entity.PrimaryKey.KeyMember.DataType == "Int32") {%>
+<% if(Entity.Key.Properties.DataType == "Int32") {%>
             /*
             int idToUse = 1;
             <%= BusinessClassName %> testObject = <%= BusinessClassName %>.Get<%= BusinessClassName %>Async(idToUse);
             Console.WriteLine("Ensuring not null after fetch");
             Assert.IsNotNull(testObject);
             Console.WriteLine("Ensuring proper object was fetch by checking primary key");
-            Assert.AreEqual(testObject.<%= Entity.PrimaryKey.KeyMember %>, idToUse);
+            Assert.AreEqual(testObject.<%= Entity.Key.Properties %>, idToUse);
             */
 <% } else {%>
             //Non-integer foreign key detected. Unable to generate FETCH test.

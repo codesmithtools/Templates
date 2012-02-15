@@ -18,7 +18,7 @@
 
             If AddBusinessValidationRules() Then Exit Sub
     
-    <%     For Each member As Member in Entity.MembersNoRowVersion %>
+    <%     For Each member As Member in Entity.GetProperties(PropertyType.NoConcurrency) %>
     <% If (member.SystemType = "System.String" ) Then  %>
     <% If Not member.IsNullable Then %>
     <% If(IsCSLA40) Then %>
