@@ -27,7 +27,7 @@
     End If
     Next %>
 
-    <% If(IsCSLA40) Then %>
+    <% If(IsLatestCSLA) Then %>
             BusinessRules.CheckRules()
     <% Else %>
             ValidationRules.CheckRules()

@@ -8,166 +8,166 @@
 <%@ Import Namespace="CodeSmith.SchemaHelper" %>
 <%@ Import Namespace="System.Linq" %>
 
-			//LinqToSQL Modification
+            //LinqToSQL Modification
             bool cancel = false;
             OnUpdating(ref cancel);
             if (cancel) return;
-			
-			// Create a new connection.
+            
+            // Create a new connection.
             using (var ctx = ContextManager<DAL.PetshopDataContext>.GetManager(LinqToSQLHelper.ConnectionString, true))
-			{
+            {
 
-<% 	if(Entity.IdentityProperty == null) { %>
-				if(<%= Entity.Key.Properties.BuildIdentityKeyEqualityStatements()%>)
-				{
-					// Insert new child.
-					DAL.<%= Entity.Name %> newItem = new DAL.<%= Entity.Name %>();
+<%     if(Entity.IdentityProperty == null) { %>
+                if(<%= Entity.Key.Properties.BuildIdentityKeyEqualityStatements()%>)
+                {
+                    // Insert new child.
+                    DAL.<%= Entity.Name %> newItem = new DAL.<%= Entity.Name %>();
 
-<% 		if(Entity.ConcurrencyProperty != null || Entity.IdentityProperty != null) 
-		{ 
-			if(Entity.ConcurrencyProperty != null) 
-			foreach(IProperty property in Entity.Key.Properties) 
-			{ 
-				if(property.IsType(PropertyType.Identity)) 			
-				{ %>
+<%         if(Entity.ConcurrencyProperty != null || Entity.IdentityProperty != null) 
+        { 
+            if(Entity.ConcurrencyProperty != null) 
+            foreach(IProperty property in Entity.Key.Properties) 
+            { 
+                if(property.IsType(PropertyType.Identity))             
+                { %>
             LoadProperty(<%= property.PrivateMemberVariableName %>Property, <%if(!property.HasByteArrayColumn()) { %>this.<%= property.Name %>);<% } else { %>LinqToSQLHelper.GetBinary(this.<%= property.Name %>));<% } %>
-<% 				}
-			} %>
-<% 			else 
-			foreach(IProperty property in Entity.Key.Properties) 
-			{ 
-				if(property.IsType(PropertyType.Identity)) 			
-				{ %>
+<%                 }
+            } %>
+<%             else 
+            foreach(IProperty property in Entity.Key.Properties) 
+            { 
+                if(property.IsType(PropertyType.Identity))             
+                { %>
             LoadProperty(_original<%= property.Name %>Property, this.<%= property.Name %>);
-<% 				}
-			} %>
-<%		} 
-		else
-		{
-			foreach(var property in Entity.Key.Properties) 
-			{ %>
-					newItem.<%= property.Name %> = this.<%= property.Name %>;
-<% 			} 
-		}%>
-<% 		foreach (IProperty property in Entity.GetProperties(PropertyType.NoKey)) 
-		{%>
-					newItem.<%= property.Name %> = <%if(!property.HasByteArrayColumn()) { %>this.<%= property.Name %>;<% } else { %>LinqToSQLHelper.GetBinary(this.<%= property.Name %>);<% } %>
-<%		}%>
-			
-					ctx.DataContext.<%= Entity.Name %>.InsertOnSubmit(newItem);
-					ctx.DataContext.SubmitChanges();
+<%                 }
+            } %>
+<%        } 
+        else
+        {
+            foreach(var property in Entity.Key.Properties) 
+            { %>
+                    newItem.<%= property.Name %> = this.<%= property.Name %>;
+<%             } 
+        }%>
+<%         foreach (IProperty property in Entity.GetProperties(PropertyType.NoKey)) 
+        {%>
+                    newItem.<%= property.Name %> = <%if(!property.HasByteArrayColumn()) { %>this.<%= property.Name %>;<% } else { %>LinqToSQLHelper.GetBinary(this.<%= property.Name %>);<% } %>
+<%        }%>
+            
+                    ctx.DataContext.<%= Entity.Name %>.InsertOnSubmit(newItem);
+                    ctx.DataContext.SubmitChanges();
 
                 // Mark child lists as dirty. This code may need to be updated to one-to-one relationships.
-<% 		foreach(Association association in Entity.Associations.Where(a => a.AssociationType == AssociationType.OneToMany)) 
-		{ %>
-                	foreach(<%= association.Name %> itemToUpdate in <%= association.Name %>)
-					{
-		<%= association.SearchCriteria.BuildUpdateStatements("itemToUpdate", "") %>
-					}
-<% 		} %>
+<%         foreach(Association association in Entity.Associations.Where(a => a.AssociationType == AssociationType.OneToMany)) 
+        { %>
+                    foreach(<%= association.Name %> itemToUpdate in <%= association.Name %>)
+                    {
+        <%= association.SearchCriteria.BuildUpdateStatements("itemToUpdate", "") %>
+                    }
+<%         } %>
 
-                	FieldManager.UpdateChildren(this);
+                    FieldManager.UpdateChildren(this);
 
-					// Delete the old.
-                	var criteria = new <%= CriteriaClassName %> {<%= Entity.Key.Properties.BuildObjectInitializer(false, false, true) %>};
-                	<%= Entity.Key.Properties.BuildNullableObjectInitializer(false, false, true)%>
-					DataPortal_Delete(criteria);
-				
-                	// Mark the original as the new one.
-<% 		foreach(IProperty property in Entity.Key.Properties) 
-		{ 
-			if(!property.IsType(PropertyType.Identity)) 
-			{ %>
-                	Original<%= property.Name %> = <%= property.Name %>;
-<% 			}%>
-<%		}%>
-                	OnUpdated();
+                    // Delete the old.
+                    var criteria = new <%= CriteriaClassName %> {<%= Entity.Key.Properties.BuildObjectInitializer(false, false, true) %>};
+                    <%= Entity.Key.Properties.BuildNullableObjectInitializer(false, false, true)%>
+                    DataPortal_Delete(criteria);
+                
+                    // Mark the original as the new one.
+<%         foreach(IProperty property in Entity.Key.Properties) 
+        { 
+            if(!property.IsType(PropertyType.Identity)) 
+            { %>
+                    Original<%= property.Name %> = <%= property.Name %>;
+<%             }%>
+<%        }%>
+                    OnUpdated();
 
-               	 	return;
-            	}
-<%	} %>
-				// Get <%= Entity.Name %> data for a single criteria
-<%	string PrimaryKeyCriteria = "";	
-	string PrimaryKeyFields = "";
- 	int memberCount = 0 ; 
-	foreach (IProperty property in Entity.Key.Properties) 
-	{
-		PrimaryKeyCriteria += "criteria." + property.Name.ToString() ;
-		PrimaryKeyFields += property.Name.ToString() ;
-		if ( memberCount < (Entity.Key.Properties.Count - 1))
-		{
-			PrimaryKeyCriteria += ", " ;
-			PrimaryKeyFields += ", ";
-		}
- 		memberCount = memberCount + 1 ; 
- 	} 
-%>	
-				DAL.<%= Entity.Name %> item = ctx.DataContext.<%= Entity.Name %>.GetByKey(<%=PrimaryKeyFields%>);
+                        return;
+                }
+<%    } %>
+                // Get <%= Entity.Name %> data for a single criteria
+<%    string PrimaryKeyCriteria = "";    
+    string PrimaryKeyFields = "";
+     int memberCount = 0 ; 
+    foreach (IProperty property in Entity.Key.Properties) 
+    {
+        PrimaryKeyCriteria += "criteria." + property.Name.ToString() ;
+        PrimaryKeyFields += property.Name.ToString() ;
+        if ( memberCount < (Entity.Key.Properties.Count - 1))
+        {
+            PrimaryKeyCriteria += ", " ;
+            PrimaryKeyFields += ", ";
+        }
+         memberCount = memberCount + 1 ; 
+     } 
+%>    
+                DAL.<%= Entity.Name %> item = ctx.DataContext.<%= Entity.Name %>.GetByKey(<%=PrimaryKeyFields%>);
 
-				if (item == null)
-					throw new ArgumentNullException("<%=PrimaryKeyFields%>", "Selection by <%=PrimaryKeyFields%> did not return a result.");
-				else
-				{		
-<% 	if(Entity.ConcurrencyProperty != null) 
-	{ %>
-                	item.<%= Entity.ConcurrencyProperty.Name %> = LinqToSQLHelper.GetBytes(this, "<%= Entity.ConcurrencyProperty.Name %>");
-<% 	} %>
-<% 	foreach(IProperty property in Entity.GetProperties(PropertyType.NoConcurrency)) 
-	{ 
-		if(UseMemberVariables) 
-		{ %>
-<% 			if( property.IsNullable && property.SystemType != "System.String" && property.SystemType != "System.Byte[]") 
-			{%>
-                	item.<%= property.Name %> = this.IsDBNull("<%= property.KeyName %>") ? (<%= property.SystemType %>)null : <%if(!property.HasByteArrayColumn()) { %>this.<%= property.Name %>;<% } else { %>LinqToSQLHelper.GetBinary(this.<%= property.Name %>);<% } %>
-<%				if (property.IsType(PropertyType.Key) && !property.IsType(PropertyType.Identity)) 
-				{ %>
-                	item.<%= property.Name %> = this.IsDBNull("<%= property.KeyName %>") ? (<%= property.SystemType %>)null : <%if(!property.HasByteArrayColumn()) { %>this.<%= property.Name %>;<% } else { %>LinqToSQLHelper.GetBinary(this.<%= property.Name %>);<% } %>
-<% 				} 
-			} 
-			else 
-			{%>
-                	item.<%= property.Name %> = <%if(!property.HasByteArrayColumn()) { %>this.<%= property.Name %>;<% } else { %>LinqToSQLHelper.GetBinary(this.<%= property.Name %>);<% } %>
-<%				if (property.IsType(PropertyType.Key) && !property.IsType(PropertyType.Identity)) 
-				{ %>
-                	item.<%= property.Name %> = <%if(!property.HasByteArrayColumn()) { %>this.<%= property.Name %>;<% } else { %>LinqToSQLHelper.GetBinary(this.<%= property.Name %>);<% } %>
-<% 				} 
-			} 
-		} 
-		else 
-		{ %>
-<%			if (!property.IsType(PropertyType.Key) && !property.IsType(PropertyType.Identity)) 
-			{%>
-                	item.<%= property.Name %> = <%if(!property.HasByteArrayColumn()) { %>this.<%= property.Name %>;<% } else { %>LinqToSQLHelper.GetBinary(this.<%= property.Name %>);<% } %>
-<%			}
-			if (property.IsType(PropertyType.Key) && !property.IsType(PropertyType.Identity)) 
-			{ %>
-                	item.<%= property.Name %> = <%if(!property.HasByteArrayColumn()) { %>this.<%= property.Name %>;<% } else { %>LinqToSQLHelper.GetBinary(this.<%= property.Name %>);<% } %>
-<% 			} 
-		} 
-	} %>
-		    	}           
+                if (item == null)
+                    throw new ArgumentNullException("<%=PrimaryKeyFields%>", "Selection by <%=PrimaryKeyFields%> did not return a result.");
+                else
+                {        
+<%     if(Entity.ConcurrencyProperty != null) 
+    { %>
+                    item.<%= Entity.ConcurrencyProperty.Name %> = LinqToSQLHelper.GetBytes(this, "<%= Entity.ConcurrencyProperty.Name %>");
+<%     } %>
+<%     foreach(IProperty property in Entity.GetProperties(PropertyType.NoConcurrency)) 
+    { 
+        if(UseMemberVariables) 
+        { %>
+<%             if( property.IsNullable && property.SystemType != "System.String" && property.SystemType != "System.Byte[]") 
+            {%>
+                    item.<%= property.Name %> = this.IsDBNull("<%= property.KeyName %>") ? (<%= property.SystemType %>)null : <%if(!property.HasByteArrayColumn()) { %>this.<%= property.Name %>;<% } else { %>LinqToSQLHelper.GetBinary(this.<%= property.Name %>);<% } %>
+<%                if (property.IsType(PropertyType.Key) && !property.IsType(PropertyType.Identity)) 
+                { %>
+                    item.<%= property.Name %> = this.IsDBNull("<%= property.KeyName %>") ? (<%= property.SystemType %>)null : <%if(!property.HasByteArrayColumn()) { %>this.<%= property.Name %>;<% } else { %>LinqToSQLHelper.GetBinary(this.<%= property.Name %>);<% } %>
+<%                 } 
+            } 
+            else 
+            {%>
+                    item.<%= property.Name %> = <%if(!property.HasByteArrayColumn()) { %>this.<%= property.Name %>;<% } else { %>LinqToSQLHelper.GetBinary(this.<%= property.Name %>);<% } %>
+<%                if (property.IsType(PropertyType.Key) && !property.IsType(PropertyType.Identity)) 
+                { %>
+                    item.<%= property.Name %> = <%if(!property.HasByteArrayColumn()) { %>this.<%= property.Name %>;<% } else { %>LinqToSQLHelper.GetBinary(this.<%= property.Name %>);<% } %>
+<%                 } 
+            } 
+        } 
+        else 
+        { %>
+<%            if (!property.IsType(PropertyType.Key) && !property.IsType(PropertyType.Identity)) 
+            {%>
+                    item.<%= property.Name %> = <%if(!property.HasByteArrayColumn()) { %>this.<%= property.Name %>;<% } else { %>LinqToSQLHelper.GetBinary(this.<%= property.Name %>);<% } %>
+<%            }
+            if (property.IsType(PropertyType.Key) && !property.IsType(PropertyType.Identity)) 
+            { %>
+                    item.<%= property.Name %> = <%if(!property.HasByteArrayColumn()) { %>this.<%= property.Name %>;<% } else { %>LinqToSQLHelper.GetBinary(this.<%= property.Name %>);<% } %>
+<%             } 
+        } 
+    } %>
+                }           
 
-				try
-				{
-					ctx.DataContext.SubmitChanges();
-				}
-				catch(System.Exception e)
-				{
-					throw new DataPortalException("The entity is out of date on the client. " +
-						"Please update the entity and try again. This could also be thrown if the sql statement " +
-						"failed to execute.",e,this);
-				}
-<% 	foreach(IProperty property in Entity.Key.Properties)%>
-<%	{%>
-<%		if(!property.IsType(PropertyType.Identity))%>
-<%		{%>
-				LoadProperty(_original<%= property.Name %>Property, this.<%= property.Name %>);
-<%		}%>
-<%	} %>
+                try
+                {
+                    ctx.DataContext.SubmitChanges();
+                }
+                catch(System.Exception e)
+                {
+                    throw new DataPortalException("The entity is out of date on the client. " +
+                        "Please update the entity and try again. This could also be thrown if the sql statement " +
+                        "failed to execute.",e,this);
+                }
+<%     foreach(IProperty property in Entity.Key.Properties)%>
+<%    {%>
+<%        if(!property.IsType(PropertyType.Identity))%>
+<%        {%>
+                LoadProperty(_original<%= property.Name %>Property, this.<%= property.Name %>);
+<%        }%>
+<%    } %>
 
-<% 	if(Entity.Associations.Count(a => a.AssociationType == AssociationType.OneToMany) > 0 || Entity.Associations.Count(a => a.AssociationType == AssociationType.ManyToOne) > 0)
-	{%>         	
-				FieldManager.UpdateChildren(this);
-<% 	} %>
-            	OnUpdated();
-			}
+<%     if(Entity.Associations.Count(a => a.AssociationType == AssociationType.OneToMany) > 0 || Entity.Associations.Count(a => a.AssociationType == AssociationType.ManyToOne) > 0)
+    {%>             
+                FieldManager.UpdateChildren(this);
+<%     } %>
+                OnUpdated();
+            }

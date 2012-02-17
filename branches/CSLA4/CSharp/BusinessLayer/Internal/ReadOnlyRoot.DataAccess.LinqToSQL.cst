@@ -37,20 +37,20 @@ namespace <%= BusinessProjectName %>
     {
         /// <summary>
         /// Retrieves data from the data base into a CSLA read only root business object of type <see cref="<%=BusinessClassName%>"/> 
-		/// using the criteria provided. 
+        /// using the criteria provided. 
         /// </summary>
-		/// <param name="criteria">Object of type <see cref="<%= CriteriaClassName %><%= Entity.GenericProperty %>"/></param>
+        /// <param name="criteria">Object of type <see cref="<%= CriteriaClassName %><%= Entity.GenericProperty %>"/></param>
         /// <returns></returns>
         private void DataPortal_Fetch(<%= CriteriaClassName %><%= Entity.GenericProperty %> criteria)
         {
 <% RenderHelper(new DataPortalFetch()); %>
         }
 
-		/// <summary>
+        /// <summary>
         /// Maps data columns retrieved from the data base to the respective properties in the current 
-		/// <see cref="<%= BusinessClassName %><%= Entity.GenericProperty %> CSLA read only root business object.
-		/// </summary>
-		/// <param name="criteria">Object of type <see cref="<%=LinqToSQLContextNamespace%>.<%=Entity.Name%> %>"/> containing the data retrieved from the data base.</param>
+        /// <see cref="<%= BusinessClassName %><%= Entity.GenericProperty %> CSLA read only root business object.
+        /// </summary>
+        /// <param name="criteria">Object of type <see cref="<%=LinqToSQLContextNamespace%>.<%=Entity.Name%> %>"/> containing the data retrieved from the data base.</param>
         /// <returns></returns>
         private void Map(DAL.<%=Entity.Name%> DataSource)
         {

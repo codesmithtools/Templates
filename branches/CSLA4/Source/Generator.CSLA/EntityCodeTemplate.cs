@@ -18,7 +18,7 @@ namespace Generator.CSLA
     {
         #region Private Member(s)
 
-        private TableSchema _table;
+        private IEntity _entity;
         private StringCollection _ignoreExpressions;
         private StringCollection _cleanExpressions;
         private bool _silverlightSupport;
@@ -47,20 +47,39 @@ namespace Generator.CSLA
 
         #region 1. DataSource
 
+        /// <summary>
+        /// This is needed for legacy purposes..
+        /// </summary>
+        [Optional]
         [Category("1. DataSource")]
-        [Description("Source Table")]
         public TableSchema SourceTable
         {
             get
             {
-                return _table;
+                if (Entity is TableEntity)
+                    return ((TableEntity)Entity).EntitySource as TableSchema;
+
+                return null;
             }
             set
             {
-                if(value != null && _table != value)
+                Entity = new TableEntity(value);
+            }
+        }
+
+        /// <summary>
+        /// The Generic Entity Object that gets generated.
+        /// </summary>
+        [Browsable(false)]
+        public IEntity Entity
+        {
+            get { return _entity; }
+            set
+            {
+                if (value != null && _entity != value)
                 {
-                    _table = value;
-                    OnTableChanged();
+                    _entity = value;
+                    OnEntityChanged();
                 }
             }
         }
@@ -69,7 +88,7 @@ namespace Generator.CSLA
         [Description("List of regular expressions to clean table, view and column names.")]
         [Optional]
         [DefaultValue("^(sp|tbl|udf|vw)_")]
-        public CodeSmith.CustomProperties.StringCollection CleanExpressions
+        public StringCollection CleanExpressions
         {
             get
             {
@@ -88,8 +107,8 @@ namespace Generator.CSLA
                     }
                 }
 
-                if (SourceTable != null)
-                    Entity = new TableEntity(SourceTable);
+                //if (SourceTable != null)
+                //    Entity = new TableEntity(SourceTable);
             }
         }
 
@@ -97,7 +116,7 @@ namespace Generator.CSLA
         [Description("List of regular expressions to ignore tables when generating.")]
         [Optional]
         [DefaultValue("sysdiagrams$")]
-        public CodeSmith.CustomProperties.StringCollection IgnoreExpressions
+        public StringCollection IgnoreExpressions
         {
             get
             {
@@ -116,13 +135,10 @@ namespace Generator.CSLA
                     }
                 }
 
-                if (SourceTable != null)
-                    Entity = new TableEntity(SourceTable);
+                //if (SourceTable != null)
+                //    Entity = new TableEntity(SourceTable);
             }
         }
-
-        [Browsable(false)]
-        public IEntity Entity { get; internal set; }
 
         #endregion
 
@@ -313,7 +329,7 @@ namespace Generator.CSLA
             }
             set
             {
-                if (!IsCSLA40)
+                if (!IsLatestCSLA)
                     Console.WriteLine("In order to include Silverlight support you must target CSLA 4.0.");
 
                 _silverlightSupport = value;
@@ -392,11 +408,12 @@ namespace Generator.CSLA
 
         #region Public Virtual Methods
 
-        public virtual void OnTableChanged()
+        /// <summary>
+        /// This method fires anytime a datasource changes.
+        /// </summary>
+        public virtual void OnEntityChanged()
         {
-            Entity = new TableEntity(SourceTable);
-
-            if (OnTableChanging()) return;
+            if (OnEntityChanging()) return;
 
             if (string.IsNullOrEmpty(BusinessClassName))
                 BusinessClassName = Entity.Name;
@@ -422,20 +439,20 @@ namespace Generator.CSLA
 
         public virtual string GetTableOwner(bool includeDot)
         {
-            if (SourceTable.Owner.Length > 0)
+            if (Entity.SchemaName.Length > 0)
                 return includeDot
-                           ? String.Format("[{0}].", SourceTable.Owner)
-                           : String.Format("[{0}]", SourceTable.Owner);
+                           ? String.Format("[{0}].", Entity.SchemaName)
+                           : String.Format("[{0}]", Entity.SchemaName);
 
             return string.Empty;
         }
 
         /// <summary>
-        /// This method is used if you don't want to overwrite the whole OnTableChanged() method, you just want to modify a property in the pipeline..
+        /// This method is used if you don't want to overwrite the whole OnEntityChanged() method, you just want to modify a property in the pipeline..
         /// I only created this becuase I didn't want to duplicated a lot of code across templates or new up a new entity twice..
         /// </summary>
         /// <returns></returns>
-        public virtual bool OnTableChanging()
+        public virtual bool OnEntityChanging()
         {
             return false;
         }
@@ -445,7 +462,7 @@ namespace Generator.CSLA
         #region Public Method(s)
 
         [Browsable(false)]
-        public override bool IsCSLA40
+        public override bool IsLatestCSLA
         {
             get
             {
@@ -453,16 +470,9 @@ namespace Generator.CSLA
             }
         }
 
-        public override void RegisterReferences()
-        {
-            RegisterReference(!IsCSLA40
-                                  ? Path.GetFullPath(Path.Combine(CodeTemplateInfo.DirectoryName, @"..\..\Common\Csla\3.8\Client\Csla.dll"))
-                                  : Path.GetFullPath(Path.Combine(CodeTemplateInfo.DirectoryName, @"..\..\Common\Csla\4.0\Client\Csla.dll")));
-        }
-
         public bool IsReadOnlyBusinessObject(string suffix)
         {
-            string key = String.Format("{0}{1}", this._table.Name, suffix);
+            string key = String.Format("{0}{1}", Entity.EntityKeyName, suffix);
             if (ContextData.Get(key) == null) return false;
 
             var value = ContextData[key];
@@ -501,7 +511,7 @@ namespace Generator.CSLA
 
         public bool IsChildBusinessObject(string suffix)
         {
-            string key = String.Format("{0}{1}", this._table.Name, suffix);
+            string key = String.Format("{0}{1}", Entity.EntityKeyName, suffix);
             if (ContextData.Get(key) == null) return false;
 
             var value = ContextData[key];
@@ -545,7 +555,7 @@ namespace Generator.CSLA
 
         public bool IsSwitchableObject(string suffix)
         {
-            string key = String.Format("{0}{1}", this._table.Name, suffix);
+            string key = String.Format("{0}{1}", Entity.EntityKeyName, suffix);
             if (ContextData.Get(key) == null) return false;
 
             var value = ContextData[key];
@@ -628,10 +638,10 @@ namespace Generator.CSLA
         /// <returns></returns>
         public bool BusinessObjectExists(string suffix)
         {
-            if (_table == null)
+            if (Entity == null)
                 return false;
 
-            string key = String.Format("{0}{1}", _table.Name, suffix);
+            string key = String.Format("{0}{1}", Entity.EntityKeyName, suffix);
 
             return ContextData.Get(key) != null;
         }

@@ -5,6 +5,7 @@
 <%@ Assembly Name="Generator.CSLA" Path="..\..\Common" %>
 <%@ Import Namespace="CodeSmith.SchemaHelper" %>
 
+        #region Exists Command
 
 <% if(IncludeSilverlightSupport) { %>
 #if !SILVERLIGHT
@@ -29,3 +30,5 @@
 <% if(IncludeSilverlightSupport) { %>
 #endif
 <% } %>
+        #endregion
+

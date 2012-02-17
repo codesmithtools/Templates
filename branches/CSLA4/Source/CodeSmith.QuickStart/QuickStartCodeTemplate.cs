@@ -156,7 +156,7 @@ namespace CodeSmith.QuickStart
             }
             set
             {
-                if (!IsCSLA40)
+                if (!IsLatestCSLA)
                     Console.WriteLine("In order to include Silverlight support you must target CSLA 4.0.");
 
                 Configuration.Instance.IncludeSilverlightSupport = value;

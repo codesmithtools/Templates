@@ -254,7 +254,7 @@ public override void Generate()
     }
 
     #endregion
-	
+    
     #region FactoryNamesTemplate
 
     if(DataAccessImplementation == DataAccessMethod.ObjectFactoryNone || DataAccessImplementation == DataAccessMethod.ObjectFactoryParameterizedSQL || DataAccessImplementation == DataAccessMethod.ObjectFactoryStoredProcedures)
@@ -267,9 +267,9 @@ public override void Generate()
     #endregion
 
     #region ExistsCommandTemplate
-	ExistsCommandTemplate ExistsCommand = this.Create<ExistsCommandTemplate>();
-	this.CopyPropertiesTo(ExistsCommand);
-	ExistsCommand.RenderToFile(System.IO.Path.Combine(this.Location, "Commands\\ExistsCommand.cs"), true);
+    ExistsCommandTemplate ExistsCommand = this.Create<ExistsCommandTemplate>();
+    this.CopyPropertiesTo(ExistsCommand);
+    ExistsCommand.RenderToFile(System.IO.Path.Combine(this.Location, "Commands\\ExistsCommand.cs"), true);
     #endregion
 
     #region AsyncChildLoaderTemplate

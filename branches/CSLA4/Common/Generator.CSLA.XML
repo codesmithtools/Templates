@@ -27,9 +27,14 @@
             <param name="expression"></param>
             <returns></returns>
         </member>
-        <member name="M:Generator.CSLA.EntityCodeTemplate.OnTableChanging">
+        <member name="M:Generator.CSLA.EntityCodeTemplate.OnEntityChanged">
             <summary>
-            This method is used if you don't want to overwrite the whole OnTableChanged() method, you just want to modify a property in the pipeline..
+            This method fires anytime a datasource changes.
+            </summary>
+        </member>
+        <member name="M:Generator.CSLA.EntityCodeTemplate.OnEntityChanging">
+            <summary>
+            This method is used if you don't want to overwrite the whole OnEntityChanged() method, you just want to modify a property in the pipeline..
             I only created this becuase I didn't want to duplicated a lot of code across templates or new up a new entity twice..
             </summary>
             <returns></returns>
@@ -63,6 +68,16 @@
             <param name="association"></param>
             <param name="suffix"></param>
             <returns></returns>
+        </member>
+        <member name="P:Generator.CSLA.EntityCodeTemplate.SourceTable">
+            <summary>
+            This is needed for legacy purposes..
+            </summary>
+        </member>
+        <member name="P:Generator.CSLA.EntityCodeTemplate.Entity">
+            <summary>
+            The Generic Entity Object that gets generated.
+            </summary>
         </member>
     </members>
 </doc>

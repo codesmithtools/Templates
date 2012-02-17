@@ -1,10 +1,10 @@
-<%-- 
+﻿<%-- 
 Name: Schema Helper example that will show you the relationships that Schema Helper detects.
 Author: Blake Niemyjski
 Description: Used to Quick Start Visual Studio Projects
 --%>
-<%@ CodeTemplate Language="C#" TargetLanguage="Text" Inherits="CodeSmith.QuickStart.QuickStartCodeTemplate" Description="Schema Helper example that will show you the relationships that Schema Helper detects." CompilerVersion="v3.5" %>
-
+<%@ CodeTemplate Language="C#" %>
+<%@ Property Name="SourceDatabase" Type="SchemaExplorer.DatabaseSchema" DeepLoad="True" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper" %>
 <%@ Assembly Name="CodeSmith.QuickStart" %>
 <%@ Assembly Name="SchemaExplorer" %>
@@ -15,65 +15,91 @@ Description: Used to Quick Start Visual Studio Projects
 <%@ Import Namespace="CodeSmith.QuickStart" %>
 <%@ Import Namespace="SchemaExplorer" %>
 <%@ Import Namespace="System.IO" %>
-
+<%@ Import Namespace="System.Linq" %>
 <% EntityManager em = new EntityManager(SourceDatabase); %>
 
 Excluded Tables
-<% foreach(TableSchema t in em.ExcludedTables) { %>
-<%= t.FullName %>
+<% foreach(var t in em.ExcludedEntities) { %>
+<%= t.Name %>
 <% } %>
 
-Entities
-<% foreach(Entity e in em.Entities) { %>
+Entities  
+<% foreach(var e in em.Entities) { %>
 
 ----------------
 
-<%= e.ClassName %>
-	Search Criteria
-<%	foreach(SearchCriteria sc in e.SearchCriteria(SearchCriteriaEnum.All)) { %>
-		<%= sc.MethodName %>
-<%	foreach(Member m in sc.Properties) { %>
-            <%= m.PropertyName %>
+<%= e.Name %>
+    Search Criteria
+<%    foreach(SearchCriteria sc in e.SearchCriteria) { %>
+        <%= sc.MethodName %>
+<%    foreach(var m in sc.Properties) { %>
+            <%= m.Name %>
 <% }} %>
 
-	PrimaryKey
-<%	foreach(Member m in e.PrimaryKey.Properties) { %>
-		<%= m.Name %>
+    PrimaryKey
+<%    foreach(var m in e.Key.Properties) { %>
+        <%= m.Name %>
 <% } %>
-	Members
-<%	foreach(Member m in e.Members) { %>
-		<%= m.Name %>
+    Properties
+<%    foreach(var m in e.Properties) { %>
+        <%= m.Name %> (<%= m.PropertyType.ToString() %>)
 <% } %>
-	ManyToMany
-<%	foreach(Association a in e.AssociatedManyToMany) { foreach(AssociationMember am in a) { %>
-		<%= am.Name %>
+
+    All Properties
+<%    foreach(var m in e.GetProperties(PropertyType.All)) { %>
+        <%= m.Name %>
+<% } %>
+
+    All Keys
+<%    foreach(var m in e.GetProperties(PropertyType.Keys)) { %>
+        <%= m.Name %>
+<% } %>    
+    Key
+<%    foreach(var m in e.GetProperties(PropertyType.Key)) { %>
+        <%= m.Name %>
+<% } %>    
+    Foreign
+<%    foreach(var m in e.GetProperties(PropertyType.Foreign)) { %>
+        <%= m.Name %>
+<% } %>
+    Identity
+<%    foreach(var m in e.GetProperties(PropertyType.Identity)) { %>
+        <%= m.Name %>
+<% } %>
+    NoConcurrency
+<%    foreach(var m in e.GetProperties(PropertyType.NoConcurrency)) { %>
+        <%= m.Name %>
+<% } %>
+    ManyToMany
+<%    foreach(Association a in e.Associations.Where(a => a.AssociationType == AssociationType.ManyToMany)) { foreach(var am in a.Properties) { %>
+        <%= am.Property.Name %>
 <% }%>
             <%= a.SearchCriteria.MethodName %>
-<%	foreach(Member m in a.SearchCriteria.Properties) { %>
-                <%= m.PropertyName %>
+<%    foreach(var m in a.SearchCriteria.Properties) { %>
+                <%= m.Name %>
 <% } } %>
-	OneToMany
-<%	foreach(Association a in e.Where(a => a.AssociationType == AssociationType.OneToMany)) { foreach(AssociationMember am in a) { %>
-		<%= am.Name %>
+    OneToMany
+<%    foreach(Association a in e.Associations.Where(a => a.AssociationType == AssociationType.OneToMany)) { foreach(var am in a.Properties) { %>
+        <%= am.Property.Name %>
 <% }%>
             <%= a.SearchCriteria.MethodName %>
-<%	foreach(Member m in a.SearchCriteria.Properties) { %>
-                <%= m.PropertyName %>
+<%    foreach(var m in a.SearchCriteria.Properties) { %>
+                <%= m.Name %>
 <% } } %>
-	OneToZeroOrOne
-<%	foreach(Association a in e.Associations.Where(a => a.AssociationType == AssociationType.OneToZeroOrOne)) { foreach(AssociationMember am in a) { %>
-		<%= am.Name %>
+    OneToZeroOrOne
+<%    foreach(Association a in e.Associations.Where(a => a.AssociationType == AssociationType.OneToZeroOrOne)) { foreach(var am in a.Properties) { %>
+        <%= am.Property.Name %>
 <% }%>
             <%= a.SearchCriteria.MethodName %>
-<%	foreach(Member m in a.SearchCriteria.Properties) { %>
-                <%= m.PropertyName %>
+<%    foreach(var m in a.SearchCriteria.Properties) { %>
+                <%= m.Name %>
 <% } } %>
-	ManyToOne
-<%	foreach(Association a in e.Associations.Where(a => a.AssociationType == AssociationType.ManyToOne)) { foreach(AssociationMember am in a) { %>
-		<%= am.Name %>
+    ManyToOne
+<%    foreach(Association a in e.Associations.Where(a => a.AssociationType == AssociationType.ManyToOne)) { foreach(var am in a.Properties) { %>
+        <%= am.Property.Name %>
 <% }%>
             <%= a.SearchCriteria.MethodName %>
-<%	foreach(Member m in a.SearchCriteria.Properties) { %>
-                <%= m.PropertyName %>
+<%    foreach(var m in a.SearchCriteria.Properties) { %>
+                <%= m.Name %>
 <% } } %>
 <% } %>

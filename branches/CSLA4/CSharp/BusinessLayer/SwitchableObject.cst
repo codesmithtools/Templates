@@ -67,7 +67,7 @@ public override void Render(System.IO.TextWriter writer)
         
         switchableObjectDataAccessLinqToSQL.RenderToFile(fileName, parentFileName, true);
     }
-	else if(DataAccessImplementation == DataAccessMethod.StoredProcedures)
+    else if(DataAccessImplementation == DataAccessMethod.StoredProcedures)
     {
         SwitchableObjectDataAccessStoredProcedures switchableObjectDataAccessStoredProcedures = this.Create<SwitchableObjectDataAccessStoredProcedures>();
         this.CopyPropertiesTo(switchableObjectDataAccessStoredProcedures);

@@ -63,12 +63,12 @@ public override void Render(System.IO.TextWriter writer)
         editableRootListDataAccessParameterized.RenderToFile(fileName, parentFileName, true);
     }
     else if(DataAccessImplementation == DataAccessMethod.LinqToSQL)
-	{
+    {
         EditableRootListDataAccessLinqToSQL editableRootListDataAccessLinqToSQL = this.Create<EditableRootListDataAccessLinqToSQL>();
         this.CopyPropertiesTo(editableRootListDataAccessLinqToSQL);
         
         editableRootListDataAccessLinqToSQL.RenderToFile(fileName, parentFileName, true);
-    }	
+    }    
     else if(DataAccessImplementation == DataAccessMethod.StoredProcedures)
     {
         EditableRootListDataAccessStoredProcedures editableRootListDataAccessStoredProcedures = this.Create<EditableRootListDataAccessStoredProcedures>();
@@ -91,7 +91,7 @@ public override void Render(System.IO.TextWriter writer)
 
 }
 
-public override bool OnTableChanging()
+public override bool OnEntityChanging()
 {
     if (string.IsNullOrEmpty(BusinessClassName))
     {

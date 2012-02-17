@@ -68,7 +68,7 @@ namespace <%= BusinessProjectName %>
 
             result = result.Remove(result.Length - 5, 5);
             return result;
-		}
+        }
 
         /// <summary>
         /// Returns an array of bytes stored in a binary column.
@@ -93,7 +93,7 @@ namespace <%= BusinessProjectName %>
         /// </summary>
         /// <param name="byteValue">The column name containing the the byte array data.</param>
         /// <returns>A Linq.Binary representation of the data.  If the length of the byte array =1 return a null value
-		public static Binary GetBinary(byte[] byteValue)
+        public static Binary GetBinary(byte[] byteValue)
         {
             if (byteValue.Length == 1)
                 return null;

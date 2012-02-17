@@ -18,7 +18,7 @@
 <% } %>
 
 <%  foreach(IProperty property in Entity.GetProperties(PropertyType.NoConcurrency)){ if (UseMemberVariables){ %>
-        private static readonly PropertyInfo< <%= property.SystemType %> > <%= property.PrivateMemberVariableName %>Property = RegisterProperty< <%= property.SystemType %> >(p => p.<%= property.Name %>, string.Empty<% if(property.IsNullable) { %>, (<%= property.SystemType %>)null<% } %><%if (IsCSLA40) { %>, RelationshipTypes.PrivateField<% }%>);
+        private static readonly PropertyInfo<<%= property.SystemType %>> <%= property.PrivateMemberVariableName %>Property = RegisterProperty<<%= property.SystemType %>>(p => p.<%= property.Name %>, string.Empty<% if(property.IsNullable) { %>, (<%= property.SystemType %>)null<% } %><%if (IsLatestCSLA) { %>, RelationshipTypes.PrivateField<% }%>);
         private <%= property.SystemType %> <%= property.PrivateMemberVariableName %> = <%= property.PrivateMemberVariableName %>Property.DefaultValue;<%= property.BuildDataObjectField(IncludeSilverlightSupport) %>
 <% if(property.HasDescription) { %>
         /// <summary>
@@ -32,7 +32,7 @@
         }
 
 <%if (property.IsType(PropertyType.Key) && !property.IsType(PropertyType.Identity)) { %>
-        private static readonly PropertyInfo< <%= property.SystemType %> > _original<%= property.Name %>Property = RegisterProperty< <%= property.SystemType %> >(p => p.Original<%= property.Name %>, string.Empty<% if(property.IsNullable) { %>, (<%= property.SystemType %>)null<% } %><%if (IsCSLA40) { %>, RelationshipTypes.PrivateField<% }%>);
+        private static readonly PropertyInfo<<%= property.SystemType %>> _original<%= property.Name %>Property = RegisterProperty<<%= property.SystemType %>>(p => p.Original<%= property.Name %>, string.Empty<% if(property.IsNullable) { %>, (<%= property.SystemType %>)null<% } %><%if (IsLatestCSLA) { %>, RelationshipTypes.PrivateField<% }%>);
         private <%= property.SystemType %> _original<%= property.Name %> = _original<%= property.Name %>Property.DefaultValue;
         /// <summary>
         /// Holds the original value for <%= property.Name %>. This is used for non identity primary keys.
@@ -44,7 +44,7 @@
         }
 
 <% } } else { %>
-        private static readonly PropertyInfo< <%= property.SystemType %> > <%= property.PrivateMemberVariableName %>Property = RegisterProperty< <%= property.SystemType %> >(p => p.<%= property.Name %>, string.Empty<% if(property.IsNullable) { %>, (<%= property.SystemType %>)null<% } %>);<%= property.BuildDataObjectField(IncludeSilverlightSupport) %>
+        private static readonly PropertyInfo<<%= property.SystemType %>> <%= property.PrivateMemberVariableName %>Property = RegisterProperty<<%= property.SystemType %>>(p => p.<%= property.Name %>, string.Empty<% if(property.IsNullable) { %>, (<%= property.SystemType %>)null<% } %>);<%= property.BuildDataObjectField(IncludeSilverlightSupport) %>
 <% if(property.HasDescription) { %>
         /// <summary>
         /// <%= property.Description %>
@@ -55,9 +55,9 @@
             get { return GetProperty(<%= property.PrivateMemberVariableName %>Property); }
             <% if(property.IsReadOnly()) { %>internal <% } %>set{ SetProperty(<%= property.PrivateMemberVariableName %>Property, value); }
         }
-<%if (property.IsType(PropertyType.Key) && !property.IsType(PropertyType.Identity)) { %>
 
-        private static readonly PropertyInfo< <%= property.SystemType %> > _original<%= property.Name %>Property = RegisterProperty< <%= property.SystemType %> >(p => p.Original<%= property.Name %>, string.Empty<% if(property.IsNullable) { %>, (<%= property.SystemType %>)null<% } %>);
+<%if (property.IsType(PropertyType.Key) && !property.IsType(PropertyType.Identity)) { %>
+        private static readonly PropertyInfo<<%= property.SystemType %>> _original<%= property.Name %>Property = RegisterProperty<<%= property.SystemType %>>(p => p.Original<%= property.Name %>, string.Empty<% if(property.IsNullable) { %>, (<%= property.SystemType %>)null<% } %>);
         /// <summary>
         /// Holds the original value for <%= property.Name %>. This is used for non identity primary keys.
         /// </summary>
@@ -66,6 +66,7 @@
             get { return GetProperty(_original<%= property.Name %>Property); }
             set{ SetProperty(_original<%= property.Name %>Property, value); }
         }
+
 <% } } } %>
 <%-- One-To-Zero-Or-One --%>
 <% foreach(Association association in Entity.Associations.Where(a => a.AssociationType == AssociationType.OneToZeroOrOne)) { 
@@ -76,7 +77,7 @@
         associationClassName = association.Name + "Info";
     } %>
         //Associations.Where(a => a.AssociationType == AssociationType.OneToZeroOrOne)
-        private static readonly PropertyInfo< <%= associationClassName %><%= association.GenericProperty %> > <%= association.PrivateMemberVariableName %>Property = RegisterProperty< <%= associationClassName %><%= association.GenericProperty %> >(p => p.<%= association.Name %>, Csla.RelationshipTypes.Child);
+        private static readonly PropertyInfo<<%= associationClassName %><%= association.GenericProperty %>> <%= association.PrivateMemberVariableName %>Property = RegisterProperty<<%= associationClassName %><%= association.GenericProperty %>>(p => p.<%= association.Name %>, Csla.RelationshipTypes.Child);
 <% if(association.HasDescription) { %>
         /// <summary>
         /// <%= association.Description %>
@@ -188,7 +189,7 @@
         associationClassName = association.Name + "Info";
     } %>
         //Associations.Where(a => a.AssociationType == AssociationType.ManyToOne)
-        private static readonly PropertyInfo< <%= associationClassName %><%= association.GenericProperty %> > <%= association.PrivateMemberVariableName %>Property = RegisterProperty< <%= associationClassName %><%= association.GenericProperty %> >(p => p.<%= association.Name %>, Csla.RelationshipTypes.Child);
+        private static readonly PropertyInfo<<%= associationClassName %><%= association.GenericProperty %>> <%= association.PrivateMemberVariableName %>Property = RegisterProperty<<%= associationClassName %><%= association.GenericProperty %>>(p => p.<%= association.Name %>, Csla.RelationshipTypes.Child);
 <% if(association.HasDescription) { %>
         /// <summary>
         /// <%= association.Description %>
@@ -260,7 +261,7 @@ if(!result.Equals("(true)", StringComparison.CurrentCultureIgnoreCase) && !resul
     }
     %>
         //Where(a => a.AssociationType == AssociationType.OneToMany)
-        private static readonly PropertyInfo< <%= associationClassName %>List<%= association.GenericProperty %> > <%= association.PrivateMemberVariableName %>Property = RegisterProperty<<%= associationClassName %>List<%= association.GenericProperty %>>(p => p.<%= association.Name %>, Csla.RelationshipTypes.Child);
+        private static readonly PropertyInfo<<%= associationClassName %>List<%= association.GenericProperty %>> <%= association.PrivateMemberVariableName %>Property = RegisterProperty<<%= associationClassName %>List<%= association.GenericProperty %>>(p => p.<%= association.Name %>, Csla.RelationshipTypes.Child);
 <% if(association.HasDescription) { %>
         /// <summary>
         /// <%= association.Description %>

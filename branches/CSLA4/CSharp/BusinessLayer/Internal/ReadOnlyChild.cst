@@ -17,20 +17,21 @@ using System;
 
 using Csla;
 using Csla.Security;
-<% if(IsCSLA40) { %>
+
+<% if(IsLatestCSLA) { %>
 using Csla.Rules;
 <% } else { %>
 using Csla.Validation;
 <% } %>
 
 namespace <%= BusinessProjectName %>
-{	
+{    
     /// <summary>
     /// The <%=BusinessClassName%><%= Entity.GenericProperty %> class is a CSLA read only child class.  See CSLA documentation for a more detailed description.
     /// </summary>
     public partial class <%= BusinessClassName %><%= Entity.GenericProperty %>
     {
 <%/*  Documentation code handled in the AuthorizationRules.cst template  */
-	RenderHelper(new AuthorizationRules()); %>
+    RenderHelper(new AuthorizationRules()); %>
     }
 }

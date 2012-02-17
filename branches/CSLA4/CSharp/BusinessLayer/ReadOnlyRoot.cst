@@ -67,7 +67,7 @@ public override void Render(System.IO.TextWriter writer)
         
         readOnlyRootDataAccessLinqToSQL.RenderToFile(fileName, parentFileName, true);
     }
-	else if(DataAccessImplementation == DataAccessMethod.StoredProcedures)
+    else if(DataAccessImplementation == DataAccessMethod.StoredProcedures)
     {
         ReadOnlyRootDataAccessStoredProcedures readOnlyRootDataAccessStoredProcedures = this.Create<ReadOnlyRootDataAccessStoredProcedures>();
         this.CopyPropertiesTo(readOnlyRootDataAccessStoredProcedures);
@@ -88,7 +88,7 @@ public override void Render(System.IO.TextWriter writer)
     #endregion
 }
 
-public override bool OnTableChanging()
+public override bool OnEntityChanging()
 {
     if (string.IsNullOrEmpty(BusinessClassName))
     {

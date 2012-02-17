@@ -19,8 +19,6 @@
 <% if(IncludeSilverlightSupport) { %>
 #if !SILVERLIGHT
 <% } %>
-#region Using declarations
-
 using System;
 using System.Data;
 using System.Data.SqlClient;
@@ -32,8 +30,6 @@ using Csla.Data;
 using CodeSmith.Data.Linq.Dynamic;
 using <%=LinqToSQLContextNamespace%>;
 using DAL=<%=LinqToSQLContextNamespace%>;
-
-#endregion
 
 namespace <%= BusinessProjectName %>
 {

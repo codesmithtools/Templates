@@ -32,7 +32,7 @@ Option Strict On
 Imports System
 
 Imports Csla
-<% If(IsCSLA40) Then %>
+<% If(IsLatestCSLA) Then %>
 Imports Csla.Rules
 <% Else %>
 Imports Csla.Validation
@@ -82,11 +82,11 @@ Namespace <%= BusinessProjectName %>
     
     <% If(UseDeferredDeletion)Then %>
         'Public Shared Sub Delete<%= BusinessClassName %><%= Entity.GenericProperty %>(<%= Entity.Key.Properties.BuildParametersVariables() %>)
-        '   DataPortal.Delete<% If (IsCSLA40) Then %>(Of <%= BusinessClassName %><%= Entity.GenericProperty %>)<% End If %>(New <%= CriteriaClassName %><%= Entity.GenericProperty %> (<%= Entity.Key.Properties.BuildVariableArguments() %>))
+        '   DataPortal.Delete<% If (IsLatestCSLA) Then %>(Of <%= BusinessClassName %><%= Entity.GenericProperty %>)<% End If %>(New <%= CriteriaClassName %><%= Entity.GenericProperty %> (<%= Entity.Key.Properties.BuildVariableArguments() %>))
         'End Sub
     <%Else%>
         Public Shared Sub Delete<%= BusinessClassName %><%= Entity.GenericProperty %>(<%= Entity.Key.Properties.BuildParametersVariables() %>)
-            DataPortal.Delete<% If (IsCSLA40) Then %>(Of <%= BusinessClassName %><%= Entity.GenericProperty %>)<% End If %>(New <%= CriteriaClassName %><%= Entity.GenericProperty %> (<%= Entity.Key.Properties.BuildVariableArguments() %>))
+            DataPortal.Delete<% If (IsLatestCSLA) Then %>(Of <%= BusinessClassName %><%= Entity.GenericProperty %>)<% End If %>(New <%= CriteriaClassName %><%= Entity.GenericProperty %> (<%= Entity.Key.Properties.BuildVariableArguments() %>))
         End Sub
     <%End If%>
     

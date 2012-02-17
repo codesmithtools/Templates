@@ -48,7 +48,7 @@ Imports Csla.Data
 Namespace <%= BusinessProjectName %>
     <Serializable()> _
     Public Class ExistsCommand
-        Inherits CommandBase<% If(IsCSLA40) Then %>(Of ExistsCommand)<% End If %>
+        Inherits CommandBase<% If(IsLatestCSLA) Then %>(Of ExistsCommand)<% End If %>
     
 #Region "Constructor(s)"
 <% If(IncludeSilverlightSupport) Then %>

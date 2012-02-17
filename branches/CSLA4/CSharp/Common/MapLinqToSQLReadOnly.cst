@@ -7,30 +7,30 @@
 <%@ Import Namespace="CodeSmith.SchemaHelper" %>
 
             bool cancel = false;
-			OnMapping(ref cancel);
+            OnMapping(ref cancel);
             if (cancel) return;
 
-<% 	if(Entity.ConcurrencyProperty != null) 
-	{ %>
+<%     if(Entity.ConcurrencyProperty != null) 
+    { %>
             <%= Entity.ConcurrencyProperty.Name %> = LinqToSQLHelper.GetBytes(DataSource, "<%= Entity.ConcurrencyProperty.KeyName %>");
-<% 	} %>
-<% 	foreach(IProperty property in Entity.GetProperties(PropertyType.NoConcurrency)) 
-	{ 
-		if(UseMemberVariables) 
-		{ %>
-<% 			if( property.IsNullable && property.SystemType != "System.String" && property.SystemType != "System.Byte[]") 
-			{%>
+<%     } %>
+<%     foreach(IProperty property in Entity.GetProperties(PropertyType.NoConcurrency)) 
+    { 
+        if(UseMemberVariables) 
+        { %>
+<%             if( property.IsNullable && property.SystemType != "System.String" && property.SystemType != "System.Byte[]") 
+            {%>
             <%= property.PrivateMemberVariableName %> = DataSource.IsDBNull("<%= property.KeyName %>") ? (<%= property.SystemType %>)null : <%if(!property.HasByteArrayColumn()) { %>DataSource.<%= property.KeyName %>;<% } else { %>LinqToSQLHelper.GetByteArray(DataSource.<%= property.KeyName %>);<% } %>
-<% 			} 
-			else 
-			{%>
+<%             } 
+            else 
+            {%>
             <%= property.PrivateMemberVariableName %> = <%if(!property.HasByteArrayColumn()) { %>DataSource.<%= property.KeyName %>;<% } else { %>LinqToSQLHelper.GetByteArray(DataSource.<%= property.KeyName %>);<% } %>
-<% 			} 
-		} 
-		else 
-		{ %>
+<%             } 
+        } 
+        else 
+        { %>
             LoadProperty(<%= property.PrivateMemberVariableName %>Property, <%if(!property.HasByteArrayColumn()) { %>DataSource.<%= property.KeyName %>);<% } else { %>LinqToSQLHelper.GetByteArray(DataSource.<%= property.KeyName %>));<% } %>
-<% 		}
-	} %>
+<%         }
+    } %>
 
             OnMapped();

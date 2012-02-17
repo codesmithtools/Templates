@@ -69,7 +69,7 @@ public override void Render(System.IO.TextWriter writer)
         
         editableChildDataAccessLinqToSQL.RenderToFile(fileName, parentFileName, true);
     }
-	else if(DataAccessImplementation == DataAccessMethod.StoredProcedures)
+    else if(DataAccessImplementation == DataAccessMethod.StoredProcedures)
     {
         EditableChildDataAccessStoredProcedures editableChildDataAccessStoredProcedures = this.Create<EditableChildDataAccessStoredProcedures>();
         this.CopyPropertiesTo(editableChildDataAccessStoredProcedures);

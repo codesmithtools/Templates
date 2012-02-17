@@ -21,14 +21,14 @@
     <%     For Each member As Member in Entity.GetProperties(PropertyType.NoConcurrency) %>
     <% If (member.SystemType = "System.String" ) Then  %>
     <% If Not member.IsNullable Then %>
-    <% If(IsCSLA40) Then %>
+    <% If(IsLatestCSLA) Then %>
             BusinessRules.AddRule(New Csla.Rules.CommonRules.Required(<%= member.PrivateMemberVariableName %>Property))
     <% Else %>
             ValidationRules.AddRule(AddressOf CommonRules.StringRequired, <%= member.PrivateMemberVariableName %>Property)
     <%  End If
     End If
         If Not member.ExcludeBusinessSizeRule() Then %>
-    <% If(IsCSLA40) Then %>
+    <% If(IsLatestCSLA) Then %>
             BusinessRules.AddRule(New Csla.Rules.CommonRules.MaxLength(<%= member.PrivateMemberVariableName %>Property, <%= member.Size %>))
     <% Else %>
             ValidationRules.AddRule(AddressOf CommonRules.StringMaxLength, New CommonRules.MaxLengthRuleArgs(<%= member.PrivateMemberVariableName %>Property, <%= member.Size %>))

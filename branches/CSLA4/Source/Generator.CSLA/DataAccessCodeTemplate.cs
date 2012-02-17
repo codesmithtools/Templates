@@ -259,8 +259,8 @@
 //        {
 //            CleanTemplateContextByValue(Constants.DynamicRoot);
 
-//            EntityManager em = new EntityManager(DynamicRoot);
-//            foreach (Entity entity in em.Entities)
+//            EntityManager em = new EntityManager(DynamicRoot, null, null);
+//            foreach (IEntity entity in em.Entities)
 //            {
 //                if (ContextData.Get(entity.Table.Name) != null)
 //                    ContextData.Remove(entity.Table.Name);
@@ -300,8 +300,8 @@
 //        {
 //            CleanTemplateContextByValue(Constants.EditableChild);
 
-//            EntityManager em = new EntityManager(EditableChild);
-//            foreach (Entity entity in em.Entities)
+//            EntityManager em = new EntityManager(EditableChild, null, null);
+//            foreach (IEntity entity in em.Entities)
 //            {
 //                if (ContextData.Get(entity.Table.Name) != null)
 //                    ContextData.Remove(entity.Table.Name);
@@ -339,8 +339,8 @@
 //        {
 //            CleanTemplateContextByValue(Constants.EditableRoot);
 
-//            EntityManager em = new EntityManager(EditableRoot);
-//            foreach (Entity entity in em.Entities)
+//            EntityManager em = new EntityManager(EditableRoot, null, null);
+//            foreach (IEntity entity in em.Entities)
 //            {
 //                if (ContextData.Get(entity.Table.Name) != null)
 //                    ContextData.Remove(entity.Table.Name);
@@ -378,8 +378,8 @@
 //        {
 //            CleanTemplateContextByValue(Constants.ReadOnlyChild);
 
-//            EntityManager em = new EntityManager(ReadOnlyChild);
-//            foreach (Entity entity in em.Entities)
+//            EntityManager em = new EntityManager(ReadOnlyChild, null, null);
+//            foreach (IEntity entity in em.Entities)
 //            {
 //                string key = String.Format(Constants.ReadOnlyFormat, entity.Table.Name);
 
@@ -417,8 +417,8 @@
 //        {
 //            CleanTemplateContextByValue(Constants.ReadOnlyRoot);
 
-//            EntityManager em = new EntityManager(ReadOnlyRoot);
-//            foreach (Entity entity in em.Entities)
+//            EntityManager em = new EntityManager(ReadOnlyRoot, null, null);
+//            foreach (IEntity entity in em.Entities)
 //            {
 //                string key = String.Format(Constants.ReadOnlyFormat, entity.Table.Name);
 
@@ -456,8 +456,8 @@
 //        {
 //            CleanTemplateContextByValue(Constants.SwitchableObject);
 
-//            EntityManager em = new EntityManager(SwitchableObject);
-//            foreach (Entity entity in em.Entities)
+//            EntityManager em = new EntityManager(SwitchableObject, null, null);
+//            foreach (IEntity entity in em.Entities)
 //            {
 //                if (ContextData.Get(entity.Table.Name) != null)
 //                    ContextData.Remove(entity.Table.Name);
@@ -499,8 +499,8 @@
 //        {
 //            CleanTemplateContextByValue(Constants.DynamicRootList);
 
-//            EntityManager em = new EntityManager(DynamicRootList);
-//            foreach (Entity entity in em.Entities)
+//            EntityManager em = new EntityManager(DynamicRootList, null, null);
+//            foreach (IEntity entity in em.Entities)
 //            {
 //                string key = String.Format(Constants.ListFormat, entity.Table.Name);
 
@@ -524,8 +524,8 @@
 //        {
 //            CleanTemplateContextByValue(Constants.EditableRootList);
 
-//            EntityManager em = new EntityManager(EditableRootList);
-//            foreach (Entity entity in em.Entities)
+//            EntityManager em = new EntityManager(EditableRootList, null, null);
+//            foreach (IEntity entity in em.Entities)
 //            {
 //                string key = String.Format(Constants.ListFormat, entity.Table.Name);
 
@@ -549,8 +549,8 @@
 //        {
 //            CleanTemplateContextByValue(Constants.DynamicListBase);
 
-//            EntityManager em = new EntityManager(DynamicListBase);
-//            foreach (Entity entity in em.Entities)
+//            EntityManager em = new EntityManager(DynamicListBase, null, null);
+//            foreach (IEntity entity in em.Entities)
 //            {
 //                string key = String.Format(Constants.ListFormat, entity.Table.Name);
 
@@ -574,9 +574,8 @@
 //        {
 //            CleanTemplateContextByValue(Constants.EditableChildList);
 
-//            EntityManager em = new EntityManager(EditableChildList);
-
-//            foreach (Entity entity in em.Entities)
+//            EntityManager em = new EntityManager(EditableChildList, null, null);
+//            foreach (IEntity entity in em.Entities)
 //            {
 //                string key = String.Format(Constants.ListFormat, entity.Table.Name);
 
@@ -600,9 +599,8 @@
 //        {
 //            CleanTemplateContextByValue(Constants.ReadOnlyList);
 
-//            EntityManager em = new EntityManager(ReadOnlyList);
-
-//            foreach (Entity entity in em.Entities)
+//            EntityManager em = new EntityManager(ReadOnlyList, null, null);
+//            foreach (IEntity entity in em.Entities)
 //            {
 //                string key = String.Format(Constants.ReadOnlyListFormat, entity.Table.Name);
 
@@ -624,9 +622,8 @@
 //        {
 //            CleanTemplateContextByValue(Constants.ReadOnlyChildList);
 
-//            EntityManager em = new EntityManager(ReadOnlyChildList);
-
-//            foreach (Entity entity in em.Entities)
+//            EntityManager em = new EntityManager(ReadOnlyChildList, null, null);
+//            foreach (IEntity entity in em.Entities)
 //            {
 //                string key = String.Format(Constants.ReadOnlyListFormat, entity.Table.Name);
 
@@ -657,7 +654,7 @@
 //            if (ReadOnlyRoot == null) ReadOnlyRoot = new TableSchemaCollection();
 //            if (SwitchableObject == null) SwitchableObject = new TableSchemaCollection();
 
-//            if (DynamicListBase == null) DynamicListBase = new TableSchemaCollection(); 
+//            if (DynamicListBase == null) DynamicListBase = new TableSchemaCollection();
 //            if (DynamicRootList == null) DynamicRootList = new TableSchemaCollection();
 //            if (EditableRootList == null) EditableRootList = new TableSchemaCollection();
 //            if (EditableChildList == null) EditableChildList = new TableSchemaCollection();
@@ -815,9 +812,9 @@
 //        {
 //            RegisterReference("System.Configuration");
 
-//            RegisterReference(!IsCSLA40
+//            RegisterReference(!IsLatestCSLA
 //                                  ? Path.GetFullPath(Path.Combine(CodeTemplateInfo.DirectoryName, @"..\..\Common\Csla\3.8\Client\Csla.dll"))
-//                                  : Path.GetFullPath(Path.Combine(CodeTemplateInfo.DirectoryName, @"..\..\Common\Csla\4.0\Client\Csla.dll")));
+//                                  : Path.GetFullPath(Path.Combine(CodeTemplateInfo.DirectoryName, @"..\..\Common\Csla\4.3\Client\Csla.dll")));
 //        }
 
 //        #endregion

@@ -41,7 +41,7 @@ namespace <%= BusinessProjectName %>
         public static <%= BusinessClassName %> GetAll()
         {
             if(_list == null)
-                _list = DataPortal.Fetch< <%= BusinessClassName %> >();
+                _list = DataPortal.Fetch<<%= BusinessClassName %>>();
                 
             return _list;
         }

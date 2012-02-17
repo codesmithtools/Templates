@@ -7,58 +7,58 @@
 <%@ Assembly Name="Generator.CSLA" Path="..\..\Common" %>
 <%@ Import Namespace="CodeSmith.SchemaHelper" %>
 
-			//LinqToSQL Modification
-			bool cancel = false;
+            //LinqToSQL Modification
+            bool cancel = false;
             OnChildUpdating(ref cancel);
             if (cancel) return;
-			
-			// Create a new connection.
+            
+            // Create a new connection.
             using (var ctx = ContextManager<DAL.PetshopDataContext>.GetManager(LinqToSQLHelper.ConnectionString, true))
-			{
-			
-			// Get <%= Entity.Name %> data for a single criteria
-<%	string PrimaryKeyCriteria = "";	
-	string PrimaryKeyFields = "";
- 	int memberCount = 0 ; 
-	foreach (IProperty property in Entity.Key.Properties) 
-	{
-		PrimaryKeyCriteria += "criteria." + property.Name.ToString() ;
-		PrimaryKeyFields += property.Name.ToString() ;
-		if ( memberCount < (Entity.Key.Properties.Count - 1))
-		{
-			PrimaryKeyCriteria += ", " ;
-			PrimaryKeyFields += ", ";
-		}
- 	memberCount = memberCount + 1 ; 
- 	} 
-%>	
-				DAL.<%= Entity.Name %> item = ctx.DataContext.<%= Entity.Name %>.GetByKey(<%=PrimaryKeyFields%>);
-	
-				if (item == null)
-					throw new ArgumentNullException("<%=PrimaryKeyFields%>", "Selection by <%=PrimaryKeyFields%> did not return a result.");
-				else
-				{
+            {
+            
+            // Get <%= Entity.Name %> data for a single criteria
+<%    string PrimaryKeyCriteria = "";    
+    string PrimaryKeyFields = "";
+     int memberCount = 0 ; 
+    foreach (IProperty property in Entity.Key.Properties) 
+    {
+        PrimaryKeyCriteria += "criteria." + property.Name.ToString() ;
+        PrimaryKeyFields += property.Name.ToString() ;
+        if ( memberCount < (Entity.Key.Properties.Count - 1))
+        {
+            PrimaryKeyCriteria += ", " ;
+            PrimaryKeyFields += ", ";
+        }
+     memberCount = memberCount + 1 ; 
+     } 
+%>    
+                DAL.<%= Entity.Name %> item = ctx.DataContext.<%= Entity.Name %>.GetByKey(<%=PrimaryKeyFields%>);
+    
+                if (item == null)
+                    throw new ArgumentNullException("<%=PrimaryKeyFields%>", "Selection by <%=PrimaryKeyFields%> did not return a result.");
+                else
+                {
 <%= Entity.GetProperties(PropertyType.UpdateInsert).BuildLinqToSQLCommandParameters(false,true,true,5)%>
-				//Map(item);
-				}           
-	
-				try
-				{
-					ctx.DataContext.SubmitChanges();
-				}
-				catch(System.Exception e)
-				{
-					throw new DataPortalException("The entity is out of date on the client. " +
-						"Please update the entity and try again. This could also be thrown if the sql statement " +
-						"failed to execute.",e,this);
-				}
-<% 	foreach(IProperty property in Entity.Key.Properties)%>
-<%	{%>
-<%		if(!property.IsType(PropertyType.Identity))%>
-<%		{%>
-				LoadProperty(_<%= property.VariableName %>Property, this.<%= property.Name %>);
-<%		}%>
-<%	} %>
+                //Map(item);
+                }           
+    
+                try
+                {
+                    ctx.DataContext.SubmitChanges();
+                }
+                catch(System.Exception e)
+                {
+                    throw new DataPortalException("The entity is out of date on the client. " +
+                        "Please update the entity and try again. This could also be thrown if the sql statement " +
+                        "failed to execute.",e,this);
+                }
+<%     foreach(IProperty property in Entity.Key.Properties)%>
+<%    {%>
+<%        if(!property.IsType(PropertyType.Identity))%>
+<%        {%>
+                LoadProperty(_<%= property.VariableName %>Property, this.<%= property.Name %>);
+<%        }%>
+<%    } %>
 
-            	OnChildUpdated();
-			}
+                OnChildUpdated();
+            }

@@ -47,7 +47,7 @@ namespace <%= BusinessProjectName %>
 <% if(DataAccessImplementation == DataAccessMethod.ObjectFactoryNone || DataAccessImplementation == DataAccessMethod.ObjectFactoryParameterizedSQL || DataAccessImplementation == DataAccessMethod.ObjectFactoryStoredProcedures){ %>
     [Csla.Server.ObjectFactory(FactoryNames.<%= Entity.Name %>InfoFactoryName)]
 <% } %>
-    public partial class <%= BusinessClassName %><%= Entity.GenericProperty %> : ReadOnlyBase< <%= BusinessClassName %><%= Entity.GenericProperty %> >
+    public partial class <%= BusinessClassName %><%= Entity.GenericProperty %> : ReadOnlyBase<<%= BusinessClassName %><%= Entity.GenericProperty %>>
     {
 <%/*  Documentation code handled in the Constructor.cst template  */
    RenderHelper(new Constructor()); %>
@@ -73,7 +73,7 @@ namespace <%= BusinessProjectName %>
             var criteria = new <%= CriteriaClassName %><%= Entity.GenericProperty %> {<%= sc.Properties.BuildObjectInitializer() %>};
             <%= sc.Properties.BuildNullableObjectInitializer()%>
 
-            return DataPortal.Fetch<% if(DataAccessImplementation != DataAccessMethod.ObjectFactoryNone && DataAccessImplementation != DataAccessMethod.ObjectFactoryParameterizedSQL && DataAccessImplementation != DataAccessMethod.ObjectFactoryStoredProcedures){ %>Child<% } %>< <%= ChildBusinessClassName %><%= Entity.GenericProperty %> >(criteria);
+            return DataPortal.Fetch<% if(DataAccessImplementation != DataAccessMethod.ObjectFactoryNone && DataAccessImplementation != DataAccessMethod.ObjectFactoryParameterizedSQL && DataAccessImplementation != DataAccessMethod.ObjectFactoryStoredProcedures){ %>Child<% } %><<%= ChildBusinessClassName %><%= Entity.GenericProperty %>>(criteria);
         }
 <% } %>
 
@@ -92,7 +92,7 @@ namespace <%= BusinessProjectName %>
             <%=Entity.Key.Properties.BuildNullableObjectInitializer()%>
             
             // Mark as child?
-            var dp = new DataPortal< <%= BusinessClassName %><%= Entity.GenericProperty %> >();
+            var dp = new DataPortal<<%= BusinessClassName %><%= Entity.GenericProperty %>>();
             dp.FetchCompleted += handler;
             dp.BeginFetch(criteria);
         }
