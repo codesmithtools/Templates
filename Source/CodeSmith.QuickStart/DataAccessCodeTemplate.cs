@@ -815,9 +815,9 @@ namespace CodeSmith.QuickStart
         {
             RegisterReference("System.Configuration");
 
-            RegisterReference(!IsCSLA40
+            RegisterReference(!IsLatestCSLA
                                   ? Path.GetFullPath(Path.Combine(CodeTemplateInfo.DirectoryName, @"..\..\Common\Csla\3.8\Client\Csla.dll"))
-                                  : Path.GetFullPath(Path.Combine(CodeTemplateInfo.DirectoryName, @"..\..\Common\Csla\4.0\Client\Csla.dll")));
+                                  : Path.GetFullPath(Path.Combine(CodeTemplateInfo.DirectoryName, @"..\..\Common\Csla\4.3\Client\Csla.dll")));
         }
 
         #endregion

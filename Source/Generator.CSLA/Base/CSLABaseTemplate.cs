@@ -33,7 +33,7 @@ namespace Generator.CSLA
                     return FileVersionInfo.GetVersionInfo(fileName).FileVersion;
                 }
 
-                return "3.0.0.0";
+                return "4.3.0.0";
             }
         }
 
@@ -42,12 +42,12 @@ namespace Generator.CSLA
         {
             get
             {
-                return IsCSLA40 ? "4.0.0" : "3.8.4";
+                return IsLatestCSLA ? "4.3.0" : "3.8.4";
             }
         }
 
         [Browsable(false)]
-        public virtual bool IsCSLA40
+        public virtual bool IsLatestCSLA
         {
             get
             {
@@ -98,9 +98,9 @@ namespace Generator.CSLA
 
         public virtual void RegisterReferences()
         {
-            RegisterReference(!IsCSLA40
+            RegisterReference(!IsLatestCSLA
                                   ? Path.GetFullPath(Path.Combine(CodeTemplateInfo.DirectoryName, @"..\..\Common\Csla\3.8\Client\Csla.dll"))
-                                  : Path.GetFullPath(Path.Combine(CodeTemplateInfo.DirectoryName, @"..\..\Common\Csla\4.0\Client\Csla.dll")));
+                                  : Path.GetFullPath(Path.Combine(CodeTemplateInfo.DirectoryName, @"..\..\Common\Csla\4.3\Client\Csla.dll")));
 
             RegisterReference("System.Configuration");
         }

@@ -20,15 +20,15 @@
 <%     foreach(IProperty property in Entity.GetProperties(PropertyType.NoConcurrency)){ %>
 <% if(property.SystemType == "System.String" ) { %>
 <% if(!property.IsNullable) { %>
-<% if(IsCSLA40) { %>
-            BusinessRules.AddRule(new Csla.Rules.CommonRules.Required(<%= property.PrivateMemberVariableName %>IProperty));
+<% if(IsLatestCSLA) { %>
+            BusinessRules.AddRule(new Csla.Rules.CommonRules.Required(<%= property.PrivateMemberVariableName %>Property));
 <% } else { %>
-            ValidationRules.AddRule(CommonRules.StringRequired, <%= property.PrivateMemberVariableName %>IProperty);
+            ValidationRules.AddRule(CommonRules.StringRequired, <%= property.PrivateMemberVariableName %>Property);
 <% } }
 if(!property.ExcludeBusinessSizeRule()) { %>
-<% if(IsCSLA40) { %>
-            BusinessRules.AddRule(new Csla.Rules.CommonRules.MaxLength(<%= property.PrivateMemberVariableName %>IProperty, <%= property.Size %>));
+<% if(IsLatestCSLA) { %>
+            BusinessRules.AddRule(new Csla.Rules.CommonRules.MaxLength(<%= property.PrivateMemberVariableName %>Property, <%= property.Size %>));
 <% } else { %>
-            ValidationRules.AddRule(CommonRules.StringMaxLength, new CommonRules.MaxLengthRuleArgs(<%= property.PrivateMemberVariableName %>IProperty, <%= property.Size %>));
+            ValidationRules.AddRule(CommonRules.StringMaxLength, new CommonRules.MaxLengthRuleArgs(<%= property.PrivateMemberVariableName %>Property, <%= property.Size %>));
 <% } } } } %>
         }

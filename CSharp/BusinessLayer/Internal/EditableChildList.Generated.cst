@@ -39,7 +39,7 @@ namespace <%= BusinessProjectName %>
 <% if(DataAccessImplementation == DataAccessMethod.ObjectFactoryNone || DataAccessImplementation == DataAccessMethod.ObjectFactoryParameterizedSQL || DataAccessImplementation == DataAccessMethod.ObjectFactoryStoredProcedures){ %>
     [Csla.Server.ObjectFactory(FactoryNames.<%= Entity.Name %>ListFactoryName)]
 <% } %>
-    public partial class <%= BusinessClassName %> : BusinessListBase< <%= BusinessClassName %>, <%= ChildBusinessClassName %> >
+    public partial class <%= BusinessClassName %> : BusinessListBase<<%= BusinessClassName %>, <%= ChildBusinessClassName %>>
     {
         #region Constructor(s)
 
@@ -74,7 +74,7 @@ namespace <%= BusinessProjectName %>
         /// <returns>Returns a newly instantiated collection of type <see cref="<%=BusinessClassName%><%= Entity.GenericProperty %>"/>.</returns>
         internal static <%= BusinessClassName %><%= Entity.GenericProperty %> NewList()
         {
-            return DataPortal.CreateChild< <%= BusinessClassName %><%= Entity.GenericProperty %> >();
+            return DataPortal.CreateChild<<%= BusinessClassName %><%= Entity.GenericProperty %>>();
         }     
 <% foreach(SearchCriteria sc in Entity.SearchCriteria) { %>
 
@@ -90,13 +90,13 @@ namespace <%= BusinessProjectName %>
             var criteria = new <%= CriteriaClassName %><%= Entity.GenericProperty %>{<%= sc.Properties.BuildObjectInitializer() %>};
             <%=sc.Properties.BuildNullableObjectInitializer()%>
             
-            return DataPortal.Fetch<% if(DataAccessImplementation != DataAccessMethod.ObjectFactoryNone && DataAccessImplementation != DataAccessMethod.ObjectFactoryParameterizedSQL && DataAccessImplementation != DataAccessMethod.ObjectFactoryStoredProcedures){ %>Child<% } %>< <%= BusinessClassName %><%= Entity.GenericProperty %> >(criteria);
+            return DataPortal.Fetch<% if(DataAccessImplementation != DataAccessMethod.ObjectFactoryNone && DataAccessImplementation != DataAccessMethod.ObjectFactoryParameterizedSQL && DataAccessImplementation != DataAccessMethod.ObjectFactoryStoredProcedures){ %>Child<% } %><<%= BusinessClassName %><%= Entity.GenericProperty %>>(criteria);
         }
 <% } %>
 
         internal static <%= BusinessClassName %><%= Entity.GenericProperty %> GetAll()
         {
-            return DataPortal.Fetch<% if(DataAccessImplementation != DataAccessMethod.ObjectFactoryNone && DataAccessImplementation != DataAccessMethod.ObjectFactoryParameterizedSQL && DataAccessImplementation != DataAccessMethod.ObjectFactoryStoredProcedures){ %>Child<% } %>< <%= BusinessClassName %><%= Entity.GenericProperty %> >(new <%= CriteriaClassName %><%= Entity.GenericProperty %>());
+            return DataPortal.Fetch<% if(DataAccessImplementation != DataAccessMethod.ObjectFactoryNone && DataAccessImplementation != DataAccessMethod.ObjectFactoryParameterizedSQL && DataAccessImplementation != DataAccessMethod.ObjectFactoryStoredProcedures){ %>Child<% } %><<%= BusinessClassName %><%= Entity.GenericProperty %>>(new <%= CriteriaClassName %><%= Entity.GenericProperty %>());
         }
 
         #endregion
@@ -136,7 +136,7 @@ namespace <%= BusinessProjectName %>
 <% if(IncludeSilverlightSupport) { %>
 #if !SILVERLIGHT
 <% } %>
-        protected override <% if(IsCSLA40) { %><%= ChildBusinessClassName %><%= Entity.GenericProperty %><% } else { %>object<% } %> AddNewCore()
+        protected override <% if(IsLatestCSLA) { %><%= ChildBusinessClassName %><%= Entity.GenericProperty %><% } else { %>object<% } %> AddNewCore()
         {
 <% RenderHelper(new AddNewCore()); %>
         }

@@ -46,10 +46,10 @@ namespace <%= BusinessProjectName %>
     {
         /// <summary>
         /// Retrieves data from the data base into a CSLA read only list business object of type <see cref="<%=BusinessClassName%><%= Entity.GenericProperty %>"/> 
-		/// using the criteria provided. 
+        /// using the criteria provided. 
         /// </summary>
-		/// <param name="criteria">Object of type <see cref="<%= CriteriaClassName %><%= Entity.GenericProperty %>"/></param>
-        /// <returns></returns>		
+        /// <param name="criteria">Object of type <see cref="<%= CriteriaClassName %><%= Entity.GenericProperty %>"/></param>
+        /// <returns></returns>        
         private void DataPortal_Fetch(<%= CriteriaClassName %><%= Entity.GenericProperty %> criteria)
         {
             IsReadOnly = false;
@@ -59,7 +59,7 @@ namespace <%= BusinessProjectName %>
             IsReadOnly = true;
         }
     }
-}		
+}        
 <% if(IncludeSilverlightSupport) { %>
 #endif
 <% } %>

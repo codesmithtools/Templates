@@ -1,5 +1,5 @@
 ﻿<%-- Author: Blake Niemyjski --%>
-<%@ CodeTemplate Language="C#" TargetLanguage="C#" Inherits="Generator.CSLA.QuickStartCodeTemplate" %>
+<%@ CodeTemplate Language="C#" TargetLanguage="C#" Inherits="Generator.CSLA.EntityCodeTemplate" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\..\Common" %>
 <%@ Assembly Name="Generator.CSLA" Path="..\..\..\Common" %>
 <%@ Import Namespace="CodeSmith.SchemaHelper" %>
@@ -38,7 +38,7 @@ namespace <%= BusinessProjectName %>
             {
                 if(string.IsNullOrEmpty(_connectionString))
                 {
-                    _connectionString = System.Configuration.ConfigurationManager.ConnectionStrings["<%= SourceDatabase.Name %>ConnectionString"].ConnectionString;
+                    _connectionString = System.Configuration.ConfigurationManager.ConnectionStrings["<%= Entity.Namespace %>ConnectionString"].ConnectionString;
                 }
                 
                 return _connectionString;

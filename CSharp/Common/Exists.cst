@@ -6,6 +6,7 @@
 <%@ Import Namespace="CodeSmith.SchemaHelper" %>
 
 
+        #region Exists Command
 <% if(IncludeSilverlightSupport) { %>
 #if !SILVERLIGHT
 <% } %>
@@ -17,7 +18,7 @@
         public static bool Exists(<%= CriteriaClassName %><%= Entity.GenericProperty %> criteria)
         {
             return <%= BusinessProjectName %>.ExistsCommand.Execute(criteria);
-		}
+        }
         
         /// <summary>
         /// Determines if a record exists in the <%= Entity.EntityKeyName %> table in the database for the specified criteria. 
@@ -29,3 +30,5 @@
 <% if(IncludeSilverlightSupport) { %>
 #endif
 <% } %>
+        #endregion
+

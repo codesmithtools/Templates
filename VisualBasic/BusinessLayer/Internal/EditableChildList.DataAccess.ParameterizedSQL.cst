@@ -32,7 +32,7 @@ Imports System.Data.SqlClient
 
 Imports Csla
 Imports Csla.Data
-<% If(IsCSLA40) Then %>
+<% If(IsLatestCSLA) Then %>
 Imports Csla.Rules
 <% Else %>
 Imports Csla.Validation

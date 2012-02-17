@@ -18,7 +18,8 @@ using System;
 
 using Csla;
 using Csla.Security;
-<% if(IsCSLA40) { %>
+
+<% if(IsLatestCSLA) { %>
 using Csla.Rules;
 <% } else { %>
 using Csla.Validation;
@@ -35,6 +36,6 @@ namespace <%= BusinessProjectName %>
    RenderHelper(new ValidationRules()); %>
 
 <%/*  Documentation code handled in the AuthorizationRules.cst template  */
-	RenderHelper(new AuthorizationRules()); %>
+    RenderHelper(new AuthorizationRules()); %>
     }
 }

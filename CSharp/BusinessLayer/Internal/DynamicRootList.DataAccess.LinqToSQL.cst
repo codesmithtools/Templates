@@ -45,15 +45,15 @@ namespace <%= BusinessProjectName %>
         /// Instantiates a CSLA dynamic root list business object of type <see cref="<%=BusinessClassName%><%= Entity.GenericProperty %>"/>. 
         /// </summary>
         /// <returns></returns>
-		private void DataPortal_Create()
+        private void DataPortal_Create()
         {
         }
 
         /// <summary>
         /// Retrieves data from the data base into a CSLA dynamic root list business object of type <see cref="<%=BusinessClassName%><%= Entity.GenericProperty %>"/> 
-		/// using the criteria provided. 
+        /// using the criteria provided. 
         /// </summary>
-		/// <param name="criteria">Object of type <see cref="<%= CriteriaClassName %>"/></param>
+        /// <param name="criteria">Object of type <see cref="<%= CriteriaClassName %>"/></param>
         /// <returns></returns>
         private void DataPortal_Fetch(<%= CriteriaClassName %> criteria)
         {

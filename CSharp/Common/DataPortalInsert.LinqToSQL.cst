@@ -8,75 +8,75 @@
 <%@ Import Namespace="CodeSmith.SchemaHelper" %>
 <%@ Import Namespace="System.Linq" %>
 
-			//LinqToSQL Modification
-			bool cancel = false;
+            //LinqToSQL Modification
+            bool cancel = false;
             OnInserting(ref cancel);
             if (cancel) return;
-			
-			// Get <%= Entity.Name %> data for a single criteria
+            
+            // Get <%= Entity.Name %> data for a single criteria
             using (var ctx = ContextManager<DAL.PetshopDataContext>.GetManager(LinqToSQLHelper.ConnectionString, true))
-			{
-				DAL.<%= Entity.Name %> item = new DAL.<%= Entity.Name %>();
-				
-				using (BypassPropertyChecks)
-				{
-<% 	if(Entity.ConcurrencyProperty != null || Entity.IdentityProperty != null) 
-	{ 
-		if(Entity.ConcurrencyProperty != null) 
-		    foreach(IProperty property in Entity.Key.Properties.Where(p => !p.IsType(PropertyType.Identity))) { %>
-			LoadProperty(<%= property.PrivateMemberVariableName %>Property, <%if(!property.HasByteArrayColumn()) { %>item.<%= property.KeyName %>);<% } else { %>LinqToSQLHelper.GetBinary(this.<%= property.Name %>));<% } %>
-<% 		    } %>
-<% 		else 
-		foreach(IProperty property in Entity.Key.Properties.Where(p => !p.IsType(PropertyType.Identity))) { %>
-            LoadProperty(_original<%= property.Name %>Property, this.<%= property.Name %>);
-<% 		} %>
-<%	} 
-	else
-	{
-		foreach(IProperty property in Entity.Key.Properties) 
-		{ %>
-					item.<%= property.Name %> = this.<%= property.Name %>;
-<% 		} 
-	}%>
-<% foreach (IProperty property in Entity.GetProperties(PropertyType.NoKey)) 
-	{%>
-					item.<%= property.Name %> = <%if(!property.HasByteArrayColumn()) { %>this.<%= property.Name %>;<% } else { %>LinqToSQLHelper.GetBinary(this.<%= property.Name %>);<% } %>
-<%	}%>
-				}
-			
-				ctx.DataContext.<%= Entity.Name %>.InsertOnSubmit(item);
-            	ctx.DataContext.SubmitChanges();
-<%
-			
- 	if(Entity.ConcurrencyProperty != null || Entity.IdentityProperty != null) 
-	{ 
-		if(Entity.ConcurrencyProperty != null) 
-		foreach(IProperty property in Entity.Key.Properties.Where(p => p.IsType(PropertyType.Identity))) { %>
+            {
+                DAL.<%= Entity.Name %> item = new DAL.<%= Entity.Name %>();
+                
+                using (BypassPropertyChecks)
+                {
+<%     if(Entity.ConcurrencyProperty != null || Entity.IdentityProperty != null) 
+    { 
+        if(Entity.ConcurrencyProperty != null) 
+            foreach(IProperty property in Entity.Key.Properties.Where(p => !p.IsType(PropertyType.Identity))) { %>
             LoadProperty(<%= property.PrivateMemberVariableName %>Property, <%if(!property.HasByteArrayColumn()) { %>item.<%= property.KeyName %>);<% } else { %>LinqToSQLHelper.GetBinary(this.<%= property.Name %>));<% } %>
-<% 		} %>
-<% 		else 
-		foreach(IProperty property in Entity.Key.Properties.Where(p => p.IsType(PropertyType.Identity))) { %>
-           	LoadProperty(<%= property.PrivateMemberVariableName %>Property, item.<%= property.KeyName %>);
-<% 		} %>
-<%	}%>			
+<%             } %>
+<%         else 
+        foreach(IProperty property in Entity.Key.Properties.Where(p => !p.IsType(PropertyType.Identity))) { %>
+            LoadProperty(_original<%= property.Name %>Property, this.<%= property.Name %>);
+<%         } %>
+<%    } 
+    else
+    {
+        foreach(IProperty property in Entity.Key.Properties) 
+        { %>
+                    item.<%= property.Name %> = this.<%= property.Name %>;
+<%         } 
+    }%>
+<% foreach (IProperty property in Entity.GetProperties(PropertyType.NoKey)) 
+    {%>
+                    item.<%= property.Name %> = <%if(!property.HasByteArrayColumn()) { %>this.<%= property.Name %>;<% } else { %>LinqToSQLHelper.GetBinary(this.<%= property.Name %>);<% } %>
+<%    }%>
+                }
+            
+                ctx.DataContext.<%= Entity.Name %>.InsertOnSubmit(item);
+                ctx.DataContext.SubmitChanges();
 <%
-	foreach(IProperty property in Entity.Key.Properties)
-	{ 
-		if(!property.IsType(PropertyType.Identity)) 
-		{ 
-			if(UseMemberVariables) 
-			{ %>
+            
+     if(Entity.ConcurrencyProperty != null || Entity.IdentityProperty != null) 
+    { 
+        if(Entity.ConcurrencyProperty != null) 
+        foreach(IProperty property in Entity.Key.Properties.Where(p => p.IsType(PropertyType.Identity))) { %>
+            LoadProperty(<%= property.PrivateMemberVariableName %>Property, <%if(!property.HasByteArrayColumn()) { %>item.<%= property.KeyName %>);<% } else { %>LinqToSQLHelper.GetBinary(this.<%= property.Name %>));<% } %>
+<%         } %>
+<%         else 
+        foreach(IProperty property in Entity.Key.Properties.Where(p => p.IsType(PropertyType.Identity))) { %>
+               LoadProperty(<%= property.PrivateMemberVariableName %>Property, item.<%= property.KeyName %>);
+<%         } %>
+<%    }%>            
+<%
+    foreach(IProperty property in Entity.Key.Properties)
+    { 
+        if(!property.IsType(PropertyType.Identity)) 
+        { 
+            if(UseMemberVariables) 
+            { %>
             _original<%= property.Name %> = this.<%= property.Name %>;
-<% 			} 
-			else 
-			{ %>
-            	LoadProperty(_original<%= property.Name %>Property, this.<%= property.Name %>);
-<% 			}
-		} 
-	} %>
-<% 	if(Entity.Associations.Count(a => a.AssociationType == AssociationType.OneToMany) > 0 || Entity.Associations.Count(a => a.AssociationType == AssociationType.ManyToOne) > 0)
-	{%>         	
-				FieldManager.UpdateChildren(this);
-<% 	} %>
-				OnInserted();
-			}
+<%             } 
+            else 
+            { %>
+                LoadProperty(_original<%= property.Name %>Property, this.<%= property.Name %>);
+<%             }
+        } 
+    } %>
+<%     if(Entity.Associations.Count(a => a.AssociationType == AssociationType.OneToMany) > 0 || Entity.Associations.Count(a => a.AssociationType == AssociationType.ManyToOne) > 0)
+    {%>             
+                FieldManager.UpdateChildren(this);
+<%     } %>
+                OnInserted();
+            }

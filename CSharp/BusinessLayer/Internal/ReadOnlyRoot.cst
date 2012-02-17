@@ -17,7 +17,8 @@ using System;
 
 using Csla;
 using Csla.Security;
-<% if(IsCSLA40) { %>
+
+<% if(IsLatestCSLA) { %>
 using Csla.Rules;
 <% } else { %>
 using Csla.Validation;

@@ -8,27 +8,27 @@
 <%@ Import Namespace="CodeSmith.SchemaHelper" %>
 <%@ Import Namespace="System.Linq" %>
 
-			//LinqToSQL Modification
-			bool cancel = false;
+            //LinqToSQL Modification
+            bool cancel = false;
             OnChildInserting(ref cancel);
             if (cancel) return;
-			
-			// Get <%= Entity.Name %> data for a single criteria
+            
+            // Get <%= Entity.Name %> data for a single criteria
             using (var ctx = ContextManager<DAL.PetshopDataContext>.GetManager(LinqToSQLHelper.ConnectionString, true))
-			{
-				DAL.<%= Entity.Name %> item = new DAL.<%= Entity.Name %>();
-			
+            {
+                DAL.<%= Entity.Name %> item = new DAL.<%= Entity.Name %>();
+            
 <%= Entity.GetProperties(PropertyType.UpdateInsert).BuildLinqToSQLCommandParameters(false,true,false,4)%>
-			
-				ctx.DataContext.<%= Entity.Name %>.InsertOnSubmit(item);
-           	 	ctx.DataContext.SubmitChanges();
+            
+                ctx.DataContext.<%= Entity.Name %>.InsertOnSubmit(item);
+                    ctx.DataContext.SubmitChanges();
 
-<% 	foreach(IProperty property in Entity.Key.Properties.Where(p => !p.IsType(PropertyType.Identity))) { %>
-				LoadProperty(_<%= property.VariableName %>Property, this.<%= property.Name %>);
-<%	} %>
-<% 	if(Entity.Associations.Count(a => a.AssociationType == AssociationType.OneToMany) > 0 || Entity.Associations.Count(a => a.AssociationType == AssociationType.ManyToOne) > 0)
-	{%>         	
-				FieldManager.UpdateChildren(this);
-<% 	} %>
-				OnChildInserted();
-			}
+<%     foreach(IProperty property in Entity.Key.Properties.Where(p => !p.IsType(PropertyType.Identity))) { %>
+                LoadProperty(_<%= property.VariableName %>Property, this.<%= property.Name %>);
+<%    } %>
+<%     if(Entity.Associations.Count(a => a.AssociationType == AssociationType.OneToMany) > 0 || Entity.Associations.Count(a => a.AssociationType == AssociationType.ManyToOne) > 0)
+    {%>             
+                FieldManager.UpdateChildren(this);
+<%     } %>
+                OnChildInserted();
+            }

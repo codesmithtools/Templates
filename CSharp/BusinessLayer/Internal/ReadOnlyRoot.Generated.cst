@@ -41,7 +41,7 @@ namespace <%= BusinessProjectName %>
 <% if(DataAccessImplementation == DataAccessMethod.ObjectFactoryNone || DataAccessImplementation == DataAccessMethod.ObjectFactoryParameterizedSQL || DataAccessImplementation == DataAccessMethod.ObjectFactoryStoredProcedures){ %>
     [Csla.Server.ObjectFactory(FactoryNames.<%= Entity.Name %>InfoFactoryName)]
 <% } %>
-    public partial class <%= BusinessClassName %><%= Entity.GenericProperty %> : ReadOnlyBase< <%= BusinessClassName %><%= Entity.GenericProperty %> >
+    public partial class <%= BusinessClassName %><%= Entity.GenericProperty %> : ReadOnlyBase<<%= BusinessClassName %><%= Entity.GenericProperty %>>
     {
 <%/*  Documentation code handled in the Constructor.cst template  */
    RenderHelper(new Constructor()); %>
@@ -67,7 +67,7 @@ namespace <%= BusinessProjectName %>
             var criteria = new <%= CriteriaClassName %><%= Entity.GenericProperty %> {<%= sc.Properties.BuildObjectInitializer() %>};
             <%= sc.Properties.BuildNullableObjectInitializer()%>
             
-            return DataPortal.Fetch< <%= BusinessClassName %><%= Entity.GenericProperty %> >(criteria);
+            return DataPortal.Fetch<<%= BusinessClassName %><%= Entity.GenericProperty %>>(criteria);
         }
 <% } %>
 

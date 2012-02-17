@@ -5,7 +5,7 @@
 <%@ Assembly Name="Generator.CSLA" Path="..\..\Common" %>
 <%@ Import Namespace="CodeSmith.SchemaHelper" %>
 <%@ Import Namespace="System.Linq" %>
-
+        #region Authorization Rules
 
 <% if(IncludeSilverlightSupport) { %>
 #if !SILVERLIGHT
@@ -16,7 +16,7 @@
         /// </summary>
         protected void AddAuthorizationRules()
         {
-<% if(IsCSLA40) { %>
+<% if(IsLatestCSLA) { %>
             //Csla.Rules.BusinessRules.AddRule(typeof(<%= BusinessClassName %>), new Csla.Rules.CommonRules.IsInRole(Csla.Rules.AuthorizationActions.CreateObject, "SomeRole"));
             //Csla.Rules.BusinessRules.AddRule(typeof(<%= BusinessClassName %>), new Csla.Rules.CommonRules.IsInRole(Csla.Rules.AuthorizationActions.EditObject, "SomeRole"));
             //Csla.Rules.BusinessRules.AddRule(typeof(<%= BusinessClassName %>), new Csla.Rules.CommonRules.IsInRole(Csla.Rules.AuthorizationActions.DeleteObject, "SomeRole", "SomeAdminRole"));
@@ -35,31 +35,32 @@
 <% foreach(IProperty property in Entity.GetProperties(PropertyType.NoConcurrency)){ %>
             //// <%= property.Name %>
 <% if (property.IsReadOnly()) { %>
-            // AuthorizationRules.AllowWrite(<%= property.PrivateMemberVariableName %>IProperty, canWrite);
+            // AuthorizationRules.AllowWrite(<%= property.PrivateMemberVariableName %>Property, canWrite);
 <% } %>
-            // AuthorizationRules.AllowRead(<%= property.PrivateMemberVariableName %>IProperty, canRead);
+            // AuthorizationRules.AllowRead(<%= property.PrivateMemberVariableName %>Property, canRead);
 
 <% } %>
 <%-- One-To-Zero-Or-One --%>
 <% foreach(Association association in Entity.Associations.Where(a => a.AssociationType == AssociationType.OneToZeroOrOne)){ %>
             //// <%= association.Name %>
-            // AuthorizationRules.AllowRead(<%= association.PrivateMemberVariableName %>IProperty, canRead);
+            // AuthorizationRules.AllowRead(<%= association.PrivateMemberVariableName %>Property, canRead);
 
 <% } %>
 <%-- Many-To-One --%>
 <% foreach(Association association in Entity.Associations.Where(a => a.AssociationType == AssociationType.ManyToOne)){ %>
             //// <%= association.Name %>
-            // AuthorizationRules.AllowRead(<%= association.PrivateMemberVariableName %>IProperty, canRead);
+            // AuthorizationRules.AllowRead(<%= association.PrivateMemberVariableName %>Property, canRead);
 
 <% } %>
 <%-- One-To-Many & Many-To-Many --%>
 // NOTE: Many-To-Many support coming soon.
 <% foreach(Association association in Entity.Associations.Where(a => a.AssociationType == AssociationType.OneToMany)){ %>
             //// <%= association.Name %>
-            // AuthorizationRules.AllowRead(<%= association.PrivateMemberVariableName %>IProperty, canRead);
+            // AuthorizationRules.AllowRead(<%= association.PrivateMemberVariableName %>Property, canRead);
 
 <% } } %>
         }
 <% if(IncludeSilverlightSupport) { %>
 #endif
 <% } %>
+        #endregion

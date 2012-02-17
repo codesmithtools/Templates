@@ -22,7 +22,7 @@ using Csla;
 namespace <%= BusinessProjectName %>
 {
     [Serializable]
-    public partial class <%= BusinessClassName %> : CommandBase
+    public partial class <%= BusinessClassName %> : CommandBase<%if(IsCSLALatest){ %><<%= BusinessClassName %>><% } %>
     {
         #region Synchronous Factory Methods 
         
@@ -33,7 +33,7 @@ namespace <%= BusinessProjectName %>
             
             <%= BusinessClassName %> cmd = new <%= BusinessClassName %>();
             cmd.BeforeServer();
-            cmd = DataPortal.Execute< <%= BusinessClassName %> >(cmd);
+            cmd = DataPortal.Execute<<%= BusinessClassName %>>(cmd);
             cmd.AfterServer();
             
             return cmd.Result;

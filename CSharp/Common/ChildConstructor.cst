@@ -6,6 +6,7 @@
 <%@ Assembly Name="Generator.CSLA" Path="..\..\Common" %>
 <%@ Import Namespace="CodeSmith.SchemaHelper" %>
 <%@ Import Namespace="Generator.CSLA" %>
+        #region Contructor(s)
 
         public <%= BusinessClassName %>()
         {
@@ -40,10 +41,11 @@
 <%  if(DataAccessImplementation == DataAccessMethod.LinqToSQL ) { %>
         internal <%= BusinessClassName %>(DAL.<%= Entity.Name %> DataSource)
         {
-           	Map(DataSource);
+               Map(DataSource);
             MarkAsChild();
         }
 <%  } %>
 <% if(IncludeSilverlightSupport) { %>
 #endif
 <% } %>
+        #endregion

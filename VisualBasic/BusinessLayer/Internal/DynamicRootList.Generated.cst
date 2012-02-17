@@ -45,7 +45,7 @@ Namespace <%= BusinessProjectName %>
     <Csla.Server.ObjectFactory(FactoryNames.<%= Entity.ClassName %>ListFactoryName)> _
     <% End If %>
     Public Partial Class <%= BusinessClassName %><%= Entity.GenericProperty %>
-        Inherits <% If(IsCSLA40) Then %>DynamicBindingListBase<% Else %>EditableRootListBase<% End If %>(Of <%= ChildBusinessClassName %><%= Entity.GenericProperty %>)
+        Inherits <% If(IsLatestCSLA) Then %>DynamicBindingListBase<% Else %>EditableRootListBase<% End If %>(Of <%= ChildBusinessClassName %><%= Entity.GenericProperty %>)
     
 #Region "Constructor(s)"
         

@@ -36,10 +36,10 @@ namespace <%= BusinessProjectName %>
 {
     public partial class <%= BusinessClassName %><%= Entity.GenericProperty %>
     {
-		/// <summary>
+        /// <summary>
         /// Instantiates a CSLA editable root list business object of type <see cref="<%=BusinessClassName%><%= Entity.GenericProperty %>"/>. 
         /// </summary>
-        /// <returns></returns>		
+        /// <returns></returns>        
         [RunLocal]
         protected override void DataPortal_Create()
         {
@@ -47,9 +47,9 @@ namespace <%= BusinessProjectName %>
 
         /// <summary>
         /// Retrieves data from the data base into a CSLA editable root list business object of type <see cref="<%=BusinessClassName%><%= Entity.GenericProperty %>"/> 
-		/// using the criteria provided. 
+        /// using the criteria provided. 
         /// </summary>
-		/// <param name="criteria">Object of type <see cref="<%= ChildBusinessClassName %>Criteria<%= Entity.GenericProperty %>"/></param>
+        /// <param name="criteria">Object of type <see cref="<%= ChildBusinessClassName %>Criteria<%= Entity.GenericProperty %>"/></param>
         /// <returns></returns>
         private void DataPortal_Fetch(<%= CriteriaClassName %><%= Entity.GenericProperty %> criteria)
         {
@@ -57,19 +57,19 @@ namespace <%= BusinessProjectName %>
         }
         /// <summary>
         /// Searches each item in the CSLA editable root list collection <see cref="<%=BusinessClassName%><%= Entity.GenericProperty %>"/>  
-		/// to determine if the item is dirty.  If it is, a save of the item is performed forcing the item
-		/// to be updated.
-		/// </summary>
+        /// to determine if the item is dirty.  If it is, a save of the item is performed forcing the item
+        /// to be updated.
+        /// </summary>
         /// <returns></returns>
         [Transactional(TransactionalTypes.TransactionScope)]
-		protected override void DataPortal_Update()
+        protected override void DataPortal_Update()
         {
             foreach (var Item in this)
             {
                 if (Item.IsDirty) Item.Save();
             }
         }
-	}
+    }
 }
 <% if(IncludeSilverlightSupport) { %>
 #endif

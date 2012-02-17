@@ -26,6 +26,6 @@ namespace <%= BusinessProjectName %>
     public partial class <%= BusinessClassName %><%= Entity.GenericProperty %>
     {
 <%/*  Documentation code handled in the AuthorizationRules.cst template  */
-	RenderHelper(new AuthorizationRules()); %>
+    RenderHelper(new AuthorizationRules()); %>
     }
 }

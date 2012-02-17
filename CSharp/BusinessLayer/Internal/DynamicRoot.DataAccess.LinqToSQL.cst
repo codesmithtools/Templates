@@ -48,7 +48,7 @@ namespace <%= BusinessProjectName %>
         /// Instantiates a CSLA dynamic root business object of type <see cref="<%=BusinessClassName%><%= Entity.GenericProperty %>"/>. 
         /// </summary>
         /// <returns></returns>
-		[RunLocal]
+        [RunLocal]
         protected override void DataPortal_Create()
         {
 <% RenderHelper(new DataPortalCreate()); %>
@@ -56,9 +56,9 @@ namespace <%= BusinessProjectName %>
 
         /// <summary>
         /// Retrieves data from the data base into a CSLA dynamic root business object of type <see cref="<%=BusinessClassName%><%= Entity.GenericProperty %>"/> 
-		/// using the criteria provided. 
+        /// using the criteria provided. 
         /// </summary>
-		/// <param name="criteria">Object of type <see cref="<%= CriteriaClassName %>"/></param>
+        /// <param name="criteria">Object of type <see cref="<%= CriteriaClassName %>"/></param>
         /// <returns></returns>
         private void DataPortal_Fetch(<%= CriteriaClassName %> criteria)
         {
@@ -69,7 +69,7 @@ namespace <%= BusinessProjectName %>
 
         /// <summary>
         /// Inserts data into the data base using the information in the current 
-		///	CSLA dynamic root business object of type <see cref="<%=BusinessClassName%><%= Entity.GenericProperty %>"/> 
+        ///    CSLA dynamic root business object of type <see cref="<%=BusinessClassName%><%= Entity.GenericProperty %>"/> 
         /// </summary>
         /// <returns></returns>
         [Transactional(TransactionalTypes.TransactionScope)]
@@ -77,10 +77,10 @@ namespace <%= BusinessProjectName %>
         {
 <% RenderHelper(new DataPortalInsert()); %>
         }
-		
+        
         /// <summary>
         /// Updates the corresponding record in the data base with the information in the current 
-		///	CSLA dynamic root business object of type <see cref="<%=BusinessClassName%><%= Entity.GenericProperty %>"/> 
+        ///    CSLA dynamic root business object of type <see cref="<%=BusinessClassName%><%= Entity.GenericProperty %>"/> 
         /// </summary>
         /// <returns></returns>
         [Transactional(TransactionalTypes.TransactionScope)]
@@ -91,7 +91,7 @@ namespace <%= BusinessProjectName %>
 
         /// <summary>
         /// Deletes the corresponding record in the data base with the information in the current 
-		///	CSLA dynamic root business object of type <see cref="<%=BusinessClassName%><%= Entity.GenericProperty %>"/> 
+        ///    CSLA dynamic root business object of type <see cref="<%=BusinessClassName%><%= Entity.GenericProperty %>"/> 
         /// </summary>
         /// <returns></returns>
         [Transactional(TransactionalTypes.TransactionScope)]
@@ -106,22 +106,22 @@ namespace <%= BusinessProjectName %>
             OnSelfDeleted();
         }
 
-		/// <summary>
+        /// <summary>
         /// Deletes data in the data base using the criteria specified in the <%= CriteriaClassName %><%= Entity.GenericProperty %> object.
-		/// </summary>
-		/// <param name="criteria">Object of type <see cref="<%= CriteriaClassName %><%= Entity.GenericProperty %>"/></param>
+        /// </summary>
+        /// <param name="criteria">Object of type <see cref="<%= CriteriaClassName %><%= Entity.GenericProperty %>"/></param>
         /// <returns></returns>
-		[Transactional(TransactionalTypes.TransactionScope)]
+        [Transactional(TransactionalTypes.TransactionScope)]
         protected void DataPortal_Delete(<%= CriteriaClassName %> criteria)
         {
 <% RenderHelper(new DataPortalDelete()); %>
         }
-		
-		/// <summary>
+        
+        /// <summary>
         /// Maps data columns retrieved from the data base to the respective properties in the current 
-		/// <see cref="<%= BusinessClassName %><%= Entity.GenericProperty %> CSLA dynamic root business object.
-		/// </summary>
-		/// <param name="criteria">Object of type <see cref="<%=LinqToSQLContextNamespace%>.<%=Entity.Name%> %>"/> containing the data retrieved from the data base.</param>
+        /// <see cref="<%= BusinessClassName %><%= Entity.GenericProperty %> CSLA dynamic root business object.
+        /// </summary>
+        /// <param name="criteria">Object of type <see cref="<%=LinqToSQLContextNamespace%>.<%=Entity.Name%> %>"/> containing the data retrieved from the data base.</param>
         /// <returns></returns>
         private void Map(DAL.<%=Entity.Name%> DataSource)
         {

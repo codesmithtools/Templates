@@ -85,11 +85,11 @@ public override void Render(System.IO.TextWriter writer)
     }
     
     #endregion
-	   
+       
     #endregion
 }
 
-public override bool OnTableChanging()
+public override bool OnEntityChanging()
 {
     if (string.IsNullOrEmpty(BusinessClassName))
     {

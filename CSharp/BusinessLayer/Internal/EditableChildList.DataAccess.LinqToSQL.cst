@@ -48,13 +48,13 @@ namespace <%= BusinessProjectName %>
         
             OnCreated();
         }
-		
+        
         /// <summary>
         /// Retrieves data from the data base into a CSLA editable child list business object of type <see cref="<%=BusinessClassName%><%= Entity.GenericProperty %>"/> 
-		/// using the criteria provided. 
+        /// using the criteria provided. 
         /// </summary>
-		/// <param name="criteria">Object of type <see cref="<%= ChildBusinessClassName %>Criteria<%= Entity.GenericProperty %>"/></param>
-        /// <returns></returns>		
+        /// <param name="criteria">Object of type <see cref="<%= ChildBusinessClassName %>Criteria<%= Entity.GenericProperty %>"/></param>
+        /// <returns></returns>        
         private void Child_Fetch(<%= CriteriaClassName %><%= Entity.GenericProperty %> criteria)
         {
 <% RenderHelper(new DataPortalFetchList()); %>

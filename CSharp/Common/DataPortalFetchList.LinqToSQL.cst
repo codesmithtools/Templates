@@ -1,5 +1,5 @@
 ﻿<%-- Author: Blake Niemyjski --%>
-<%-- 		 Joe McPherson   --%>
+<%--          Joe McPherson   --%>
 <%@ CodeTemplate Language="C#" TargetLanguage="C#" Inherits="Generator.CSLA.EntityCodeTemplate" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\Common" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper.Extensions" Path="..\..\Common" %>
@@ -7,28 +7,28 @@
 <%@ Assembly Name="Generator.CSLA" Path="..\..\Common" %>
 <%@ Import Namespace="CodeSmith.SchemaHelper" %>
 
-			//LinqToSQL Modification
-			bool cancel = false;
+            //LinqToSQL Modification
+            bool cancel = false;
             OnFetching(criteria, ref cancel);
             if (cancel) return;
-			
-			RaiseListChangedEvents = false;
-			
-			// Build a collection of <%= Entity.Name %> objects based on a specified criteria
+            
+            RaiseListChangedEvents = false;
+            
+            // Build a collection of <%= Entity.Name %> objects based on a specified criteria
             using (var ctx = ContextManager<DAL.PetshopDataContext>.GetManager(LinqToSQLHelper.ConnectionString, true))
-			{		
-				var items = ctx.DataContext.<%= Entity.Name %>
-					.Where(LinqToSQLHelper.BuildWhereStatement(criteria.StateBag), criteria.StateBag.Values.ToArray());
-	
-				// Add each item retrieved from the data base to the current collection object
-				foreach(var item in items)
-				{
-					//<%= BusinessClassName%>
-					this.Add(new <%= ChildBusinessClassName%>(item));
-					//<% if(BusinessClassName.Contains("InfoList")) { %>Info<% }%>(item));
-				}
-				
-				RaiseListChangedEvents = true;
-							
-				OnFetched();
-			}
+            {        
+                var items = ctx.DataContext.<%= Entity.Name %>
+                    .Where(LinqToSQLHelper.BuildWhereStatement(criteria.StateBag), criteria.StateBag.Values.ToArray());
+    
+                // Add each item retrieved from the data base to the current collection object
+                foreach(var item in items)
+                {
+                    //<%= BusinessClassName%>
+                    this.Add(new <%= ChildBusinessClassName%>(item));
+                    //<% if(BusinessClassName.Contains("InfoList")) { %>Info<% }%>(item));
+                }
+                
+                RaiseListChangedEvents = true;
+                            
+                OnFetched();
+            }

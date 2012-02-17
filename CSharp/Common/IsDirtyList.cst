@@ -7,6 +7,8 @@
 
 
 <% if(DataAccessImplementation == DataAccessMethod.ObjectFactoryNone || DataAccessImplementation == DataAccessMethod.ObjectFactoryParameterizedSQL || DataAccessImplementation == DataAccessMethod.ObjectFactoryStoredProcedures) { %>
+        #region Property overrides
+
         /// <summary>
         /// Returns true if any children are dirty
         /// </summary>
@@ -22,4 +24,7 @@
                 return false;
             }
         }
+
+        #endregion
+
 <% } %>

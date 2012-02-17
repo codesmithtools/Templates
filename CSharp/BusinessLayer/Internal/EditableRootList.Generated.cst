@@ -38,7 +38,7 @@ namespace <%= BusinessProjectName %>
 <% if(DataAccessImplementation == DataAccessMethod.ObjectFactoryNone || DataAccessImplementation == DataAccessMethod.ObjectFactoryParameterizedSQL || DataAccessImplementation == DataAccessMethod.ObjectFactoryStoredProcedures){ %>
     [Csla.Server.ObjectFactory(FactoryNames.<%= Entity.Name %>ListFactoryName)]
 <% } %>
-    public partial class <%= BusinessClassName %><%= Entity.GenericProperty %> : BusinessListBase< <%= BusinessClassName %><%= Entity.GenericProperty %>, <%= ChildBusinessClassName %><%= Entity.GenericProperty %> >
+    public partial class <%= BusinessClassName %><%= Entity.GenericProperty %> : BusinessListBase<<%= BusinessClassName %><%= Entity.GenericProperty %>, <%= ChildBusinessClassName %><%= Entity.GenericProperty %>>
     {    
         #region Contructor(s)
 
@@ -65,7 +65,7 @@ namespace <%= BusinessProjectName %>
 <% } %>
         #region Method Overrides
         
-        protected override <% if(IsCSLA40) { %><%= ChildBusinessClassName %><%= Entity.GenericProperty %><% } else { %>object<% } %> AddNewCore()
+        protected override <% if(IsLatestCSLA) { %><%= ChildBusinessClassName %><%= Entity.GenericProperty %><% } else { %>object<% } %> AddNewCore()
         {
 <% RenderHelper(new AddNewCore()); %>
         }
@@ -80,7 +80,7 @@ namespace <%= BusinessProjectName %>
         /// <returns>Returns a newly instantiated collection of type <see cref="<%=BusinessClassName%><%= Entity.GenericProperty %>"/>.</returns>
         public static <%= BusinessClassName %><%= Entity.GenericProperty %> NewList()
         {
-            return DataPortal.Create< <%= BusinessClassName %><%= Entity.GenericProperty %> >();
+            return DataPortal.Create<<%= BusinessClassName %><%= Entity.GenericProperty %>>();
         }      
 <% foreach(SearchCriteria sc in Entity.SearchCriteria) { %>
 
@@ -96,13 +96,13 @@ namespace <%= BusinessProjectName %>
             var criteria = new <%= CriteriaClassName %><%= Entity.GenericProperty %>{<%= sc.Properties.BuildObjectInitializer() %>};
             <%= sc.Properties.BuildNullableObjectInitializer()%>
             
-            return DataPortal.Fetch< <%= BusinessClassName %><%= Entity.GenericProperty %> >(criteria);
+            return DataPortal.Fetch<<%= BusinessClassName %><%= Entity.GenericProperty %>>(criteria);
         }
 <% } %>
 
         public static <%= BusinessClassName %><%= Entity.GenericProperty %> GetAll()
         {
-            return DataPortal.Fetch< <%= BusinessClassName %><%= Entity.GenericProperty %> >(new <%= CriteriaClassName %><%= Entity.GenericProperty %>());
+            return DataPortal.Fetch<<%= BusinessClassName %><%= Entity.GenericProperty %>>(new <%= CriteriaClassName %><%= Entity.GenericProperty %>());
         }
 
         #endregion
@@ -132,7 +132,7 @@ namespace <%= BusinessProjectName %>
         {
             var criteria = new <%= CriteriaClassName %><%= Entity.GenericProperty %>{<%= sc.Properties.BuildObjectInitializer() %>};
             <%= sc.Properties.BuildNullableObjectInitializer()%>
-            var dp = new DataPortal< <%= BusinessClassName %> >();
+            var dp = new DataPortal<<%= BusinessClassName %>>();
             dp.FetchCompleted += handler;
             dp.BeginFetch(criteria);
         }

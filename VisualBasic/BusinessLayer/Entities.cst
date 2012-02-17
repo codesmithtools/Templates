@@ -215,9 +215,9 @@ Public Overrides Sub Generate()
     ' AsyncChildLoaderTemplate
 
     If IncludeSilverlightSupport Then
-	    Dim AsyncChildLoader As AsyncChildLoaderTemplate = Me.Create(Of AsyncChildLoaderTemplate)()
-	    Me.CopyPropertiesTo(AsyncChildLoader)
-	    AsyncChildLoader.RenderToFile(System.IO.Path.Combine(Me.Location, "Utility\AsyncChildLoader.vb"), True)
+        Dim AsyncChildLoader As AsyncChildLoaderTemplate = Me.Create(Of AsyncChildLoaderTemplate)()
+        Me.CopyPropertiesTo(AsyncChildLoader)
+        AsyncChildLoader.RenderToFile(System.IO.Path.Combine(Me.Location, "Utility\AsyncChildLoader.vb"), True)
     End If
 End Sub
 

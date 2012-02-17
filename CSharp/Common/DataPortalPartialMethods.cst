@@ -30,7 +30,7 @@
 
         /// <summary>
         /// Codesmith generated stub method that is called after the <see cref="<%=ChildBusinessClassName%><%= Entity.GenericProperty %>"/> object has been fetched. 
-        /// </summary>	
+        /// </summary>    
         partial void OnFetched();
 
         /// <summary>

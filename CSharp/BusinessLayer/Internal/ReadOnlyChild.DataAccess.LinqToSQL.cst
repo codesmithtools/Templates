@@ -37,20 +37,20 @@ namespace <%= BusinessProjectName %>
     {
         /// <summary>
         /// Retrieves data from the data base into a CSLA read only child business object of type <see cref="<%=BusinessClassName%><%= Entity.GenericProperty %>"/> 
-		/// using the criteria provided. 
+        /// using the criteria provided. 
         /// </summary>
-		/// <param name="criteria">Object of type <see cref="<%= CriteriaClassName %><%= Entity.GenericProperty %>"/></param>
-        /// <returns></returns>		
+        /// <param name="criteria">Object of type <see cref="<%= CriteriaClassName %><%= Entity.GenericProperty %>"/></param>
+        /// <returns></returns>        
         private void Child_Fetch(<%= CriteriaClassName %> criteria<%= Entity.GenericProperty %>)
         {
 <% RenderHelper(new ChildFetch()); %>
         }
 
-		/// <summary>
+        /// <summary>
         /// Maps data columns retrieved from the data base to the respective properties in the current 
-		/// <see cref="<%= BusinessClassName %><%= Entity.GenericProperty %> CSLA read only child business object.
-		/// </summary>
-		/// <param name="criteria">Object of type <see cref="<%=LinqToSQLContextNamespace%>.<%=Entity.Name%> %>"/> containing the data retrieved from the data base.</param>
+        /// <see cref="<%= BusinessClassName %><%= Entity.GenericProperty %> CSLA read only child business object.
+        /// </summary>
+        /// <param name="criteria">Object of type <see cref="<%=LinqToSQLContextNamespace%>.<%=Entity.Name%> %>"/> containing the data retrieved from the data base.</param>
         /// <returns></returns>
         private void Map(DAL.<%=Entity.Name%> DataSource)
         {

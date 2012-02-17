@@ -45,7 +45,7 @@ namespace <%= BusinessProjectName %>
 <% if(DataAccessImplementation == DataAccessMethod.ObjectFactoryNone || DataAccessImplementation == DataAccessMethod.ObjectFactoryParameterizedSQL || DataAccessImplementation == DataAccessMethod.ObjectFactoryStoredProcedures){ %>
     [Csla.Server.ObjectFactory(FactoryNames.<%= Entity.Name %>ListFactoryName)]
 <% } %>
-    public partial class <%= BusinessClassName %><%= Entity.GenericProperty %> : <% if(IsCSLA40) { %>DynamicBindingListBase<% } else { %>EditableRootListBase<% } %>< <%= ChildBusinessClassName %><%= Entity.GenericProperty %> >
+    public partial class <%= BusinessClassName %><%= Entity.GenericProperty %> : <% if(IsLatestCSLA) { %>DynamicBindingListBase<% } else { %>EditableRootListBase<% } %><<%= ChildBusinessClassName %><%= Entity.GenericProperty %>>
     {
         #region Constructor(s)
 <% if(IncludeSilverlightSupport) { %>
@@ -86,16 +86,16 @@ namespace <%= BusinessProjectName %>
         /// <returns>Returns a newly instantiated collection of type <see cref="<%=BusinessClassName%><%= Entity.GenericProperty %>"/>.</returns>
         public static <%= BusinessClassName %><%= Entity.GenericProperty %> NewList()
         {
-            return DataPortal.Create< <%= BusinessClassName %><%= Entity.GenericProperty %> >();
+            return DataPortal.Create<<%= BusinessClassName %><%= Entity.GenericProperty %>>();
         }
-	
+    
         /// <summary>
         /// Returns a <see cref="<%=BusinessClassName%><%= Entity.GenericProperty %>"/> collection of all <see cref="<%=ChildBusinessClassName%><%= Entity.GenericProperty %>"/> items. 
         /// </summary>
-        /// <returns>Collection of all <%=ChildBusinessClassName%><%= Entity.GenericProperty %> items.</returns>	
+        /// <returns>Collection of all <%=ChildBusinessClassName%><%= Entity.GenericProperty %> items.</returns>    
         public static <%= BusinessClassName %><%= Entity.GenericProperty %> GetAll()
         {
-            return DataPortal.Fetch< <%= BusinessClassName %><%= Entity.GenericProperty %>>(new <%= CriteriaClassName %><%= Entity.GenericProperty %>());
+            return DataPortal.Fetch<<%= BusinessClassName %><%= Entity.GenericProperty %>>(new <%= CriteriaClassName %><%= Entity.GenericProperty %>());
         }
 
 <% foreach(SearchCriteria sc in Entity.SearchCriteria) { %>
@@ -106,13 +106,13 @@ namespace <%= BusinessProjectName %>
 <% foreach(var item in  sc.Properties) { %>
         /// <param name="<%= item.VariableName%>"><%if(item.HasDescription){%><%=item.Description%>.<%}else{%>No additional detail available.<%}%></param>
 <%}%>
-        /// <returns>Collection of all <see cref="<%=ChildBusinessClassName%><%= Entity.GenericProperty %>"/> items.</returns>	
+        /// <returns>Collection of all <see cref="<%=ChildBusinessClassName%><%= Entity.GenericProperty %>"/> items.</returns>    
         public static <%= BusinessClassName %><%= Entity.GenericProperty %> <%= sc.MethodName %>(<%= sc.Properties.BuildParametersVariables() %>)
         {
             var criteria = new <%= CriteriaClassName %><%= Entity.GenericProperty %>{<%= sc.Properties.BuildObjectInitializer() %>};
             <%=sc.Properties.BuildNullableObjectInitializer()%>
         
-            return DataPortal.Fetch< <%= BusinessClassName %><%= Entity.GenericProperty %> >(criteria);
+            return DataPortal.Fetch<<%= BusinessClassName %><%= Entity.GenericProperty %>>(criteria);
         }
 <% } %>
         #endregion
@@ -145,7 +145,7 @@ namespace <%= BusinessProjectName %>
         {
              var criteria = new <%= CriteriaClassName %><%= Entity.GenericProperty %>{<%= sc.Properties.BuildObjectInitializer() %>};
             <%=sc.Properties.BuildNullableObjectInitializer()%>
-            var dp = new DataPortal< <%= BusinessClassName %> >();
+            var dp = new DataPortal<<%= BusinessClassName %>>();
             dp.FetchCompleted += handler;
             dp.BeginFetch(criteria);
         }
@@ -153,7 +153,7 @@ namespace <%= BusinessProjectName %>
         
         public static void GetAllAsync(EventHandler<DataPortalResult<<%= BusinessClassName %><%= Entity.GenericProperty %>>> handler)
         {
-            var dp = new DataPortal< <%= BusinessClassName %> >();
+            var dp = new DataPortal<<%= BusinessClassName %>>();
             dp.FetchCompleted += handler;
             dp.BeginFetch(new <%= CriteriaClassName %><%= Entity.GenericProperty %>());
         }

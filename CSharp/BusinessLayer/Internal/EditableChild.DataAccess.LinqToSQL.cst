@@ -49,7 +49,7 @@ namespace <%= BusinessProjectName %>
 {
     public partial class <%= BusinessClassName %><%= Entity.GenericProperty %>
     {
-		/// <summary>
+        /// <summary>
         /// Instantiates a CSLA editable child business object of type <see cref="<%=BusinessClassName%><%= Entity.GenericProperty %>"/>. 
         /// </summary>
         /// <returns></returns>
@@ -60,19 +60,19 @@ namespace <%= BusinessProjectName %>
 
         /// <summary>
         /// Retrieves data from the data base into a CSLA editable child business object of type <see cref="<%=BusinessClassName%><%= Entity.GenericProperty %>"/> 
-		/// using the criteria provided. 
+        /// using the criteria provided. 
         /// </summary>
-		/// <param name="criteria">Object of type <see cref="<%= CriteriaClassName %><%= Entity.GenericProperty %>"/></param>
+        /// <param name="criteria">Object of type <see cref="<%= CriteriaClassName %><%= Entity.GenericProperty %>"/></param>
         /// <returns></returns>
         private void Child_Fetch(<%= CriteriaClassName %><%= Entity.GenericProperty %> criteria)
         {
 <% RenderHelper(new ChildFetch()); %>
         }
 
-		#region Child_Insert
+        #region Child_Insert
         /// <summary>
         /// Inserts data into the data base using the information in the current 
-		///	CSLA editable child business object of type <see cref="<%=BusinessClassName%><%= Entity.GenericProperty %>"/> 
+        ///    CSLA editable child business object of type <see cref="<%=BusinessClassName%><%= Entity.GenericProperty %>"/> 
         /// </summary>
         /// <returns></returns>
         private void Child_Insert()
@@ -100,7 +100,7 @@ namespace <%= BusinessProjectName %>
 
         /// <summary>
         /// Updates the corresponding record in the data base with the information in the current 
-		///	CSLA editable child business object of type <see cref="<%=BusinessClassName%><%= Entity.GenericProperty %>"/> 
+        ///    CSLA editable child business object of type <see cref="<%=BusinessClassName%><%= Entity.GenericProperty %>"/> 
         /// </summary>
         /// <returns></returns>
         private void Child_Update()
@@ -127,7 +127,7 @@ namespace <%= BusinessProjectName %>
 
         /// <summary>
         /// Deletes the corresponding record in the data base with the information in the current 
-		///	CSLA editable child business object of type <see cref="<%=BusinessClassName%><%= Entity.GenericProperty %>"/> 
+        ///    CSLA editable child business object of type <see cref="<%=BusinessClassName%><%= Entity.GenericProperty %>"/> 
         /// </summary>
         /// <returns></returns>
         private void Child_DeleteSelf()
@@ -141,10 +141,10 @@ namespace <%= BusinessProjectName %>
             OnChildSelfDeleted();
         }
 
-		/// <summary>
+        /// <summary>
         /// Deletes data in the data base using the criteria specified in the <%= CriteriaClassName %><%= Entity.GenericProperty %> object.
-		/// </summary>
-		/// <param name="criteria">Object of type <see cref="<%= CriteriaClassName %><%= Entity.GenericProperty %>"/></param>
+        /// </summary>
+        /// <param name="criteria">Object of type <see cref="<%= CriteriaClassName %><%= Entity.GenericProperty %>"/></param>
         /// <returns></returns>
         [Transactional(TransactionalTypes.TransactionScope)]
         protected void DataPortal_Delete(<%= CriteriaClassName %> criteria)
@@ -152,11 +152,11 @@ namespace <%= BusinessProjectName %>
 <% RenderHelper(new DataPortalDelete()); %>
         }
 
-		/// <summary>
+        /// <summary>
         /// Maps data columns retrieved from the data base to the respective properties in the current 
-		/// <see cref="<%= BusinessClassName %><%= Entity.GenericProperty %> CSLA editable child business object.
-		/// </summary>
-		/// <param name="criteria">Object of type <see cref="<%=LinqToSQLContextNamespace%>.<%=Entity.Name%> %>"/> containing the data retrieved from the data base.</param>
+        /// <see cref="<%= BusinessClassName %><%= Entity.GenericProperty %> CSLA editable child business object.
+        /// </summary>
+        /// <param name="criteria">Object of type <see cref="<%=LinqToSQLContextNamespace%>.<%=Entity.Name%> %>"/> containing the data retrieved from the data base.</param>
         /// <returns></returns>
         private void Map(DAL.<%=Entity.Name%> DataSource)
         {

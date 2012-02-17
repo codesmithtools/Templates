@@ -7,30 +7,30 @@
 <%@ Assembly Name="Generator.CSLA" Path="..\..\Common" %>
 <%@ Import Namespace="CodeSmith.SchemaHelper" %>
 
-			//LinqToSQL Modification
+            //LinqToSQL Modification
             bool cancel = false;
             OnDeleting(criteria, ref cancel);
             if (cancel) return;
-			
-			// Delete <%= Entity.Name %> data based on specified criteria
-<%	string PrimaryKeyCriteria = "";	
-	string PrimaryKeyFields = "";
- 	int memberCount = 0 ; 
-	foreach (IProperty property in Entity.Key.Properties) 
-	{
-		PrimaryKeyCriteria += "criteria." + property.Name.ToString() ;
-		PrimaryKeyFields += property.Name.ToString() ;
-		if ( memberCount < (Entity.Key.Properties.Count - 1))
-		{
-			PrimaryKeyCriteria += ", " ;
-			PrimaryKeyFields += ", ";
-		}
- 	memberCount = memberCount + 1 ; 
- 	} 
-%>	
+            
+            // Delete <%= Entity.Name %> data based on specified criteria
+<%    string PrimaryKeyCriteria = "";    
+    string PrimaryKeyFields = "";
+     int memberCount = 0 ; 
+    foreach (IProperty property in Entity.Key.Properties) 
+    {
+        PrimaryKeyCriteria += "criteria." + property.Name.ToString() ;
+        PrimaryKeyFields += property.Name.ToString() ;
+        if ( memberCount < (Entity.Key.Properties.Count - 1))
+        {
+            PrimaryKeyCriteria += ", " ;
+            PrimaryKeyFields += ", ";
+        }
+     memberCount = memberCount + 1 ; 
+     } 
+%>    
             using (var ctx = ContextManager<DAL.PetshopDataContext>.GetManager(LinqToSQLHelper.ConnectionString, true))
-			{
-				ctx.DataContext.<%= Entity.Name %>.Delete(<%= PrimaryKeyCriteria %>);
-			
-            	OnDeleted();
-			}
+            {
+                ctx.DataContext.<%= Entity.Name %>.Delete(<%= PrimaryKeyCriteria %>);
+            
+                OnDeleted();
+            }

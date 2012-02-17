@@ -6,6 +6,7 @@
 <%@ Assembly Name="Generator.CSLA" Path="..\..\Common" %>
 <%@ Import Namespace="CodeSmith.SchemaHelper" %>
 <%@ Import Namespace="Generator.CSLA" %>
+        #region Contructor(s)
 
         public <%= BusinessClassName %>()
         { /* Require use of factory methods */ }
@@ -44,3 +45,4 @@
 <% if(IncludeSilverlightSupport) { %>
 #endif
 <% } } %>
+        #endregion

@@ -69,16 +69,16 @@ Public Overloads Overrides Sub Render(writer As System.IO.TextWriter)
     End If
 End Sub
 
-Public Overrides Function OnTableChanging() As Boolean
-	If String.IsNullOrEmpty(BusinessClassName) Then
-		BusinessClassName = String.Concat(Entity.ClassName, "Info")
-	End If
+Public Overrides Function OnEntityChanging() As Boolean
+    If String.IsNullOrEmpty(BusinessClassName) Then
+        BusinessClassName = String.Concat(Entity.ClassName, "Info")
+    End If
 
-	If String.IsNullOrEmpty(CriteriaClassName) OrElse CriteriaClassName.Equals("Criteria", StringComparison.InvariantCultureIgnoreCase) Then
-		CriteriaClassName = [String].Concat(Entity.ClassName, "Criteria")
-	End If
+    If String.IsNullOrEmpty(CriteriaClassName) OrElse CriteriaClassName.Equals("Criteria", StringComparison.InvariantCultureIgnoreCase) Then
+        CriteriaClassName = [String].Concat(Entity.ClassName, "Criteria")
+    End If
 
-	Return False
+    Return False
 End Function
 
 </script>

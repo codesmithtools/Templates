@@ -68,7 +68,7 @@ public override void Render(System.IO.TextWriter writer)
         
         DynamicListBaseDataAccessLinqToSQL.RenderToFile(fileName, parentFileName, true);
     }
-	else if(DataAccessImplementation == DataAccessMethod.StoredProcedures)
+    else if(DataAccessImplementation == DataAccessMethod.StoredProcedures)
     {
         DynamicListBaseDataAccessStoredProcedures DynamicListBaseDataAccessStoredProcedures = this.Create<DynamicListBaseDataAccessStoredProcedures>();
         this.CopyPropertiesTo(DynamicListBaseDataAccessStoredProcedures);
@@ -90,7 +90,7 @@ public override void Render(System.IO.TextWriter writer)
 
 }
 
-public override bool OnTableChanging()
+public override bool OnEntityChanging()
 {
     if (string.IsNullOrEmpty(BusinessClassName))
     {
