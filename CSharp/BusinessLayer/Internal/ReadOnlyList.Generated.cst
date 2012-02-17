@@ -48,12 +48,10 @@ namespace <%= BusinessProjectName %>
 
         #endregion
     
+        #region Synchronous Factory Methods
 <% if(IncludeSilverlightSupport) { %>
 #if !SILVERLIGHT
-<% } %>
-        #region Synchronous Factory Methods
-
-   
+<% } %>   
 <% foreach(SearchCriteria sc in Entity.SearchCriteria) { %>
 
         /// <summary>
@@ -79,12 +77,12 @@ namespace <%= BusinessProjectName %>
             return DataPortal.Fetch<<%= BusinessClassName %><%= Entity.GenericProperty %>>(new <%= CriteriaClassName %><%= Entity.GenericProperty %>());
         }
 
-        #endregion
 <% if(IncludeSilverlightSupport) { %>
 #endif
-        #region Asynchronous Factory Methods
+<% } %>
+        #endregion
 
-#if SILVERLIGHT
+        #region Asynchronous Factory Methods
 <% foreach(SearchCriteria sc in Entity.SearchCriteria) { %>
 
         public static void <%= sc.MethodName %>Async(<%= sc.Properties.BuildParametersVariables() %>, EventHandler<DataPortalResult<<%= BusinessClassName %><%= Entity.GenericProperty %>>> handler)
@@ -97,10 +95,9 @@ namespace <%= BusinessProjectName %>
             dp.BeginFetch(criteria);
         }
 <% } %>
-#endif
 
         #endregion
-<% } %>
+
 <%/*  Documentation code handled in the appropriate PartialMethods template  */
    RenderHelper(new PartialMethods()); %>
 <%/*  Documentation code handled in the Exists.cst template  */

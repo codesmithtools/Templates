@@ -63,7 +63,6 @@ namespace <%= BusinessProjectName %>
    RenderHelper(new Properties()); %>
 
         #region Synchronous Factory Methods 
-
 <% if(IncludeSilverlightSupport) { %>
 #if !SILVERLIGHT
 <% } %> 
@@ -93,16 +92,14 @@ namespace <%= BusinessProjectName %>
             return DataPortal.Fetch<% if(DataAccessImplementation != DataAccessMethod.ObjectFactoryNone && DataAccessImplementation != DataAccessMethod.ObjectFactoryParameterizedSQL && DataAccessImplementation != DataAccessMethod.ObjectFactoryStoredProcedures){ %>Child<% } %><<%= ChildBusinessClassName %><%= Entity.GenericProperty %>>(criteria);
         }
 <% } %>
+
 <% if(IncludeSilverlightSupport) { %>
 #endif
 <% } %>
-
         #endregion
-<% if(IncludeSilverlightSupport) { %>
 
         #region Asynchronous Factory Methods
 
-#if SILVERLIGHT
         internal static void New<%= ChildBusinessClassName %>Async(EventHandler<DataPortalResult<<%= ChildBusinessClassName %><%= Entity.GenericProperty %>>> handler)
         {
             var dp = new DataPortal<<%= ChildBusinessClassName %><%= Entity.GenericProperty %>>();
@@ -119,10 +116,8 @@ namespace <%= BusinessProjectName %>
             DataPortal.BeginFetch<AsyncChildLoader<<%= BusinessClassName %><%= Entity.GenericProperty %>>>(criteria, handler);
         }
 <% } %>
-#endif
-        
+
         #endregion
-<% } %>
 
 <% RenderHelper(new IsDirty()); %>
 <% RenderHelper(new PartialMethods()); %>

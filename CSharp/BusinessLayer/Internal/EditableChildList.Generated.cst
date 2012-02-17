@@ -43,30 +43,18 @@ namespace <%= BusinessProjectName %>
     {
         #region Constructor(s)
 
-<% if(IncludeSilverlightSupport) { %>
-#if !SILVERLIGHT
-<% } %>        
-        private <%= BusinessClassName %>()
-        { 
-            AllowNew = true;
-            MarkAsChild();
-        }
-<% if(IncludeSilverlightSupport) { %>
-#else
         public <%= BusinessClassName %>()
         { 
             AllowNew = true;
             MarkAsChild();
         }
-#endif
-<% } %>
         
         #endregion
 
+        #region Synchronous Factory Methods 
 <% if(IncludeSilverlightSupport) { %>
 #if !SILVERLIGHT
 <% } %>
-        #region Synchronous Factory Methods 
 
         /// <summary>
         /// Creates a new object of type <see cref="<%=BusinessClassName%><%= Entity.GenericProperty %>"/>. 
@@ -99,13 +87,13 @@ namespace <%= BusinessProjectName %>
             return DataPortal.Fetch<% if(DataAccessImplementation != DataAccessMethod.ObjectFactoryNone && DataAccessImplementation != DataAccessMethod.ObjectFactoryParameterizedSQL && DataAccessImplementation != DataAccessMethod.ObjectFactoryStoredProcedures){ %>Child<% } %><<%= BusinessClassName %><%= Entity.GenericProperty %>>(new <%= CriteriaClassName %><%= Entity.GenericProperty %>());
         }
 
+<% if(IncludeSilverlightSupport) { %>
+#endif
+<% } %>
         #endregion
 
-<% if(IncludeSilverlightSupport) { %>
-#endif  
         #region Asynchronous Factory Methods
 
-#if SILVERLIGHT
         internal static void NewListAsync(EventHandler<DataPortalResult<<%= BusinessClassName %><%= Entity.GenericProperty %>>> handler)
         {
             var dp = new DataPortal<<%= BusinessClassName %><%= Entity.GenericProperty %>>();
@@ -126,10 +114,8 @@ namespace <%= BusinessProjectName %>
         {
             DataPortal.BeginFetch<AsyncChildLoader<<%= BusinessClassName %><%= Entity.GenericProperty %>>>(new <%= CriteriaClassName %><%= Entity.GenericProperty %>(),handler);
         }
-#endif
- 
-        #endregion  
-<% } %>   
+
+        #endregion
 
         #region Method Overrides
         
@@ -147,10 +133,8 @@ namespace <%= BusinessProjectName %>
 <% RenderHelper(new AddNewCore(), IncludeSilverlightSupport); %>
         }
 #endif
-
-<% if(IncludeSilverlightSupport) { %>
-#if SILVERLIGHT
 <% } %>
+
         protected void AddNewCoreAsync(EventHandler<DataPortalResult<<%= ChildBusinessClassName %><%= Entity.GenericProperty %>>> handler)
         {
             <%= BusinessProjectName %>.<%= ChildBusinessClassName %><%= Entity.GenericProperty %>.New<%= ChildBusinessClassName %>Async((o, e) =>
@@ -162,11 +146,6 @@ namespace <%= BusinessProjectName %>
                 }
             });
         }
-<% if(IncludeSilverlightSupport) { %>
-#endif
-<% } %>
-
-<% } %>
         
         #endregion
 

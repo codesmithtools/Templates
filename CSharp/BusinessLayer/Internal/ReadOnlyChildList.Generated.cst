@@ -51,24 +51,15 @@ namespace <%= BusinessProjectName %>
 
         #region Constructor(s)
 
-<% if(IncludeSilverlightSupport) { %>
-#if SILVERLIGHT
         public <%= BusinessClassName %>()
         { /* Require use of factory methods */ }
-#else
-<% } %>
-        private <%= BusinessClassName %>()
-        { /* Require use of factory methods */ }
-<% if(IncludeSilverlightSupport) { %>
-#endif
-<% } %>
         
         #endregion
     
+        #region Synchronous Factory Methods     
 <% if(IncludeSilverlightSupport) { %>
 #if !SILVERLIGHT
 <% } %>
-        #region Synchronous Factory Methods     
 <% foreach(SearchCriteria sc in Entity.SearchCriteria) { %>
 
         /// <summary>
@@ -91,13 +82,12 @@ namespace <%= BusinessProjectName %>
             return DataPortal.Fetch<% if(DataAccessImplementation != DataAccessMethod.ObjectFactoryNone && DataAccessImplementation != DataAccessMethod.ObjectFactoryParameterizedSQL && DataAccessImplementation != DataAccessMethod.ObjectFactoryStoredProcedures){ %>Child<% } %><<%= BusinessClassName %>>(new <%= CriteriaClassName %>());
         }
     
-        #endregion
 <% if(IncludeSilverlightSupport) { %>
 #endif
+<% } %>
+        #endregion
 
         #region Asynchronous Factory Methods
-
-#if SILVERLIGHT
 <% foreach(SearchCriteria sc in Entity.SearchCriteria) { %>
 
         internal static void <%= sc.MethodName %>Async(<%= sc.Properties.BuildParametersVariables() %>, EventHandler<DataPortalResult<<%= BusinessClassName %><%= Entity.GenericProperty %>>> handler)
@@ -118,11 +108,9 @@ namespace <%= BusinessProjectName %>
             dp.FetchCompleted += handler;
             dp.BeginFetch(new <%= CriteriaClassName %>());
         }
-#endif
 
         #endregion
 
-<% } %>
 <%/*  Documentation code handled in the appropriate PartialMethods template  */
    RenderHelper(new PartialMethods()); %>
 <%/*  Documentation code handled in the Exists.cst template  */

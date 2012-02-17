@@ -42,37 +42,38 @@ namespace <%= BusinessProjectName %>
     {    
         #region Contructor(s)
 
-<% if(IncludeSilverlightSupport) { %>
-#if !SILVERLIGHT
-<% } %>        
-        private <%= BusinessClassName %>()
-        { 
-            AllowNew = true;
-        }
-<% if(IncludeSilverlightSupport) { %>
-#else
         public <%= BusinessClassName %>()
         { 
             AllowNew = true;
         }
+        
+        #endregion
+
+        #region Method Overrides
+
+<% if(IncludeSilverlightSupport) { %>
+#if !SILVERLIGHT
+<% } %>
+        protected override <% if(IsLatestCSLA) { %><%= ChildBusinessClassName %><%= Entity.GenericProperty %><% } else { %>object<% } %> AddNewCore()
+        {
+<% RenderHelper(new AddNewCore()); %>
+        }
+<% if(IncludeSilverlightSupport) { %>
+#else
+        protected override void AddNewCore()
+        {
+<% RenderHelper(new AddNewCore(), IncludeSilverlightSupport); %>
+        }
+<% if(IncludeSilverlightSupport) { %>
 #endif
 <% } %>
         
         #endregion
 
+        #region Synchronous Factory Methods 
 <% if(IncludeSilverlightSupport) { %>
 #if !SILVERLIGHT
 <% } %>
-        #region Method Overrides
-        
-        protected override <% if(IsLatestCSLA) { %><%= ChildBusinessClassName %><%= Entity.GenericProperty %><% } else { %>object<% } %> AddNewCore()
-        {
-<% RenderHelper(new AddNewCore()); %>
-        }
-        
-        #endregion
-
-        #region Synchronous Factory Methods 
 
         /// <summary>
         /// Creates a new object of type <see cref="<%=BusinessClassName%><%= Entity.GenericProperty %>"/>. 
@@ -105,16 +106,9 @@ namespace <%= BusinessProjectName %>
             return DataPortal.Fetch<<%= BusinessClassName %><%= Entity.GenericProperty %>>(new <%= CriteriaClassName %><%= Entity.GenericProperty %>());
         }
 
-        #endregion
 <% if(IncludeSilverlightSupport) { %>
-#else
-        #region Method Overrides
-
-        protected override void AddNewCore()
-        {
-<% RenderHelper(new AddNewCore(), IncludeSilverlightSupport); %>
-        }
-        
+#endif
+<% } %>
         #endregion
 
         #region Asynchronous Factory Methods
@@ -146,8 +140,6 @@ namespace <%= BusinessProjectName %>
         }
 
         #endregion
-#endif
-<% } %>
 
 <%/*  Documentation code handled in the IsDirty.cst template  */
    RenderHelper(new IsDirty()); %>
