@@ -1,6 +1,5 @@
 ﻿<%-- Author: Blake Niemyjski --%>
 <%@ CodeTemplate Language="C#" TargetLanguage="C#" Inherits="Generator.CSLA.EntityCodeTemplate" %>
-<%@ Register Name="CompositeKeyMethods" Template="..\..\Common\CompositeKeyMethods.cst" MergeProperties="False" ExcludeProperties="" %>
 <%@ Register Name="Constructor" Template="..\..\Common\ChildConstructor.cst" MergeProperties="False" ExcludeProperties="" %>
 <%@ Register Name="Exists" Template="..\..\Common\Exists.cst" MergeProperties="False" ExcludeProperties="" %>
 <%@ Register Name="IsDirty" Template="..\..\Common\IsDirty.cst" MergeProperties="False" ExcludeProperties="" %>
@@ -128,6 +127,5 @@ namespace <%= BusinessProjectName %>
 <% RenderHelper(new IsDirty()); %>
 <% RenderHelper(new PartialMethods()); %>
 <% RenderHelper(new Exists()); %>
-<% RenderHelper(new CompositeKeyMethods()); %>
     }
 }
