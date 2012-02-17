@@ -57,10 +57,10 @@ namespace <%= BusinessProjectName %>
 <%/*  Documentation code handled in the Properties.cst template  */
    RenderHelper(new Properties()); %>
 
+        #region Synchronous Root Factory Methods 
 <% if(IncludeSilverlightSupport) { %>
 #if !SILVERLIGHT
 <% } %>
-        #region Synchronous Root Factory Methods 
 
         /// <summary>
         /// Creates a new object of type <see cref="<%=BusinessClassName%><%= Entity.GenericProperty %>"/>. 
@@ -99,10 +99,11 @@ namespace <%= BusinessProjectName %>
                 DataPortal.Delete<% if(IsLatestCSLA) { %><<%= BusinessClassName %><%= Entity.GenericProperty %>><% } %>(new <%= CriteriaClassName %><%= Entity.GenericProperty %> (<%= Entity.Key.Properties.BuildVariableArguments() %>));
         }
 <% } %>
-        
-        #endregion
+
 <% if(IncludeSilverlightSupport) { %>
-#endif        
+#endif
+<% } %>
+        #endregion
 
         #region Asynchronous Root Factory Methods
         
@@ -148,10 +149,10 @@ namespace <%= BusinessProjectName %>
         
         #endregion
 
+        #region Synchronous Child Factory Methods 
+<% if(IncludeSilverlightSupport) { %>
 #if !SILVERLIGHT
 <% } %>
-
-        #region Synchronous Child Factory Methods 
 
         /// <summary>
         /// Creates a new object of type <see cref="<%=BusinessClassName%><%= Entity.GenericProperty %>"/>. 
@@ -180,9 +181,10 @@ namespace <%= BusinessProjectName %>
         }
 <% } %>
 
-        #endregion
 <% if(IncludeSilverlightSupport) { %>
-#endif        
+#endif
+<% } %>
+        #endregion
 
         #region Asynchronous Child Factory Methods
         
@@ -207,7 +209,7 @@ namespace <%= BusinessProjectName %>
 <% } %>
 
         #endregion
-<% } %>
+
 <%/*  Documentation code handled in the appropriate PartialMethods template  */
    RenderHelper(new PartialMethods()); %>
 
