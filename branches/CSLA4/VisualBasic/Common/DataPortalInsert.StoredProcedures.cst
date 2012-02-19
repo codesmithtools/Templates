@@ -33,7 +33,7 @@
     <% If (Entity.ConcurrencyProperty != null) Then %>
                         <%= Entity.ConcurrencyProperty.PropertyName %> = DirectCast(command.Parameters("<%= ParameterPrefix  %><%= Entity.ConcurrencyProperty.ColumnName %>").Value, <%= Entity.ConcurrencyProperty.SystemType %>)
     <% End If %>
-    <% for each member As Member in Entity.Key.Properties
+    <% for each member As Member in Entity.GetProperties(PropertyType.Key)
         If(member.IsType(PropertyType.Identity) OrElse member.DataType = DbType.Guid) Then
             If(UseMemberVariables) Then %>
                         <%= member.PrivateMemberVariableName %> =  DirectCast(command.Parameters("<%= member.BuildParameterVariableName() %>").Value,<%= member.SystemType %>)
@@ -45,7 +45,7 @@
                     End Using
                 End Using
                 
-    <% For Each member As Member In Entity.Key.Properties
+    <% For Each member As Member In Entity.GetProperties(PropertyType.Key)
         If Not (member.IsType(PropertyType.Identity)) Then
             If(UseMemberVariables) Then %>
                 _original<%= member.PropertyName %> = Me.<%= member.PropertyName %>

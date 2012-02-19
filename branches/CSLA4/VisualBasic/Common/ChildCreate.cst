@@ -16,7 +16,7 @@
                 Return
             End If
     
-    <% For Each member As Member in Entity.Key.Properties
+    <% For Each member As Member in Entity.GetProperties(PropertyType.Key)
     If (member.SystemType = "System.Guid") Then
         If (UseMemberVariables) Then %>
             <%=member.PrivateMemberVariableName %> = Guid.NewGuid()

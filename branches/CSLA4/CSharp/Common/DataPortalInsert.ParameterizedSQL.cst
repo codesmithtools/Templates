@@ -28,7 +28,7 @@
                             {
 <% if(Entity.ConcurrencyProperty != null) { %>
                                 <%= Entity.ConcurrencyProperty.Name %> = ADOHelper.GetBytes(reader, "<%= Entity.ConcurrencyProperty.KeyName %>");                        
-<% } foreach(IProperty property in Entity.Key.Properties) { if(property.IsType(PropertyType.Identity) || property.IsDbType(DbType.Guid)) { if(UseMemberVariables) { %>
+<% } foreach(IProperty property in Entity.GetProperties(PropertyType.Key)) { if(property.IsType(PropertyType.Identity) || property.IsDbType(DbType.Guid)) { if(UseMemberVariables) { %>
                                 <%= property.PrivateMemberVariableName %> = <%if(!property.HasByteArrayColumn()) { %>reader.<%= property.GetReaderMethod() %>("<%= property.KeyName %>");<% } else { %>ADOHelper.GetBytes(reader);<% } %>
 <% } else { %>
                                 LoadProperty(<%= property.PrivateMemberVariableName %>Property, <%if(!property.HasByteArrayColumn()) { %>reader.<%= property.GetReaderMethod() %>("<%= property.KeyName %>"));<% } else { %>ADOHelper.GetBytes(reader, "<%= property.KeyName %>"));<% } %>
@@ -43,7 +43,7 @@
                         throw new DBConcurrencyException("The entity is out of date on the client. Please update the entity and try again. This could also be thrown if the sql statement failed to execute.");
 <% } %>
 
-<% foreach(IProperty property in Entity.Key.Properties) { if(!property.IsType(PropertyType.Identity)) { if(UseMemberVariables) { %>
+<% foreach(IProperty property in Entity.GetProperties(PropertyType.Key)) { if(!property.IsType(PropertyType.Identity)) { if(UseMemberVariables) { %>
                     _original<%= property.Name %> = this.<%= property.Name %>;
 <% } else { %>
                     LoadProperty(_original<%= property.Name %>Property, this.<%= property.Name %>);

@@ -12,7 +12,7 @@
             if (cancel) return;
 
 <% if(Entity.IdentityProperty == null) { %>
-            if(<%= Entity.Key.Properties.BuildIdentityKeyEqualityStatements()%>)
+            if(<%= Entity.GetProperties(PropertyType.Key).BuildIdentityKeyEqualityStatements()%>)
             {
                 // Insert new child.
                 <%= BusinessClassName %> item = new <%= BusinessClassName %> {<%= Entity.GetProperties(PropertyType.NoConcurrency).BuildObjectInitializer(false, true) %>};
@@ -36,12 +36,12 @@
                 }
 
                 // Delete the old.
-                var criteria = new <%= CriteriaClassName %> {<%= Entity.Key.Properties.BuildObjectInitializer(false, false, true) %>};
-                <%= Entity.Key.Properties.BuildNullableObjectInitializer(false, false, true) %>
+                var criteria = new <%= CriteriaClassName %> {<%= Entity.GetProperties(PropertyType.Key).BuildObjectInitializer(false, false, true) %>};
+                <%= Entity.GetProperties(PropertyType.Key).BuildNullableObjectInitializer(false, false, true) %>
                 DataPortal_Delete(criteria);
 
                 // Mark the original as the new one.
-<% foreach(IProperty property in Entity.Key.Properties) { if(!property.IsType(PropertyType.Identity)) { %>
+<% foreach(IProperty property in Entity.GetProperties(PropertyType.Key)) { if(!property.IsType(PropertyType.Identity)) { %>
                 Original<%= property.Name %> = <%= property.Name %>;
 <% } }%>
                 OnUpdated();
@@ -69,14 +69,14 @@
 
 <% if(Entity.ConcurrencyProperty != null) { %>
                     <%= Entity.ConcurrencyProperty.Name %> = (<%= Entity.ConcurrencyProperty.SystemType %>)command.Parameters["<%= ParameterPrefix  %><%= Entity.ConcurrencyProperty.KeyName %>"].Value;
-<% } foreach(IProperty property in Entity.Key.Properties) { if(!property.IsType(PropertyType.Identity) && property.IsNullable) {%> 
+<% } foreach(IProperty property in Entity.GetProperties(PropertyType.Key)) { if(!property.IsType(PropertyType.Identity) && property.IsNullable) {%> 
                     //  Update non-identity nullable primary key value.
 <% if(UseMemberVariables) { %>
                     <%= property.PrivateMemberVariableName %> = (<%= property.SystemType %>)command.Parameters["<%= property.BuildParameterVariableName() %>"].Value;
 <% } else { %>
                     LoadProperty(<%= property.PrivateMemberVariableName %>Property,(<%= property.SystemType %>)command.Parameters["<%= property.BuildParameterVariableName() %>"].Value);
 <% } } } %>
-<% foreach(IProperty property in Entity.Key.Properties) { if(!property.IsType(PropertyType.Identity)) { if(UseMemberVariables) { %>
+<% foreach(IProperty property in Entity.GetProperties(PropertyType.Key)) { if(!property.IsType(PropertyType.Identity)) { if(UseMemberVariables) { %>
                     _original<%= property.Name %> = this.<%= property.Name %>;
 <% } else { %>
                     LoadProperty(_original<%= property.Name %>Property, this.<%= property.Name %>);

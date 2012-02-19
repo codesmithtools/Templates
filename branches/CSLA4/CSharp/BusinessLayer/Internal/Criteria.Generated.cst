@@ -45,28 +45,28 @@ namespace <%= BusinessProjectName %>
     [Serializable]
     public partial class <%= BusinessClassName %><%= Entity.GenericProperty %> : CriteriaBase<% if(IsLatestCSLA) { %><<%= BusinessClassName %><%= Entity.GenericProperty %>><% } %>, IGeneratedCriteria
     {
-        #region Private Read-Only Members
-        
         private readonly Dictionary<string, object> _bag = new Dictionary<string, object>();
         
-        #endregion
-        
         #region Constructors
+
         public <%= BusinessClassName %>()<% if(!IsLatestCSLA) { %> : base(typeof(<%= BusinessProjectName %>.<%= ResolveTargetClassName(ChildBusinessClassName, "Info", IsReadOnlyBusinessObject("Info")) %><%= Entity.GenericProperty %>))<% } %>{}
 
-        public <%= BusinessClassName %>(<%= Entity.Key.Properties.BuildParametersVariables() %>)<% if(!IsLatestCSLA) { %> : base(typeof(<%= BusinessProjectName %>.<%= ResolveTargetClassName(ChildBusinessClassName, "Info", IsReadOnlyBusinessObject("Info")) %><%= Entity.GenericProperty %>))<% } %>
+<% if(Entity.HasKey) { %>
+        public <%= BusinessClassName %>(<%= Entity.GetProperties(PropertyType.Key).BuildParametersVariables() %>)<% if(!IsLatestCSLA) { %> : base(typeof(<%= BusinessProjectName %>.<%= ResolveTargetClassName(ChildBusinessClassName, "Info", IsReadOnlyBusinessObject("Info")) %><%= Entity.GenericProperty %>))<% } %>
         {
-<%  foreach(var property in Entity.Key.Properties){ %>
+<%  foreach(var property in Entity.GetProperties(PropertyType.Key)) { %>
             <%= property.Name %> = <%= property.VariableName %>;
 <% } %>
         }
-        
+
+<% } %>
         #endregion
         
         #region Public Properties
         
         #region Read-Write
-<%  foreach(var property in Entity.GetProperties(PropertyType.NoConcurrency)){ %>
+
+<% foreach(var property in Entity.GetProperties(PropertyType.NoConcurrency)){ %>
 
         public <%= property.SystemType %> <%= property.Name %>
         {

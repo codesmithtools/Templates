@@ -31,7 +31,7 @@
     <% If (Entity.ConcurrencyProperty != null) Then %>
                 <%= Entity.ConcurrencyProperty.PropertyName %> = DirectCast(command.Parameters("<%= ParameterPrefix  %><%= Entity.ConcurrencyProperty.ColumnName %>").Value, <%= Entity.ConcurrencyProperty.SystemType %>)
     <% End If %>
-    <% For Each member As Member In Entity.Key.Properties
+    <% For Each member As Member In Entity.GetProperties(PropertyType.Key)
         If(member.IsType(PropertyType.Identity) OrElse member.DataType = DbType.Guid) Then %>
     
                 ' Update identity or guid primary key value.

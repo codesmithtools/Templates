@@ -32,7 +32,7 @@
     <% If (Entity.ConcurrencyProperty != null) Then %>
                         <%= Entity.ConcurrencyProperty.PropertyName %> = ADOHelper.GetBytes(reader, "<%= Entity.ConcurrencyProperty.ColumnName %>")
     <% End If %>
-    <%For Each member As Member In Entity.Key.Properties
+    <%For Each member As Member In Entity.GetProperties(PropertyType.Key)
         If(Not member.IsType(PropertyType.Identity)) Then %>
                         ' Update non-identity primary key value.
             <% If(UseMemberVariables) Then %>
@@ -72,7 +72,7 @@
         Next
     End If %>
     
-    <% For Each member As Member In Entity.Key.Properties
+    <% For Each member As Member In Entity.GetProperties(PropertyType.Key)
         If Not (member.IsType(PropertyType.Identity)) Then %>
                 ' Update non-identity primary key value.
         <% If(UseMemberVariables) Then %>

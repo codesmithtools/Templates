@@ -75,7 +75,7 @@ Namespace <%= BusinessProjectName %>
                 Return
             End If
         
-            DataPortal_Delete(New <%= CriteriaClassName %><%= Entity.GenericProperty %> (<% If (UseMemberVariables) Then %><%= Entity.Key.Properties.BuildPrivateMemberVariableArguments() %><% else %><%= Entity.Key.Properties.BuildPropertyVariableArguments() %><% End If %>))
+            DataPortal_Delete(New <%= CriteriaClassName %><%= Entity.GenericProperty %> (<% If (UseMemberVariables) Then %><%= Entity.GetProperties(PropertyType.Key).BuildPrivateMemberVariableArguments() %><% else %><%= Entity.GetProperties(PropertyType.Key).BuildPropertyVariableArguments() %><% End If %>))
         
             OnSelfDeleted()
         End Sub
@@ -162,7 +162,7 @@ Namespace <%= BusinessProjectName %>
                 Return
             End If
         
-            DataPortal_Delete(New <%= CriteriaClassName %><%= Entity.GenericProperty %> (<% If (UseMemberVariables) Then %><%= Entity.Key.Properties.BuildPrivateMemberVariableArguments() %><% else %><%= Entity.Key.Properties.BuildPropertyVariableArguments() %><% End If %>))
+            DataPortal_Delete(New <%= CriteriaClassName %><%= Entity.GenericProperty %> (<% If (UseMemberVariables) Then %><%= Entity.GetProperties(PropertyType.Key).BuildPrivateMemberVariableArguments() %><% else %><%= Entity.GetProperties(PropertyType.Key).BuildPropertyVariableArguments() %><% End If %>))
         
             OnChildSelfDeleted()
         End Sub
@@ -179,7 +179,7 @@ Namespace <%= BusinessProjectName %>
                 Return
             End If
         
-            DataPortal_Delete(New <%= CriteriaClassName %><%= Entity.GenericProperty %> (<% If (UseMemberVariables) Then %><%= Entity.Key.Properties.BuildPrivateMemberVariableArguments() %><% else %><%= Entity.Key.Properties.BuildPropertyVariableArguments() %><% End If %>), connection)
+            DataPortal_Delete(New <%= CriteriaClassName %><%= Entity.GenericProperty %> (<% If (UseMemberVariables) Then %><%= Entity.GetProperties(PropertyType.Key).BuildPrivateMemberVariableArguments() %><% else %><%= Entity.GetProperties(PropertyType.Key).BuildPropertyVariableArguments() %><% End If %>), connection)
         
             OnChildSelfDeleted()
         End Sub

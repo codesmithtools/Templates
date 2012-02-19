@@ -37,7 +37,7 @@ Entities
 <% }} %>
 
     PrimaryKey
-<%    foreach(var m in e.Key.Properties) { %>
+<%    foreach(var m in e.GetProperties(PropertyType.Key)) { %>
         <%= m.Name %>
 <% } %>
     Properties

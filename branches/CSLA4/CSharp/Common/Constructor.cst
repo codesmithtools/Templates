@@ -11,11 +11,11 @@
         public <%= BusinessClassName %>()
         { /* Require use of factory methods */ }
         
-        internal <%= BusinessClassName %>(<%= Entity.Key.Properties.BuildParametersVariables() %>)
+        internal <%= BusinessClassName %>(<%= Entity.GetProperties(PropertyType.Key).BuildParametersVariables() %>)
         {
             using(BypassPropertyChecks)
             {
-<% foreach(var property in Entity.Key.Properties) { if(UseMemberVariables) { %>
+<% foreach(var property in Entity.GetProperties(PropertyType.Key)) { if(UseMemberVariables) { %>
                 <%= property.PrivateMemberVariableName %> = <%= property.VariableName %>;
 <% } else { %>
                 LoadProperty(<%= property.PrivateMemberVariableName %>Property, <%= property.VariableName %>);

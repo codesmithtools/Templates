@@ -51,13 +51,14 @@ namespace <%= DataProjectName %>
             using (BypassPropertyChecks(item))
             {
                 // Default values.
-<% foreach(IProperty property in Entity.Key.Properties) {
+<% if(Entity.HasKey) {
+    foreach(IProperty property in Entity.GetProperties(PropertyType.Key)) {
 if(property.SystemType == "System.Guid") { %>
                 item.<%= property.Name %> = Guid.NewGuid();
 <%} } foreach(Association association in Entity.Associations.Where(a => a.AssociationType == AssociationType.ManyToOne)) { foreach(AssociationProperty property in association.Properties) {
 if(property.ForeignProperty.SystemType == "System.String" && !property.ForeignProperty.IsType(PropertyType.Identity) && property.ForeignProperty.IsType(PropertyType.Foreign)) { %>
                 item.<%= property.ForeignProperty.Name %> = "BN";
-<%} } } %>
+<%} } } } %>
             }
 
             CheckRules(item);
@@ -176,15 +177,17 @@ if(property.ForeignProperty.SystemType == "System.String" && !property.ForeignPr
 
 <% if(Entity.ConcurrencyProperty != null) { %>
                     item.<%= Entity.ConcurrencyProperty.Name %> = (<%= Entity.ConcurrencyProperty.SystemType %>)command.Parameters["<%= ParameterPrefix  %><%= Entity.ConcurrencyProperty.KeyName %>"].Value;
-<% } foreach(IProperty property in Entity.Key.Properties) { if(property.IsType(PropertyType.Identity) || property.IsDbType(DbType.Guid)) {  %>
+<% } if(Entity.HasKey) { 
+    foreach(IProperty property in Entity.GetProperties(PropertyType.Key)) { if(property.IsType(PropertyType.Identity) || property.IsDbType(DbType.Guid)) {  %>
                     item.<%= property.Name %> = (<%= property.SystemType %>)command.Parameters["<%= property.BuildParameterVariableName() %>"].Value;
-<% } } %>
+<% } } } %>
                 }
             }
 
-<% foreach(var property in Entity.Key.Properties) { if(!property.IsType(PropertyType.Identity)) {%>
+<% if(Entity.HasKey) {
+    foreach(var property in Entity.GetProperties(PropertyType.Key)) { if(!property.IsType(PropertyType.Identity)) {%>
             item.Original<%= property.Name %> = item.<%= property.Name %>;
-<% } }  %>
+<% } } } %>
 
             MarkOld(item);
             CheckRules(item);
@@ -247,8 +250,8 @@ if(property.ForeignProperty.SystemType == "System.String" && !property.ForeignPr
             // Don't update if the item isn't dirty.
             if (item.IsDirty)
             {
-<% if(Entity.IdentityProperty == null) { %>
-                if(<%= Entity.Key.Properties.BuildIdentityKeyEqualityStatements("item.")%>)
+<% if(Entity.IdentityProperty == null && Entity.HasKey) { %>
+                if(<%= Entity.GetProperties(PropertyType.Key).BuildIdentityKeyEqualityStatements("item.")%>)
                 {
                     // Insert new child.
                     var temp = (<%= Entity.Name %>)Activator.CreateInstance(typeof(<%= Entity.Name %>), true);
@@ -280,14 +283,19 @@ if(property.ForeignProperty.SystemType == "System.String" && !property.ForeignPr
 <% } %>
     
                     // Delete the old.
-                    var criteria = new <%= CriteriaClassName %> {<%= Entity.Key.Properties.BuildObjectInitializer(true, false, true) %>};
-                    <%= Entity.Key.Properties.BuildNullableObjectInitializer(true, false, true) %>
+<% if(Entity.HasKey) { %>
+                    var criteria = new <%= CriteriaClassName %> {<%= Entity.GetProperties(PropertyType.Key).BuildObjectInitializer(true, false, true) %>};
+                    <%= Entity.GetProperties(PropertyType.Key).BuildNullableObjectInitializer(true, false, true) %>
+<% } else { %>
+                    var criteria = new <%= CriteriaClassName %>();
+<% } %>
                     Delete(criteria);
     
                     // Mark the original as the new one.
-<% foreach(IProperty property in Entity.Key.Properties) { if(!property.IsType(PropertyType.Identity)) { %>
+<% if(Entity.HasKey) {
+    foreach(IProperty property in Entity.GetProperties(PropertyType.Key)) { if(!property.IsType(PropertyType.Identity)) { %>
                     item.Original<%= property.Name %> = item.<%= property.Name %>;
-<% } }%>
+<% } } } %>
 
                     MarkOld(item);
                     CheckRules(item);
@@ -317,16 +325,19 @@ if(property.ForeignProperty.SystemType == "System.String" && !property.ForeignPr
 
 <% if(Entity.ConcurrencyProperty != null) { %>
                         item.<%= Entity.ConcurrencyProperty.Name %> = (<%= Entity.ConcurrencyProperty.SystemType %>)command.Parameters["<%= ParameterPrefix  %><%= Entity.ConcurrencyProperty.KeyName %>"].Value;
-<% } foreach(IProperty property in Entity.Key.Properties) { if(property.IsType(PropertyType.Identity) || property.IsDbType(DbType.Guid)) { %>
+<% } if(Entity.HasKey) {
+    foreach(IProperty property in Entity.GetProperties(PropertyType.Key)) { 
+        if(property.IsType(PropertyType.Identity) || property.IsDbType(DbType.Guid)) { %>
                         item.<%= property.Name %> = (<%= property.SystemType %>)command.Parameters["<%= property.BuildParameterVariableName() %>"].Value;
-<% } } %>
+<% } } } %>
                     }
                 }
             }
 
-<% foreach(IProperty property in Entity.Key.Properties) { if(!property.IsType(PropertyType.Identity)) { %>
+<% if(Entity.HasKey) {
+    foreach(IProperty property in Entity.GetProperties(PropertyType.Key)) { if(!property.IsType(PropertyType.Identity)) { %>
             item.Original<%= property.Name %> = item.<%= property.Name %>;
-<% } }%>
+<% } } }%>
 
             MarkOld(item);
             CheckRules(item);
@@ -369,11 +380,15 @@ if(property.ForeignProperty.SystemType == "System.String" && !property.ForeignPr
 
             // If we're new then don't call delete.
             if (item.IsNew) return;
-
-            var criteria = new <%= CriteriaClassName %>{<%= Entity.Key.Properties.BuildObjectInitializer(true) %>};
-            <%= Entity.Key.Properties.BuildNullableObjectInitializer(true)%>
+            
+<% if(Entity.HasKey) { %>
+            var criteria = new <%= CriteriaClassName %>{<%= Entity.GetProperties(PropertyType.Key).BuildObjectInitializer(true) %>};
+            <%= Entity.GetProperties(PropertyType.Key).BuildNullableObjectInitializer(true)%>
+<% } else { %>
+            var criteria = new <%= CriteriaClassName %>();
+<% } %>
             DoDelete(criteria);
-
+           
             MarkNew(item);
         }
 

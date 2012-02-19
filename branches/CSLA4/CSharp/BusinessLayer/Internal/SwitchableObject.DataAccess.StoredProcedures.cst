@@ -71,7 +71,7 @@ namespace <%= BusinessProjectName %>
             OnSelfDeleting(ref cancel);
             if (cancel) return;
             
-            DataPortal_Delete(new <%= CriteriaClassName %><%= Entity.GenericProperty %> (<% if(UseMemberVariables) { %><%= Entity.Key.Properties.BuildPrivateMemberVariableArguments() %><% } else { %><%= Entity.Key.Properties.BuildPropertyVariableArguments() %><% } %>));
+            DataPortal_Delete(new <%= CriteriaClassName %><%= Entity.GenericProperty %> (<% if(UseMemberVariables) { %><%= Entity.GetProperties(PropertyType.Key).BuildPrivateMemberVariableArguments() %><% } else { %><%= Entity.GetProperties(PropertyType.Key).BuildPropertyVariableArguments() %><% } %>));
         
             OnSelfDeleted();
         }
@@ -157,7 +157,7 @@ namespace <%= BusinessProjectName %>
             OnChildSelfDeleting(ref cancel);
             if (cancel) return;
             
-            DataPortal_Delete(new <%= CriteriaClassName %><%= Entity.GenericProperty %> (<% if(UseMemberVariables) { %><%= Entity.Key.Properties.BuildPrivateMemberVariableArguments() %><% } else { %><%= Entity.Key.Properties.BuildPropertyVariableArguments() %><% } %>));
+            DataPortal_Delete(new <%= CriteriaClassName %><%= Entity.GenericProperty %> (<% if(UseMemberVariables) { %><%= Entity.GetProperties(PropertyType.Key).BuildPrivateMemberVariableArguments() %><% } else { %><%= Entity.GetProperties(PropertyType.Key).BuildPropertyVariableArguments() %><% } %>));
         
             OnChildSelfDeleted();
         }
@@ -172,7 +172,7 @@ namespace <%= BusinessProjectName %>
             OnChildSelfDeleting(ref cancel);
             if (cancel) return;
 
-            DataPortal_Delete(new <%= CriteriaClassName %><%= Entity.GenericProperty %> (<% if(UseMemberVariables) { %><%= Entity.Key.Properties.BuildPrivateMemberVariableArguments() %><% } else { %><%= Entity.Key.Properties.BuildPropertyVariableArguments() %><% } %>), connection);
+            DataPortal_Delete(new <%= CriteriaClassName %><%= Entity.GenericProperty %> (<% if(UseMemberVariables) { %><%= Entity.GetProperties(PropertyType.Key).BuildPrivateMemberVariableArguments() %><% } else { %><%= Entity.GetProperties(PropertyType.Key).BuildPropertyVariableArguments() %><% } %>), connection);
 
             OnChildSelfDeleted();
         }

@@ -77,7 +77,7 @@ Namespace <%= DataProjectName %>
         ''' <Returns>new <%= Entity.ClassName %>.</Returns>
         <RunLocal()> _
         Private Create(ByVal criteria As <%= Entity.ClassName %>Criteria) As <%= Entity.ClassName %>
-            'Dim resource As <%= Entity.ClassName %> = <%= Entity.ClassName %>.Get<%= Entity.ClassName %>(<%= Entity.Key.Properties.BuildParametersVariables() %>)
+            'Dim resource As <%= Entity.ClassName %> = <%= Entity.ClassName %>.Get<%= Entity.ClassName %>(<%= Entity.GetProperties(PropertyType.Key).BuildParametersVariables() %>)
             Dim item As <%= Entity.ClassName %> = (<%= Entity.ClassName %>)Activator.CreateInstance(typeof(<%= Entity.ClassName %>), True)
     
             Dim cancel As Boolean = False

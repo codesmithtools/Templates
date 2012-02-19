@@ -12,7 +12,7 @@
             if (cancel) return;
 
 <% if(Entity.IdentityProperty == null) { %>
-            if(<%= Entity.Key.Properties.BuildIdentityKeyEqualityStatements()%>)
+            if(<%= Entity.GetProperties(PropertyType.Key).BuildIdentityKeyEqualityStatements()%>)
             {
                 // Insert new child.
                 <%= BusinessClassName %> item = new <%= BusinessClassName %> {<%= Entity.GetProperties(PropertyType.NoConcurrency).BuildObjectInitializer(false, true) %>};
@@ -36,12 +36,12 @@
                 }
 
                 // Delete the old.
-                var criteria = new <%= CriteriaClassName %> {<%= Entity.Key.Properties.BuildObjectInitializer(false, false, true) %>};
-                <%= Entity.Key.Properties.BuildNullableObjectInitializer(false, false, true)%>
+                var criteria = new <%= CriteriaClassName %> {<%= Entity.GetProperties(PropertyType.Key).BuildObjectInitializer(false, false, true) %>};
+                <%= Entity.GetProperties(PropertyType.Key).BuildNullableObjectInitializer(false, false, true)%>
                 DataPortal_Delete(criteria);
 
                 // Mark the original as the new one.
-<% foreach(IProperty property in Entity.Key.Properties) { if(!property.IsType(PropertyType.Identity)) { %>
+<% foreach(IProperty property in Entity.GetProperties(PropertyType.Key)) { if(!property.IsType(PropertyType.Identity)) { %>
                 Original<%= property.Name %> = <%= property.Name %>;
 <% } }%>
 
@@ -51,7 +51,7 @@
             }
 
 <% } %>
-            const string commandText = "UPDATE <%= Entity.EntityKeyName %> <%= Entity.GetProperties(PropertyType.UpdateInsert).BuildSetStatements() %> <%= Entity.Key.Properties.BuildWhereStatements(true) %><% if(Entity.ConcurrencyProperty != null) { %> AND [<%= Entity.ConcurrencyProperty.KeyName %>] = <%= ParameterPrefix  %><%= Entity.ConcurrencyProperty.KeyName %><% } %><%= Entity.BuildUpdateSelectStatement() %>";
+            const string commandText = "UPDATE <%= Entity.EntityKeyName %> <%= Entity.GetProperties(PropertyType.UpdateInsert).BuildSetStatements() %> <%= Entity.GetProperties(PropertyType.Key).BuildWhereStatements(true) %><% if(Entity.ConcurrencyProperty != null) { %> AND [<%= Entity.ConcurrencyProperty.KeyName %>] = <%= ParameterPrefix  %><%= Entity.ConcurrencyProperty.KeyName %><% } %><%= Entity.BuildUpdateSelectStatement() %>";
             using (var connection = new SqlConnection(ADOHelper.ConnectionString))
             {
                 connection.Open();
@@ -77,7 +77,7 @@
                             {
 <% if(Entity.ConcurrencyProperty != null) { %>
                                 <%= Entity.ConcurrencyProperty.Name %> = ADOHelper.GetBytes(reader, "<%= Entity.ConcurrencyProperty.KeyName %>");
-<% } foreach(IProperty property in Entity.Key.Properties) { if(!property.IsType(PropertyType.Identity) && property.IsNullable) {%> 
+<% } foreach(IProperty property in Entity.GetProperties(PropertyType.Key)) { if(!property.IsType(PropertyType.Identity) && property.IsNullable) {%> 
                     //  Update non-identity nullable primary key value.
 <%if(UseMemberVariables) { %>
                                 <%= property.PrivateMemberVariableName %> = <%if(!property.HasByteArrayColumn()) { %>reader.<%= property.GetReaderMethod() %>("<%= property.KeyName %>");<% } else { %>ADOHelper.GetBytes(reader);<% } %>
@@ -94,7 +94,7 @@
                         throw new DBConcurrencyException("The entity is out of date on the client. Please update the entity and try again. This could also be thrown if the sql statement failed to execute.");
 <% } %>
 
-<% foreach(IProperty property in Entity.Key.Properties) { if(!property.IsType(PropertyType.Identity) || property.IsDbType(DbType.Guid)) { if(UseMemberVariables) { %>
+<% foreach(IProperty property in Entity.GetProperties(PropertyType.Key)) { if(!property.IsType(PropertyType.Identity) || property.IsDbType(DbType.Guid)) { if(UseMemberVariables) { %>
                     _original<%= property.Name %> = this.<%= property.Name %>;
 <% } else { %>
                     LoadProperty(_original<%= property.Name %>Property, this.<%= property.Name %>);
