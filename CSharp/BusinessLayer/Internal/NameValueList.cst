@@ -59,7 +59,7 @@ namespace <%= BusinessProjectName %>
                             do
                             {
                                 // TODO: You will need to update the GetInt32 and GetString values.
-                                this.Add(new NameValuePair(reader.GetInt32("<%= Entity.Key.Properties[0].KeyName %>"), reader.GetString("<%= Entity.GetProperties(PropertyType.NoKey)[0].KeyName %>")));
+                                this.Add(new NameValuePair(reader.GetInt32("<%= Entity.GetProperties(PropertyType.Key)[0].KeyName %>"), reader.GetString("<%= Entity.GetProperties(PropertyType.NoKey)[0].KeyName %>")));
                             } while(reader.Read());
                         }
                         else
@@ -99,7 +99,7 @@ namespace <%= BusinessProjectName %>
                             do
                             {
                                 // TODO: You will need to update the GetInt32 and GetString values.
-                                this.Add(new NameValuePair(reader.GetInt32("<%= Entity.Key.Properties[0].KeyName %>"), reader.GetString("<%= Entity.GetProperties(PropertyType.NoKey)[0].KeyName %>")));
+                                this.Add(new NameValuePair(reader.GetInt32("<%= Entity.GetProperties(PropertyType.Key)[0].KeyName %>"), reader.GetString("<%= Entity.GetProperties(PropertyType.NoKey)[0].KeyName %>")));
                             } while(reader.Read());
                         }
                         else

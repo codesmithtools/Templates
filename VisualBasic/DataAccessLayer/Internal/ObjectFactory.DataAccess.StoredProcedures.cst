@@ -63,7 +63,7 @@ Namespace <%= DataProjectName %>
             Using BypassPropertyChecks(item)
                 ' Default values.
     
-    <% For Each member As Member in Entity.Key.Properties
+    <% For Each member As Member in Entity.GetProperties(PropertyType.Key)
     If (member.SystemType = "System.Guid") Then %>
                 item.<%=member.PropertyName %> = Guid.NewGuid()
     <% End If
@@ -200,7 +200,7 @@ Namespace <%= DataProjectName %>
     <% If (Entity.ConcurrencyProperty != null) Then %>
                         item.<%= Entity.ConcurrencyProperty.PropertyName %> = DirectCast(command.Parameters("<%= ParameterPrefix  %><%= Entity.ConcurrencyProperty.ColumnName %>").Value, <%= Entity.ConcurrencyProperty.SystemType %>)
     <% End If %>
-    <% for each member As Member in Entity.Key.Properties
+    <% for each member As Member in Entity.GetProperties(PropertyType.Key)
         If(member.IsType(PropertyType.Identity) OrElse member.DataType = DbType.Guid) Then %>
                         item.<%= [member].PropertyName %> = DirectCast(command.Parameters("<%= member.BuildParameterVariableName() %>").Value, <%= member.SystemType %>)
     <% End If
@@ -208,7 +208,7 @@ Namespace <%= DataProjectName %>
                 End Using
             End Using
     
-    <% For Each member As Member In Entity.Key.Properties
+    <% For Each member As Member In Entity.GetProperties(PropertyType.Key)
     If Not(member.IsType(PropertyType.Identity)) Then %>
             item.Original<%= member.PropertyName %> = item.<%= member.PropertyName %>
     <% End If
@@ -269,7 +269,7 @@ Namespace <%= DataProjectName %>
             If (item.IsDirty) Then
     
     <% If Not(Entity.IdentityProperty != null) Then %>
-                If <%= Entity.Key.Properties.BuildIdentityKeyEqualityStatements("item.")%> Then
+                If <%= Entity.GetProperties(PropertyType.Key).BuildIdentityKeyEqualityStatements("item.")%> Then
                     ' Insert new child.
                     Dim temp As <%= Entity.ClassName %> = CType(Activator.CreateInstance(GetType(<%= Entity.ClassName %>), True), <%= Entity.ClassName %>)
                     <%= Entity.GetProperties(PropertyType.NoConcurrency).BuildObjectInitializer(true, true, false, "temp.") %>
@@ -298,11 +298,11 @@ Namespace <%= DataProjectName %>
         
                     ' Delete the old.
                     Dim criteria As New <%= CriteriaClassName %>()
-                    <%= Entity.Key.Properties.BuildObjectInitializer(true, false, true) %>
+                    <%= Entity.GetProperties(PropertyType.Key).BuildObjectInitializer(true, false, true) %>
                     Delete(criteria)
         
                     ' Mark the original as the new one.
-    <% For Each member As Member In Entity.Key.Properties
+    <% For Each member As Member In Entity.GetProperties(PropertyType.Key)
     If Not(member.IsType(PropertyType.Identity)) Then %>
                     item.Original<%= member.PropertyName %> = item.<%= member.PropertyName %>
     <% End If
@@ -336,7 +336,7 @@ Namespace <%= DataProjectName %>
     <% If(Entity.ConcurrencyProperty != null) Then %>
                         item.<%= Entity.ConcurrencyProperty.PropertyName %> = DirectCast(command.Parameters("<%= ParameterPrefix  %><%= Entity.ConcurrencyProperty.ColumnName %>").Value, <%= Entity.ConcurrencyProperty.SystemType %>)
     <% End If 
-    For Each member As Member In Entity.Key.Properties
+    For Each member As Member In Entity.GetProperties(PropertyType.Key)
         If(member.IsType(PropertyType.Identity) OrElse member.DataType = DbType.Guid) Then %>
                         item.<%= member.PropertyName %> = DirectCast(command.Parameters("<%= member.BuildParameterVariableName() %>").Value, <%= member.SystemType %>)
     <%End If
@@ -345,7 +345,7 @@ Namespace <%= DataProjectName %>
                 End Using
             End If
     
-    <% For Each member As Member In Entity.Key.Properties
+    <% For Each member As Member In Entity.GetProperties(PropertyType.Key)
         If Not (member.IsType(PropertyType.Identity)) Then %>
             item.Original<%= member.PropertyName %> = item.<%= member.PropertyName %>
     <%  End If
@@ -395,7 +395,7 @@ Namespace <%= DataProjectName %>
             End If
     
             Dim criteria As New <%= CriteriaClassName %>()
-    <%= Entity.Key.Properties.BuildObjectInitializer(True) %>
+    <%= Entity.GetProperties(PropertyType.Key).BuildObjectInitializer(True) %>
             DoDelete(criteria)
     
             MarkNew(item)

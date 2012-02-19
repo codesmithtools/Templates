@@ -68,7 +68,7 @@ Namespace <%= BusinessProjectName %>
                 Return
             End If
         
-            DataPortal_Delete(New <%= CriteriaClassName %> (<% If (UseMemberVariables) Then %><%= Entity.Key.Properties.BuildPrivateMemberVariableArguments() %><% else %><%= Entity.Key.Properties.BuildPropertyVariableArguments() %><% End If %>))
+            DataPortal_Delete(New <%= CriteriaClassName %> (<% If (UseMemberVariables) Then %><%= Entity.GetProperties(PropertyType.Key).BuildPrivateMemberVariableArguments() %><% else %><%= Entity.GetProperties(PropertyType.Key).BuildPropertyVariableArguments() %><% End If %>))
         
             OnSelfDeleted()
         End Sub

@@ -58,7 +58,7 @@ Namespace <%= BusinessProjectName %>
                         If reader.Read() Then
                             Do
                                 ' TODO: You will need to update the GetInt32 and GetString values.
-                                Me.Add(New NameValuePair(reader.GetInt32("<%= Entity.Key.Properties.ColumnName %>"), reader.GetString("<%= Entity.GetProperties(PropertyType.NoKey)(0).ColumnName %>")))
+                                Me.Add(New NameValuePair(reader.GetInt32("<%= Entity.GetProperties(PropertyType.Key).ColumnName %>"), reader.GetString("<%= Entity.GetProperties(PropertyType.NoKey)(0).ColumnName %>")))
                             Loop While reader.Read()
                         Else
                             Throw New Exception(String.Format("The record was not found in '<%= entity.Table.Name %>' using the following criteria: {0}.", criteria))
@@ -92,7 +92,7 @@ Namespace <%= BusinessProjectName %>
                         If reader.Read() Then
                             Do
                                 ' TODO: You will need to update the GetInt32 and GetString values.
-                                Me.Add(New NameValuePair(reader.GetInt32("<%= Entity.Key.Properties.ColumnName %>"), reader.GetString("<%= Entity.GetProperties(PropertyType.NoKey)(0).ColumnName %>")))
+                                Me.Add(New NameValuePair(reader.GetInt32("<%= Entity.GetProperties(PropertyType.Key).ColumnName %>"), reader.GetString("<%= Entity.GetProperties(PropertyType.NoKey)(0).ColumnName %>")))
                             Loop While reader.Read()
                         Else
                             Throw New Exception(String.Format("The record was not found in '<%= entity.Table.Name %>' using the following criteria: {0}.", criteria))

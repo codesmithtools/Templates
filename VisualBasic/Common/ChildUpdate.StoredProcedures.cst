@@ -35,7 +35,7 @@
     <% If (Entity.ConcurrencyProperty != null) Then %>
                 <%= Entity.ConcurrencyProperty.PropertyName %> = DirectCast(command.Parameters("<%= ParameterPrefix  %><%= Entity.ConcurrencyProperty.ColumnName %>").Value, <%= Entity.ConcurrencyProperty.SystemType %>)
     <% End If %>
-    <% For Each member As Member In Entity.Key.Properties
+    <% For Each member As Member In Entity.GetProperties(PropertyType.Key)
         If(Not member.IsType(PropertyType.Identity)) Then %> 
                 ' Update non-identity primary key value.
         <% If(UseMemberVariables) Then %>
@@ -65,7 +65,7 @@
             <% End If
         Next
     End If %>
-    <% For Each member As Member In Entity.Key.Properties
+    <% For Each member As Member In Entity.GetProperties(PropertyType.Key)
         If Not (member.IsType(PropertyType.Identity)) Then %>
                 ' Update non-identity primary key value.
             <% If(UseMemberVariables) Then %>

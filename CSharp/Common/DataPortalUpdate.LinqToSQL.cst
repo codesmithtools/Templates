@@ -18,7 +18,7 @@
             {
 
 <%     if(Entity.IdentityProperty == null) { %>
-                if(<%= Entity.Key.Properties.BuildIdentityKeyEqualityStatements()%>)
+                if(<%= Entity.GetProperties(PropertyType.Key).BuildIdentityKeyEqualityStatements()%>)
                 {
                     // Insert new child.
                     DAL.<%= Entity.Name %> newItem = new DAL.<%= Entity.Name %>();
@@ -26,7 +26,7 @@
 <%         if(Entity.ConcurrencyProperty != null || Entity.IdentityProperty != null) 
         { 
             if(Entity.ConcurrencyProperty != null) 
-            foreach(IProperty property in Entity.Key.Properties) 
+            foreach(IProperty property in Entity.GetProperties(PropertyType.Key)) 
             { 
                 if(property.IsType(PropertyType.Identity))             
                 { %>
@@ -34,7 +34,7 @@
 <%                 }
             } %>
 <%             else 
-            foreach(IProperty property in Entity.Key.Properties) 
+            foreach(IProperty property in Entity.GetProperties(PropertyType.Key)) 
             { 
                 if(property.IsType(PropertyType.Identity))             
                 { %>
@@ -44,7 +44,7 @@
 <%        } 
         else
         {
-            foreach(var property in Entity.Key.Properties) 
+            foreach(var property in Entity.GetProperties(PropertyType.Key)) 
             { %>
                     newItem.<%= property.Name %> = this.<%= property.Name %>;
 <%             } 
@@ -69,12 +69,12 @@
                     FieldManager.UpdateChildren(this);
 
                     // Delete the old.
-                    var criteria = new <%= CriteriaClassName %> {<%= Entity.Key.Properties.BuildObjectInitializer(false, false, true) %>};
-                    <%= Entity.Key.Properties.BuildNullableObjectInitializer(false, false, true)%>
+                    var criteria = new <%= CriteriaClassName %> {<%= Entity.GetProperties(PropertyType.Key).BuildObjectInitializer(false, false, true) %>};
+                    <%= Entity.GetProperties(PropertyType.Key).BuildNullableObjectInitializer(false, false, true)%>
                     DataPortal_Delete(criteria);
                 
                     // Mark the original as the new one.
-<%         foreach(IProperty property in Entity.Key.Properties) 
+<%         foreach(IProperty property in Entity.GetProperties(PropertyType.Key)) 
         { 
             if(!property.IsType(PropertyType.Identity)) 
             { %>
@@ -90,11 +90,11 @@
 <%    string PrimaryKeyCriteria = "";    
     string PrimaryKeyFields = "";
      int memberCount = 0 ; 
-    foreach (IProperty property in Entity.Key.Properties) 
+    foreach (IProperty property in Entity.GetProperties(PropertyType.Key)) 
     {
         PrimaryKeyCriteria += "criteria." + property.Name.ToString() ;
         PrimaryKeyFields += property.Name.ToString() ;
-        if ( memberCount < (Entity.Key.Properties.Count - 1))
+        if ( memberCount < (Entity.GetProperties(PropertyType.Key).Count - 1))
         {
             PrimaryKeyCriteria += ", " ;
             PrimaryKeyFields += ", ";
@@ -157,7 +157,7 @@
                         "Please update the entity and try again. This could also be thrown if the sql statement " +
                         "failed to execute.",e,this);
                 }
-<%     foreach(IProperty property in Entity.Key.Properties)%>
+<%     foreach(IProperty property in Entity.GetProperties(PropertyType.Key))%>
 <%    {%>
 <%        if(!property.IsType(PropertyType.Identity))%>
 <%        {%>

@@ -89,14 +89,14 @@ namespace <%= BusinessProjectName %>
 <% } %>
 
 <% if(UseDeferredDeletion){ %>
-        //public static void Delete<%= BusinessClassName %><%= Entity.GenericProperty %>(<%= Entity.Key.Properties.BuildParametersVariables() %>)
+        //public static void Delete<%= BusinessClassName %><%= Entity.GenericProperty %>(<%= Entity.GetProperties(PropertyType.Key).BuildParametersVariables() %>)
         //{
-        //      DataPortal.Delete<% if(IsLatestCSLA) { %><<%= BusinessClassName %><%= Entity.GenericProperty %>><% } %>(new <%= CriteriaClassName %><%= Entity.GenericProperty %> (<%= Entity.Key.Properties.BuildVariableArguments() %>));
+        //      DataPortal.Delete<% if(IsLatestCSLA) { %><<%= BusinessClassName %><%= Entity.GenericProperty %>><% } %>(new <%= CriteriaClassName %><%= Entity.GenericProperty %> (<%= Entity.GetProperties(PropertyType.Key).BuildVariableArguments() %>));
         //}
 <% } else { %> 
-        public static void Delete<%= BusinessClassName %><%= Entity.GenericProperty %>(<%= Entity.Key.Properties.BuildParametersVariables() %>)
+        public static void Delete<%= BusinessClassName %><%= Entity.GenericProperty %>(<%= Entity.GetProperties(PropertyType.Key).BuildParametersVariables() %>)
         {
-                DataPortal.Delete<% if(IsLatestCSLA) { %><<%= BusinessClassName %><%= Entity.GenericProperty %>><% } %>(new <%= CriteriaClassName %><%= Entity.GenericProperty %> (<%= Entity.Key.Properties.BuildVariableArguments() %>));
+                DataPortal.Delete<% if(IsLatestCSLA) { %><<%= BusinessClassName %><%= Entity.GenericProperty %>><% } %>(new <%= CriteriaClassName %><%= Entity.GenericProperty %> (<%= Entity.GetProperties(PropertyType.Key).BuildVariableArguments() %>));
         }
 <% } %>
 
@@ -127,19 +127,19 @@ namespace <%= BusinessProjectName %>
 <% } %> 
 
 <% if(UseDeferredDeletion){ %>
-        //public static void Delete<%= BusinessClassName %>(<%= Entity.Key.Properties.BuildParametersVariables() %>)
+        //public static void Delete<%= BusinessClassName %>(<%= Entity.GetProperties(PropertyType.Key).BuildParametersVariables() %>)
         //{
-            //var criteria = new <%= CriteriaClassName %><%= Entity.GenericProperty %>{<%= Entity.Key.Properties.BuildObjectInitializer() %>};
-            //<%= Entity.Key.Properties.BuildNullableObjectInitializer()%>
+            //var criteria = new <%= CriteriaClassName %><%= Entity.GenericProperty %>{<%= Entity.GetProperties(PropertyType.Key).BuildObjectInitializer() %>};
+            //<%= Entity.GetProperties(PropertyType.Key).BuildNullableObjectInitializer()%>
 
             //var dp = new DataPortal<<%= BusinessClassName %><%= Entity.GenericProperty %>>();
             //dp.BeginDelete(criteria);
         //}
 <% } else { %>
-        public static void Delete<%= BusinessClassName %>Async(<%= Entity.Key.Properties.BuildParametersVariables()%>, EventHandler<DataPortalResult<<%= BusinessClassName %><%= Entity.GenericProperty %>>> handler)
+        public static void Delete<%= BusinessClassName %>Async(<%= Entity.GetProperties(PropertyType.Key).BuildParametersVariables()%>, EventHandler<DataPortalResult<<%= BusinessClassName %><%= Entity.GenericProperty %>>> handler)
         {
-            var criteria = new <%= CriteriaClassName %><%= Entity.GenericProperty %>{<%= Entity.Key.Properties.BuildObjectInitializer() %>};
-            <%= Entity.Key.Properties.BuildNullableObjectInitializer()%>
+            var criteria = new <%= CriteriaClassName %><%= Entity.GenericProperty %>{<%= Entity.GetProperties(PropertyType.Key).BuildObjectInitializer() %>};
+            <%= Entity.GetProperties(PropertyType.Key).BuildNullableObjectInitializer()%>
 
             var dp = new DataPortal<<%= BusinessClassName %><%= Entity.GenericProperty %>>();
             dp.DeleteCompleted += handler;

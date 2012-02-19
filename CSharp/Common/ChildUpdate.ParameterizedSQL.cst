@@ -11,7 +11,7 @@
             if (cancel) return;
 
             if(connection.State != ConnectionState.Open) connection.Open();
-            const string commandText = "UPDATE <%= Entity.EntityKeyName %> <%= Entity.GetProperties(PropertyType.UpdateInsert).BuildSetStatements() %> <%= Entity.Key.Properties.BuildWhereStatements(true) %><% if(Entity.ConcurrencyProperty != null) { %> AND [<%= Entity.ConcurrencyProperty.KeyName %>] = <%= ParameterPrefix  %><%= Entity.ConcurrencyProperty.KeyName %><% } %><%= Entity.BuildUpdateSelectStatement() %>";
+            const string commandText = "UPDATE <%= Entity.EntityKeyName %> <%= Entity.GetProperties(PropertyType.UpdateInsert).BuildSetStatements() %> <%= Entity.GetProperties(PropertyType.Key).BuildWhereStatements(true) %><% if(Entity.ConcurrencyProperty != null) { %> AND [<%= Entity.ConcurrencyProperty.KeyName %>] = <%= ParameterPrefix  %><%= Entity.ConcurrencyProperty.KeyName %><% } %><%= Entity.BuildUpdateSelectStatement() %>";
             using(var command = new SqlCommand(commandText, connection))
             {
                 <%= Entity.GetProperties(PropertyType.NoConcurrency).BuildCommandParameters(false, false, !RenderOptionalContent, false, true) %>
@@ -28,7 +28,7 @@
                     {
 <% if(Entity.ConcurrencyProperty != null) { %>
                         <%= Entity.ConcurrencyProperty.Name %> = ADOHelper.GetBytes(reader, "<%= Entity.ConcurrencyProperty.KeyName %>");
-<% } foreach(IProperty property in Entity.Key.Properties) { if(!property.IsType(PropertyType.Identity)) { %> 
+<% } foreach(IProperty property in Entity.GetProperties(PropertyType.Key)) { if(!property.IsType(PropertyType.Identity)) { %> 
                         //  Update non-identity primary key value.
 <%if(UseMemberVariables) { %>
                         <%= property.PrivateMemberVariableName %> = <%if(!property.HasByteArrayColumn()) { %>reader.<%= property.GetReaderMethod() %>("<%= property.KeyName %>");<% } else { %>ADOHelper.GetBytes(reader, "<%= property.KeyName %>");<% } %>
@@ -54,7 +54,7 @@
 <% } else { %>
                     LoadProperty(<%= property.PrivateMemberVariableName %>Property, <%= localParameterNameWithChildProperty %>);
 <% } } } } %>
-<% foreach(IProperty property in Entity.Key.Properties) { if(!property.IsType(PropertyType.Identity)) { %> 
+<% foreach(IProperty property in Entity.GetProperties(PropertyType.Key)) { if(!property.IsType(PropertyType.Identity)) { %> 
 
                 // Update non-identity primary key value.
 <% if(UseMemberVariables) { %>

@@ -16,11 +16,11 @@
 <%    string PrimaryKeyCriteria = "";    
     string PrimaryKeyFields = "";
      int memberCount = 0 ; 
-    foreach (IProperty property in Entity.Key.Properties) 
+    foreach (IProperty property in Entity.GetProperties(PropertyType.Key)) 
     {
         PrimaryKeyCriteria += "criteria." + property.Name.ToString() ;
         PrimaryKeyFields += property.Name.ToString() ;
-        if ( memberCount < (Entity.Key.Properties.Count - 1))
+        if ( memberCount < (Entity.GetProperties(PropertyType.Key).Count - 1))
         {
             PrimaryKeyCriteria += ", " ;
             PrimaryKeyFields += ", ";

@@ -26,9 +26,9 @@
 #End If
     <% End If %>
     
-        Friend Sub New(<%= Entity.Key.Properties.BuildParametersVariables() %>)
+        Friend Sub New(<%= Entity.GetProperties(PropertyType.Key).BuildParametersVariables() %>)
             Using(BypassPropertyChecks)
-    <% For Each member As Member in Entity.Key.Properties
+    <% For Each member As Member in Entity.GetProperties(PropertyType.Key)
     If UseMemberVariables Then %>
                 <%= [member].PrivateMemberVariableName %> = <%= member.VariableName %>
     <%  Else  %>

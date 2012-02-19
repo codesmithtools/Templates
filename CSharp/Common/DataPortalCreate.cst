@@ -9,7 +9,7 @@
             OnCreating(ref cancel);
             if (cancel) return;
 
-<% foreach(var property in Entity.Key.Properties) {
+<% foreach(var property in Entity.GetProperties(PropertyType.Key)) {
 if(property.SystemType == "System.Guid") { if(UseMemberVariables) { %>
             <%= property.PrivateMemberVariableName %> = Guid.NewGuid();
 <% } else { %>

@@ -28,7 +28,7 @@
 <% if(Entity.ConcurrencyProperty != null) { %>
 
                 <%= Entity.ConcurrencyProperty.Name %> = (<%= Entity.ConcurrencyProperty.SystemType %>)command.Parameters["<%= ParameterPrefix  %><%= Entity.ConcurrencyProperty.KeyName %>"].Value;
-<% } foreach(IProperty property in Entity.Key.Properties) { if(!property.IsType(PropertyType.Identity)) {%> 
+<% } foreach(IProperty property in Entity.GetProperties(PropertyType.Key)) { if(!property.IsType(PropertyType.Identity)) {%> 
 
                 // Update non-identity primary key value.
 <% if(UseMemberVariables) { %>
@@ -47,7 +47,7 @@
 <% } else { %>
                     LoadProperty(<%= property.PrivateMemberVariableName %>Property, <%= localParameterNameWithChildProperty %>);
 <% } } } } %>
-<% foreach(IProperty property in Entity.Key.Properties) { if(!property.IsType(PropertyType.Identity)) {%> 
+<% foreach(IProperty property in Entity.GetProperties(PropertyType.Key)) { if(!property.IsType(PropertyType.Identity)) {%> 
 
                 // Update non-identity primary key value.
 <% if(UseMemberVariables) { %>

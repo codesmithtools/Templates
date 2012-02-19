@@ -23,7 +23,7 @@
                 ctx.DataContext.<%= Entity.Name %>.InsertOnSubmit(item);
                     ctx.DataContext.SubmitChanges();
 
-<%     foreach(IProperty property in Entity.Key.Properties.Where(p => !p.IsType(PropertyType.Identity))) { %>
+<%     foreach(IProperty property in Entity.GetProperties(PropertyType.Key).Where(p => !p.IsType(PropertyType.Identity))) { %>
                 LoadProperty(_<%= property.VariableName %>Property, this.<%= property.Name %>);
 <%    } %>
 <%     if(Entity.Associations.Count(a => a.AssociationType == AssociationType.OneToMany) > 0 || Entity.Associations.Count(a => a.AssociationType == AssociationType.ManyToOne) > 0)

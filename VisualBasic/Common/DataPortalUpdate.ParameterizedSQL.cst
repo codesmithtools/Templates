@@ -17,7 +17,7 @@
             End If
     
     <% If Not(Entity.IdentityProperty != null) Then %>
-            If <%= Entity.Key.Properties.BuildIdentityKeyEqualityStatements()%> Then
+            If <%= Entity.GetProperties(PropertyType.Key).BuildIdentityKeyEqualityStatements()%> Then
                 ' Insert new child.
                 Dim item As New <%= BusinessClassName %>()
                 <%= Entity.GetProperties(PropertyType.NoConcurrency).BuildObjectInitializer(false, true, false, "item.") %>
@@ -42,11 +42,11 @@
     
                 ' Delete the old.
                 Dim criteria As New <%= CriteriaClassName %>()
-                <%= Entity.Key.Properties.BuildObjectInitializer(false, false, true) %>
+                <%= Entity.GetProperties(PropertyType.Key).BuildObjectInitializer(false, false, true) %>
                 DataPortal_Delete(criteria)
     
                 ' Mark the original as the new one.
-    <% For Each member As Member In Entity.Key.Properties
+    <% For Each member As Member In Entity.GetProperties(PropertyType.Key)
     If Not(member.IsType(PropertyType.Identity)) Then %>
                 Original<%= member.PropertyName %> = <%= member.PropertyName %>
     <% End If
@@ -81,7 +81,7 @@
     <% If (Entity.ConcurrencyProperty != null) Then %>
                                 <%= Entity.ConcurrencyProperty.PropertyName %> = ADOHelper.GetBytes(reader, "<%= Entity.ConcurrencyProperty.ColumnName %>")
     <% End If %>
-    <%For Each member As Member In Entity.Key.Properties
+    <%For Each member As Member In Entity.GetProperties(PropertyType.Key)
         If(Not member.IsType(PropertyType.Identity) AndAlso member.IsNullable) Then %> 
                                 ' Update non-identity nullable primary key value.
             <% If(UseMemberVariables) Then %>
@@ -102,7 +102,7 @@
                 End If
     <% End If %>
                 End Using
-    <% For Each member As Member In Entity.Key.Properties
+    <% For Each member As Member In Entity.GetProperties(PropertyType.Key)
         If (Not member.IsType(PropertyType.Identity) OrElse member.DataType = DbType.Guid) Then
             If(UseMemberVariables) Then %>
                 _original<%= member.PropertyName %> = Me.<%= member.PropertyName %>

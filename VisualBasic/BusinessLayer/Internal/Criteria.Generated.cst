@@ -66,10 +66,10 @@ Namespace <%= BusinessProjectName %>
         <% If Not(IsLatestCSLA) Then %>MyBase.New(GetType(<%= BusinessProjectName %>.<%= ChildBusinessClassName %><%= Entity.GenericProperty %>))<% End If %>
         End Sub
         
-        Public Sub New(<%= Entity.Key.Properties.BuildParametersVariables() %>) 
+        Public Sub New(<%= Entity.GetProperties(PropertyType.Key).BuildParametersVariables() %>) 
             <% If Not(IsLatestCSLA) Then %>MyBase.New(GetType(<%= BusinessProjectName %>.<%= ChildBusinessClassName %><%= Entity.GenericProperty %>))<% End If %>
             
-    <% For Each member As Member In Entity.Key.Properties %>
+    <% For Each member As Member In Entity.GetProperties(PropertyType.Key) %>
             Me.<%= member.PropertyName %> = <%= member.VariableName %>
     <% Next %>
         End Sub

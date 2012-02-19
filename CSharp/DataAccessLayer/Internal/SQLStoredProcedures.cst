@@ -85,41 +85,46 @@ CREATE PROCEDURE <%= GetInsertStoredProcedureName() %>
 <%}%>
 <% GenerateParameters(Entity.GetProperties(PropertyType.NoKey), 1, true, false); %>
 <%-- Loop through all primary keys. --%>
-<% foreach(var property in Entity.Key.Properties.AsIndexedEnumerable()) {
+<% if(Entity.HasKey) {
+    foreach(var property in Entity.GetProperties(PropertyType.Key).AsIndexedEnumerable()) {
  GenerateParameter(property.Value, 1, false, property.IsLast, IsGuidOrIdentityColumn(property.Value) && !property.Value.IsType(PropertyType.Foreign), false, false);
-}%>
+} } %>
 
 AS
 
 <%-- Loop through all primary keys. If the primary key is a GUID, then assign a new GUID using NEWID(). --%>
-<% foreach(var property in Entity.Key.Properties) {
+<% if(Entity.HasKey) {
+    foreach(var property in Entity.GetProperties(PropertyType.Key)) {
      if (property.IsDbType(DbType.Guid) && !property.IsType(PropertyType.Foreign)) {%>
 SET <%= ParameterPrefix %><%= property.Name %> = NEWID()
 
-<% } } %>
+<% } } } %>
 INSERT INTO <%= Entity.EntityKeyName %> (
-<% foreach(var property in Entity.Key.Properties) {
+<% if(Entity.HasKey) {
+    foreach(var property in Entity.GetProperties(PropertyType.Key)) {
      if (property.IsDbType(DbType.Guid) || !IsIdentityColumn(property)) {%>
     [<%= property.Name %>],
-<% } } %>
+<% } } } %>
     <% GenerateColumns(Entity.GetProperties(PropertyType.NoKey), 1, false); %>
     
 ) VALUES (
-<% foreach(var property in Entity.Key.Properties) {
+<% if(Entity.HasKey) {
+    foreach(var property in Entity.GetProperties(PropertyType.Key)) {
      if (property.IsDbType(DbType.Guid) || !IsIdentityColumn(property)) {%>
     <%= ParameterPrefix %><%= property.Name %>,
-<% } } %>
+<% } } } %>
     <% GenerateVariables(Entity.GetProperties(PropertyType.NoKey), 1, false); %>
 )
 
 <%-- If the primary key is an identity property, then capture the newly assigned identity using SCOPE_IDENTITY(). --%>
-<% foreach(var property in Entity.Key.Properties) {
+<% if(Entity.HasKey) {
+    foreach(var property in Entity.GetProperties(PropertyType.Key)) {
      if (IsIdentityColumn(property)) {%>
 SET <%= ParameterPrefix %><%= property.Name %> = SCOPE_IDENTITY()
 
-<% } } %>
+<% } } } %>
 <% if(Entity.ConcurrencyProperty != null){ %>
-SET <%= ParameterPrefix %><%= Entity.ConcurrencyProperty.KeyName %> = (SELECT [<%= Entity.ConcurrencyProperty.KeyName %>] FROM <%= Entity.EntityKeyName %>WHERE <% GenerateConditions(Entity.Key.Properties, 1, false); %>)
+SET <%= ParameterPrefix %><%= Entity.ConcurrencyProperty.KeyName %> = (SELECT [<%= Entity.ConcurrencyProperty.KeyName %>] FROM <%= Entity.EntityKeyName %>WHERE <% GenerateConditions(Entity.GetProperties(PropertyType.Key), 1, false); %>)
 
 <%}%>
 
@@ -143,7 +148,7 @@ INSERT INTO <%= Entity.EntityKeyName %> (
 )
 
 <% if(Entity.ConcurrencyProperty != null){ %>
-SET <%= ParameterPrefix %><%= Entity.ConcurrencyProperty.KeyName %> = (SELECT [<%= Entity.ConcurrencyProperty.KeyName %>] FROM <%= Entity.EntityKeyName %>WHERE <% GenerateConditions(Entity.Key.Properties, 1, false); %>)
+SET <%= ParameterPrefix %><%= Entity.ConcurrencyProperty.KeyName %> = (SELECT [<%= Entity.ConcurrencyProperty.KeyName %>] FROM <%= Entity.EntityKeyName %>WHERE <% GenerateConditions(Entity.GetProperties(PropertyType.Key), 1, false); %>)
 <%}%>
 <% } %>
 
@@ -211,13 +216,13 @@ UPDATE <%= Entity.EntityKeyName %> SET
     <% GenerateUpdates(Entity.Properties, 1, false); %>
 
 WHERE
-    <% GenerateConditions(Entity.Key.Properties, 1, true); %>
+    <% GenerateConditions(Entity.GetProperties(PropertyType.Key), 1, true); %>
 <% if(Entity.ConcurrencyProperty != null){ %>
     <% GenerateCondition(Entity.ConcurrencyProperty, 1, false, true, false); %>
 <%}%>
 
 <% if(Entity.ConcurrencyProperty != null){ %>
-SET <%= ParameterPrefix %><%= Entity.ConcurrencyProperty.KeyName %> = (SELECT [<%= Entity.ConcurrencyProperty.KeyName %>] FROM <%= Entity.EntityKeyName %>WHERE <% GenerateConditions(Entity.Key.Properties, 1, false); %>)
+SET <%= ParameterPrefix %><%= Entity.ConcurrencyProperty.KeyName %> = (SELECT [<%= Entity.ConcurrencyProperty.KeyName %>] FROM <%= Entity.EntityKeyName %>WHERE <% GenerateConditions(Entity.GetProperties(PropertyType.Key), 1, false); %>)
 <%}%>
 
 GO
@@ -276,14 +281,14 @@ IF EXISTS(SELECT 1 FROM fn_listextendedproperty (NULL, 'SCHEMA', 'dbo', 'PROCEDU
 GO
 
 CREATE PROCEDURE <%= GetDeleteStoredProcedureName() %>
-<% GenerateParameters(Entity.Key.Properties, 1, false); %>
+<% GenerateParameters(Entity.GetProperties(PropertyType.Key), 1, false); %>
 
 AS
 
 DELETE FROM
     <%= Entity.EntityKeyName %>
 WHERE
-    <% GenerateConditions(Entity.Key.Properties, 1, false); %>
+    <% GenerateConditions(Entity.GetProperties(PropertyType.Key), 1, false); %>
 
 GO
 IF @@ERROR!=0 AND @@TRANCOUNT>0 ROLLBACK TRANSACTION
@@ -830,6 +835,9 @@ public bool IsColumnFindable(IProperty property)
 /// <returns></returns>
 public bool HasGuidOrIdentityColumn(IKey key)
 {
+    if(key == null)
+        return false;
+
     foreach(IProperty property in key.Properties)
     {
         if(IsGuidOrIdentityColumn(property))
