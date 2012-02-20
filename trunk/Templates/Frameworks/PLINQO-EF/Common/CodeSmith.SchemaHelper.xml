@@ -202,6 +202,11 @@
             Sample: usp_cust_{0}_
             </summary>
         </member>
+        <member name="P:CodeSmith.SchemaHelper.Configuration.GenerateViewKeys">
+            <summary>
+            Views do not define any keys, but in cases where frameworks need to define a key like entity framework a key is defined as any non-nullable column.
+            </summary>
+        </member>
         <member name="T:CodeSmith.SchemaHelper.Configuration.Nested">
             <summary>
             
@@ -1762,6 +1767,13 @@
             <param name="entity"></param>
             <returns></returns>
         </member>
+        <member name="M:CodeSmith.SchemaHelper.SchemaExplorerExtensions.ToCollection(System.Collections.Generic.IEnumerable{CodeSmith.SchemaHelper.IEntity})">
+            <summary>
+            
+            </summary>
+            <param name="entities"></param>
+            <returns></returns>
+        </member>
         <member name="T:CodeSmith.SchemaHelper.EntityManager">
             <summary>
             
@@ -1772,30 +1784,6 @@
             
             </summary>
             <param name="provider"></param>
-        </member>
-        <member name="M:CodeSmith.SchemaHelper.EntityManager.#ctor(SchemaExplorer.DatabaseSchema)">
-            <summary>
-            
-            </summary>
-            <param name="database"></param>
-        </member>
-        <member name="M:CodeSmith.SchemaHelper.EntityManager.#ctor(SchemaExplorer.TableSchemaCollection,SchemaExplorer.ViewSchemaCollection,SchemaExplorer.CommandSchemaCollection)">
-            <summary>
-            
-            </summary>
-            <param name="tables"></param>
-            <param name="views"></param>
-            <param name="commands"></param>
-        </member>
-        <member name="M:CodeSmith.SchemaHelper.EntityManager.Initialize(SchemaExplorer.TableSchemaCollection,SchemaExplorer.ViewSchemaCollection,SchemaExplorer.CommandSchemaCollection)">
-            <summary>
-            Load all the Entities into the EntityStore.
-            </summary>
-        </member>
-        <member name="P:CodeSmith.SchemaHelper.EntityManager.Database">
-            <summary>
-            
-            </summary>
         </member>
         <member name="P:CodeSmith.SchemaHelper.EntityManager.Entities">
             <summary>
@@ -2070,6 +2058,58 @@
             <summary>
             The text that created the view.
             </summary>
+        </member>
+        <member name="T:CodeSmith.SchemaHelper.SchemaExplorerEntityProvider">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.SchemaExplorerEntityProvider.#ctor(SchemaExplorer.DatabaseSchema)">
+            <summary>
+            
+            </summary>
+            <param name="database"></param>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.SchemaExplorerEntityProvider.#ctor(SchemaExplorer.TableSchemaCollection,SchemaExplorer.ViewSchemaCollection,SchemaExplorer.CommandSchemaCollection)">
+            <summary>
+            
+            </summary>
+            <param name="tables"></param>
+            <param name="views"></param>
+            <param name="commands"></param>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.SchemaExplorerEntityProvider.Validate">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.SchemaExplorerEntityProvider.Load">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.SchemaExplorerEntityProvider.Save">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.SchemaExplorerEntityProvider.Initialize(SchemaExplorer.TableSchemaCollection,SchemaExplorer.ViewSchemaCollection,SchemaExplorer.CommandSchemaCollection)">
+            <summary>
+            Load all the Entities into the EntityStore.
+            </summary>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.SchemaExplorerEntityProvider.LoadTables(SchemaExplorer.TableSchemaCollection)">
+            <summary>
+            Load the Tables.
+            </summary>
+            <param name="tables"></param>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.SchemaExplorerEntityProvider.LoadCommands(SchemaExplorer.CommandSchemaCollection)">
+            <summary>
+            Loop through all the commands and create the command objects.
+            </summary>
+            <param name="commands"></param>
         </member>
     </members>
 </doc>
