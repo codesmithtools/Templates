@@ -1,8 +1,20 @@
-﻿using System;
+﻿//------------------------------------------------------------------------------
+//
+// Copyright (c) 2002-2012 CodeSmith Tools, LLC.  All rights reserved.
+// 
+// The terms of use for this software are contained in the file
+// named sourcelicense.txt, which can be found in the root of this distribution.
+// By using this software in any fashion, you are agreeing to be bound by the
+// terms of this license.
+// 
+// You must not remove this notice, or any other, from this software.
+//
+//------------------------------------------------------------------------------
+
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
-using System.IO;
 using System.Text.RegularExpressions;
 using CodeSmith.CustomProperties;
 using CodeSmith.Engine;
@@ -63,7 +75,52 @@ namespace Generator.CSLA
             }
             set
             {
-                Entity = new TableEntity(value);
+                if (value != null)
+                    Entity = new TableEntity(value);
+            }
+        }
+
+
+
+        /// <summary>
+        /// This is needed for legacy purposes..
+        /// </summary>
+        [Optional]
+        [Category("1. DataSource")]
+        public ViewSchema SourceView
+        {
+            get
+            {
+                if (Entity is ViewEntity)
+                    return ((ViewEntity)Entity).EntitySource as ViewSchema;
+
+                return null;
+            }
+            set
+            {
+                if(value != null)
+                    Entity = new ViewEntity(value);
+            }
+        }
+
+        /// <summary>
+        /// This is needed for legacy purposes..
+        /// </summary>
+        [Optional]
+        [Category("1. DataSource")]
+        public CommandSchema SourceCommand
+        {
+            get
+            {
+                if (Entity is CommandEntity)
+                    return ((CommandEntity)Entity).EntitySource as CommandSchema;
+
+                return null;
+            }
+            set
+            {
+                if (value != null)
+                    Entity = new CommandEntity(value);
             }
         }
 

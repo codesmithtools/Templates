@@ -58,6 +58,10 @@ Entities
 <%    foreach(var m in e.GetProperties(PropertyType.Key)) { %>
         <%= m.Name %>
 <% } %>    
+    Key PROP.
+<%    foreach(var m in e.Key.Properties) { %>
+        <%= m.Name %>
+<% } %>    
     Foreign
 <%    foreach(var m in e.GetProperties(PropertyType.Foreign)) { %>
         <%= m.Name %>

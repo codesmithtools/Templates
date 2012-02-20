@@ -64,7 +64,6 @@ namespace <%= BusinessProjectName %>
         {
 <% RenderHelper(new AddNewCore(), IncludeSilverlightSupport); %>
         }
-<% if(IncludeSilverlightSupport) { %>
 #endif
 <% } %>
         

@@ -12,8 +12,6 @@
 <%@ Assembly Name="CodeSmith.CustomProperties" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\Common" %>
 <%@ Assembly Name="Generator.CSLA" Path="..\..\Common" %>
-
-
 <%@ Import Namespace="CodeSmith.CustomProperties" %>
 <%@ Import Namespace="CodeSmith.SchemaHelper" %>
 

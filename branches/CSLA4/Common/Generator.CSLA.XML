@@ -74,9 +74,39 @@
             This is needed for legacy purposes..
             </summary>
         </member>
+        <member name="P:Generator.CSLA.EntityCodeTemplate.SourceView">
+            <summary>
+            This is needed for legacy purposes..
+            </summary>
+        </member>
+        <member name="P:Generator.CSLA.EntityCodeTemplate.SourceCommand">
+            <summary>
+            This is needed for legacy purposes..
+            </summary>
+        </member>
         <member name="P:Generator.CSLA.EntityCodeTemplate.Entity">
             <summary>
             The Generic Entity Object that gets generated.
+            </summary>
+        </member>
+        <member name="T:Generator.CSLA.EntityMasterCodeTemplate">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Generator.CSLA.EntityMasterCodeTemplate.#ctor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:Generator.CSLA.DataAccessCodeTemplate">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Generator.CSLA.DataAccessCodeTemplate.#ctor">
+            <summary>
+            
             </summary>
         </member>
     </members>
