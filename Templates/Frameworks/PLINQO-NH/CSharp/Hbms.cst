@@ -1,4 +1,4 @@
-<%-- Author: Tom DuPont --%>
+﻿<%-- Author: Tom DuPont --%>
 <%@ CodeTemplate Language="C#" TargetLanguage="XML" OutputType="None" Debug="False" CompilerVersion="v3.5"
     Src="Internal\NHibernateHelper.cs" Inherits="NHibernateHelper"
     Description="Generates HBM files for PLINQO for NHibernate." %>
@@ -118,7 +118,8 @@ Generating PLINQO for NHibernate Mapings...
         CodeSmith.SchemaHelper.Configuration.Instance.IncludeManyToManyEntity = false;
         CodeSmith.SchemaHelper.Configuration.Instance.SchemaProviderName = SourceDatabase.Provider.Name;
         
-        return new EntityManager(SourceDatabase);
+        var provider = new SchemaExplorerEntityProvider(SourceDatabase);
+        return new EntityManager(provider);
     }
     
     private void RenderFunction(CommandEntity command)
