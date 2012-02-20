@@ -10,7 +10,8 @@
 
         public <%= BusinessClassName %>()
         { /* Require use of factory methods */ }
-        
+
+<% if(Entity.HasKey) { %>
         internal <%= BusinessClassName %>(<%= Entity.GetProperties(PropertyType.Key).BuildParametersVariables() %>)
         {
             using(BypassPropertyChecks)
@@ -23,6 +24,7 @@
             }
         }
 
+<% } %>
 <% if(IncludeSilverlightSupport) { %>
 #if !SILVERLIGHT
 <% } %>

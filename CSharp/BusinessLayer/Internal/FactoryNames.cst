@@ -30,31 +30,31 @@ namespace <%= BusinessProjectName %>
         
         #endregion
         
-<% foreach(IEntity entity in new EntityManager(DynamicRoot).Entities){ %>
+<% foreach(IEntity entity in DynamicRootEntities){ %>
         public const string <%= entity.Name %>FactoryName = "<%= DataProjectName %>.<%= entity.Name %>Factory, <%= DataProjectName %>";
-<% } foreach(IEntity entity in new EntityManager(EditableChild).Entities){ %>
+<% } foreach(IEntity entity in EditableChildEntities){ %>
         public const string <%= entity.Name %>FactoryName = "<%= DataProjectName %>.<%= entity.Name %>Factory, <%= DataProjectName %>";
-<% } foreach(IEntity entity in new EntityManager(EditableRoot).Entities){ %>
+<% } foreach(IEntity entity in EditableRootEntities){ %>
         public const string <%= entity.Name %>FactoryName = "<%= DataProjectName %>.<%= entity.Name %>Factory, <%= DataProjectName %>";
-<% } foreach(IEntity entity in new EntityManager(ReadOnlyChild).Entities){ %>
+<% } foreach(IEntity entity in ReadOnlyChildEntities){ %>
         public const string <%= entity.Name %>InfoFactoryName = "<%= DataProjectName %>.<%= entity.Name %>Factory, <%= DataProjectName %>";
-<% } foreach(IEntity entity in new EntityManager(ReadOnlyRoot).Entities){ %>
+<% } foreach(IEntity entity in ReadOnlyRootEntities){ %>
         public const string <%= entity.Name %>InfoFactoryName = "<%= DataProjectName %>.<%= entity.Name %>Factory, <%= DataProjectName %>";
-<% } foreach(IEntity entity in new EntityManager(SwitchableObject).Entities){ %>
+<% } foreach(IEntity entity in SwitchableObjectEntities){ %>
         public const string <%= entity.Name %>FactoryName = "<%= DataProjectName %>.<%= entity.Name %>Factory, <%= DataProjectName %>";
 <% }%> 
 
-<% foreach(IEntity entity in new EntityManager(DynamicListBase).Entities){ %>
+<% foreach(IEntity entity in DynamicListBaseEntities){ %>
         public const string <%= entity.Name %>ListFactoryName = "<%= DataProjectName %>.<%= entity.Name %>ListFactory, <%= DataProjectName %>";
-<% } foreach(IEntity entity in new EntityManager(DynamicRootList).Entities){ %>
+<% } foreach(IEntity entity in DynamicRootListEntities){ %>
         public const string <%= entity.Name %>ListFactoryName = "<%= DataProjectName %>.<%= entity.Name %>ListFactory, <%= DataProjectName %>";
-<% } foreach(IEntity entity in new EntityManager(EditableRootList).Entities){ %>
+<% } foreach(IEntity entity in EditableRootListEntities){ %>
         public const string <%= entity.Name %>ListFactoryName = "<%= DataProjectName %>.<%= entity.Name %>ListFactory, <%= DataProjectName %>";
-<% } foreach(IEntity entity in new EntityManager(EditableChildList).Entities){ %>
+<% } foreach(IEntity entity in EditableChildListEntities){ %>
         public const string <%= entity.Name %>ListFactoryName = "<%= DataProjectName %>.<%= entity.Name %>ListFactory, <%= DataProjectName %>";
-<% } foreach(IEntity entity in new EntityManager(ReadOnlyList).Entities){ %>
+<% } foreach(IEntity entity in ReadOnlyListEntities){ %>
         public const string <%= entity.Name %>InfoListFactoryName = "<%= DataProjectName %>.<%= entity.Name %>ListFactory, <%= DataProjectName %>";
-<% } foreach(IEntity entity in new EntityManager(ReadOnlyChildList).Entities){ %>
+<% } foreach(IEntity entity in ReadOnlyChildListEntities){ %>
         public const string <%= entity.Name %>InfoListFactoryName = "<%= DataProjectName %>.<%= entity.Name %>ListFactory, <%= DataProjectName %>";
 <% } %>
     }

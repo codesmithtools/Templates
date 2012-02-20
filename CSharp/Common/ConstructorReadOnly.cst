@@ -5,11 +5,13 @@
 <%@ Assembly Name="CodeSmith.SchemaHelper.CSharpExtensions" Path="..\..\Common" %>
 <%@ Assembly Name="Generator.CSLA" Path="..\..\Common" %>
 <%@ Import Namespace="CodeSmith.SchemaHelper" %>
+<%@ Import Namespace="Generator.CSLA" %>
         #region Contructor(s)
 
         public <%= BusinessClassName %>()
         { /* Require use of factory methods */ }
 
+<% if(Entity.HasKey) { %>
         internal <%= BusinessClassName %>(<%= Entity.GetProperties(PropertyType.Key).BuildParametersVariables() %>)
         {
 <% foreach(var property in Entity.GetProperties(PropertyType.Key)) { if(UseMemberVariables) { %>
@@ -18,6 +20,8 @@
             LoadProperty(<%= property.PrivateMemberVariableName %>Property, <%= property.VariableName %>);
 <% } } %>
         }
+
+<% } %>
 <% if(IncludeSilverlightSupport) { %>
 #if !SILVERLIGHT
 <% } %>

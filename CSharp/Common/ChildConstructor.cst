@@ -14,6 +14,7 @@
             MarkAsChild();
         }
 
+<% if(Entity.HasKey) { %>
         internal <%= BusinessClassName %>(<%= Entity.GetProperties(PropertyType.Key).BuildParametersVariables() %>)
         {
             using(BypassPropertyChecks)
@@ -27,7 +28,8 @@
 
             MarkAsChild();
         }
-
+        
+<% }%>
 <% if(IncludeSilverlightSupport) { %>
 #if !SILVERLIGHT
 <% } %>  
@@ -45,6 +47,7 @@
             MarkAsChild();
         }
 <%  } %>
+
 <% if(IncludeSilverlightSupport) { %>
 #endif
 <% } %>
