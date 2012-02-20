@@ -1,6 +1,6 @@
 //------------------------------------------------------------------------------
 //
-// Copyright (c) 2002-2011 CodeSmith Tools, LLC.  All rights reserved.
+// Copyright (c) 2002-2012 CodeSmith Tools, LLC.  All rights reserved.
 // 
 // The terms of use for this software are contained in the file
 // named sourcelicense.txt, which can be found in the root of this distribution.
@@ -18,40 +18,15 @@ namespace Generator.Microsoft.Frameworks
 {
     public class GeneratorSettings
     {
-        private string mappingFile;
-        public string MappingFile
-        {
-            get { return mappingFile; }
-            set { mappingFile = value; }
-        }
+        public string MappingFile { get; set; }
 
-        private string _contextNamespace;
-        public string ContextNamespace
-        {
-            get { return _contextNamespace; }
-            set { _contextNamespace = value; }
-        }
+        public string ContextNamespace { get; set; }
 
-        private string _dataContextName;
-        public string DataContextName
-        {
-            get { return _dataContextName; }
-            set { _dataContextName = value; }
-        }
+        public string DataContextName { get; set; }
 
-        private string _entityBase;
-        public string EntityBase
-        {
-            get { return _entityBase; }
-            set { _entityBase = value; }
-        }
+        public string EntityBase { get; set; }
 
-        private string _entityNamespace;
-        public string EntityNamespace
-        {
-            get { return _entityNamespace; }
-            set { _entityNamespace = value; }
-        }
+        public string EntityNamespace { get; set; }
 
         private List<Regex> _ignoreExpressions = new List<Regex>();
         public List<Regex> IgnoreExpressions

@@ -1,4 +1,4 @@
-<%@ CodeTemplate Language="C#" TargetLanguage="XML" Description="Generates an EDMX File" Debug="true" OutputType="None" %>
+﻿<%@ CodeTemplate Language="C#" TargetLanguage="XML" Description="Generates an EDMX File" Debug="true" OutputType="None" %>
 
 <%@ Assembly Name="CodeSmith.CustomProperties" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\Common" %>
@@ -103,8 +103,9 @@
         
         EdmxGenerator generator = new EdmxGenerator(settings);
         //generator.SchemaItemProcessed += new EventHandler<SchemaItemProcessedEventArgs>(OnSchemaItemProcessed);
-
-        EntityManager manager = new EntityManager(SourceDatabase);
+        
+        var provider = new SchemaExplorerEntityProvider(SourceDatabase);
+        EntityManager manager = new EntityManager(provider);
         generator.Create(manager.Entities);
         
         OutputFile edmxOutputFile = new OutputFile(this.EdmxFile);

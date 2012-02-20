@@ -1,6 +1,6 @@
 ﻿//------------------------------------------------------------------------------
 //
-// Copyright (c) 2002-2011 CodeSmith Tools, LLC.  All rights reserved.
+// Copyright (c) 2002-2012 CodeSmith Tools, LLC.  All rights reserved.
 // 
 // The terms of use for this software are contained in the file
 // named sourcelicense.txt, which can be found in the root of this distribution.
@@ -964,7 +964,7 @@ namespace Generator.Microsoft.Frameworks
             string fromRole;
             ResolveConceptualAssociationValues(association, out principalEntity, out dependentEntity, out isParentEntity, out key, out toRole, out fromRole);
 
-            //11/4/2011 If an entity has an association to itself then we will modify the key if it's the child association.
+            //11/4/2012 If an entity has an association to itself then we will modify the key if it's the child association.
             bool isSelfReferencingChild = !isParentEntity && principalEntity == dependentEntity;
             if (!isSelfReferencingChild && !association.IsParentManyToMany())
             {
@@ -973,7 +973,7 @@ namespace Generator.Microsoft.Frameworks
                 toRole = temp;
             }
 
-            // 11/4/2011 Updated to check to see if a self referencing entity exists then we check the too and from roles. By checking only the to and from roles if it's a self referencing this allows custom names to be picked up.
+            // 11/4/2012 Updated to check to see if a self referencing entity exists then we check the too and from roles. By checking only the to and from roles if it's a self referencing this allows custom names to be picked up.
             var navigationProperty = principalEntity == dependentEntity 
                 ? entity.NavigationProperties.FirstOrDefault(n => n.Relationship.Equals(String.Concat(ConceptualSchema.Namespace, ".", key)) && n.ToRole.Equals(toRole) && n.FromRole.Equals(fromRole))
                 : entity.NavigationProperties.FirstOrDefault(n => n.Relationship.Equals(String.Concat(ConceptualSchema.Namespace, ".", key)));
