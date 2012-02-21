@@ -44,6 +44,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\Libraries\AddIns\SchemaExplorer.dll</HintPath>
     </Reference>
+    <Reference Include="CodeSmith.SchemaHelper">
+      <HintPath>..\..\Common\CodeSmith.SchemaHelper.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
@@ -239,12 +242,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Edmx\Entity Design.cd" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\..\..\Source\CodeSmith.SchemaHelper\CodeSmith.SchemaHelper.csproj">
-      <Project>{29F4357A-A92D-458F-A266-A7231E75DA52}</Project>
-      <Name>CodeSmith.SchemaHelper</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
