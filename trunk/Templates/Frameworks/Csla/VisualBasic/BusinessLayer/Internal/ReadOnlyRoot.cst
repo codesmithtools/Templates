@@ -27,9 +27,9 @@ Imports Csla.Validation
 <% End If %>
 
 Namespace <%= BusinessProjectName %>
-    /// <summary>
-    /// The <%=BusinessClassName%><%= Entity.GenericProperty %> class is a CSLA read only root class.  See CSLA documentation for a more detailed description.
-    /// </summary>
+    ''' <summary>
+    ''' The <%=BusinessClassName%><%= Entity.GenericProperty %> class is a CSLA read only root class.  See CSLA documentation for a more detailed description.
+    ''' </summary>
     Public Partial Class <%= BusinessClassName %><%= Entity.GenericProperty %>
     <% RenderHelper(New AuthorizationRules()) %>
     End Class

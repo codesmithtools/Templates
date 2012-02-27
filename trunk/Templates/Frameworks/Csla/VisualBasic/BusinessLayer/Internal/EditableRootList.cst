@@ -22,10 +22,10 @@ Imports System.Collections.Generic
 Imports Csla
 
 Namespace <%= BusinessProjectName %>
-    /// <summary>
-    /// The <%=BusinessClassName%><%= Entity.GenericProperty %> class is a CSLA editable root list class collection of <see cref="<%= ChildBusinessClassName %>"/> objects.  See CSLA documentation for a more detailed description.
-    /// </summary>
-    /// <returns></returns>
+    ''' <summary>
+    ''' The <%=BusinessClassName%><%= Entity.GenericProperty %> class is a CSLA editable root list class collection of <see cref="<%= ChildBusinessClassName %>"/> objects.  See CSLA documentation for a more detailed description.
+    ''' </summary>
+    ''' <returns></returns>
     Public Partial Class <%= BusinessClassName %><%= Entity.GenericProperty %>
     <% RenderHelper(New AuthorizationRules()) %>
     End Class

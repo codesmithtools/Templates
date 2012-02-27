@@ -58,6 +58,7 @@ namespace Generator.CSLA
                     continue;
                 }
 
+                CodeSmith.Engine.Logger.Log.Info(String.Format("Adding '{0}' Entity of type {1}", view.FullName, _extendedPropertyName));
                 EntityStore.Instance.EntityCollection.Add(view.FullName, viewEntity);
             }
         }

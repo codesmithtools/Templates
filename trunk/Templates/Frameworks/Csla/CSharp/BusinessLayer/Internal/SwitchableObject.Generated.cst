@@ -140,10 +140,10 @@ namespace <%= BusinessProjectName %>
             //dp.BeginDelete(criteria);
         //}
 <% } else { %>
-        public static void Delete<%= BusinessClassName %>Async(<%= Entity.GetProperties(PropertyType.Key).BuildParametersVariables()%>, EventHandler<DataPortalResult<<%= BusinessClassName %><%= Entity.GenericProperty %>>> handler)
+        public static void Delete<%= BusinessClassName %>Async(<% if(Entity.HasKey){ %><%= Entity.Key.Properties.BuildParametersVariables()%>, <% } %>EventHandler<DataPortalResult<<%= BusinessClassName %><%= Entity.GenericProperty %>>> handler)
         {
-            var criteria = new <%= CriteriaClassName %><%= Entity.GenericProperty %>{<%= Entity.GetProperties(PropertyType.Key).BuildObjectInitializer() %>};
-            <%= Entity.GetProperties(PropertyType.Key).BuildNullableObjectInitializer()%>
+            var criteria = new <%= CriteriaClassName %><%= Entity.GenericProperty %>{<%= Entity.Key.Properties.BuildObjectInitializer() %>};
+            <%= Entity.Key.Properties.BuildNullableObjectInitializer()%>
 
             var dp = new DataPortal<<%= BusinessClassName %><%= Entity.GenericProperty %>>();
             dp.DeleteCompleted += handler;

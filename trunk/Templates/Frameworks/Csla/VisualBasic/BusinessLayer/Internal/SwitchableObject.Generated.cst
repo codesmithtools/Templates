@@ -61,22 +61,22 @@ Namespace <%= BusinessProjectName %>
 <% If(IncludeSilverlightSupport) Then %>
 #If Not SILVERLIGHT Then
     <% End If %>
-        /// <summary>
-        /// Creates a new object of type <see cref="<%=BusinessClassName%><%= Entity.GenericProperty %>"/>. 
-        /// </summary>
-        /// <returns>Returns a newly instantiated collection of type <see cref="<%=BusinessClassName%><%= Entity.GenericProperty %>"/>.</returns>    
+        ''' <summary>
+        ''' Creates a new object of type <see cref="<%=BusinessClassName%><%= Entity.GenericProperty %>"/>. 
+        ''' </summary>
+        ''' <returns>Returns a newly instantiated collection of type <see cref="<%=BusinessClassName%><%= Entity.GenericProperty %>"/>.</returns>    
         Public Shared Function New<%= BusinessClassName %><%= Entity.GenericProperty %>() As <%= BusinessClassName %> 
             Return DataPortal.Create(Of <%= BusinessClassName %><%= Entity.GenericProperty %>)()
         End Function
     <% For Each sc As SearchCriteria In  Entity.SearchCriteria %>
     
-        /// <summary>
-        /// Returns a <see cref="<%=BusinessClassName%><%= Entity.GenericProperty %>"/> object of the specified criteria. 
-        /// </summary>
+        ''' <summary>
+        ''' Returns a <see cref="<%=BusinessClassName%><%= Entity.GenericProperty %>"/> object of the specified criteria. 
+        ''' </summary>
 <% For Each item As IProperty In sc.Properties %>
-        /// <param name="<%= item.VariableName%>"><%If(item.HasDescription) Then%><%=item.Description%>.<% Else %>No additional detail available.<% End If %></param>
+        ''' <param name="<%= item.VariableName%>"><%If(item.HasDescription) Then%><%=item.Description%>.<% Else %>No additional detail available.<% End If %></param>
 <% Next %>
-        /// <returns>A <see cref="<%=BusinessClassName%><%= Entity.GenericProperty %>"/> object of the specified criteria.</returns>
+        ''' <returns>A <see cref="<%=BusinessClassName%><%= Entity.GenericProperty %>"/> object of the specified criteria.</returns>
         Public Shared Function <%= sc.MethodName %>(<%= sc.Properties.BuildParametersVariables() %>) As <%= BusinessClassName %><%= Entity.GenericProperty %>
             Dim criteria As New <%= CriteriaClassName %><%= Entity.GenericProperty %>()
             <%= sc.Properties.BuildObjectInitializer() %>
@@ -123,13 +123,13 @@ Namespace <%= BusinessProjectName %>
     <% Next %> 
     
     <% If (UseDeferredDeletion) Then %>
-        'Public Shared Sub Delete<%= BusinessClassName %>Async<%= Entity.GetProperties(PropertyType.Key).BuildParametersVariables() %>)
+        'Public Shared Sub Delete<%= BusinessClassName %>Async(<%= Entity.GetProperties(PropertyType.Key).BuildParametersVariables() %>)
             'Dim dp As New DataPortal(Of <%= BusinessClassName %><%= Entity.GenericProperty %>)()
             'AddHandler dp.DeleteCompleted, handler
             'dp.BeginDelete(New <%= CriteriaClassName %><%= Entity.GenericProperty %> (<%= Entity.GetProperties(PropertyType.Key).BuildVariableArguments() %>))
         'End Sub
     <% Else %>
-        Public Shared Sub Delete<%= BusinessClassName %>Async(<%= Entity.GetProperties(PropertyType.Key).BuildParametersVariables()%>, ByVal handler As EventHandler(Of DataPortalResult(Of <%= BusinessClassName %><%= Entity.GenericProperty %>)))
+        Public Shared Sub Delete<%= BusinessClassName %>Async(<% If(Entity.HasKey) Then %><%= Entity.Key.Properties.BuildParametersVariables()%>, <% End If %>ByVal handler As EventHandler(Of DataPortalResult(Of <%= BusinessClassName %><%= Entity.GenericProperty %>)))
             Dim dp As New DataPortal(Of <%= BusinessClassName %><%= Entity.GenericProperty %>)()
             AddHandler dp.DeleteCompleted, handler
             dp.BeginDelete(New <%= CriteriaClassName %><%= Entity.GenericProperty %> (<%= Entity.GetProperties(PropertyType.Key).BuildVariableArguments() %>))
@@ -143,22 +143,22 @@ Namespace <%= BusinessProjectName %>
 <% If(IncludeSilverlightSupport) Then %>
 #If Not SILVERLIGHT Then
 <% End If %>
-        /// <summary>
-        /// Creates a new object of type <see cref="<%=BusinessClassName%><%= Entity.GenericProperty %>"/>. 
-        /// </summary>
-        /// <returns>Returns a newly instantiated collection of type <see cref="<%=BusinessClassName%><%= Entity.GenericProperty %>"/>.</returns>
+        ''' <summary>
+        ''' Creates a new object of type <see cref="<%=BusinessClassName%><%= Entity.GenericProperty %>"/>. 
+        ''' </summary>
+        ''' <returns>Returns a newly instantiated collection of type <see cref="<%=BusinessClassName%><%= Entity.GenericProperty %>"/>.</returns>
         Friend Shared Function New<%= BusinessClassName %>Child() As <%= BusinessClassName %><%= Entity.GenericProperty %>
             Return DataPortal.CreateChild(Of <%= BusinessClassName %><%= Entity.GenericProperty %>)()
         End Function
     <% For Each sc As SearchCriteria In  Entity.SearchCriteria %>
     
-        /// <summary>
-        /// Returns a <see cref="<%=BusinessClassName%><%= Entity.GenericProperty %>"/> object of the specified criteria. 
-        /// </summary>
+        ''' <summary>
+        ''' Returns a <see cref="<%=BusinessClassName%><%= Entity.GenericProperty %>"/> object of the specified criteria. 
+        ''' </summary>
 <% For Each item As IProperty In sc.Properties %>
-        /// <param name="<%= item.VariableName%>"><%If(item.HasDescription) Then%><%=item.Description%>.<% Else %>No additional detail available.<% End If %></param>
+        ''' <param name="<%= item.VariableName%>"><%If(item.HasDescription) Then%><%=item.Description%>.<% Else %>No additional detail available.<% End If %></param>
 <% Next %>
-        /// <returns>A <see cref="<%=BusinessClassName%><%= Entity.GenericProperty %>"/> object of the specified criteria.</returns>
+        ''' <returns>A <see cref="<%=BusinessClassName%><%= Entity.GenericProperty %>"/> object of the specified criteria.</returns>
         Friend Shared Function <%= sc.MethodName %>Child(<%= sc.Properties.BuildParametersVariables() %>) As <%= BusinessClassName %><%= Entity.GenericProperty %>
             Dim criteria As New <%= CriteriaClassName %><%= Entity.GenericProperty %>()
     <%For Each prop As IProperty In sc.Properties %>
@@ -207,85 +207,85 @@ Namespace <%= BusinessProjectName %>
 #If Not SILVERLIGHT Then
 <% End If %>
 
-        /// <summary>
-        /// Codesmith generated stub method that is called when creating the child <see cref="<%=ChildBusinessClassName%><%= Entity.GenericProperty %>"/> object. 
-        /// </summary>
-        /// <param name="cancel">Value returned from the method indicating whether the object creation should proceed.</param>
+        ''' <summary>
+        ''' Codesmith generated stub method that is called when creating the child <see cref="<%=ChildBusinessClassName%><%= Entity.GenericProperty %>"/> object. 
+        ''' </summary>
+        ''' <param name="cancel">Value returned from the method indicating whether the object creation should proceed.</param>
         Partial Private Sub OnChildCreating(ByRef cancel As Boolean)
         End Sub
 
-        /// <summary>
-        /// Codesmith generated stub method that is called after the child <see cref="<%=ChildBusinessClassName%><%= Entity.GenericProperty %>"/> object has been created. 
-        /// </summary>
+        ''' <summary>
+        ''' Codesmith generated stub method that is called after the child <see cref="<%=ChildBusinessClassName%><%= Entity.GenericProperty %>"/> object has been created. 
+        ''' </summary>
         Partial Private Sub OnChildCreated()
         End Sub
 
-        /// <summary>
-        /// Codesmith generated stub method that is called when fetching the child <see cref="<%=ChildBusinessClassName%><%= Entity.GenericProperty %>"/> object. 
-        /// </summary>
-        /// <param name="criteria"><see cref="<%= ChildBusinessClassName %>Criteria"/> object containg the criteria of the object to fetch.</param>
-        /// <param name="cancel">Value returned from the method indicating whether the object fetching should proceed.</param>
+        ''' <summary>
+        ''' Codesmith generated stub method that is called when fetching the child <see cref="<%=ChildBusinessClassName%><%= Entity.GenericProperty %>"/> object. 
+        ''' </summary>
+        ''' <param name="criteria"><see cref="<%= ChildBusinessClassName %>Criteria"/> object containg the criteria of the object to fetch.</param>
+        ''' <param name="cancel">Value returned from the method indicating whether the object fetching should proceed.</param>
         Partial Private Sub OnChildFetching(ByVal criteria As <%= CriteriaClassName %><%= Entity.GenericProperty %>, ByRef cancel As Boolean)
         End Sub
 
-        /// <summary>
-        /// Codesmith generated stub method that is called after the child <see cref="<%=ChildBusinessClassName%><%= Entity.GenericProperty %>"/> object has been fetched. 
-        /// </summary>
+        ''' <summary>
+        ''' Codesmith generated stub method that is called after the child <see cref="<%=ChildBusinessClassName%><%= Entity.GenericProperty %>"/> object has been fetched. 
+        ''' </summary>
         Partial Private Sub OnChildFetched()
         End Sub
 
-        /// <summary>
-        /// Codesmith generated stub method that is called when inserting the child <see cref="<%=ChildBusinessClassName%><%= Entity.GenericProperty %>"/> object. 
-        /// </summary>
-        /// <param name="cancel">Value returned from the method indicating whether the object insertion should proceed.</param>
+        ''' <summary>
+        ''' Codesmith generated stub method that is called when inserting the child <see cref="<%=ChildBusinessClassName%><%= Entity.GenericProperty %>"/> object. 
+        ''' </summary>
+        ''' <param name="cancel">Value returned from the method indicating whether the object insertion should proceed.</param>
         Partial Private Sub OnChildInserting(ByRef cancel As Boolean)
         End Sub
 
-        /// <summary>
-        /// Codesmith generated stub method that is called when inserting the child <see cref="<%=ChildBusinessClassName%><%= Entity.GenericProperty %>"/> object. 
-        /// </summary>
-        /// <param name="connection"></param>
-        /// <param name="cancel">Value returned from the method indicating whether the object insertion should proceed.</param>
+        ''' <summary>
+        ''' Codesmith generated stub method that is called when inserting the child <see cref="<%=ChildBusinessClassName%><%= Entity.GenericProperty %>"/> object. 
+        ''' </summary>
+        ''' <param name="connection"></param>
+        ''' <param name="cancel">Value returned from the method indicating whether the object insertion should proceed.</param>
         Partial Private Sub OnChildInserting(ByVal connection As SqlConnection, ByRef cancel As Boolean)
         End Sub
 
-        /// <summary>
-        /// Codesmith generated stub method that is called after the child <see cref="<%=ChildBusinessClassName%><%= Entity.GenericProperty %>"/> object has been inserted. 
-        /// </summary>
+        ''' <summary>
+        ''' Codesmith generated stub method that is called after the child <see cref="<%=ChildBusinessClassName%><%= Entity.GenericProperty %>"/> object has been inserted. 
+        ''' </summary>
         Partial Private Sub OnChildInserted()
         End Sub
 
-        /// <summary>
-        /// Codesmith generated stub method that is called when updating the child <see cref="<%=ChildBusinessClassName%><%= Entity.GenericProperty %>"/> object. 
-        /// </summary>
-        /// <param name="cancel">Value returned from the method indicating whether the object creation should proceed.</param>
+        ''' <summary>
+        ''' Codesmith generated stub method that is called when updating the child <see cref="<%=ChildBusinessClassName%><%= Entity.GenericProperty %>"/> object. 
+        ''' </summary>
+        ''' <param name="cancel">Value returned from the method indicating whether the object creation should proceed.</param>
         Partial Private Sub OnChildUpdating(ByRef cancel As Boolean)
         End Sub
 
-        /// <summary>
-        /// Codesmith generated stub method that is called when updating the child <see cref="<%=ChildBusinessClassName%><%= Entity.GenericProperty %>"/> object. 
-        /// </summary>
-        /// <param name="connection"></param>
-        /// <param name="cancel">Value returned from the method indicating whether the object creation should proceed.</param>
+        ''' <summary>
+        ''' Codesmith generated stub method that is called when updating the child <see cref="<%=ChildBusinessClassName%><%= Entity.GenericProperty %>"/> object. 
+        ''' </summary>
+        ''' <param name="connection"></param>
+        ''' <param name="cancel">Value returned from the method indicating whether the object creation should proceed.</param>
         Partial Private Sub OnChildUpdating(ByVal connection As SqlConnection, ByRef cancel As Boolean)
         End Sub
 
-        /// <summary>
-        /// Codesmith generated stub method that is called after the child <see cref="<%=ChildBusinessClassName%><%= Entity.GenericProperty %>"/> object has been updated. 
-        /// </summary>
+        ''' <summary>
+        ''' Codesmith generated stub method that is called after the child <see cref="<%=ChildBusinessClassName%><%= Entity.GenericProperty %>"/> object has been updated. 
+        ''' </summary>
         Partial Private Sub OnChildUpdated()
         End Sub
 
-        /// <summary>
-        /// Codesmith generated stub method that is called when self deleting the child <see cref="<%=ChildBusinessClassName%><%= Entity.GenericProperty %>"/> object. 
-        /// </summary>
-        /// <param name="cancel">Value returned from the method indicating whether the object self deletion should proceed.</param>
+        ''' <summary>
+        ''' Codesmith generated stub method that is called when self deleting the child <see cref="<%=ChildBusinessClassName%><%= Entity.GenericProperty %>"/> object. 
+        ''' </summary>
+        ''' <param name="cancel">Value returned from the method indicating whether the object self deletion should proceed.</param>
         Partial Private Sub OnChildSelfDeleting(ByRef cancel As Boolean)
         End Sub
 
-        /// <summary>
-        /// Codesmith generated stub method that is called after the child <see cref="<%=ChildBusinessClassName%><%= Entity.GenericProperty %>"/> object has been deleted. 
-        /// </summary>
+        ''' <summary>
+        ''' Codesmith generated stub method that is called after the child <see cref="<%=ChildBusinessClassName%><%= Entity.GenericProperty %>"/> object has been deleted. 
+        ''' </summary>
         Partial Private Sub OnChildSelfDeleted()
         End Sub
 <% If(IncludeSilverlightSupport) Then %>

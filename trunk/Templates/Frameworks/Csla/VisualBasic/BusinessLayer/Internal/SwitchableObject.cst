@@ -28,9 +28,9 @@ Imports Csla.Validation
 <% End If %>
 
 Namespace <%= BusinessProjectName %>
-    /// <summary>
-    /// The <%=BusinessClassName%><%= Entity.GenericProperty %> class is a CSLA switchable object class.  See CSLA documentation for a more detailed description.
-    /// </summary>
+    ''' <summary>
+    ''' The <%=BusinessClassName%><%= Entity.GenericProperty %> class is a CSLA switchable object class.  See CSLA documentation for a more detailed description.
+    ''' </summary>
     Public Partial Class <%= BusinessClassName %><%= Entity.GenericProperty %>
     <% RenderHelper(New ValidationRules()) %>
     
