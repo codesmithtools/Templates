@@ -22,9 +22,9 @@ Imports System
 Imports Csla
 
 Namespace <%= BusinessProjectName %>
-    /// <summary>
-    /// The <%=BusinessClassName%><%= Entity.GenericProperty %> class is a CSLA dynamic root class.  See CSLA documentation for a more detailed description.
-    /// </summary>
+    ''' <summary>
+    ''' The <%=BusinessClassName%><%= Entity.GenericProperty %> class is a CSLA dynamic root class.  See CSLA documentation for a more detailed description.
+    ''' </summary>
     Public Partial Class <%= BusinessClassName %><%= Entity.GenericProperty %>
     <% RenderHelper(New ValidationRules()) %>
     

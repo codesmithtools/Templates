@@ -55,13 +55,13 @@ Namespace <%= BusinessProjectName %>
     <% End If %>
     <% For Each sc As SearchCriteria In  Entity.SearchCriteria %>
     
-        /// <summary>
-        /// Returns a <see cref="<%=BusinessClassName%><%= Entity.GenericProperty %>"/> object of the specified criteria. 
-        /// </summary>
+        ''' <summary>
+        ''' Returns a <see cref="<%=BusinessClassName%><%= Entity.GenericProperty %>"/> object of the specified criteria. 
+        ''' </summary>
 <% For Each item As IProperty In sc.Properties %>
-        /// <param name="<%= item.VariableName%>"><%If(item.HasDescription) Then%><%=item.Description%>.<% Else %>No additional detail available.<% End If %></param>
+        ''' <param name="<%= item.VariableName%>"><%If(item.HasDescription) Then%><%=item.Description%>.<% Else %>No additional detail available.<% End If %></param>
 <% Next %>
-        /// <returns>A <see cref="<%=BusinessClassName%><%= Entity.GenericProperty %>"/> object of the specified criteria.</returns>
+        ''' <returns>A <see cref="<%=BusinessClassName%><%= Entity.GenericProperty %>"/> object of the specified criteria.</returns>
         Public Shared Function <%= sc.MethodName %>(<%= sc.Properties.BuildParametersVariables() %>) As <%= BusinessClassName %> 
             Dim criteria As New <%= CriteriaClassName %>()
             <%= sc.Properties.BuildObjectInitializer() %>

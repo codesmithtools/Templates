@@ -55,12 +55,11 @@ namespace <%= BusinessProjectName %>
     {
 <%/*  Documentation code handled in the Constructor.cst template  */
    RenderHelper(new Constructor()); %>
-
 <%/*  Documentation code handled in the ValidationRules.cst template  */
    RenderHelper(new ValidationRules()); %>
-
 <%/*  Documentation code handled in the Properties.cst template  */
    RenderHelper(new Properties()); %>
+
 
         #region Synchronous Factory Methods 
 <% if(IncludeSilverlightSupport) { %>
@@ -146,10 +145,10 @@ namespace <%= BusinessProjectName %>
         //    DataPortal.Delete<% if(IsLatestCSLA) { %><<%= BusinessClassName %><%= Entity.GenericProperty %>><% } %>(criteria);
         //}
 <% } else { %>
-        public static void Delete<%= BusinessClassName %>Async(<%= Entity.GetProperties(PropertyType.Key).BuildParametersVariables()%>, EventHandler<DataPortalResult<<%= BusinessClassName %><%= Entity.GenericProperty %>>> handler)
+        public static void Delete<%= BusinessClassName %>Async(<% if(Entity.HasKey){ %><%= Entity.Key.Properties.BuildParametersVariables()%>, <% } %>EventHandler<DataPortalResult<<%= BusinessClassName %><%= Entity.GenericProperty %>>> handler)
         {
-            var criteria = new <%= CriteriaClassName %><%= Entity.GenericProperty %>{<%= Entity.GetProperties(PropertyType.Key).BuildObjectInitializer() %>};
-            <%=Entity.GetProperties(PropertyType.Key).BuildNullableObjectInitializer()%>
+            var criteria = new <%= CriteriaClassName %><%= Entity.GenericProperty %>{<%= Entity.Key.Properties.BuildObjectInitializer() %>};
+            <%=Entity.Key.Properties.BuildNullableObjectInitializer()%>
             
             var dp = new DataPortal<<%= BusinessClassName %><%= Entity.GenericProperty %>>();
             dp.DeleteCompleted += handler;
@@ -158,7 +157,6 @@ namespace <%= BusinessProjectName %>
 <% } %>
 
         #endregion
-
 <%/*  Documentation code handled in the IsDirty.cst template  */
    RenderHelper(new IsDirty()); %>
 <%/*  Documentation code handled in the appropriate PartialMethods template  */

@@ -62,22 +62,22 @@ Namespace <%= BusinessProjectName %>
 #If Not SILVERLIGHT Then
 <% End If %>
 
-        /// <summary>
-        /// Creates a new object of type <see cref="<%=BusinessClassName%><%= Entity.GenericProperty %>"/>. 
-        /// </summary>
-        /// <returns>Returns a newly instantiated collection of type <see cref="<%=BusinessClassName%><%= Entity.GenericProperty %>"/>.</returns>
+        ''' <summary>
+        ''' Creates a new object of type <see cref="<%=BusinessClassName%><%= Entity.GenericProperty %>"/>. 
+        ''' </summary>
+        ''' <returns>Returns a newly instantiated collection of type <see cref="<%=BusinessClassName%><%= Entity.GenericProperty %>"/>.</returns>
         Friend Shared Function New<%= ChildBusinessClassName %><%= Entity.GenericProperty %>() As <%= ChildBusinessClassName %> 
             Return DataPortal.Create(Of <%= BusinessClassName %>)()
         End Function
     <% For Each sc As SearchCriteria In  Entity.SearchCriteria %>
 
-        /// <summary>
-        /// Returns a <see cref="<%=BusinessClassName%><%= Entity.GenericProperty %>"/> object of the specified criteria. 
-        /// </summary>
+        ''' <summary>
+        ''' Returns a <see cref="<%=BusinessClassName%><%= Entity.GenericProperty %>"/> object of the specified criteria. 
+        ''' </summary>
 <% For Each item As IProperty In sc.Properties %>
-        /// <param name="<%= item.VariableName%>"><%If(item.HasDescription) Then%><%=item.Description%>.<% Else %>No additional detail available.<% End If %></param>
+        ''' <param name="<%= item.VariableName%>"><%If(item.HasDescription) Then%><%=item.Description%>.<% Else %>No additional detail available.<% End If %></param>
 <% Next %>
-        /// <returns>A <see cref="<%=BusinessClassName%>"/> object of the specified criteria.</returns>
+        ''' <returns>A <see cref="<%=BusinessClassName%>"/> object of the specified criteria.</returns>
         Friend Shared Function <%= sc.MethodName %>(<%= sc.Properties.BuildParametersVariables() %>) As <%= BusinessClassName %><%= Entity.GenericProperty %>
             Dim criteria As New <%= CriteriaClassName %><%= Entity.GenericProperty %>()
             <%= sc.Properties.BuildObjectInitializer() %>
