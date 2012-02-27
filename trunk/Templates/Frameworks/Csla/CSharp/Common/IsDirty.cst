@@ -1,14 +1,12 @@
-<%-- Author: Blake Niemyjski --%>
-<%@ CodeTemplate Language="C#" TargetLanguage="C#" Inherits="CodeSmith.QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Encoding="UTF-8" Description="CSLA Map" %>
-
-<%@ Assembly Name="SchemaExplorer" %>
+﻿<%-- Author: Blake Niemyjski --%>
+<%@ CodeTemplate Language="C#" TargetLanguage="C#" Inherits="Generator.CSLA.EntityCodeTemplate" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\Common" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper.Extensions" Path="..\..\Common" %>
-<%@ Assembly Name="CodeSmith.QuickStart" Path="..\..\Common" %>
-
-<%@ Import Namespace="SchemaExplorer" %>
+<%@ Assembly Name="Generator.CSLA" Path="..\..\Common" %>
 <%@ Import Namespace="CodeSmith.SchemaHelper" %>
-<%@ Import Namespace="CodeSmith.QuickStart" %>
+<%@ Import Namespace="Generator.CSLA" %>
+
+
 <% if(DataAccessImplementation == DataAccessMethod.ObjectFactoryNone || DataAccessImplementation == DataAccessMethod.ObjectFactoryParameterizedSQL || DataAccessImplementation == DataAccessMethod.ObjectFactoryStoredProcedures) { %>
         #region Overridden properties
 
@@ -21,16 +19,16 @@
             {
                 if (base.IsDirty) return true;
 <%-- One-To-Zero-Or-One --%>
-<% foreach(Association association in Entity.AssociatedOneToZeroOrOne) { %>
-                if (FieldManager.FieldExists(<%= association.PrivateMemberVariableName %>Property) && <%= association.PropertyName %>.IsDirty) return true;
+<% foreach(Association association in Entity.Associations.Where(a => a.AssociationType == AssociationType.OneToZeroOrOne)) { %>
+                if (FieldManager.FieldExists(<%= association.PrivateMemberVariableName %>Property) && <%= association.Name %>.IsDirty) return true;
 <% } %>
 <%-- Many-To-One --%>
-<% foreach(Association association in Entity.AssociatedManyToOne) { %>
-                if (FieldManager.FieldExists(<%= association.PrivateMemberVariableName %>Property) && <%= association.PropertyName %>.IsDirty) return true;
+<% foreach(Association association in Entity.Associations.Where(a => a.AssociationType == AssociationType.ManyToOne)) { %>
+                if (FieldManager.FieldExists(<%= association.PrivateMemberVariableName %>Property) && <%= association.Name %>.IsDirty) return true;
 <% } %>
 <%-- One-To-Many & Many-To-Many --%>
-<% foreach(Association association in Entity.AssociatedOneToMany) { %>
-                if (FieldManager.FieldExists(<%= association.PrivateMemberVariableName %>Property) && <%= association.PropertyName %>.IsDirty) return true;
+<% foreach(Association association in Entity.Associations.Where(a => a.AssociationType == AssociationType.OneToMany)) { %>
+                if (FieldManager.FieldExists(<%= association.PrivateMemberVariableName %>Property) && <%= association.Name %>.IsDirty) return true;
 <% } %>
 
                 return false;

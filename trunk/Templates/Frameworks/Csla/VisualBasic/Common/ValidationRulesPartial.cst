@@ -1,18 +1,13 @@
 ﻿<%-- Author: Blake Niemyjski --%>
-<%@ CodeTemplate Language="VB" TargetLanguage="VB" Inherits="CodeSmith.QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Encoding="UTF-8" Description="CSLA Map" %>
-
-<%@ Assembly Name="SchemaExplorer" %>
+<%@ CodeTemplate Language="VB" TargetLanguage="VB" Inherits="Generator.CSLA.EntityCodeTemplate" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\Common" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper.Extensions" Path="..\..\Common" %>
-<%@ Assembly Name="CodeSmith.QuickStart" Path="..\..\Common" %>
-
-<%@ Import Namespace="SchemaExplorer" %>
+<%@ Assembly Name="Generator.CSLA" Path="..\..\Common" %>
 <%@ Import Namespace="CodeSmith.SchemaHelper" %>
-<%@ Import Namespace="CodeSmith.QuickStart" %>
 #Region "Business Rules"
     
         ''' <summary>
-        ''' All custom rules need to be placed in this method.
+        ''' All custom rules need to be placed In this method.
         ''' </summary>
         ''' <Returns>Return true to override the generated rules If false generated rules will be run.</Returns>
         Protected Function AddBusinessValidationRules() As Boolean
@@ -21,5 +16,6 @@
     
             Return False
         End Function
-    
+
 #End Region
+

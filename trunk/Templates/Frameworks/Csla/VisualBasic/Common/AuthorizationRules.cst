@@ -1,20 +1,20 @@
 ﻿<%-- Author: Blake Niemyjski --%>
-<%@ CodeTemplate Language="VB" TargetLanguage="VB" Inherits="CodeSmith.QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Encoding="UTF-8" Description="CSLA Map" %>
-
-<%@ Assembly Name="SchemaExplorer" %>
+<%@ CodeTemplate Language="VB" TargetLanguage="VB" Inherits="Generator.CSLA.EntityCodeTemplate" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\Common" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper.Extensions" Path="..\..\Common" %>
-<%@ Assembly Name="CodeSmith.QuickStart" Path="..\..\Common" %>
-
-<%@ Import Namespace="SchemaExplorer" %>
+<%@ Assembly Name="Generator.CSLA" Path="..\..\Common" %>
 <%@ Import Namespace="CodeSmith.SchemaHelper" %>
-<%@ Import Namespace="CodeSmith.QuickStart" %>
+<%@ Import Namespace="System.Linq" %>
 #Region "Authorization Rules"
     
-    <% If(IncludeSilverlightSupport) Then %>
+<% If(IncludeSilverlightSupport) Then %>
 #If Not SILVERLIGHT Then
     <% End If %>
-    <% If(IsCSLA40) Then %>
+        ''' <summary>
+        ''' Allows the specification of CSLA based authorization rules.  Specifies what roles can 
+        ''' perform which operations for a given business object
+        ''' </summary>
+    <% If(IsLatestCSLA) Then %>
         Protected Shared Sub AddObjectAuthorizationRules()
             'Csla.Rules.BusinessRules.AddRule(GetType(<%= BusinessClassName %>), New Csla.Rules.CommonRules.IsInRole(Csla.Rules.AuthorizationActions.CreateObject, "SomeRole"))
             'Csla.Rules.BusinessRules.AddRule(GetType(<%= BusinessClassName %>), New Csla.Rules.CommonRules.IsInRole(Csla.Rules.AuthorizationActions.EditObject, "SomeRole"))
@@ -33,37 +33,37 @@
             'AuthorizationRules.AllowEdit(GetType(<%= BusinessClassName %>), canWrite)
             'AuthorizationRules.AllowGet(GetType(<%= BusinessClassName %>), canRead)
     
-    <% For Each member As Member in Entity.MembersNoRowVersion %>
-            ''<%= member.PropertyName %>
-    <% If Not member.IsReadOnly Then %>
-            'AuthorizationRules.AllowWrite(<%= member.PrivateMemberVariableName %>Property, canWrite)
+    <% For Each prop As IProperty In Entity.GetProperties(PropertyType.NoConcurrency) %>
+            ''<%= prop.Name %>
+    <% If Not prop.IsReadOnly Then %>
+            'AuthorizationRules.AllowWrite(<%= prop.PrivateMemberVariableName %>Property, canWrite)
     <% End If %>
-            'AuthorizationRules.AllowRead(<%= member.PrivateMemberVariableName %>Property, canRead)
+            'AuthorizationRules.AllowRead(<%= prop.PrivateMemberVariableName %>Property, canRead)
     
     <% Next%>
     <%-- One-To-Zero-Or-One --%>
-    <% For Each association As Association in Entity.AssociatedOneToZeroOrOne %>
-            ''<%= association.PropertyName %>
+    <% For Each association As Association In Entity.Associations.Where(Function(a) a.AssociationType = AssociationType.OneToZeroOrOne) %>
+            ''<%= association.Name %>
             'AuthorizationRules.AllowRead(<%= association.PrivateMemberVariableName %>Property, canRead)
     
     <% Next%>
     <%-- Many-To-One --%>
-    <% For Each association As Association in Entity.AssociatedManyToOne %>
-            ''<%= association.PropertyName %>
+    <% For Each association As Association In Entity.Associations.Where(Function(a) a.AssociationType = AssociationType.ManyToOne) %>
+            ''<%= association.Name %>
             'AuthorizationRules.AllowRead(<%= association.PrivateMemberVariableName %>Property, canRead)
     
     <% Next%>
     <%-- One-To-Many & Many-To-Many --%>
     ' NOTE: Many-To-Many support coming soon.
-    <% For Each association As Association in Entity.AssociatedOneToMany %>
-            ''<%= association.PropertyName %>
+    <% For Each association As Association In Entity.Associations.Where(Function(a) a.AssociationType = AssociationType.OneToMany) %>
+            ''<%= association.Name %>
             'AuthorizationRules.AllowRead(<%= association.PrivateMemberVariableName %>Property, canRead)
     
     <% Next
     End If %>
         End Sub
     
-    <% If(IncludeSilverlightSupport) Then %>
+<% If(IncludeSilverlightSupport) Then %>
 #End If
     <% End If %>
 #End Region

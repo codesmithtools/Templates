@@ -3,7 +3,7 @@ Name: Quick Start
 Author: Blake Niemyjski
 Description: Used to Quick Start Visual Studio Projects
 --%>
-<%@ CodeTemplate Language="C#" TargetLanguage="Text" Inherits="CodeSmith.QuickStart.QuickStartCodeTemplate" Description="QuickStart for CSLA" CompilerVersion="v3.5" Encoding="UTF-8" %>
+<%@ CodeTemplate Language="C#" TargetLanguage="Text" Inherits="Generator.CSLA.QuickStartCodeTemplate" Description="QuickStart for CSLA" %>
 
 <%@ Register Name="QuickStartSolution" Template="Common\QuickStartSolution.cst" %>
 <%@ Register Name="Entities" Template="CSharp\BusinessLayer\Entities.cst" MergeProperties="False" ExcludeProperties="" %>
@@ -12,12 +12,12 @@ Description: Used to Quick Start Visual Studio Projects
 <%@ Register Name="NUnitTests" Template="CSharp\NUnitTests\NUnitTests.cst" MergeProperties="False" ExcludeProperties="" %>
 
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="Common" %>
-<%@ Assembly Name="CodeSmith.QuickStart" Path="Common" %>
-<%@ Assembly Name="SchemaExplorer" %>
+<%@ Assembly Name="Generator.CSLA" Path="Common" %>
+
 
 <%@ Import Namespace="CodeSmith.SchemaHelper" %>
-<%@ Import Namespace="CodeSmith.QuickStart" %>
-<%@ Import Namespace="SchemaExplorer" %>
+
+
 <%@ Import Namespace="System.IO" %>
 
 <%@ Property Name="IncludeInterfaceProject" Type="System.Boolean" Default="True" Category="5. Interface Project" Description="If true, the Interface Project will be included in the generated solution." %>
@@ -34,9 +34,9 @@ public override void Generate()
     // Make sure Location is FullPath
     Location = Path.GetFullPath(Location);
 
-	// Check For Existing Project
-	if(DirectoriesAlreadyExists)
-		throw new System.ApplicationException(AlreadyExistsMessage);
+    // Check For Existing Project
+    if(DirectoriesAlreadyExists)
+        throw new System.ApplicationException(AlreadyExistsMessage);
 
     // Prep Directories
     if (!Directory.Exists(Location))
@@ -133,7 +133,7 @@ public override void Generate()
 private string CreateSolution(List<SolutionItem> solutionItems)
 {
     QuickStartSolution quickStartSolution = this.Create<QuickStartSolution>();
-    quickStartSolution.IsCSLA40 = this.FrameworkVersion == FrameworkVersion.v40;
+    quickStartSolution.IsLatestCSLA = this.FrameworkVersion == FrameworkVersion.v40;
     quickStartSolution.SolutionItems = solutionItems;
 
     string filePathAboslute = Path.Combine(this.Location, String.Concat(SolutionName, ".sln"));
@@ -153,32 +153,32 @@ public bool DirectoriesAlreadyExists
 
 private string AlreadyExistsMessage
 {
-	get
-	{
-		System.Text.StringBuilder sb = new System.Text.StringBuilder();
-		sb.AppendLine("It seems that a quick start already exists in specified directory:");
-		sb.AppendLine(Location);
-		sb.AppendLine("Please delete existing data or selected a different directory.");
-		return sb.ToString();
-	}
+    get
+    {
+        System.Text.StringBuilder sb = new System.Text.StringBuilder();
+        sb.AppendLine("It seems that a quick start already exists in specified directory:");
+        sb.AppendLine(Location);
+        sb.AppendLine("Please delete existing data or selected a different directory.");
+        return sb.ToString();
+    }
 }
 
  public ProjectBuilderSettings CreateProjectBuilderSettings()
 {
     return new ProjectBuilderSettings()
     {
-			SourceDatabase = this.SourceDatabase,
-			Location = this.Location,
-			SolutionName = this.SolutionName,
-			Language = this.Language,
+            SourceDatabase = this.SourceDatabase,
+            Location = this.Location,
+            SolutionName = this.SolutionName,
+            Language = this.Language,
             FrameworkVersion = this.FrameworkVersion,
-			DataProjectName = this.DataProjectName,
-			BusinessProjectName = this.BusinessProjectName,
-			InterfaceProjectName = this.InterfaceProjectName,
-			TestProjectName = this.TestProjectName,
-			IncludeDataProject = !(DataAccessImplementation == DataAccessMethod.ObjectFactoryNone || DataAccessImplementation == DataAccessMethod.ObjectFactoryParameterizedSQL || DataAccessImplementation == DataAccessMethod.ObjectFactoryStoredProcedures),
-			IncludeTestProject = this.IncludeTestProject,
-			WorkingDirectory = this.CodeTemplateInfo.DirectoryName
+            DataProjectName = this.DataProjectName,
+            BusinessProjectName = this.BusinessProjectName,
+            InterfaceProjectName = this.InterfaceProjectName,
+            TestProjectName = this.TestProjectName,
+            IncludeDataProject = !(DataAccessImplementation == DataAccessMethod.ObjectFactoryNone || DataAccessImplementation == DataAccessMethod.ObjectFactoryParameterizedSQL || DataAccessImplementation == DataAccessMethod.ObjectFactoryStoredProcedures),
+            IncludeTestProject = this.IncludeTestProject,
+            WorkingDirectory = this.CodeTemplateInfo.DirectoryName
     };
 }
 

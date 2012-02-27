@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Data;
+using System.Linq;
 
 namespace CodeSmith.SchemaHelper
 {
@@ -7,38 +9,59 @@ namespace CodeSmith.SchemaHelper
     /// </summary>
     public static class MemberExtensions
     {
-        public static string BuildDataObjectField(this Member member)
+        public static bool IsDbType(this IProperty property, DbType type)
         {
-            return member.BuildDataObjectField(false);
+            var schemaProperty = property as ISchemaProperty;
+            if (schemaProperty != null)
+                return schemaProperty.DataType == type;
+
+            switch (type)
+            {
+                case DbType.Guid:
+                    return property.BaseSystemType == "System.Guid";
+                case DbType.Int16:
+                    return property.BaseSystemType == "System.Int16";
+                case DbType.Int32:
+                    return property.BaseSystemType == "System.Int32";
+                case DbType.Int64:
+                    return property.BaseSystemType == "System.Int64";
+            }
+
+            return false;
         }
-        
-        public static string BuildDataObjectField(this Member member, bool isSilverlight)
+
+        public static string BuildDataObjectField(this IProperty property)
         {
-            if (member.IsPrimaryKey)
+            return property.BuildDataObjectField(false);
+        }
+
+        public static string BuildDataObjectField(this IProperty property, bool isSilverlight)
+        {
+            if (property.IsType(PropertyType.Key))
             {
                 if(isSilverlight)
-                    return string.Format("{1}#if !SILVERLIGHT{1}\t\t[System.ComponentModel.DataObjectField(true, {0})]{1}#endif", member.IsIdentity.ToString().ToLower(), Environment.NewLine);
+                    return String.Format("{1}#if !SILVERLIGHT{1}\t\t[System.ComponentModel.DataObjectField(true, {0})]{1}#endif", property.IsType(PropertyType.Identity).ToString().ToLower(), Environment.NewLine);
 
-                return string.Format("{1}\t\t[System.ComponentModel.DataObjectField(true, {0})]", member.IsIdentity.ToString().ToLower(), Environment.NewLine);
+                return String.Format("{1}\t\t[System.ComponentModel.DataObjectField(true, {0})]", property.IsType(PropertyType.Identity).ToString().ToLower(), Environment.NewLine);
             }
 
             return string.Empty;
         }
 
         /// <summary>
-        /// This is used in the Insert and Update methods to figure out the association for the a fk member.
+        /// This is used in the Insert and Update methods to figure out the association for the a fk property.
         /// </summary>
-        /// <param name="member"></param>
+        /// <param name="property"></param>
         /// <returns></returns>
-        public static string ResolveAssociationPropertyVariable(this Member member)
+        public static string ResolveAssociationPropertyVariable(this IProperty property)
         {
-            foreach (Association association in member.Entity.AssociatedManyToOne.Distinct())
+            foreach (Association association in property.Entity.Associations.Where(a => a.AssociationType == AssociationType.ManyToOne))
             {
-                foreach (AssociationMember associationMember in association)
+                foreach (AssociationProperty associationProperty in association.Properties)
                 {
-                    if (member.ColumnName == associationMember.AssociatedColumn.ColumnName && member.TableName == associationMember.AssociatedColumn.TableName)
+                    if (property.KeyName == associationProperty.ForeignProperty.KeyName) // && property.ForeignProperty == associationProperty.ForeignProperty.ForeignProperty)
                     {
-                        var className = Util.NamingConventions.VariableName(associationMember.ClassName);
+                        var className = Util.NamingConventions.VariableName(associationProperty.Property.Name);
                         if (className.Equals("item", StringComparison.InvariantCultureIgnoreCase))
                             className += "1";
 
@@ -51,19 +74,19 @@ namespace CodeSmith.SchemaHelper
         }
 
         /// <summary>
-        /// This is used in the AddNewCore methods to figure out the association for the a fk member.
+        /// This is used in the AddNewCore methods to figure out the association for the a fk property.
         /// </summary>
-        /// <param name="member"></param>
+        /// <param name="property"></param>
         /// <returns></returns>
-        public static string ResolveAssociationPropertyClassName(this Member member)
+        public static string ResolveAssociationPropertyClassName(this IProperty property)
         {
-            foreach (Association association in member.Entity.AssociatedManyToOne.Distinct())
+            foreach (Association association in property.Entity.Associations.Where(a => a.AssociationType == AssociationType.ManyToOne))
             {
-                foreach (AssociationMember associationMember in association)
+                foreach (AssociationProperty associationProperty in association.Properties)
                 {
-                    if (member.ColumnName == associationMember.AssociatedColumn.ColumnName && member.TableName == associationMember.AssociatedColumn.TableName)
+                    if (property.KeyName == associationProperty.ForeignProperty.KeyName)// && property.ForeignProperty == associationProperty.ForeignProperty.ForeignProperty)
                     {
-                        return Util.NamingConventions.PropertyName(associationMember.ClassName);
+                        return Util.NamingConventions.PropertyName(associationProperty.Property.Name);
                     }
                 }
             }
@@ -72,23 +95,23 @@ namespace CodeSmith.SchemaHelper
         }
 
         /// <summary>
-        /// This is used in the Insert and Update methods to figure out the association for the a fk member.
+        /// This is used in the Insert and Update methods to figure out the association for the a fk property.
         /// </summary>
-        /// <param name="member"></param>
+        /// <param name="property"></param>
         /// <returns></returns>
-        public static string ResolveAssociationPropertyVariableWithChildProperty(this Member member)
+        public static string ResolveAssociationPropertyVariableWithChildProperty(this IProperty property)
         {
-            foreach (Association association in member.Entity.AssociatedManyToOne.Distinct())
+            foreach (Association association in property.Entity.Associations.Where(a => a.AssociationType == AssociationType.ManyToOne))
             {
-                foreach (AssociationMember associationMember in association)
+                foreach (AssociationProperty associationProperty in association.Properties)
                 {
-                    if (member.ColumnName == associationMember.AssociatedColumn.ColumnName && member.TableName == associationMember.AssociatedColumn.TableName)
+                    if (property.KeyName == associationProperty.ForeignProperty.KeyName)// && property.ForeignProperty == associationProperty.ForeignProperty.ForeignProperty)
                     {
-                        var className = Util.NamingConventions.VariableName(associationMember.ClassName);
+                        var className = Util.NamingConventions.VariableName(associationProperty.Property.Name);
                         if (className.Equals("item", StringComparison.InvariantCultureIgnoreCase))
                             className += "1";
 
-                        return string.Format("{0}.{1}", className, associationMember.MemberPropertyName);
+                        return String.Format("{0}.{1}", className, associationProperty.Property.Name);
                     }
                 }
             }

@@ -1,14 +1,10 @@
 ﻿<%-- Author: Blake Niemyjski --%>
-<%@ CodeTemplate Language="C#" TargetLanguage="C#" Inherits="CodeSmith.QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Encoding="UTF-8" Description="CSLA Map" %>
-
-<%@ Assembly Name="SchemaExplorer" %>
+<%@ CodeTemplate Language="C#" TargetLanguage="C#" Inherits="Generator.CSLA.EntityCodeTemplate" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\Common" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper.Extensions" Path="..\..\Common" %>
-<%@ Assembly Name="CodeSmith.QuickStart" Path="..\..\Common" %>
-
-<%@ Import Namespace="SchemaExplorer" %>
+<%@ Assembly Name="Generator.CSLA" Path="..\..\Common" %>
 <%@ Import Namespace="CodeSmith.SchemaHelper" %>
-<%@ Import Namespace="CodeSmith.QuickStart" %>
+
         #region DataPortal partial methods
 
 <% if(IncludeSilverlightSupport) { %>
@@ -34,7 +30,7 @@
 
         /// <summary>
         /// Codesmith generated stub method that is called after the <see cref="<%=ChildBusinessClassName%><%= Entity.GenericProperty %>"/> object has been fetched. 
-        /// </summary>	
+        /// </summary>    
         partial void OnFetched();
 
         /// <summary>
@@ -42,6 +38,12 @@
         /// </summary>
         /// <param name="cancel">Value returned from the method indicating whether the object mapping should proceed.</param>
         partial void OnMapping(ref bool cancel);
+ 
+        /// <summary>
+        /// Codesmith generated stub method that is called when mapping the <see cref="<%=ChildBusinessClassName%><%= Entity.GenericProperty %>"/> object. 
+        /// </summary>
+        /// <param name="reader"></param>
+        /// <param name="cancel">Value returned from the method indicating whether the object mapping should proceed.</param>
         partial void OnMapping(SafeDataReader reader, ref bool cancel);
 
         /// <summary>

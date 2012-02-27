@@ -1,0 +1,2115 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>CodeSmith.SchemaHelper</name>
+    </assembly>
+    <members>
+        <member name="T:CodeSmith.SchemaHelper.IProperty">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.ICommonEntityProperty.Initialize">
+            <summary>
+            Loads the Property Settings.
+            This method is called from the base classes constructor.
+            </summary>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.ICommonEntityProperty.ToString">
+            <summary>
+            Returns the Name of the member
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.ICommonEntityProperty.Name">
+            <summary>
+            The resolved Name for this Entity.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.ICommonEntityProperty.PrivateMemberVariableName">
+            <summary>
+            The Private IProperty variable name.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.ICommonEntityProperty.VariableName">
+            <summary>
+            Variable name used within scope of a Method or Method parameter.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.ICommonEntityProperty.HasDescription">
+            <summary>
+            Returns True of the Description has a Value
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.ICommonEntityProperty.Description">
+            <summary>
+            The Description of the IProperty
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.ICommonEntityProperty.ExtendedProperties">
+            <summary>
+            Collection of Extended properties.
+            </summary>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.IProperty.IsType(CodeSmith.SchemaHelper.PropertyType)">
+            <summary>
+            Checks to see if a property is a specific property type.
+            </summary>
+            <param name="type"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.IProperty.SetName(System.String)">
+            <summary>
+            Set name without formatting it.
+            </summary>
+            <param name="name"></param>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.IProperty.GetSafeName">
+            <summary>
+            Get Database safe full name.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.IProperty.Entity">
+            <summary>
+            The entity that this property is associated with.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.IProperty.PropertyType">
+            <summary>
+            Type of the property.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.IProperty.KeyName">
+            <summary>
+            Returns the original name of the property (E.G. The original column name).
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.IProperty.TypeAccess">
+            <summary>
+            Controls the Access Modifer the Property is defined with.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.IProperty.GetterAccess">
+            <summary>
+            The Getter Access of the IProperty
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.IProperty.SetterAccess">
+            <summary>
+            The Setter Access of the IProperty
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.IProperty.SystemType">
+            <summary>
+            Returns the string for the System type of the member.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.IProperty.SystemTypeWithSize">
+            <summary>
+            Returns the SystemType using the Size of the IProperty.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.IProperty.BaseSystemType">
+            <summary>
+            It returns the SystemType for Nullable types.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.IProperty.DefaultValue">
+            <summary>
+            The Default Value of the Property.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.IProperty.Size">
+            <summary>
+            The size of the Property.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.IProperty.Scale">
+            <summary>
+            The Scale of the Property.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.IProperty.Precision">
+            <summary>
+            The Precision of the Property.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.IProperty.FixedLength">
+            <summary>
+            The Fixed Length of the Property.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.IProperty.Unicode">
+            <summary>
+            The Unicode of the Property.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.IProperty.IsNullable">
+            <summary>
+            Is the IProperty nullable.
+            </summary>
+        </member>
+        <member name="T:CodeSmith.SchemaHelper.Configuration">
+            <summary>
+            The Main Configuration Class.
+            </summary>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.Configuration.#ctor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.Configuration.EnumRegexIsMatch(System.String,System.Boolean)">
+            <summary>
+            Checks to see if a string is in the EnumExpressions.
+            </summary>
+            <param name="name">Table FullName, Column Name, Command Name, View Name.</param>
+            <param name="isDescription"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.Configuration.IncludeRegexIsMatch(System.String)">
+            <summary>
+            Checks to see if a string is in the IncludeExpressions.
+            </summary>
+            <param name="name">Table FullName, Column Name, Command Name, View Name.</param>
+            <returns></returns>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.Configuration.ExcludeRegexIsMatch(System.String)">
+            <summary>
+            Checks to see if a string is in the IgnoreExpressions.
+            </summary>
+            <param name="name">Table FullName, Column Name, Command Name, View Name.</param>
+            <returns></returns>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.Configuration.RegexIsMatch(System.String,System.Collections.Generic.IEnumerable{System.Text.RegularExpressions.Regex})">
+            <summary>
+            Checks to see if a string is in the IgnoreExpressions.
+            </summary>
+            <param name="name">Table FullName, Column Name, Command Name, View Name.</param>
+            <param name="expressions">A List of Regex's to check.</param>
+            <returns></returns>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.Configuration.Instance">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.Configuration.CustomProcedureNameFormat">
+            <summary>
+            The format needed for the custom procedures.
+            
+            Sample: usp_cust_{0}_
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.Configuration.GenerateViewKeys">
+            <summary>
+            Views do not define any keys, but in cases where frameworks need to define a key like entity framework a key is defined as any non-nullable column.
+            </summary>
+        </member>
+        <member name="T:CodeSmith.SchemaHelper.Configuration.Nested">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:CodeSmith.SchemaHelper.Configuration.Nested.Current">
+            <summary>
+            Current singleton instance.
+            </summary>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.Configuration.Nested.#cctor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:CodeSmith.SchemaHelper.Association">
+            <summary>
+            The Association.
+            </summary>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.Association.#ctor(System.String,CodeSmith.SchemaHelper.AssociationType,CodeSmith.SchemaHelper.IEntity,CodeSmith.SchemaHelper.IEntity,System.Boolean,CodeSmith.SchemaHelper.Association)">
+            <summary>
+            COnstructor for Many to Many relationships
+            </summary>
+            <param name="keyName"></param>
+            <param name="associationType"></param>
+            <param name="entity"></param>
+            <param name="foreignEntity"></param>
+            <param name="isParentEntity"></param>
+            <param name="intermediaryAssociation"></param>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.Association.#ctor(System.String,CodeSmith.SchemaHelper.AssociationType,CodeSmith.SchemaHelper.IEntity,CodeSmith.SchemaHelper.IEntity,System.Boolean,System.String,CodeSmith.SchemaHelper.Association)">
+            <summary>
+            Constructor for Many to Many relationships
+            </summary>
+            <param name="keyName"></param>
+            <param name="associationType"></param>
+            <param name="entity"></param>
+            <param name="foreignEntity"></param>
+            <param name="isParentEntity"></param>
+            <param name="namespace"></param>
+            <param name="intermediaryAssociation"></param>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.Association.AddAssociationProperty(CodeSmith.SchemaHelper.IProperty,CodeSmith.SchemaHelper.IProperty)">
+            <summary>
+            </summary>
+            <param name="property"></param>
+            <param name="foreignProperty"></param>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.Association.Initialize">
+            <summary>
+            Loads the Property Settings.
+            This method is called from the base classes constructor.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.Association.Namespace">
+            <summary>
+            The namespace that the Association belongs in.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.Association.AssociationType">
+            <summary>
+            Returns the association type of the first associated property.
+            TODO: Handle different association types between members
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.Association.Properties">
+            <summary>
+            Returns a list of Association Properties.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.Association.ExtendedProperties">
+            <summary>
+            Returns a list of Extended Properties.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.Association.Entity">
+            <summary>
+            Returns the Entity.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.Association.ForeignEntity">
+            <summary>
+            Returns the Associated Entity.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.Association.IntermediaryAssociation">
+            <summary>
+            Returns the Intermediary Entity for a Many to Many association
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.Association.IsParentEntity">
+            <summary>
+            Returns true if the current association was created by the parent table and not the child.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.Association.GenericProperty">
+            <summary>
+            Returns a generic parameter if an extended property named CS_IsGeneric and the value of CS_IsGeneric is True.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.Association.AssociationKeyName">
+            <summary>
+            Returns the name of the association from the Database (E.G. ColumnName).
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.Association.Name">
+            <summary>
+            The resolved Name for this Entity.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.Association.PrivateMemberVariableName">
+            <summary>
+            Returns the concatenated PrivateMemberVariableName of all properties.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.Association.VariableName">
+            <summary>
+            Returns the concatenated VariableName of all properties.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.Association.HasDescription">
+            <summary>
+            Returns true if a description exists.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.Association.Description">
+            <summary>
+            Description from the extended properties
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.Association.SearchCriteria">
+            <summary>
+            The associated SearchCriteria for this Association
+            </summary>
+        </member>
+        <member name="T:CodeSmith.SchemaHelper.ViewProperty">
+            <summary>
+            ViewMember represents a column from a Table
+            </summary>
+        </member>
+        <member name="T:CodeSmith.SchemaHelper.PropertyBase`1">
+            <summary>
+            IProperty of an Entity.
+            Example would be a table column, view column, or stored procedure return column.
+            </summary>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.PropertyBase`1.#ctor(`0,CodeSmith.SchemaHelper.IEntity)">
+            <summary>
+            Constructor that passes in the property that this class will represent.
+            </summary>
+            <param name="entity"></param>
+            <param name="property"></param>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.PropertyBase`1.Initialize">
+            <summary>
+            Loads the Property Settings
+            </summary>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.PropertyBase`1.ToString">
+            <summary>
+            Returns the Name of the property
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.PropertyBase`1.GetDescription">
+            <summary>
+            Return the description of the Column.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.PropertyBase`1.LoadExtendedProperties(System.Collections.Generic.IEnumerable{SchemaExplorer.IExtendedProperty})">
+            <summary>
+            Load the extended properties from the ExtendedPropertyCollection.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.PropertyBase`1.PropertySource">
+            <summary>
+            This is the source where the property is populated from (E.G. EDMX Node, ColumnSchema, CommandSchemaMember..);
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.PropertyBase`1.Entity">
+            <summary>
+            The entity that this property is associated with.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.PropertyBase`1.PropertyType">
+            <summary>
+            Type of the property.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.PropertyBase`1.KeyName">
+            <summary>
+            Returns the original name of the property (E.G. The original column name).
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.PropertyBase`1.HasDescription">
+            <summary>
+            Returns True of the Description has a Value
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.PropertyBase`1.Description">
+            <summary>
+            The Description of the IProperty
+            </summary>
+            <summary>
+            Description from the extended properties
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.PropertyBase`1.TypeAccess">
+            <summary>
+            The Type Access of the IProperty
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.PropertyBase`1.GetterAccess">
+            <summary>
+            The Getter Access of the IProperty
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.PropertyBase`1.SetterAccess">
+            <summary>
+            The Setter Access of the IProperty
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.PropertyBase`1.ExtendedProperties">
+            <summary>
+            Collection of Extended properties.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.PropertyBase`1.Name">
+            <summary>
+            Returns the resolved name of the IProperty.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.PropertyBase`1.PrivateMemberVariableName">
+            <summary>
+            The Private IProperty variable name.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.PropertyBase`1.VariableName">
+            <summary>
+            Variable name used within scope of a Method or Method parameter.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.PropertyBase`1.SystemType">
+            <summary>
+            Returns the string for the System type of the property.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.PropertyBase`1.SystemTypeWithSize">
+            <summary>
+            Returns the SystemType using the Size of the IProperty.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.PropertyBase`1.BaseSystemType">
+            <summary>
+            It returns the SystemType for Nullable types.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.PropertyBase`1.DefaultValue">
+            <summary>
+            The Default Value of the Property.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.PropertyBase`1.Size">
+            <summary>
+            The size of the Property.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.PropertyBase`1.Scale">
+            <summary>
+            The Scale of the Property.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.PropertyBase`1.Precision">
+            <summary>
+            The Precision of the Property.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.PropertyBase`1.FixedLength">
+            <summary>
+            The Fixed Length of the Property.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.PropertyBase`1.Unicode">
+            <summary>
+            The Unicode of the Property.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.PropertyBase`1.IsNullable">
+            <summary>
+            Is the IProperty nullable.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.ISchemaProperty.DataType">
+            <summary>
+            Returns the string representing the Database type of the member.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.ISchemaProperty.NativeType">
+            <summary>
+            Returns the string representing the actual data type of the member in the Source Database.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.ISchemaProperty.IsPrimaryKey">
+            <summary>
+            Is this IProperty a art of a Key
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.ISchemaProperty.IsForeignKey">
+            <summary>
+            Is this IProperty part of a Foreign Key.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.ISchemaProperty.IsUnique">
+            <summary>
+            Is this IProperty Unique for the Entity.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.ISchemaProperty.IsIdentity">
+            <summary>
+            Is this IProperty an Identity column.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.ISchemaProperty.IsComputed">
+            <summary>
+            Is this IProperty computed.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.ISchemaProperty.IsRowVersion">
+            <summary>
+            Is this IProperty a RowVersion column for the Entity.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.ISchemaProperty.IsReadOnly">
+            <summary>
+            Is this IProperty ReadOnly.
+            Computed by looking at IsIdentity, IsRowVersion, and IsComputed.
+            </summary>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.ViewProperty.#ctor(SchemaExplorer.IViewColumnSchema,CodeSmith.SchemaHelper.IEntity)">
+            <summary>
+            Creates a ViewProperty from a ViewColumnSchema.
+            </summary>
+            <param name="column"></param>
+            <param name="entity"></param>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.ViewProperty.Initialize">
+            <summary>
+            Loads the Property Settings.
+            This method is called from the base classes constructor.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.ViewProperty.DataType">
+            <summary>
+            Returns the string representing the Database type of the property.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.ViewProperty.NativeType">
+            <summary>
+            Returns the string representing the actual data type of the property in the Source Database.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.ViewProperty.IsPrimaryKey">
+            <summary>
+            Is this IProperty a art of a Key
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.ViewProperty.IsForeignKey">
+            <summary>
+            Is this IProperty part of a Foreign Key.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.ViewProperty.IsUnique">
+            <summary>
+            Is this IProperty Unique for the Entity.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.ViewProperty.IsIdentity">
+            <summary>
+            Is this IProperty an Identity column.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.ViewProperty.IsComputed">
+            <summary>
+            Is this IProperty computed.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.ViewProperty.IsRowVersion">
+            <summary>
+            Is this IProperty a RowVersion column for the Entity.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.ViewProperty.IsReadOnly">
+            <summary>
+            Is this IProperty ReadOnly.  Computed by looking at IsIdentity, IsRowVersion, and IsComputed.
+            </summary>
+        </member>
+        <member name="T:CodeSmith.SchemaHelper.AccessibilityHelper">
+            <summary>
+            Helps determine the Access Modifier of Interfaces, Enumerations, Classes, Structs, Properties and Members.
+            
+            Documentation: http://msdn.microsoft.com/en-us/library/ms173121.aspx
+            
+            TODO: Add support for checking member types.
+            TODO: Add better support for checking dissallowed types and unit tests.
+            TODO: Add checks to see if the new Accessibility keyword is needed.
+            TODO: Add Support for VB.NET 
+            </summary>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.AccessibilityHelper.EnumerationAccessibility(System.String,System.String,System.Boolean,System.Boolean)">
+            <summary>
+            Resolves the Accessibility for a Enumeration.
+            Valid modifiers: public, protected, internal, private, new
+            Documentation: http://msdn.microsoft.com/en-us/library/wxh6fsc7(v=VS.100).aspx, http://msdn.microsoft.com/en-us/library/sbbt4032(VS.71).aspx
+            
+            Note: Enumeration members are always public, and no access modifiers can be applied.
+            </summary>
+            <param name="modifier"></param>
+            <param name="defaultAccessModifier"></param>
+            <param name="useDefaultAccessModifier"></param>
+            <param name="isNested"></param>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.AccessibilityHelper.InterfaceAccessibility(System.String,System.String,System.Boolean,System.Boolean)">
+            <summary>
+            Resolves the Accessibility for a Interface.
+            Valid modifiers: public, protected, internal, private, new
+            Documentation: http://msdn.microsoft.com/en-us/library/wxh6fsc7(v=VS.100).aspx, http://msdn.microsoft.com/en-us/library/sbbt4032(VS.71).aspx
+            
+            Note: Interfaces declared directly within a namespace can be declared as public or internal and, just like classes and structs, 
+                  interfaces default to internal access. Interface members are always public because the purpose of an interface is to 
+                  enable other types to access a class or struct. No access modifiers can be applied to interface members.
+            
+                  Enumeration members are always public, and no access modifiers can be applied.
+            </summary>
+            <param name="modifier"></param>
+            <param name="defaultAccessModifier"></param>
+            <param name="useDefaultAccessModifier"></param>
+            <param name="isNested"></param>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.AccessibilityHelper.StructAccessibility(System.String,System.String,System.Boolean,System.Boolean)">
+            <summary>
+            Resolves the Accessibility for a Struct.
+            Valid Access Modifiers: public, protected, internal, private, new
+            Documentation: http://msdn.microsoft.com/en-us/library/wxh6fsc7(v=VS.100).aspx, http://msdn.microsoft.com/en-us/library/sbbt4032(VS.71).aspx
+            
+            Notes: Struct that are declared directly within a namespace (in other words, that are not nested within other classes or structs) can be either public or internal. 
+                   Internal is the default if no access modifier is specified.
+            
+                   Struct members, including nested classes and structs, can be declared as public, internal, or private. 
+                   Class members, including nested classes and structs, can be public, protected internal, protected, internal, or private. 
+                   The access level for class members and struct members, including nested classes and structs, is private by default. 
+                   Private nested types are not accessible from outside the containing type.
+            </summary>
+            <param name="modifier"></param>
+            <param name="defaultAccessModifier"></param>
+            <param name="useDefaultAccessModifier"></param>
+            <param name="isNested"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.AccessibilityHelper.ClassAccessibility(System.String,System.String,System.Boolean,System.String,System.Boolean)">
+            <summary>
+            Resolves the Accessibility for a Class.
+            Valid Access Modifiers: public, protected, internal, private, new
+            Documentation: http://msdn.microsoft.com/en-us/library/wxh6fsc7(v=VS.100).aspx, http://msdn.microsoft.com/en-us/library/sbbt4032(VS.71).aspx
+            
+            Notes: Classes that are declared directly within a namespace (in other words, that are not nested within other classes or structs) can be either public or internal. 
+                   Internal is the default if no access modifier is specified.
+            
+                   Derived classes cannot have greater accessibility than their base types. 
+                   In other words, you cannot have a public class B that derives from an internal class A. If this were allowed, 
+                   it would have the effect of making A public, because all protected or internal members of A are accessible from the derived class.
+                   
+                   Class members, including nested classes and structs, can be public, protected internal, protected, internal, or private. 
+                   The access level for class members and struct members, including nested classes and structs, is private by default. 
+                   Private nested types are not accessible from outside the containing type.
+            </summary>
+            <param name="modifier"></param>
+            <param name="baseClassModifier"></param>
+            <param name="defaultAccessModifier"></param>
+            <param name="useDefaultAccessModifier"></param>
+            <param name="isNested"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.AccessibilityHelper.PropertyAccessibility(System.String@,System.String@,System.Boolean)">
+            <summary>
+            Resolves the Accessibility for a Property.
+            Valid Access Modifiers: public, protected, protected internal, internal, private, new
+            Documentation: http://msdn.microsoft.com/en-us/library/wxh6fsc7(v=VS.100).aspx, http://msdn.microsoft.com/en-us/library/sbbt4032(VS.71).aspx
+            
+            Note: Class members (including nested classes and structs) can be declared with any of the five types of access. Struct members cannot be 
+                  declared as protected because structs do not support inheritance.
+            
+                  Normally, the accessibility of a member is not greater than the accessibility of the type that contains it. However, a public member of an 
+                  internal class might be accessible from outside the assembly if the member implements interface methods or overrides virtual methods 
+                  that are defined in a public base class.
+            
+                  The type of any member that is a field, property, or event must be at least as accessible as the member itself. Similarly, 
+                  the return type and the parameter types of any member that is a method, indexer, or delegate must be at least as accessible as the member itself.  
+                  For example, you cannot have a public method M that returns a class C unless C is also public. Likewise, you cannot have a protected property of  
+                  type A if A is declared as private.
+            
+                  User-defined operators must always be declared as public. For more information, see operator (C# Reference).
+            
+                  Destructors cannot have accessibility modifiers.
+            </summary>
+            <param name="getterModifier"></param>
+            <param name="setterModifier"></param>
+            <param name="useDefaultAccessModifier"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.AccessibilityHelper.BuildAccessModifier(System.String,System.Boolean)">
+            <summary>
+            Builds the Access Modifier.
+            </summary>
+            <param name="modifier"></param>
+            <param name="hasNewModifier"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.AccessibilityHelper.BuildAccessModifier(System.String,System.String,System.Boolean,System.Boolean,System.String)">
+            <summary>
+            Resolves the access modifier for a class.
+            Valid Access Modifiers: public, protected, internal, private, new
+            Documentation: http://msdn.microsoft.com/en-us/library/wxh6fsc7(v=VS.100).aspx, http://msdn.microsoft.com/en-us/library/sbbt4032(VS.71).aspx
+            
+            Notes: Classes that are declared directly within a namespace (in other words, that are not nested within other classes or structs) can be either public or internal. 
+                   Internal is the default if no access modifier is specified.
+            
+                   Derived classes cannot have greater accessibility than their base types. 
+                   In other words, you cannot have a public class B that derives from an internal class A. If this were allowed, 
+                   it would have the effect of making A public, because all protected or internal members of A are accessible from the derived class.
+            </summary>
+            <param name="modifier"></param>
+            <param name="baseTypeModifier"></param>
+            <param name="useDefaultAccessModifier"></param>
+            <param name="isNested"></param>
+            <param name="defaultAccessModifier"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.AccessibilityHelper.GetAccessibilityModifier(System.String,System.String,System.Boolean)">
+            <summary>
+            Parses the default Access Modifier from the passed in string.
+            </summary>
+            <param name="modifier"></param>
+            <param name="defaultAccessModifier"></param>
+            <param name="useDefaultAccessModifier"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.AccessibilityHelper.GetAccessibilityModifier(System.String,System.Boolean@,System.String,System.Boolean)">
+            <summary>
+            Parses the default Access Modifier from the passed in string.
+            </summary>
+            <param name="modifier"></param>
+            <param name="hasNewAccessModifier"></param>
+            <param name="defaultAccessModifier"></param>
+            <param name="useDefaultAccessModifier"></param>
+            <returns></returns>
+        </member>
+        <member name="T:CodeSmith.SchemaHelper.SearchCriteria">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.SearchCriteria.#ctor(CodeSmith.SchemaHelper.SearchCriteriaType)">
+            <summary>
+            
+            </summary>
+            <param name="type"></param>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.SearchCriteria.#ctor(CodeSmith.SchemaHelper.SearchCriteriaType,System.Boolean)">
+            <summary>
+            
+            </summary>
+            <param name="type"></param>
+            <param name="treatAsChild"></param>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.SearchCriteria.ToString">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.SearchCriteria.Association">
+            <summary>
+            The Association that the SearchCriteria is created for
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.SearchCriteria.ForeignProperties">
+            <summary>
+            This is the FK associated members.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.SearchCriteria.Properties">
+            <summary>
+            This is the list of local columns that are part of the Search Criteria.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.SearchCriteria.IsUniqueResult">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.SearchCriteria.IsChild">
+            <summary>
+            Is this a child Search Criteria.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.SearchCriteria.MethodName">
+            <summary>
+            What is the MethodName for this SearchCriteria
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.SearchCriteria.SearchCriteriaDescription">
+            <summary>
+            Return the string description of this Search Criteria
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.SearchCriteria.SearchCriteriaType">
+            <summary>
+            SearchCriteriaType for this SearchCriteria
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.SearchCriteria.Key">
+            <summary>
+            They unique Key for this Search Criteria
+            </summary>
+        </member>
+        <member name="F:CodeSmith.SchemaHelper.Language.CSharp">
+            <summary>
+            CSharp
+            </summary>
+        </member>
+        <member name="F:CodeSmith.SchemaHelper.Language.VB">
+            <summary>
+            Visual Basic
+            </summary>
+        </member>
+        <member name="F:CodeSmith.SchemaHelper.AssociationType.ManyToOne">
+            <summary>
+            Returns a list of all Associated Many to One keys.
+            </summary>
+        </member>
+        <member name="F:CodeSmith.SchemaHelper.AssociationType.OneToMany">
+            <summary>
+            Returns a list of all One to Many keys.
+            </summary>
+        </member>
+        <member name="F:CodeSmith.SchemaHelper.AssociationType.ZeroOrOneToMany">
+            <summary>
+            Returns a list of all One to Many keys.
+            </summary>
+        </member>
+        <member name="F:CodeSmith.SchemaHelper.AssociationType.ManyToMany">
+            <summary>
+            Returns a list of all Many to Many keys
+            </summary>
+        </member>
+        <member name="F:CodeSmith.SchemaHelper.AssociationType.ManyToZeroOrOne">
+            <summary>
+            Returns a list of all One to Zero or one keys.
+            </summary>
+        </member>
+        <member name="F:CodeSmith.SchemaHelper.AssociationType.OneToZeroOrOne">
+            <summary>
+            Returns a list of all One to Zero or one keys.
+            </summary>
+        </member>
+        <member name="F:CodeSmith.SchemaHelper.AssociationType.OneToOne">
+            <summary>
+            Returns a list of all One to Zero or one keys.
+            </summary>
+        </member>
+        <member name="T:CodeSmith.SchemaHelper.EntityBase`1">
+            <summary>
+            The base class for all Entities.
+            </summary>
+        </member>
+        <member name="T:CodeSmith.SchemaHelper.IEntity">
+            <summary>
+            Interface that describes the contract for an Entity.
+            </summary>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.IEntity.GetProperties(CodeSmith.SchemaHelper.PropertyType)">
+            <summary>
+            Returns a list of Properties filtered by the PropertyType
+            </summary>
+            <param name="type"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.IEntity.GetAssociations(CodeSmith.SchemaHelper.AssociationType)">
+            <summary>
+            Returns a list of Search Criteria filtered by the SearchCriteriaType
+            </summary>
+            <param name="type"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.IEntity.GetSearchCriteria(CodeSmith.SchemaHelper.SearchCriteriaType)">
+            <summary>
+            Returns a list of Search Criteria filtered by the SearchCriteriaType
+            </summary>
+            <param name="criteria"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.IEntity.SetName(System.String)">
+            <summary>
+            Set name without formatting it.
+            </summary>
+            <param name="name"></param>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.IEntity.GetSafeName">
+            <summary>
+            Get Database safe full name.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.IEntity.EntityKeyName">
+            <summary>
+            This is the name of the IEntity from the DataSource.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.IEntity.Namespace">
+            <summary>
+            The namespace that the entity belongs in.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.IEntity.SchemaName">
+            <summary>
+            Name of the table schema/owner.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.IEntity.HasKey">
+            <summary>
+            Returns whether or not the IEntity has a Key.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.IEntity.Key">
+            <summary>
+            Returns the Key for the Entity.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.IEntity.Properties">
+            <summary>
+            Returns a list of all the Properties of this Entity.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.IEntity.HasConcurrencyProperty">
+            <summary>
+            Returns whether or not this IEntity has a ConcurrencyProperty.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.IEntity.ConcurrencyProperty">
+            <summary>
+            Returns the ConcurrencyProperty of the Entity. 
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.IEntity.HasIdentityProperty">
+            <summary>
+            Does the Entity have an Identity Property.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.IEntity.IdentityProperty">
+            <summary>
+            The Identity Property.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.IEntity.Associations">
+            <summary>
+            Collection of Associations for this Entity.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.IEntity.SearchCriteria">
+            <summary>
+            The list of SearchCriteria for this IEntity
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.IEntity.BaseEntity">
+            <summary>
+            The Entity that the current entity inherits from.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.IEntity.DerivedEntities">
+            <summary>
+            A List of all children entities that inherit from this entity.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.IEntity.IsAbstract">
+            <summary>
+            Returns true if the IEntity is marked as abstract.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.IEntity.TypeAccess">
+            <summary>
+            Controls the Access Modifer the class is defined with.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.IEntity.CanDelete">
+            <summary>
+            Can this entity be updated.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.IEntity.CanInsert">
+            <summary>
+            Can this entity be updated.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.IEntity.CanUpdate">
+            <summary>
+            Can this entity be updated.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.IEntity.GenericProperty">
+            <summary>
+            Returns a generic parameter if an extended property named CS_IsGeneric exists and the value of CS_IsGeneric is true.
+            </summary>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.EntityBase`1.#ctor(`0)">
+            <summary>
+            Constructor that passes in the entity that this class will represent.
+            </summary>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.EntityBase`1.#ctor(`0,System.String)">
+            <summary>
+            Constructor that passes in the entity that this class will represent.
+            </summary>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.EntityBase`1.Initialize">
+            <summary>
+            Do any Post constructor initialization here.
+            By default, this does nothing.
+            </summary>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.EntityBase`1.LoadKeys">
+            <summary>
+            Override to populate the keys from the implemented entity.
+            </summary>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.EntityBase`1.LoadProperties">
+            <summary>
+            Override to populate the properties from the implemented entity.
+            </summary>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.EntityBase`1.LoadAssociations">
+            <summary>
+            Override to populate the associations from the implemented entity.
+            </summary>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.EntityBase`1.LoadExtendedProperties">
+            <summary>
+            Override to populate the extended properties from the implemented entity.
+            </summary>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.EntityBase`1.AddSearchCriteria">
+            <summary>
+            Override to populate the SearchCriteria from the implemented entity.
+            </summary>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.EntityBase`1.ToString">
+            <summary>
+            Return the Name of the class.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.EntityBase`1.PopulateInheritanceProperties">
+            <summary>
+            Override to populate the Inheritance properties for the implemented entity.
+            </summary>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.EntityBase`1.GetSearchCriteria(CodeSmith.SchemaHelper.SearchCriteriaType)">
+            <summary>
+            
+            </summary>
+            <param name="criteria"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.EntityBase`1.GetDescription">
+            <summary>
+            Returns the description for this Entity.  This must be implemented by the inheriting class.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.EntityBase`1.GetGenericProperty">
+            <summary>
+            Returns the GenericProperty for this Entity.  This must be implemented by the inheriting class.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.EntityBase`1.EntitySource">
+            <summary>
+            This is the source where the entity is populated from (E.G. EDMX Node, TableSchema, CommandSchema...);
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.EntityBase`1.EntityKeyName">
+            <summary>
+            This is the name of the Entity from the Database or Xml.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.EntityBase`1.Name">
+            <summary>
+            The resolved Name for this Entity.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.EntityBase`1.PrivateMemberVariableName">
+            <summary>
+            The Private IEntity variable name.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.EntityBase`1.VariableName">
+            <summary>
+            Variable name used within scope of a Method or Method parameter.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.EntityBase`1.GenericProperty">
+            <summary>
+            Resolved GenericProperty for this Entity.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.EntityBase`1.Description">
+            <summary>
+            Resolved Description for this Entity.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.EntityBase`1.HasDescription">
+            <summary>
+            Returns whether or not Description contains a value
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.EntityBase`1.Key">
+            <summary>
+            Returns the Key for the Entity.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.EntityBase`1.HasKey">
+            <summary>
+            Returns whether or not the Entity has a Key.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.EntityBase`1.ConcurrencyProperty">
+            <summary>
+            Returns the ConcurrencyProperty of the Entity. 
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.EntityBase`1.HasConcurrencyProperty">
+            <summary>
+            Returns whether or not this IEntity has a ConcurrencyProperty.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.EntityBase`1.IdentityProperty">
+            <summary>
+            The Identity column.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.EntityBase`1.HasIdentityProperty">
+            <summary>
+            Does the Entity have an Identity column.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.EntityBase`1.AssociationMap">
+            <summary>
+            Collection of Associations for this Entity.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.EntityBase`1.PropertyMap">
+            <summary>
+            Collection of Properties for this Entity.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.EntityBase`1.ExtendedProperties">
+            <summary>
+            Collection of Extended properties.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.EntityBase`1.CanDelete">
+            <summary>
+            Can this entity be updated.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.EntityBase`1.CanInsert">
+            <summary>
+            Can this entity be updated.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.EntityBase`1.CanUpdate">
+            <summary>
+            Can this entity be updated.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.EntityBase`1.Associations">
+            <summary>
+            Returns a list of all the Associations of this Entity.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.EntityBase`1.SearchCriteria">
+            <summary>
+            The list of SearchCriteria for this IEntity
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.EntityBase`1.BaseEntity">
+            <summary>
+            The Entity that the current entity inherits from.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.EntityBase`1.DerivedEntities">
+            <summary>
+            A List of all children entities that inherit from this entity.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.EntityBase`1.Properties">
+            <summary>
+            Returns a list of all the Properties of this Entity.
+            </summary>
+        </member>
+        <member name="T:CodeSmith.SchemaHelper.Util.TypeHelper">
+            <summary>
+            This class aids in the resolving of Types from the CodeSmith Generator into .NET related types as well.
+            </summary>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.Util.TypeHelper.ResolveSystemType(SchemaExplorer.IColumnSchema)">
+            <summary>
+            
+            </summary>
+            <param name="column"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.Util.TypeHelper.ResolveSystemType(SchemaExplorer.IParameterSchema)">
+            <summary>
+            
+            </summary>
+            <param name="column"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.Util.TypeHelper.ResolveSystemType(SchemaExplorer.IViewColumnSchema)">
+            <summary>
+            
+            </summary>
+            <param name="column"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.Util.TypeHelper.ResolveSystemType(SchemaExplorer.ICommandResultColumnSchema)">
+            <summary>
+            
+            </summary>
+            <param name="column"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.Util.TypeHelper.ResolveSystemType(System.String,System.Boolean,System.Boolean)">
+            <summary>
+            
+            </summary>
+            <param name="systemType"></param>
+            <param name="isNullable"></param>
+            <param name="canAppendNullable"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.Util.TypeHelper.ResolveSystemType(System.Type,System.Boolean,System.Boolean)">
+            <summary>
+            
+            </summary>
+            <param name="systemType"></param>
+            <param name="isNullable"></param>
+            <param name="canAppendNullable"></param>
+            <returns></returns>
+        </member>
+        <member name="T:CodeSmith.SchemaHelper.IKey">
+            <summary>
+            Interface that describes the contract for an Entity.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.IKey.IsComposite">
+            <summary>
+            Is the key Composite.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.IKey.IsIdentity">
+            <summary>
+            Is this Key an Identity.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.IKey.Properties">
+            <summary>
+            Properties that make up the Key.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.IKey.Associations">
+            <summary>
+            Associations that make up the Key.
+            </summary>
+        </member>
+        <member name="T:CodeSmith.SchemaHelper.EntityStore">
+            <summary>
+            Stores all the Entities in a collection. EntityStore is made static so it can be accessed anywhere.
+            </summary>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.EntityStore.#ctor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.EntityStore.GetEntity(System.String)">
+            <summary>
+            Returns the entity based on the Key.
+            </summary>
+            <param name="key"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.EntityStore.GetExcludedEntity(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="key"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.EntityStore.GetCommandsForEntity(CodeSmith.SchemaHelper.IEntity)">
+            <summary>
+            Returns a list of Commands that match the naming for this Entity
+            </summary>
+            <param name="entity"></param>
+            <returns></returns>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.EntityStore.Instance">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.EntityStore.EntityCollection">
+            <summary>
+            Collection of all the valid entities
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.EntityStore.ExcludedEntityCollection">
+            <summary>
+            Collection of all the Entities that are excluded
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.EntityStore.CommandCollection">
+            <summary>
+            Collection of Commands (Stored Procedures)
+            </summary>
+        </member>
+        <member name="T:CodeSmith.SchemaHelper.EntityStore.Nested">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:CodeSmith.SchemaHelper.EntityStore.Nested.Current">
+            <summary>
+            Current singleton instance.
+            </summary>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.EntityStore.Nested.#cctor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:CodeSmith.SchemaHelper.Util.NamingConventions">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.Util.NamingConventions.PropertyName(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="value"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.Util.NamingConventions.PropertyName(System.String,System.Boolean)">
+            <summary>
+            
+            </summary>
+            <param name="value"></param>
+            <param name="useKeywordRenameAlias"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.Util.NamingConventions.PropertyName(System.String,System.String)">
+            <summary>
+            
+            </summary>
+            <param name="value"></param>
+            <param name="suffix"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.Util.NamingConventions.PropertyName(System.String,System.String,System.Boolean,System.Boolean)">
+            <summary>
+            
+            </summary>
+            <param name="value"></param>
+            <param name="suffix"></param>
+            <param name="useKeywordRenameAlias"></param>
+            <param name="useCleanExpression"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.Util.NamingConventions.PrivateMemberVariableName(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="value"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.Util.NamingConventions.PrivateMemberVariableName(System.String,System.Boolean)">
+            <summary>
+            
+            </summary>
+            <param name="value"></param>
+            <param name="useKeywordRenameAlias"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.Util.NamingConventions.PrivateMemberVariableName(System.String,System.String)">
+            <summary>
+            
+            </summary>
+            <param name="value"></param>
+            <param name="suffix"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.Util.NamingConventions.PrivateMemberVariableName(System.String,System.String,System.Boolean)">
+            <summary>
+            
+            </summary>
+            <param name="value"></param>
+            <param name="suffix"></param>
+            <param name="useKeywordRenameAlias"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.Util.NamingConventions.VariableName(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="value"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.Util.NamingConventions.VariableName(System.String,System.Boolean)">
+            <summary>
+            
+            </summary>
+            <param name="value"></param>
+            <param name="useKeywordRenameAlias"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.Util.NamingConventions.ValidateName(CodeSmith.SchemaHelper.IProperty)">
+            <summary>
+            Validates the name is not the same name as the Property.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.Util.NamingConventions.ValidateName(CodeSmith.SchemaHelper.IEntity)">
+            <summary>
+            Validates the name is not the same name as the Entity.
+            </summary>
+            <returns>Returns properly formatted class name based off the name of the table.</returns>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.Util.NamingConventions.GetSafeName(System.String,System.String)">
+            <summary>
+            
+            </summary>
+            <param name="schema"></param>
+            <param name="name"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.Util.NamingConventions.GetSafeName(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="name"></param>
+            <returns></returns>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.Util.NamingConventions.SystemTypeEscape">
+            <summary>
+            Returns the DBTypeToSystemTypeEscape MapCollection.
+            </summary>
+            <returns>Returns the correct SystemTypeEscape MapCollection.</returns>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.Util.NamingConventions.KeywordRenameAlias">
+            <summary>
+            Returns the DBTypeToSystemTypeEscape MapCollection.
+            </summary>
+            <returns>Returns the correct SystemTypeEscape MapCollection.</returns>
+        </member>
+        <member name="F:CodeSmith.SchemaHelper.FrameworkVersion.v35">
+            <summary>
+            .NET 3.5
+            </summary>
+        </member>
+        <member name="F:CodeSmith.SchemaHelper.FrameworkVersion.v40">
+            <summary>
+            .NET 4.0
+            </summary>
+        </member>
+        <member name="T:CodeSmith.SchemaHelper.TableEntity">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.ISchemaEntity.GetData">
+            <summary>
+            Returns the actual data from the EntitySource.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.ISchemaEntity.ConnectionString">
+            <summary>
+            Returns the connection string information.
+            </summary>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.TableEntity.#ctor(SchemaExplorer.ITableSchema)">
+            <summary>
+            Constructor that passes in the Table that this class will represent.
+            </summary>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.TableEntity.Initialize">
+            <summary>
+            Do any Post constructor initialization here.
+            </summary>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.TableEntity.LoadKeys">
+            <summary>
+            Override to populate the keys from the implemented entity.
+            </summary>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.TableEntity.LoadProperties">
+            <summary>
+            Override to populate the properties from the implemented entity.
+            </summary>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.TableEntity.LoadAssociations">
+            <summary>
+            Override to populate the associations from the implemented entity.
+            </summary>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.TableEntity.LoadExtendedProperties">
+            <summary>
+            Load the extended properties for the entity.
+            </summary>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.TableEntity.AddSearchCriteria">
+            <summary>
+            Load the Search Criteria for the table
+            </summary>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.TableEntity.GetParentAssociations">
+            <summary>
+            Populates the Parent Associations
+            </summary>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.TableEntity.GetChildAssociations">
+            <summary>
+            Populates the Child Associations
+            </summary>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.TableEntity.LoadCommands">
+            <summary>
+            Load all the custom commands for this Entity.
+            </summary>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.TableEntity.GetToManyTable(SchemaExplorer.ITableSchema,SchemaExplorer.ITableSchema)">
+            <summary>
+            
+            </summary>
+            <param name="manyToTable"></param>
+            <param name="sourceTable"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.TableEntity.AddPrimaryKeySearchCriteria">
+            <summary>
+            Add PrimaryKeys to the SearchCriteria
+            </summary>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.TableEntity.AddForeignKeySearchCriteria">
+            <summary>
+            Add ForeignKeys to the SearchCriteria collection
+            </summary>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.TableEntity.AddIndexSearchCriteria">
+            <summary>
+            Add all the indexes to the Search Criteria
+            </summary>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.TableEntity.AddToSearchCriteria(CodeSmith.SchemaHelper.SearchCriteria)">
+            <summary>
+            Add a SearchCriteria to the mapping collection
+            </summary>
+            <param name="searchCriteria"></param>
+            <returns></returns>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.TableEntity.Commands">
+            <summary>
+            List of custom commands (Stored Procedures) for this IEntity
+            </summary>
+        </member>
+        <member name="T:CodeSmith.SchemaHelper.AssociationProperty">
+            <summary>
+            The Association property.
+            </summary>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.AssociationProperty.#ctor(CodeSmith.SchemaHelper.Association,CodeSmith.SchemaHelper.IProperty,CodeSmith.SchemaHelper.IProperty)">
+            <summary>
+            Creates an AssociationProperty from the supplied data.
+            </summary>
+            <param name="association"></param>
+            <param name="property"></param>
+            <param name="foreignProperty"></param>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.AssociationProperty.Association">
+            <summary>
+            The parent association for the property.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.AssociationProperty.Property">
+            <summary>
+            Local property to the entity.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.AssociationProperty.ForeignProperty">
+            <summary>
+            Foreign property to the entity.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.AssociationProperty.Cascade">
+            <summary>
+            I think this is used for Cascading of deletes??
+            </summary>
+        </member>
+        <member name="T:CodeSmith.SchemaHelper.CommandEntity">
+            <summary>
+            Class that wraps a Stored Procedure into an Entity
+            </summary>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.CommandEntity.#ctor(SchemaExplorer.ICommandSchema)">
+            <summary>
+            Construct the CommandEntity from the ICommandSchema.
+            </summary>
+            <param name="command"></param>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.CommandEntity.Initialize">
+            <summary>
+            Initialize the Command
+            </summary>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.CommandEntity.LoadProperties">
+            <summary>
+            Sets the PropertyMap for all columns.
+            </summary>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.CommandEntity.LoadExtendedProperties">
+            <summary>
+            Load the Extended Properties
+            </summary>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.CommandEntity.AddSearchCriteria">
+            <summary>
+            Get all the parameters from the ICommandSchema and store them in the parameter collection.
+            </summary>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.CommandEntity.MatchesEntity(CodeSmith.SchemaHelper.IEntity)">
+            <summary>
+            Does the name of the IEntity that is passed in match the name of the IEntity from the Command.
+            </summary>
+            <param name="entity"></param>
+            <returns></returns>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.CommandEntity.AssociatedEntity">
+            <summary>
+            The associated Entity for this command. This is usually a Table or a View.
+            This comes from the name of the Custom command.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.CommandEntity.IsAssociated">
+            <summary>
+            Is this Command associated to an Entity
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.CommandEntity.IsStronglyTypedAssociatedEntity">
+            <summary>
+            Returns true if the Commands ResultSet (Properties) is a 1 - 1 match with the AssociatedEntity (properties).
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.CommandEntity.IsFunction">
+            <summary>
+            Returns true if the Command is a Function.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.CommandEntity.ReturnValueParameter">
+            <summary>
+            Returns the Commands Return Value.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.CommandEntity.Owner">
+            <summary>
+            Returns the Owner / Schema that the table is a property of.
+            
+            If this is the default schema, it will return an empty string.
+            </summary>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.TableEnumEntity.#ctor(SchemaExplorer.ITableSchema)">
+            <summary>
+            Constructor that passes in the Table that this class will represent.
+            </summary>
+        </member>
+        <member name="T:CodeSmith.SchemaHelper.SchemaExplorerExtensions">
+            <summary>
+            Extension Methods for ITableSchema
+            </summary>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.SchemaExplorerExtensions.IsManyToMany(SchemaExplorer.ITableSchema)">
+            <summary>
+            Checks to see if a Table is part of a ManyToMany relationship. It checks for the following:
+            
+            1) Table must have Two ForeignKeys.
+            2) All columns must be either...
+               a) IProperty of the Primary Key.
+               b) IProperty of a Foreign Key.
+               c) A DateTime stamp (CreateDate, EditDate, etc).
+               d) Name matches Version Regex.
+            </summary>
+            <param name="table"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.SchemaExplorerExtensions.IsColumnIdentity(SchemaExplorer.IDataObject)">
+            <summary>
+            Is the column an Identity column.
+            </summary>
+            <param name="column"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.SchemaExplorerExtensions.IsColumnComputed(SchemaExplorer.IDataObject)">
+            <summary>
+            Is the column a computed column.
+            </summary>
+            <param name="column"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.SchemaExplorerExtensions.IsColumnRowVersion(SchemaExplorer.IDataObject)">
+            <summary>
+            Is the column a RowVersion column.
+            </summary>
+            <param name="column"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.SchemaExplorerExtensions.IsUnicode(SchemaExplorer.IDataObject)">
+            <summary>
+            Is the column a Unicode column.
+            </summary>
+            <param name="column"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.SchemaExplorerExtensions.IsFixedLength(SchemaExplorer.IDataObject)">
+            <summary>
+            Is the column a FixedLength column.
+            
+            http://msdn.microsoft.com/en-us/library/aa258271(v=sql.80).aspx
+            </summary>
+            <param name="column"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.SchemaExplorerExtensions.EntityKey(CodeSmith.SchemaHelper.IEntity)">
+            <summary>
+            
+            </summary>
+            <param name="entity"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.SchemaExplorerExtensions.ToCollection(System.Collections.Generic.IEnumerable{CodeSmith.SchemaHelper.IEntity})">
+            <summary>
+            
+            </summary>
+            <param name="entities"></param>
+            <returns></returns>
+        </member>
+        <member name="T:CodeSmith.SchemaHelper.EntityManager">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.EntityManager.#ctor(CodeSmith.SchemaHelper.IEntityProvider)">
+            <summary>
+            
+            </summary>
+            <param name="provider"></param>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.EntityManager.Entities">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.EntityManager.ExcludedEntities">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:CodeSmith.SchemaHelper.CommandProperty">
+            <summary>
+            The Command property.
+            </summary>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.CommandProperty.#ctor(SchemaExplorer.ICommandResultColumnSchema,CodeSmith.SchemaHelper.IEntity)">
+            <summary>
+            Creates an CommandMember from the supplied data.
+            </summary>
+            <param name="column"></param>
+            <param name="entity"></param>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.CommandProperty.Initialize">
+            <summary>
+            Loads the Property Settings.
+            This method is called from the base classes constructor.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.CommandProperty.DataType">
+            <summary>
+            Returns the string representing the Database type of the property.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.CommandProperty.NativeType">
+            <summary>
+            Returns the string representing the actual data type of the property in the Source Database.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.CommandProperty.IsPrimaryKey">
+            <summary>
+            Is this IProperty a art of a Key
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.CommandProperty.IsForeignKey">
+            <summary>
+            Is this IProperty part of a Foreign Key.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.CommandProperty.IsUnique">
+            <summary>
+            Is this IProperty Unique for the Entity.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.CommandProperty.IsIdentity">
+            <summary>
+            Is this IProperty an Identity column.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.CommandProperty.IsComputed">
+            <summary>
+            Is this IProperty computed.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.CommandProperty.IsRowVersion">
+            <summary>
+            Is this IProperty a RowVersion column for the Entity.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.CommandProperty.IsReadOnly">
+            <summary>
+            Is this IProperty ReadOnly.  Computed by looking at IsIdentity, IsRowVersion, and IsComputed.
+            </summary>
+        </member>
+        <member name="T:CodeSmith.SchemaHelper.SchemaExplorerEntityProvider">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.SchemaExplorerEntityProvider.#ctor(SchemaExplorer.DatabaseSchema)">
+            <summary>
+            
+            </summary>
+            <param name="database"></param>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.SchemaExplorerEntityProvider.#ctor(SchemaExplorer.TableSchemaCollection,SchemaExplorer.ViewSchemaCollection,SchemaExplorer.CommandSchemaCollection)">
+            <summary>
+            
+            </summary>
+            <param name="tables"></param>
+            <param name="views"></param>
+            <param name="commands"></param>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.SchemaExplorerEntityProvider.Validate">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.SchemaExplorerEntityProvider.Load">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.SchemaExplorerEntityProvider.Save">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.SchemaExplorerEntityProvider.Initialize(SchemaExplorer.TableSchemaCollection,SchemaExplorer.ViewSchemaCollection,SchemaExplorer.CommandSchemaCollection)">
+            <summary>
+            Load all the Entities into the EntityStore.
+            </summary>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.SchemaExplorerEntityProvider.LoadTables(SchemaExplorer.TableSchemaCollection)">
+            <summary>
+            Load the Tables.
+            </summary>
+            <param name="tables"></param>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.SchemaExplorerEntityProvider.LoadCommands(SchemaExplorer.CommandSchemaCollection)">
+            <summary>
+            Loop through all the commands and create the command objects.
+            </summary>
+            <param name="commands"></param>
+        </member>
+        <member name="T:CodeSmith.SchemaHelper.CommandParameter">
+            <summary>
+            This represents a Parameter to a command object from the Database.  Using a property to inherit the naming Functionality from the Schema Helper.
+            </summary>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.CommandParameter.#ctor(SchemaExplorer.IParameterSchema,CodeSmith.SchemaHelper.IEntity)">
+            <summary>
+            Creates a CommandParameter from a ParameterSchema.
+            </summary>
+            <param name="parameter"></param>
+            <param name="entity"></param>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.CommandParameter.Initialize">
+            <summary>
+            Loads the Property Settings.
+            This method is called from the base classes constructor.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.CommandParameter.ParameterDirection">
+            <summary>
+            The direction of the Parameter of the command
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.CommandParameter.DataType">
+            <summary>
+            Returns the string representing the Database type of the property.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.CommandParameter.NativeType">
+            <summary>
+            Returns the string representing the actual data type of the property in the Source Database.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.CommandParameter.IsPrimaryKey">
+            <summary>
+            Is this IProperty a art of a Key
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.CommandParameter.IsForeignKey">
+            <summary>
+            Is this IProperty part of a Foreign Key.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.CommandParameter.IsUnique">
+            <summary>
+            Is this IProperty Unique for the Entity.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.CommandParameter.IsIdentity">
+            <summary>
+            Is this IProperty an Identity column.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.CommandParameter.IsComputed">
+            <summary>
+            Is this IProperty computed.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.CommandParameter.IsRowVersion">
+            <summary>
+            Is this IProperty a RowVersion column for the Entity.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.CommandParameter.IsReadOnly">
+            <summary>
+            Is this IProperty ReadOnly.  Computed by looking at IsIdentity, IsRowVersion, and IsComputed.
+            </summary>
+        </member>
+        <member name="T:CodeSmith.SchemaHelper.TableProperty">
+            <summary>
+            TableMember represents a column from a Table
+            </summary>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.TableProperty.#ctor(SchemaExplorer.IColumnSchema,CodeSmith.SchemaHelper.IEntity)">
+            <summary>
+            Creates a IColumnSchema from a TableSchema.
+            </summary>
+            <param name="column"></param>
+            <param name="entity"></param>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.TableProperty.Initialize">
+            <summary>
+            Loads the Property Settings.
+            This method is called from the base classes constructor.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.TableProperty.DataType">
+            <summary>
+            Returns the string representing the Database type of the property.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.TableProperty.NativeType">
+            <summary>
+            Returns the string representing the actual data type of the property in the Source Database.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.TableProperty.IsPrimaryKey">
+            <summary>
+            Is this IProperty a art of a Key
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.TableProperty.IsForeignKey">
+            <summary>
+            Is this IProperty part of a Foreign Key.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.TableProperty.IsUnique">
+            <summary>
+            Is this IProperty Unique for the Entity.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.TableProperty.IsIdentity">
+            <summary>
+            Is this IProperty an Identity column.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.TableProperty.IsComputed">
+            <summary>
+            Is this IProperty computed.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.TableProperty.IsRowVersion">
+            <summary>
+            Is this IProperty a RowVersion column for the Entity.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.TableProperty.IsReadOnly">
+            <summary>
+            Is this IProperty ReadOnly.  Computed by looking at IsIdentity, IsRowVersion, and IsComputed.
+            </summary>
+        </member>
+        <member name="T:CodeSmith.SchemaHelper.EntityKey">
+            <summary>
+            Holds the Key members for an Entity.
+            </summary>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.EntityKey.#ctor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.EntityKey.IsComposite">
+            <summary>
+            Is the key Composite.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.EntityKey.Properties">
+            <summary>
+            Properties that make up the Key.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.EntityKey.Associations">
+            <summary>
+            Properties that make up the Key.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.EntityKey.IsIdentity">
+            <summary>
+            Is this Key an Identity.
+            </summary>
+        </member>
+        <member name="T:CodeSmith.SchemaHelper.ViewEntity">
+            <summary>
+            A View Entity.
+            </summary>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.ViewEntity.#ctor(SchemaExplorer.IViewSchema)">
+            <summary>
+            Constructor that passes in the Table that this class will represent.
+            </summary>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.ViewEntity.Initialize">
+            <summary>
+            Initialize the view
+            </summary>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.ViewEntity.LoadKeys">
+            <summary>
+            Views do not define any keys, but in cases where frameworks need to define a key like entity framework a key is defined as any non-nullable column.
+            </summary>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.ViewEntity.LoadProperties">
+            <summary>
+            Sets the PropertyMap for all columns
+            </summary>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.ViewEntity.LoadExtendedProperties">
+            <summary>
+            Load the Extended Properties
+            </summary>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.ViewEntity.AddSearchCriteria">
+            <summary>
+            Add the Search Criteria
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.ViewEntity.SourceText">
+            <summary>
+            The text that created the view.
+            </summary>
+        </member>
+    </members>
+</doc>

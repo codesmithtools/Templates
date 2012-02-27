@@ -1,6 +1,5 @@
 ﻿<%-- Author: Blake Niemyjski --%>
-<%@ CodeTemplate Language="C#" TargetLanguage="C#" OutputType="None" Inherits="CodeSmith.QuickStart.DataAccessCodeTemplate" Debug="False" CompilerVersion="v3.5" Encoding="UTF-8" Description="CSLA 3.7.X DataAccessLayer" %>
-
+<%@ CodeTemplate Language="C#" TargetLanguage="C#" OutputType="None" Inherits="Generator.CSLA.DataAccessCodeTemplate" %>
 <%@ Register Name="ObjectFactory" Template="Internal\ObjectFactory.cst" MergeProperties="False" ExcludeProperties="" %>
 <%@ Register Name="ObjectFactoryDataAccess" Template="Internal\ObjectFactory.DataAccess.cst" MergeProperties="False" ExcludeProperties="" %>
 <%@ Register Name="ObjectFactoryDataAccessParameterized" Template="Internal\ObjectFactory.DataAccess.ParameterizedSQL.cst" MergeProperties="False" ExcludeProperties="" %>
@@ -9,17 +8,10 @@
 <%@ Register Name="ObjectFactoryListDataAccess" Template="Internal\ObjectFactoryList.DataAccess.cst" MergeProperties="False" ExcludeProperties="" %>
 <%@ Register Name="ObjectFactoryListDataAccessParameterized" Template="Internal\ObjectFactoryList.DataAccess.ParameterizedSQL.cst" MergeProperties="False" ExcludeProperties="" %>
 <%@ Register Name="ObjectFactoryListDataAccessStoredProcedures" Template="Internal\ObjectFactoryList.DataAccess.StoredProcedures.cst" MergeProperties="False" ExcludeProperties="" %>
-
 <%@ Register Name="ADOHelperTemplate" Template="Internal\ADOHelper.cst" %>
-
 <%@ Register Name="SqlStoredProcedures" Template="Internal\SQLStoredProcedures.cst" %>
-
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\Common" %>
-<%@ Assembly Name="CodeSmith.QuickStart" Path="..\..\Common" %>
-<%@ Assembly Name="SchemaExplorer" %>
-
-<%@ Import Namespace="SchemaExplorer" %>
-<%@ Import Namespace="CodeSmith.QuickStart" %>
+<%@ Assembly Name="Generator.CSLA" Path="..\..\Common" %>
 <%@ Import Namespace="CodeSmith.SchemaHelper" %>
 <% Generate(); %>
 
@@ -31,32 +23,32 @@ public override void Generate()
 
     #region Entities
 
-    foreach(Entity entity in new EntityManager(DynamicRoot).Entities)
+    foreach(IEntity entity in DynamicRootEntities)
     {
         RenderObjectFactoryTemplates(entity, false, false);
     }
 
-    foreach(Entity entity in new EntityManager(EditableChild).Entities)
+    foreach(IEntity entity in EditableChildEntities)
     {
         RenderObjectFactoryTemplates(entity, false, true);
     }
     
-    foreach(Entity entity in new EntityManager(EditableRoot).Entities)
+    foreach(IEntity entity in EditableRootEntities)
     {
         RenderObjectFactoryTemplates(entity, false, false);
     }
     
-    foreach(Entity entity in new EntityManager(ReadOnlyChild).Entities)
+    foreach(IEntity entity in ReadOnlyChildEntities)
     {
         RenderObjectFactoryTemplates(entity, true, true);
     }
     
-    foreach(Entity entity in new EntityManager(ReadOnlyRoot).Entities)
+    foreach(IEntity entity in ReadOnlyRootEntities)
     {
         RenderObjectFactoryTemplates(entity, true, false);
     }
     
-    foreach(Entity entity in new EntityManager(SwitchableObject).Entities)
+    foreach(IEntity entity in SwitchableObjectEntities)
     {
         RenderObjectFactoryTemplates(entity, false, false);
     }
@@ -65,32 +57,32 @@ public override void Generate()
 
     #region Lists
 
-    foreach(Entity entity in new EntityManager(DynamicListBase).Entities)
+    foreach(IEntity entity in DynamicListBaseEntities)
     {
         RenderObjectFactoryListTemplates(entity, false, false);
     }
 
-    foreach(Entity entity in new EntityManager(DynamicRootList).Entities)
+    foreach(IEntity entity in DynamicRootListEntities)
     {
         RenderObjectFactoryListTemplates(entity, false, false);
     }
 
-    foreach(Entity entity in new EntityManager(EditableRootList).Entities)
+    foreach(IEntity entity in EditableRootListEntities)
     {
         RenderObjectFactoryListTemplates(entity, false, false);
     }
     
-    foreach(Entity entity in new EntityManager(EditableChildList).Entities)
+    foreach(IEntity entity in EditableChildListEntities)
     {
         RenderObjectFactoryListTemplates(entity, false, true);
     }
     
-    foreach(Entity entity in new EntityManager(ReadOnlyList).Entities)
+    foreach(IEntity entity in ReadOnlyListEntities)
     {
         RenderObjectFactoryListTemplates(entity, true, false);
     }
     
-    foreach(Entity entity in new EntityManager(ReadOnlyChildList).Entities)
+    foreach(IEntity entity in ReadOnlyChildListEntities)
     {
         RenderObjectFactoryListTemplates(entity, true, true);
     }
@@ -98,7 +90,7 @@ public override void Generate()
     #endregion
 }
 
-public void RenderObjectFactoryTemplates(Entity entity, bool IsReadOnly, bool IsChild)
+public void RenderObjectFactoryTemplates(IEntity entity, bool IsReadOnly, bool IsChild)
 {
     PreserveRegionsMergeStrategy strategy = new PreserveRegionsMergeStrategy();
     strategy.RegionNameRegex = "^[ \\t]*[ \\s]*\"?(?i:Preserved Code)\"?";
@@ -107,28 +99,28 @@ public void RenderObjectFactoryTemplates(Entity entity, bool IsReadOnly, bool Is
     
     ObjectFactory objectFactory = this.Create<ObjectFactory>();
     this.CopyPropertiesTo(objectFactory);
-    objectFactory.SourceTable = entity.Table;
+    objectFactory.Entity = entity;
     
     if(IsReadOnly)
-        objectFactory.BusinessClassName = entity.ClassName + "InfoFactory";
+        objectFactory.BusinessClassName = entity.Name + "InfoFactory";
     else
-        objectFactory.BusinessClassName = entity.ClassName + "Factory";
+        objectFactory.BusinessClassName = entity.Name + "Factory";
     
     objectFactory.IsReadOnlyBusinessObject = IsReadOnly;
     objectFactory.IsChildBusinessObject = IsChild;
 
-    string parentFileName = System.IO.Path.Combine(this.Location, string.Format("Entities\\{0}.cs", objectFactory.BusinessClassName));
+    string parentFileName = System.IO.Path.Combine(this.Location, String.Format("Entities\\{0}.cs", objectFactory.BusinessClassName));
     if (!System.IO.File.Exists(parentFileName))
     {
         objectFactory.RenderToFile(parentFileName, false);
     }
 
-    var fileName = System.IO.Path.Combine(Location, string.Format("Entities\\{0}.DataAccess.cs", objectFactory.BusinessClassName));
+    var fileName = System.IO.Path.Combine(Location, String.Format("Entities\\{0}.DataAccess.cs", objectFactory.BusinessClassName));
     if(DataAccessImplementation == DataAccessMethod.ObjectFactoryNone)
     {
         ObjectFactoryDataAccess objectFactoryDataAccess = this.Create<ObjectFactoryDataAccess>();
         this.CopyPropertiesTo(objectFactoryDataAccess);
-        objectFactoryDataAccess.SourceTable = entity.Table;
+        objectFactoryDataAccess.Entity = entity;
         objectFactoryDataAccess.IsReadOnlyBusinessObject = IsReadOnly;
         objectFactoryDataAccess.IsChildBusinessObject = IsChild;
     
@@ -138,7 +130,7 @@ public void RenderObjectFactoryTemplates(Entity entity, bool IsReadOnly, bool Is
     {
         ObjectFactoryDataAccessParameterized objectFactoryDataAccessParameterized = this.Create<ObjectFactoryDataAccessParameterized>();
         this.CopyPropertiesTo(objectFactoryDataAccessParameterized);
-        objectFactoryDataAccessParameterized.SourceTable = entity.Table;
+        objectFactoryDataAccessParameterized.Entity = entity;
         objectFactoryDataAccessParameterized.IsReadOnlyBusinessObject = IsReadOnly;
         objectFactoryDataAccessParameterized.IsChildBusinessObject = IsChild;
     
@@ -146,7 +138,7 @@ public void RenderObjectFactoryTemplates(Entity entity, bool IsReadOnly, bool Is
         
         ADOHelperTemplate ADOHelper = this.Create<ADOHelperTemplate>();
         this.CopyPropertiesTo(ADOHelper);
-        ADOHelper.SourceTable = entity.Table;
+        ADOHelper.Entity = entity;
         ADOHelper.RenderToFile(System.IO.Path.Combine(this.Location, "Utility\\ADOHelper.cs"), strategy);
     }
     else if(DataAccessImplementation == DataAccessMethod.ObjectFactoryStoredProcedures)
@@ -154,7 +146,7 @@ public void RenderObjectFactoryTemplates(Entity entity, bool IsReadOnly, bool Is
         //ObjectFactoryDataAccessStoredProcedures
         ObjectFactoryDataAccessStoredProcedures objectFactoryDataAccessStoredProcedures = this.Create<ObjectFactoryDataAccessStoredProcedures>();
         this.CopyPropertiesTo(objectFactoryDataAccessStoredProcedures);
-        objectFactoryDataAccessStoredProcedures.SourceTable = entity.Table;
+        objectFactoryDataAccessStoredProcedures.Entity = entity;
         objectFactoryDataAccessStoredProcedures.IsReadOnlyBusinessObject = IsReadOnly;
         objectFactoryDataAccessStoredProcedures.IsChildBusinessObject = IsChild;
     
@@ -163,22 +155,22 @@ public void RenderObjectFactoryTemplates(Entity entity, bool IsReadOnly, bool Is
         //SqlStoredProcedures
         SqlStoredProcedures sqlStoredProcedures = this.Create<SqlStoredProcedures>();
         this.CopyPropertiesTo(sqlStoredProcedures);
-        sqlStoredProcedures.SourceTable = entity.Table;
+        sqlStoredProcedures.Entity = entity;
         
-        fileName = System.IO.Path.Combine(Location, string.Format("Entities\\{0}.StoredProcedures.sql", objectFactory.BusinessClassName));
+        fileName = System.IO.Path.Combine(Location, String.Format("Entities\\{0}.StoredProcedures.sql", objectFactory.BusinessClassName));
         sqlStoredProcedures.RenderToFile(fileName, parentFileName, true);
         
         //ADOHelperTemplate
         ADOHelperTemplate ADOHelper = this.Create<ADOHelperTemplate>();
         this.CopyPropertiesTo(ADOHelper);
-        ADOHelper.SourceTable = entity.Table;
+        ADOHelper.Entity = entity;
         ADOHelper.RenderToFile(System.IO.Path.Combine(this.Location, "Utility\\ADOHelper.cs"), strategy);
     }
 
     #endregion
 }
 
-public void RenderObjectFactoryListTemplates(Entity entity, bool IsReadOnly, bool IsChild)
+public void RenderObjectFactoryListTemplates(IEntity entity, bool IsReadOnly, bool IsChild)
 {
     PreserveRegionsMergeStrategy strategy = new PreserveRegionsMergeStrategy();
     strategy.RegionNameRegex = "^[ \\t]*[ \\s]*\"?(?i:Preserved Code)\"?";
@@ -187,28 +179,28 @@ public void RenderObjectFactoryListTemplates(Entity entity, bool IsReadOnly, boo
     
     ObjectFactoryList objectFactory = this.Create<ObjectFactoryList>();
     this.CopyPropertiesTo(objectFactory);
-    objectFactory.SourceTable = entity.Table;
+    objectFactory.Entity = entity;
 
     if(IsReadOnly)
-        objectFactory.BusinessClassName = entity.ClassName + "InfoListFactory";
+        objectFactory.BusinessClassName = entity.Name + "InfoListFactory";
     else
-        objectFactory.BusinessClassName = entity.ClassName + "ListFactory";
+        objectFactory.BusinessClassName = entity.Name + "ListFactory";
 
     objectFactory.IsReadOnlyBusinessObject = IsReadOnly;
     objectFactory.IsChildBusinessObject = IsChild;
     
-    string parentFileName = System.IO.Path.Combine(this.Location, string.Format("Collections\\{0}.cs", objectFactory.BusinessClassName));
+    string parentFileName = System.IO.Path.Combine(this.Location, String.Format("Collections\\{0}.cs", objectFactory.BusinessClassName));
     if (!System.IO.File.Exists(parentFileName))
     {
         objectFactory.RenderToFile(parentFileName, false);
     }
 
-    var fileName = System.IO.Path.Combine(Location, string.Format("Collections\\{0}.DataAccess.cs", objectFactory.BusinessClassName));
+    var fileName = System.IO.Path.Combine(Location, String.Format("Collections\\{0}.DataAccess.cs", objectFactory.BusinessClassName));
     if(DataAccessImplementation == DataAccessMethod.ObjectFactoryNone)
     {
         ObjectFactoryListDataAccess objectFactoryDataAccess = this.Create<ObjectFactoryListDataAccess>();
         this.CopyPropertiesTo(objectFactoryDataAccess);
-        objectFactoryDataAccess.SourceTable = entity.Table;
+        objectFactoryDataAccess.Entity = entity;
         objectFactoryDataAccess.IsReadOnlyBusinessObject = IsReadOnly;
         objectFactoryDataAccess.IsChildBusinessObject = IsChild;
     
@@ -218,7 +210,7 @@ public void RenderObjectFactoryListTemplates(Entity entity, bool IsReadOnly, boo
     {
         ObjectFactoryListDataAccessParameterized objectFactoryDataAccessParameterized = this.Create<ObjectFactoryListDataAccessParameterized>();
         this.CopyPropertiesTo(objectFactoryDataAccessParameterized);
-        objectFactoryDataAccessParameterized.SourceTable = entity.Table;
+        objectFactoryDataAccessParameterized.Entity = entity;
         objectFactoryDataAccessParameterized.IsReadOnlyBusinessObject = IsReadOnly;
         objectFactoryDataAccessParameterized.IsChildBusinessObject = IsChild;
     
@@ -226,7 +218,7 @@ public void RenderObjectFactoryListTemplates(Entity entity, bool IsReadOnly, boo
         
         ADOHelperTemplate ADOHelper = this.Create<ADOHelperTemplate>();
         this.CopyPropertiesTo(ADOHelper);
-        ADOHelper.SourceTable = entity.Table;
+        ADOHelper.Entity = entity;
         
         ADOHelper.RenderToFile(System.IO.Path.Combine(this.Location, "Utility\\ADOHelper.cs"), strategy);
     }
@@ -235,7 +227,7 @@ public void RenderObjectFactoryListTemplates(Entity entity, bool IsReadOnly, boo
         //ObjectFactoryDataAccessStoredProcedures
         ObjectFactoryListDataAccessStoredProcedures objectFactoryDataAccessStoredProcedures = this.Create<ObjectFactoryListDataAccessStoredProcedures>();
         this.CopyPropertiesTo(objectFactoryDataAccessStoredProcedures);
-        objectFactoryDataAccessStoredProcedures.SourceTable = entity.Table;
+        objectFactoryDataAccessStoredProcedures.Entity = entity;
         objectFactoryDataAccessStoredProcedures.IsReadOnlyBusinessObject = IsReadOnly;
         objectFactoryDataAccessStoredProcedures.IsChildBusinessObject = IsChild;
     
@@ -244,15 +236,15 @@ public void RenderObjectFactoryListTemplates(Entity entity, bool IsReadOnly, boo
         //SqlStoredProcedures
         SqlStoredProcedures sqlStoredProcedures = this.Create<SqlStoredProcedures>();
         this.CopyPropertiesTo(sqlStoredProcedures);
-        sqlStoredProcedures.SourceTable = entity.Table;
+        sqlStoredProcedures.Entity = entity;
         
-        fileName = System.IO.Path.Combine(Location, string.Format("Collections\\{0}.StoredProcedures.sql", objectFactory.BusinessClassName));
+        fileName = System.IO.Path.Combine(Location, String.Format("Collections\\{0}.StoredProcedures.sql", objectFactory.BusinessClassName));
         sqlStoredProcedures.RenderToFile(fileName, parentFileName, true);
         
         //ADOHelperTemplate
         ADOHelperTemplate ADOHelper = this.Create<ADOHelperTemplate>();
         this.CopyPropertiesTo(ADOHelper);
-        ADOHelper.SourceTable = entity.Table;
+        ADOHelper.Entity = entity;
         ADOHelper.RenderToFile(System.IO.Path.Combine(this.Location, "Utility\\ADOHelper.cs"), strategy);
     }
 

@@ -1,53 +1,41 @@
 ﻿<%-- Author: Blake Niemyjski --%>
-<%@ CodeTemplate Language="VB" TargetLanguage="VB" Inherits="CodeSmith.QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Encoding="UTF-8" Description="CSLA Map" %>
-
-<%@ Assembly Name="SchemaExplorer" %>
+<%@ CodeTemplate Language="VB" TargetLanguage="VB" Inherits="Generator.CSLA.EntityCodeTemplate" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\Common" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper.Extensions" Path="..\..\Common" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper.VisualBasicExtensions" Path="..\..\Common" %>
-<%@ Assembly Name="CodeSmith.QuickStart" Path="..\..\Common" %>
-
-<%@ Import Namespace="SchemaExplorer" %>
+<%@ Assembly Name="Generator.CSLA" Path="..\..\Common" %>
 <%@ Import Namespace="CodeSmith.SchemaHelper" %>
-<%@ Import Namespace="CodeSmith.QuickStart" %>
+<%@ Import Namespace="Generator.CSLA" %>
 #Region "Contructor(s)"
  
-    <% If(IncludeSilverlightSupport) Then %>
-#If Not SILVERLIGHT Then
-    <% End If %>
-        Private Sub New()
-            ' require use of factory method 
-        End Sub
-    <% If(IncludeSilverlightSupport) Then %>
-#Else
         public Sub New()
             ' require use of factory method 
         End Sub
-#End If
-    <% End If %>
-    
-        Friend Sub New(<%= Entity.PrimaryKey.KeyMembers.BuildParametersVariables() %>)
-    <% For Each member As Member in Entity.PrimaryKey.KeyMembers
+
+<% If(Entity.HasKey) Then %>
+        Friend Sub New(<%= Entity.GetProperties(PropertyType.Key).BuildParametersVariables() %>)
+    <% For Each prop As IProperty In Entity.GetProperties(PropertyType.Key)
     If UseMemberVariables Then %>
-            <%= [member].PrivateMemberVariableName %> = <%= member.VariableName %>
+            <%= prop.PrivateMemberVariableName %> = <%= prop.VariableName %>
     <%  Else  %>
-            LoadProperty(<%= [member].PrivateMemberVariableName %>Property, <%= member.VariableName %>)
+            LoadProperty(<%= prop.PrivateMemberVariableName %>Property, <%= prop.VariableName %>)
     <% End If
     Next %>
         End Sub
-    
-    <% If(DataAccessImplementation = DataAccessMethod.None Or DataAccessImplementation = DataAccessMethod.ParameterizedSQL Or DataAccessImplementation = DataAccessMethod.StoredProcedures) Then %>
-    <% If(IncludeSilverlightSupport) Then %>
+
+<% End If %>
+<% If(IncludeSilverlightSupport) Then %>
 #If Not SILVERLIGHT Then
     <% End If %>
+    <% If(DataAccessImplementation = DataAccessMethod.None Or DataAccessImplementation = DataAccessMethod.ParameterizedSQL Or DataAccessImplementation = DataAccessMethod.StoredProcedures) Then %>
         Friend Sub New(Byval reader As SafeDataReader)
     <%If(DataAccessImplementation = DataAccessMethod.ParameterizedSQL Or DataAccessImplementation = DataAccessMethod.StoredProcedures) Then %>
             Map(reader)
     <% End If %>
         End Sub
-    <% If(IncludeSilverlightSupport) Then %>
-#End If
     <% End If %>
+<% If(IncludeSilverlightSupport) Then %>
+#End If
     <% End If %>
 
 #End Region

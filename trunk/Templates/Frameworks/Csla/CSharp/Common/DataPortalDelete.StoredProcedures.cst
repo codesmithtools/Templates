@@ -1,24 +1,20 @@
 ﻿<%-- Author: Blake Niemyjski --%>
-<%@ CodeTemplate Language="C#" TargetLanguage="C#" Inherits="CodeSmith.QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Encoding="UTF-8" Description="CSLA Map" %>
-
-<%@ Assembly Name="SchemaExplorer" %>
+<%@ CodeTemplate Language="C#" TargetLanguage="C#" Inherits="Generator.CSLA.EntityCodeTemplate" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\Common" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper.Extensions" Path="..\..\Common" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper.CSharpExtensions" Path="..\..\Common" %>
-<%@ Assembly Name="CodeSmith.QuickStart" Path="..\..\Common" %>
-
-<%@ Import Namespace="SchemaExplorer" %>
+<%@ Assembly Name="Generator.CSLA" Path="..\..\Common" %>
 <%@ Import Namespace="CodeSmith.SchemaHelper" %>
-<%@ Import Namespace="CodeSmith.QuickStart" %>
             bool cancel = false;
             OnDeleting(criteria, ref cancel);
             if (cancel) return;
 
+<% if(Entity.CanDelete) { %>
 <% if(!RenderOptionalContent) { %>
-            using (SqlConnection connection = new SqlConnection(ADOHelper.ConnectionString))
+            using (var connection = new SqlConnection(ADOHelper.ConnectionString))
             {
                 connection.Open();
-                using (SqlCommand command = new SqlCommand("<%= GetDeleteStoredProcedureName() %>", connection))
+                using (var command = new SqlCommand("<%= GetDeleteStoredProcedureName() %>", connection))
                 {
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.AddRange(ADOHelper.SqlParameters(criteria.StateBag));
@@ -30,7 +26,7 @@
                 }
             }
 <%} else {%>
-            using (SqlCommand command = new SqlCommand("<%= GetDeleteStoredProcedureName() %>", connection))
+            using (var command = new SqlCommand("<%= GetDeleteStoredProcedureName() %>", connection))
             {
                 command.CommandType = CommandType.StoredProcedure;
                 command.Parameters.AddRange(ADOHelper.SqlParameters(criteria.StateBag));
@@ -43,3 +39,6 @@
 <%}%>
 
             OnDeleted();
+<% } else { %>
+            throw new NotSupportedException("This business object cannot be deleted.");
+<% } %>

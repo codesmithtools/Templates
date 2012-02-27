@@ -1,20 +1,19 @@
 ﻿<%-- Author: Blake Niemyjski --%>
-<%@ CodeTemplate Language="VB" TargetLanguage="VB" Inherits="CodeSmith.QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Encoding="UTF-8" Description="CSLA Map" %>
-
-<%@ Assembly Name="SchemaExplorer" %>
+<%@ CodeTemplate Language="VB" TargetLanguage="VB" Inherits="Generator.CSLA.EntityCodeTemplate" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\Common" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper.Extensions" Path="..\..\Common" %>
-<%@ Assembly Name="CodeSmith.QuickStart" Path="..\..\Common" %>
-
-<%@ Import Namespace="SchemaExplorer" %>
+<%@ Assembly Name="Generator.CSLA" Path="..\..\Common" %>
 <%@ Import Namespace="CodeSmith.SchemaHelper" %>
-<%@ Import Namespace="CodeSmith.QuickStart" %>
 
 #Region "Exists Command"
 <% If(IncludeSilverlightSupport) Then %>
 #If Not SILVERLIGHT Then
 <% End If %>
-
+        ''' <summary>
+        ''' Determines if a record exists in the <%=ChildBusinessClassName%><%= Entity.GenericProperty %> in the database for the specified criteria. 
+        ''' </summary>
+        ''' <param name="criteria">The criteria parameter is a <see cref="<%=BusinessClassName%><%= Entity.GenericProperty %>"/> object.</param>
+        ''' <returns>A boolean value of true is returned if a record is found.</returns>
         Public Shared Function Exists(ByVal criteria As <%= CriteriaClassName %>) As Boolean
             Return <%= BusinessProjectName %>.<%= ChildBusinessClassName %>.Exists(criteria)
         End Function
@@ -22,6 +21,9 @@
 <% If(IncludeSilverlightSupport) Then %>
 #Else
 
+        ''' <summary>
+        ''' Determines if a record exists in the <%=ChildBusinessClassName%><%= Entity.GenericProperty %> in the database for the specified criteria. 
+        ''' </summary>
         Public Shared Sub Exists(ByVal criteria As <%= CriteriaClassName %>, ByVal handler As EventHandler(Of DataPortalResult(Of ExistsCommand)))
             <%= BusinessProjectName %>.<%= ChildBusinessClassName %>.Exists(criteria, handler)
         End Sub
