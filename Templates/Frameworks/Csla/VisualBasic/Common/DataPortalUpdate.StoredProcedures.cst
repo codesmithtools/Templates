@@ -13,7 +13,7 @@
             End If
     
 <% If(Entity.CanUpdate) Then %>  
-    <% If Not(Entity.IdentityProperty Is Nothing) Then %>
+    <% If Entity.IdentityProperty IsNot Nothing AndAlso Entity.Key.Properties.Count <> 1 %>
             If <%= Entity.GetProperties(PropertyType.Key).BuildIdentityKeyEqualityStatements()%> Then
                 ' Insert new child.
                 Dim item As New <%= BusinessClassName %>()

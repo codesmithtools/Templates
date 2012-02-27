@@ -209,12 +209,9 @@ Public Overrides Sub Generate()
     ExistsCommand.RenderToFile(System.IO.Path.Combine(Me.Location, "Commands\ExistsCommand.vb"), True)
     
     ' AsyncChildLoaderTemplate
-
-    If IncludeSilverlightSupport Then
-        Dim AsyncChildLoader As AsyncChildLoaderTemplate = Me.Create(Of AsyncChildLoaderTemplate)()
-        Me.CopyPropertiesTo(AsyncChildLoader)
-        AsyncChildLoader.RenderToFile(System.IO.Path.Combine(Me.Location, "Utility\AsyncChildLoader.vb"), True)
-    End If
+    Dim AsyncChildLoader As AsyncChildLoaderTemplate = Me.Create(Of AsyncChildLoaderTemplate)()
+    Me.CopyPropertiesTo(AsyncChildLoader)
+    AsyncChildLoader.RenderToFile(System.IO.Path.Combine(Me.Location, "Utility\AsyncChildLoader.vb"), True)
 End Sub
 
 </script>

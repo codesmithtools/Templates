@@ -28,15 +28,15 @@
                 End Using
             End Using
     <% Else %>
-                Using command As New SqlCommand(commandText, connection)
-                    command.Parameters.AddRange(ADOHelper.SqlParameters(criteria.StateBag))
-    
-                    'result: The number of rows changed, inserted, or deleted. -1 for select statements; 0 if no rows were affected, or the statement failed. 
-                    Dim result As Integer = command.ExecuteNonQuery()
-                    If (result = 0) Then
-                        Throw New DBConcurrencyException("The entity is out of date on the client. Please update the entity and try again. This could also be thrown if the sql statement failed to execute.")
-                    End If
-                End Using
+            Using command As New SqlCommand(commandText, connection)
+                command.Parameters.AddRange(ADOHelper.SqlParameters(criteria.StateBag))
+
+                'result: The number of rows changed, inserted, or deleted. -1 for select statements; 0 if no rows were affected, or the statement failed. 
+                Dim result As Integer = command.ExecuteNonQuery()
+                If (result = 0) Then
+                    Throw New DBConcurrencyException("The entity is out of date on the client. Please update the entity and try again. This could also be thrown if the sql statement failed to execute.")
+                End If
+            End Using
     <% End If %>
     
             OnDeleted()

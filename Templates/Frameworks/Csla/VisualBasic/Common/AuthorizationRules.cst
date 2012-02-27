@@ -16,9 +16,9 @@
         ''' </summary>
     <% If(IsLatestCSLA) Then %>
         Protected Shared Sub AddObjectAuthorizationRules()
-            'Csla.Rules.BusinessRules.AddRule(GetType(<%= BusinessClassName %>), New Csla.Rules.CommonRules.IsInRole(Csla.Rules.AuthorizationActions.CreateObject, "SomeRole"))
-            'Csla.Rules.BusinessRules.AddRule(GetType(<%= BusinessClassName %>), New Csla.Rules.CommonRules.IsInRole(Csla.Rules.AuthorizationActions.EditObject, "SomeRole"))
-            'Csla.Rules.BusinessRules.AddRule(GetType(<%= BusinessClassName %>), New Csla.Rules.CommonRules.IsInRole(Csla.Rules.AuthorizationActions.DeleteObject, "SomeRole", "SomeAdminRole"))
+            'Csla.Rules.BusinessRules.AddRule(GetType(<%= BusinessClassName %>), New Global.Csla.Rules.CommonRules.IsInRole(Csla.Rules.AuthorizationActions.CreateObject, "SomeRole"))
+            'Csla.Rules.BusinessRules.AddRule(GetType(<%= BusinessClassName %>), New Global.Csla.Rules.CommonRules.IsInRole(Csla.Rules.AuthorizationActions.EditObject, "SomeRole"))
+            'Csla.Rules.BusinessRules.AddRule(GetType(<%= BusinessClassName %>), New Global.Csla.Rules.CommonRules.IsInRole(Csla.Rules.AuthorizationActions.DeleteObject, "SomeRole", "SomeAdminRole"))
     <% Else %>
     
         Protected Overrides Sub AddAuthorizationRules()

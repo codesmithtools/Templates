@@ -51,13 +51,13 @@ namespace CodeSmith.SchemaHelper
                     {
                         if ((property.IsNullable && property.SystemType != "System.String" && property.SystemType != "System.Byte[]") == false) continue;
 
-                        parameters += String.Format("\r\n\t\t\t\tif({1}.HasValue) criteria.{0} = {1}.Value;", associationProperty.Property.Name,
+                        parameters += String.Format("\r\n                if({1}.HasValue) criteria.{0} = {1}.Value;", associationProperty.Property.Name,
                             usePropertyName ? property.Name : property.VariableName);
                     }
                 }
             }
 
-            return parameters.TrimStart(new[] { '\r', '\n', '\t' });
+            return parameters.TrimStart(new[] { '\r', '\n', ' ' });
         }
 
         /// <summary>

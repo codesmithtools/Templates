@@ -86,14 +86,14 @@ namespace CodeSmith.SchemaHelper
 
         public static string BuildSetStatements(this List<IProperty> members)
         {
-            string setStatements = "\t\t\t\t\t\t SET";
+            string setStatements = "                         SET";
 
             foreach (IProperty property in members)
             {
                 setStatements += String.Format(" [{0}] = {1},", property.KeyName, property.BuildParameterVariableName());
             }
 
-            return setStatements.TrimStart(new[] { '\t', '\n' }).TrimEnd(new[] { ',' });
+            return setStatements.TrimStart(new[] { ' ', '\n' }).TrimEnd(new[] { ',' });
         }
 
         public static string BuildWhereStatements(this List<IProperty> members)

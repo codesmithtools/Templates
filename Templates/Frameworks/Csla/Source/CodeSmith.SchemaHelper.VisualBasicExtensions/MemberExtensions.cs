@@ -39,7 +39,7 @@ namespace CodeSmith.SchemaHelper
         {
             if (property.IsType(PropertyType.Key))
             {
-                return String.Format("{1}\t\t<System.ComponentModel.DataObjectField(true, {0})> _", property.IsType(PropertyType.Identity).ToString().ToLower(), Environment.NewLine);
+                return String.Format("{1}        <System.ComponentModel.DataObjectField(true, {0})> _", property.IsType(PropertyType.Identity).ToString().ToLower(), Environment.NewLine);
             }
 
             return string.Empty;

@@ -42,10 +42,10 @@ namespace CodeSmith.SchemaHelper
 
                 if (includeOriginal && property.IsType(PropertyType.Key) && !property.IsType(PropertyType.Identity))
                     propertyName = isObjectFactory ? String.Format("item.Original{0}", property.Name) : String.Format("Original{0}", property.Name);
-                parameters += string.Format("\r\n\t\t\t{3}{0} = {1}{2}", property.Name, propertyName, property.IsNullable && property.SystemType != "System.String" && property.SystemType != "System.Byte()" ? ".Value" : string.Empty, prefix);
+                parameters += string.Format("\r\n            {3}{0} = {1}{2}", property.Name, propertyName, property.IsNullable && property.SystemType != "System.String" && property.SystemType != "System.Byte()" ? ".Value" : string.Empty, prefix);
             }
 
-            return parameters.TrimStart(new[] { '\r', '\n', '\t', ',', ' ' });
+            return parameters.TrimStart(new[] { '\r', '\n', ',', ' ' });
         }
 
         public static string BuildParametersVariables(this List<IProperty> members)
@@ -165,20 +165,20 @@ namespace CodeSmith.SchemaHelper
 
                 bool includeOriginalPropertyName = isUpdateStatement && property.IsType(PropertyType.Key) && !property.IsType(PropertyType.Identity);
                 if (isUpdateStatement && includeOriginalPropertyName)
-                    commandParameters += String.Format(Environment.NewLine + "\t\t\t\tcommand.Parameters.AddWithValue(\"{0}Original{1}\", {2}", Configuration.Instance.ParameterPrefix, property.KeyName, originalCast);
+                    commandParameters += String.Format(Environment.NewLine + "                command.Parameters.AddWithValue(\"{0}Original{1}\", {2}", Configuration.Instance.ParameterPrefix, property.KeyName, originalCast);
 
-                commandParameters += String.Format(Environment.NewLine + "\t\t\t\tcommand.Parameters.AddWithValue(\"{0}{1}\", {2}", Configuration.Instance.ParameterPrefix, property.KeyName, cast);
+                commandParameters += String.Format(Environment.NewLine + "                command.Parameters.AddWithValue(\"{0}{1}\", {2}", Configuration.Instance.ParameterPrefix, property.KeyName, cast);
 
                 if ((property.IsType(PropertyType.Identity) || (property.IsDbType(DbType.Guid) && property.IsType(PropertyType.Key) && !property.IsType(PropertyType.Foreign))) && includeOutPutParameters)
                 {
                     if(isUpdateStatement)
-                        commandParameters += String.Format(Environment.NewLine + "\t\t\t\tcommand.Parameters(\"{0}{1}\").Direction = ParameterDirection.Input", Configuration.Instance.ParameterPrefix, property.KeyName);
+                        commandParameters += String.Format(Environment.NewLine + "                command.Parameters(\"{0}{1}\").Direction = ParameterDirection.Input", Configuration.Instance.ParameterPrefix, property.KeyName);
                     else
-                        commandParameters += String.Format(Environment.NewLine + "\t\t\t\tcommand.Parameters(\"{0}{1}\").Direction = ParameterDirection.Output", Configuration.Instance.ParameterPrefix, property.KeyName);
+                        commandParameters += String.Format(Environment.NewLine + "                command.Parameters(\"{0}{1}\").Direction = ParameterDirection.Output", Configuration.Instance.ParameterPrefix, property.KeyName);
                 }
             }
 
-            return commandParameters.TrimStart(new[] { '\t', '\r', '\n' });
+            return commandParameters.TrimStart(new[] { ' ', '\r', '\n' });
         }
 
         public static string BuildHasValueCommandParameters(this List<IProperty> members)
@@ -188,10 +188,10 @@ namespace CodeSmith.SchemaHelper
             foreach (var property in members)
             {
                 if (property.IsNullable)
-                    commandParameters += String.Format(Environment.NewLine + "\t\t\t\t\tcommand.Parameters.AddWithValue(\"{0}{1}HasValue\", criteria.{2}HasValue)", Configuration.Instance.ParameterPrefix, property.KeyName, property.Name);
+                    commandParameters += String.Format(Environment.NewLine + "                    command.Parameters.AddWithValue(\"{0}{1}HasValue\", criteria.{2}HasValue)", Configuration.Instance.ParameterPrefix, property.KeyName, property.Name);
             }
 
-            return commandParameters.TrimStart(new[] { '\t', '\r', '\n' });
+            return commandParameters.TrimStart(new[] { ' ', '\r', '\n' });
         }
 
         public static string BuildIdentityKeyEqualityStatements(this List<IProperty> members)
@@ -210,6 +210,9 @@ namespace CodeSmith.SchemaHelper
                 if (property.IsType(PropertyType.Key) && !property.IsType(PropertyType.Identity))
                     statement += string.Format(" Or Not {1}Original{0} = {1}{0}", property.Name, prefix);
             }
+
+            if (String.IsNullOrWhiteSpace(statement))
+                return String.Empty;
 
             return statement.Substring(3, statement.Length - 3).TrimStart(new[] { ' ' });
         }
