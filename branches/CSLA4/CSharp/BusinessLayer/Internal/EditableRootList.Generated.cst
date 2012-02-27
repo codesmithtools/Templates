@@ -46,11 +46,10 @@ namespace <%= BusinessProjectName %>
         { 
             AllowNew = true;
         }
-        
+
         #endregion
 
         #region Method Overrides
-
 <% if(IncludeSilverlightSupport) { %>
 #if !SILVERLIGHT
 <% } %>

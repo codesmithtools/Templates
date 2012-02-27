@@ -1,6 +1,5 @@
 ﻿<%-- Author: Blake Niemyjski --%>
-<%@ CodeTemplate Language="VB" TargetLanguage="VB" OutputType="None" Inherits="CodeSmith.QuickStart.DataAccessCodeTemplate" Debug="False" CompilerVersion="v3.5" Encoding="UTF-8" %>
-
+<%@ CodeTemplate Language="VB" TargetLanguage="VB" OutputType="None" Inherits="Generator.CSLA.DataAccessCodeTemplate" %>
 <%@ Register Name="ObjectFactory" Template="Internal\ObjectFactory.cst" MergeProperties="False" ExcludeProperties="" %>
 <%@ Register Name="ObjectFactoryDataAccess" Template="Internal\ObjectFactory.DataAccess.cst" MergeProperties="False" ExcludeProperties="" %>
 <%@ Register Name="ObjectFactoryDataAccessParameterized" Template="Internal\ObjectFactory.DataAccess.ParameterizedSQL.cst" MergeProperties="False" ExcludeProperties="" %>
@@ -9,20 +8,12 @@
 <%@ Register Name="ObjectFactoryListDataAccess" Template="Internal\ObjectFactoryList.DataAccess.cst" MergeProperties="False" ExcludeProperties="" %>
 <%@ Register Name="ObjectFactoryListDataAccessParameterized" Template="Internal\ObjectFactoryList.DataAccess.ParameterizedSQL.cst" MergeProperties="False" ExcludeProperties="" %>
 <%@ Register Name="ObjectFactoryListDataAccessStoredProcedures" Template="Internal\ObjectFactoryList.DataAccess.StoredProcedures.cst" MergeProperties="False" ExcludeProperties="" %>
-
 <%@ Register Name="ADOHelperTemplate" Template="Internal\ADOHelper.cst" %>
-
 <%@ Register Name="SqlStoredProcedures" Template="Internal\SQLStoredProcedures.cst" %>
-
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\Common" %>
-<%@ Assembly Name="CodeSmith.QuickStart" Path="..\..\Common" %>
-<%@ Assembly Name="SchemaExplorer" %>
-
-<%@ Import Namespace="SchemaExplorer" %>
-<%@ Import Namespace="CodeSmith.QuickStart" %>
+<%@ Assembly Name="Generator.CSLA" Path="..\..\Common" %>
 <%@ Import Namespace="CodeSmith.SchemaHelper" %>
-
-<% Generate() %>
+<% Generate(); %>
 
 <script runat="template">
 
@@ -30,57 +21,57 @@ Public Overloads Overrides Sub Generate()
     RegisterReferences()
 
     'Entities
-    For Each entity As Entity In New EntityManager(DynamicRoot).Entities
+    For Each entity As IEntity In DynamicRootEntities
         RenderObjectFactoryTemplates(entity, False, False)
     Next
 
-    For Each entity As Entity In New EntityManager(EditableChild).Entities
+    For Each entity As IEntity In EditableChildEntities
         RenderObjectFactoryTemplates(entity, False, True)
     Next
 
-    For Each entity As Entity In New EntityManager(EditableRoot).Entities
+    For Each entity As IEntity In EditableRootEntities
         RenderObjectFactoryTemplates(entity, False, False)
     Next
 
-    For Each entity As Entity In New EntityManager(ReadOnlyChild).Entities
+    For Each entity As IEntity In ReadOnlyChildEntities
         RenderObjectFactoryTemplates(entity, True, True)
     Next
 
-    For Each entity As Entity In New EntityManager(ReadOnlyRoot).Entities
+    For Each entity As IEntity In ReadOnlyRootEntities
         RenderObjectFactoryTemplates(entity, True, False)
     Next
 
-    For Each entity As Entity In New EntityManager(SwitchableObject).Entities
+    For Each entity As IEntity In SwitchableObjectEntities
         RenderObjectFactoryTemplates(entity, False, False)
     Next
 
     'Lists
-    For Each entity As Entity In New EntityManager(DynamicListBase).Entities
+    For Each entity As IEntity In DynamicListBaseEntities
         RenderObjectFactoryListTemplates(entity, False, False)
     Next
     
-    For Each entity As Entity In New EntityManager(DynamicRootList).Entities
+    For Each entity As IEntity In DynamicRootListEntities
         RenderObjectFactoryListTemplates(entity, False, False)
     Next
 
-    For Each entity As Entity In New EntityManager(EditableRootList).Entities
+    For Each entity As IEntity In EditableRootListEntities
         RenderObjectFactoryListTemplates(entity, False, False)
     Next
 
-    For Each entity As Entity In New EntityManager(EditableChildList).Entities
+    For Each entity As IEntity In EditableChildListEntities
         RenderObjectFactoryListTemplates(entity, False, True)
     Next
 
-    For Each entity As Entity In New EntityManager(ReadOnlyList).Entities
+    For Each entity As IEntity In ReadOnlyListEntities
         RenderObjectFactoryListTemplates(entity, True, False)
     Next
 
-    For Each entity As Entity In New EntityManager(ReadOnlyChildList).Entities
+    For Each entity As IEntity In ReadOnlyChildListEntities
         RenderObjectFactoryListTemplates(entity, True, True)
     Next
 End Sub
 
-Public Sub RenderObjectFactoryTemplates(entity As Entity, IsReadOnly As Boolean, IsChild As Boolean)
+Public Sub RenderObjectFactoryTemplates(entity As IEntity, IsReadOnly As Boolean, IsChild As Boolean)
     Dim strategy As New PreserveRegionsMergeStrategy()
     strategy.Language = "VB"
     strategy.RegionNameRegex = "^[ \t]*[ \s]*""?(?i:Preserved)""?"
@@ -88,12 +79,12 @@ Public Sub RenderObjectFactoryTemplates(entity As Entity, IsReadOnly As Boolean,
     'ObjectFactory
     Dim objectFactory As ObjectFactory = Me.Create(Of ObjectFactory)()
     Me.CopyPropertiesTo(objectFactory)
-    objectFactory.SourceTable = entity.Table
+    objectFactory.Entity = entity
     
     If(IsReadOnly) Then
-        objectFactory.BusinessClassName = entity.ClassName + "InfoFactory"
+        objectFactory.BusinessClassName = entity.Name + "InfoFactory"
     Else
-        objectFactory.BusinessClassName = entity.ClassName + "Factory"
+        objectFactory.BusinessClassName = entity.Name + "Factory"
     End If
     
     objectFactory.IsReadOnlyBusinessObject = IsReadOnly
@@ -108,7 +99,7 @@ Public Sub RenderObjectFactoryTemplates(entity As Entity, IsReadOnly As Boolean,
     If DataAccessImplementation = DataAccessMethod.ObjectFactoryNone Then
         Dim objectFactoryDataAccess As ObjectFactoryDataAccess = Me.Create(Of ObjectFactoryDataAccess)()
         Me.CopyPropertiesTo(objectFactoryDataAccess)
-        objectFactoryDataAccess.SourceTable = entity.Table
+        objectFactoryDataAccess.Entity = entity
         objectFactoryDataAccess.IsReadOnlyBusinessObject = IsReadOnly
         objectFactoryDataAccess.IsChildBusinessObject = IsChild
 
@@ -116,7 +107,7 @@ Public Sub RenderObjectFactoryTemplates(entity As Entity, IsReadOnly As Boolean,
     ElseIf DataAccessImplementation = DataAccessMethod.ObjectFactoryParameterizedSQL Then
         Dim objectFactoryDataAccessParameterized As ObjectFactoryDataAccessParameterized = Me.Create(Of ObjectFactoryDataAccessParameterized)()
         Me.CopyPropertiesTo(objectFactoryDataAccessParameterized)
-        objectFactoryDataAccessParameterized.SourceTable = entity.Table
+        objectFactoryDataAccessParameterized.Entity = entity
         objectFactoryDataAccessParameterized.IsReadOnlyBusinessObject = IsReadOnly
         objectFactoryDataAccessParameterized.IsChildBusinessObject = IsChild
 
@@ -124,13 +115,13 @@ Public Sub RenderObjectFactoryTemplates(entity As Entity, IsReadOnly As Boolean,
 
         Dim ADOHelper As ADOHelperTemplate = Me.Create(Of ADOHelperTemplate)()
         Me.CopyPropertiesTo(ADOHelper)
-        ADOHelper.SourceTable = entity.Table
+        ADOHelper.Entity = entity
         ADOHelper.RenderToFile(System.IO.Path.Combine(Me.Location, "Utility\ADOHelper.vb"), strategy)
     ElseIf DataAccessImplementation = DataAccessMethod.ObjectFactoryStoredProcedures Then
         'ObjectFactoryDataAccessStoredProcedures
         Dim objectFactoryDataAccessStoredProcedures As ObjectFactoryDataAccessStoredProcedures = Me.Create(Of ObjectFactoryDataAccessStoredProcedures)()
         Me.CopyPropertiesTo(objectFactoryDataAccessStoredProcedures)
-        objectFactoryDataAccessStoredProcedures.SourceTable = entity.Table
+        objectFactoryDataAccessStoredProcedures.Entity = entity
         objectFactoryDataAccessStoredProcedures.IsReadOnlyBusinessObject = IsReadOnly
         objectFactoryDataAccessStoredProcedures.IsChildBusinessObject = IsChild
 
@@ -139,7 +130,7 @@ Public Sub RenderObjectFactoryTemplates(entity As Entity, IsReadOnly As Boolean,
         'SqlStoredProcedures
         Dim sqlStoredProcedures As SqlStoredProcedures = Me.Create(Of SqlStoredProcedures)()
         Me.CopyPropertiesTo(sqlStoredProcedures)
-        sqlStoredProcedures.SourceTable = entity.Table
+        sqlStoredProcedures.Entity = entity
 
         fileName = System.IO.Path.Combine(Location, String.Format("Entities\{0}.StoredProcedures.sql", objectFactory.BusinessClassName))
         sqlStoredProcedures.RenderToFile(fileName, parentFileName, True)
@@ -147,12 +138,12 @@ Public Sub RenderObjectFactoryTemplates(entity As Entity, IsReadOnly As Boolean,
         'ADOHelperTemplate
         Dim ADOHelper As ADOHelperTemplate = Me.Create(Of ADOHelperTemplate)()
         Me.CopyPropertiesTo(ADOHelper)
-        ADOHelper.SourceTable = entity.Table
+        ADOHelper.Entity = entity
         ADOHelper.RenderToFile(System.IO.Path.Combine(Me.Location, "Utility\ADOHelper.vb"), strategy)
     End If
 End Sub
 
-Public Sub RenderObjectFactoryListTemplates(entity As Entity, IsReadOnly As Boolean, IsChild As Boolean)
+Public Sub RenderObjectFactoryListTemplates(entity As IEntity, IsReadOnly As Boolean, IsChild As Boolean)
     Dim strategy As New PreserveRegionsMergeStrategy()
     strategy.Language = "VB"
     strategy.RegionNameRegex = "^[ \t]*[ \s]*""?(?i:Preserved)""?"
@@ -160,12 +151,12 @@ Public Sub RenderObjectFactoryListTemplates(entity As Entity, IsReadOnly As Bool
     'ObjectFactory
     Dim objectFactory As ObjectFactoryList = Me.Create(Of ObjectFactoryList)()
     Me.CopyPropertiesTo(objectFactory)
-    objectFactory.SourceTable = entity.Table
+    objectFactory.Entity = entity
     
     If(IsReadOnly) Then
-        objectFactory.BusinessClassName = entity.ClassName + "InfoListFactory"
+        objectFactory.BusinessClassName = entity.Name + "InfoListFactory"
     Else
-        objectFactory.BusinessClassName = entity.ClassName + "ListFactory"
+        objectFactory.BusinessClassName = entity.Name + "ListFactory"
     End If
     
     objectFactory.IsReadOnlyBusinessObject = IsReadOnly
@@ -180,7 +171,7 @@ Public Sub RenderObjectFactoryListTemplates(entity As Entity, IsReadOnly As Bool
     If DataAccessImplementation = DataAccessMethod.ObjectFactoryNone Then
         Dim objectFactoryDataAccess As ObjectFactoryListDataAccess = Me.Create(Of ObjectFactoryListDataAccess)()
         Me.CopyPropertiesTo(objectFactoryDataAccess)
-        objectFactoryDataAccess.SourceTable = entity.Table
+        objectFactoryDataAccess.Entity = entity
         objectFactoryDataAccess.IsReadOnlyBusinessObject = IsReadOnly
         objectFactoryDataAccess.IsChildBusinessObject = IsChild
 
@@ -188,7 +179,7 @@ Public Sub RenderObjectFactoryListTemplates(entity As Entity, IsReadOnly As Bool
     ElseIf DataAccessImplementation = DataAccessMethod.ObjectFactoryParameterizedSQL Then
         Dim objectFactoryDataAccessParameterized As ObjectFactoryListDataAccessParameterized = Me.Create(Of ObjectFactoryListDataAccessParameterized)()
         Me.CopyPropertiesTo(objectFactoryDataAccessParameterized)
-        objectFactoryDataAccessParameterized.SourceTable = entity.Table
+        objectFactoryDataAccessParameterized.Entity = entity
         objectFactoryDataAccessParameterized.IsReadOnlyBusinessObject = IsReadOnly
         objectFactoryDataAccessParameterized.IsChildBusinessObject = IsChild
 
@@ -196,13 +187,13 @@ Public Sub RenderObjectFactoryListTemplates(entity As Entity, IsReadOnly As Bool
 
         Dim ADOHelper As ADOHelperTemplate = Me.Create(Of ADOHelperTemplate)()
         Me.CopyPropertiesTo(ADOHelper)
-        ADOHelper.SourceTable = entity.Table
+        ADOHelper.Entity = entity
         ADOHelper.RenderToFile(System.IO.Path.Combine(Me.Location, "Utility\ADOHelper.vb"), strategy)
     ElseIf DataAccessImplementation = DataAccessMethod.ObjectFactoryStoredProcedures Then
         'ObjectFactoryDataAccessStoredProcedures
         Dim objectFactoryDataAccessStoredProcedures As ObjectFactoryListDataAccessStoredProcedures = Me.Create(Of ObjectFactoryListDataAccessStoredProcedures)()
         Me.CopyPropertiesTo(objectFactoryDataAccessStoredProcedures)
-        objectFactoryDataAccessStoredProcedures.SourceTable = entity.Table
+        objectFactoryDataAccessStoredProcedures.Entity = entity
         objectFactoryDataAccessStoredProcedures.IsReadOnlyBusinessObject = IsReadOnly
         objectFactoryDataAccessStoredProcedures.IsChildBusinessObject = IsChild
 
@@ -211,7 +202,7 @@ Public Sub RenderObjectFactoryListTemplates(entity As Entity, IsReadOnly As Bool
         'SqlStoredProcedures
         Dim sqlStoredProcedures As SqlStoredProcedures = Me.Create(Of SqlStoredProcedures)()
         Me.CopyPropertiesTo(sqlStoredProcedures)
-        sqlStoredProcedures.SourceTable = entity.Table
+        sqlStoredProcedures.Entity = entity
 
         fileName = System.IO.Path.Combine(Location, String.Format("Collections\{0}.StoredProcedures.sql", objectFactory.BusinessClassName))
         sqlStoredProcedures.RenderToFile(fileName, parentFileName, True)
@@ -219,7 +210,7 @@ Public Sub RenderObjectFactoryListTemplates(entity As Entity, IsReadOnly As Bool
         'ADOHelperTemplate
         Dim ADOHelper As ADOHelperTemplate = Me.Create(Of ADOHelperTemplate)()
         Me.CopyPropertiesTo(ADOHelper)
-        ADOHelper.SourceTable = entity.Table
+        ADOHelper.Entity = entity
         ADOHelper.RenderToFile(System.IO.Path.Combine(Me.Location, "Utility\ADOHelper.vb"), strategy)
     End If
 End Sub

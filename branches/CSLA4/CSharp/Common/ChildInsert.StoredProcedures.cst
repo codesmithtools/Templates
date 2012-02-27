@@ -10,6 +10,7 @@
             OnChildInserting(connection, ref cancel);
             if (cancel) return;
 
+<% if(Entity.CanInsert) { %>  
             if(connection.State != ConnectionState.Open) connection.Open();
             using(var command = new SqlCommand("<%= GetInsertStoredProcedureName() %>", connection))
             {
@@ -73,3 +74,6 @@
 <% } } %>
 
             OnChildInserted();
+<% } else { %>
+            throw new NotSupportedException("This business object cannot be inserted.");
+<% } %>

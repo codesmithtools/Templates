@@ -33,14 +33,21 @@ namespace <%= BusinessProjectName %>
             private set { LoadProperty(ChildProperty, value); }
         }
 
-        private void DataPortal_Fetch()
+<% if(IncludeSilverlightSupport) { %>
+#if !SILVERLIGHT
+<% } %>
+        protected void DataPortal_Fetch(object criteria)
         {
-            Child = DataPortal.FetchChild<T>();
+            Child = DataPortal.FetchChild<T>(criteria);
         }
+<% if(IncludeSilverlightSupport) { %>
+#else
 
         protected override void DataPortal_Fetch(object criteria)
         {
             Child = DataPortal.FetchChild<T>(criteria);
         }
+#endif
+<% } %>
     }
 }

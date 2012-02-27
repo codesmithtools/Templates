@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace CodeSmith.SchemaHelper
 {
@@ -17,25 +16,25 @@ namespace CodeSmith.SchemaHelper
         {
             string parameters = string.Empty;
 
-            if (sc.SearchCriteriaType == SearchCriteriaEnum.ForeignKey)
+            if (sc.SearchCriteriaType == SearchCriteriaType.ForeignKey)
             {
-                foreach (AssociationMember member in sc.AssociationMembers)
+                foreach (AssociationProperty property in sc.ForeignProperties)
                 {
-                    var propertyName = isObjectFactory ? string.Format("item.{0}", member.PropertyName) : member.VariableName;
-                    var resolvedPropertyName = member.PropertyName;
+                    var propertyName = isObjectFactory ? string.Format("item.{0}", property.Property.Name) : property.Property.VariableName;
+                    var resolvedPropertyName = property.Property.Name;
                     if(isObjectFactory)
                     {
                         if (sc.IsChild)
                         {
-                            resolvedPropertyName = member.MemberPropertyName;
-                            var nullable = member.AssociatedColumn.IsNullable && member.AssociatedColumn.SystemType != "System.String" ? ".Value" : string.Empty;
-                            propertyName = string.Format("item.{0}{1}", member.AssociatedMemberPropertyName, nullable);
+                            resolvedPropertyName = property.Property.Name;
+                            var nullable = property.ForeignProperty.IsNullable && property.ForeignProperty.SystemType != "System.String" ? ".Value" : string.Empty;
+                            propertyName = string.Format("item.{0}{1}", property.ForeignProperty.Name, nullable);
                         }
                         else
                         {
-                            resolvedPropertyName = member.AssociatedMemberPropertyName;
-                            var nullable = member.IsNullable && member.SystemType != "System.String" && member.SystemType != "System.Byte()" ? ".Value" : string.Empty;
-                            propertyName = string.Format("item.{0}{1}", member.MemberPropertyName, nullable);
+                            resolvedPropertyName = property.ForeignProperty.Name;
+                            var nullable = property.Property.IsNullable && property.Property.SystemType != "System.String" && property.Property.SystemType != "System.Byte()" ? ".Value" : string.Empty;
+                            propertyName = string.Format("item.{0}{1}", property.Property.Name, nullable);
                         }
                     }
 
@@ -46,10 +45,10 @@ namespace CodeSmith.SchemaHelper
             {
                 #region Handle anything not a ForeignKey.
 
-                foreach (Member member in sc.Members)
+                foreach (var property in sc.Properties)
                 {
-                    var propertyName = isObjectFactory ? string.Format("item.{0}", member.PropertyName) : member.VariableName;
-                    parameters += string.Format("\r\n\t\t{0} = {1}{2}", member.PropertyName, propertyName, member.IsNullable && member.SystemType != "System.String" && member.SystemType != "System.Byte()" ? ".Value" : string.Empty);
+                    var propertyName = isObjectFactory ? string.Format("item.{0}", property.Name) : property.VariableName;
+                    parameters += string.Format("\r\n\t\t{0} = {1}{2}", property.Name, propertyName, property.IsNullable && property.SystemType != "System.String" && property.SystemType != "System.Byte()" ? ".Value" : string.Empty);
                 }
 
                 #endregion
@@ -67,36 +66,36 @@ namespace CodeSmith.SchemaHelper
         {
             string parameters = string.Empty;
 
-            if (sc.SearchCriteriaType == SearchCriteriaEnum.ForeignKey)
+            if (sc.SearchCriteriaType == SearchCriteriaType.ForeignKey)
             {
-                foreach (AssociationMember member in sc.AssociationMembers)
+                foreach (AssociationProperty property in sc.Properties)
                 {
-                    var propertyName = member.PropertyName;
-                    var resolvedPropertyName = member.PropertyName;
+                    var propertyName = property.Property.Name;
+                    var resolvedPropertyName = property.Property.Name;
 
                     if (sc.IsChild)
                     {
-                        var nullable = member.AssociatedColumn.IsNullable && member.AssociatedColumn.SystemType != "System.String" ? ".Value" : string.Empty;
-                        resolvedPropertyName = member.MemberPropertyName;
-                        propertyName = string.Format("{0}{1}", member.AssociatedMemberPropertyName, nullable);
+                        var nullable = property.ForeignProperty.IsNullable && property.ForeignProperty.SystemType != "System.String" ? ".Value" : string.Empty;
+                        resolvedPropertyName = property.Property.Name;
+                        propertyName = String.Format("{0}{1}", property.ForeignProperty.Name, nullable);
                     }
                     else
                     {
-                        var nullable = member.IsNullable && member.SystemType != "System.String" && member.SystemType != "System.Byte()" ? ".Value" : string.Empty;
-                        resolvedPropertyName = member.AssociatedMemberPropertyName;
-                        propertyName = string.Format("{0}{1}", member.MemberPropertyName, nullable);
+                        var nullable = property.Property.IsNullable && property.Property.SystemType != "System.String" && property.Property.SystemType != "System.Byte[]" ? ".Value" : string.Empty;
+                        resolvedPropertyName = property.ForeignProperty.Name;
+                        propertyName = String.Format("{0}{1}", property.Property.Name, nullable);
                     }
 
-                    parameters += string.Format("\r\n\t\t{0}.{1} = {2}{3}", associationPropertyName, resolvedPropertyName, prefix, propertyName);
+                    parameters += String.Format("\r\n\t\t{0}.{1} = {2}{3}", associationPropertyName, resolvedPropertyName, prefix, propertyName);
                 }
             }
             else
             {
                 #region Handle anything not a ForeignKey.
 
-                foreach (Member member in sc.Members)
+                foreach (IProperty property in sc.Properties)
                 {
-                    parameters += string.Format("\r\n\t\t{0}.{1} = {1}{2}", associationPropertyName, member.PropertyName, prefix);
+                    parameters += String.Format("\r\n\t\t{0}.{1} = {1}{2}", associationPropertyName, property.Name, prefix);
                 }
 
                 #endregion

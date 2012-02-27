@@ -1,6 +1,5 @@
 ﻿<%-- Author: Blake Niemyjski --%>
 <%@ CodeTemplate Language="C#" TargetLanguage="C#" OutputType="None" Inherits="Generator.CSLA.EntityCodeTemplate" %>
-
 <%@ Register Name="Criteria" Template="Internal\Criteria.cst" %>
 <%@ Register Name="CriteriaGenerated" Template="Internal\Criteria.Generated.cst" %>
 <%@ Register Name="IGeneratedCriteriaTemplate" Template="Internal\IGeneratedCriteria.cst" %>

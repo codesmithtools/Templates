@@ -10,6 +10,7 @@
             OnChildUpdating(connection, ref cancel);
             if (cancel) return;
 
+<% if(Entity.CanUpdate) { %>  
             if(connection.State != ConnectionState.Open) connection.Open();
             const string commandText = "UPDATE <%= Entity.EntityKeyName %> <%= Entity.GetProperties(PropertyType.UpdateInsert).BuildSetStatements() %> <%= Entity.GetProperties(PropertyType.Key).BuildWhereStatements(true) %><% if(Entity.ConcurrencyProperty != null) { %> AND [<%= Entity.ConcurrencyProperty.KeyName %>] = <%= ParameterPrefix  %><%= Entity.ConcurrencyProperty.KeyName %><% } %><%= Entity.BuildUpdateSelectStatement() %>";
             using(var command = new SqlCommand(commandText, connection))
@@ -82,3 +83,6 @@
 <% } } %>
 
             OnChildUpdated();
+<% } else { %>
+            throw new NotSupportedException("This business object cannot be updated.");
+<% } %>

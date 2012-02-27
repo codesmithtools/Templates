@@ -1,5 +1,5 @@
 ﻿<%-- Author: Blake Niemyjski --%>
-<%@ CodeTemplate Language="C#" TargetLanguage="C#" Inherits="Generator.CSLA.EntityCodeTemplate" %>
+<%@ CodeTemplate Language="C#" TargetLanguage="C#" Inherits="Generator.CSLA.EntityMasterCodeTemplate" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\..\Common" %>
 <%@ Assembly Name="Generator.CSLA" Path="..\..\..\Common" %>
 <%@ Import Namespace="CodeSmith.SchemaHelper" %>
@@ -89,10 +89,10 @@ namespace <%= BusinessProjectName %>
 
         #endregion
 
+        #region Factory Methods 
 <% if(IncludeSilverlightSupport) { %>
 #if !SILVERLIGHT
 <% } %>
-        #region Factory Methods 
 
         public static bool Execute<T>(T criteria) where T : <%= BusinessProjectName %>.IGeneratedCriteria
         {
@@ -107,6 +107,10 @@ namespace <%= BusinessProjectName %>
             return cmd.Result;
         }
 
+<% if(IncludeSilverlightSupport) { %>
+#endif
+<% } %>
+
         public static void Execute<T>(T criteria, EventHandler<DataPortalResult<ExistsCommand>> handler) where T : <%= BusinessProjectName %>.IGeneratedCriteria
         {
             if (!CanExecuteCommand())
@@ -119,7 +123,7 @@ namespace <%= BusinessProjectName %>
             dp.ExecuteCompleted += handler;
             dp.BeginExecute(cmd);
         }
-        
+
         #endregion
 
         #region Data Access

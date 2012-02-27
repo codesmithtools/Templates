@@ -18,7 +18,6 @@
 <% if(IncludeSilverlightSupport) { %>
 #if !SILVERLIGHT
 <% } %>
-#region Using declarations
 
 using System;
 using System.Data;
@@ -28,7 +27,6 @@ using System.Linq;
 using Csla;
 using Csla.Data;
 
-#endregion
 
 namespace <%= BusinessProjectName %>
 {

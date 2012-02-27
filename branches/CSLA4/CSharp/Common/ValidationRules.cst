@@ -4,7 +4,7 @@
 <%@ Assembly Name="CodeSmith.SchemaHelper.Extensions" Path="..\..\Common" %>
 <%@ Assembly Name="Generator.CSLA" Path="..\..\Common" %>
 <%@ Import Namespace="CodeSmith.SchemaHelper" %>
-
+        #region Business Rules
 
         /// <summary>
         /// Contains the Codesmith generated validation rules.
@@ -32,3 +32,6 @@ if(!property.ExcludeBusinessSizeRule()) { %>
             ValidationRules.AddRule(CommonRules.StringMaxLength, new CommonRules.MaxLengthRuleArgs(<%= property.PrivateMemberVariableName %>Property, <%= property.Size %>));
 <% } } } } %>
         }
+
+        #endregion
+

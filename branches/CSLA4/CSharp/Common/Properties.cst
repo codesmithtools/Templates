@@ -257,7 +257,7 @@ if(!result.Equals("(true)", StringComparison.CurrentCultureIgnoreCase) && !resul
     if(association.GenericProperty == string.Empty) {
     string associationClassName = association.Name;
     if(!BusinessObjectExists(association, "List") && IsReadOnlyBusinessObject(association, "InfoList")) {
-        associationClassName = association.Name + "Info";
+        associationClassName += "Info";
     }
     %>
         //Where(a => a.AssociationType == AssociationType.OneToMany)

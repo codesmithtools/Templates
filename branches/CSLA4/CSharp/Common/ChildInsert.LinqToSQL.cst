@@ -7,12 +7,12 @@
 <%@ Assembly Name="Generator.CSLA" Path="..\..\Common" %>
 <%@ Import Namespace="CodeSmith.SchemaHelper" %>
 <%@ Import Namespace="System.Linq" %>
-
             //LinqToSQL Modification
             bool cancel = false;
             OnChildInserting(ref cancel);
             if (cancel) return;
-            
+
+<% if(Entity.CanInsert) { %>            
             // Get <%= Entity.Name %> data for a single criteria
             using (var ctx = ContextManager<DAL.PetshopDataContext>.GetManager(LinqToSQLHelper.ConnectionString, true))
             {
@@ -32,3 +32,6 @@
 <%     } %>
                 OnChildInserted();
             }
+<% } else { %>
+            throw new NotSupportedException("This business object cannot be inserted.");
+<% } %>

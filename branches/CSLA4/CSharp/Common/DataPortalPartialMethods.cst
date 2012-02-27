@@ -38,6 +38,12 @@
         /// </summary>
         /// <param name="cancel">Value returned from the method indicating whether the object mapping should proceed.</param>
         partial void OnMapping(ref bool cancel);
+ 
+        /// <summary>
+        /// Codesmith generated stub method that is called when mapping the <see cref="<%=ChildBusinessClassName%><%= Entity.GenericProperty %>"/> object. 
+        /// </summary>
+        /// <param name="reader"></param>
+        /// <param name="cancel">Value returned from the method indicating whether the object mapping should proceed.</param>
         partial void OnMapping(SafeDataReader reader, ref bool cancel);
 
         /// <summary>

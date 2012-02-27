@@ -1,6 +1,5 @@
 ﻿<%-- Author: Blake Niemyjski --%>
 <%@ CodeTemplate Language="C#" TargetLanguage="C#" OutputType="None" Inherits="Generator.CSLA.EntityCodeTemplate" %>
-
 <%@ Register Name="DynamicRootList" Template="Internal\DynamicRootList.cst" %>
 <%@ Register Name="DynamicRootListDataAccess" Template="Internal\DynamicRootList.DataAccess.cst" %>
 <%@ Register Name="DynamicRootListDataAccessParameterized" Template="Internal\DynamicRootList.DataAccess.ParameterizedSQL.cst" %>

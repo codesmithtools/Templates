@@ -1,6 +1,5 @@
 ﻿<%-- Author: Blake Niemyjski --%>
 <%@ CodeTemplate Language="C#" TargetLanguage="C#" OutputType="None" Inherits="Generator.CSLA.EntityCodeTemplate" %>
-
 <%@ Register Name="EditableRootList" Template="Internal\EditableRootList.cst" %>
 <%@ Register Name="EditableRootListDataAccess" Template="Internal\EditableRootList.DataAccess.cst" %>
 <%@ Register Name="EditableRootListDataAccessParameterized" Template="Internal\EditableRootList.DataAccess.ParameterizedSQL.cst" %>

@@ -10,6 +10,7 @@
             OnUpdating(ref cancel);
             if (cancel) return;
 
+<% if(Entity.CanUpdate) { %>  
             RaiseListChangedEvents = false;
 
 <% if(IsChildBusinessObject(string.Empty)) { %>
@@ -36,3 +37,6 @@
             RaiseListChangedEvents = true;
 
             OnUpdated();
+<% } else { %>
+            throw new NotSupportedException("This business object cannot be updated.");
+<% } %>

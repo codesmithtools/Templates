@@ -1,28 +1,22 @@
 ﻿<%-- Author: Blake Niemyjski --%>
-<%@ CodeTemplate Language="VB" TargetLanguage="VB" Inherits="CodeSmith.QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Encoding="UTF-8" Description="CSLA Map" %>
-
-<%@ Assembly Name="SchemaExplorer" %>
+<%@ CodeTemplate Language="VB" TargetLanguage="VB" Inherits="Generator.CSLA.EntityCodeTemplate" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\Common" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper.Extensions" Path="..\..\Common" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper.VisualBasicExtensions" Path="..\..\Common" %>
-<%@ Assembly Name="CodeSmith.QuickStart" Path="..\..\Common" %>
-
-<%@ Import Namespace="SchemaExplorer" %>
+<%@ Assembly Name="Generator.CSLA" Path="..\..\Common" %>
 <%@ Import Namespace="CodeSmith.SchemaHelper" %>
-<%@ Import Namespace="CodeSmith.QuickStart" %>
-<%@ Import Namespace="CodeSmith.QuickStart" %>
             Dim cancel As Boolean = False
             OnCreating(cancel)
             If (cancel) Then
                 Return
             End If
     
-    <% For Each member As Member in Entity.GetProperties(PropertyType.Key)
-    If (member.SystemType = "System.Guid") Then
+    <% For Each prop As IProperty In Entity.GetProperties(PropertyType.Key)
+    If (prop.SystemType = "System.Guid") Then
         If (UseMemberVariables) Then %>
-            <%=member.PrivateMemberVariableName %> = Guid.NewGuid()
+            <%=prop.PrivateMemberVariableName %> = Guid.NewGuid()
     <% Else %>
-            LoadProperty(<%= member.PrivateMemberVariableName %>Property, Guid.NewGuid())
+            LoadProperty(<%= prop.PrivateMemberVariableName %>Property, Guid.NewGuid())
     <% End If
     End If
     Next %>

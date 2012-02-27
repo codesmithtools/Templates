@@ -11,6 +11,7 @@
             OnInserting(ref cancel);
             if (cancel) return;
 
+<% if(Entity.CanInsert) { %> 
             using (var connection = new SqlConnection(ADOHelper.ConnectionString))
             {
                 connection.Open();
@@ -49,3 +50,7 @@
             }
 
             OnInserted();
+<% } else { %>
+            throw new NotSupportedException("This business object cannot be inserted.");
+<% } %>
+

@@ -4,7 +4,8 @@
 <%@ Assembly Name="CodeSmith.SchemaHelper.Extensions" Path="..\..\Common" %>
 <%@ Assembly Name="Generator.CSLA" Path="..\..\Common" %>
 <%@ Import Namespace="CodeSmith.SchemaHelper" %>
-
+        #region Business Rules
+    
         /// <summary>
         /// All custom rules need to be placed in this method.
         /// </summary>
@@ -16,3 +17,6 @@
 
             return false;
         }
+
+        #endregion
+

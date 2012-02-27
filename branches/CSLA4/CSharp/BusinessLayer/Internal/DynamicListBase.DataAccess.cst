@@ -29,7 +29,7 @@ namespace <%= BusinessProjectName %>
         protected void DataPortal_Create()
         {
         }
-        
+
         private void DataPortal_Fetch(<%= CriteriaClassName %><%= Entity.GenericProperty %> criteria)
         {
             RaiseListChangedEvents = false;

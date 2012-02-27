@@ -1,6 +1,5 @@
 ﻿<%-- Author: Blake Niemyjski --%>
 <%@ CodeTemplate Language="C#" TargetLanguage="C#" OutputType="None" Inherits="Generator.CSLA.EntityCodeTemplate" %>
-
 <%@ Register Name="ReadOnlyChildList" Template="Internal\ReadOnlyChildList.cst" %>
 <%@ Register Name="ReadOnlyChildListDataAccess" Template="Internal\ReadOnlyChildList.DataAccess.cst" %>
 <%@ Register Name="ReadOnlyChildListDataAccessParameterized" Template="Internal\ReadOnlyChildList.DataAccess.ParameterizedSQL.cst" %>

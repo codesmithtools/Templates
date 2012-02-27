@@ -3,12 +3,12 @@ Name: Default.aspx.cs
 Author: Blake Niemyjski
 Description: The following template will generate a ASP.Net code behind.
 --%>
-<%@ CodeTemplate Language="VB" TargetLanguage="VB" Inherits="CodeSmith.QuickStart.InterfaceCodeTemplate" Description="The following template will generate a default ASP.Net code behind." %>
+<%@ CodeTemplate Language="VB" TargetLanguage="VB" Inherits="Generator.CSLA.InterfaceCodeTemplate" Description="The following template will generate a default ASP.Net code behind." %>
 
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\..\Common" %>
-<%@ Assembly Name="CodeSmith.QuickStart" Path="..\..\..\Common" %>
+<%@ Assembly Name="Generator.CSLA" Path="..\..\..\Common" %>
 
-<%@ Import Namespace="CodeSmith.QuickStart" %>
+<%@ Import Namespace="Generator.CSLA" %>
 <%@ Import Namespace="CodeSmith.SchemaHelper" %>
 
 Namespace <%= InterfaceProjectName %>

@@ -6,12 +6,12 @@
 <%@ Assembly Name="CodeSmith.SchemaHelper.CSharpExtensions" Path="..\..\Common" %>
 <%@ Assembly Name="Generator.CSLA" Path="..\..\Common" %>
 <%@ Import Namespace="CodeSmith.SchemaHelper" %>
-
             //LinqToSQL Modification
             bool cancel = false;
             OnChildUpdating(ref cancel);
             if (cancel) return;
-            
+
+<% if(Entity.CanUpdate) { %>  
             // Create a new connection.
             using (var ctx = ContextManager<DAL.PetshopDataContext>.GetManager(LinqToSQLHelper.ConnectionString, true))
             {
@@ -62,3 +62,6 @@
 
                 OnChildUpdated();
             }
+<% } else { %>
+            throw new NotSupportedException("This business object cannot be updated.");
+<% } %>

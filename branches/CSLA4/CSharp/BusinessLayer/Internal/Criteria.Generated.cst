@@ -50,20 +50,20 @@ namespace <%= BusinessProjectName %>
         #region Constructors
 
         public <%= BusinessClassName %>()<% if(!IsLatestCSLA) { %> : base(typeof(<%= BusinessProjectName %>.<%= ResolveTargetClassName(ChildBusinessClassName, "Info", IsReadOnlyBusinessObject("Info")) %><%= Entity.GenericProperty %>))<% } %>{}
-
 <% if(Entity.HasKey) { %>
+
         public <%= BusinessClassName %>(<%= Entity.GetProperties(PropertyType.Key).BuildParametersVariables() %>)<% if(!IsLatestCSLA) { %> : base(typeof(<%= BusinessProjectName %>.<%= ResolveTargetClassName(ChildBusinessClassName, "Info", IsReadOnlyBusinessObject("Info")) %><%= Entity.GenericProperty %>))<% } %>
         {
 <%  foreach(var property in Entity.GetProperties(PropertyType.Key)) { %>
             <%= property.Name %> = <%= property.VariableName %>;
 <% } %>
         }
-
 <% } %>
+
         #endregion
-        
+
         #region Public Properties
-        
+
         #region Read-Write
 
 <% foreach(var property in Entity.GetProperties(PropertyType.NoConcurrency)){ %>

@@ -96,7 +96,7 @@ namespace Generator.CSLA
             {
                 if (value != null)
                 {
-                    CriteriaEntities = new EntityManager(new CSLASchemaExplorerEntityProvider(SourceDatabase, value)).Entities;
+                    CriteriaEntities = new EntityManager(new CSLASchemaExplorerEntityProvider(SourceDatabase, value, Constants.Criteria)).Entities;
                 }
             }
         }

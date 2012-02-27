@@ -191,7 +191,7 @@ if(property.ForeignProperty.SystemType == "System.String" && !property.ForeignPr
 
             MarkOld(item);
             CheckRules(item);
-            
+
             if(!stopProccessingChildren)
             {
             // Update Child Items.
@@ -388,7 +388,7 @@ if(property.ForeignProperty.SystemType == "System.String" && !property.ForeignPr
             var criteria = new <%= CriteriaClassName %>();
 <% } %>
             DoDelete(criteria);
-           
+
             MarkNew(item);
         }
 
@@ -444,12 +444,12 @@ foreach(IProperty property in Entity.GetProperties(PropertyType.NoConcurrency)) 
                 item.Original<%= property.Name %> = <%if(!property.HasByteArrayColumn()) { %>reader.<%= property.GetReaderMethod() %>("<%= property.KeyName %>");<% } else { %>ADOHelper.GetBytes(reader, "<%= property.KeyName %>");<% } %>
 <% } } }%>
             }
-            
+
             MarkOld(item);
 <% if(IsChildBusinessObject) { %>
             MarkAsChild(item);
 <%}%>
-            
+
             return item;
         }
 

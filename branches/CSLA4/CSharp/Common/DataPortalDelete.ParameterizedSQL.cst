@@ -9,6 +9,7 @@
             OnDeleting(criteria, ref cancel);
             if (cancel) return;
 
+<% if(Entity.CanDelete) { %>
             string commandText = String.Format("DELETE FROM <%= Entity.EntityKeyName %> {0}", ADOHelper.BuildWhereStatement(criteria.StateBag));
 <%  if(!RenderOptionalContent) { %>
             using (var connection = new SqlConnection(ADOHelper.ConnectionString))
@@ -37,3 +38,6 @@
 <%}%>
 
             OnDeleted();
+<% } else { %>
+            throw new NotSupportedException("This business object cannot be deleted.");
+<% } %>

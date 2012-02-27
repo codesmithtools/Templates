@@ -43,6 +43,8 @@ namespace <%= BusinessProjectName %>
 <% } %>
     public partial class <%= BusinessClassName %><%= Entity.GenericProperty %> : ReadOnlyListBase<<%= BusinessClassName %><%= Entity.GenericProperty %>, <%= ChildBusinessClassName %><%= Entity.GenericProperty %>>
     {
+        #region Constructor(s)
+
         public <%= BusinessClassName %>()
         { /* Require use of factory methods */ }
 

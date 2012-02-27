@@ -53,7 +53,7 @@ namespace <%= BusinessProjectName %>
 
         public <%= BusinessClassName %>()
         { /* Require use of factory methods */ }
-        
+
         #endregion
     
         #region Synchronous Factory Methods     

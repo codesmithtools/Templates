@@ -1,14 +1,10 @@
 ﻿<%-- Author: Blake Niemyjski --%>
-<%@ CodeTemplate Language="VB" TargetLanguage="VB" Inherits="CodeSmith.QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Encoding="UTF-8" Description="CSLA Map" %>
-
-<%@ Assembly Name="SchemaExplorer" %>
+<%@ CodeTemplate Language="VB" TargetLanguage="VB" Inherits="Generator.CSLA.EntityCodeTemplate" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\Common" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper.Extensions" Path="..\..\Common" %>
-<%@ Assembly Name="CodeSmith.QuickStart" Path="..\..\Common" %>
-
-<%@ Import Namespace="SchemaExplorer" %>
+<%@ Assembly Name="Generator.CSLA" Path="..\..\Common" %>
 <%@ Import Namespace="CodeSmith.SchemaHelper" %>
-<%@ Import Namespace="CodeSmith.QuickStart" %>
+
             Dim cancel As Boolean = False
             OnMapping(reader, cancel)
             If (cancel) Then
@@ -16,27 +12,27 @@
             End If
     
             Using(BypassPropertyChecks)
-    <% If Entity.ConcurrencyProperty != null Then %>
-                <%= Entity.ConcurrencyProperty.PropertyName %> = ADOHelper.GetBytes(reader, "<%= Entity.ConcurrencyProperty.ColumnName %>")
+    <% If Not(Entity.ConcurrencyProperty Is Nothing) Then %>
+                <%= Entity.ConcurrencyProperty.Name %> = ADOHelper.GetBytes(reader, "<%= Entity.ConcurrencyProperty.KeyName %>")
     <% End If %>
-    <% for each [member] as Member in Entity.GetProperties(PropertyType.NoConcurrency) 
+    <% for each prop as IProperty In Entity.GetProperties(PropertyType.NoConcurrency) 
     If UseMemberVariables Then
-        If member.IsNullable And Not member.SystemType = "System.String" And Not member.SystemType = "System.Byte()" Then
+        If prop.IsNullable And Not prop.SystemType = "System.String" And Not prop.SystemType = "System.Byte()" Then
     %>
-                <%= [member].PrivateMemberVariableName %> = If(reader.IsDBNull("<%= [member].ColumnName %>"), Nothing, <%If not [member].HasByteArrayColumn() Then %>reader.<%= [member].GetReaderMethod() %>("<%= [member].ColumnName %>")<% else %>ADOHelper.GetBytes(reader)<% End If %>)
-    <%If(member.IsType(PropertyType.Key) And Not member.IsType(PropertyType.Identity)) %>
-                _original<%= member.PropertyName %> = If(reader.IsDBNull("<%= [member].ColumnName %>"), Nothing, <%If not [member].HasByteArrayColumn() Then %>reader.<%= [member].GetReaderMethod() %>("<%= [member].ColumnName %>")<% else %>ADOHelper.GetBytes(reader)<% End If %>)
+                <%= prop.PrivateMemberVariableName %> = If(reader.IsDBNull("<%= prop.KeyName %>"), Nothing, <%If not prop.HasByteArrayColumn() Then %>reader.<%= prop.GetReaderMethod() %>("<%= prop.KeyName %>")<% else %>ADOHelper.GetBytes(reader)<% End If %>)
+    <%If(prop.IsType(PropertyType.Key) And Not prop.IsType(PropertyType.Identity)) %>
+                _original<%= prop.Name %> = If(reader.IsDBNull("<%= prop.KeyName %>"), Nothing, <%If not prop.HasByteArrayColumn() Then %>reader.<%= prop.GetReaderMethod() %>("<%= prop.KeyName %>")<% else %>ADOHelper.GetBytes(reader)<% End If %>)
     <% End If %>
     <% Else%>
-                <%= [member].PrivateMemberVariableName %> = <%If not [member].HasByteArrayColumn() Then %>reader.<%= [member].GetReaderMethod() %>("<%= [member].ColumnName %>")<% else %>ADOHelper.GetBytes(reader)<% End If %>
-    <%If(member.IsType(PropertyType.Key) And Not member.IsType(PropertyType.Identity)) %>
-                _original<%= member.PropertyName %> = <%If not [member].HasByteArrayColumn() Then %>reader.<%= [member].GetReaderMethod() %>("<%= [member].ColumnName %>")<% else %>ADOHelper.GetBytes(reader)<% End If %>
+                <%= prop.PrivateMemberVariableName %> = <%If not prop.HasByteArrayColumn() Then %>reader.<%= prop.GetReaderMethod() %>("<%= prop.KeyName %>")<% else %>ADOHelper.GetBytes(reader)<% End If %>
+    <%If(prop.IsType(PropertyType.Key) And Not prop.IsType(PropertyType.Identity)) %>
+                _original<%= prop.Name %> = <%If not prop.HasByteArrayColumn() Then %>reader.<%= prop.GetReaderMethod() %>("<%= prop.KeyName %>")<% else %>ADOHelper.GetBytes(reader)<% End If %>
     <% End If 
     End If %>
     <%  else  %>
-                LoadProperty(<%= [member].PrivateMemberVariableName %>Property, <%If not [member].HasByteArrayColumn() Then %>reader.Item("<%= [member].ColumnName %>"))<% else %>ADOHelper.GetBytes(reader, "<%= [member].ColumnName %>"))<% End If %>
-    <%If(member.IsType(PropertyType.Key) And Not member.IsType(PropertyType.Identity)) %>
-                LoadProperty(_original<%= member.PropertyName %>Property, <%If not [member].HasByteArrayColumn() Then %>reader.Item("<%= [member].ColumnName %>"))<% else %>ADOHelper.GetBytes(reader, "<%= [member].ColumnName %>"))<% End If %>
+                LoadProperty(<%= prop.PrivateMemberVariableName %>Property, <%If not prop.HasByteArrayColumn() Then %>reader.Item("<%= prop.KeyName %>"))<% else %>ADOHelper.GetBytes(reader, "<%= prop.KeyName %>"))<% End If %>
+    <%If(prop.IsType(PropertyType.Key) And Not prop.IsType(PropertyType.Identity)) %>
+                LoadProperty(_original<%= prop.Name %>Property, <%If not prop.HasByteArrayColumn() Then %>reader.Item("<%= prop.KeyName %>"))<% else %>ADOHelper.GetBytes(reader, "<%= prop.KeyName %>"))<% End If %>
     <% End If %>
     <% End If 
     Next %>

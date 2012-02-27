@@ -3,7 +3,7 @@
 * Modified By: Blake Niemyjski
 * Description: This template will generate standard CRUD stored procedures for a given database table.
 --------------------------------------------------------------------------------------------------------------%>
-<%@ CodeTemplate Language="C#"  TargetLanguage="T-SQL" Inherits="Generator.CSLA.DataCodeTemplate" Description="Generates standard CRUD procedures based on a database table schema." %>
+<%@ CodeTemplate Language="C#"  TargetLanguage="T-SQL" Inherits="Generator.CSLA.DataCodeTemplate" %>
 <%@ Assembly Name="CodeSmith.BaseTemplates" %>
 <%@ Assembly Name="CodeSmith.CustomProperties" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\..\Common" %>
@@ -21,7 +21,8 @@
 <%@ Import Namespace="Generator.CSLA" %>
 <%
 // this template requires a primary key on the source table
-if (!Entity.HasKey) throw new ApplicationException("Entity does not contain a key.");
+if (!Entity.HasKey) 
+    throw new ApplicationException("Entity does not contain a key.");
 
 // generate drop statements
 Response.WriteLine("--region Drop Existing Procedures");
@@ -42,7 +43,6 @@ Response.WriteLine("");
 * Insert Procedure
 *
 ------------------------------------------------------------------------------------------%>
-
 <% GenerateProcedureHeader(GetInsertStoredProcedureName()); %>
 
 SET NUMERIC_ROUNDABORT OFF
@@ -176,7 +176,6 @@ GO
 * Update Procedure
 *
 ------------------------------------------------------------------------------------------%>
-
 <% GenerateProcedureHeader(GetUpdateStoredProcedureName()); %>
 
 SET NUMERIC_ROUNDABORT OFF
@@ -476,7 +475,7 @@ public void GenerateDropStatement(string procedureName)
         Response.WriteLine("");
         Response.WriteLine("DROP TABLE #tmpErrors");
         Response.WriteLine("GO");
-        
+
         // add this procedure to the list of dropped procedures
         _droppedProcedureNames.Add(procedureName);
     }
@@ -624,7 +623,7 @@ public bool IsUserDefinedType(IProperty property)
 {
     if(property.ExtendedProperties.ContainsKey("CS_UserDefinedType"))
         return true;
-        
+
     return false;
 }
 

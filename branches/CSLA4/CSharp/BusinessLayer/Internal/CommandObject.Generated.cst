@@ -22,28 +22,28 @@ using Csla;
 namespace <%= BusinessProjectName %>
 {
     [Serializable]
-    public partial class <%= BusinessClassName %> : CommandBase<%if(IsCSLALatest){ %><<%= BusinessClassName %>><% } %>
+    public partial class <%= BusinessClassName %> : CommandBase<%if(IsLatestCSLA){ %><<%= BusinessClassName %>><% } %>
     {
         private <%= BusinessClassName %>()
         { /* Require use of factory methods */ }
 
         #region Factory Methods 
-        
+
         public static bool Execute()
         {
             if (!CanExecuteCommand())
                 throw new System.Security.SecurityException("Not authorized to execute command.");
-            
+
             <%= BusinessClassName %> cmd = new <%= BusinessClassName %>();
             cmd.BeforeServer();
             cmd = DataPortal.Execute<<%= BusinessClassName %>>(cmd);
             cmd.AfterServer();
-            
+
             return cmd.Result;
         }
-        
+
         #endregion
-        
+
         #region Client-side Code
 
         // TODO: add your own fields and properties

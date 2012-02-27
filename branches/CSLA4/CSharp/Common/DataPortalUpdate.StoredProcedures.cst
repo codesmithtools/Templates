@@ -11,6 +11,7 @@
             OnUpdating(ref cancel);
             if (cancel) return;
 
+<% if(Entity.CanUpdate) { %>  
 <% if(Entity.IdentityProperty == null) { %>
             if(<%= Entity.GetProperties(PropertyType.Key).BuildIdentityKeyEqualityStatements()%>)
             {
@@ -89,3 +90,6 @@
             }
 
             OnUpdated();
+<% } else { %>
+            throw new NotSupportedException("This business object cannot be updated.");
+<% } %>

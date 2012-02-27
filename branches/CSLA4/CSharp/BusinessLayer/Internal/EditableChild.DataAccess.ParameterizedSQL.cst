@@ -47,7 +47,7 @@ namespace <%= BusinessProjectName %>
 
         #region Child_Insert
 
-        private void Child_Insert(var connection)
+        private void Child_Insert(SqlConnection connection)
         {
 <% RenderHelper(new ChildInsert(), true); %>
         }

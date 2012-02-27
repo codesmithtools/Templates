@@ -10,6 +10,7 @@
             OnChildInserting(connection, ref cancel);
             if (cancel) return;
 
+<% if(Entity.CanInsert) { %>  
             if(connection.State != ConnectionState.Open) connection.Open();
             const string commandText = "INSERT INTO <%= Entity.EntityKeyName %> (<%= Entity.GetProperties(PropertyType.UpdateInsert).BuildDataBaseColumns() %>) VALUES (<%= Entity.GetProperties(PropertyType.UpdateInsert).BuildDataBaseParameters() %>)<%= Entity.BuildInsertSelectStatement() %>";
             using(var command = new SqlCommand(commandText, connection))
@@ -78,3 +79,6 @@
             FieldManager.UpdateChildren(this, connection);
 <% } } %>
             OnChildInserted();
+<% } else { %>
+            throw new NotSupportedException("This business object cannot be inserted.");
+<% } %>
