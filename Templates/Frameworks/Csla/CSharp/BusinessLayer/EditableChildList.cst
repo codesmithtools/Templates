@@ -1,24 +1,19 @@
 ﻿<%-- Author: Blake Niemyjski --%>
-<%@ CodeTemplate Language="C#" TargetLanguage="C#" OutputType="None" Inherits="CodeSmith.QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Encoding="UTF-8" Description="CSLA EditableChildList" %>
-
+<%@ CodeTemplate Language="C#" TargetLanguage="C#" OutputType="None" Inherits="Generator.CSLA.EntityCodeTemplate" %>
 <%@ Register Name="EditableChildList" Template="Internal\EditableChildList.cst" %>
 <%@ Register Name="EditableChildListDataAccess" Template="Internal\EditableChildList.DataAccess.cst" %>
 <%@ Register Name="EditableChildListDataAccessParameterized" Template="Internal\EditableChildList.DataAccess.ParameterizedSQL.cst" %>
 <%@ Register Name="EditableChildListDataAccessLinqToSQL" Template="Internal\EditableChildList.DataAccess.LinqToSQL.cst" %>
 <%@ Register Name="EditableChildListDataAccessStoredProcedures" Template="Internal\EditableChildList.DataAccess.StoredProcedures.cst" %>
 <%@ Register Name="EditableChildListGenerated" Template="Internal\EditableChildList.Generated.cst" %>
-
 <%@ Register Name="SqlStoredProcedures" Template="..\DataAccessLayer\Internal\SQLStoredProcedures.cst" %>
 
 <%@ Assembly Name="CodeSmith.CustomProperties" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\Common" %>
-<%@ Assembly Name="CodeSmith.QuickStart" Path="..\..\Common" %>
-<%@ Assembly Name="SchemaExplorer" %>
+<%@ Assembly Name="Generator.CSLA" Path="..\..\Common" %>
 
 <%@ Import Namespace="CodeSmith.CustomProperties" %>
 <%@ Import Namespace="CodeSmith.SchemaHelper" %>
-<%@ Import Namespace="CodeSmith.QuickStart" %>
-<%@ Import Namespace="SchemaExplorer" %>
 
 <script runat="template">
 
@@ -31,7 +26,7 @@ public override void Render(System.IO.TextWriter writer)
     EditableChildList editableChildList = this.Create<EditableChildList>();
     this.CopyPropertiesTo(editableChildList);
     
-    string parentFileName = System.IO.Path.Combine(this.Location, string.Format("Collections\\{0}.cs", editableChildList.BusinessClassName));
+    string parentFileName = System.IO.Path.Combine(this.Location, String.Format("Collections\\{0}.cs", editableChildList.BusinessClassName));
     if (!System.IO.File.Exists(parentFileName))
     {
         editableChildList.RenderToFile(parentFileName, false);
@@ -39,7 +34,7 @@ public override void Render(System.IO.TextWriter writer)
     
     #region EditableChildList.Generated
     
-    string fileName = System.IO.Path.Combine(Location, string.Format("Collections\\{0}.Generated.cs", editableChildList.BusinessClassName));
+    string fileName = System.IO.Path.Combine(Location, String.Format("Collections\\{0}.Generated.cs", editableChildList.BusinessClassName));
     
     EditableChildListGenerated editableChildListGenerated = this.Create<EditableChildListGenerated>();
     this.CopyPropertiesTo(editableChildListGenerated);
@@ -50,7 +45,7 @@ public override void Render(System.IO.TextWriter writer)
     
     #region EditableChildList.DataAccess
     
-    fileName = System.IO.Path.Combine(Location, string.Format("Collections\\{0}.DataAccess.cs", editableChildList.BusinessClassName));
+    fileName = System.IO.Path.Combine(Location, String.Format("Collections\\{0}.DataAccess.cs", editableChildList.BusinessClassName));
     if(DataAccessImplementation == DataAccessMethod.None)
     {
         EditableChildListDataAccess editableChildListDataAccess = this.Create<EditableChildListDataAccess>();
@@ -80,7 +75,7 @@ public override void Render(System.IO.TextWriter writer)
         editableChildListDataAccessStoredProcedures.RenderToFile(fileName, parentFileName, true);
 
         //StoredProcedures
-        fileName = System.IO.Path.Combine(Location, string.Format("Collections\\{0}.StoredProcedures.sql", editableChildList.BusinessClassName));
+        fileName = System.IO.Path.Combine(Location, String.Format("Collections\\{0}.StoredProcedures.sql", editableChildList.BusinessClassName));
         SqlStoredProcedures sqlStoredProcedures = this.Create<SqlStoredProcedures>();
         this.CopyPropertiesTo(sqlStoredProcedures);
         sqlStoredProcedures.DataProjectName = "Not needed for sql stored procedures.";
@@ -89,20 +84,20 @@ public override void Render(System.IO.TextWriter writer)
     }
     
     #endregion
-	   
+       
     #endregion
 }
 
-public override bool OnTableChanging()
+public override bool OnEntityChanging()
 {
     if (string.IsNullOrEmpty(BusinessClassName))
     {
-        BusinessClassName = string.Concat(Entity.ClassName, "List");
-        ChildBusinessClassName = Entity.ClassName;
+        BusinessClassName = string.Concat(Entity.Name, "List");
+        ChildBusinessClassName = Entity.Name;
     }
 
     if (string.IsNullOrEmpty(CriteriaClassName) || CriteriaClassName.Equals("Criteria", StringComparison.InvariantCultureIgnoreCase))
-        CriteriaClassName = String.Concat(Entity.ClassName, "Criteria");
+        CriteriaClassName = String.Concat(Entity.Name, "Criteria");
 
     return false;
 }

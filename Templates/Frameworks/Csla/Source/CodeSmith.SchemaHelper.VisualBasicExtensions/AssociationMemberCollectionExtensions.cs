@@ -19,9 +19,9 @@ namespace CodeSmith.SchemaHelper
 
             foreach (Association association in associations)
             {
-                foreach (AssociationMember member in association)
+                foreach (AssociationProperty property in association.Properties)
                 {
-                    var parameter = string.Format(", ByVal {0} As {1}", Util.NamingConventions.VariableName(member.ClassName), member.ClassName);
+                    var parameter = string.Format(", ByVal {0} As {1}", Util.NamingConventions.VariableName(property.Property.Name), property.Property.Name);
 
                     if (!parameters.Contains(parameter))
                         parameters += parameter;

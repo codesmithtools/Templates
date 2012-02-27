@@ -1,6 +1,5 @@
 ﻿<%-- Author: Blake Niemyjski --%>
-<%@ CodeTemplate Language="C#" TargetLanguage="C#" OutputType="None" Inherits="CodeSmith.QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Encoding="UTF-8" Description="CSLA EditableChild" %>
-
+<%@ CodeTemplate Language="C#" TargetLanguage="C#" OutputType="None" Inherits="Generator.CSLA.EntityCodeTemplate" Description="CSLA EditableChild" %>
 <%@ Register Name="EditableChild" Template="Internal\EditableChild.cst" %>
 <%@ Register Name="EditableChildDataAccess" Template="Internal\EditableChild.DataAccess.cst" %>
 <%@ Register Name="EditableChildDataAccessParameterized" Template="Internal\EditableChild.DataAccess.ParameterizedSQL.cst" %>
@@ -12,13 +11,10 @@
 
 <%@ Assembly Name="CodeSmith.CustomProperties" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\Common" %>
-<%@ Assembly Name="CodeSmith.QuickStart" Path="..\..\Common" %>
-<%@ Assembly Name="SchemaExplorer" %>
+<%@ Assembly Name="Generator.CSLA" Path="..\..\Common" %>
 
 <%@ Import Namespace="CodeSmith.CustomProperties" %>
 <%@ Import Namespace="CodeSmith.SchemaHelper" %>
-<%@ Import Namespace="CodeSmith.QuickStart" %>
-<%@ Import Namespace="SchemaExplorer" %>
 
 <script runat="template">
 
@@ -31,7 +27,7 @@ public override void Render(System.IO.TextWriter writer)
     EditableChild editableChild = this.Create<EditableChild>();
     this.CopyPropertiesTo(editableChild);
     
-    string parentFileName = System.IO.Path.Combine(this.Location, string.Format("Entities\\{0}.cs", editableChild.BusinessClassName));
+    string parentFileName = System.IO.Path.Combine(this.Location, String.Format("Entities\\{0}.cs", editableChild.BusinessClassName));
     if (!System.IO.File.Exists(parentFileName))
     {
         editableChild.RenderToFile(parentFileName, false);
@@ -39,7 +35,7 @@ public override void Render(System.IO.TextWriter writer)
     
     #region EditableChild.Generated
     
-    string fileName = System.IO.Path.Combine(Location, string.Format("Entities\\{0}.Generated.cs", editableChild.BusinessClassName));
+    string fileName = System.IO.Path.Combine(Location, String.Format("Entities\\{0}.Generated.cs", editableChild.BusinessClassName));
     
     EditableChildGenerated editableChildGenerated = this.Create<EditableChildGenerated>();
     this.CopyPropertiesTo(editableChildGenerated);
@@ -50,7 +46,7 @@ public override void Render(System.IO.TextWriter writer)
     
     #region EditableChild.DataAccess
     
-    fileName = System.IO.Path.Combine(Location, string.Format("Entities\\{0}.DataAccess.cs", editableChild.BusinessClassName));
+    fileName = System.IO.Path.Combine(Location, String.Format("Entities\\{0}.DataAccess.cs", editableChild.BusinessClassName));
     if(DataAccessImplementation == DataAccessMethod.None)
     {
         EditableChildDataAccess editableChildDataAccess = this.Create<EditableChildDataAccess>();
@@ -72,7 +68,7 @@ public override void Render(System.IO.TextWriter writer)
         
         editableChildDataAccessLinqToSQL.RenderToFile(fileName, parentFileName, true);
     }
-	else if(DataAccessImplementation == DataAccessMethod.StoredProcedures)
+    else if(DataAccessImplementation == DataAccessMethod.StoredProcedures)
     {
         EditableChildDataAccessStoredProcedures editableChildDataAccessStoredProcedures = this.Create<EditableChildDataAccessStoredProcedures>();
         this.CopyPropertiesTo(editableChildDataAccessStoredProcedures);
@@ -80,7 +76,7 @@ public override void Render(System.IO.TextWriter writer)
         editableChildDataAccessStoredProcedures.RenderToFile(fileName, parentFileName, true);
 
         //StoredProcedures
-        fileName = System.IO.Path.Combine(Location, string.Format("Entities\\{0}.StoredProcedures.sql", editableChild.BusinessClassName));
+        fileName = System.IO.Path.Combine(Location, String.Format("Entities\\{0}.StoredProcedures.sql", editableChild.BusinessClassName));
         SqlStoredProcedures sqlStoredProcedures = this.Create<SqlStoredProcedures>();
         this.CopyPropertiesTo(sqlStoredProcedures);
         sqlStoredProcedures.DataProjectName = "Not needed for sql stored procedures.";

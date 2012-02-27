@@ -1,50 +1,131 @@
 ﻿<%-- Author: Blake Niemyjski --%>
-<%@ CodeTemplate Language="VB" TargetLanguage="VB" Inherits="CodeSmith.QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Encoding="UTF-8" Description="CSLA Map" %>
-
-<%@ Assembly Name="SchemaExplorer" %>
+<%@ CodeTemplate Language="VB" TargetLanguage="VB" Inherits="Generator.CSLA.EntityCodeTemplate" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\Common" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper.Extensions" Path="..\..\Common" %>
-<%@ Assembly Name="CodeSmith.QuickStart" Path="..\..\Common" %>
-
-<%@ Import Namespace="SchemaExplorer" %>
+<%@ Assembly Name="Generator.CSLA" Path="..\..\Common" %>
 <%@ Import Namespace="CodeSmith.SchemaHelper" %>
-<%@ Import Namespace="CodeSmith.QuickStart" %>
+
 #Region "ChildPortal partial methods"
     
     <%If IncludeSilverlightSupport Then %>
 #If Not SILVERLIGHT Then
     <% End If %>
+        ''' <summary>
+        ''' Codesmith generated stub method that is called when creating the child <see cref="<%=ChildBusinessClassName%><%= Entity.GenericProperty %>"/> object. 
+        ''' </summary>
+        ''' <param name="cancel">Value returned from the method indicating whether the object creation should proceed.</param>
         Partial Private Sub OnChildCreating(ByRef cancel As Boolean)
         End Sub
+        ''' <summary>
+        ''' Codesmith generated stub method that is called after the child <see cref="<%=ChildBusinessClassName%><%= Entity.GenericProperty %>"/> object has been created. 
+        ''' </summary>
         Partial Private Sub OnChildCreated()
         End Sub
+        ''' <summary>
+        ''' Codesmith generated stub method that is called when fetching the child <see cref="<%=ChildBusinessClassName%><%= Entity.GenericProperty %>"/> object. 
+        ''' </summary>
+        ''' <param name="criteria"><see cref="<%= ChildBusinessClassName %>Criteria"/> object containg the criteria of the object to fetch.</param>
+        ''' <param name="cancel">Value returned from the method indicating whether the object fetching should proceed.</param>
         Partial Private Sub OnChildFetching(ByVal criteria As <%= CriteriaClassName %><%= Entity.GenericProperty %>, ByRef cancel As Boolean)
         End Sub
+        ''' <summary>
+        ''' Codesmith generated stub method that is called after the child <see cref="<%=ChildBusinessClassName%><%= Entity.GenericProperty %>"/> object has been fetched. 
+        ''' </summary>
         Partial Private Sub OnChildFetched()
         End Sub
+        ''' <summary>
+        ''' Codesmith generated stub method that is called when mapping the child <see cref="<%=ChildBusinessClassName%><%= Entity.GenericProperty %>"/> object. 
+        ''' </summary>
+        ''' <param name="cancel">Value returned from the method indicating whether the object mapping should proceed.</param>
+        Partial Private Sub OnMapping(ByRef cancel As Boolean)
+        End Sub
+        ''' <summary>
+        ''' Codesmith generated stub method that is called when mapping the child <see cref="<%=ChildBusinessClassName%><%= Entity.GenericProperty %>"/> object. 
+        ''' </summary>
+        ''' <param name="reader"></param>
+        ''' <param name="cancel">Value returned from the method indicating whether the object mapping should proceed.</param>
         Partial Private Sub OnMapping(ByVal reader As SafeDataReader, ByRef cancel As Boolean)
         End Sub
+        ''' <summary>
+        ''' Codesmith generated stub method that is called after the child <see cref="<%=ChildBusinessClassName%><%= Entity.GenericProperty %>"/> object has been mapped. 
+        ''' </summary>
         Partial Private Sub OnMapped()
         End Sub
+        ''' <summary>
+        ''' Codesmith generated stub method that is called when inserting the child <see cref="<%=ChildBusinessClassName%><%= Entity.GenericProperty %>"/> object. 
+        ''' </summary>
+        ''' <param name="cancel">Value returned from the method indicating whether the object insertion should proceed.</param>
+        Partial Private Sub OnChildInserting(ByRef cancel As Boolean)
+        End Sub
+        ''' <summary>
+        ''' Codesmith generated stub method that is called when inserting the child <see cref="<%=ChildBusinessClassName%><%= Entity.GenericProperty %>"/> object. 
+        ''' </summary>
+        ''' <param name="connection"></param>
+        ''' <param name="cancel">Value returned from the method indicating whether the object insertion should proceed.</param>
         Partial Private Sub OnChildInserting(ByVal connection As SqlConnection, ByRef cancel As Boolean)
         End Sub
+        ''' <summary>
+        ''' Codesmith generated stub method that is called after the child <see cref="<%=ChildBusinessClassName%><%= Entity.GenericProperty %>"/> object has been inserted. 
+        ''' </summary>
         Partial Private Sub OnChildInserted()
         End Sub
+        ''' <summary>
+        ''' Codesmith generated stub method that is called when updating the child <see cref="<%=ChildBusinessClassName%><%= Entity.GenericProperty %>"/> object. 
+        ''' </summary>
+        ''' <param name="cancel">Value returned from the method indicating whether the object creation should proceed.</param>
+        Partial Private Sub OnChildUpdating(ByRef cancel As Boolean)
+        End Sub
+        ''' <summary>
+        ''' Codesmith generated stub method that is called when updating the child <see cref="<%=ChildBusinessClassName%><%= Entity.GenericProperty %>"/> object. 
+        ''' </summary>
+        ''' <param name="connection"></param>
+        ''' <param name="cancel">Value returned from the method indicating whether the object creation should proceed.</param>
         Partial Private Sub OnChildUpdating(ByVal connection As SqlConnection, ByRef cancel As Boolean)
         End Sub
+        ''' <summary>
+        ''' Codesmith generated stub method that is called after the child <see cref="<%=ChildBusinessClassName%><%= Entity.GenericProperty %>"/> object has been updated. 
+        ''' </summary>
         Partial Private Sub OnChildUpdated()
         End Sub
+        ''' <summary>
+        ''' Codesmith generated stub method that is called when self deleting the child <see cref="<%=ChildBusinessClassName%><%= Entity.GenericProperty %>"/> object. 
+        ''' </summary>
+        ''' <param name="cancel">Value returned from the method indicating whether the object self deletion should proceed.</param>
+        Partial Private Sub OnChildSelfDeleting(ByRef cancel As Boolean)
+        End Sub
+        ''' <summary>
+        ''' Codesmith generated stub method that is called when self deleting the child <see cref="<%=ChildBusinessClassName%><%= Entity.GenericProperty %>"/> object. 
+        ''' </summary>
+        ''' <param name="connection"></param>
+        ''' <param name="cancel">Value returned from the method indicating whether the object self deletion should proceed.</param>
         Partial Private Sub OnChildSelfDeleting(ByVal connection As SqlConnection, ByRef cancel As Boolean)
         End Sub
+        ''' <summary>
+        ''' Codesmith generated stub method that is called after the child <see cref="<%=ChildBusinessClassName%><%= Entity.GenericProperty %>"/> object has been deleted. 
+        ''' </summary>
         Partial Private Sub OnChildSelfDeleted()
         End Sub
+        ''' <summary>
+        ''' Codesmith generated stub method that is called when deleting the child <see cref="<%=ChildBusinessClassName%><%= Entity.GenericProperty %>"/> object. 
+        ''' </summary>
+        ''' <param name="criteria"><see cref="<%= ChildBusinessClassName %>Criteria<%= Entity.GenericProperty %>"/> object containg the criteria of the object to delete.</param>
+        ''' <param name="cancel">Value returned from the method indicating whether the object deletion should proceed.</param>
         Partial Private Sub OnDeleting(ByVal criteria As <%= CriteriaClassName %><%= Entity.GenericProperty %>, ByRef cancel As Boolean)
         End Sub
+        ''' <summary>
+        ''' Codesmith generated stub method that is called when deleting the child <see cref="<%=ChildBusinessClassName%><%= Entity.GenericProperty %>"/> object. 
+        ''' </summary>
+        ''' <param name="criteria"><see cref="<%= ChildBusinessClassName %>Criteria<%= Entity.GenericProperty %>"/> object containg the criteria of the object to delete.</param>
+        ''' <param name="connection"></param>
+        ''' <param name="cancel">Value returned from the method indicating whether the object deletion should proceed.</param>
         Partial Private Sub OnDeleting(ByVal criteria As <%= CriteriaClassName %><%= Entity.GenericProperty %>, ByVal connection As SqlConnection, ByRef cancel As Boolean)
         End Sub
+        ''' <summary>
+        ''' Codesmith generated stub method that is called after the child <see cref="<%=ChildBusinessClassName%><%= Entity.GenericProperty %>"/> object with the specified criteria has been deleted. 
+        ''' </summary>
         Partial Private Sub OnDeleted()
         End Sub
-    <% If(IncludeSilverlightSupport) Then %>
+<% If(IncludeSilverlightSupport) Then %>
 #End If
     <% End If %>
         Private Partial Sub OnChildLoading(ByVal childProperty As Csla.Core.IPropertyInfo, ByRef cancel As Boolean)

@@ -1,43 +1,40 @@
 ﻿<%-- Author: Blake Niemyjski --%>
-<%@ CodeTemplate Language="C#" TargetLanguage="C#" Inherits="CodeSmith.QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Encoding="UTF-8" Description="CSLA Map" %>
-
-<%@ Assembly Name="SchemaExplorer" %>
+<%@ CodeTemplate Language="C#" TargetLanguage="C#" Inherits="Generator.CSLA.EntityCodeTemplate" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\Common" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper.Extensions" Path="..\..\Common" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper.CSharpExtensions" Path="..\..\Common" %>
-<%@ Assembly Name="CodeSmith.QuickStart" Path="..\..\Common" %>
-
-<%@ Import Namespace="SchemaExplorer" %>
+<%@ Assembly Name="Generator.CSLA" Path="..\..\Common" %>
 <%@ Import Namespace="CodeSmith.SchemaHelper" %>
-<%@ Import Namespace="CodeSmith.QuickStart" %>
+<%@ Import Namespace="System.Linq" %>
             bool cancel = false;
             OnChildUpdating(connection, ref cancel);
             if (cancel) return;
 
+<% if(Entity.CanUpdate) { %>  
             if(connection.State != ConnectionState.Open) connection.Open();
-            const string commandText = "UPDATE [<%= Entity.Table.Owner %>].[<%= Entity.Table.Name %>] <%= Entity.MembersUpdateInsert.BuildSetStatements() %> <%= Entity.PrimaryKey.KeyMembers.BuildWhereStatements(true) %><% if(Entity.HasRowVersionMember) { %> AND [<%= Entity.RowVersionMember.ColumnName %>] = <%= ParameterPrefix  %><%= Entity.RowVersionMember.ColumnName %><% } %><%= Entity.BuildUpdateSelectStatement() %>";
-            using(SqlCommand command = new SqlCommand(commandText, connection))
+            const string commandText = "UPDATE <%= Entity.EntityKeyName %> <%= Entity.GetProperties(PropertyType.UpdateInsert).BuildSetStatements() %> <%= Entity.GetProperties(PropertyType.Key).BuildWhereStatements(true) %><% if(Entity.ConcurrencyProperty != null) { %> AND [<%= Entity.ConcurrencyProperty.KeyName %>] = <%= ParameterPrefix  %><%= Entity.ConcurrencyProperty.KeyName %><% } %><%= Entity.BuildUpdateSelectStatement() %>";
+            using(var command = new SqlCommand(commandText, connection))
             {
-                <%= Entity.MembersNoRowVersion.BuildCommandParameters(false, false, !RenderOptionalContent, false, true) %>
-<% if(Entity.HasRowVersionMember) { %>
-                command.Parameters.AddWithValue("<%= ParameterPrefix  %><%= Entity.RowVersionMember.ColumnName %>", SqlDbType.Timestamp);
-                command.Parameters["<%= ParameterPrefix  %><%= Entity.RowVersionMember.ColumnName %>"].Value = this.<%= Entity.RowVersionMember.PropertyName %>;
-                command.Parameters["<%= ParameterPrefix  %><%= Entity.RowVersionMember.ColumnName %>"].Direction = ParameterDirection.InputOutput;
+                <%= Entity.GetProperties(PropertyType.NoConcurrency).BuildCommandParameters(false, false, !RenderOptionalContent, false, true) %>
+<% if(Entity.ConcurrencyProperty != null) { %>
+                command.Parameters.AddWithValue("<%= ParameterPrefix  %><%= Entity.ConcurrencyProperty.KeyName %>", SqlDbType.Timestamp);
+                command.Parameters["<%= ParameterPrefix  %><%= Entity.ConcurrencyProperty.KeyName %>"].Value = this.<%= Entity.ConcurrencyProperty.Name %>;
+                command.Parameters["<%= ParameterPrefix  %><%= Entity.ConcurrencyProperty.KeyName %>"].Direction = ParameterDirection.InputOutput;
 <% } %>
 
-<% if(Entity.HasRowVersionMember || Entity.HasIdentityMember) { %>
+<% if(Entity.ConcurrencyProperty != null || Entity.IdentityProperty != null) { %>
                 using(var reader = new SafeDataReader(command.ExecuteReader()))
                 {
                     if(reader.Read())
                     {
-<% if(Entity.HasRowVersionMember) { %>
-                        <%= Entity.RowVersionMember.PropertyName %> = ADOHelper.GetBytes(reader, "<%= Entity.RowVersionMember.ColumnName %>");
-<% } foreach(Member member in Entity.PrimaryKey.KeyMembers) { if(!member.IsIdentity) { %> 
+<% if(Entity.ConcurrencyProperty != null) { %>
+                        <%= Entity.ConcurrencyProperty.Name %> = ADOHelper.GetBytes(reader, "<%= Entity.ConcurrencyProperty.KeyName %>");
+<% } foreach(IProperty property in Entity.GetProperties(PropertyType.Key)) { if(!property.IsType(PropertyType.Identity)) { %> 
                         //  Update non-identity primary key value.
 <%if(UseMemberVariables) { %>
-                        <%= member.PrivateMemberVariableName %> = <%if(!member.HasByteArrayColumn()) { %>reader.<%= member.GetReaderMethod() %>("<%= member.ColumnName %>");<% } else { %>ADOHelper.GetBytes(reader, "<%= member.ColumnName %>");<% } %>
+                        <%= property.PrivateMemberVariableName %> = <%if(!property.HasByteArrayColumn()) { %>reader.<%= property.GetReaderMethod() %>("<%= property.KeyName %>");<% } else { %>ADOHelper.GetBytes(reader, "<%= property.KeyName %>");<% } %>
 <% } else { %>
-                        LoadProperty(<%= member.PrivateMemberVariableName %>Property, <%if(!member.HasByteArrayColumn()) { %>reader.<%= member.GetReaderMethod() %>("<%= member.ColumnName %>"));<% } else { %>ADOHelper.GetBytes(reader, "<%= member.ColumnName %>"));<% } %>
+                        LoadProperty(<%= property.PrivateMemberVariableName %>Property, <%if(!property.HasByteArrayColumn()) { %>reader.<%= property.GetReaderMethod() %>("<%= property.KeyName %>"));<% } else { %>ADOHelper.GetBytes(reader, "<%= property.KeyName %>"));<% } %>
 <% } } } %>
                     }
                 }
@@ -47,29 +44,29 @@
                 if (result == 0)
                     throw new DBConcurrencyException("The entity is out of date on the client. Please update the entity and try again. This could also be thrown if the sql statement failed to execute.");
 <% } %>
-<%  if(!RenderOptionalContent) { foreach(Member member in Entity.Members) { if(member.IsForeignKey) { if(string.IsNullOrEmpty(member.ResolveAssociationPropertyClassName())) continue; %> 
+<%  if(!RenderOptionalContent) { foreach(IProperty property in Entity.Properties) { if(property.IsType(PropertyType.Foreign)) { if(string.IsNullOrEmpty(property.ResolveAssociationPropertyClassName())) continue; %> 
 
                 // Update foreign keys values. This code will update the values passed in from the parent only if no errors occurred after executing the query.
-<% string localParameterName = member.ResolveAssociationPropertyVariable();
-   string localParameterNameWithChildProperty = member.ResolveAssociationPropertyVariableWithChildProperty();%>
-                if(<%= localParameterName %> != null && <%= localParameterNameWithChildProperty %> != this.<%= member.PropertyName %>)
+<% string localParameterName = property.ResolveAssociationPropertyVariable();
+   string localParameterNameWithChildProperty = property.ResolveAssociationPropertyVariableWithChildProperty();%>
+                if(<%= localParameterName %> != null && <%= localParameterNameWithChildProperty %> != this.<%= property.Name %>)
 <% if(UseMemberVariables) { %>
-                    <%= member.PrivateMemberVariableName %> = <%= localParameterNameWithChildProperty %>;
+                    <%= property.PrivateMemberVariableName %> = <%= localParameterNameWithChildProperty %>;
 <% } else { %>
-                    LoadProperty(<%= member.PrivateMemberVariableName %>Property, <%= localParameterNameWithChildProperty %>);
+                    LoadProperty(<%= property.PrivateMemberVariableName %>Property, <%= localParameterNameWithChildProperty %>);
 <% } } } } %>
-<% foreach(Member member in Entity.PrimaryKey.KeyMembers) { if(!member.IsIdentity) { %> 
+<% foreach(IProperty property in Entity.GetProperties(PropertyType.Key)) { if(!property.IsType(PropertyType.Identity)) { %> 
 
                 // Update non-identity primary key value.
 <% if(UseMemberVariables) { %>
-                _original<%= member.PropertyName %> = this.<%= member.PropertyName %>;
+                _original<%= property.Name %> = this.<%= property.Name %>;
 <% } else { %>
-                LoadProperty(_original<%= member.PropertyName %>Property, this.<%= member.PropertyName %>);
+                LoadProperty(_original<%= property.Name %>Property, this.<%= property.Name %>);
 <% } } } %>
             }
-<% if(Entity.AssociatedToManyUnion.Count > 0 || Entity.AssociatedManyToOne.Count > 0 || Entity.AssociatedOneToZeroOrOne.Count > 0){ if(!RenderOptionalContent) { 
+<% if(Entity.Associations.Count(a => a.AssociationType == AssociationType.OneToMany) > 0 || Entity.Associations.Count(a => a.AssociationType == AssociationType.ManyToOne) > 0 || Entity.Associations.Count(a => a.AssociationType == AssociationType.OneToZeroOrOne) > 0){ if(!RenderOptionalContent) { 
     int childCount = 0;
-    foreach(Association a in Entity.AssociatedOneToMany) {
+    foreach(Association a in Entity.Associations.Where(a => a.AssociationType == AssociationType.OneToMany)) {
         if(IsChildBusinessObject(a) || IsSwitchableObject(a)) childCount++;
     }%>
 <% if(childCount > 0) { %>
@@ -86,3 +83,6 @@
 <% } } %>
 
             OnChildUpdated();
+<% } else { %>
+            throw new NotSupportedException("This business object cannot be updated.");
+<% } %>

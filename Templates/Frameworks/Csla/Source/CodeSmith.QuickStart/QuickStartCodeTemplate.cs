@@ -156,7 +156,7 @@ namespace CodeSmith.QuickStart
             }
             set
             {
-                if (!IsCSLA40)
+                if (!IsLatestCSLA)
                     Console.WriteLine("In order to include Silverlight support you must target CSLA 4.0.");
 
                 Configuration.Instance.IncludeSilverlightSupport = value;
@@ -261,7 +261,7 @@ namespace CodeSmith.QuickStart
 
             foreach (var entity in Entities)
             {
-                foreach (Association associationMember in entity.AssociatedManyToOne)
+                foreach (Association associationMember in entity.Associations.Where(a => a.AssociationType == AssociationType.ManyToOne))
                 {
                     foreach (AssociationMember member in associationMember)
                     {
@@ -272,7 +272,7 @@ namespace CodeSmith.QuickStart
                     }
                 }
 
-                foreach (Association associationMember in entity.AssociatedOneToZeroOrOne)
+                foreach (Association associationMember in entity.Associations.Where(a => a.AssociationType == AssociationType.OneToZeroOrOne))
                 {
                     foreach (AssociationMember member in associationMember)
                     {
@@ -314,7 +314,7 @@ namespace CodeSmith.QuickStart
 
             foreach (var entity in Entities)
             {
-                if (entity.AssociatedManyToOne.Count == 0)
+                if (entity.Associations.Where(a => a.AssociationType == AssociationType.ManyToOne).Count == 0)
                 {
                     if (!entities.ContainsKey(entity.Table.FullName))
                     {

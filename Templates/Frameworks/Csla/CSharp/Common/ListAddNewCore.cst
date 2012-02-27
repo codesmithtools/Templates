@@ -1,15 +1,12 @@
 ﻿<%-- Author: Blake Niemyjski --%>
-<%@ CodeTemplate Language="C#" TargetLanguage="C#" Inherits="CodeSmith.QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Encoding="UTF-8" Description="CSLA Map" %>
-
-<%@ Assembly Name="SchemaExplorer" %>
+<%@ CodeTemplate Language="C#" TargetLanguage="C#" Inherits="Generator.CSLA.EntityCodeTemplate" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\Common" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper.Extensions" Path="..\..\Common" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper.CSharpExtensions" Path="..\..\Common" %>
-<%@ Assembly Name="CodeSmith.QuickStart" Path="..\..\Common" %>
-
-<%@ Import Namespace="SchemaExplorer" %>
+<%@ Assembly Name="Generator.CSLA" Path="..\..\Common" %>
 <%@ Import Namespace="CodeSmith.SchemaHelper" %>
-<%@ Import Namespace="CodeSmith.QuickStart" %>
+<%@ Import Namespace="Generator.CSLA" %>
+
 <% if(!RenderOptionalContent) { %>
             <%= ChildBusinessClassName %> item = <%= BusinessProjectName %>.<%= ChildBusinessClassName %>.New<%= ChildBusinessClassName %>();
 
@@ -23,12 +20,12 @@
 
 <%  var list = new System.Collections.Generic.List<string>(); 
     bool isObjectFactory = DataAccessImplementation == DataAccessMethod.ObjectFactoryNone || DataAccessImplementation == DataAccessMethod.ObjectFactoryParameterizedSQL || DataAccessImplementation == DataAccessMethod.ObjectFactoryStoredProcedures;
-    foreach(Member member in Entity.Members) { if(member.IsForeignKey && !member.IsIdentity) {
-        string className = member.ResolveAssociationPropertyClassName();
+    foreach(IProperty property in Entity.Properties) { if(property.IsType(PropertyType.Foreign) && !property.IsType(PropertyType.Identity)) {
+        string className = property.ResolveAssociationPropertyClassName();
         if(string.IsNullOrEmpty(className)) continue;
 
-        string variableName = member.ResolveAssociationPropertyVariable();
-        string variableWithChildProperty = member.ResolveAssociationPropertyVariableWithChildProperty(); %>
+        string variableName = property.ResolveAssociationPropertyVariable();
+        string variableWithChildProperty = property.ResolveAssociationPropertyVariableWithChildProperty(); %>
                 // Pass the parent value down to the child.
 <% if(!list.Contains(className)) { list.Add(className); %>
                 <%if(isObjectFactory){%>//<%}%><%= className %> <%= variableName %> = this.Parent as <%= className %>;
@@ -36,7 +33,7 @@
                 <%if(isObjectFactory){%>//<%}%><%= variableName %> = this.Parent as <%= className %>;
 <% } %>
                 <%if(isObjectFactory){%>//<%}%>if(<%= variableName %> != null)
-                <%if(isObjectFactory){%>//<%}%>    item.<%= member.PropertyName %> = <%= variableWithChildProperty %>;
+                <%if(isObjectFactory){%>//<%}%>    item.<%= property.Name %> = <%= variableWithChildProperty %>;
 
 <% } } %>
 
@@ -58,12 +55,12 @@
                             return;
 <%  var list = new System.Collections.Generic.List<string>(); 
             bool isObjectFactory = DataAccessImplementation == DataAccessMethod.ObjectFactoryNone || DataAccessImplementation == DataAccessMethod.ObjectFactoryParameterizedSQL || DataAccessImplementation == DataAccessMethod.ObjectFactoryStoredProcedures;
-            foreach(Member member in Entity.Members) { if(member.IsForeignKey && !member.IsIdentity) {
-                string className = member.ResolveAssociationPropertyClassName();
+            foreach(IProperty property in Entity.Properties) { if(property.IsType(PropertyType.Foreign) && !property.IsType(PropertyType.Identity)) {
+                string className = property.ResolveAssociationPropertyClassName();
                 if(string.IsNullOrEmpty(className)) continue;
         
-                string variableName = member.ResolveAssociationPropertyVariable();
-                string variableWithChildProperty = member.ResolveAssociationPropertyVariableWithChildProperty(); %>
+                string variableName = property.ResolveAssociationPropertyVariable();
+                string variableWithChildProperty = property.ResolveAssociationPropertyVariableWithChildProperty(); %>
                         // Pass the parent value down to the child.
         <% if(!list.Contains(className)) { list.Add(className); %>
                         <%if(isObjectFactory){%>//<%}%><%= className %> <%= variableName %> = this.Parent as <%= className %>;
@@ -71,7 +68,7 @@
                         <%if(isObjectFactory){%>//<%}%><%= variableName %> = this.Parent as <%= className %>;
         <% } %>
                         <%if(isObjectFactory){%>//<%}%>if(<%= variableName %> != null)
-                        <%if(isObjectFactory){%>//<%}%>    item.<%= member.PropertyName %> = <%= variableWithChildProperty %>;
+                        <%if(isObjectFactory){%>//<%}%>    item.<%= property.Name %> = <%= variableWithChildProperty %>;
         
         <% } } %>
                         Add(item);

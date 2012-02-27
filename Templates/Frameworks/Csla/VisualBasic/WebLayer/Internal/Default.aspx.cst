@@ -3,12 +3,12 @@ Name: ASP.Net Samples
 Author: Blake Niemyjski
 Description: The following template will generate a ASP.Net page.
 --%>
-<%@ CodeTemplate Language="VB" TargetLanguage="Html" Inherits="CodeSmith.QuickStart.InterfaceCodeTemplate" Description="The following template will generate a default default ASP.Net page." %>
+<%@ CodeTemplate Language="VB" TargetLanguage="Html" Inherits="Generator.CSLA.InterfaceCodeTemplate" Description="The following template will generate a default default ASP.Net page." %>
 
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\..\Common" %>
-<%@ Assembly Name="CodeSmith.QuickStart" Path="..\..\..\Common" %>
+<%@ Assembly Name="Generator.CSLA" Path="..\..\..\Common" %>
 
-<%@ Import Namespace="CodeSmith.QuickStart" %>
+<%@ Import Namespace="Generator.CSLA" %>
 <%@ Import Namespace="CodeSmith.SchemaHelper" %>
 <%%@ Page Language="VB" AutoEventWireup="false" CodeFile="Default.aspx.vb" Inherits="<%= InterfaceProjectName %>._Default" %>
 

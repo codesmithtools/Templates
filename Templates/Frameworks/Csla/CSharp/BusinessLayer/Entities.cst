@@ -1,17 +1,5 @@
 ﻿<%-- Author: Blake Niemyjski --%>
-<%@ CodeTemplate Language="C#" TargetLanguage="C#" OutputType="None" Debug="False" Inherits="CodeSmith.QuickStart.EntityMasterCodeTemplate" CompilerVersion="v3.5" Encoding="UTF-8" Description="CSLA Entities" %>
-
-<%@ Assembly Name="CodeSmith.CustomProperties" %>
-<%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\Common" %>
-<%@ Assembly Name="CodeSmith.QuickStart" Path="..\..\Common" %>
-<%@ Assembly Name="SchemaExplorer" %>
-
-<%@ Import Namespace="CodeSmith.CustomProperties" %>
-<%@ Import Namespace="CodeSmith.SchemaHelper" %>
-<%@ Import Namespace="CodeSmith.QuickStart" %>
-<%@ Import Namespace="SchemaExplorer" %>
-<%@ Import Namespace="System.Collections.Generic" %>
-
+<%@ CodeTemplate Language="C#" TargetLanguage="C#" OutputType="None" Inherits="Generator.CSLA.EntityMasterCodeTemplate" %>
 <%@ Register Name="CommandObjectTemplate" Template="CommandObject.cst" %>
 <%@ Register Name="CriteriaTemplate" Template="Criteria.cst" %>
 <%@ Register Name="DynamicListBaseTemplate" Template="DynamicListBase.cst" %>
@@ -27,12 +15,21 @@
 <%@ Register Name="ReadOnlyListTemplate" Template="ReadOnlyList.cst" %>
 <%@ Register Name="ReadOnlyRootTemplate" Template="ReadOnlyRoot.cst" %>
 <%@ Register Name="SwitchableObjectTemplate" Template="SwitchableObject.cst" %>
-
 <%@ Register Name="ADOHelperTemplate" Template="Internal\ADOHelper.cst" %>
 <%@ Register Name="LinqToSQLHelperTemplate" Template="Internal\LinqToSQLHelper.cst" %>
 <%@ Register Name="FactoryNamesTemplate" Template="Internal\FactoryNames.cst" %>
 <%@ Register Name="ExistsCommandTemplate" Template="Internal\ExistsCommand.cst" %>
 <%@ Register Name="AsyncChildLoaderTemplate" Template="Internal\AsyncChildLoader.cst" %>
+
+<%@ Assembly Name="CodeSmith.CustomProperties" %>
+<%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\Common" %>
+<%@ Assembly Name="Generator.CSLA" Path="..\..\Common" %>
+<%@ Assembly Name="SchemaExplorer" %>
+
+<%@ Import Namespace="CodeSmith.CustomProperties" %>
+<%@ Import Namespace="CodeSmith.SchemaHelper" %>
+<%@ Import Namespace="System.Collections.Generic" %>
+<%@ Import Namespace="SchemaExplorer" %>
 
 <% Generate(); %>
 
@@ -42,12 +39,12 @@ public override void Generate()
 {
     #region CommandObjectTemplate
 
-    if(this.CommandObject != null)
+    if(this.CommandObjectEntities != null)
     {
-        foreach(TableSchema table in this.CommandObject)
+        foreach(var entity in this.CommandObjectEntities)
         {
             CommandObjectTemplate template = this.Create<CommandObjectTemplate>();
-            RenderHelper(template, table);
+            RenderHelper(template, entity);
         }
     }
     
@@ -55,12 +52,12 @@ public override void Generate()
     
     #region CriteriaTemplate
 
-    if(this.Criteria != null)
+    if(this.CriteriaEntities != null)
     {
-        foreach(TableSchema table in this.Criteria)
+        foreach(var entity in this.CriteriaEntities)
         {
             CriteriaTemplate template = this.Create<CriteriaTemplate>();
-            RenderHelper(template, table);
+            RenderHelper(template, entity);
         }
     }
 
@@ -68,12 +65,12 @@ public override void Generate()
     
     #region DynamicRootTemplate
 
-    if(this.DynamicRoot != null)
+    if(this.DynamicRootEntities != null)
     {
-        foreach(TableSchema table in this.DynamicRoot)
+        foreach(var entity in this.DynamicRootEntities)
         {
             DynamicRootTemplate template = this.Create<DynamicRootTemplate>();
-            RenderHelper(template, table);
+            RenderHelper(template, entity);
         }
     }
 
@@ -81,12 +78,12 @@ public override void Generate()
     
     #region DynamicRootListTemplate
 
-    if(this.DynamicRootList != null)
+    if(this.DynamicRootListEntities != null)
     {
-        foreach(TableSchema table in this.DynamicRootList)
+        foreach(var entity in this.DynamicRootListEntities)
         {
             DynamicRootListTemplate template = this.Create<DynamicRootListTemplate>();
-            RenderHelper(template, table);
+            RenderHelper(template, entity);
         }
     }
 
@@ -94,12 +91,12 @@ public override void Generate()
     
     #region EditableChildTemplate
 
-    if(this.EditableChild != null)
+    if(this.EditableChildEntities != null)
     {
-        foreach(TableSchema table in this.EditableChild)
+        foreach(var entity in this.EditableChildEntities)
         {
             EditableChildTemplate template = this.Create<EditableChildTemplate>();
-            RenderHelper(template, table);
+            RenderHelper(template, entity);
         }
     }
 
@@ -107,12 +104,12 @@ public override void Generate()
     
     #region EditableChildListTemplate
 
-    if(this.EditableChildList != null)
+    if(this.EditableChildListEntities != null)
     {
-        foreach(TableSchema table in this.EditableChildList)
+        foreach(var entity in this.EditableChildListEntities)
         {
             EditableChildListTemplate template = this.Create<EditableChildListTemplate>();
-            RenderHelper(template, table);
+            RenderHelper(template, entity);
         }
     }
 
@@ -120,12 +117,12 @@ public override void Generate()
     
     #region EditableRootTemplate
 
-    if(this.EditableRoot != null)
+    if(this.EditableRootEntities != null)
     {
-        foreach(TableSchema table in this.EditableRoot)
+        foreach(var entity in this.EditableRootEntities)
         {
             EditableRootTemplate template = this.Create<EditableRootTemplate>();
-            RenderHelper(template, table);
+            RenderHelper(template, entity);
         }
     }
 
@@ -133,12 +130,12 @@ public override void Generate()
     
     #region EditableRootListTemplate
 
-    if(this.EditableRootList != null)
+    if(this.EditableRootListEntities != null)
     {
-        foreach(TableSchema table in this.EditableRootList)
+        foreach(var entity in this.EditableRootListEntities)
         {
             EditableRootListTemplate template = this.Create<EditableRootListTemplate>();
-            RenderHelper(template, table);
+            RenderHelper(template, entity);
         }
     }
 
@@ -146,12 +143,12 @@ public override void Generate()
      
     #region DynamicListBase
 
-    if(this.DynamicListBase != null)
+    if(this.DynamicListBaseEntities != null)
     {
-        foreach(TableSchema table in this.DynamicListBase)
+        foreach(var entity in this.DynamicListBaseEntities)
         {
             DynamicListBaseTemplate template = this.Create<DynamicListBaseTemplate>();
-            RenderHelper(template, table);
+            RenderHelper(template, entity);
         }
     }
 
@@ -159,12 +156,12 @@ public override void Generate()
     
     #region NameValueListTemplate
 
-    if(this.NameValueList != null)
+    if(this.NameValueListEntities != null)
     {
-        foreach(TableSchema table in this.NameValueList)
+        foreach(var entity in this.NameValueListEntities)
         {
             NameValueListTemplate template = this.Create<NameValueListTemplate>();
-            RenderHelper(template, table);
+            RenderHelper(template, entity);
         }
     }
 
@@ -172,12 +169,12 @@ public override void Generate()
     
     #region ReadOnlyChildTemplate
 
-    if(this.ReadOnlyChild != null)
+    if(this.ReadOnlyChildEntities != null)
     {
-        foreach(TableSchema table in this.ReadOnlyChild)
+        foreach(var entity in this.ReadOnlyChildEntities)
         {
             ReadOnlyChildTemplate template = this.Create<ReadOnlyChildTemplate>();
-            RenderHelper(template, table);
+            RenderHelper(template, entity);
         }
     }
 
@@ -185,12 +182,12 @@ public override void Generate()
     
     #region ReadOnlyChildListTemplate
 
-    if(this.ReadOnlyChildList != null)
+    if(this.ReadOnlyChildListEntities != null)
     {
-        foreach(TableSchema table in this.ReadOnlyChildList)
+        foreach(var entity in this.ReadOnlyChildListEntities)
         {
             ReadOnlyChildListTemplate template = this.Create<ReadOnlyChildListTemplate>();
-            RenderHelper(template, table);
+            RenderHelper(template, entity);
         }
     }
 
@@ -198,12 +195,12 @@ public override void Generate()
     
     #region ReadOnlyListTemplate
 
-    if(this.ReadOnlyList != null)
+    if(this.ReadOnlyListEntities != null)
     {
-        foreach(TableSchema table in this.ReadOnlyList)
+        foreach(var entity in this.ReadOnlyListEntities)
         {
             ReadOnlyListTemplate template = this.Create<ReadOnlyListTemplate>();
-            RenderHelper(template, table);
+            RenderHelper(template, entity);
         }
     }
 
@@ -211,12 +208,12 @@ public override void Generate()
     
     #region ReadOnlyRootTemplate
 
-    if(this.ReadOnlyRoot != null)
+    if(this.ReadOnlyRootEntities != null)
     {
-        foreach(TableSchema table in this.ReadOnlyRoot)
+        foreach(var entity in this.ReadOnlyRootEntities)
         {
             ReadOnlyRootTemplate template = this.Create<ReadOnlyRootTemplate>();
-            RenderHelper(template, table);
+            RenderHelper(template, entity);
         }
     }
 
@@ -224,12 +221,12 @@ public override void Generate()
     
     #region SwitchableObjectTemplate
 
-    if(this.SwitchableObject != null)
+    if(this.SwitchableObjectEntities != null)
     {
-        foreach(TableSchema table in this.SwitchableObject)
+        foreach(var entity in this.SwitchableObjectEntities)
         {
             SwitchableObjectTemplate template = this.Create<SwitchableObjectTemplate>();
-            RenderHelper(template, table);
+            RenderHelper(template, entity);
         }
     }
 
@@ -259,7 +256,7 @@ public override void Generate()
     }
 
     #endregion
-	
+    
     #region FactoryNamesTemplate
 
     if(DataAccessImplementation == DataAccessMethod.ObjectFactoryNone || DataAccessImplementation == DataAccessMethod.ObjectFactoryParameterizedSQL || DataAccessImplementation == DataAccessMethod.ObjectFactoryStoredProcedures)
@@ -272,20 +269,17 @@ public override void Generate()
     #endregion
 
     #region ExistsCommandTemplate
-	ExistsCommandTemplate ExistsCommand = this.Create<ExistsCommandTemplate>();
-	this.CopyPropertiesTo(ExistsCommand);
-	ExistsCommand.RenderToFile(System.IO.Path.Combine(this.Location, "Commands\\ExistsCommand.cs"), true);
+    ExistsCommandTemplate ExistsCommand = this.Create<ExistsCommandTemplate>();
+    this.CopyPropertiesTo(ExistsCommand);
+    ExistsCommand.RenderToFile(System.IO.Path.Combine(this.Location, "Commands\\ExistsCommand.cs"), true);
     #endregion
 
     #region AsyncChildLoaderTemplate
 
-    if(IncludeSilverlightSupport)
-    {
-        AsyncChildLoaderTemplate AsyncChildLoader = this.Create<AsyncChildLoaderTemplate>();
-        this.CopyPropertiesTo(AsyncChildLoader);
-        AsyncChildLoader.RenderToFile(System.IO.Path.Combine(this.Location, "Utility\\AsyncChildLoader.cs"), true);
-    }
-
+    AsyncChildLoaderTemplate AsyncChildLoader = this.Create<AsyncChildLoaderTemplate>();
+    this.CopyPropertiesTo(AsyncChildLoader);
+    AsyncChildLoader.RenderToFile(System.IO.Path.Combine(this.Location, "Utility\\AsyncChildLoader.cs"), true);
+   
     #endregion
 }
 

@@ -1,0 +1,113 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Generator.CSLA</name>
+    </assembly>
+    <members>
+        <member name="M:Generator.CSLA.EntityCodeTemplate.ResolveChildBusinessClassName">
+            <summary>
+            Attempts to resolve the best canidate for the child class name.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Generator.CSLA.EntityCodeTemplate.ResolveTargetClassName(System.String,System.String)">
+            <summary>
+            Gets the Root BusinessName + the suffix.
+            </summary>
+            <param name="className"></param>
+            <param name="suffix"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Generator.CSLA.EntityCodeTemplate.ResolveTargetClassName(System.String,System.String,System.Boolean)">
+            <summary>
+            Gets the Root BusinessName + the suffix.
+            </summary>
+            <param name="className"></param>
+            <param name="suffix"></param>
+            <param name="expression"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Generator.CSLA.EntityCodeTemplate.OnEntityChanged">
+            <summary>
+            This method fires anytime a datasource changes.
+            </summary>
+        </member>
+        <member name="M:Generator.CSLA.EntityCodeTemplate.OnEntityChanging">
+            <summary>
+            This method is used if you don't want to overwrite the whole OnEntityChanged() method, you just want to modify a property in the pipeline..
+            I only created this becuase I didn't want to duplicated a lot of code across templates or new up a new entity twice..
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Generator.CSLA.EntityCodeTemplate.BusinessClassNameExists(System.String,System.Int32)">
+            <summary>
+            Checks to see if a Business Object exists without a suffix.
+            </summary>
+            <param name="suffix">The Suffix</param>
+            <param name="length"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Generator.CSLA.EntityCodeTemplate.BusinessObjectExists(System.String)">
+            <summary>
+            This is used to detect to see if the context data contains a class. It is used in the case where we want to see if a read-write class exists before a read only..
+            </summary>
+            <param name="suffix"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Generator.CSLA.EntityCodeTemplate.BusinessObjectExists(CodeSmith.SchemaHelper.Association)">
+            <summary>
+            This is used to detect to see if the context data contains a class. It is used in the case where we want to see if a read-write class exists before a read only..
+            </summary>
+            <param name="association"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Generator.CSLA.EntityCodeTemplate.BusinessObjectExists(CodeSmith.SchemaHelper.Association,System.String)">
+            <summary>
+            This is used to detect to see if the context data contains a class. It is used in the case where we want to see if a read-write class exists before a read only..
+            </summary>
+            <param name="association"></param>
+            <param name="suffix"></param>
+            <returns></returns>
+        </member>
+        <member name="P:Generator.CSLA.EntityCodeTemplate.SourceTable">
+            <summary>
+            This is needed for legacy purposes..
+            </summary>
+        </member>
+        <member name="P:Generator.CSLA.EntityCodeTemplate.SourceView">
+            <summary>
+            This is needed for legacy purposes..
+            </summary>
+        </member>
+        <member name="P:Generator.CSLA.EntityCodeTemplate.SourceCommand">
+            <summary>
+            This is needed for legacy purposes..
+            </summary>
+        </member>
+        <member name="P:Generator.CSLA.EntityCodeTemplate.Entity">
+            <summary>
+            The Generic Entity Object that gets generated.
+            </summary>
+        </member>
+        <member name="T:Generator.CSLA.EntityMasterCodeTemplate">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Generator.CSLA.EntityMasterCodeTemplate.#ctor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:Generator.CSLA.DataAccessCodeTemplate">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Generator.CSLA.DataAccessCodeTemplate.#ctor">
+            <summary>
+            
+            </summary>
+        </member>
+    </members>
+</doc>

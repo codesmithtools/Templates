@@ -313,7 +313,7 @@ namespace CodeSmith.QuickStart
             }
             set
             {
-                if (!IsCSLA40)
+                if (!IsLatestCSLA)
                     Console.WriteLine("In order to include Silverlight support you must target CSLA 4.0.");
 
                 _silverlightSupport = value;
@@ -396,7 +396,7 @@ namespace CodeSmith.QuickStart
         {
             Entity = new Entity(SourceTable);
 
-            if (OnTableChanging()) return;
+            if (OnEntityChanging()) return;
 
             if (string.IsNullOrEmpty(BusinessClassName))
                 BusinessClassName = Entity.ClassName;
@@ -435,7 +435,7 @@ namespace CodeSmith.QuickStart
         /// I only created this becuase I didn't want to duplicated a lot of code across templates or new up a new entity twice..
         /// </summary>
         /// <returns></returns>
-        public virtual bool OnTableChanging()
+        public virtual bool OnEntityChanging()
         {
             return false;
         }
@@ -445,7 +445,7 @@ namespace CodeSmith.QuickStart
         #region Public Method(s)
 
         [Browsable(false)]
-        public override bool IsCSLA40
+        public override bool IsLatestCSLA
         {
             get
             {
@@ -455,9 +455,9 @@ namespace CodeSmith.QuickStart
 
         public override void RegisterReferences()
         {
-            RegisterReference(!IsCSLA40
+            RegisterReference(!IsLatestCSLA
                                   ? Path.GetFullPath(Path.Combine(CodeTemplateInfo.DirectoryName, @"..\..\Common\Csla\3.8\Client\Csla.dll"))
-                                  : Path.GetFullPath(Path.Combine(CodeTemplateInfo.DirectoryName, @"..\..\Common\Csla\4.0\Client\Csla.dll")));
+                                  : Path.GetFullPath(Path.Combine(CodeTemplateInfo.DirectoryName, @"..\..\Common\Csla\4.3\Client\Csla.dll")));
         }
 
         public bool IsReadOnlyBusinessObject(string suffix)

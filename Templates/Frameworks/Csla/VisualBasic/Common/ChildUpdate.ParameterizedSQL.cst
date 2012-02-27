@@ -1,44 +1,41 @@
 ﻿<%-- Author: Blake Niemyjski --%>
-<%@ CodeTemplate Language="VB" TargetLanguage="VB" Inherits="CodeSmith.QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Encoding="UTF-8" Description="CSLA Map" %>
-
-<%@ Assembly Name="SchemaExplorer" %>
+<%@ CodeTemplate Language="VB" TargetLanguage="VB" Inherits="Generator.CSLA.EntityCodeTemplate" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\Common" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper.Extensions" Path="..\..\Common" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper.VisualBasicExtensions" Path="..\..\Common" %>
-<%@ Assembly Name="CodeSmith.QuickStart" Path="..\..\Common" %>
-
-<%@ Import Namespace="SchemaExplorer" %>
+<%@ Assembly Name="Generator.CSLA" Path="..\..\Common" %>
 <%@ Import Namespace="CodeSmith.SchemaHelper" %>
-<%@ Import Namespace="CodeSmith.QuickStart" %>
+<%@ Import Namespace="System.Linq" %>
             Dim cancel As Boolean = False
             OnChildUpdating(connection, cancel)
             If (cancel) Then
                 Return
             End If
-    
+
+<% If(Entity.CanUpdate) Then %> 
             If Not connection.State = ConnectionState.Open Then connection.Open()
-            Const commandText As String = "UPDATE [<%= entity.Table.Owner %>].[<%= entity.Table.Name %>] <%= entity.MembersUpdateInsert.BuildSetStatements() %> <%= entity.PrimaryKey.KeyMembers.BuildWhereStatements(True) %><% If (entity.HasRowVersionMember) Then %> AND [<%= entity.RowVersionMember.ColumnName %>] = <%= ParameterPrefix  %><%= entity.RowVersionMember.ColumnName %><% End If %><%= entity.BuildUpdateSelectStatement() %>"
+            Const commandText As String = "UPDATE <%= Entity.EntityKeyName %> <%= entity.GetProperties(PropertyType.UpdateInsert).BuildSetStatements() %> <%= entity.Key.Properties.BuildWhereStatements(True) %><% If entity.ConcurrencyProperty IsNot Nothing Then %> AND [<%= entity.ConcurrencyProperty.KeyName %>] = <%= ParameterPrefix  %><%= entity.ConcurrencyProperty.KeyName %><% End If %><%= entity.BuildUpdateSelectStatement() %>"
             Using command As New SqlCommand(commandText, connection)
-                <%= entity.MembersNoRowVersion.BuildCommandParameters(False, False, Not RenderOptionalContent, False, True) %>
-    <% If(Entity.HasRowVersionMember) Then %>
-                command.Parameters.AddWithValue("<%= ParameterPrefix  %><%= Entity.RowVersionMember.ColumnName %>", SqlDbType.Timestamp)
-                command.Parameters("<%= ParameterPrefix  %><%= Entity.RowVersionMember.ColumnName %>").Value = Me.<%= Entity.RowVersionMember.PropertyName %>
-                command.Parameters("<%= ParameterPrefix  %><%= Entity.RowVersionMember.ColumnName %>").Direction = ParameterDirection.InputOutput
+                <%= entity.GetProperties(PropertyType.NoConcurrency).BuildCommandParameters(False, False, Not RenderOptionalContent, False, True) %>
+    <% If Not(Entity.ConcurrencyProperty Is Nothing) Then %>
+                command.Parameters.AddWithValue("<%= ParameterPrefix  %><%= Entity.ConcurrencyProperty.KeyName %>", SqlDbType.Timestamp)
+                command.Parameters("<%= ParameterPrefix  %><%= Entity.ConcurrencyProperty.KeyName %>").Value = Me.<%= Entity.ConcurrencyProperty.Name %>
+                command.Parameters("<%= ParameterPrefix  %><%= Entity.ConcurrencyProperty.KeyName %>").Direction = ParameterDirection.InputOutput
     <% End If %>
     
-    <% If (entity.HasRowVersionMember Or entity.HasIdentityMember) Then %>
+    <% If (entity.ConcurrencyProperty IsNot Nothing OrElse entity.IdentityProperty IsNot Nothing) Then %>
                 Using reader As SafeDataReader = New SafeDataReader(command.ExecuteReader())
                     If reader.Read() Then
-    <% If (Entity.HasRowVersionMember) Then %>
-                        <%= Entity.RowVersionMember.PropertyName %> = ADOHelper.GetBytes(reader, "<%= Entity.RowVersionMember.ColumnName %>")
+    <% If Not(Entity.ConcurrencyProperty Is Nothing) Then %>
+                        <%= Entity.ConcurrencyProperty.Name %> = ADOHelper.GetBytes(reader, "<%= Entity.ConcurrencyProperty.KeyName %>")
     <% End If %>
-    <%For Each member As Member In Entity.PrimaryKey.KeyMembers
-        If(Not member.IsIdentity) Then %>
+    <%For Each prop As IProperty In Entity.GetProperties(PropertyType.Key)
+        If(Not prop.IsType(PropertyType.Identity)) Then %>
                         ' Update non-identity primary key value.
             <% If(UseMemberVariables) Then %>
-                        <%= member.PrivateMemberVariableName %> = <%If not [member].HasByteArrayColumn() Then %>reader.<%= [member].GetReaderMethod() %>("<%= [member].ColumnName %>")<% else %>ADOHelper.GetBytes(reader, "<%= member.ColumnName %>")<% End If %>
+                        <%= prop.PrivateMemberVariableName %> = <%If not prop.HasByteArrayColumn() Then %>reader.<%= prop.GetReaderMethod() %>("<%= prop.KeyName %>")<% else %>ADOHelper.GetBytes(reader, "<%= prop.KeyName %>")<% End If %>
         <% Else %>
-                        LoadProperty(<%= member.PrivateMemberVariableName %>Property, <%If not [member].HasByteArrayColumn() Then %>reader.<%= [member].GetReaderMethod() %>("<%= [member].ColumnName %>")<% else %>ADOHelper.GetBytes(reader, "<%= member.ColumnName %>")<% End If %>)
+                        LoadProperty(<%= prop.PrivateMemberVariableName %>Property, <%If not prop.HasByteArrayColumn() Then %>reader.<%= prop.GetReaderMethod() %>("<%= prop.KeyName %>")<% else %>ADOHelper.GetBytes(reader, "<%= prop.KeyName %>")<% End If %>)
         <% End If
         End If
     Next %>
@@ -52,41 +49,41 @@
                 End If
     <% End If %>
     <% If Not RenderOptionalContent Then
-        For Each member As Member In Entity.Members
-            If member.IsForeignKey Then
-                If String.IsNullOrEmpty(member.ResolveAssociationPropertyClassName()) Then
+        For Each prop As IProperty In Entity.Properties
+            If prop.IsType(PropertyType.Foreign) Then
+                If String.IsNullOrEmpty(prop.ResolveAssociationPropertyClassName()) Then
                     Continue For
                 End If  %>
     
-                ' Update foreign keys values. This code will update the values passed in from the parent only if no errors occurred after executing the query.
-    <% Dim localParameterName As String = member.ResolveAssociationPropertyVariable()
-    Dim localParameterNameWithChildProperty As String = member.ResolveAssociationPropertyVariableWithChildProperty() %>
-                If(Not IsNothing(<%= localParameterName %>) AndAlso Not <%= localParameterNameWithChildProperty %> = Me.<%= member.PropertyName %>) Then
+                ' Update foreign keys values. This code will update the values passed In from the parent only if no errors occurred after executing the query.
+    <% Dim localParameterName As String = prop.ResolveAssociationPropertyVariable()
+    Dim localParameterNameWithChildProperty As String = prop.ResolveAssociationPropertyVariableWithChildProperty() %>
+                If(Not IsNothing(<%= localParameterName %>) AndAlso Not <%= localParameterNameWithChildProperty %> = Me.<%= prop.Name %>) Then
     <% If(UseMemberVariables) Then %>
-                    <%= member.PrivateMemberVariableName %> = <%= localParameterNameWithChildProperty %>
+                    <%= prop.PrivateMemberVariableName %> = <%= localParameterNameWithChildProperty %>
     <% Else %>
-                    LoadProperty(<%= member.PrivateMemberVariableName %>Property, <%= localParameterNameWithChildProperty %>)
+                    LoadProperty(<%= prop.PrivateMemberVariableName %>Property, <%= localParameterNameWithChildProperty %>)
     <% End If %>
                 End If
             <% End If
         Next
     End If %>
     
-    <% For Each member As Member In Entity.PrimaryKey.KeyMembers
-        If Not (member.IsIdentity) Then %>
+    <% For Each prop As IProperty In Entity.GetProperties(PropertyType.Key)
+        If Not (prop.IsType(PropertyType.Identity)) Then %>
                 ' Update non-identity primary key value.
         <% If(UseMemberVariables) Then %>
-                _original<%= member.PropertyName %> = Me.<%= member.PropertyName %>
+                _original<%= prop.Name %> = Me.<%= prop.Name %>
     <%      Else %>
-                LoadProperty(_original<%= member.PropertyName %>Property, Me.<%= member.PropertyName %>)
+                LoadProperty(_original<%= prop.Name %>Property, Me.<%= prop.Name %>)
     <%      End If
         End If
     Next %>
             End Using
-    <% If (Entity.AssociatedToManyUnion.Count > 0 OrElse Entity.AssociatedManyToOne.Count > 0 OrElse Entity.AssociatedOneToZeroOrOne.Count > 0) Then
+    <% If (Entity.Associations.Where(Function(a) a.AssociationType = AssociationType.OneToMany).Count() > 0 OrElse Entity.Associations.Where(Function(a) a.AssociationType = AssociationType.ManyToOne).Count() > 0 OrElse Entity.Associations.Where(Function(a) a.AssociationType = AssociationType.OneToZeroOrOne).Count() > 0) Then
         If (Not RenderOptionalContent) Then
         Dim childCount As Integer = 0
-        For Each a As Association In Entity.AssociatedOneToMany
+        For Each a As Association In Entity.Associations.Where(Function(assoc) assoc.AssociationType = AssociationType.OneToMany)
             If IsChildBusinessObject(a) Or IsSwitchableObject(a) Then
                 childCount += 1
             End If
@@ -105,3 +102,6 @@
     End If %>
     
             OnChildUpdated()
+<% Else %>
+            Throw New  NotSupportedException("This business object cannot be updated.")
+<% End If %>

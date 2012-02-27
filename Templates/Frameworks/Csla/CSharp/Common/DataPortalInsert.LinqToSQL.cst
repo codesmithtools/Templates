@@ -1,101 +1,86 @@
 ﻿<%-- Author: Blake Niemyjski --%>
 <%--         Joe McPherson   --%>
-<%@ CodeTemplate Language="C#" TargetLanguage="C#" Inherits="CodeSmith.QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Encoding="UTF-8" Description="CSLA Map" %>
-
-<%@ Assembly Name="SchemaExplorer" %>
+<%@ CodeTemplate Language="C#" TargetLanguage="C#" Inherits="Generator.CSLA.EntityCodeTemplate" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\Common" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper.Extensions" Path="..\..\Common" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper.CSharpExtensions" Path="..\..\Common" %>
-<%@ Assembly Name="CodeSmith.QuickStart" Path="..\..\Common" %>
-
-<%@ Import Namespace="SchemaExplorer" %>
+<%@ Assembly Name="Generator.CSLA" Path="..\..\Common" %>
 <%@ Import Namespace="CodeSmith.SchemaHelper" %>
-<%@ Import Namespace="CodeSmith.QuickStart" %>
-			//LinqToSQL Modification
-			bool cancel = false;
+<%@ Import Namespace="System.Linq" %>
+
+            //LinqToSQL Modification
+            bool cancel = false;
             OnInserting(ref cancel);
             if (cancel) return;
-			
-			// Get <%= StringUtil.ToPascalCase(Entity.Table.Name) %> data for a single criteria
+
+<% if(Entity.CanInsert) { %>             
+            // Get <%= Entity.Name %> data for a single criteria
             using (var ctx = ContextManager<DAL.PetshopDataContext>.GetManager(LinqToSQLHelper.ConnectionString, true))
-			{
-				DAL.<%= StringUtil.ToPascalCase(Entity.Table.Name) %> item = new DAL.<%= StringUtil.ToPascalCase(Entity.Table.Name) %>();
-				
-				using (BypassPropertyChecks)
-				{
-<% 	if(Entity.HasRowVersionMember || Entity.HasIdentityMember) 
-	{ 
-		if(Entity.HasRowVersionMember) 
-		foreach(Member member in Entity.PrimaryKey.KeyMembers) 
-		{ 
-			if(!member.IsIdentity) 			
-			{ %>
-			LoadProperty(<%= member.PrivateMemberVariableName %>Property, <%if(!member.HasByteArrayColumn()) { %>item.<%= member.ColumnName %>);<% } else { %>LinqToSQLHelper.GetBinary(this.<%= member.PropertyName %>));<% } %>
-<% 			}
-		} %>
-<% 		else 
-		foreach(Member member in Entity.PrimaryKey.KeyMembers) 
-		{ 
-			if(!member.IsIdentity) 			
-			{ %>
-            LoadProperty(_original<%= member.PropertyName %>Property, this.<%= member.PropertyName %>);
-<% 			}
-		} %>
-<%	} 
-	else
-	{
-		foreach(Member member in Entity.PrimaryKey.KeyMembers) 
-		{ %>
-					item.<%= member.PropertyName %> = this.<%= member.PropertyName %>;
-<% 		} 
-	}%>
-<% foreach (Member member in Entity.MembersNoPrimaryKeys) 
-	{%>
-					item.<%= member.PropertyName %> = <%if(!member.HasByteArrayColumn()) { %>this.<%= member.PropertyName %>;<% } else { %>LinqToSQLHelper.GetBinary(this.<%= member.PropertyName %>);<% } %>
-<%	}%>
-				}
-			
-				ctx.DataContext.<%= StringUtil.ToPascalCase(Entity.Table.Name) %>.InsertOnSubmit(item);
-            	ctx.DataContext.SubmitChanges();
+            {
+                DAL.<%= Entity.Name %> item = new DAL.<%= Entity.Name %>();
+                
+                using (BypassPropertyChecks)
+                {
+<%     if(Entity.ConcurrencyProperty != null || Entity.IdentityProperty != null) 
+    { 
+        if(Entity.ConcurrencyProperty != null) 
+            foreach(IProperty property in Entity.GetProperties(PropertyType.Key).Where(p => !p.IsType(PropertyType.Identity))) { %>
+            LoadProperty(<%= property.PrivateMemberVariableName %>Property, <%if(!property.HasByteArrayColumn()) { %>item.<%= property.KeyName %>);<% } else { %>LinqToSQLHelper.GetBinary(this.<%= property.Name %>));<% } %>
+<%             } %>
+<%         else 
+        foreach(IProperty property in Entity.GetProperties(PropertyType.Key).Where(p => !p.IsType(PropertyType.Identity))) { %>
+            LoadProperty(_original<%= property.Name %>Property, this.<%= property.Name %>);
+<%         } %>
+<%    } 
+    else
+    {
+        foreach(IProperty property in Entity.GetProperties(PropertyType.Key)) 
+        { %>
+                    item.<%= property.Name %> = this.<%= property.Name %>;
+<%         } 
+    }%>
+<% foreach (IProperty property in Entity.GetProperties(PropertyType.NoKey)) 
+    {%>
+                    item.<%= property.Name %> = <%if(!property.HasByteArrayColumn()) { %>this.<%= property.Name %>;<% } else { %>LinqToSQLHelper.GetBinary(this.<%= property.Name %>);<% } %>
+<%    }%>
+                }
+            
+                ctx.DataContext.<%= Entity.Name %>.InsertOnSubmit(item);
+                ctx.DataContext.SubmitChanges();
 <%
-			
- 	if(Entity.HasRowVersionMember || Entity.HasIdentityMember) 
-	{ 
-		if(Entity.HasRowVersionMember) 
-		foreach(Member member in Entity.PrimaryKey.KeyMembers) 
-		{ 
-			if(member.IsIdentity) 			
-			{ %>
-            LoadProperty(<%= member.PrivateMemberVariableName %>Property, <%if(!member.HasByteArrayColumn()) { %>item.<%= member.ColumnName %>);<% } else { %>LinqToSQLHelper.GetBinary(this.<%= member.PropertyName %>));<% } %>
-<% 			}
-		} %>
-<% 		else 
-		foreach(Member member in Entity.PrimaryKey.KeyMembers) 
-		{ 
-			if(member.IsIdentity) 			
-			{ %>
-           		LoadProperty(<%= member.PrivateMemberVariableName %>Property, item.<%= member.ColumnName %>);
-<% 			}
-		} %>
-<%	}%>			
+            
+     if(Entity.ConcurrencyProperty != null || Entity.IdentityProperty != null) 
+    { 
+        if(Entity.ConcurrencyProperty != null) 
+        foreach(IProperty property in Entity.GetProperties(PropertyType.Key).Where(p => p.IsType(PropertyType.Identity))) { %>
+            LoadProperty(<%= property.PrivateMemberVariableName %>Property, <%if(!property.HasByteArrayColumn()) { %>item.<%= property.KeyName %>);<% } else { %>LinqToSQLHelper.GetBinary(this.<%= property.Name %>));<% } %>
+<%         } %>
+<%         else 
+        foreach(IProperty property in Entity.GetProperties(PropertyType.Key).Where(p => p.IsType(PropertyType.Identity))) { %>
+               LoadProperty(<%= property.PrivateMemberVariableName %>Property, item.<%= property.KeyName %>);
+<%         } %>
+<%    }%>            
 <%
-	foreach(Member member in Entity.PrimaryKey.KeyMembers)
-	{ 
-		if(!member.IsIdentity) 
-		{ 
-			if(UseMemberVariables) 
-			{ %>
-            _original<%= member.PropertyName %> = this.<%= member.PropertyName %>;
-<% 			} 
-			else 
-			{ %>
-            	LoadProperty(_original<%= member.PropertyName %>Property, this.<%= member.PropertyName %>);
-<% 			}
-		} 
-	} %>
-<% 	if(Entity.AssociatedToManyUnion.Count > 0 || Entity.AssociatedManyToOne.Count > 0)
-	{%>         	
-				FieldManager.UpdateChildren(this);
-<% 	} %>
-				OnInserted();
-			}
+    foreach(IProperty property in Entity.GetProperties(PropertyType.Key))
+    { 
+        if(!property.IsType(PropertyType.Identity)) 
+        { 
+            if(UseMemberVariables) 
+            { %>
+            _original<%= property.Name %> = this.<%= property.Name %>;
+<%             } 
+            else 
+            { %>
+                LoadProperty(_original<%= property.Name %>Property, this.<%= property.Name %>);
+<%             }
+        } 
+    } %>
+<%     if(Entity.Associations.Count(a => a.AssociationType == AssociationType.OneToMany) > 0 || Entity.Associations.Count(a => a.AssociationType == AssociationType.ManyToOne) > 0)
+    {%>             
+                FieldManager.UpdateChildren(this);
+<%     } %>
+                OnInserted();
+            }
+<% } else { %>
+            throw new NotSupportedException("This business object cannot be inserted.");
+<% } %>

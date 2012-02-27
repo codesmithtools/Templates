@@ -1,17 +1,5 @@
 ﻿<%-- Author: Blake Niemyjski --%>
-<%@ CodeTemplate Language="VB" TargetLanguage="VB" OutputType="None" Debug="False" Inherits="CodeSmith.QuickStart.EntityMasterCodeTemplate" CompilerVersion="v3.5" Encoding="UTF-8" Description="CSLA Entities" %>
-
-<%@ Assembly Name="CodeSmith.CustomProperties" %>
-<%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\Common" %>
-<%@ Assembly Name="CodeSmith.QuickStart" Path="..\..\Common" %>
-<%@ Assembly Name="SchemaExplorer" %>
-
-<%@ Import Namespace="CodeSmith.CustomProperties" %>
-<%@ Import Namespace="CodeSmith.SchemaHelper" %>
-<%@ Import Namespace="CodeSmith.QuickStart" %>
-<%@ Import Namespace="SchemaExplorer" %>
-<%@ Import Namespace="System.Collections.Generic" %>
-
+<%@ CodeTemplate Language="VB" TargetLanguage="VB" OutputType="None" Inherits="Generator.CSLA.EntityMasterCodeTemplate" %>
 <%@ Register Name="CommandObjectTemplate" Template="CommandObject.cst" %>
 <%@ Register Name="CriteriaTemplate" Template="Criteria.cst" %>
 <%@ Register Name="DynamicListBaseTemplate" Template="DynamicListBase.cst" %>
@@ -27,11 +15,20 @@
 <%@ Register Name="ReadOnlyListTemplate" Template="ReadOnlyList.cst" %>
 <%@ Register Name="ReadOnlyRootTemplate" Template="ReadOnlyRoot.cst" %>
 <%@ Register Name="SwitchableObjectTemplate" Template="SwitchableObject.cst" %>
-
 <%@ Register Name="ADOHelperTemplate" Template="Internal\ADOHelper.cst" %>
 <%@ Register Name="FactoryNamesTemplate" Template="Internal\FactoryNames.cst" %>
 <%@ Register Name="ExistsCommandTemplate" Template="Internal\ExistsCommand.cst" %>
 <%@ Register Name="AsyncChildLoaderTemplate" Template="Internal\AsyncChildLoader.cst" %>
+
+<%@ Assembly Name="CodeSmith.CustomProperties" %>
+<%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\Common" %>
+<%@ Assembly Name="Generator.CSLA" Path="..\..\Common" %>
+<%@ Assembly Name="SchemaExplorer" %>
+
+<%@ Import Namespace="CodeSmith.CustomProperties" %>
+<%@ Import Namespace="CodeSmith.SchemaHelper" %>
+<%@ Import Namespace="System.Collections.Generic" %>
+<%@ Import Namespace="SchemaExplorer" %>
 
 <% Generate() %>
 
@@ -40,147 +37,146 @@
 Public Overrides Sub Generate()
     ' CommandObjectTemplate
     
-    If Not Me.CommandObject Is Nothing Then
-        For Each table As TableSchema In Me.CommandObject
+    If Not Me.CommandObjectEntities Is Nothing Then
+        For Each entity As IEntity In Me.CommandObjectEntities
             Dim template As CommandObjectTemplate = Me.Create(Of CommandObjectTemplate)()
-            RenderHelper(template, table)
+            RenderHelper(template, entity)
         Next
     End If
     
     ' CriteriaTemplate
     
-    If Not Me.Criteria Is Nothing Then
-        For Each table As TableSchema In Me.Criteria
+    If Not Me.CriteriaEntities Is Nothing Then
+        For Each entity As IEntity In Me.CriteriaEntities
             Dim template As CriteriaTemplate = Me.Create(Of CriteriaTemplate)()
-            RenderHelper(template, table)
+            RenderHelper(template, entity)
         Next
     End If
     
-    ' DynamicListBase
-    
-    If Not Me.DynamicListBase Is Nothing Then
-        For Each table As TableSchema In Me.DynamicListBase
-            Dim template As DynamicListBaseTemplate = Me.Create(Of DynamicListBaseTemplate)()
-            RenderHelper(template, table)
-        Next
-    End If
     
     ' DynamicRootTemplate
     
-    If Not Me.DynamicRoot Is Nothing Then
-        For Each table As TableSchema In Me.DynamicRoot
+    If Not Me.DynamicRootEntities Is Nothing Then
+        For Each entity As IEntity In Me.DynamicRootEntities
             Dim template As DynamicRootTemplate = Me.Create(Of DynamicRootTemplate)()
-            RenderHelper(template, table)
+            RenderHelper(template, entity)
         Next
     End If
     
     
     ' DynamicRootListTemplate
     
-    If Not Me.DynamicRootList Is Nothing Then
-        For Each table As TableSchema In Me.DynamicRootList
+    If Not Me.DynamicRootListEntities Is Nothing Then
+        For Each entity As IEntity In Me.DynamicRootListEntities
             Dim template As DynamicRootListTemplate = Me.Create(Of DynamicRootListTemplate)()
-            RenderHelper(template, table)
+            RenderHelper(template, entity)
         Next
     End If
     
     
     ' EditableChildTemplate
     
-    If Not Me.EditableChild Is Nothing Then
-        For Each table As TableSchema In Me.EditableChild
+    If Not Me.EditableChildEntities Is Nothing Then
+        For Each entity As IEntity In Me.EditableChildEntities
             Dim template As EditableChildTemplate = Me.Create(Of EditableChildTemplate)()
-            RenderHelper(template, table)
+            RenderHelper(template, entity)
         Next
     End If
     
     
     ' EditableChildListTemplate
     
-    If Not Me.EditableChildList Is Nothing Then
-        For Each table As TableSchema In Me.EditableChildList
+    If Not Me.EditableChildListEntities Is Nothing Then
+        For Each entity As IEntity In Me.EditableChildListEntities
             Dim template As EditableChildListTemplate = Me.Create(Of EditableChildListTemplate)()
-            RenderHelper(template, table)
+            RenderHelper(template, entity)
         Next
     End If
     
     
     ' EditableRootTemplate
     
-    If Not Me.EditableRoot Is Nothing Then
-        For Each table As TableSchema In Me.EditableRoot
+    If Not Me.EditableRootEntities Is Nothing Then
+        For Each entity As IEntity In Me.EditableRootEntities
             Dim template As EditableRootTemplate = Me.Create(Of EditableRootTemplate)()
-            RenderHelper(template, table)
+            RenderHelper(template, entity)
         Next
     End If
     
     
     ' EditableRootListTemplate
     
-    If Not Me.EditableRootList Is Nothing Then
-        For Each table As TableSchema In Me.EditableRootList
+    If Not Me.EditableRootListEntities Is Nothing Then
+        For Each entity As IEntity In Me.EditableRootListEntities
             Dim template As EditableRootListTemplate = Me.Create(Of EditableRootListTemplate)()
-            RenderHelper(template, table)
+            RenderHelper(template, entity)
+        Next
+    End If
+    ' DynamicListBase
+    
+    If Not Me.DynamicListBaseEntities Is Nothing Then
+        For Each entity As IEntity In Me.DynamicListBaseEntities
+            Dim template As DynamicListBaseTemplate = Me.Create(Of DynamicListBaseTemplate)()
+            RenderHelper(template, entity)
         Next
     End If
     
-    
     ' NameValueListTemplate
     
-    If Not Me.NameValueList Is Nothing Then
-        For Each table As TableSchema In Me.NameValueList
+    If Not Me.NameValueListEntities Is Nothing Then
+        For Each entity As IEntity In Me.NameValueListEntities
             Dim template As NameValueListTemplate = Me.Create(Of NameValueListTemplate)()
-            RenderHelper(template, table)
+            RenderHelper(template, entity)
         Next
     End If
     
     
     ' ReadOnlyChildTemplate
     
-    If Not Me.ReadOnlyChild Is Nothing Then
-        For Each table As TableSchema In Me.ReadOnlyChild
+    If Not Me.ReadOnlyChildEntities Is Nothing Then
+        For Each entity As IEntity In Me.ReadOnlyChildEntities
             Dim template As ReadOnlyChildTemplate = Me.Create(Of ReadOnlyChildTemplate)()
-            RenderHelper(template, table)
+            RenderHelper(template, entity)
         Next
     End If
     
     
     ' ReadOnlyChildListTemplate
     
-    If Not Me.ReadOnlyChildList Is Nothing Then
-        For Each table As TableSchema In Me.ReadOnlyChildList
+    If Not Me.ReadOnlyChildListEntities Is Nothing Then
+        For Each entity As IEntity In Me.ReadOnlyChildListEntities
             Dim template As ReadOnlyChildListTemplate = Me.Create(Of ReadOnlyChildListTemplate)()
-            RenderHelper(template, table)
+            RenderHelper(template, entity)
         Next
     End If
     
     
     ' ReadOnlyListTemplate
     
-    If Not Me.ReadOnlyList Is Nothing Then
-        For Each table As TableSchema In Me.ReadOnlyList
+    If Not Me.ReadOnlyListEntities Is Nothing Then
+        For Each entity As IEntity In Me.ReadOnlyListEntities
             Dim template As ReadOnlyListTemplate = Me.Create(Of ReadOnlyListTemplate)()
-            RenderHelper(template, table)
+            RenderHelper(template, entity)
         Next
     End If
     
     
     ' ReadOnlyRootTemplate
     
-    If Not Me.ReadOnlyRoot Is Nothing Then
-        For Each table As TableSchema In Me.ReadOnlyRoot
+    If Not Me.ReadOnlyRootEntities Is Nothing Then
+        For Each entity As IEntity In Me.ReadOnlyRootEntities
             Dim template As ReadOnlyRootTemplate = Me.Create(Of ReadOnlyRootTemplate)()
-            RenderHelper(template, table)
+            RenderHelper(template, entity)
         Next
     End If
     
     
     ' SwitchableObjectTemplate
     
-    If Not Me.SwitchableObject Is Nothing Then
-        For Each table As TableSchema In Me.SwitchableObject
+    If Not Me.SwitchableObjectEntities Is Nothing Then
+        For Each entity As IEntity In Me.SwitchableObjectEntities
             Dim template As SwitchableObjectTemplate = Me.Create(Of SwitchableObjectTemplate)()
-            RenderHelper(template, table)
+            RenderHelper(template, entity)
         Next
     End If
     
@@ -215,9 +211,9 @@ Public Overrides Sub Generate()
     ' AsyncChildLoaderTemplate
 
     If IncludeSilverlightSupport Then
-	    Dim AsyncChildLoader As AsyncChildLoaderTemplate = Me.Create(Of AsyncChildLoaderTemplate)()
-	    Me.CopyPropertiesTo(AsyncChildLoader)
-	    AsyncChildLoader.RenderToFile(System.IO.Path.Combine(Me.Location, "Utility\AsyncChildLoader.vb"), True)
+        Dim AsyncChildLoader As AsyncChildLoaderTemplate = Me.Create(Of AsyncChildLoaderTemplate)()
+        Me.CopyPropertiesTo(AsyncChildLoader)
+        AsyncChildLoader.RenderToFile(System.IO.Path.Combine(Me.Location, "Utility\AsyncChildLoader.vb"), True)
     End If
 End Sub
 

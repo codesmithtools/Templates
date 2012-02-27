@@ -277,7 +277,7 @@ namespace CodeSmith.QuickStart
                     continue;
 
                 //Many-To-One
-                foreach (var childEntity in entity.AssociatedManyToOne)
+                foreach (var childEntity in entity.Associations.Where(a => a.AssociationType == AssociationType.ManyToOne))
                 {
                     foreach (AssociationMember member in childEntity)
                     {
@@ -316,7 +316,7 @@ namespace CodeSmith.QuickStart
                     continue;
 
                 //Many-To-One
-                foreach (var childEntity in entity.AssociatedManyToOne)
+                foreach (var childEntity in entity.Associations.Where(a => a.AssociationType == AssociationType.ManyToOne))
                 {
                     foreach (AssociationMember member in childEntity)
                     {
@@ -355,7 +355,7 @@ namespace CodeSmith.QuickStart
                     continue;
 
                 //Many-To-One
-                foreach (var childEntity in entity.AssociatedManyToOne)
+                foreach (var childEntity in entity.Associations.Where(a => a.AssociationType == AssociationType.ManyToOne))
                 {
                     foreach (AssociationMember member in childEntity)
                     {
@@ -394,7 +394,7 @@ namespace CodeSmith.QuickStart
                     continue;
 
                 //Many-To-One
-                foreach (var childEntity in entity.AssociatedManyToOne)
+                foreach (var childEntity in entity.Associations.Where(a => a.AssociationType == AssociationType.ManyToOne))
                 {
                     foreach (AssociationMember member in childEntity)
                     {
@@ -433,7 +433,7 @@ namespace CodeSmith.QuickStart
                     continue;
 
                 //Many-To-One
-                foreach (var childEntity in entity.AssociatedManyToOne)
+                foreach (var childEntity in entity.Associations.Where(a => a.AssociationType == AssociationType.ManyToOne))
                 {
                     foreach (AssociationMember member in childEntity)
                     {
@@ -472,7 +472,7 @@ namespace CodeSmith.QuickStart
                     continue;
 
                 //Many-To-One
-                foreach (var childEntity in entity.AssociatedManyToOne)
+                foreach (var childEntity in entity.Associations.Where(a => a.AssociationType == AssociationType.ManyToOne))
                 {
                     foreach (AssociationMember member in childEntity)
                     {
@@ -815,9 +815,9 @@ namespace CodeSmith.QuickStart
         {
             RegisterReference("System.Configuration");
 
-            RegisterReference(!IsCSLA40
+            RegisterReference(!IsLatestCSLA
                                   ? Path.GetFullPath(Path.Combine(CodeTemplateInfo.DirectoryName, @"..\..\Common\Csla\3.8\Client\Csla.dll"))
-                                  : Path.GetFullPath(Path.Combine(CodeTemplateInfo.DirectoryName, @"..\..\Common\Csla\4.0\Client\Csla.dll")));
+                                  : Path.GetFullPath(Path.Combine(CodeTemplateInfo.DirectoryName, @"..\..\Common\Csla\4.3\Client\Csla.dll")));
         }
 
         #endregion

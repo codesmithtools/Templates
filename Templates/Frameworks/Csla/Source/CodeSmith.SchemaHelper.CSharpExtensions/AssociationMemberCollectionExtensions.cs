@@ -19,9 +19,9 @@ namespace CodeSmith.SchemaHelper
 
             foreach (Association association in associations)
             {
-                foreach (AssociationMember member in association)
+                foreach (AssociationProperty property in association.Properties)
                 {
-                    var parameter = string.Format(", {0} {1}", member.ClassName, Util.NamingConventions.VariableName(member.ClassName));
+                    var parameter = String.Format(", {0} {1}", property.Property.Name, Util.NamingConventions.VariableName(property.Property.Name));
 
                     if (!parameters.Contains(parameter))
                         parameters += parameter;
@@ -29,7 +29,7 @@ namespace CodeSmith.SchemaHelper
             }
 
             if (includeConnectionParameter)
-                parameters += ", SqlConnection connection";
+                parameters += ", var connection";
 
             return parameters.TrimStart(new[] { ',', ' ' });
         }

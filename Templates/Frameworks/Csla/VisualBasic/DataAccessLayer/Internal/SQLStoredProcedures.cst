@@ -3,26 +3,26 @@
 * Modified By: Blake Niemyjski
 * Description: This template will generate standard CRUD stored procedures for a given database table.
 --------------------------------------------------------------------------------------------------------------%>
-<%@ CodeTemplate Debug="False" Language="VB"  TargetLanguage="T-SQL"  Inherits="CodeSmith.QuickStart.DataCodeTemplate" CompilerVersion="v3.5" Encoding="UTF-8" Description="Generates standard CRUD procedures based on a database table schema." %>
+<%@ CodeTemplate Language="VB"  TargetLanguage="T-SQL"  Inherits="Generator.CSLA.DataCodeTemplate" %>
 <%@ Assembly Name="CodeSmith.BaseTemplates" %>
 <%@ Assembly Name="CodeSmith.CustomProperties" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\..\Common" %>
-<%@ Assembly Name="CodeSmith.QuickStart" Path="..\..\..\Common" %>
-<%@ Assembly Name="SchemaExplorer" %>
+<%@ Assembly Name="CodeSmith.SchemaHelper.VisualBasicExtensions" Path="..\..\..\Common" %>
+<%@ Assembly Name="Generator.CSLA" Path="..\..\..\Common" %>
+
 <%@ Assembly Name="System.Data" %>
 
-<%@ Import Namespace="CodeSmith.BaseTemplates" %>
-<%@ Import Namespace="CodeSmith.CustomProperties" %>
-<%@ Import Namespace="CodeSmith.SchemaHelper" %>
-<%@ Import Namespace="SchemaExplorer" %>
-<%@ Import Namespace="CodeSmith.QuickStart" %>
 <%@ Import Namespace="System.Collections.Generic" %>
 <%@ Import Namespace="System.Data" %>
 <%@ Import Namespace="System.Text.RegularExpressions" %>
+<%@ Import Namespace="CodeSmith.BaseTemplates" %>
+<%@ Import Namespace="CodeSmith.CustomProperties" %>
+<%@ Import Namespace="CodeSmith.SchemaHelper" %>
+<%@ Import Namespace="Generator.CSLA" %>
 <%
 ' this template requires a primary key on the source table
-If Not SourceTable.HasPrimaryKey Then
-    Throw New ApplicationException("SourceTable does not contain a primary key.")
+If Not Entity.HasKey Then
+    Throw New ApplicationException("Entity does not contain a key.")
 End If
 
 ' generate drop statements
@@ -66,85 +66,89 @@ GO
 
 IF EXISTS(SELECT 1 FROM fn_listextendedproperty (NULL, 'SCHEMA', 'dbo', 'PROCEDURE', '<%= GetInsertStoredProcedureShortName() %>', default, default) WHERE name = 'CustomProcedure' and value = '1')
     BEGIN
-        RAISERROR ('The procedure <%= GetInsertStoredProcedureName() %> has an Extended Property "CustomProcedure" which means is has been customised. Please review and remove the property if you wish to create the stored procedure.',16,1)
+        RAISERROR ('The procedure <%= GetInsertStoredProcedureName() %> has an Extended Property "CustomProcedure" which means is has been customized. Please review and remove the prop if you wish to create the stored procedure.',16,1)
         INSERT INTO #tmpErrors (Error) SELECT 1
     END
 GO
 
-<%   ' Check to see If the primary key is a single column primary key and also If it's either an
-     ' identity column or a GUID.  If so, we will not include the primary key column in the
+<%   ' Check to see If the primary key is a single prop primary key and also If it's either an
+     ' identity prop or a GUID.  If so, we will not include the primary key prop In the
      ' list of input parameters.
 
-    If (HasGuidOrIdentityColumn(SourceTable.PrimaryKey)) Then
+    If (HasGuidOrIdentityColumn(Entity.Key)) Then
 %>
 
 CREATE PROCEDURE <%= GetInsertStoredProcedureName() %>
-<% If(Entity.HasRowVersionMember) Then %>
-<% GenerateParameter(SourceTable.Columns(Entity.RowVersionMember.ColumnName), 1, true, false, true, true) %>,
+<% If Not(Entity.ConcurrencyProperty Is Nothing) Then %>
+<% GenerateParameter(Entity.ConcurrencyProperty, 1, true, false, true, true) %>,
 <% End If %>
-<% GenerateParameters(SourceTable.NonPrimaryKeyColumns, 1, true, false) %>
+<% GenerateParameters(Entity.GetProperties(PropertyType.NoKey), 1, true, false) %>
 <%-- Loop through all primary keys. --%>
-<% For Each column As Object In SourceTable.PrimaryKey.MemberColumns.AsIndexedEnumerable()
-    GenerateParameter(column.Value, 1, False, column.IsLast, IsGuidOrIdentityColumn(column.Value) AndAlso Not column.Value.IsForeignKeyMember, False, False)
-Next %>
+<% If(Entity.HasKey) Then %>
+<% For Each prop As Object In Entity.GetProperties(PropertyType.Key).AsIndexedEnumerable()
+    GenerateParameter(prop.Value, 1, False, prop.IsLast, IsGuidOrIdentityColumn(prop.Value) AndAlso Not prop.Value.IsType(PropertyType.Foreign), False, False)
+Next 
+End If %>
 
 AS
 
 <%-- Loop through all primary keys. If the primary key is a GUID, then assign a new GUID using NEWID(). --%>
-<% For Each column As MemberColumnSchema In SourceTable.PrimaryKey.MemberColumns
- If (column.DataType = DbType.Guid AndAlso Not column.IsForeignKeyMember) Then %>
-SET <%= ParameterPrefix %><%= column.Name %> = NEWID()
+<% If(Entity.HasKey) Then %>
+<% For Each prop As IProperty In Entity.GetProperties(PropertyType.Key)
+ If (prop.IsDbType(DbType.Guid) AndAlso Not prop.IsType(PropertyType.Foreign)) Then %>
+SET <%= ParameterPrefix %><%= prop.Name %> = NEWID()
 
 <% End If
-Next %>
-INSERT INTO <%= GetTableOwner() %>[<%= SourceTable.Name %>] (
-<% For Each column As MemberColumnSchema In SourceTable.PrimaryKey.MemberColumns
-    If (column.DataType = DbType.Guid Or Not IsIdentityColumn(column)) Then %>
-    [<%= column.Name %>],
+Next 
+End If%>
+INSERT INTO <%= Entity.EntityKeyName %> (
+<% For Each prop As IProperty In Entity.GetProperties(PropertyType.Key)
+    If (prop.IsDbType(DbType.Guid) Or Not IsIdentityColumn(prop)) Then %>
+    [<%= prop.Name %>],
     <% End If 
 Next %>
-    <% GenerateColumns(SourceTable.NonPrimaryKeyColumns, 1, false) %>
+    <% GenerateColumns(Entity.GetProperties(PropertyType.NoKey), 1, false) %>
 
 ) VALUES (
-<% For Each column As MemberColumnSchema In SourceTable.PrimaryKey.MemberColumns
-    If (column.DataType = DbType.Guid Or Not IsIdentityColumn(column)) Then %>
-    <%= ParameterPrefix %><%= column.Name %>,
+<% For Each prop As IProperty In Entity.GetProperties(PropertyType.Key)
+    If (prop.IsDbType(DbType.Guid) Or Not IsIdentityColumn(prop)) Then %>
+    <%= ParameterPrefix %><%= prop.Name %>,
     <% End If 
 Next %>
-    <% GenerateVariables(SourceTable.NonPrimaryKeyColumns, 1, false) %>
+    <% GenerateVariables(Entity.GetProperties(PropertyType.NoKey), 1, false) %>
 )
 
-<%-- If the primary key is an identity column, then capture the newly assigned identity using SCOPE_IDENTITY(). --%>
-<% For Each column As ColumnSchema In SourceTable.PrimaryKey.MemberColumns
-    If (IsIdentityColumn(column)) Then %>
-SET <%= ParameterPrefix %><%= column.Name %> = SCOPE_IDENTITY()
+<%-- If the primary key is an identity prop, then capture the newly assigned identity using SCOPE_IDENTITY(). --%>
+<% For Each prop As IProperty In Entity.GetProperties(PropertyType.Key)
+    If (IsIdentityColumn(prop)) Then %>
+SET <%= ParameterPrefix %><%= prop.Name %> = SCOPE_IDENTITY()
 <% End If
 Next %>
 
-<% If(Entity.HasRowVersionMember) Then %>
-SET <%= ParameterPrefix %><%= Entity.RowVersionMember.ColumnName %> = (SELECT [<%= Entity.RowVersionMember.ColumnName %>] FROM [<%= SourceTable.Owner %>].[<%= SourceTable.Name %>] WHERE <% GenerateConditions(SourceTable.PrimaryKey.MemberColumns, 1, false) %>)
+<% If Not(Entity.ConcurrencyProperty Is Nothing) Then %>
+SET <%= ParameterPrefix %><%= Entity.ConcurrencyProperty.KeyName %> = (SELECT [<%= Entity.ConcurrencyProperty.KeyName %>] FROM <%= Entity.EntityKeyName %>WHERE <% GenerateConditions(Entity.GetProperties(PropertyType.Key), 1, false) %>)
 <% End If %>
 
-<%-- Primary key is not a identity column or a GUID, so include all columns as input parameters. --%>
+<%-- Primary key is not a identity prop or a GUID, so include all columns as input parameters. --%>
 <% Else %>
 
 CREATE PROCEDURE <%= GetInsertStoredProcedureName() %>
-<% If(Entity.HasRowVersionMember) Then %>
-<% GenerateParameter(SourceTable.Columns(Entity.RowVersionMember.ColumnName), 1, true, false, true, true) %>,
+<% If Not(Entity.ConcurrencyProperty Is Nothing) Then %>
+<% GenerateParameter(Entity.ConcurrencyProperty, 1, true, false, true, true) %>,
 <% End If %>
-<% GenerateParameters(SourceTable.Columns, 1, false) %>
+<% GenerateParameters(Entity.Properties, 1, false) %>
 
 AS
 
 SET NOCOUNT ON
-INSERT INTO <%= GetTableOwner() %>[<%= SourceTable.Name %>] (
-    <% GenerateColumns(SourceTable.Columns, 1, false) %>
+INSERT INTO <%= Entity.EntityKeyName %> (
+    <% GenerateColumns(Entity.Properties, 1, false) %>
 ) VALUES (
-    <% GenerateVariables(SourceTable.Columns, 1, false) %>
+    <% GenerateVariables(Entity.Properties, 1, false) %>
 )
 
-<% If(Entity.HasRowVersionMember) Then %>
-SET <%= ParameterPrefix %><%= Entity.RowVersionMember.ColumnName %> = (SELECT [<%= Entity.RowVersionMember.ColumnName %>] FROM [<%= SourceTable.Owner %>].[<%= SourceTable.Name %>] WHERE <% GenerateConditions(SourceTable.PrimaryKey.MemberColumns, 1, false) %>)
+<% If Not(Entity.ConcurrencyProperty Is Nothing) Then %>
+SET <%= ParameterPrefix %><%= Entity.ConcurrencyProperty.KeyName %> = (SELECT [<%= Entity.ConcurrencyProperty.KeyName %>] FROM <%= Entity.EntityKeyName %>WHERE <% GenerateConditions(Entity.GetProperties(PropertyType.Key), 1, false) %>)
 <% End If %>
 <% End If %>
 
@@ -172,9 +176,7 @@ GO
 * Update Procedure
 *
 ------------------------------------------------------------------------------------------%>
-<%
-    GenerateProcedureHeader(GetUpdateStoredProcedureName())
-%>
+<% GenerateProcedureHeader(GetUpdateStoredProcedureName()) %>
 
 SET NUMERIC_ROUNDABORT OFF
 GO
@@ -196,30 +198,30 @@ GO
 
 IF EXISTS(SELECT 1 FROM fn_listextendedproperty (NULL, 'SCHEMA', 'dbo', 'PROCEDURE', '<%= GetUpdateStoredProcedureShortName() %>', default, default) WHERE name = 'CustomProcedure' and value = '1')
     BEGIN
-        RAISERROR ('The procedure <%= GetUpdateStoredProcedureName() %> has an Extended Property "CustomProcedure" which means is has been customized. Please review and remove the property if you wish to create the stored procedure.',16,1)
+        RAISERROR ('The procedure <%= GetUpdateStoredProcedureName() %> has an Extended Property "CustomProcedure" which means is has been customized. Please review and remove the prop if you wish to create the stored procedure.',16,1)
         INSERT INTO #tmpErrors (Error) SELECT 1
     END
 GO
 
 CREATE PROCEDURE <%= GetUpdateStoredProcedureName() %>
-<% If(Entity.HasRowVersionMember) Then %>
-<% GenerateParameter(SourceTable.Columns(Entity.RowVersionMember.ColumnName), 1, true, false, true, true) %>,
+<% If Not(Entity.ConcurrencyProperty Is Nothing) Then %>
+<% GenerateParameter(Entity.ConcurrencyProperty, 1, true, false, true, true) %>,
 <% End If %>
-<% GenerateParameters(SourceTable.Columns, 1, false, false, false, true) %>
+<% GenerateParameters(Entity.Properties, 1, false, false, false, true) %>
 
 AS
 
-UPDATE <%= GetTableOwner() %>[<%= SourceTable.Name %>] SET
-    <% GenerateUpdates(SourceTable.Columns, 1, false) %>
+UPDATE <%= Entity.EntityKeyName %> SET
+    <% GenerateUpdates(Entity.Properties, 1, false) %>
 
 WHERE
-    <% GenerateConditions(SourceTable.PrimaryKey.MemberColumns, 1, true) %>
-<% If(Entity.HasRowVersionMember) Then %>
-    <% GenerateCondition(SourceTable.Columns(Entity.RowVersionMember.ColumnName), 1, false, true, false) %>
+    <% GenerateConditions(Entity.GetProperties(PropertyType.Key), 1, true) %>
+<% If Not(Entity.ConcurrencyProperty Is Nothing) Then %>
+    <% GenerateCondition(Entity.ConcurrencyProperty, 1, false, true, false) %>
 <% End If %>
 
-<% If(Entity.HasRowVersionMember) Then %>
-SET <%= ParameterPrefix %><%= Entity.RowVersionMember.ColumnName %> = (SELECT [<%= Entity.RowVersionMember.ColumnName %>] FROM [<%= SourceTable.Owner %>].[<%= SourceTable.Name %>] WHERE <% GenerateConditions(SourceTable.PrimaryKey.MemberColumns, 1, false) %>)
+<% If Not(Entity.ConcurrencyProperty Is Nothing) Then %>
+SET <%= ParameterPrefix %><%= Entity.ConcurrencyProperty.KeyName %> = (SELECT [<%= Entity.ConcurrencyProperty.KeyName %>] FROM <%= Entity.EntityKeyName %>WHERE <% GenerateConditions(Entity.GetProperties(PropertyType.Key), 1, false) %>)
 <% End If %>
 
 GO
@@ -272,20 +274,20 @@ GO
 
 IF EXISTS(SELECT 1 FROM fn_listextendedproperty (NULL, 'SCHEMA', 'dbo', 'PROCEDURE', '<%= GetDeleteStoredProcedureShortName() %>', default, default) WHERE name = 'CustomProcedure' and value = '1')
     BEGIN
-        RAISERROR ('The procedure <%= GetDeleteStoredProcedureName() %> has an Extended Property "CustomProcedure" which means is has been customised. Please review and remove the property if you wish to create the stored procedure.',16,1)
+        RAISERROR ('The procedure <%= GetDeleteStoredProcedureName() %> has an Extended Property "CustomProcedure" which means is has been customized. Please review and remove the prop if you wish to create the stored procedure.',16,1)
         INSERT INTO #tmpErrors (Error) SELECT 1
     END
 GO
 
 CREATE PROCEDURE <%= GetDeleteStoredProcedureName() %>
-<% GenerateParameters(SourceTable.PrimaryKey.MemberColumns, 1, false) %>
+<% GenerateParameters(Entity.GetProperties(PropertyType.Key), 1, false) %>
 
 AS
 
 DELETE FROM
-    <%= GetTableOwner() %>[<%= SourceTable.Name %>]
+    <%= Entity.EntityKeyName %>
 WHERE
-    <% GenerateConditions(SourceTable.PrimaryKey.MemberColumns, 1, false) %>
+    <% GenerateConditions(Entity.GetProperties(PropertyType.Key), 1, false) %>
 
 GO
 IF @@ERROR!=0 AND @@TRANCOUNT>0 ROLLBACK TRANSACTION
@@ -304,7 +306,6 @@ ELSE PRINT 'Stored procedure creation failed.'
 GO
 DROP TABLE #tmpErrors
 GO
-
 
 <%
     GenerateProcedureFooter(GetDeleteStoredProcedureName())
@@ -338,25 +339,25 @@ GO
 
 IF EXISTS(SELECT 1 FROM fn_listextendedproperty (NULL, 'SCHEMA', 'dbo', 'PROCEDURE', '<%= GetSelectStoredProcedureShortName() %>', default, default) WHERE name = 'CustomProcedure' and value = '1')
     BEGIN
-        RAISERROR ('The procedure <%= GetSelectStoredProcedureName() %> has an Extended Property "CustomProcedure" which means is has been customised. Please review and remove the property if you wish to create the stored procedure.',16,1)
+        RAISERROR ('The procedure <%= GetSelectStoredProcedureName() %> has an Extended Property "CustomProcedure" which means is has been customized. Please review and remove the prop if you wish to create the stored procedure.',16,1)
         INSERT INTO #tmpErrors (Error) SELECT 1
     END
 GO
 
 CREATE PROCEDURE <%= GetSelectStoredProcedureName() %>
-<% GenerateParameters(SourceTable.Columns, 1, false, false, true) %>
+<% GenerateParameters(Entity.Properties, 1, false, false, true) %>
 
 AS
 
 <% GenerateSetTransactionIsolationLevelStatement(IsolationLevel) %>
 
 SELECT
-    <% GenerateColumns(SourceTable.Columns, 1, true) %>
+    <% GenerateColumns(Entity.Properties, 1, true) %>
 
 FROM
-    <%= GetTableOwner() %>[<%= SourceTable.Name %>]
+    <%= Entity.EntityKeyName %>
 WHERE
-    <% GenerateFindConditions(SourceTable.Columns, 1) %>
+    <% GenerateFindConditions(Entity.Properties, 1) %>
 
 GO
 IF @@ERROR!=0 AND @@TRANCOUNT>0 ROLLBACK TRANSACTION
@@ -381,7 +382,7 @@ GO
     GenerateProcedureFooter(GetSelectStoredProcedureName())
 %>
 <script runat="template">
-#Region "Member Variables"
+#Region "IProperty Variables"
 Private _droppedProcedureNames As New StringCollection()
 Private _generatedProcedureNames As New StringCollection()
 #End Region
@@ -418,12 +419,6 @@ End Sub
 
 #Region "Code Generation Helpers"
 
-Private Function ConvertMemberColumnSchemaToColumnSchema(ByVal memberColumns As IList(Of MemberColumnSchema)) As IList(Of ColumnSchema)
-    Dim columns As List(Of ColumnSchema) = New List(Of ColumnSchema)()
-    columns.AddRange(memberColumns.Cast(Of ColumnSchema)())
-    Return columns
-End Function
-
 Public Sub GenerateDropStatement(ByVal procedureName As String)
     ' check to see if this procedure has already been dropped.
     If Not _droppedProcedureNames.Contains(procedureName) Then
@@ -447,7 +442,7 @@ Public Sub GenerateDropStatement(ByVal procedureName As String)
         
         Response.WriteLine("IF EXISTS(SELECT 1 FROM fn_listextendedproperty (NULL, 'SCHEMA', 'dbo', 'PROCEDURE', '{0}', default, default) WHERE name = 'CustomProcedure' and value = '1')", procedureName)
         Response.WriteLine("BEGIN")
-        Response.WriteLine("    RAISERROR ('The procedure {0} has an Extended Property ""CustomProcedure"" which means is has been customised. Please review and remove the property if you wish to drop the procedure.',16,1)", procedureName)
+        Response.WriteLine("    RAISERROR ('The procedure {0} has an Extended Property ""CustomProcedure"" which means is has been customised. Please review and remove the prop if you wish to drop the procedure.',16,1)", procedureName)
         Response.WriteLine("    INSERT INTO #tmpErrors (Error) SELECT 1")
         Response.WriteLine("END")
         Response.WriteLine("GO")
@@ -477,6 +472,7 @@ Public Sub GenerateDropStatement(ByVal procedureName As String)
         Response.WriteLine("")
         Response.WriteLine("DROP TABLE #tmpErrors")
         Response.WriteLine("GO")
+
         ' add this procedure to the list of dropped procedures
         _droppedProcedureNames.Add(procedureName)
     End If
@@ -504,20 +500,20 @@ Public Sub GenerateIndent(ByVal indentLevel As Integer)
     Next
 End Sub
 
-Public Sub GenerateParameter(ByVal column As ColumnSchema, ByVal indentLevel As Integer, ByVal isFirst As Boolean, ByVal isLast As Boolean, ByVal includeTimeStamp As Boolean)
-    GenerateParameter(column, indentLevel, isFirst, isLast, False, includeTimeStamp)
+Public Sub GenerateParameter(ByVal prop As IProperty, ByVal indentLevel As Integer, ByVal isFirst As Boolean, ByVal isLast As Boolean, ByVal includeTimeStamp As Boolean)
+    GenerateParameter(prop, indentLevel, isFirst, isLast, False, includeTimeStamp)
 End Sub
 
-Public Sub GenerateParameter(column As ColumnSchema, indentLevel As Integer, isFirst As Boolean, isLast As Boolean, isOutput As Boolean, includeTimeStamp As Boolean)
-    GenerateParameter(column, indentLevel, isFirst, isLast, isOutput, includeTimeStamp, False)
+Public Sub GenerateParameter(prop As IProperty, indentLevel As Integer, isFirst As Boolean, isLast As Boolean, isOutput As Boolean, includeTimeStamp As Boolean)
+    GenerateParameter(prop, indentLevel, isFirst, isLast, isOutput, includeTimeStamp, False)
 End Sub
 
-Public Sub GenerateParameter(ByVal column As ColumnSchema, ByVal indentLevel As Integer, ByVal isFirst As Boolean, ByVal isLast As Boolean, ByVal isOutput As Boolean, ByVal includeTimeStamp As Boolean, ByVal makeParametersNullable As Boolean)
-    GenerateParameter(column, indentLevel, isFirst, isLast, isOutput, includeTimeStamp, makeParametersNullable, False)
+Public Sub GenerateParameter(ByVal prop As IProperty, ByVal indentLevel As Integer, ByVal isFirst As Boolean, ByVal isLast As Boolean, ByVal isOutput As Boolean, ByVal includeTimeStamp As Boolean, ByVal makeParametersNullable As Boolean)
+    GenerateParameter(prop, indentLevel, isFirst, isLast, isOutput, includeTimeStamp, makeParametersNullable, False)
 End Sub
 
-Public Sub GenerateParameter(ByVal column As ColumnSchema, ByVal indentLevel As Integer, ByVal isFirst As Boolean, ByVal isLast As Boolean, ByVal isOutput As Boolean, ByVal includeTimeStamp As Boolean, ByVal makeParametersNullable As Boolean, ByVal includeOriginalParam As Boolean)
-    If (ColumnIsIgnored(column) OrElse (Not includeTimeStamp AndAlso ColumnIsTimestamp(column))) Then
+Public Sub GenerateParameter(ByVal prop As IProperty, ByVal indentLevel As Integer, ByVal isFirst As Boolean, ByVal isLast As Boolean, ByVal isOutput As Boolean, ByVal includeTimeStamp As Boolean, ByVal makeParametersNullable As Boolean, ByVal includeOriginalParam As Boolean)
+    If (ColumnIsIgnored(prop) OrElse (Not includeTimeStamp AndAlso prop.IsType(PropertyType.Concurrency))) Then
         Exit Sub
     End If
     
@@ -530,22 +526,22 @@ Public Sub GenerateParameter(ByVal column As ColumnSchema, ByVal indentLevel As 
         End If
     End If
     
-    ' Is Guid column.
-    If(includeOriginalParam AndAlso column.DataType = DbType.Guid AndAlso column.IsPrimaryKeyMember AndAlso Not column.IsForeignKeyMember) Then
+    ' Is Guid prop.
+    If(includeOriginalParam AndAlso prop.IsDbType(DbType.Guid) AndAlso prop.IsType(PropertyType.Key) AndAlso Not prop.IsType(PropertyType.Foreign)) Then
         isOutput = True
     End If
     
     GenerateIndent(indentLevel)
-    Response.Write(GetSqlParameterStatement(column, isOutput))
+    Response.Write(GetSqlParameterStatement(prop, isOutput))
     If makeParametersNullable Then
         Response.Write(" = NULL")
     End If
 
-    If makeParametersNullable AndAlso column.AllowDBNull Then
-        Response.Write(String.Format("," & vbCr & vbLf & vbTab & "{0}{1}HasValue BIT = 0", ParameterPrefix, column.Name))
+    If makeParametersNullable AndAlso prop.IsNullable Then
+        Response.Write(String.Format("," & vbCr & vbLf & vbTab & "{0}{1}HasValue BIT = 0", ParameterPrefix, prop.Name))
     End If
 
-    If includeOriginalParam AndAlso column.IsPrimaryKeyMember AndAlso column.ExtendedProperties.Contains("CS_IsIdentity") AndAlso Not (DirectCast(column.ExtendedProperties("CS_IsIdentity").Value, Boolean)) Then
+    If includeOriginalParam AndAlso prop.IsType(PropertyType.Key) AndAlso Not prop.IsType(PropertyType.Identity) Then
         Response.Write(",")
     
         If indentLevel >= 0 Then
@@ -555,30 +551,35 @@ Public Sub GenerateParameter(ByVal column As ColumnSchema, ByVal indentLevel As 
         End If
     
         GenerateIndent(indentLevel)
-        Response.Write(GetSqlParameterStatement(column, False, includeOriginalParam))
+        Response.Write(GetSqlParameterStatement(prop, False, includeOriginalParam))
     End If
 End Sub
 
-Public Function GetSqlParameterStatement(ByVal column As DataObjectBase, ByVal isOutput As Boolean) As String
-    Return GetSqlParameterStatement(column, isOutput, False)
+Public Function GetSqlParameterStatement(ByVal prop As IProperty, ByVal isOutput As Boolean) As String
+    Return GetSqlParameterStatement(prop, isOutput, False)
 End Function
 
-Public Function GetSqlParameterStatement(ByVal column As DataObjectBase, ByVal isOutput As Boolean, ByVal includeOriginalParam As Boolean) As String
-    Dim param As String = String.Format("{0}{1}{2} {3}", ParameterPrefix, If(includeOriginalParam, "Original", ""), column.Name, column.NativeType)
-    
-    If Not IsUserDefinedType(column) And Not ColumnIsTimestamp(column) Then
-        Select Case column.DataType
+Public Function GetSqlParameterStatement(ByVal props As IProperty, ByVal isOutput As Boolean, ByVal includeOriginalParam As Boolean) As String
+    If (TypeOf props Is ISchemaProperty) = False Then
+        Throw New ArgumentException("prop must be of type IProperty", "prop")
+    End If
+
+    Dim prop = DirectCast(props, ISchemaProperty)
+
+    Dim param As String = String.Format("{0}{1}{2} {3}", ParameterPrefix, If(includeOriginalParam, "Original", ""), prop.Name, prop.NativeType)
+    If Not IsUserDefinedType(prop) And Not prop.IsType(PropertyType.Concurrency) Then
+        Select Case prop.DataType
             Case DbType.[Decimal]
                 If True Then
-                    param += String.Format("({0}, {1})", column.Precision, column.Scale)
+                    param += String.Format("({0}, {1})", prop.Precision, prop.Scale)
                     Exit Select
                 End If
             Case DbType.Binary, DbType.AnsiString, DbType.AnsiStringFixedLength, DbType.[String], DbType.StringFixedLength
                 If True Then
-                    If column.NativeType <> "text" AndAlso column.NativeType <> "ntext" Then
-                        If column.Size > 0 Then
-                            param += String.Format("({0})", column.Size)
-                        ElseIf column.Size = -1 Then
+                    If prop.NativeType <> "text" AndAlso prop.NativeType <> "ntext" Then
+                        If prop.Size > 0 Then
+                            param += String.Format("({0})", prop.Size)
+                        ElseIf prop.Size = -1 Then
                             param += "(max)"
                         End If
                     End If
@@ -595,47 +596,38 @@ Public Function GetSqlParameterStatement(ByVal column As DataObjectBase, ByVal i
 End Function
 
 ''' <summary>
-''' Determine if the given column is using a UDT.
+''' Determine if the given prop is using a UDT.
 ''' </summary>
-''' <param name="column"></param>
+''' <param name="prop"></param>
 ''' <returns></returns>
-Public Function IsUserDefinedType(ByVal column As DataObjectBase) As Boolean
-    Select Case column.NativeType.Trim().ToLower()
-        Case "bigint", "binary", "bit", "char", "date", "datetime", _
-            "datetime2", "time", "decimal", "float", "image", "int", _
-            "money", "nchar", "ntext", "numeric", "nvarchar", "real", _
-            "smalldatetime", "smallint", "smallmoney", "sql_variant", "sysname", "text", _
-            "timestamp", "tinyint", "uniqueidentifier", "varbinary", "xml", "varchar"
-            Return False
-        Case Else
-            Return True
-    End Select
+Public Function IsUserDefinedType(ByVal prop As IProperty) As Boolean
+    If prop.ExtendedProperties.ContainsKey("CS_UserDefinedType") Then
+        Return True
+    End If
+
+    Return False
 End Function
 
-Public Sub GenerateParameters(ByVal columns As IList(Of MemberColumnSchema), ByVal indentLevel As Integer, ByVal includeTimeStamp As Boolean)
-    GenerateParameters(ConvertMemberColumnSchemaToColumnSchema(columns), indentLevel, False, includeTimeStamp)
-End Sub
-
-Public Sub GenerateParameters(ByVal columns As IList(Of ColumnSchema), ByVal indentLevel As Integer, ByVal includeTimeStamp As Boolean)
+Public Sub GenerateParameters(ByVal columns As IList(Of IProperty), ByVal indentLevel As Integer, ByVal includeTimeStamp As Boolean)
     GenerateParameters(columns, indentLevel, False, includeTimeStamp)
 End Sub
 
-Public Sub GenerateParameters(ByVal columns As IList(Of ColumnSchema), ByVal indentLevel As Integer, ByVal includeTrailingComma As Boolean, ByVal includeTimeStamp As Boolean)
+Public Sub GenerateParameters(ByVal columns As IList(Of IProperty), ByVal indentLevel As Integer, ByVal includeTrailingComma As Boolean, ByVal includeTimeStamp As Boolean)
     GenerateParameters(columns, indentLevel, includeTrailingComma, includeTimeStamp, False)
 End Sub
 
-Public Sub GenerateParameters(ByVal columns As IList(Of ColumnSchema), ByVal indentLevel As Integer, ByVal includeTrailingComma As Boolean, ByVal includeTimeStamp As Boolean, ByVal makeParametersNullable As Boolean)
+Public Sub GenerateParameters(ByVal columns As IList(Of IProperty), ByVal indentLevel As Integer, ByVal includeTrailingComma As Boolean, ByVal includeTimeStamp As Boolean, ByVal makeParametersNullable As Boolean)
     GenerateParameters(columns, indentLevel, includeTrailingComma, includeTimeStamp, makeParametersNullable, False)
 End Sub
 
-Public Sub GenerateParameters(ByVal columns As IList(Of ColumnSchema), ByVal indentLevel As Integer, ByVal includeTrailingComma As Boolean, ByVal includeTimeStamp As Boolean, ByVal makeParametersNullable As Boolean, ByVal includeOriginalParam As Boolean)
-    For Each column As Object In columns.AsIndexedEnumerable()
-        GenerateParameter(column.Value, indentLevel, column.IsFirst, column.IsLast AndAlso Not includeTrailingComma, False, includeTimeStamp, makeParametersNullable, includeOriginalParam)
+Public Sub GenerateParameters(ByVal columns As IList(Of IProperty), ByVal indentLevel As Integer, ByVal includeTrailingComma As Boolean, ByVal includeTimeStamp As Boolean, ByVal makeParametersNullable As Boolean, ByVal includeOriginalParam As Boolean)
+    For Each prop As Object In columns.AsIndexedEnumerable()
+        GenerateParameter(prop.Value, indentLevel, prop.IsFirst, prop.IsLast AndAlso Not includeTrailingComma, False, includeTimeStamp, makeParametersNullable, includeOriginalParam)
     Next
 End Sub
 
-Public Sub GenerateColumn(ByVal column As ColumnSchema, ByVal indentLevel As Integer, ByVal isFirst As Boolean, ByVal isLast As Boolean, ByVal includeTimeStamp As Boolean)
-    If (ColumnIsIgnored(column) OrElse (Not includeTimeStamp AndAlso ColumnIsTimestamp(column))) Then
+Public Sub GenerateColumn(ByVal prop As IProperty, ByVal indentLevel As Integer, ByVal isFirst As Boolean, ByVal isLast As Boolean, ByVal includeTimeStamp As Boolean)
+    If (ColumnIsIgnored(prop) OrElse (Not includeTimeStamp AndAlso prop.IsType(PropertyType.Concurrency))) Then
         Exit Sub
     End If
     
@@ -649,22 +641,18 @@ Public Sub GenerateColumn(ByVal column As ColumnSchema, ByVal indentLevel As Int
     End If
     GenerateIndent(indentLevel)
     Response.Write("[")
-    Response.Write(column.Name)
+    Response.Write(prop.Name)
     Response.Write("]")
 End Sub
 
-Public Sub GenerateColumns(ByVal columns As IList(Of MemberColumnSchema), ByVal indentLevel As Integer, ByVal includeTimeStamp As Boolean)
-    GenerateColumns(ConvertMemberColumnSchemaToColumnSchema(columns), indentLevel, includeTimeStamp)
-End Sub
-
-Public Sub GenerateColumns(ByVal columns As IList(Of ColumnSchema), ByVal indentLevel As Integer, ByVal includeTimeStamp As Boolean)
-    For Each column As Object In columns.AsIndexedEnumerable()
-        GenerateColumn(column.Value, indentLevel, column.IsFirst, column.IsLast, includeTimeStamp)
+Public Sub GenerateColumns(ByVal columns As IList(Of IProperty), ByVal indentLevel As Integer, ByVal includeTimeStamp As Boolean)
+    For Each prop As Object In columns.AsIndexedEnumerable()
+        GenerateColumn(prop.Value, indentLevel, prop.IsFirst, prop.IsLast, includeTimeStamp)
     Next
 End Sub
 
-Public Sub GenerateUpdate(ByVal column As ColumnSchema, ByVal indentLevel As Integer, ByVal isFirst As Boolean, ByVal isLast As Boolean, ByVal includeTimeStamp As Boolean)
-    If (ColumnIsIgnored(column) OrElse (Not includeTimeStamp AndAlso ColumnIsTimestamp(column))) Then
+Public Sub GenerateUpdate(ByVal prop As IProperty, ByVal indentLevel As Integer, ByVal isFirst As Boolean, ByVal isLast As Boolean, ByVal includeTimeStamp As Boolean)
+    If (ColumnIsIgnored(prop) OrElse (Not includeTimeStamp AndAlso prop.IsType(PropertyType.Concurrency))) Then
         Exit Sub
     End If
     
@@ -679,27 +667,27 @@ Public Sub GenerateUpdate(ByVal column As ColumnSchema, ByVal indentLevel As Int
     
     GenerateIndent(indentLevel)
     Response.Write("[")
-    Response.Write(column.Name)
+    Response.Write(prop.Name)
     Response.Write("] = ")
     Response.Write(ParameterPrefix)
-    Response.Write(column.Name)
+    Response.Write(prop.Name)
 End Sub
 
-Public Sub GenerateUpdates(ByVal columns As IList(Of ColumnSchema), ByVal indentLevel As Integer, ByVal includeTimeStamp As Boolean)
+Public Sub GenerateUpdates(ByVal columns As IList(Of IProperty), ByVal indentLevel As Integer, ByVal includeTimeStamp As Boolean)
     Dim isFirst As Boolean = True
-    For Each column As Object In columns.AsIndexedEnumerable()
-        If column.Value.IsPrimaryKeyMember AndAlso (column.Value.ExtendedProperties.Contains("CS_IsIdentity") AndAlso DirectCast(column.Value.ExtendedProperties("CS_IsIdentity").Value, Boolean)) Then
+    For Each prop As Object In columns.AsIndexedEnumerable()
+        If prop.Value.IsType(PropertyType.Key) AndAlso prop.Value.IsType(PropertyType.Identity) Then
             Continue For
         End If
 
-        GenerateUpdate(column.Value, indentLevel, isFirst, column.IsLast, includeTimeStamp)
+        GenerateUpdate(prop.Value, indentLevel, isFirst, prop.IsLast, includeTimeStamp)
         isFirst = False
     Next
 End Sub
 
-Public Sub GenerateCondition(ByVal column As ColumnSchema, ByVal indentLevel As Integer, ByVal isFirst As Boolean, ByVal isLast As Boolean, ByVal includeOriginal As Boolean)
+Public Sub GenerateCondition(ByVal prop As IProperty, ByVal indentLevel As Integer, ByVal isFirst As Boolean, ByVal isLast As Boolean, ByVal includeOriginal As Boolean)
     
-    If (ColumnIsIgnored(column)) Then
+    If (ColumnIsIgnored(prop)) Then
         Exit Sub
     End If
     
@@ -708,15 +696,15 @@ Public Sub GenerateCondition(ByVal column As ColumnSchema, ByVal indentLevel As 
         Response.Write("AND ")
     End If
     Response.Write("[")
-    Response.Write(column.Name)
+    Response.Write(prop.Name)
     Response.Write("] = ")
     Response.Write(ParameterPrefix)
 
-If includeOriginal AndAlso column.IsPrimaryKeyMember AndAlso column.ExtendedProperties.Contains("CS_IsIdentity") AndAlso Not (DirectCast(column.ExtendedProperties("CS_IsIdentity").Value, Boolean)) Then
+If includeOriginal AndAlso prop.IsType(PropertyType.Key) AndAlso prop.IsType(PropertyType.Identity) Then
     Response.Write("Original")
 End If
 
-    Response.Write(column.Name)
+    Response.Write(prop.Name)
     If indentLevel >= 0 Then
         Response.WriteLine("")
     ElseIf Not isLast Then
@@ -724,27 +712,23 @@ End If
     End If
 End Sub
 
-Public Sub GenerateConditions(ByVal columns As IList(Of MemberColumnSchema), ByVal indentLevel As Integer, ByVal includeTimeStamp As Boolean)
-    GenerateConditions(ConvertMemberColumnSchemaToColumnSchema(columns), indentLevel, includeTimeStamp)
-End Sub
-
-Public Sub GenerateConditions(ByVal columns As IList(Of ColumnSchema), ByVal indentLevel As Integer)
+Public Sub GenerateConditions(ByVal columns As IList(Of IProperty), ByVal indentLevel As Integer)
     GenerateConditions(columns, indentLevel, false)
 End Sub
-Public Sub GenerateConditions(ByVal columns As IList(Of ColumnSchema), ByVal indentLevel As Integer, ByVal includeOriginal As Boolean)
-    For Each column As Object In columns.AsIndexedEnumerable()
-        GenerateCondition(column.Value, indentLevel, column.IsFirst, column.IsLast, includeOriginal)
+Public Sub GenerateConditions(ByVal columns As IList(Of IProperty), ByVal indentLevel As Integer, ByVal includeOriginal As Boolean)
+    For Each prop As Object In columns.AsIndexedEnumerable()
+        GenerateCondition(prop.Value, indentLevel, prop.IsFirst, prop.IsLast, includeOriginal)
     Next
 End Sub
 
-Public Sub GenerateFindConditions(columns As IList(Of ColumnSchema), indentLevel As Integer)
-    For Each column As Object In columns.AsIndexedEnumerable()
-        GenerateFindCondition(column.Value, indentLevel, column.IsFirst, column.IsLast)
+Public Sub GenerateFindConditions(columns As IList(Of IProperty), indentLevel As Integer)
+    For Each prop As Object In columns.AsIndexedEnumerable()
+        GenerateFindCondition(prop.Value, indentLevel, prop.IsFirst, prop.IsLast)
     Next
 End Sub
 
-Public Sub GenerateFindCondition(column As ColumnSchema, indentLevel As Integer, isFirst As Boolean, isLast As Boolean)
-    If ColumnIsIgnored(column) OrElse Not IsColumnFindable(column) Then
+Public Sub GenerateFindCondition(prop As IProperty, indentLevel As Integer, isFirst As Boolean, isLast As Boolean)
+    If ColumnIsIgnored(prop) OrElse Not IsColumnFindable(prop) Then
         Return
     End If
 
@@ -753,22 +737,22 @@ Public Sub GenerateFindCondition(column As ColumnSchema, indentLevel As Integer,
         Response.Write("AND ")
     End If
     Response.Write("([")
-    Response.Write(column.Name)
+    Response.Write(prop.Name)
     Response.Write("] = ")
     Response.Write(ParameterPrefix)
-    Response.Write(column.Name)
-If column.AllowDBNull Then
+    Response.Write(prop.Name)
+If prop.IsNullable Then
     Response.Write(" OR (")
     Response.Write(ParameterPrefix)
-    Response.Write(column.Name)
+    Response.Write(prop.Name)
     Response.Write(" IS NULL AND ")
     Response.Write(ParameterPrefix)
-    Response.Write(column.Name)
+    Response.Write(prop.Name)
     Response.Write("HasValue = 0))")
 Else
     Response.Write(" OR ")
     Response.Write(ParameterPrefix)
-    Response.Write(column.Name)
+    Response.Write(prop.Name)
     Response.Write(" IS NULL)")
 End If
 
@@ -779,18 +763,25 @@ End If
     End If
 End Sub
 
-Public Function IsColumnFindable(column As ColumnSchema) As Boolean
-    If column.DataType = DbType.Binary OrElse column.NativeType = "text" OrElse column.NativeType = "ntext" OrElse column.NativeType = "timestamp" OrElse column.NativeType = "image" OrElse column.NativeType = "xml" Then
-        Return False
-    End If
+Public Function IsColumnFindable(prop As IProperty) As Boolean
+	If TypeOf prop Is ISchemaProperty Then
+		Dim p = DirectCast(prop, ISchemaProperty)
+		If p.DataType = DbType.Binary OrElse p.NativeType = "text" OrElse p.NativeType = "ntext" OrElse p.NativeType = "timestamp" OrElse p.NativeType = "image" OrElse p.NativeType = "xml" Then
+			Return False
+		End If
+	End If
 
-    Return True
+	Return True
 End Function
 
-' This method adds support for composite primary keys.
-Public Function HasGuidOrIdentityColumn(ByVal key As PrimaryKeySchema) As Boolean
-    For Each column As MemberColumnSchema In key.MemberColumns
-        If IsGuidOrIdentityColumn(column) Then
+''' <summary>
+''' This method adds support for composite primary keys.
+''' </summary>
+''' <param name="key"></param>
+''' <returns></returns>
+Public Function HasGuidOrIdentityColumn(key As IKey) As Boolean
+    For Each prop As IProperty In key.Properties
+        If IsGuidOrIdentityColumn(prop) Then
             Return True
         End If
     Next
@@ -798,22 +789,21 @@ Public Function HasGuidOrIdentityColumn(ByVal key As PrimaryKeySchema) As Boolea
     Return False
 End Function
 
-Public Function IsGuidOrIdentityColumn(ByVal column As MemberColumnSchema) As Boolean
-    If column.DataType = DbType.Guid OrElse IsIdentityColumn(column) Then
+Public Function IsGuidOrIdentityColumn(ByVal prop As IProperty) As Boolean
+    If prop.IsDbType(DbType.Guid) OrElse IsIdentityColumn(prop) Then
         Return True
     End If
     
     Return False
 End Function
 
-Public Function IsIdentityColumn(ByVal column As MemberColumnSchema) As Boolean
-    If column Is Nothing Then
+Public Function IsIdentityColumn(ByVal prop As IProperty) As Boolean
+    If prop Is Nothing Then
         Return False
     End If
     
-    Dim correctDataType As Boolean = column.DataType = DbType.Int16 OrElse column.DataType = DbType.Int32 OrElse column.DataType = DbType.Int64
-    Dim extendedPropertyValue As Boolean = column.ExtendedProperties.Contains("CS_IsIdentity") AndAlso CBool(column.ExtendedProperties("CS_IsIdentity").Value)
-    If correctDataType AndAlso extendedPropertyValue Then
+    Dim correctDataType As Boolean = prop.IsDbType(DbType.Int16) OrElse prop.IsDbType(DbType.Int32) OrElse prop.IsDbType(DbType.Int64)
+    If correctDataType AndAlso prop.IsType(PropertyType.Identity) Then
         Return True
     End If
     
@@ -821,8 +811,8 @@ Public Function IsIdentityColumn(ByVal column As MemberColumnSchema) As Boolean
 End Function
 
 
-Public Sub GenerateVariable(ByVal column As ColumnSchema, ByVal indentLevel As Integer, ByVal isFirst As Boolean, ByVal isLast As Boolean, ByVal includeTimeStamp As Boolean)
-    If (ColumnIsIgnored(column) OrElse (Not includeTimeStamp AndAlso ColumnIsTimestamp(column))) Then
+Public Sub GenerateVariable(ByVal prop As IProperty, ByVal indentLevel As Integer, ByVal isFirst As Boolean, ByVal isLast As Boolean, ByVal includeTimeStamp As Boolean)
+    If (ColumnIsIgnored(prop) OrElse (Not includeTimeStamp AndAlso prop.IsType(PropertyType.Concurrency))) Then
         Exit Sub
     End If
     
@@ -836,31 +826,23 @@ Public Sub GenerateVariable(ByVal column As ColumnSchema, ByVal indentLevel As I
     End If
     GenerateIndent(indentLevel)
     Response.Write(ParameterPrefix)
-    Response.Write(column.Name)
+    Response.Write(prop.Name)
 End Sub
 
-Public Sub GenerateVariables(ByVal columns As List(Of ColumnSchema), ByVal indentLevel As Integer, ByVal includeTimeStamp As Boolean)
-    For Each column As Object In columns.AsIndexedEnumerable()
-        GenerateVariable(column.Value, indentLevel, column.IsFirst, column.IsLast, includeTimeStamp)
+Public Sub GenerateVariables(ByVal columns As List(Of IProperty), ByVal indentLevel As Integer, ByVal includeTimeStamp As Boolean)
+    For Each prop As Object In columns.AsIndexedEnumerable()
+        GenerateVariable(prop.Value, indentLevel, prop.IsFirst, prop.IsLast, includeTimeStamp)
     Next
 End Sub
 
-Public Sub GenerateVariables(ByVal columns As IList(Of ColumnSchema), ByVal indentLevel As Integer, ByVal includeTimeStamp As Boolean)
-    For Each column As Object In columns.AsIndexedEnumerable()
-        GenerateVariable(column.Value, indentLevel, column.IsFirst, column.IsLast, includeTimeStamp)
+Public Sub GenerateVariables(ByVal columns As IList(Of IProperty), ByVal indentLevel As Integer, ByVal includeTimeStamp As Boolean)
+    For Each prop As Object In columns.AsIndexedEnumerable()
+        GenerateVariable(prop.Value, indentLevel, prop.IsFirst, prop.IsLast, includeTimeStamp)
     Next
 End Sub
 
-Public Function ColumnIsTimestamp(ByVal column As DataObjectBase) As Boolean
-    If column.NativeType.ToLower() = "timestamp" OrElse column.NativeType.ToLower() = "rowversion" Then
-        Return True
-    End If
-    
-    Return False
-End Function
-
-Public Function ColumnIsIgnored(ByVal column As DataObjectBase) As Boolean
-    Return CodeSmith.SchemaHelper.Configuration.Instance.ExcludeRegexIsMatch(column.ToString())
+Public Function ColumnIsIgnored(ByVal prop As IProperty) As Boolean
+    Return CodeSmith.SchemaHelper.Configuration.Instance.ExcludeRegexIsMatch(prop.ToString())
 End Function
 
 #End Region
@@ -868,13 +850,16 @@ End Function
 #Region "Events"
 
 Protected Overloads Overrides Sub OnPostRender(ByVal result As String)
-    If AutoExecuteStoredProcedures Then
-        ' execute the output on the same database as the source table.
-        Dim scriptResult As CodeSmith.BaseTemplates.ScriptResult = CodeSmith.BaseTemplates.ScriptUtility.ExecuteScript(Me.SourceTable.Database.ConnectionString, result, AddressOf Me.cn_InfoMessage)
-        Trace.WriteLine(scriptResult.ToString())
-    End If
-    
-    MyBase.OnPostRender(result)
+	If AutoExecuteStoredProcedures Then
+		Dim connectionString As String = If(TypeOf Entity Is ISchemaEntity, DirectCast(Entity, ISchemaEntity).ConnectionString, Nothing)
+		If Not [String].IsNullOrEmpty(connectionString) Then
+			' execute the output on the same database as the source table.
+			Dim scriptResult = CodeSmith.BaseTemplates.ScriptUtility.ExecuteScript(connectionString, result, New System.Data.SqlClient.SqlInfoMessageEventHandler(AddressOf cn_InfoMessage))
+			Trace.WriteLine(scriptResult.ToString())
+		End If
+	End If
+
+	MyBase.OnPostRender(result)
 End Sub
 
 Private Sub cn_InfoMessage(ByVal sender As Object, ByVal ex As System.Data.SqlClient.SqlInfoMessageEventArgs)

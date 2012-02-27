@@ -8,8 +8,6 @@ namespace CodeSmith.SchemaHelper
     /// </summary>
     public static class AssociationExtensions
     {
-        #region BuildObjectInitializer
-
         public static string BuildObjectInitializer(this Association association)
         {
             return association.BuildObjectInitializer(false);
@@ -19,26 +17,22 @@ namespace CodeSmith.SchemaHelper
         {
             string parameters = string.Empty;
 
-            foreach (Member member in association.SearchCriteria.Members)
+            foreach (IProperty property in association.SearchCriteria.Properties)
             {
-                foreach (AssociationMember associationMember in association)
+                foreach (AssociationProperty associationProperty in association.Properties)
                 {
-                    if (member.ColumnName == associationMember.AssociatedColumn.ColumnName && member.TableName == associationMember.AssociatedColumn.TableName)
+                    if (property.KeyName == associationProperty.ForeignProperty.KeyName) // && property.ForeignProperty == associationProperty.ForeignProperty.ForeignProperty)
                     {
-                        if (member.IsNullable && member.SystemType != "System.String" && member.SystemType != "System.Byte[]") continue;
+                        if (property.IsNullable && property.SystemType != "System.String" && property.SystemType != "System.Byte[]") continue;
 
-                        parameters += string.Format(", {0} = {1}", associationMember.MemberPropertyName,
-                            usePropertyName ? member.PropertyName : member.VariableName);
+                        parameters += String.Format(", {0} = {1}", associationProperty.Property.Name,
+                            usePropertyName ? property.Name : property.VariableName);
                     }
                 }
             }
 
             return parameters.TrimStart(new[] { ',', ' ' });
         }
-
-        #endregion
-
-        #region BuildNullableObjectInitializer
 
         public static string BuildNullableObjectInitializer(this Association association)
         {
@@ -49,26 +43,22 @@ namespace CodeSmith.SchemaHelper
         {
             string parameters = string.Empty;
 
-            foreach (Member member in association.SearchCriteria.Members)
+            foreach (IProperty property in association.SearchCriteria.Properties)
             {
-                foreach (AssociationMember associationMember in association)
+                foreach (AssociationProperty associationProperty in association.Properties)
                 {
-                    if (member.ColumnName == associationMember.AssociatedColumn.ColumnName && member.TableName == associationMember.AssociatedColumn.TableName)
+                    if (property.KeyName == associationProperty.ForeignProperty.KeyName) // && property.Entity.EntityKeyName == associationProperty.ForeignProperty.ForeignProperty)
                     {
-                        if ((member.IsNullable && member.SystemType != "System.String" && member.SystemType != "System.Byte[]") == false) continue;
+                        if ((property.IsNullable && property.SystemType != "System.String" && property.SystemType != "System.Byte[]") == false) continue;
 
-                        parameters += string.Format("\r\n\t\t\t\tif({1}.HasValue) criteria.{0} = {1}.Value;", associationMember.MemberPropertyName,
-                            usePropertyName ? member.PropertyName : member.VariableName);
+                        parameters += String.Format("\r\n\t\t\t\tif({1}.HasValue) criteria.{0} = {1}.Value;", associationProperty.Property.Name,
+                            usePropertyName ? property.Name : property.VariableName);
                     }
                 }
             }
 
             return parameters.TrimStart(new[] { '\r', '\n', '\t' });
         }
-
-        #endregion
-
-        #region BuildNullCheckStatement
 
         /// <summary>
         /// Builds a null check HasValue Statements for the Property Templates.
@@ -110,17 +100,17 @@ namespace CodeSmith.SchemaHelper
             string lastParameter = string.Empty;
             string parameters = string.Empty;
 
-            foreach (Member member in association.SearchCriteria.Members)
+            foreach (IProperty property in association.SearchCriteria.Properties)
             {
-                foreach (AssociationMember associationMember in association)
+                foreach (AssociationProperty associationProperty in association.Properties)
                 {
-                    if (member.ColumnName == associationMember.AssociatedColumn.ColumnName && member.TableName == associationMember.AssociatedColumn.TableName)
+                    if (property.KeyName == associationProperty.ForeignProperty.KeyName) // && property.ForeignProperty == associationProperty.ForeignProperty.ForeignProperty)
                     {
-                        if ((member.IsNullable && member.SystemType != "System.String" && member.SystemType != "System.Byte[]") == false) continue;
+                        if ((property.IsNullable && property.SystemType != "System.String" && property.SystemType != "System.Byte[]") == false) continue;
 
                         lastParameter = parameters.Length == 0 ?
-                            string.Format("({0}{1}.HasValue {2}", useNot ? "!" : string.Empty, usePropertyName ? member.PropertyName : member.VariableName, exspression) :
-                            string.Format(" {0}{1}.HasValue {2}", useNot ? "!" : string.Empty, usePropertyName ? member.PropertyName : member.VariableName, exspression);
+                            String.Format("({0}{1}.HasValue {2}", useNot ? "!" : string.Empty, usePropertyName ? property.Name : property.VariableName, exspression) :
+                            String.Format(" {0}{1}.HasValue {2}", useNot ? "!" : string.Empty, usePropertyName ? property.Name : property.VariableName, exspression);
 
                         parameters += lastParameter;
                     }
@@ -140,16 +130,12 @@ namespace CodeSmith.SchemaHelper
             parameters = parameters.Replace(lastParameter, lastParameter.Insert(lastParameter.IndexOf("HasValue") + 8, ")"));
 
             // Remove the last exspression if needed.
-            if (trimEnd)
+            if(trimEnd)
                 parameters = parameters.Remove(parameters.Length - exspression.Length);
 
             // Remove leading characters.
             return parameters.TrimStart(new[] { ' ' });
         }
-
-        #endregion
-
-        #region BuildParametersVariables
 
         public static string BuildParametersVariables(this Association association)
         {
@@ -160,21 +146,19 @@ namespace CodeSmith.SchemaHelper
         {
             string parameters = string.Empty;
 
-            foreach (AssociationMember member in association)
+            foreach (AssociationProperty property in association.Properties)
             {
-                var parameter = string.Format(", {0} {1}", member.ClassName, Util.NamingConventions.VariableName(member.ClassName));
+                var parameter = String.Format(", {0} {1}", property.Property.Name, Util.NamingConventions.VariableName(property.Property.Name));
 
                 if (!parameters.Contains(parameter))
                     parameters += parameter;
             }
 
             if (includeConnectionParameter)
-                parameters += ", SqlConnection connection";
+                parameters += ", var connection";
 
             return parameters.TrimStart(new[] { ',', ' ' });
         }
-
-        #endregion
 
         public static string BuildUpdateStatementVariables(this Association association, List<Association> associations, int currentRecord, bool includeConnectionParameter)
         {
@@ -182,7 +166,7 @@ namespace CodeSmith.SchemaHelper
 
             for (int index = 0; index < associations.Count; index++)
             {
-                var parameter = string.Format(", {0}", Util.NamingConventions.VariableName(associations[index].ClassName));
+                var parameter = String.Format(", {0}", Util.NamingConventions.VariableName(associations[index].Name));
                 if(index == currentRecord)
                 {
                     parameters += parameter;
