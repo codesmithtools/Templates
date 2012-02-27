@@ -40,9 +40,9 @@ namespace CodeSmith.SchemaHelper
             if (property.IsType(PropertyType.Key))
             {
                 if(isSilverlight)
-                    return String.Format("{1}#if !SILVERLIGHT{1}\t\t[System.ComponentModel.DataObjectField(true, {0})]{1}#endif", property.IsType(PropertyType.Identity).ToString().ToLower(), Environment.NewLine);
+                    return String.Format("{1}#if !SILVERLIGHT{1}        [System.ComponentModel.DataObjectField(true, {0})]{1}#endif", property.IsType(PropertyType.Identity).ToString().ToLower(), Environment.NewLine);
 
-                return String.Format("{1}\t\t[System.ComponentModel.DataObjectField(true, {0})]", property.IsType(PropertyType.Identity).ToString().ToLower(), Environment.NewLine);
+                return String.Format("{1}        [System.ComponentModel.DataObjectField(true, {0})]", property.IsType(PropertyType.Identity).ToString().ToLower(), Environment.NewLine);
             }
 
             return string.Empty;

@@ -95,7 +95,7 @@ namespace CodeSmith.SchemaHelper
                         }
                     }
 
-                    parameters += String.Format("\r\n\t\t\t\tif({1}.HasValue) criteria.{0} = {1};", resolvedPropertyName, propertyName);
+                    parameters += String.Format("\r\n                if({1}.HasValue) criteria.{0} = {1};", resolvedPropertyName, propertyName);
                 }
             }
             else
@@ -107,13 +107,13 @@ namespace CodeSmith.SchemaHelper
                     if((property.IsNullable && property.SystemType != "System.String" && property.SystemType != "System.Byte[]") == false) continue;
 
                     var propertyName = isObjectFactory ? String.Format("item.{0}", property.Name) : property.VariableName;
-                    parameters += String.Format("\r\n\t\t\t\tif({1}.HasValue) criteria.{0} = {1}.Value;", property.Name, propertyName);
+                    parameters += String.Format("\r\n                if({1}.HasValue) criteria.{0} = {1}.Value;", property.Name, propertyName);
                 }
 
                 #endregion
             }
 
-            return parameters.TrimStart(new[] { '\r', '\n', '\t' });
+            return parameters.TrimStart(new[] { '\r', '\n', ' ' });
         }
 
         public static string BuildUpdateStatements(this SearchCriteria sc, string associationPropertyName)
@@ -145,7 +145,7 @@ namespace CodeSmith.SchemaHelper
                         propertyName = String.Format("{0}{1}", property.Property.Name, nullable);
                     }
 
-                    parameters += String.Format("\r\n\t\t\t\t{0}.{1} = {2}{3};", associationPropertyName, resolvedPropertyName, prefix, propertyName);
+                    parameters += String.Format("\r\n                {0}.{1} = {2}{3};", associationPropertyName, resolvedPropertyName, prefix, propertyName);
                 }
             }
             else
@@ -154,7 +154,7 @@ namespace CodeSmith.SchemaHelper
 
                 foreach (IProperty property in sc.Properties)
                 {
-                    parameters += String.Format("\r\n\t\t\t\t{0}.{1} = {1}{2};", associationPropertyName, property.Name, prefix);
+                    parameters += String.Format("\r\n                {0}.{1} = {1}{2};", associationPropertyName, property.Name, prefix);
                 }
 
                 #endregion

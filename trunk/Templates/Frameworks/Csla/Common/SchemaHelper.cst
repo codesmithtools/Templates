@@ -4,7 +4,9 @@ Author: Blake Niemyjski
 Description: Used to Quick Start Visual Studio Projects
 --%>
 <%@ CodeTemplate Language="C#" %>
-<%@ Property Name="SourceDatabase" Type="SchemaExplorer.DatabaseSchema" DeepLoad="True" %>
+<%@ Property Name="SourceTables" Type="SchemaExplorer.TableSchemaCollection" DeepLoad="True" Optional="True" %>
+<%@ Property Name="SourceViews" Type="SchemaExplorer.ViewSchemaCollection" DeepLoad="True" Optional="True" %>
+<%@ Property Name="SourceCommands" Type="SchemaExplorer.CommandSchemaCollection" DeepLoad="True" Optional="True" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper" %>
 <%@ Assembly Name="CodeSmith.QuickStart" %>
 <%@ Assembly Name="SchemaExplorer" %>
@@ -16,7 +18,10 @@ Description: Used to Quick Start Visual Studio Projects
 <%@ Import Namespace="SchemaExplorer" %>
 <%@ Import Namespace="System.IO" %>
 <%@ Import Namespace="System.Linq" %>
-<% EntityManager em = new EntityManager(SourceDatabase); %>
+<% 
+var manager = new CodeSmith.SchemaHelper.SchemaExplorerEntityProvider(SourceTables, SourceViews, SourceCommands);
+var em = new EntityManager(manager);
+%>
 
 Excluded Tables
 <% foreach(var t in em.ExcludedEntities) { %>

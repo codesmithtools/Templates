@@ -19,16 +19,16 @@
     <% If (prop.SystemType = "System.String" ) Then  %>
     <% If Not prop.IsNullable Then %>
     <% If(IsLatestCSLA) Then %>
-            BusinessRules.AddRule(New Csla.Rules.CommonRules.Required(<%= prop.PrivateMemberVariableName %>Property))
+            BusinessRules.AddRule(New Global.Csla.Rules.CommonRules.Required(<%= prop.PrivateMemberVariableName %>Property))
     <% Else %>
-            ValidationRules.AddRule(AddressOf CommonRules.StringRequired, <%= prop.PrivateMemberVariableName %>Property)
+            ValidationRules.AddRule(AddressOf Global.Csla.Rules.CommonRules.StringRequired, <%= prop.PrivateMemberVariableName %>Property)
     <%  End If
     End If
         If Not prop.ExcludeBusinessSizeRule() Then %>
     <% If(IsLatestCSLA) Then %>
-            BusinessRules.AddRule(New Csla.Rules.CommonRules.MaxLength(<%= prop.PrivateMemberVariableName %>Property, <%= prop.Size %>))
+            BusinessRules.AddRule(New Global.Csla.Rules.CommonRules.MaxLength(<%= prop.PrivateMemberVariableName %>Property, <%= prop.Size %>))
     <% Else %>
-            ValidationRules.AddRule(AddressOf CommonRules.StringMaxLength, New CommonRules.MaxLengthRuleArgs(<%= prop.PrivateMemberVariableName %>Property, <%= prop.Size %>))
+            ValidationRules.AddRule(AddressOf Global.Csla.Rules.CommonRules.StringMaxLength, New CommonRules.MaxLengthRuleArgs(<%= prop.PrivateMemberVariableName %>Property, <%= prop.Size %>))
     <% End If 
         End If 
         End If 

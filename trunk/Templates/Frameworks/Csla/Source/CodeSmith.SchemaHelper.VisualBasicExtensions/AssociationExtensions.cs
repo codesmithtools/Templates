@@ -26,13 +26,13 @@ namespace CodeSmith.SchemaHelper
                         bool isNullable = property.IsNullable && property.SystemType != "System.String" && property.SystemType != "System.Byte()";
                         if(isNullable)
                         {
-                            parameters += string.Format("\r\n\t\t\t\tIf({1}.HasValue) Then criteria.{0} = {1}.Value",
+                            parameters += string.Format("\r\n                If({1}.HasValue) Then criteria.{0} = {1}.Value",
                                 associationProperty.Property.Name,
                                 usePropertyName ? property.Name : property.VariableName);
                         }
                         else
                         {
-                            parameters += string.Format("\r\n\t\t\t\tcriteria.{0} = {1}",
+                            parameters += string.Format("\r\n                criteria.{0} = {1}",
                                 associationProperty.Property.Name,
                                 usePropertyName ? property.Name : property.VariableName);
                         }
@@ -40,7 +40,7 @@ namespace CodeSmith.SchemaHelper
                 }
             }
 
-            return parameters.TrimStart(new[] { '\r', '\n', '\t', ',', ' ' });
+            return parameters.TrimStart(new[] { '\r', '\n', ' ', ',', ' ' });
         }
 
         /// <summary>

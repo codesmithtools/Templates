@@ -38,7 +38,7 @@ namespace CodeSmith.SchemaHelper
                         }
                     }
 
-                    parameters += string.Format("\r\n\t\t{0} = {1}", resolvedPropertyName, propertyName);
+                    parameters += string.Format("\r\n        {0} = {1}", resolvedPropertyName, propertyName);
                 }
             }
             else
@@ -48,7 +48,7 @@ namespace CodeSmith.SchemaHelper
                 foreach (var property in sc.Properties)
                 {
                     var propertyName = isObjectFactory ? string.Format("item.{0}", property.Name) : property.VariableName;
-                    parameters += string.Format("\r\n\t\t{0} = {1}{2}", property.Name, propertyName, property.IsNullable && property.SystemType != "System.String" && property.SystemType != "System.Byte()" ? ".Value" : string.Empty);
+                    parameters += string.Format("\r\n        {0} = {1}{2}", property.Name, propertyName, property.IsNullable && property.SystemType != "System.String" && property.SystemType != "System.Byte()" ? ".Value" : string.Empty);
                 }
 
                 #endregion
@@ -86,7 +86,7 @@ namespace CodeSmith.SchemaHelper
                         propertyName = String.Format("{0}{1}", property.Property.Name, nullable);
                     }
 
-                    parameters += String.Format("\r\n\t\t{0}.{1} = {2}{3}", associationPropertyName, resolvedPropertyName, prefix, propertyName);
+                    parameters += String.Format("\r\n        {0}.{1} = {2}{3}", associationPropertyName, resolvedPropertyName, prefix, propertyName);
                 }
             }
             else
@@ -95,7 +95,7 @@ namespace CodeSmith.SchemaHelper
 
                 foreach (IProperty property in sc.Properties)
                 {
-                    parameters += String.Format("\r\n\t\t{0}.{1} = {1}{2}", associationPropertyName, property.Name, prefix);
+                    parameters += String.Format("\r\n        {0}.{1} = {1}{2}", associationPropertyName, property.Name, prefix);
                 }
 
                 #endregion
