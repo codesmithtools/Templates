@@ -12,7 +12,8 @@
             bool cancel = false;
             OnInserting(ref cancel);
             if (cancel) return;
-            
+
+<% if(Entity.CanInsert) { %>             
             // Get <%= Entity.Name %> data for a single criteria
             using (var ctx = ContextManager<DAL.PetshopDataContext>.GetManager(LinqToSQLHelper.ConnectionString, true))
             {
@@ -80,3 +81,6 @@
 <%     } %>
                 OnInserted();
             }
+<% } else { %>
+            throw new NotSupportedException("This business object cannot be inserted.");
+<% } %>

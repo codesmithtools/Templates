@@ -21,6 +21,7 @@ namespace Generator.CSLA
         public const string ReadOnlyFormat = "{0}Info";
         public const string ReadOnlyListFormat = "{0}InfoList";
 
+        public const string Criteria = "Criteria";
         public const string DynamicRoot = "DynamicRoot";
         public const string EditableChild = "EditableChild";
         public const string EditableRoot = "EditableRoot";

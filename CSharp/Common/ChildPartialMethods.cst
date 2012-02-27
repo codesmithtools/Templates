@@ -38,6 +38,12 @@
         /// </summary>
         /// <param name="cancel">Value returned from the method indicating whether the object mapping should proceed.</param>
         partial void OnMapping(ref bool cancel);
+
+        /// <summary>
+        /// Codesmith generated stub method that is called when mapping the child <see cref="<%=ChildBusinessClassName%><%= Entity.GenericProperty %>"/> object. 
+        /// </summary>
+        /// <param name="reader"></param>
+        /// <param name="cancel">Value returned from the method indicating whether the object mapping should proceed.</param>
         partial void OnMapping(SafeDataReader reader, ref bool cancel);
 
         /// <summary>
@@ -50,6 +56,11 @@
         /// </summary>
         /// <param name="cancel">Value returned from the method indicating whether the object insertion should proceed.</param>
         partial void OnChildInserting(ref bool cancel);
+        /// <summary>
+        /// Codesmith generated stub method that is called when inserting the child <see cref="<%=ChildBusinessClassName%><%= Entity.GenericProperty %>"/> object. 
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="cancel">Value returned from the method indicating whether the object insertion should proceed.</param>
         partial void OnChildInserting(SqlConnection connection, ref bool cancel);
 
         /// <summary>
@@ -62,6 +73,12 @@
         /// </summary>
         /// <param name="cancel">Value returned from the method indicating whether the object creation should proceed.</param>
         partial void OnChildUpdating(ref bool cancel);
+
+        /// <summary>
+        /// Codesmith generated stub method that is called when updating the child <see cref="<%=ChildBusinessClassName%><%= Entity.GenericProperty %>"/> object. 
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="cancel">Value returned from the method indicating whether the object creation should proceed.</param>
         partial void OnChildUpdating(SqlConnection connection, ref bool cancel);
 
         /// <summary>
@@ -74,6 +91,12 @@
         /// </summary>
         /// <param name="cancel">Value returned from the method indicating whether the object self deletion should proceed.</param>
         partial void OnChildSelfDeleting(ref bool cancel);
+
+        /// <summary>
+        /// Codesmith generated stub method that is called when self deleting the child <see cref="<%=ChildBusinessClassName%><%= Entity.GenericProperty %>"/> object. 
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="cancel">Value returned from the method indicating whether the object self deletion should proceed.</param>
         partial void OnChildSelfDeleting(SqlConnection connection, ref bool cancel);
 
         /// <summary>
@@ -87,6 +110,12 @@
         /// <param name="criteria"><see cref="<%= ChildBusinessClassName %>Criteria<%= Entity.GenericProperty %>"/> object containg the criteria of the object to delete.</param>
         /// <param name="cancel">Value returned from the method indicating whether the object deletion should proceed.</param>
         partial void OnDeleting(<%= CriteriaClassName %><%= Entity.GenericProperty %> criteria, ref bool cancel);
+        /// <summary>
+        /// Codesmith generated stub method that is called when deleting the child <see cref="<%=ChildBusinessClassName%><%= Entity.GenericProperty %>"/> object. 
+        /// </summary>
+        /// <param name="criteria"><see cref="<%= ChildBusinessClassName %>Criteria<%= Entity.GenericProperty %>"/> object containg the criteria of the object to delete.</param>
+        /// <param name="connection"></param>
+        /// <param name="cancel">Value returned from the method indicating whether the object deletion should proceed.</param>
         partial void OnDeleting(<%= CriteriaClassName %><%= Entity.GenericProperty %> criteria, SqlConnection connection, ref bool cancel);
 
         /// <summary>

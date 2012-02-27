@@ -9,6 +9,7 @@
             OnDeleting(criteria, connection, ref cancel);
             if (cancel) return;
 
+<% if(Entity.CanDelete) { %>
             using (var command = new SqlCommand("<%= GetDeleteStoredProcedureName() %>", connection))
             {
                 command.CommandType = CommandType.StoredProcedure;
@@ -21,3 +22,6 @@
             }
 
             OnDeleted();
+<% } else { %>
+            throw new NotSupportedException("This business object cannot be deleted.");
+<% } %>

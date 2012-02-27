@@ -1,6 +1,5 @@
 ﻿<%-- Author: Blake Niemyjski --%>
 <%@ CodeTemplate Language="C#" TargetLanguage="C#" OutputType="None" Inherits="Generator.CSLA.EntityCodeTemplate" %>
-
 <%@ Register Name="CommandObject" Template="Internal\CommandObject.cst" %>
 <%@ Register Name="CommandObjectDataAccess" Template="Internal\CommandObject.DataAccess.cst" %>
 <%@ Register Name="CommandObjectGenerated" Template="Internal\CommandObject.Generated.cst" %>

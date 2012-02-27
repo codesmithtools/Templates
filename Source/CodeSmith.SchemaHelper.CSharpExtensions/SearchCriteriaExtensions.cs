@@ -7,8 +7,6 @@ namespace CodeSmith.SchemaHelper
     /// </summary>
     public static class SearchCriteriaExtensions
     {
-        #region BuildObjectInitializer
-
         public static string BuildObjectInitializer(this SearchCriteria sc)
         {
             return sc.BuildObjectInitializer(false);
@@ -62,10 +60,6 @@ namespace CodeSmith.SchemaHelper
 
             return parameters.TrimStart(new[] { ',', ' ' });
         }
-
-        #endregion
-
-        #region BuildNullableObjectInitializer
 
         public static string BuildNullableObjectInitializer(this SearchCriteria sc)
         {
@@ -122,10 +116,6 @@ namespace CodeSmith.SchemaHelper
             return parameters.TrimStart(new[] { '\r', '\n', '\t' });
         }
 
-        #endregion
-
-        #region BuildUpdateStatements
-
         public static string BuildUpdateStatements(this SearchCriteria sc, string associationPropertyName)
         {
             return sc.BuildUpdateStatements(associationPropertyName, "item.");
@@ -170,9 +160,7 @@ namespace CodeSmith.SchemaHelper
                 #endregion
             }
 
-            return parameters.TrimStart(new[] { '\r', '\n', });
+            return parameters.TrimStart(new[] { '\r', '\n' });
         }
-
-        #endregion
     }
 }

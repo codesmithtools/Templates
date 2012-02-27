@@ -40,12 +40,16 @@ namespace <%= BusinessProjectName %>
     [Csla.Server.ObjectFactory(FactoryNames.<%= Entity.Name %>ListFactoryName)]
 <% } %>
     public partial class <%= BusinessClassName %><%= Entity.GenericProperty %> : <% if(IsLatestCSLA) { %>DynamicListBase<% } else { %>EditableRootListBase<% } %><<%= ChildBusinessClassName %><%= Entity.GenericProperty %>>
-    {    
+    {
+        #region Constructor(s)
+        
         public <%= BusinessClassName %>()
         { 
             AllowNew = true;
         }
-        
+
+        #endregion
+
         #region Synchronous Factory Methods 
 <% if(IncludeSilverlightSupport) { %>
 #if !SILVERLIGHT
@@ -115,14 +119,14 @@ namespace <%= BusinessProjectName %>
         {
 <% RenderHelper(new AddNewCore()); %>
         }
-        
+
 <% if(IncludeSilverlightSupport) { %>
 #else
         protected override void AddNewCore()
         {
 <% RenderHelper(new AddNewCore(), IncludeSilverlightSupport); %>
         }
-        
+
 #endif
 <% } %>
         #endregion

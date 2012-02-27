@@ -11,7 +11,8 @@
             bool cancel = false;
             OnDeleting(criteria, ref cancel);
             if (cancel) return;
-            
+
+<% if(Entity.CanDelete) { %>
             // Delete <%= Entity.Name %> data based on specified criteria
 <%    string PrimaryKeyCriteria = "";    
     string PrimaryKeyFields = "";
@@ -34,3 +35,6 @@
             
                 OnDeleted();
             }
+<% } else { %>
+            throw new NotSupportedException("This business object cannot be deleted.");
+<% } %>

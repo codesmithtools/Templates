@@ -1,23 +1,18 @@
 ﻿<%-- Author: Blake Niemyjski --%>
-<%@ CodeTemplate Language="VB" TargetLanguage="VB" OutputType="None" Inherits="CodeSmith.QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Encoding="UTF-8" %>
-
+<%@ CodeTemplate Language="VB" TargetLanguage="VB" OutputType="None" Inherits="Generator.CSLA.EntityCodeTemplate" %>
 <%@ Register Name="EditableChildList" Template="Internal\EditableChildList.cst" %>
 <%@ Register Name="EditableChildListDataAccess" Template="Internal\EditableChildList.DataAccess.cst" %>
 <%@ Register Name="EditableChildListDataAccessParameterized" Template="Internal\EditableChildList.DataAccess.ParameterizedSQL.cst" %>
 <%@ Register Name="EditableChildListDataAccessStoredProcedures" Template="Internal\EditableChildList.DataAccess.StoredProcedures.cst" %>
 <%@ Register Name="EditableChildListGenerated" Template="Internal\EditableChildList.Generated.cst" %>
-
 <%@ Register Name="SqlStoredProcedures" Template="..\DataAccessLayer\Internal\SQLStoredProcedures.cst" %>
 
 <%@ Assembly Name="CodeSmith.CustomProperties" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\Common" %>
-<%@ Assembly Name="CodeSmith.QuickStart" Path="..\..\Common" %>
-<%@ Assembly Name="SchemaExplorer" %>
+<%@ Assembly Name="Generator.CSLA" Path="..\..\Common" %>
 
 <%@ Import Namespace="CodeSmith.CustomProperties" %>
 <%@ Import Namespace="CodeSmith.SchemaHelper" %>
-<%@ Import Namespace="CodeSmith.QuickStart" %>
-<%@ Import Namespace="SchemaExplorer" %>
 
 <script runat="template">
 
@@ -72,12 +67,12 @@ End Sub
 
 Public Overrides Function OnEntityChanging() As Boolean
     If String.IsNullOrEmpty(BusinessClassName) Then
-        BusinessClassName = String.Concat(Entity.ClassName, "List")
-        ChildBusinessClassName = Entity.ClassName
+        BusinessClassName = String.Concat(Entity.Name, "List")
+        ChildBusinessClassName = Entity.Name
     End If
 
     If String.IsNullOrEmpty(CriteriaClassName) OrElse CriteriaClassName.Equals("Criteria", StringComparison.InvariantCultureIgnoreCase) Then
-        CriteriaClassName = [String].Concat(Entity.ClassName, "Criteria")
+        CriteriaClassName = [String].Concat(Entity.Name, "Criteria")
     End If
 
     Return False

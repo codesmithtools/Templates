@@ -10,8 +10,6 @@ namespace CodeSmith.SchemaHelper
     /// </summary>
     public static class MemberCollectionExtensions
     {
-        #region BuildObjectInitializer
-
         public static string BuildObjectInitializer(this List<IProperty> members)
         {
             return members.BuildObjectInitializer(false);
@@ -52,10 +50,6 @@ namespace CodeSmith.SchemaHelper
 
             return parameters.TrimStart(new[] { ',', ' ' });
         }
-
-        #endregion
-
-        #region BuildNullableObjectInitializer
 
         public static string BuildNullableObjectInitializer(this List<IProperty> members)
         {
@@ -98,10 +92,6 @@ namespace CodeSmith.SchemaHelper
             return parameters.TrimStart(new[] { '\r', '\n', '\t' });
         }
 
-        #endregion
-
-        #region BuildParametersVariables
-
         public static string BuildParametersVariables(this List<IProperty> members)
         {
             return members.BuildParametersVariables(true);
@@ -111,18 +101,14 @@ namespace CodeSmith.SchemaHelper
         {
             string parameters = string.Empty;
 
-            foreach (IProperty property in members)
+            foreach (var property in members)
             {
-                string systemType = isNullable ? property.SystemType : property.SystemType.TrimEnd(new[] {'?'});
+                string systemType = isNullable ? property.SystemType : property.SystemType.TrimEnd(new[] { '?' });
                 parameters += String.Format(", {0} {1}", systemType, property.VariableName);
             }
 
             return parameters.TrimStart(new[] { ',', ' ' });
         }
-
-        #endregion
-
-        #region BuildCommandParameters
 
         public static string BuildCommandParameters(this List<IProperty> members)
         {
@@ -176,7 +162,7 @@ namespace CodeSmith.SchemaHelper
                                 originalPropertyName = String.Format(format, Util.NamingConventions.VariableName(associationProperty.Property.Name), associationProperty.Property.Name);
 
                                 className = Util.NamingConventions.VariableName(associationProperty.Property.Name);
-                                includeThisPrefix = string.Empty;
+                                includeThisPrefix = String.Empty;
                                 break;
                             }
                         }
@@ -239,15 +225,13 @@ namespace CodeSmith.SchemaHelper
             return commandParameters.TrimStart(new[] { '\t', '\r', '\n' });
         }
 
-        #endregion
-
         public static string BuildHasValueCommandParameters(this List<IProperty> members)
         {
             string commandParameters = string.Empty;
 
-            foreach (IProperty property in members)
+            foreach (var property in members)
             {
-                if(property.IsNullable)
+                if (property.IsNullable)
                     commandParameters += String.Format(Environment.NewLine + "\t\t\t\t\tcommand.Parameters.AddWithValue(\"{0}{1}HasValue\", criteria.{2}HasValue);", Configuration.Instance.ParameterPrefix, property.KeyName, property.Name);
             }
 

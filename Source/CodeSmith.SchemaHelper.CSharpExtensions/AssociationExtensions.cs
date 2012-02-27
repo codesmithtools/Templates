@@ -8,8 +8,6 @@ namespace CodeSmith.SchemaHelper
     /// </summary>
     public static class AssociationExtensions
     {
-        #region BuildObjectInitializer
-
         public static string BuildObjectInitializer(this Association association)
         {
             return association.BuildObjectInitializer(false);
@@ -36,10 +34,6 @@ namespace CodeSmith.SchemaHelper
             return parameters.TrimStart(new[] { ',', ' ' });
         }
 
-        #endregion
-
-        #region BuildNullableObjectInitializer
-
         public static string BuildNullableObjectInitializer(this Association association)
         {
             return association.BuildNullableObjectInitializer(false);
@@ -65,10 +59,6 @@ namespace CodeSmith.SchemaHelper
 
             return parameters.TrimStart(new[] { '\r', '\n', '\t' });
         }
-
-        #endregion
-
-        #region BuildNullCheckStatement
 
         /// <summary>
         /// Builds a null check HasValue Statements for the Property Templates.
@@ -140,16 +130,12 @@ namespace CodeSmith.SchemaHelper
             parameters = parameters.Replace(lastParameter, lastParameter.Insert(lastParameter.IndexOf("HasValue") + 8, ")"));
 
             // Remove the last exspression if needed.
-            if (trimEnd)
+            if(trimEnd)
                 parameters = parameters.Remove(parameters.Length - exspression.Length);
 
             // Remove leading characters.
             return parameters.TrimStart(new[] { ' ' });
         }
-
-        #endregion
-
-        #region BuildParametersVariables
 
         public static string BuildParametersVariables(this Association association)
         {
@@ -173,8 +159,6 @@ namespace CodeSmith.SchemaHelper
 
             return parameters.TrimStart(new[] { ',', ' ' });
         }
-
-        #endregion
 
         public static string BuildUpdateStatementVariables(this Association association, List<Association> associations, int currentRecord, bool includeConnectionParameter)
         {

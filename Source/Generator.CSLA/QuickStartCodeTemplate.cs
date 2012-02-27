@@ -93,6 +93,36 @@ namespace Generator.CSLA
         [Browsable(false)]
         public IEnumerable<IEntity> Entities { get; set; }
 
+        [Optional]
+        [Category("1. DataSource")]
+        [Description("Include views that have an extended property declaring it's business type")]
+        public bool IncludeViews
+        {
+            get
+            {
+                return Configuration.Instance.IncludeViews;
+            }
+            set
+            {
+                Configuration.Instance.IncludeViews = value;
+            }
+        }
+
+        [Optional]
+        [Category("1. DataSource")]
+        [Description("Include stored procedures that have an extended property declaring it's business type")]
+        public bool IncludeFunctions
+        {
+            get
+            {
+                return Configuration.Instance.IncludeFunctions;
+            }
+            set
+            {
+                Configuration.Instance.IncludeFunctions = value;
+            }
+        }
+
         #endregion
 
         #region 2. Solution

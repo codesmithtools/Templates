@@ -1,83 +1,80 @@
 ﻿<%-- Author: Blake Niemyjski --%>
-<%@ CodeTemplate Language="VB" TargetLanguage="VB" Inherits="CodeSmith.QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Encoding="UTF-8" Description="CSLA Map" %>
-
-<%@ Assembly Name="SchemaExplorer" %>
+<%@ CodeTemplate Language="VB" TargetLanguage="VB" Inherits="Generator.CSLA.EntityCodeTemplate" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\Common" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper.Extensions" Path="..\..\Common" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper.VisualBasicExtensions" Path="..\..\Common" %>
-<%@ Assembly Name="CodeSmith.QuickStart" Path="..\..\Common" %>
-
-<%@ Import Namespace="SchemaExplorer" %>
+<%@ Assembly Name="Generator.CSLA" Path="..\..\Common" %>
 <%@ Import Namespace="CodeSmith.SchemaHelper" %>
-<%@ Import Namespace="CodeSmith.QuickStart" %>
+<%@ Import Namespace="System.Linq" %>
             Dim cancel As Boolean = False
             OnChildInserting(connection, cancel)
             If (cancel) Then
                 Return
             End If
-    
+
+<% If(Entity.CanInsert) Then %> 
             If Not (connection.State = ConnectionState.Open) Then connection.Open()
             Using command As New SqlCommand("<%= GetInsertStoredProcedureName() %>", connection)
                 command.CommandType = CommandType.StoredProcedure
                 <%= entity.GetProperties(PropertyType.NoConcurrency).BuildCommandParameters(False, False, Not RenderOptionalContent, True) %>
-    <% If(Entity.ConcurrencyProperty != null) Then %>
-                command.Parameters.AddWithValue("<%= ParameterPrefix  %><%= Entity.ConcurrencyProperty.ColumnName %>", SqlDbType.Timestamp)
-                command.Parameters("<%= ParameterPrefix  %><%= Entity.ConcurrencyProperty.ColumnName %>").Value = Me.<%= Entity.ConcurrencyProperty.PropertyName %>
-                command.Parameters("<%= ParameterPrefix  %><%= Entity.ConcurrencyProperty.ColumnName %>").Direction = ParameterDirection.InputOutput
+    <% If Not(Entity.ConcurrencyProperty Is Nothing) Then %>
+                command.Parameters.AddWithValue("<%= ParameterPrefix  %><%= Entity.ConcurrencyProperty.KeyName %>", SqlDbType.Timestamp)
+                command.Parameters("<%= ParameterPrefix  %><%= Entity.ConcurrencyProperty.KeyName %>").Value = Me.<%= Entity.ConcurrencyProperty.Name %>
+                command.Parameters("<%= ParameterPrefix  %><%= Entity.ConcurrencyProperty.KeyName %>").Direction = ParameterDirection.InputOutput
     <% End If %>
     
                 command.ExecuteNonQuery()
     
-    <% If (Entity.ConcurrencyProperty != null) Then %>
-                <%= Entity.ConcurrencyProperty.PropertyName %> = DirectCast(command.Parameters("<%= ParameterPrefix  %><%= Entity.ConcurrencyProperty.ColumnName %>").Value, <%= Entity.ConcurrencyProperty.SystemType %>)
+    <% If Not(Entity.ConcurrencyProperty Is Nothing) Then %>
+                <%= Entity.ConcurrencyProperty.Name %> = DirectCast(command.Parameters("<%= ParameterPrefix  %><%= Entity.ConcurrencyProperty.KeyName %>").Value, <%= Entity.ConcurrencyProperty.SystemType %>)
     <% End If %>
-    <% For Each member As Member In Entity.GetProperties(PropertyType.Key)
-        If(member.IsType(PropertyType.Identity) OrElse member.DataType = DbType.Guid) Then %>
+    <% For Each prop As IProperty In Entity.GetProperties(PropertyType.Key)
+        If(prop.IsType(PropertyType.Identity) OrElse prop.IsDbType(DbType.Guid)) Then %>
     
                 ' Update identity or guid primary key value.
             <% If(UseMemberVariables) Then %>
-                <%= member.PrivateMemberVariableName %> = DirectCast(command.Parameters("<%= member.BuildParameterVariableName() %>").Value, <%= member.SystemType %>)
+                <%= prop.PrivateMemberVariableName %> = DirectCast(command.Parameters("<%= prop.BuildParameterVariableName() %>").Value, <%= prop.SystemType %>)
             <% Else %>
-                LoadProperty(<%= member.PrivateMemberVariableName %>Property, DirectCast(command.Parameters("<%= member.BuildParameterVariableName() %>").Value, <%= member.SystemType %>))
+                LoadProperty(<%= prop.PrivateMemberVariableName %>Property, DirectCast(command.Parameters("<%= prop.BuildParameterVariableName() %>").Value, <%= prop.SystemType %>))
             <% End If
         Else %> 
     
                 ' Update the original non-identity primary key value.
             <% If(UseMemberVariables) Then %>
-                _original<%= member.PropertyName %> = Me.<%= member.PropertyName %>
+                _original<%= prop.Name %> = Me.<%= prop.Name %>
             <% Else %>
-                LoadProperty(_original<%= member.PropertyName %>Property, Me.<%= member.PropertyName %>)
+                LoadProperty(_original<%= prop.Name %>Property, Me.<%= prop.Name %>)
             <% End If %>
     <%  End If
     Next %>
     
             End Using
     <% If Not RenderOptionalContent Then
-        For Each member As Member In Entity.Properties
-                If member.IsType(PropertyType.Foreign) AndAlso Not member.IsType(PropertyType.Key) Then
-            If String.IsNullOrEmpty(member.ResolveAssociationPropertyClassName()) Then
+        For Each prop As IProperty In Entity.Properties
+                If prop.IsType(PropertyType.Foreign) AndAlso Not prop.IsType(PropertyType.Key) Then
+            If String.IsNullOrEmpty(prop.ResolveAssociationPropertyClassName()) Then
                 Continue For
             End If  %>
     
-            ' Update foreign keys values. This code will update the values passed in from the parent only if no errors occurred after executing the query.
-    <% Dim localParameterName As String = member.ResolveAssociationPropertyVariable()
-    Dim localParameterNameWithChildProperty As String = member.ResolveAssociationPropertyVariableWithChildProperty() %>
-            '   BLAKE: Parent objects in VB require a different syntax check [Please Use IsNothing(ParentObjectParameter)]            
-            If(Not IsNothing(<%= localParameterName %>) AndAlso Not <%= localParameterNameWithChildProperty %> = Me.<%= member.PropertyName %>) Then
+            ' Update foreign keys values. This code will update the values passed In from the parent only if no errors occurred after executing the query.
+    <% Dim localParameterName As String = prop.ResolveAssociationPropertyVariable()
+    Dim localParameterNameWithChildProperty As String = prop.ResolveAssociationPropertyVariableWithChildProperty() %>
+            '   BLAKE: Parent objects In VB require a different syntax check [Please Use IsNothing(ParentObjectParameter)]            
+            If(Not IsNothing(<%= localParameterName %>) AndAlso Not <%= localParameterNameWithChildProperty %> = Me.<%= prop.Name %>) Then
     <% If(UseMemberVariables) Then %>
-                <%= member.PrivateMemberVariableName %> = <%= localParameterNameWithChildProperty %>
+                <%= prop.PrivateMemberVariableName %> = <%= localParameterNameWithChildProperty %>
     <% Else %>
-                LoadProperty(<%= member.PrivateMemberVariableName %>Property, <%= localParameterNameWithChildProperty %>)
+                LoadProperty(<%= prop.PrivateMemberVariableName %>Property, <%= localParameterNameWithChildProperty %>)
     <% End If %>
             End If
                 <% End If
         Next
     End If %>
     
-    <% If (Entity.Associations.Count(a => a.AssociationType == AssociationType.OneToMany) > 0 OrElse Entity.Associations.Count(a => a.AssociationType == AssociationType.ManyToOne) > 0 OrElse Entity.Associations.Count(a => a.AssociationType == AssociationType.OneToZeroOrOne) > 0) Then
+    <% If (Entity.Associations.Where(Function(a) a.AssociationType = AssociationType.OneToMany).Count() > 0 OrElse Entity.Associations.Where(Function(a) a.AssociationType = AssociationType.ManyToOne).Count() > 0 OrElse Entity.Associations.Where(Function(a) a.AssociationType = AssociationType.OneToZeroOrOne).Count() > 0) Then
         If (Not RenderOptionalContent) Then
         Dim childCount As Integer = 0
-        For Each a As Association In Entity.Associations.Where(a => a.AssociationType == AssociationType.OneToMany)
+        For Each a As Association In Entity.Associations.Where(Function(assoc) assoc.AssociationType = AssociationType.OneToMany)
             If IsChildBusinessObject(a) Then
                 childCount += 1
             End If
@@ -96,3 +93,6 @@
     End If %>
     
             OnChildInserted()
+<% Else %>
+            Throw New NotSupportedException("This business object cannot be inserted.")
+<% End If %>

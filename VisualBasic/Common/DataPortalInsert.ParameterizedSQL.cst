@@ -1,40 +1,37 @@
 ﻿<%-- Author: Blake Niemyjski --%>
-<%@ CodeTemplate Language="VB" TargetLanguage="VB" Inherits="CodeSmith.QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Encoding="UTF-8" Description="CSLA Map" %>
-
-<%@ Assembly Name="SchemaExplorer" %>
+<%@ CodeTemplate Language="VB" TargetLanguage="VB" Inherits="Generator.CSLA.EntityCodeTemplate" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\Common" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper.Extensions" Path="..\..\Common" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper.VisualBasicExtensions" Path="..\..\Common" %>
-<%@ Assembly Name="CodeSmith.QuickStart" Path="..\..\Common" %>
-
-<%@ Import Namespace="SchemaExplorer" %>
+<%@ Assembly Name="Generator.CSLA" Path="..\..\Common" %>
 <%@ Import Namespace="CodeSmith.SchemaHelper" %>
-<%@ Import Namespace="CodeSmith.QuickStart" %>
+<%@ Import Namespace="System.Linq" %>
             Dim cancel As Boolean = False
             OnInserting(cancel)
             If (cancel) Then
                 Return
             End If
-    
-            Const commandText As String = "INSERT INTO [<%= entity.Table.Owner %>].[<%= entity.Table.Name %>] (<%= entity.GetProperties(PropertyType.UpdateInsert).BuildDataBaseColumns() %>) VALUES (<%= entity.GetProperties(PropertyType.UpdateInsert).BuildDataBaseParameters() %>)<%= entity.BuildInsertSelectStatement() %>"
+
+<% If(Entity.CanInsert) Then %> 
+            Const commandText As String = "INSERT INTO <%= Entity.EntityKeyName %> (<%= entity.GetProperties(PropertyType.UpdateInsert).BuildDataBaseColumns() %>) VALUES (<%= entity.GetProperties(PropertyType.UpdateInsert).BuildDataBaseParameters() %>)<%= entity.BuildInsertSelectStatement() %>"
             Using connection As New SqlConnection(ADOHelper.ConnectionString)
                 connection.Open()
                 Using command As New SqlCommand(commandText, connection)
                     <%= entity.GetProperties(PropertyType.UpdateInsert).BuildCommandParameters(False, True) %>
     
-    <% If (entity.ConcurrencyProperty != null Or entity.IdentityProperty != null) Then %>
+    <% If (entity.ConcurrencyProperty IsNot Nothing OrElse entity.IdentityProperty IsNot Nothing) Then %>
                     Using reader As SafeDataReader = New SafeDataReader(command.ExecuteReader())
                         If reader.Read() Then
-                Using(BypassPropertyChecks)
-    <% If (Entity.ConcurrencyProperty != null) Then %>
-                                <%= Entity.ConcurrencyProperty.PropertyName %> = ADOHelper.GetBytes(reader, "<%= Entity.ConcurrencyProperty.ColumnName %>")
+                            Using(BypassPropertyChecks)
+    <% If Not(Entity.ConcurrencyProperty Is Nothing) Then %>
+                                <%= Entity.ConcurrencyProperty.Name %> = ADOHelper.GetBytes(reader, "<%= Entity.ConcurrencyProperty.KeyName %>")
     <% End If %>
-    <% for each [member] As Member in Entity.GetProperties(PropertyType.Key)
-        If ([member].IsType(PropertyType.Identity) OrElse member.DataType = DbType.Guid) Then
+    <% for each prop As IProperty In Entity.GetProperties(PropertyType.Key)
+        If (prop.IsType(PropertyType.Identity) OrElse prop.IsDbType(DbType.Guid)) Then
             If(UseMemberVariables) Then %>
-                                <%= [member].PrivateMemberVariableName %> = <%If Not [member].HasByteArrayColumn() Then %>reader.<%= [member].GetReaderMethod() %>("<%= [member].ColumnName %>")<% else %>ADOHelper.GetBytes(reader)<% End If %>
+                                <%= prop.PrivateMemberVariableName %> = <%If Not prop.HasByteArrayColumn() Then %>reader.<%= prop.GetReaderMethod() %>("<%= prop.KeyName %>")<% else %>ADOHelper.GetBytes(reader)<% End If %>
             <% Else %>
-                                LoadProperty(<%= [member].PrivateMemberVariableName %>Property, <% If NOT [member].HasByteArrayColumn() Then %>reader.<%= [member].GetReaderMethod() %>("<%= [member].ColumnName %>"))<% else %>ADOHelper.GetBytes(reader, "<%= [member].ColumnName %>"))<% End If %>
+                                LoadProperty(<%= prop.PrivateMemberVariableName %>Property, <% If NOT prop.HasByteArrayColumn() Then %>reader.<%= prop.GetReaderMethod() %>("<%= prop.KeyName %>"))<% else %>ADOHelper.GetBytes(reader, "<%= prop.KeyName %>"))<% End If %>
             <% End If
         End If
     Next %>
@@ -50,20 +47,23 @@
     <% End If %>
                 End Using
     
-    <% For Each member As Member In Entity.GetProperties(PropertyType.Key)
-        If Not (member.IsType(PropertyType.Identity)) Then
+    <% For Each prop As IProperty In Entity.GetProperties(PropertyType.Key)
+        If Not (prop.IsType(PropertyType.Identity)) Then
             If(UseMemberVariables) Then %>
-                _original<%= member.PropertyName %> = Me.<%= member.PropertyName %>
+                _original<%= prop.Name %> = Me.<%= prop.Name %>
         <% Else %>
-                LoadProperty(_original<%= member.PropertyName %>Property, Me.<%= member.PropertyName %>)
+                LoadProperty(_original<%= prop.Name %>Property, Me.<%= prop.Name %>)
         <% End If
         End If
     Next %>
     
-    <% If (Entity.Associations.Count(a => a.AssociationType == AssociationType.OneToMany) > 0 OrElse Entity.Associations.Count(a => a.AssociationType == AssociationType.ManyToOne) > 0 OrElse Entity.Associations.Count(a => a.AssociationType == AssociationType.OneToZeroOrOne) > 0) Then %>
+    <% If (Entity.Associations.Where(Function(a) a.AssociationType = AssociationType.OneToMany).Count() > 0 OrElse Entity.Associations.Where(Function(a) a.AssociationType = AssociationType.ManyToOne).Count() > 0 OrElse Entity.Associations.Where(Function(a) a.AssociationType = AssociationType.OneToZeroOrOne).Count() > 0) Then %>
     
                 FieldManager.UpdateChildren(Me, connection)
     <% End If %>
             End Using
     
             OnInserted()
+<% Else %>
+            Throw New NotSupportedException("This business object cannot be inserted.")
+<% End If %>

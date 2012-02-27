@@ -1858,6 +1858,58 @@
             Is this IProperty ReadOnly.  Computed by looking at IsIdentity, IsRowVersion, and IsComputed.
             </summary>
         </member>
+        <member name="T:CodeSmith.SchemaHelper.SchemaExplorerEntityProvider">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.SchemaExplorerEntityProvider.#ctor(SchemaExplorer.DatabaseSchema)">
+            <summary>
+            
+            </summary>
+            <param name="database"></param>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.SchemaExplorerEntityProvider.#ctor(SchemaExplorer.TableSchemaCollection,SchemaExplorer.ViewSchemaCollection,SchemaExplorer.CommandSchemaCollection)">
+            <summary>
+            
+            </summary>
+            <param name="tables"></param>
+            <param name="views"></param>
+            <param name="commands"></param>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.SchemaExplorerEntityProvider.Validate">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.SchemaExplorerEntityProvider.Load">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.SchemaExplorerEntityProvider.Save">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.SchemaExplorerEntityProvider.Initialize(SchemaExplorer.TableSchemaCollection,SchemaExplorer.ViewSchemaCollection,SchemaExplorer.CommandSchemaCollection)">
+            <summary>
+            Load all the Entities into the EntityStore.
+            </summary>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.SchemaExplorerEntityProvider.LoadTables(SchemaExplorer.TableSchemaCollection)">
+            <summary>
+            Load the Tables.
+            </summary>
+            <param name="tables"></param>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.SchemaExplorerEntityProvider.LoadCommands(SchemaExplorer.CommandSchemaCollection)">
+            <summary>
+            Loop through all the commands and create the command objects.
+            </summary>
+            <param name="commands"></param>
+        </member>
         <member name="T:CodeSmith.SchemaHelper.CommandParameter">
             <summary>
             This represents a Parameter to a command object from the Database.  Using a property to inherit the naming Functionality from the Schema Helper.
@@ -2058,58 +2110,6 @@
             <summary>
             The text that created the view.
             </summary>
-        </member>
-        <member name="T:CodeSmith.SchemaHelper.SchemaExplorerEntityProvider">
-            <summary>
-            
-            </summary>
-        </member>
-        <member name="M:CodeSmith.SchemaHelper.SchemaExplorerEntityProvider.#ctor(SchemaExplorer.DatabaseSchema)">
-            <summary>
-            
-            </summary>
-            <param name="database"></param>
-        </member>
-        <member name="M:CodeSmith.SchemaHelper.SchemaExplorerEntityProvider.#ctor(SchemaExplorer.TableSchemaCollection,SchemaExplorer.ViewSchemaCollection,SchemaExplorer.CommandSchemaCollection)">
-            <summary>
-            
-            </summary>
-            <param name="tables"></param>
-            <param name="views"></param>
-            <param name="commands"></param>
-        </member>
-        <member name="M:CodeSmith.SchemaHelper.SchemaExplorerEntityProvider.Validate">
-            <summary>
-            
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:CodeSmith.SchemaHelper.SchemaExplorerEntityProvider.Load">
-            <summary>
-            
-            </summary>
-        </member>
-        <member name="M:CodeSmith.SchemaHelper.SchemaExplorerEntityProvider.Save">
-            <summary>
-            
-            </summary>
-        </member>
-        <member name="M:CodeSmith.SchemaHelper.SchemaExplorerEntityProvider.Initialize(SchemaExplorer.TableSchemaCollection,SchemaExplorer.ViewSchemaCollection,SchemaExplorer.CommandSchemaCollection)">
-            <summary>
-            Load all the Entities into the EntityStore.
-            </summary>
-        </member>
-        <member name="M:CodeSmith.SchemaHelper.SchemaExplorerEntityProvider.LoadTables(SchemaExplorer.TableSchemaCollection)">
-            <summary>
-            Load the Tables.
-            </summary>
-            <param name="tables"></param>
-        </member>
-        <member name="M:CodeSmith.SchemaHelper.SchemaExplorerEntityProvider.LoadCommands(SchemaExplorer.CommandSchemaCollection)">
-            <summary>
-            Loop through all the commands and create the command objects.
-            </summary>
-            <param name="commands"></param>
         </member>
     </members>
 </doc>

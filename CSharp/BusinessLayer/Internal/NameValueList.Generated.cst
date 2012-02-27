@@ -33,7 +33,7 @@ namespace <%= BusinessProjectName %>
         public <%= BusinessClassName %>()
         { /* Require use of factory methods */ }
         
-        #region Synchronous Factory Methods         
+        #region Synchronous Factory Methods
 <% if(IncludeSilverlightSupport) { %>
 #if !SILVERLIGHT
 <% } %>
@@ -60,12 +60,12 @@ namespace <%= BusinessProjectName %>
         }
             
         #endregion
-    
+
         public static void InvalidateCache()
         {
             _list = null;
         }
-        
+
 <% if(DataAccessImplementation == DataAccessMethod.ObjectFactoryNone || DataAccessImplementation == DataAccessMethod.ObjectFactoryParameterizedSQL || DataAccessImplementation == DataAccessMethod.ObjectFactoryStoredProcedures) { %>
         #region Property overrides
 

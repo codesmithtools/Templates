@@ -276,13 +276,10 @@ public override void Generate()
 
     #region AsyncChildLoaderTemplate
 
-    if(IncludeSilverlightSupport)
-    {
-        AsyncChildLoaderTemplate AsyncChildLoader = this.Create<AsyncChildLoaderTemplate>();
-        this.CopyPropertiesTo(AsyncChildLoader);
-        AsyncChildLoader.RenderToFile(System.IO.Path.Combine(this.Location, "Utility\\AsyncChildLoader.cs"), true);
-    }
-
+    AsyncChildLoaderTemplate AsyncChildLoader = this.Create<AsyncChildLoaderTemplate>();
+    this.CopyPropertiesTo(AsyncChildLoader);
+    AsyncChildLoader.RenderToFile(System.IO.Path.Combine(this.Location, "Utility\\AsyncChildLoader.cs"), true);
+   
     #endregion
 }
 

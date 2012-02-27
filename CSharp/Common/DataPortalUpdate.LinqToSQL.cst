@@ -12,7 +12,8 @@
             bool cancel = false;
             OnUpdating(ref cancel);
             if (cancel) return;
-            
+
+<% if(Entity.CanUpdate) { %>  
             // Create a new connection.
             using (var ctx = ContextManager<DAL.PetshopDataContext>.GetManager(LinqToSQLHelper.ConnectionString, true))
             {
@@ -171,3 +172,6 @@
 <%     } %>
                 OnUpdated();
             }
+<% } else { %>
+            throw new NotSupportedException("This business object cannot be updated.");
+<% } %>

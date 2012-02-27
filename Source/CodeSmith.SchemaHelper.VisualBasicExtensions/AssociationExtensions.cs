@@ -17,24 +17,24 @@ namespace CodeSmith.SchemaHelper
         {
             string parameters = string.Empty;
 
-            foreach (Member member in association.SearchCriteria.Members)
+            foreach (IProperty property in association.SearchCriteria.Properties)
             {
-                foreach (AssociationMember associationMember in association)
+                foreach (AssociationProperty associationProperty in association.Properties)
                 {
-                    if (member.ColumnName == associationMember.AssociatedColumn.ColumnName && member.TableName == associationMember.AssociatedColumn.TableName)
+                    if (property.KeyName == associationProperty.ForeignProperty.KeyName) // && property.ForeignProperty == associationProperty.ForeignProperty.ForeignProperty)
                     {
-                        bool isNullable = member.IsNullable && member.SystemType != "System.String" && member.SystemType != "System.Byte()";
+                        bool isNullable = property.IsNullable && property.SystemType != "System.String" && property.SystemType != "System.Byte()";
                         if(isNullable)
                         {
                             parameters += string.Format("\r\n\t\t\t\tIf({1}.HasValue) Then criteria.{0} = {1}.Value",
-                                associationMember.MemberPropertyName,
-                                usePropertyName ? member.PropertyName : member.VariableName);
+                                associationProperty.Property.Name,
+                                usePropertyName ? property.Name : property.VariableName);
                         }
                         else
                         {
                             parameters += string.Format("\r\n\t\t\t\tcriteria.{0} = {1}",
-                                associationMember.MemberPropertyName,
-                                usePropertyName ? member.PropertyName : member.VariableName);
+                                associationProperty.Property.Name,
+                                usePropertyName ? property.Name : property.VariableName);
                         }
                     }
                 }
@@ -83,17 +83,17 @@ namespace CodeSmith.SchemaHelper
             string lastParameter = string.Empty;
             string parameters = string.Empty;
 
-            foreach (Member member in association.SearchCriteria.Members)
+            foreach (IProperty property in association.SearchCriteria.Properties)
             {
-                foreach (AssociationMember associationMember in association)
+                foreach (AssociationProperty associationProperty in association.Properties)
                 {
-                    if (member.ColumnName == associationMember.AssociatedColumn.ColumnName && member.TableName == associationMember.AssociatedColumn.TableName)
+                    if (property.KeyName == associationProperty.ForeignProperty.KeyName) // && property.ForeignProperty == associationProperty.ForeignProperty.ForeignProperty)
                     {
-                        if ((member.IsNullable && member.SystemType != "System.String" && member.SystemType != "System.Byte()") == false) continue;
+                        if ((property.IsNullable && property.SystemType != "System.String" && property.SystemType != "System.Byte[]") == false) continue;
 
                         lastParameter = parameters.Length == 0 ? 
-                            string.Format("({0} {1}.HasValue {2}", useNot ? "Not" : string.Empty, usePropertyName ? member.PropertyName : member.VariableName, exspression) : 
-                            string.Format(" {0} {1}.HasValue {2}", useNot ? "Not" : string.Empty, usePropertyName ? member.PropertyName : member.VariableName, exspression);
+                            string.Format("({0} {1}.HasValue {2}", useNot ? "Not" : string.Empty, usePropertyName ? property.Name : property.VariableName, exspression) : 
+                            string.Format(" {0} {1}.HasValue {2}", useNot ? "Not" : string.Empty, usePropertyName ? property.Name : property.VariableName, exspression);
 
                         parameters += lastParameter; 
                     }
@@ -129,9 +129,9 @@ namespace CodeSmith.SchemaHelper
         {
             string parameters = string.Empty;
 
-            foreach (AssociationMember member in association)
+            foreach (AssociationProperty property in association.Properties)
             {
-                var parameter = string.Format(", ByVal {1} As {0}", member.ClassName, Util.NamingConventions.VariableName(member.ClassName));
+                var parameter = string.Format(", ByVal {1} As {0}", property.Property.Name, Util.NamingConventions.VariableName(property.Property.Name));
 
                 if (!parameters.Contains(parameter))
                     parameters += parameter;
@@ -149,7 +149,7 @@ namespace CodeSmith.SchemaHelper
 
             for (int index = 0; index < associations.Count; index++)
             {
-                var parameter = string.Format(", {0}", Util.NamingConventions.VariableName(associations[index].ClassName));
+                var parameter = String.Format(", {0}", Util.NamingConventions.VariableName(associations[index].Name));
                 if(index == currentRecord)
                 {
                     parameters += parameter;

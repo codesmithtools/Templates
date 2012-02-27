@@ -10,6 +10,7 @@
             OnChildUpdating(connection, ref cancel);
             if (cancel) return;
 
+<% if(Entity.CanUpdate) { %> 
             if(connection.State != ConnectionState.Open) connection.Open();
             using(var command = new SqlCommand("<%= GetUpdateStoredProcedureName() %>", connection))
             {
@@ -76,3 +77,6 @@
 <% } } %>
 
             OnChildUpdated();
+<% } else { %>
+            throw new NotSupportedException("This business object cannot be updated.");
+<% } %>

@@ -65,9 +65,9 @@ namespace <%= BusinessProjectName %>
             bool cancel = false;
             OnSelfDeleting(ref cancel);
             if (cancel) return;
-            
+
             DataPortal_Delete(new <%= CriteriaClassName %> (<% if(UseMemberVariables) { %><%= Entity.GetProperties(PropertyType.Key).BuildPrivateMemberVariableArguments() %><% } else { %><%= Entity.GetProperties(PropertyType.Key).BuildPropertyVariableArguments() %><% } %>));
-        
+
             OnSelfDeleted();
         }
 

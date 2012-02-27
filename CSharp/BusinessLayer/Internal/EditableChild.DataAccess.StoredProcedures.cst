@@ -24,8 +24,6 @@
 <% if(IncludeSilverlightSupport) { %>
 #if !SILVERLIGHT
 <% } %>
-#region Using declarations
-
 using System;
 using System.Data;
 using System.Data.SqlClient;
@@ -33,12 +31,11 @@ using System.Data.SqlClient;
 using Csla;
 using Csla.Data;
 
-#endregion
-
 namespace <%= BusinessProjectName %>
 {
     public partial class <%= BusinessClassName %><%= Entity.GenericProperty %>
     {
+        [RunLocal()]
         protected override void Child_Create()
         {
 <% RenderHelper(new ChildCreate()); %>

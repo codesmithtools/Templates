@@ -27,7 +27,6 @@ using Csla;
 using <%=LinqToSQLContextNamespace%>;
 using DAL=<%=LinqToSQLContextNamespace%>;
 <% }%>
-using Csla.Rules;
 <% if(IncludeSilverlightSupport) { %>
 #if SILVERLIGHT
 using Csla.Serialization;
@@ -38,6 +37,11 @@ using System.Data.SqlClient;
 <% } else { %>
 using Csla.Data;
 using System.Data.SqlClient;
+<% } %>
+<% if(IsLatestCSLA) { %>
+Imports Csla.Rules
+<% } else { %>
+Imports Csla.Validation
 <% } %>
 
 namespace <%= BusinessProjectName %>
@@ -247,6 +251,12 @@ namespace <%= BusinessProjectName %>
         /// </summary>
         /// <param name="cancel">Value returned from the method indicating whether the object insertion should proceed.</param>
         partial void OnChildInserting(ref bool cancel);
+
+        /// <summary>
+        /// Codesmith generated stub method that is called when inserting the child <see cref="<%=ChildBusinessClassName%><%= Entity.GenericProperty %>"/> object. 
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="cancel">Value returned from the method indicating whether the object insertion should proceed.</param>
         partial void OnChildInserting(var connection, ref bool cancel);
 
         /// <summary>
@@ -259,6 +269,12 @@ namespace <%= BusinessProjectName %>
         /// </summary>
         /// <param name="cancel">Value returned from the method indicating whether the object creation should proceed.</param>
         partial void OnChildUpdating(ref bool cancel);
+
+        /// <summary>
+        /// Codesmith generated stub method that is called when updating the child <see cref="<%=ChildBusinessClassName%><%= Entity.GenericProperty %>"/> object. 
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="cancel">Value returned from the method indicating whether the object creation should proceed.</param>
         partial void OnChildUpdating(var connection, ref bool cancel);
 
         /// <summary>
