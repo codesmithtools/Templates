@@ -356,67 +356,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Common", "Common", "{3FA48A
 		..\CSharp\Common\ValidationRulesPartial.cst = ..\CSharp\Common\ValidationRulesPartial.cst
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NUnitTests", "NUnitTests", "{4332987A-45BF-46F4-A8BF-59F1E6A96D1D}"
-	ProjectSection(SolutionItems) = preProject
-		..\CSharp\NUnitTests\NUnitProjectFile.cst = ..\CSharp\NUnitTests\NUnitProjectFile.cst
-		..\CSharp\NUnitTests\NUnitTests.cst = ..\CSharp\NUnitTests\NUnitTests.cst
-		..\CSharp\NUnitTests\TestDynamicRoot.cst = ..\CSharp\NUnitTests\TestDynamicRoot.cst
-		..\CSharp\NUnitTests\TestDynamicRootList.cst = ..\CSharp\NUnitTests\TestDynamicRootList.cst
-		..\CSharp\NUnitTests\TestEditableChild.cst = ..\CSharp\NUnitTests\TestEditableChild.cst
-		..\CSharp\NUnitTests\TestEditableChildList.cst = ..\CSharp\NUnitTests\TestEditableChildList.cst
-		..\CSharp\NUnitTests\TestEditableRoot.cst = ..\CSharp\NUnitTests\TestEditableRoot.cst
-		..\CSharp\NUnitTests\TestEditableRootList.cst = ..\CSharp\NUnitTests\TestEditableRootList.cst
-		..\CSharp\NUnitTests\TestNameValueList.cst = ..\CSharp\NUnitTests\TestNameValueList.cst
-		..\CSharp\NUnitTests\TestReadOnlyChild.cst = ..\CSharp\NUnitTests\TestReadOnlyChild.cst
-		..\CSharp\NUnitTests\TestReadOnlyChildList.cst = ..\CSharp\NUnitTests\TestReadOnlyChildList.cst
-		..\CSharp\NUnitTests\TestReadOnlyRoot.cst = ..\CSharp\NUnitTests\TestReadOnlyRoot.cst
-		..\CSharp\NUnitTests\TestReadOnlyRootList.cst = ..\CSharp\NUnitTests\TestReadOnlyRootList.cst
-		..\CSharp\NUnitTests\TestSwitchable.cst = ..\CSharp\NUnitTests\TestSwitchable.cst
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Internal", "Internal", "{BABC468E-87EF-4ED9-8141-A4297BBF001B}"
-	ProjectSection(SolutionItems) = preProject
-		..\CSharp\NUnitTests\Internal\NUnitProjectFile.cst = ..\CSharp\NUnitTests\Internal\NUnitProjectFile.cst
-		..\CSharp\NUnitTests\Internal\TestCslaObjectCreate.cst = ..\CSharp\NUnitTests\Internal\TestCslaObjectCreate.cst
-		..\CSharp\NUnitTests\Internal\TestCslaObjectDelete.cst = ..\CSharp\NUnitTests\Internal\TestCslaObjectDelete.cst
-		..\CSharp\NUnitTests\Internal\TestCslaObjectFetch.cst = ..\CSharp\NUnitTests\Internal\TestCslaObjectFetch.cst
-		..\CSharp\NUnitTests\Internal\TestCslaObjectInsert.cst = ..\CSharp\NUnitTests\Internal\TestCslaObjectInsert.cst
-		..\CSharp\NUnitTests\Internal\TestCslaObjectUpdate.cst = ..\CSharp\NUnitTests\Internal\TestCslaObjectUpdate.cst
-		..\CSharp\NUnitTests\Internal\TestDynamicRoot.cst = ..\CSharp\NUnitTests\Internal\TestDynamicRoot.cst
-		..\CSharp\NUnitTests\Internal\TestDynamicRoot.Generated.cst = ..\CSharp\NUnitTests\Internal\TestDynamicRoot.Generated.cst
-		..\CSharp\NUnitTests\Internal\TestDynamicRootList.cst = ..\CSharp\NUnitTests\Internal\TestDynamicRootList.cst
-		..\CSharp\NUnitTests\Internal\TestDynamicRootList.Generated.cst = ..\CSharp\NUnitTests\Internal\TestDynamicRootList.Generated.cst
-		..\CSharp\NUnitTests\Internal\TestEditableChild.cst = ..\CSharp\NUnitTests\Internal\TestEditableChild.cst
-		..\CSharp\NUnitTests\Internal\TestEditableChild.Generated.cst = ..\CSharp\NUnitTests\Internal\TestEditableChild.Generated.cst
-		..\CSharp\NUnitTests\Internal\TestEditableChildList.cst = ..\CSharp\NUnitTests\Internal\TestEditableChildList.cst
-		..\CSharp\NUnitTests\Internal\TestEditableChildList.Generated.cst = ..\CSharp\NUnitTests\Internal\TestEditableChildList.Generated.cst
-		..\CSharp\NUnitTests\Internal\TestEditableRoot.cst = ..\CSharp\NUnitTests\Internal\TestEditableRoot.cst
-		..\CSharp\NUnitTests\Internal\TestEditableRoot.Generated.cst = ..\CSharp\NUnitTests\Internal\TestEditableRoot.Generated.cst
-		..\CSharp\NUnitTests\Internal\TestEditableRootList.cst = ..\CSharp\NUnitTests\Internal\TestEditableRootList.cst
-		..\CSharp\NUnitTests\Internal\TestEditableRootList.Generated.cst = ..\CSharp\NUnitTests\Internal\TestEditableRootList.Generated.cst
-		..\CSharp\NUnitTests\Internal\TestNameValueList.cst = ..\CSharp\NUnitTests\Internal\TestNameValueList.cst
-		..\CSharp\NUnitTests\Internal\TestNameValueList.Generated.cst = ..\CSharp\NUnitTests\Internal\TestNameValueList.Generated.cst
-		..\CSharp\NUnitTests\Internal\TestReadOnlyChild.cst = ..\CSharp\NUnitTests\Internal\TestReadOnlyChild.cst
-		..\CSharp\NUnitTests\Internal\TestReadOnlyChild.Generated.cst = ..\CSharp\NUnitTests\Internal\TestReadOnlyChild.Generated.cst
-		..\CSharp\NUnitTests\Internal\TestReadOnlyChildList.cst = ..\CSharp\NUnitTests\Internal\TestReadOnlyChildList.cst
-		..\CSharp\NUnitTests\Internal\TestReadOnlyChildList.Generated.cst = ..\CSharp\NUnitTests\Internal\TestReadOnlyChildList.Generated.cst
-		..\CSharp\NUnitTests\Internal\TestReadOnlyRoot.cst = ..\CSharp\NUnitTests\Internal\TestReadOnlyRoot.cst
-		..\CSharp\NUnitTests\Internal\TestReadOnlyRoot.Generated.cst = ..\CSharp\NUnitTests\Internal\TestReadOnlyRoot.Generated.cst
-		..\CSharp\NUnitTests\Internal\TestReadOnlyRootList.cst = ..\CSharp\NUnitTests\Internal\TestReadOnlyRootList.cst
-		..\CSharp\NUnitTests\Internal\TestReadOnlyRootList.Generated.cst = ..\CSharp\NUnitTests\Internal\TestReadOnlyRootList.Generated.cst
-		..\CSharp\NUnitTests\Internal\TestSwitchable.cst = ..\CSharp\NUnitTests\Internal\TestSwitchable.cst
-		..\CSharp\NUnitTests\Internal\TestSwitchable.Generated.cst = ..\CSharp\NUnitTests\Internal\TestSwitchable.Generated.cst
-	EndProjectSection
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeSmith.SchemaHelper", "CodeSmith.SchemaHelper\CodeSmith.SchemaHelper.csproj", "{29F4357A-A92D-458F-A266-A7231E75DA52}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeSmith.SchemaHelper.Extensions", "CodeSmith.SchemaHelper.Extensions\CodeSmith.SchemaHelper.Extensions.csproj", "{830E1B3E-1BC8-4F16-8C47-260ACEF3B96D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeSmith.SchemaHelper.CSharpExtensions", "CodeSmith.SchemaHelper.CSharpExtensions\CodeSmith.SchemaHelper.CSharpExtensions.csproj", "{41C50564-90B5-4566-946E-0C0513E7F2EB}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeSmith.SchemaHelper.VisualBasicExtensions", "CodeSmith.SchemaHelper.VisualBasicExtensions\CodeSmith.SchemaHelper.VisualBasicExtensions.csproj", "{E139EDCF-9BC6-40E1-8280-5C4C1D54AB6E}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeSmith.QuickStart", "CodeSmith.QuickStart\CodeSmith.QuickStart.csproj", "{2143D00C-842D-4B62-82E9-95D262A6F88E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -428,15 +372,6 @@ Global
 		Testing|x86 = Testing|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{29F4357A-A92D-458F-A266-A7231E75DA52}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{29F4357A-A92D-458F-A266-A7231E75DA52}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{29F4357A-A92D-458F-A266-A7231E75DA52}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{29F4357A-A92D-458F-A266-A7231E75DA52}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{29F4357A-A92D-458F-A266-A7231E75DA52}.Release|Any CPU.Build.0 = Release|Any CPU
-		{29F4357A-A92D-458F-A266-A7231E75DA52}.Release|x86.ActiveCfg = Release|Any CPU
-		{29F4357A-A92D-458F-A266-A7231E75DA52}.Testing|Any CPU.ActiveCfg = Release|Any CPU
-		{29F4357A-A92D-458F-A266-A7231E75DA52}.Testing|Any CPU.Build.0 = Release|Any CPU
-		{29F4357A-A92D-458F-A266-A7231E75DA52}.Testing|x86.ActiveCfg = Release|Any CPU
 		{830E1B3E-1BC8-4F16-8C47-260ACEF3B96D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{830E1B3E-1BC8-4F16-8C47-260ACEF3B96D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{830E1B3E-1BC8-4F16-8C47-260ACEF3B96D}.Debug|x86.ActiveCfg = Debug|Any CPU
@@ -464,15 +399,6 @@ Global
 		{E139EDCF-9BC6-40E1-8280-5C4C1D54AB6E}.Testing|Any CPU.ActiveCfg = Release|Any CPU
 		{E139EDCF-9BC6-40E1-8280-5C4C1D54AB6E}.Testing|Any CPU.Build.0 = Release|Any CPU
 		{E139EDCF-9BC6-40E1-8280-5C4C1D54AB6E}.Testing|x86.ActiveCfg = Release|Any CPU
-		{2143D00C-842D-4B62-82E9-95D262A6F88E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2143D00C-842D-4B62-82E9-95D262A6F88E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2143D00C-842D-4B62-82E9-95D262A6F88E}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{2143D00C-842D-4B62-82E9-95D262A6F88E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2143D00C-842D-4B62-82E9-95D262A6F88E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{2143D00C-842D-4B62-82E9-95D262A6F88E}.Release|x86.ActiveCfg = Release|Any CPU
-		{2143D00C-842D-4B62-82E9-95D262A6F88E}.Testing|Any CPU.ActiveCfg = Release|Any CPU
-		{2143D00C-842D-4B62-82E9-95D262A6F88E}.Testing|Any CPU.Build.0 = Release|Any CPU
-		{2143D00C-842D-4B62-82E9-95D262A6F88E}.Testing|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -484,7 +410,6 @@ Global
 		{C2E439BE-629B-4069-9A36-A61F1D793E94} = {06C6ADF6-C3DB-4ABC-948E-1705702DD07C}
 		{14CC4B24-5ED7-4819-9610-8B5AD619FAD4} = {06C6ADF6-C3DB-4ABC-948E-1705702DD07C}
 		{3FA48AB3-3405-42F4-B49E-77B42F4E1D4E} = {06C6ADF6-C3DB-4ABC-948E-1705702DD07C}
-		{4332987A-45BF-46F4-A8BF-59F1E6A96D1D} = {06C6ADF6-C3DB-4ABC-948E-1705702DD07C}
 		{670B086B-ECFC-4769-85FC-FA19DC00E5B9} = {999286CE-0FB7-4622-8D09-EA068B9778DE}
 		{E90645D8-091B-47CE-9E4E-9528A4AB0C72} = {C2E439BE-629B-4069-9A36-A61F1D793E94}
 		{8AF4CEEA-7B24-40A5-87C2-1A934E4A0F54} = {580D643C-0950-4C43-BF66-4724D24C673D}
@@ -495,6 +420,5 @@ Global
 		{AA24549B-F016-4588-9AE9-3A503B4DAD79} = {B3F774E2-9D8D-4780-A9F5-D54958DEF3E8}
 		{1EBCD6D8-6E9E-41EB-8968-F1ABAD8CB1CE} = {AB7EA04C-C7E9-447A-9277-B677409B54BA}
 		{19D60463-EC4B-4A64-9186-20C9B34A8F92} = {14CC4B24-5ED7-4819-9610-8B5AD619FAD4}
-		{BABC468E-87EF-4ED9-8141-A4297BBF001B} = {4332987A-45BF-46F4-A8BF-59F1E6A96D1D}
 	EndGlobalSection
 EndGlobal

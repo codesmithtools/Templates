@@ -38,6 +38,7 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\Libraries\bin\CodeSmith.Core.dll</HintPath>
     </Reference>
+    <Reference Include="CodeSmith.SchemaHelper, Version=3.0.0.0, Culture=neutral, processorArchitecture=MSIL" />
     <Reference Include="SchemaExplorer">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\Libraries\AddIns\SchemaExplorer.dll</HintPath>
@@ -66,12 +67,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\..\..\Source\CodeSmith.SchemaHelper\CodeSmith.SchemaHelper.csproj">
-      <Project>{29F4357A-A92D-458F-A266-A7231E75DA52}</Project>
-      <Name>CodeSmith.SchemaHelper</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
