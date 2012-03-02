@@ -20,49 +20,28 @@ Public Overloads Overrides Sub Render(writer As System.IO.TextWriter)
 
     RegisterReferences()
 
-    'ReadOnlyChildList
-    Dim readOnlyChildList As ReadOnlyChildList = Me.Create(Of ReadOnlyChildList)()
-    Me.CopyPropertiesTo(readOnlyChildList)
+Dim parentFileName As String = System.IO.Path.Combine(Me.Location, String.Format("Collections\{0}.vb", BusinessClassName))
+Dim fileName As String = System.IO.Path.Combine(Location, String.Format("Collections\{0}.Generated.vb", BusinessClassName))
+RenderToFileHelper(Of ReadOnlyChildList)(parentFileName)
+RenderToFileHelper(Of ReadOnlyChildListGenerated)(fileName, parentFileName, True)
 
-    Dim parentFileName As String = System.IO.Path.Combine(Me.Location, String.Format("Collections\{0}.vb", readOnlyChildList.BusinessClassName))
-    If Not System.IO.File.Exists(parentFileName) Then
-        readOnlyChildList.RenderToFile(parentFileName, False)
-    End If
+fileName = System.IO.Path.Combine(Location, String.Format("Collections\{0}.DataAccess.vb", BusinessClassName))
+If DataAccessImplementation = DataAccessMethod.None Then
+    RenderToFileHelper(Of ReadOnlyChildListDataAccess)(fileName, parentFileName, True)
+ElseIf DataAccessImplementation = DataAccessMethod.ParameterizedSQL Then
+    RenderToFileHelper(Of ReadOnlyChildListDataAccessParameterized)(fileName, parentFileName, True)
+ElseIf DataAccessImplementation = DataAccessMethod.StoredProcedures Then
+    RenderToFileHelper(Of ReadOnlyChildListDataAccessStoredProcedures)(fileName, parentFileName, True)
 
-    'ReadOnlyChildList.Generated
-    Dim fileName As String = System.IO.Path.Combine(Location, String.Format("Collections\{0}.Generated.vb", readOnlyChildList.BusinessClassName))
+    'StoredProcedures
+    fileName = System.IO.Path.Combine(Location, String.Format("Collections\{0}.StoredProcedures.sql", BusinessClassName))
+    Dim sqlStoredProcedures As SqlStoredProcedures = Me.Create(Of SqlStoredProcedures)()
+    Me.CopyPropertiesTo(sqlStoredProcedures, True)
+    sqlStoredProcedures.DataProjectName = "Not needed for sql stored procedures."
 
-    Dim readOnlyChildListGenerated As ReadOnlyChildListGenerated = Me.Create(Of ReadOnlyChildListGenerated)()
-    Me.CopyPropertiesTo(readOnlyChildListGenerated)
+    sqlStoredProcedures.RenderToFile(fileName, parentFileName, True)
+End If
 
-    readOnlyChildListGenerated.RenderToFile(fileName, parentFileName, True)
-
-    'ReadOnlyChildList.DataAccess
-    fileName = System.IO.Path.Combine(Location, String.Format("Collections\{0}.DataAccess.vb", readOnlyChildList.BusinessClassName))
-    If DataAccessImplementation = DataAccessMethod.None Then
-        Dim readOnlyChildListDataAccess As ReadOnlyChildListDataAccess = Me.Create(Of ReadOnlyChildListDataAccess)()
-        Me.CopyPropertiesTo(readOnlyChildListDataAccess)
-
-        readOnlyChildListDataAccess.RenderToFile(fileName, parentFileName, True)
-    ElseIf DataAccessImplementation = DataAccessMethod.ParameterizedSQL Then
-        Dim readOnlyChildListDataAccessParameterized As ReadOnlyChildListDataAccessParameterized = Me.Create(Of ReadOnlyChildListDataAccessParameterized)()
-        Me.CopyPropertiesTo(readOnlyChildListDataAccessParameterized)
-
-        readOnlyChildListDataAccessParameterized.RenderToFile(fileName, parentFileName, True)
-    ElseIf DataAccessImplementation = DataAccessMethod.StoredProcedures Then
-        Dim readOnlyChildListDataAccessStoredProcedures As ReadOnlyChildListDataAccessStoredProcedures = Me.Create(Of ReadOnlyChildListDataAccessStoredProcedures)()
-        Me.CopyPropertiesTo(readOnlyChildListDataAccessStoredProcedures)
-        
-        readOnlyChildListDataAccessStoredProcedures.RenderToFile(fileName, parentFileName, True)
-        
-        'StoredProcedures
-        fileName = System.IO.Path.Combine(Location, String.Format("Collections\{0}.StoredProcedures.sql", readOnlyChildList.BusinessClassName))
-        Dim sqlStoredProcedures As SqlStoredProcedures = Me.Create(Of SqlStoredProcedures)()
-        Me.CopyPropertiesTo(sqlStoredProcedures)
-        sqlStoredProcedures.DataProjectName = "Not needed for sql stored procedures."
-        
-        sqlStoredProcedures.RenderToFile(fileName, parentFileName, True)
-    End If
 End Sub
 
 Public Overrides Function OnEntityChanging() As Boolean
@@ -72,7 +51,7 @@ Public Overrides Function OnEntityChanging() As Boolean
     End If
 
     If String.IsNullOrEmpty(CriteriaClassName) OrElse CriteriaClassName.Equals("Criteria", StringComparison.InvariantCultureIgnoreCase) Then
-        CriteriaClassName = [String].Concat(Entity.Name, "Criteria")
+        CriteriaClassName = String.Concat(Entity.Name, "Criteria")
     End If
 
     Return False

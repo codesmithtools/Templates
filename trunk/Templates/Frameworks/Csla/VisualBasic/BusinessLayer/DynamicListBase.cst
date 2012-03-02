@@ -7,12 +7,8 @@
 <%@ Register Name="DynamicListBaseGenerated" Template="Internal\DynamicListBase.Generated.cst" %>
 <%@ Register Name="SqlStoredProcedures" Template="..\DataAccessLayer\Internal\SQLStoredProcedures.cst" %>
 
-<%@ Assembly Name="CodeSmith.CustomProperties" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\Common" %>
 <%@ Assembly Name="Generator.CSLA" Path="..\..\Common" %>
-
-<%@ Import Namespace="CodeSmith.CustomProperties" %>
-<%@ Import Namespace="CodeSmith.SchemaHelper" %>
 
 <script runat="template">
 
@@ -20,49 +16,28 @@ Public Overloads Overrides Sub Render(writer As System.IO.TextWriter)
 
     RegisterReferences()
 
-    'DynamicListBase
-    Dim DynamicListBase As DynamicListBase = Me.Create(Of DynamicListBase)()
-    Me.CopyPropertiesTo(DynamicListBase)
+Dim parentFileName As String = System.IO.Path.Combine(Me.Location, String.Format("Collections\{0}.vb", BusinessClassName))
+Dim fileName As String = System.IO.Path.Combine(Location, String.Format("Collections\{0}.Generated.vb", BusinessClassName))
+RenderToFileHelper(Of DynamicListBase)(parentFileName)
+RenderToFileHelper(Of DynamicListBaseGenerated)(fileName, parentFileName, True)
 
-    Dim parentFileName As String = System.IO.Path.Combine(Me.Location, String.Format("Collections\{0}.vb", DynamicListBase.BusinessClassName))
-    If Not System.IO.File.Exists(parentFileName) Then
-        DynamicListBase.RenderToFile(parentFileName, False)
-    End If
+fileName = System.IO.Path.Combine(Location, String.Format("Collections\{0}.DataAccess.vb", BusinessClassName))
+If DataAccessImplementation = DataAccessMethod.None Then
+    RenderToFileHelper(Of DynamicListBaseDataAccess)(fileName, parentFileName, True)
+ElseIf DataAccessImplementation = DataAccessMethod.ParameterizedSQL Then
+    RenderToFileHelper(Of DynamicListBaseDataAccessParameterized)(fileName, parentFileName, True)
+ElseIf DataAccessImplementation = DataAccessMethod.StoredProcedures Then
+    RenderToFileHelper(Of DynamicListBaseDataAccessStoredProcedures)(fileName, parentFileName, True)
 
-    'DynamicListBase.Generated
-    Dim fileName As String = System.IO.Path.Combine(Location, String.Format("Collections\{0}.Generated.vb", DynamicListBase.BusinessClassName))
+    'StoredProcedures
+    fileName = System.IO.Path.Combine(Location, String.Format("Collections\{0}.StoredProcedures.sql", BusinessClassName))
+    Dim sqlStoredProcedures As SqlStoredProcedures = Me.Create(Of SqlStoredProcedures)()
+    Me.CopyPropertiesTo(sqlStoredProcedures, True)
 
-    Dim DynamicListBaseGenerated As DynamicListBaseGenerated = Me.Create(Of DynamicListBaseGenerated)()
-    Me.CopyPropertiesTo(DynamicListBaseGenerated)
+    sqlStoredProcedures.DataProjectName = "Not needed for sql stored procedures."
+    sqlStoredProcedures.RenderToFile(fileName, parentFileName, True)
+End If
 
-    DynamicListBaseGenerated.RenderToFile(fileName, parentFileName, True)
-
-    'DynamicListBase.DataAccess
-    fileName = System.IO.Path.Combine(Location, String.Format("Collections\{0}.DataAccess.vb", DynamicListBase.BusinessClassName))
-    If DataAccessImplementation = DataAccessMethod.None Then
-        Dim DynamicListBaseDataAccess As DynamicListBaseDataAccess = Me.Create(Of DynamicListBaseDataAccess)()
-        Me.CopyPropertiesTo(DynamicListBaseDataAccess)
-
-        DynamicListBaseDataAccess.RenderToFile(fileName, parentFileName, True)
-    ElseIf DataAccessImplementation = DataAccessMethod.ParameterizedSQL Then
-        Dim DynamicListBaseDataAccessParameterized As DynamicListBaseDataAccessParameterized = Me.Create(Of DynamicListBaseDataAccessParameterized)()
-        Me.CopyPropertiesTo(DynamicListBaseDataAccessParameterized)
-
-        DynamicListBaseDataAccessParameterized.RenderToFile(fileName, parentFileName, True)
-    ElseIf DataAccessImplementation = DataAccessMethod.StoredProcedures Then
-        Dim DynamicListBaseDataAccessStoredProcedures As DynamicListBaseDataAccessStoredProcedures = Me.Create(Of DynamicListBaseDataAccessStoredProcedures)()
-        Me.CopyPropertiesTo(DynamicListBaseDataAccessStoredProcedures)
-        
-        DynamicListBaseDataAccessStoredProcedures.RenderToFile(fileName, parentFileName, True)
-        
-        'StoredProcedures
-        fileName = System.IO.Path.Combine(Location, String.Format("Collections\{0}.StoredProcedures.sql", DynamicListBase.BusinessClassName))
-        Dim sqlStoredProcedures As SqlStoredProcedures = Me.Create(Of SqlStoredProcedures)()
-        Me.CopyPropertiesTo(sqlStoredProcedures)
-        sqlStoredProcedures.DataProjectName = "Not needed for sql stored procedures."
-        
-        sqlStoredProcedures.RenderToFile(fileName, parentFileName, True)
-    End If
 End Sub
 
 Public Overrides Function OnEntityChanging() As Boolean
@@ -72,7 +47,7 @@ Public Overrides Function OnEntityChanging() As Boolean
     End If
 
     If String.IsNullOrEmpty(CriteriaClassName) OrElse CriteriaClassName.Equals("Criteria", StringComparison.InvariantCultureIgnoreCase) Then
-        CriteriaClassName = [String].Concat(Entity.Name, "Criteria")
+        CriteriaClassName = String.Concat(Entity.Name, "Criteria")
     End If
 
     Return False

@@ -53,7 +53,7 @@
     <% Next %>
     <%-- One-To-Many & Many-To-Many --%>
     ' NOTE: Many-To-Many support coming soon.
-    <% For Each association As Association In Entity.Associations.Where(Function(a) a.AssociationType = AssociationType.OneToMany) %>
+    <% For Each association As Association In Entity.Associations.Where(Function(a) a.AssociationType = AssociationType.OneToMany OrElse a.AssociationType = AssociationType.OneToOne OrElse a.AssociationType = AssociationType.OneToZeroOrOne OrElse a.AssociationType = AssociationType.ZeroOrOneToMany) %>
             ''<%= association.Name %>
             'AuthorizationRules.AllowRead(<%= association.PrivateMemberVariableName %>Property, canRead)
     

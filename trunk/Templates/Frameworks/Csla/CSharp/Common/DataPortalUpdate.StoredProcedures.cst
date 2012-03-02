@@ -21,7 +21,7 @@
                 item = item.Save();
 
                 // Mark child lists as dirty. This code may need to be updated to one-to-one relationships.
-<% foreach(Association association in Entity.Associations.Where(a => a.AssociationType == AssociationType.OneToMany)) { 
+<% foreach(Association association in Entity.Associations.Where(a => a.AssociationType == AssociationType.OneToMany || a.AssociationType == AssociationType.OneToOne || a.AssociationType == AssociationType.OneToZeroOrOne || a.AssociationType == AssociationType.ZeroOrOneToMany)) { 
      if(!BusinessObjectExists(association) && IsReadOnlyBusinessObject( association, "Info")) { continue; }%>
                 foreach(<%= association.Name %> itemToUpdate in <%= association.Name %>)
                 {

@@ -68,7 +68,7 @@ Namespace <%= BusinessProjectName %>
         Private _criteria As IGeneratedCriteria
         Private Property Criteria() As IGeneratedCriteria
            
-	    Get
+        Get
                 Return _criteria
             End Get
             Set(ByVal value As IGeneratedCriteria)

@@ -50,19 +50,20 @@ Namespace <%= BusinessProjectName %>
         Private Sub Child_Insert(ByVal connection as SqlConnection)
     <% RenderHelper(New ChildInsert(), true) %>
         End Sub
-    <% If (Entity.Associations.Where(Function(a) a.AssociationType = AssociationType.ManyToOne).Count() > 0) Then
-        If (Entity.Associations.Where(Function(a) a.AssociationType = AssociationType.ManyToOne).Distinct().Count() > 1) Then
+    <% Dim associations As List(Of Association) = Entity.Associations.Where(Function(a) a.AssociationType = AssociationType.ManyToOne OrElse a.AssociationType = AssociationType.ManyToZeroOrOne).Distinct().ToList()
+        If (associations.Count() > 0) Then
+        If (associations.Count() > 1) Then
             Dim index As Integer = 0
-        For Each association As Association In Entity.Associations.Where(Function(a) a.AssociationType = AssociationType.ManyToOne).Distinct() %>
+        For Each association As Association In associations %>
     
         Private Sub Child_Insert(<%= association.BuildParametersVariables(True) %>)
-        Child_Insert(<%= association.BuildUpdateStatementVariables(Entity.Associations.Where(Function(a) a.AssociationType = AssociationType.ManyToOne).Distinct().ToList(), index, true) %>)
+            Child_Insert(<%= association.BuildUpdateStatementVariables(associations, index, true) %>)
         End Sub
         <% index += 1 
         Next
         End If %>
     
-        Private Sub Child_Insert(<%= Entity.Associations.Where(Function(a) a.AssociationType = AssociationType.ManyToOne).Distinct().ToList().BuildParametersVariables(True) %>)
+        Private Sub Child_Insert(<%= associations.BuildParametersVariables(True) %>)
     <% RenderHelper(New ChildInsert()) %>
         End Sub
     
@@ -75,19 +76,19 @@ Namespace <%= BusinessProjectName %>
         Private Sub Child_Update(ByVal connection as SqlConnection)
     <% RenderHelper(New ChildUpdate(), true) %>
         End Sub
-    <% If (Entity.Associations.Where(Function(a) a.AssociationType = AssociationType.ManyToOne).Count() > 0) Then
-        If (Entity.Associations.Where(Function(a) a.AssociationType = AssociationType.ManyToOne).Distinct().Count() > 1) Then
+    <% If (associations.Count() > 0) Then
+        If (associations.Count() > 1) Then
             Dim index As Integer = 0
-        For Each association As Association In Entity.Associations.Where(Function(a) a.AssociationType = AssociationType.ManyToOne).Distinct() %>
+        For Each association As Association In associations %>
     
         Private Sub Child_Update(<%= association.BuildParametersVariables(True) %>)
-        Child_Update(<%= association.BuildUpdateStatementVariables(Entity.Associations.Where(Function(a) a.AssociationType = AssociationType.ManyToOne).Distinct().ToList(), index, true) %>)
+        Child_Update(<%= association.BuildUpdateStatementVariables(associations, index, true) %>)
         End Sub
-        <% index += 1 
+        <% index += 1
         Next
         End If %>
     
-        Private Sub Child_Update(<%= Entity.Associations.Where(Function(a) a.AssociationType = AssociationType.ManyToOne).Distinct().ToList().BuildParametersVariables(True) %>)
+        Private Sub Child_Update(<%= associations.BuildParametersVariables(True) %>)
     <% RenderHelper(New ChildUpdate()) %>
         End Sub
     
@@ -95,8 +96,7 @@ Namespace <%= BusinessProjectName %>
     
 #End Region
     
-    
-        Private Sub Child_DeleteSelf(ByVal connection as SqlConnection)
+    Private Sub Child_DeleteSelf(ByVal connection as SqlConnection)
             Dim cancel As Boolean = False
             OnChildSelfDeleting(connection, cancel)
             If (cancel) Then
@@ -111,7 +111,6 @@ Namespace <%= BusinessProjectName %>
         Protected Shadows Sub DataPortal_Delete(ByVal criteria As <%= CriteriaClassName %><%= Entity.GenericProperty %>, ByVal connection as SqlConnection)
     <% RenderHelper(New DataPortalDelete()) %>
         End Sub
-    
         
         Private Sub Map(ByVal reader As SafeDataReader)
     <% RenderHelper(New MapDataReader()) %>

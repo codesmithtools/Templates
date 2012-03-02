@@ -5,12 +5,8 @@
 <%@ Register Name="NameValueListGenerated" Template="Internal\NameValueList.Generated.cst" %>
 <%@ Register Name="SqlStoredProcedures" Template="..\DataAccessLayer\Internal\SQLStoredProcedures.cst" %>
 
-<%@ Assembly Name="CodeSmith.CustomProperties" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\Common" %>
 <%@ Assembly Name="Generator.CSLA" Path="..\..\Common" %>
-
-<%@ Import Namespace="CodeSmith.CustomProperties" %>
-<%@ Import Namespace="CodeSmith.SchemaHelper" %>
 
 <script runat="template">
 
@@ -22,37 +18,24 @@ Public Overloads Overrides Sub Render(writer As System.IO.TextWriter)
     strategy.Language = "VB"
     strategy.RegionNameRegex = "^[ \t]*[ \s]*""?(?i:Preserved Code)""?"
 
-    'NameValueList
-    Dim nameValueList As NameValueList = Me.Create(Of NameValueList)()
-    Me.CopyPropertiesTo(nameValueList)
+Dim parentFileName As String = System.IO.Path.Combine(Me.Location, String.Format("Entities\{0}.vb", BusinessClassName))
+Dim fileName As String = System.IO.Path.Combine(Location, String.Format("Entities\{0}.Generated.vb", BusinessClassName))
+RenderToFileHelper(Of NameValueList)(parentFileName, strategy)
+RenderToFileHelper(Of NameValueListGenerated)(fileName, parentFileName, True)
 
-    Dim parentFileName As String = System.IO.Path.Combine(Me.Location, String.Format("Collections\{0}.vb", nameValueList.BusinessClassName))
-    nameValueList.RenderToFile(parentFileName, strategy)
+fileName = System.IO.Path.Combine(Location, String.Format("Entities\{0}.DataAccess.vb", BusinessClassName))
+RenderToFileHelper(Of NameValueListDataAccess)(fileName, parentFileName, True)
 
-    'NameValueList.Generated
-    Dim fileName As String = System.IO.Path.Combine(Location, String.Format("Collections\{0}.Generated.vb", nameValueList.BusinessClassName))
-
-    Dim nameValueListGenerated As NameValueListGenerated = Me.Create(Of NameValueListGenerated)()
-    Me.CopyPropertiesTo(nameValueListGenerated)
-
-    nameValueListGenerated.RenderToFile(fileName, parentFileName, True)
-
-    'NameValueList.DataAccess
-    fileName = System.IO.Path.Combine(Location, String.Format("Collections\{0}.DataAccess.vb", nameValueList.BusinessClassName))
-
-    Dim nameValueListDataAccess As NameValueListDataAccess = Me.Create(Of NameValueListDataAccess)()
-    Me.CopyPropertiesTo(nameValueListDataAccess)
-
-    nameValueListDataAccess.RenderToFile(fileName, parentFileName, True)
-    If DataAccessImplementation = DataAccessMethod.StoredProcedures Then
+If DataAccessImplementation = DataAccessMethod.StoredProcedures Then
     'StoredProcedures
-    fileName = System.IO.Path.Combine(Location, String.Format("Collections\{0}.StoredProcedures.sql", nameValueList.BusinessClassName))
+    fileName = System.IO.Path.Combine(Location, String.Format("Collections\{0}.StoredProcedures.sql", BusinessClassName))
     Dim sqlStoredProcedures As SqlStoredProcedures = Me.Create(Of SqlStoredProcedures)()
-    Me.CopyPropertiesTo(sqlStoredProcedures)
+    Me.CopyPropertiesTo(sqlStoredProcedures, True)
     sqlStoredProcedures.DataProjectName = "Not needed for sql stored procedures."
 
     sqlStoredProcedures.RenderToFile(fileName, parentFileName, True)
-    End If
+End If
+
 End Sub
 
 Public Overrides Function OnEntityChanging() As Boolean
@@ -62,7 +45,7 @@ Public Overrides Function OnEntityChanging() As Boolean
     End If
 
     If String.IsNullOrEmpty(CriteriaClassName) OrElse CriteriaClassName.Equals("Criteria", StringComparison.InvariantCultureIgnoreCase) Then
-        CriteriaClassName = [String].Concat(Entity.Name, "Criteria")
+        CriteriaClassName = String.Concat(Entity.Name, "Criteria")
     End If
 
     Return False

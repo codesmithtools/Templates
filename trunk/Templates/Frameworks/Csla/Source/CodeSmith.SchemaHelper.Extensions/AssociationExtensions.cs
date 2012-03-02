@@ -14,7 +14,7 @@ namespace CodeSmith.SchemaHelper
 
         public static string BuildPropertyVariableArguments(this Association association, bool useAssociatedColumn)
         {
-            string parameters = string.Empty;
+            string parameters = String.Empty;
 
             foreach (AssociationProperty property in association.Properties)
             {
@@ -29,7 +29,7 @@ namespace CodeSmith.SchemaHelper
 
         public static string BuildPropertyVariables(this Association association)
         {
-            string parameters = string.Empty;
+            string parameters = String.Empty;
 
             foreach (AssociationProperty property in association.Properties)
             {

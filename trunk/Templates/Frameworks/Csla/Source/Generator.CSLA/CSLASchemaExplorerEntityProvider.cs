@@ -10,9 +10,13 @@ namespace Generator.CSLA
     class CSLASchemaExplorerEntityProvider : SchemaExplorerEntityProvider
     {
         private readonly string _extendedPropertyName;
-
         public CSLASchemaExplorerEntityProvider(DatabaseSchema database) : base(database)
         {
+        }
+
+        public CSLASchemaExplorerEntityProvider(TableSchema table) : base(table.Database)
+        {
+            _tables = table.Database.Tables;
         }
 
         public CSLASchemaExplorerEntityProvider(DatabaseSchema database, TableSchemaCollection tables) : base(database)
@@ -31,12 +35,11 @@ namespace Generator.CSLA
 
         protected override void LoadViews(ViewSchemaCollection views)
         {
-            base.LoadViews(views);
-
-            if (String.IsNullOrEmpty(_extendedPropertyName) 
-                || !Configuration.Instance.IncludeViews
-                || _database == null)
+            if (String.IsNullOrEmpty(_extendedPropertyName) || !Configuration.Instance.IncludeViews || _database == null)
+            {
+                base.LoadViews(views);
                 return;
+            }
 
             foreach (var view in _database.Views)
             {
@@ -65,12 +68,11 @@ namespace Generator.CSLA
 
         protected override void LoadCommands(CommandSchemaCollection commands)
         {
-            base.LoadCommands(commands);
-
-            if (String.IsNullOrEmpty(_extendedPropertyName)
-                || !Configuration.Instance.IncludeFunctions
-                || _database == null)
+            if (String.IsNullOrEmpty(_extendedPropertyName) || !Configuration.Instance.IncludeFunctions || _database == null)
+            {
+                base.LoadCommands(commands);
                 return;
+            }
 
             foreach (var command in _database.Commands)
             {

@@ -56,7 +56,7 @@
 <% } %>
 <%-- One-To-Many & Many-To-Many --%>
 // NOTE: Many-To-Many support coming soon.
-<% foreach(Association association in Entity.Associations.Where(a => a.AssociationType == AssociationType.OneToMany)){ %>
+<% foreach(Association association in Entity.Associations.Where(a => a.AssociationType == AssociationType.OneToMany || a.AssociationType == AssociationType.OneToOne || a.AssociationType == AssociationType.OneToZeroOrOne || a.AssociationType == AssociationType.ZeroOrOneToMany)){ %>
             //// <%= association.Name %>
             // AuthorizationRules.AllowRead(<%= association.PrivateMemberVariableName %>Property, canRead);
 

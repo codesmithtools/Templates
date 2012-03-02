@@ -15,13 +15,13 @@ namespace CodeSmith.SchemaHelper
 
         public static string BuildParametersVariables(this List<Association> associations, bool includeConnectionParameter)
         {
-            string parameters = string.Empty;
+            string parameters = String.Empty;
 
             foreach (Association association in associations)
             {
                 foreach (AssociationProperty property in association.Properties)
                 {
-                    var parameter = String.Format(", {0} {1}", property.Property.Name, Util.NamingConventions.VariableName(property.Property.Name));
+                    var parameter = String.Format(", {0} {1}", property.ForeignProperty.Entity.Name, property.ForeignProperty.Entity.VariableName);
 
                     if (!parameters.Contains(parameter))
                         parameters += parameter;
@@ -29,7 +29,7 @@ namespace CodeSmith.SchemaHelper
             }
 
             if (includeConnectionParameter)
-                parameters += ", var connection";
+                parameters += ", SqlConnection connection";
 
             return parameters.TrimStart(new[] { ',', ' ' });
         }

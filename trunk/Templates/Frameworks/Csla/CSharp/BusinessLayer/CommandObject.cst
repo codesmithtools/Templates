@@ -15,40 +15,13 @@ public override void Render(System.IO.TextWriter writer)
 {
     RegisterReferences();
 
-    #region CommandObject
-    
-    CommandObject commandObject = this.Create<CommandObject>();
-    this.CopyPropertiesTo(commandObject);
-    
-    string parentFileName = System.IO.Path.Combine(this.Location, String.Format("Command\\{0}.cs", commandObject.BusinessClassName));
-    if (!System.IO.File.Exists(parentFileName))
-    {
-        commandObject.RenderToFile(parentFileName, false);
-    }
-    
-    #region CommandObject.Generated
-    
-    string fileName = System.IO.Path.Combine(Location, String.Format("Command\\{0}.Generated.cs", commandObject.BusinessClassName));
-    
-    CommandObjectGenerated commandObjectGenerated = this.Create<CommandObjectGenerated>();
-    this.CopyPropertiesTo(commandObjectGenerated);
-    
-    commandObjectGenerated.RenderToFile(fileName, parentFileName, true);
-    
-    #endregion
-    
-    #region CommandObject.DataAccess
-    
-    fileName = System.IO.Path.Combine(Location, String.Format("Command\\{0}.DataAccess.cs", commandObject.BusinessClassName));
-    
-    CommandObjectDataAccess commandObjectDataAccess = this.Create<CommandObjectDataAccess>();
-    this.CopyPropertiesTo(commandObjectDataAccess);
-    
-    commandObjectDataAccess.RenderToFile(fileName, parentFileName, true);
-    
-    #endregion
-    
-    #endregion
+    string parentFileName = System.IO.Path.Combine(this.Location, String.Format("Command\\{0}.cs", BusinessClassName));
+    string fileName = System.IO.Path.Combine(Location, String.Format("Command\\{0}.Generated.cs", BusinessClassName));
+    RenderToFileHelper<CommandObject>(parentFileName);
+    RenderToFileHelper<CommandObjectGenerated>(fileName, parentFileName, true);
+ 
+    fileName = System.IO.Path.Combine(Location, String.Format("Command\\{0}.DataAccess.cs", BusinessClassName));
+    RenderToFileHelper<CommandObjectDataAccess>(fileName, parentFileName, true);
 }
 
 </script>

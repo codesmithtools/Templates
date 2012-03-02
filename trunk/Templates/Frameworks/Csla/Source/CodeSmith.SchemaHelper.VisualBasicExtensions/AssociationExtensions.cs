@@ -15,13 +15,13 @@ namespace CodeSmith.SchemaHelper
 
         public static string BuildObjectInitializer(this Association association, bool usePropertyName)
         {
-            string parameters = string.Empty;
+            string parameters = String.Empty;
 
             foreach (IProperty property in association.SearchCriteria.Properties)
             {
                 foreach (AssociationProperty associationProperty in association.Properties)
                 {
-                    if (property.KeyName == associationProperty.ForeignProperty.KeyName) // && property.ForeignProperty == associationProperty.ForeignProperty.ForeignProperty)
+                    if (property.KeyName == associationProperty.Property.KeyName && property == associationProperty.Property)
                     {
                         bool isNullable = property.IsNullable && property.SystemType != "System.String" && property.SystemType != "System.Byte()";
                         if(isNullable)
@@ -32,7 +32,7 @@ namespace CodeSmith.SchemaHelper
                         }
                         else
                         {
-                            parameters += string.Format("\r\n                criteria.{0} = {1}",
+                            parameters += String.Format("\r\n                criteria.{0} = {1}",
                                 associationProperty.Property.Name,
                                 usePropertyName ? property.Name : property.VariableName);
                         }
@@ -40,7 +40,7 @@ namespace CodeSmith.SchemaHelper
                 }
             }
 
-            return parameters.TrimStart(new[] { '\r', '\n', ' ', ',', ' ' });
+            return parameters.TrimStart(new[] { '\r', '\n', ' ', ',' });
         }
 
         /// <summary>
@@ -77,25 +77,26 @@ namespace CodeSmith.SchemaHelper
         /// <param name="trimEnd"></param>
         /// <param name="nullExpression">If this value is not set to null and the parameters is blank, then this exspression will be returned.</param>
         /// <returns></returns>
-        public static string BuildNullCheckStatement(this Association association, bool usePropertyName, bool useNot, bool useAndAlso, bool trimEnd, bool? nullExpression )
+        public static string BuildNullCheckStatement(this Association association, bool usePropertyName, bool useNot, bool useAndAlso, bool trimEnd, bool? nullExpression)
         {
             string exspression = useAndAlso ? "AndAlso " : "OrElse ";
-            string lastParameter = string.Empty;
-            string parameters = string.Empty;
+            string lastParameter = String.Empty;
+            string parameters = String.Empty;
 
             foreach (IProperty property in association.SearchCriteria.Properties)
             {
                 foreach (AssociationProperty associationProperty in association.Properties)
                 {
-                    if (property.KeyName == associationProperty.ForeignProperty.KeyName) // && property.ForeignProperty == associationProperty.ForeignProperty.ForeignProperty)
+                    if (property.KeyName == associationProperty.Property.KeyName && property == associationProperty.Property)
                     {
-                        if ((property.IsNullable && property.SystemType != "System.String" && property.SystemType != "System.Byte[]") == false) continue;
+                        if ((associationProperty.Property.IsNullable && associationProperty.Property.SystemType != "System.String" && associationProperty.Property.SystemType != "System.Byte[]") == false) 
+                            continue;
 
-                        lastParameter = parameters.Length == 0 ? 
-                            string.Format("({0} {1}.HasValue {2}", useNot ? "Not" : string.Empty, usePropertyName ? property.Name : property.VariableName, exspression) : 
-                            string.Format(" {0} {1}.HasValue {2}", useNot ? "Not" : string.Empty, usePropertyName ? property.Name : property.VariableName, exspression);
+                        lastParameter = parameters.Length == 0 ?
+                            String.Format("({0}{1}.HasValue {2}", useNot ? "Not" : String.Empty, usePropertyName ? associationProperty.Property.Name : associationProperty.Property.VariableName, exspression) :
+                            String.Format(" {0}{1}.HasValue {2}", useNot ? "Not" : String.Empty, usePropertyName ? associationProperty.Property.Name : associationProperty.Property.VariableName, exspression);
 
-                        parameters += lastParameter; 
+                        parameters += lastParameter;
                     }
                 }
             }
@@ -104,7 +105,7 @@ namespace CodeSmith.SchemaHelper
             if (parameters.Length == 0)
             {
                 if (!nullExpression.HasValue)
-                    return string.Empty;
+                    return String.Empty;
 
                 return nullExpression.Value ? "(True)" : "(False)";
             }
@@ -127,11 +128,11 @@ namespace CodeSmith.SchemaHelper
 
         public static string BuildParametersVariables(this Association association, bool includeConnectionParameter)
         {
-            string parameters = string.Empty;
+            string parameters = String.Empty;
 
             foreach (AssociationProperty property in association.Properties)
             {
-                var parameter = string.Format(", ByVal {1} As {0}", property.Property.Name, Util.NamingConventions.VariableName(property.Property.Name));
+                var parameter = String.Format(", ByVal {1} As {0}", property.ForeignProperty.Entity.Name, property.ForeignProperty.Entity.VariableName);
 
                 if (!parameters.Contains(parameter))
                     parameters += parameter;
@@ -145,11 +146,11 @@ namespace CodeSmith.SchemaHelper
 
         public static string BuildUpdateStatementVariables(this Association association, List<Association> associations, int currentRecord, bool includeConnectionParameter)
         {
-            string parameters = string.Empty;
+            string parameters = String.Empty;
 
             for (int index = 0; index < associations.Count; index++)
             {
-                var parameter = String.Format(", {0}", Util.NamingConventions.VariableName(associations[index].Name));
+                var parameter = String.Format(", {0}", associations[index].ForeignEntity.VariableName);
                 if(index == currentRecord)
                 {
                     parameters += parameter;

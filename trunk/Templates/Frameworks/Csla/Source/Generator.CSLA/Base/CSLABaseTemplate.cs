@@ -12,6 +12,7 @@
 //------------------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
@@ -29,6 +30,7 @@ namespace Generator.CSLA
         public CSLABaseTemplate()
         {
             ResolveTargetLanguage();
+            Configuration.Instance.NamingProperty.AssociationSuffix = AssociationSuffix.None;
         }
 
         #endregion
@@ -120,7 +122,7 @@ namespace Generator.CSLA
 
         #endregion
 
-        #region RenderHelper
+        #region Render Helpers
 
         public void RenderHelper<T>(T template) where T : EntityCodeTemplate
         {
@@ -129,20 +131,20 @@ namespace Generator.CSLA
 
         public void RenderHelper<T>(T template, bool renderOptionalContent) where T : EntityCodeTemplate
         {
-            this.CopyPropertiesTo(template);
+            CopyPropertiesTo(template, true, new List<string>() { "SourceTable", "SourceView", "SourceCommand" });
             template.RenderOptionalContent = renderOptionalContent;
             template.Render(this.Response);
         }
 
-        public void RenderHelper<T>(T template, IEntity table) where T : EntityCodeTemplate
+        public void RenderHelper<T>(T template, IEntity entity) where T : EntityCodeTemplate
         {
-            RenderHelper(template, table, false);
+            RenderHelper(template, entity, false);
         }
 
-        public void RenderHelper<T>(T template, IEntity table, bool renderOptionalContent) where T : EntityCodeTemplate
+        public void RenderHelper<T>(T template, IEntity entity, bool renderOptionalContent) where T : EntityCodeTemplate
         {
-            this.CopyPropertiesTo(template);
-            template.Entity = table;
+            this.CopyPropertiesTo(template, true, new List<string>() { "SourceTable", "SourceView", "SourceCommand" });
+            template.Entity = entity;
             template.RenderOptionalContent = renderOptionalContent;
             template.Render(this.Response);
         }

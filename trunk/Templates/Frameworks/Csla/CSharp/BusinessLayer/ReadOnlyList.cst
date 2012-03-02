@@ -8,12 +8,8 @@
 <%@ Register Name="ReadOnlyListGenerated" Template="Internal\ReadOnlyList.Generated.cst" %>
 <%@ Register Name="SqlStoredProcedures" Template="..\DataAccessLayer\Internal\SQLStoredProcedures.cst" %>
 
-<%@ Assembly Name="CodeSmith.CustomProperties" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\Common" %>
 <%@ Assembly Name="Generator.CSLA" Path="..\..\Common" %>
-
-<%@ Import Namespace="CodeSmith.CustomProperties" %>
-<%@ Import Namespace="CodeSmith.SchemaHelper" %>
 
 <script runat="template">
 
@@ -21,71 +17,36 @@ public override void Render(System.IO.TextWriter writer)
 {
     RegisterReferences();
 
-    #region ReadOnlyList
-    
-    ReadOnlyList readOnlyList = this.Create<ReadOnlyList>();
-    this.CopyPropertiesTo(readOnlyList);
-    
-    string parentFileName = System.IO.Path.Combine(Location, String.Format("Collections\\{0}.cs", readOnlyList.BusinessClassName));
-    if (!System.IO.File.Exists(parentFileName))
-    {
-        readOnlyList.RenderToFile(parentFileName, false);
-    }
-    
-    #region ReadOnlyList.Generated
-    
-    string fileName = System.IO.Path.Combine(Location, String.Format("Collections\\{0}.Generated.cs", readOnlyList.BusinessClassName));
-    
-    ReadOnlyListGenerated readOnlyListGenerated = this.Create<ReadOnlyListGenerated>();
-    this.CopyPropertiesTo(readOnlyListGenerated);
-    
-    readOnlyListGenerated.RenderToFile(fileName, parentFileName, true);
-    
-    #endregion
-    
-    #region ReadOnlyList.DataAccess
-    
-    fileName = System.IO.Path.Combine(Location, String.Format("Collections\\{0}.DataAccess.cs", readOnlyList.BusinessClassName));
+    string parentFileName = System.IO.Path.Combine(Location, String.Format("Collections\\{0}.cs", BusinessClassName));
+    string fileName = System.IO.Path.Combine(Location, String.Format("Collections\\{0}.Generated.cs", BusinessClassName));
+    RenderToFileHelper<ReadOnlyList>(parentFileName);
+    RenderToFileHelper<ReadOnlyListGenerated>(fileName, parentFileName, true);
+ 
+    fileName = System.IO.Path.Combine(Location, String.Format("Collections\\{0}.DataAccess.cs", BusinessClassName));
     if(DataAccessImplementation == DataAccessMethod.None)
     {
-        ReadOnlyListDataAccess readOnlyListDataAccess = this.Create<ReadOnlyListDataAccess>();
-        this.CopyPropertiesTo(readOnlyListDataAccess);
-        
-        readOnlyListDataAccess.RenderToFile(fileName, parentFileName, true);
+        RenderToFileHelper<ReadOnlyListDataAccess>(fileName, parentFileName, true);
     }
     else if(DataAccessImplementation == DataAccessMethod.ParameterizedSQL)
     {
-        ReadOnlyListDataAccessParameterized readOnlyListDataAccessParameterized = this.Create<ReadOnlyListDataAccessParameterized>();
-        this.CopyPropertiesTo(readOnlyListDataAccessParameterized);
-        
-        readOnlyListDataAccessParameterized.RenderToFile(fileName, parentFileName, true);
+        RenderToFileHelper<ReadOnlyListDataAccessParameterized>(fileName, parentFileName, true);
     }
     else if(DataAccessImplementation == DataAccessMethod.LinqToSQL)
     {
-        ReadOnlyListDataAccessLinqToSQL readOnlyListDataAccessLinqToSQL = this.Create<ReadOnlyListDataAccessLinqToSQL>();
-        this.CopyPropertiesTo(readOnlyListDataAccessLinqToSQL);
-        
-        readOnlyListDataAccessLinqToSQL.RenderToFile(fileName, parentFileName, true);
+        RenderToFileHelper<ReadOnlyListDataAccessLinqToSQL>(fileName, parentFileName, true);
     }
     else if(DataAccessImplementation == DataAccessMethod.StoredProcedures)
     {
-        ReadOnlyListDataAccessStoredProcedures readOnlyListDataAccessStoredProcedures = this.Create<ReadOnlyListDataAccessStoredProcedures>();
-        this.CopyPropertiesTo(readOnlyListDataAccessStoredProcedures);
-
-        readOnlyListDataAccessStoredProcedures.RenderToFile(fileName, parentFileName, true);
+        RenderToFileHelper<ReadOnlyListDataAccessStoredProcedures>(fileName, parentFileName, true);
 
         //StoredProcedures
-        fileName = System.IO.Path.Combine(Location, String.Format("Collections\\{0}.StoredProcedures.sql", readOnlyList.BusinessClassName));
+        fileName = System.IO.Path.Combine(Location, String.Format("Collections\\{0}.StoredProcedures.sql", BusinessClassName));
         SqlStoredProcedures sqlStoredProcedures = this.Create<SqlStoredProcedures>();
-        this.CopyPropertiesTo(sqlStoredProcedures);
+        this.CopyPropertiesTo(sqlStoredProcedures, true);
         sqlStoredProcedures.DataProjectName = "Not needed for sql stored procedures.";
         
         sqlStoredProcedures.RenderToFile(fileName, parentFileName, true);
     }
-    
-    #endregion
-    
-    #endregion
 }
 
 public override bool OnEntityChanging()

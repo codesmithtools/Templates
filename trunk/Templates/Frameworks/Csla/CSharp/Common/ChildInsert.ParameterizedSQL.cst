@@ -41,7 +41,10 @@
                 if (result == 0)
                     throw new DBConcurrencyException("The entity is out of date on the client. Please update the entity and try again. This could also be thrown if the sql statement failed to execute.");
 <% } %>
-<% if(!RenderOptionalContent) { foreach(IProperty property in Entity.Properties) { if(property.IsType(PropertyType.Foreign)) { if(string.IsNullOrEmpty(property.ResolveAssociationPropertyClassName())) continue; %> 
+<% if(!RenderOptionalContent) { 
+    foreach(IProperty property in Entity.GetProperties(PropertyType.Foreign)) {
+        if(string.IsNullOrEmpty(property.ResolveAssociationPropertyClassName())) 
+            continue; %> 
 
                 // Update foreign keys values. This code will update the values passed in from the parent only if no errors occurred after executing the query.
 <% string localParameterName = property.ResolveAssociationPropertyVariable();
@@ -51,7 +54,7 @@
                     <%= property.PrivateMemberVariableName %> = <%= localParameterNameWithChildProperty %>;
 <% } else { %>
                     LoadProperty(<%= property.PrivateMemberVariableName %>Property, <%= localParameterNameWithChildProperty %>);
-<% } } } }%>
+<% } } }%>
 <% foreach(IProperty property in Entity.GetProperties(PropertyType.Key).Where(p => !p.IsType(PropertyType.Identity) || p.IsDbType(DbType.Guid))) {%> 
 
                 // Update the original non-identity primary key value.
@@ -63,7 +66,7 @@
             }
 <% if(Entity.Associations.Count(a => a.AssociationType == AssociationType.OneToMany) > 0 || Entity.Associations.Count(a => a.AssociationType == AssociationType.ManyToOne) > 0 || Entity.Associations.Count(a => a.AssociationType == AssociationType.OneToZeroOrOne) > 0){ if(!RenderOptionalContent) { 
     int childCount = 0;
-    foreach(Association a in Entity.Associations.Where(a => a.AssociationType == AssociationType.OneToMany)) {
+    foreach(Association a in Entity.Associations.Where(a => a.AssociationType == AssociationType.OneToMany || a.AssociationType == AssociationType.OneToOne || a.AssociationType == AssociationType.OneToZeroOrOne || a.AssociationType == AssociationType.ZeroOrOneToMany)) {
         if(IsChildBusinessObject(a)) childCount++; 
     }%>
 <% if(childCount > 0) { %>

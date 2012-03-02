@@ -300,7 +300,7 @@ namespace Generator.CSLA
                     continue;
 
                 //Many-To-One
-                foreach (var childEntity in entity.Associations.Where(a => a.AssociationType == AssociationType.ManyToOne))
+                foreach (var childEntity in entity.Associations.Where(a => a.AssociationType == AssociationType.ManyToOne || a.AssociationType == AssociationType.ManyToZeroOrOne))
                 {
                     foreach (AssociationProperty property in childEntity.Properties)
                     {
@@ -337,7 +337,7 @@ namespace Generator.CSLA
                     continue;
 
                 //Many-To-One
-                foreach (var childEntity in entity.Associations.Where(a => a.AssociationType == AssociationType.ManyToOne))
+                foreach (var childEntity in entity.Associations.Where(a => a.AssociationType == AssociationType.ManyToOne || a.AssociationType == AssociationType.ManyToZeroOrOne))
                 {
                     foreach (AssociationProperty property in childEntity.Properties)
                     {
@@ -375,7 +375,7 @@ namespace Generator.CSLA
                     continue;
 
                 //Many-To-One
-                foreach (var childEntity in entity.Associations.Where(a => a.AssociationType == AssociationType.ManyToOne))
+                foreach (var childEntity in entity.Associations.Where(a => a.AssociationType == AssociationType.ManyToOne || a.AssociationType == AssociationType.ManyToZeroOrOne))
                 {
                     foreach (AssociationProperty property in childEntity.Properties)
                     {
@@ -413,7 +413,7 @@ namespace Generator.CSLA
                     continue;
 
                 //Many-To-One
-                foreach (var childEntity in entity.Associations.Where(a => a.AssociationType == AssociationType.ManyToOne))
+                foreach (var childEntity in entity.Associations.Where(a => a.AssociationType == AssociationType.ManyToOne || a.AssociationType == AssociationType.ManyToZeroOrOne))
                 {
                     foreach (AssociationProperty property in childEntity.Properties)
                     {
@@ -451,7 +451,7 @@ namespace Generator.CSLA
                     continue;
 
                 //Many-To-One
-                foreach (var childEntity in entity.Associations.Where(a => a.AssociationType == AssociationType.ManyToOne))
+                foreach (var childEntity in entity.Associations.Where(a => a.AssociationType == AssociationType.ManyToOne || a.AssociationType == AssociationType.ManyToZeroOrOne))
                 {
                     foreach (AssociationProperty property in childEntity.Properties)
                     {
@@ -489,7 +489,7 @@ namespace Generator.CSLA
                     continue;
 
                 //Many-To-One
-                foreach (var childEntity in entity.Associations.Where(a => a.AssociationType == AssociationType.ManyToOne))
+                foreach (var childEntity in entity.Associations.Where(a => a.AssociationType == AssociationType.ManyToOne || a.AssociationType == AssociationType.ManyToZeroOrOne))
                 {
                     foreach (AssociationProperty property in childEntity.Properties)
                     {

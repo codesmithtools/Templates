@@ -50,6 +50,11 @@ Entities
         <%= m.Name %> (<%= m.PropertyType.ToString() %>)
 <% } %>
 
+    UpdateInsert
+<%    foreach(var m in e.GetProperties(PropertyType.UpdateInsert)) { %>
+        <%= m.Name %>
+<% } %>    
+
     All Properties
 <%    foreach(var m in e.GetProperties(PropertyType.All)) { %>
         <%= m.Name %>
@@ -79,32 +84,71 @@ Entities
 <%    foreach(var m in e.GetProperties(PropertyType.NoConcurrency)) { %>
         <%= m.Name %>
 <% } %>
-    ManyToMany
-<%    foreach(Association a in e.Associations.Where(a => a.AssociationType == AssociationType.ManyToMany)) { foreach(var am in a.Properties) { %>
+Associations (<%= e.Associations.Count %>)
+    ZeroOrOneToMany (<%= e.Associations.Count(a => a.AssociationType == AssociationType.ZeroOrOneToMany) %>)
+<%    foreach(Association a in e.Associations.Where(a => a.AssociationType == AssociationType.ZeroOrOneToMany)) {  %>
+  <%= a.Name %>
+<%foreach(var am in a.Properties) { %>
         <%= am.Property.Name %>
 <% }%>
             <%= a.SearchCriteria.MethodName %>
 <%    foreach(var m in a.SearchCriteria.Properties) { %>
                 <%= m.Name %>
 <% } } %>
-    OneToMany
-<%    foreach(Association a in e.Associations.Where(a => a.AssociationType == AssociationType.OneToMany)) { foreach(var am in a.Properties) { %>
+    OneToOne (<%= e.Associations.Count(a => a.AssociationType == AssociationType.OneToOne) %>)
+<%    foreach(Association a in e.Associations.Where(a => a.AssociationType == AssociationType.OneToOne)) {  %>
+  <%= a.Name %>
+<%foreach(var am in a.Properties) { %>
         <%= am.Property.Name %>
 <% }%>
             <%= a.SearchCriteria.MethodName %>
 <%    foreach(var m in a.SearchCriteria.Properties) { %>
                 <%= m.Name %>
 <% } } %>
-    OneToZeroOrOne
-<%    foreach(Association a in e.Associations.Where(a => a.AssociationType == AssociationType.OneToZeroOrOne)) { foreach(var am in a.Properties) { %>
+    OneToMany (<%= e.Associations.Count(a => a.AssociationType == AssociationType.OneToMany) %>)
+<%    foreach(Association a in e.Associations.Where(a => a.AssociationType == AssociationType.OneToMany || a.AssociationType == AssociationType.OneToOne || a.AssociationType == AssociationType.OneToZeroOrOne || a.AssociationType == AssociationType.ZeroOrOneToMany)) { %>
+  <%= a.Name %>
+<%foreach(var am in a.Properties) { %>
         <%= am.Property.Name %>
 <% }%>
             <%= a.SearchCriteria.MethodName %>
 <%    foreach(var m in a.SearchCriteria.Properties) { %>
                 <%= m.Name %>
 <% } } %>
-    ManyToOne
-<%    foreach(Association a in e.Associations.Where(a => a.AssociationType == AssociationType.ManyToOne)) { foreach(var am in a.Properties) { %>
+    OneToZeroOrOne (<%= e.Associations.Count(a => a.AssociationType == AssociationType.OneToZeroOrOne) %>)
+<%    foreach(Association a in e.Associations.Where(a => a.AssociationType == AssociationType.OneToZeroOrOne)) { %>
+  <%= a.Name %>
+<%foreach(var am in a.Properties) { %>
+        <%= am.Property.Name %>
+<% }%>
+            <%= a.SearchCriteria.MethodName %>
+<%    foreach(var m in a.SearchCriteria.Properties) { %>
+                <%= m.Name %>
+<% } } %>
+    ManyToOne (<%= e.Associations.Count(a => a.AssociationType == AssociationType.ManyToOne) %>)
+<%    foreach(Association a in e.Associations.Where(a => a.AssociationType == AssociationType.ManyToOne)) {  %>
+  <%= a.Name %>
+<%foreach(var am in a.Properties) { %>
+        <%= am.Property.Name %>
+<% }%>
+            <%= a.SearchCriteria.MethodName %>
+<%    foreach(var m in a.SearchCriteria.Properties) { %>
+                <%= m.Name %>
+<% } } %>
+    ManyToZeroOrOne (<%= e.Associations.Count(a => a.AssociationType == AssociationType.ManyToZeroOrOne) %>)
+<%    foreach(Association a in e.Associations.Where(a => a.AssociationType == AssociationType.ManyToZeroOrOne)) {  %>
+  <%= a.Name %>
+<%foreach(var am in a.Properties) { %>
+        <%= am.Property.Name %>
+<% }%>
+            <%= a.SearchCriteria.MethodName %>
+<%    foreach(var m in a.SearchCriteria.Properties) { %>
+                <%= m.Name %>
+<% } } %>
+    ManyToMany (<%= e.Associations.Count(a => a.AssociationType == AssociationType.ManyToMany) %>)
+<%    foreach(Association a in e.Associations.Where(a => a.AssociationType == AssociationType.ManyToMany)) { %>
+  <%= a.Name %>
+<%foreach(var am in a.Properties) { %>
         <%= am.Property.Name %>
 <% }%>
             <%= a.SearchCriteria.MethodName %>

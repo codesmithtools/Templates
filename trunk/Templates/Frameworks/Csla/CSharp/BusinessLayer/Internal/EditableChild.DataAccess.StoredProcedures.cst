@@ -36,33 +36,48 @@ namespace <%= BusinessProjectName %>
     public partial class <%= BusinessClassName %><%= Entity.GenericProperty %>
     {
         [RunLocal()]
+        /// <summary>
+        /// Instantiates a CSLA editable child business object of type <see cref="<%=BusinessClassName%><%= Entity.GenericProperty %>"/>. 
+        /// </summary>
+        /// <returns></returns>
         protected override void Child_Create()
         {
 <% RenderHelper(new ChildCreate()); %>
         }
 
+        /// <summary>
+        /// Retrieves data from the data base into a CSLA editable child business object of type <see cref="<%=BusinessClassName%><%= Entity.GenericProperty %>"/> 
+        /// using the criteria provided. 
+        /// </summary>
+        /// <param name="criteria">Object of type <see cref="<%= CriteriaClassName %><%= Entity.GenericProperty %>"/></param>
+        /// <returns></returns>
         private void Child_Fetch(<%= CriteriaClassName %><%= Entity.GenericProperty %> criteria)
         {
 <% RenderHelper(new ChildFetch()); %>
         }
 
         #region Child_Insert
-
+        /// <summary>
+        /// Inserts data into the data base using the information in the current 
+        ///    CSLA editable child business object of type <see cref="<%=BusinessClassName%><%= Entity.GenericProperty %>"/> 
+        /// </summary>
+        /// <returns></returns>
         private void Child_Insert(SqlConnection connection)
         {
 <% RenderHelper(new ChildInsert(), true); %>
         }
-<% if (Entity.Associations.Count(a => a.AssociationType == AssociationType.ManyToOne) > 0) {%>
-<% if (Entity.Associations.Where(a => a.AssociationType == AssociationType.ManyToOne).Distinct().Count() > 1) { int index = 0; foreach(Association association in Entity.Associations.Where(a => a.AssociationType == AssociationType.ManyToOne).Distinct()) { %>
+<% var associations = Entity.Associations.Where(a => a.AssociationType == AssociationType.ManyToOne || a.AssociationType == AssociationType.ManyToZeroOrOne).Distinct();
+   if (associations.Count() > 0) {%>
+<% if (associations.Count() > 1) { int index = 0; foreach(Association association in associations) { %>
 
         private void Child_Insert(<%= association.BuildParametersVariables(true) %>)
         {
-            Child_Insert(<%= association.BuildUpdateStatementVariables(Entity.Associations.Where(a => a.AssociationType == AssociationType.ManyToOne).Distinct().ToList(), index++, true) %>);
+            Child_Insert(<%= association.BuildUpdateStatementVariables(associations.ToList(), index++, true) %>);
         }
 
 <% } }%>
 
-        private void Child_Insert(<%= Entity.Associations.Where(a => a.AssociationType == AssociationType.ManyToOne).Distinct().ToList().BuildParametersVariables(true) %>)
+        private void Child_Insert(<%= associations.ToList().BuildParametersVariables(true) %>)
         {
 <% RenderHelper(new ChildInsert()); %>
         }
@@ -72,27 +87,37 @@ namespace <%= BusinessProjectName %>
 
         #region Child_Update
 
+        /// <summary>
+        /// Updates the corresponding record in the data base with the information in the current 
+        ///    CSLA editable child business object of type <see cref="<%=BusinessClassName%><%= Entity.GenericProperty %>"/> 
+        /// </summary>
+        /// <returns></returns>
         private void Child_Update(SqlConnection connection)
         {
 <% RenderHelper(new ChildUpdate(), true); %>
         }
-<% if (Entity.Associations.Count(a => a.AssociationType == AssociationType.ManyToOne) > 0) {%>
-<% if (Entity.Associations.Where(a => a.AssociationType == AssociationType.ManyToOne).Distinct().Count() > 1) { int index = 0; foreach(Association association in Entity.Associations.Where(a => a.AssociationType == AssociationType.ManyToOne).Distinct()) { %>
+<% if (associations.Count() > 0) {%>
+<% if (associations.Count() > 1) { int index = 0; foreach(Association association in associations) { %>
 
         private void Child_Update(<%= association.BuildParametersVariables(true) %>)
         {
-            Child_Update(<%= association.BuildUpdateStatementVariables(Entity.Associations.Where(a => a.AssociationType == AssociationType.ManyToOne).Distinct().ToList(), index++, true) %>);
+            Child_Update(<%= association.BuildUpdateStatementVariables(associations.ToList(), index++, true) %>);
         }
 
 <% } }%>
  
-        private void Child_Update(<%= Entity.Associations.Where(a => a.AssociationType == AssociationType.ManyToOne).Distinct().ToList().BuildParametersVariables(true) %>)
+        private void Child_Update(<%= associations.ToList().BuildParametersVariables(true) %>)
         {
 <% RenderHelper(new ChildUpdate()); %>
         }
 <% }%>
         #endregion
 
+        /// <summary>
+        /// Deletes the corresponding record in the data base with the information in the current 
+        ///    CSLA editable child business object of type <see cref="<%=BusinessClassName%><%= Entity.GenericProperty %>"/> 
+        /// </summary>
+        /// <returns></returns>
         private void Child_DeleteSelf(SqlConnection connection)
         {
             bool cancel = false;
@@ -104,11 +129,22 @@ namespace <%= BusinessProjectName %>
             OnChildSelfDeleted();
         }
 
+        /// <summary>
+        /// Deletes data in the data base using the criteria specified in the <%= CriteriaClassName %><%= Entity.GenericProperty %> object.
+        /// </summary>
+        /// <param name="criteria">Object of type <see cref="<%= CriteriaClassName %><%= Entity.GenericProperty %>"/></param>
+        /// <returns></returns>
         protected void DataPortal_Delete(<%= CriteriaClassName %> criteria, SqlConnection connection)
         {
 <% RenderHelper(new DataPortalDelete()); %>
         }
 
+        /// <summary>
+        /// Maps data columns retrieved from the data base to the respective properties in the current 
+        /// <see cref="<%= BusinessClassName %><%= Entity.GenericProperty %> CSLA editable child business object.
+        /// </summary>
+        /// <param name="criteria">Object of type <see cref="<%=LinqToSQLContextNamespace%>.<%=Entity.Name%> %>"/> containing the data retrieved from the data base.</param>
+        /// <returns></returns>
         private void Map(SafeDataReader reader)
         {
 <% RenderHelper(new MapDataReader()); %>

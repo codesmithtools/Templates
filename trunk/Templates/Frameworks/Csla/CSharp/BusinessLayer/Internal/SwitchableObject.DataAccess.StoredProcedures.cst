@@ -110,17 +110,18 @@ namespace <%= BusinessProjectName %>
         {
 <% RenderHelper(new ChildInsert(), true); %>
         }
-<% if (Entity.Associations.Count(a => a.AssociationType == AssociationType.ManyToOne) > 0) {%>
-<% if (Entity.Associations.Where(a => a.AssociationType == AssociationType.ManyToOne).Distinct().Count() > 1) { int index = 0; foreach(Association association in Entity.Associations.Where(a => a.AssociationType == AssociationType.ManyToOne).Distinct()) { %>
+<% var associations = Entity.Associations.Where(a => a.AssociationType == AssociationType.ManyToOne || a.AssociationType == AssociationType.ManyToZeroOrOne).Distinct();
+   if (associations.Count() > 0) {%>
+<% if (associations.Count() > 1) { int index = 0; foreach(Association association in associations) { %>
 
         private void Child_Insert(<%= association.BuildParametersVariables(true) %>)
         {
-            Child_Insert(<%= association.BuildUpdateStatementVariables(Entity.Associations.Where(a => a.AssociationType == AssociationType.ManyToOne).Distinct().ToList(), index++, true) %>);
+            Child_Insert(<%= association.BuildUpdateStatementVariables(associations.ToList(), index++, true) %>);
         }
 
 <% } }%>
 
-        private void Child_Insert(<%= Entity.Associations.Where(a => a.AssociationType == AssociationType.ManyToOne).Distinct().ToList().BuildParametersVariables(true) %>)
+        private void Child_Insert(<%= associations.ToList().BuildParametersVariables(true) %>)
         {
 <% RenderHelper(new ChildInsert()); %>
         }
@@ -134,17 +135,17 @@ namespace <%= BusinessProjectName %>
         {
 <% RenderHelper(new ChildUpdate(), true); %>
         }
-<% if (Entity.Associations.Count(a => a.AssociationType == AssociationType.ManyToOne) > 0) {%>
-<% if (Entity.Associations.Where(a => a.AssociationType == AssociationType.ManyToOne).Distinct().Count() > 1) { int index = 0; foreach(Association association in Entity.Associations.Where(a => a.AssociationType == AssociationType.ManyToOne).Distinct()) { %>
+<% if (associations.Count() > 0) {%>
+<% if (associations.Count() > 1) { int index = 0; foreach(Association association in associations) { %>
 
         private void Child_Update(<%= association.BuildParametersVariables(true) %>)
         {
-            Child_Update(<%= association.BuildUpdateStatementVariables(Entity.Associations.Where(a => a.AssociationType == AssociationType.ManyToOne).Distinct().ToList(), index++, true) %>);
+            Child_Update(<%= association.BuildUpdateStatementVariables(associations.ToList(), index++, true) %>);
         }
 
 <% } }%>
  
-        private void Child_Update(<%= Entity.Associations.Where(a => a.AssociationType == AssociationType.ManyToOne).Distinct().ToList().BuildParametersVariables(true) %>)
+        private void Child_Update(<%= associations.ToList().BuildParametersVariables(true) %>)
         {
 <% RenderHelper(new ChildUpdate()); %>
         }
