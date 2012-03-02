@@ -45,6 +45,7 @@ namespace Generator.CSLA
             DataAccessImplementation = DataAccessMethod.ParameterizedSQL;
             LaunchVisualStudio = true;
             UseLazyLoading = true;
+            FrameworkVersion = FrameworkVersion.v40;
 
             CleanExpressions = new StringCollection();
             IgnoreExpressions = new StringCollection();
@@ -304,7 +305,7 @@ namespace Generator.CSLA
 
             foreach (var entity in Entities)
             {
-                foreach (Association associationProperty in entity.Associations.Where(a => a.AssociationType == AssociationType.ManyToOne))
+                foreach (Association associationProperty in entity.Associations.Where(a => a.AssociationType == AssociationType.ManyToOne || a.AssociationType == AssociationType.ManyToZeroOrOne))
                 {
                     foreach (AssociationProperty property in associationProperty.Properties)
                     {
@@ -480,8 +481,8 @@ namespace Generator.CSLA
             }
             else
             {
-                LinqToSQLContextNamespace = string.Empty;
-                LinqToSQLDataContextName = string.Empty;
+                LinqToSQLContextNamespace = String.Empty;
+                LinqToSQLDataContextName = String.Empty;
 
             }
         }

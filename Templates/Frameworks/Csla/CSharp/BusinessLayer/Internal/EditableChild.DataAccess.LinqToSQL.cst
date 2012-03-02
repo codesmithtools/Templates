@@ -3,7 +3,6 @@
 <%@ CodeTemplate Language="C#" TargetLanguage="C#" Inherits="Generator.CSLA.EntityCodeTemplate" Description="CSLA 3.8.X EditableRoot" %>
 <%@ Register Name="MapLinqToSQL" Template="..\..\Common\MapLinqToSQL.cst" MergeProperties="False" ExcludeProperties="" %>
 <%@ Register Name="ChildCreate" Template="..\..\Common\ChildCreate.cst" MergeProperties="False" ExcludeProperties="" %>
-<%-- LinqToSQL Modification --%>
 <%@ Register Name="ChildFetch" Template="..\..\Common\ChildFetch.LinqToSQL.cst" MergeProperties="False" ExcludeProperties="" %>
 <%@ Register Name="ChildInsert" Template="..\..\Common\ChildInsert.LinqToSQL.cst" MergeProperties="False" ExcludeProperties="" %>
 <%@ Register Name="ChildUpdate" Template="..\..\Common\ChildUpdate.LinqToSQL.cst" MergeProperties="False" ExcludeProperties="" %>
@@ -26,7 +25,6 @@
 <% if(IncludeSilverlightSupport) { %>
 #if !SILVERLIGHT
 <% } %>
-#region Using declarations
 
 using System;
 using System.Data;
@@ -42,8 +40,6 @@ using System.Data.SqlClient;
 
 using Csla;
 using Csla.Data;
-
-#endregion
 
 namespace <%= BusinessProjectName %>
 {
@@ -79,17 +75,18 @@ namespace <%= BusinessProjectName %>
         {
 <% RenderHelper(new ChildInsert(), false); %>
         }
-<% if (Entity.Associations.Count(a => a.AssociationType == AssociationType.ManyToOne) > 0) {%>
-<% if (Entity.Associations.Where(a => a.AssociationType == AssociationType.ManyToOne).Distinct().Count() > 1) { int index = 0; foreach(Association association in Entity.Associations.Where(a => a.AssociationType == AssociationType.ManyToOne).Distinct()) { %>
+<% var associations = Entity.Associations.Where(a => a.AssociationType == AssociationType.ManyToOne || a.AssociationType == AssociationType.ManyToZeroOrOne).Distinct();
+   if (associations.Count() > 0) {%>
+<% if (associations.Count() > 1) { int index = 0; foreach(Association association in associations) { %>
 
         private void Child_Insert(<%= association.BuildParametersVariables(false) %>)
         {
-            Child_Insert(<%= association.BuildUpdateStatementVariables(Entity.Associations.Where(a => a.AssociationType == AssociationType.ManyToOne).Distinct().ToList(), index++, false) %>);
+            Child_Insert(<%= association.BuildUpdateStatementVariables(associations.ToList(), index++, false) %>);
         }
 
 <% } }%>
 
-        private void Child_Insert(<%= Entity.Associations.Where(a => a.AssociationType == AssociationType.ManyToOne).Distinct().ToList().BuildParametersVariables(false) %>)
+        private void Child_Insert(<%= associations.ToList().BuildParametersVariables(false) %>)
         {
 <% RenderHelper(new ChildInsert()); %>
         }
@@ -107,17 +104,17 @@ namespace <%= BusinessProjectName %>
         {
 <% RenderHelper(new ChildUpdate(), false); %>
         }
-<% if (Entity.Associations.Count(a => a.AssociationType == AssociationType.ManyToOne) > 0) {%>
-<% if (Entity.Associations.Where(a => a.AssociationType == AssociationType.ManyToOne).Distinct().Count() > 1) { int index = 0; foreach(Association association in Entity.Associations.Where(a => a.AssociationType == AssociationType.ManyToOne).Distinct()) { %>
+<% if (associations.Count() > 0) {%>
+<% if (associations.Count() > 1) { int index = 0; foreach(Association association in associations) { %>
 
         private void Child_Update(<%= association.BuildParametersVariables(false) %>)
         {
-            Child_Update(<%= association.BuildUpdateStatementVariables(Entity.Associations.Where(a => a.AssociationType == AssociationType.ManyToOne).Distinct().ToList(), index++, false) %>);
+            Child_Update(<%= association.BuildUpdateStatementVariables(associations.ToList(), index++, false) %>);
         }
 
 <% } }%>
  
-        private void Child_Update(<%= Entity.Associations.Where(a => a.AssociationType == AssociationType.ManyToOne).Distinct().ToList().BuildParametersVariables(false) %>)
+        private void Child_Update(<%= associations.ToList().BuildParametersVariables(false) %>)
         {
 <% RenderHelper(new ChildUpdate()); %>
         }

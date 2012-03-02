@@ -8,84 +8,44 @@
 <%@ Register Name="SwitchableObjectGenerated" Template="Internal\SwitchableObject.Generated.cst" %>
 <%@ Register Name="SqlStoredProcedures" Template="..\DataAccessLayer\Internal\SQLStoredProcedures.cst" %>
 
-<%@ Assembly Name="CodeSmith.CustomProperties" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\Common" %>
 <%@ Assembly Name="Generator.CSLA" Path="..\..\Common" %>
-
-<%@ Import Namespace="CodeSmith.CustomProperties" %>
-<%@ Import Namespace="CodeSmith.SchemaHelper" %>
-
 <script runat="template">
 
 public override void Render(System.IO.TextWriter writer)
 {
     RegisterReferences();
 
-    #region SwitchableObject
-    
-    SwitchableObject switchableObject = this.Create<SwitchableObject>();
-    this.CopyPropertiesTo(switchableObject);
-    
-    string parentFileName = System.IO.Path.Combine(this.Location, String.Format("Entities\\{0}.cs", switchableObject.BusinessClassName));
-    if (!System.IO.File.Exists(parentFileName))
-    {
-        switchableObject.RenderToFile(parentFileName, false);
-    }
-    
-    #region SwitchableObject.Generated
-    
-    string fileName = System.IO.Path.Combine(Location, String.Format("Entities\\{0}.Generated.cs", switchableObject.BusinessClassName));
-    
-    SwitchableObjectGenerated switchableObjectGenerated = this.Create<SwitchableObjectGenerated>();
-    this.CopyPropertiesTo(switchableObjectGenerated);
-    
-    switchableObjectGenerated.RenderToFile(fileName, parentFileName, true);
-    
-    #endregion
-    
-    #region SwitchableObject.DataAccess
-    
-    fileName = System.IO.Path.Combine(Location, String.Format("Entities\\{0}.DataAccess.cs", switchableObject.BusinessClassName));
+    string parentFileName = System.IO.Path.Combine(this.Location, String.Format("Entities\\{0}.cs", BusinessClassName));
+    string fileName = System.IO.Path.Combine(Location, String.Format("Entities\\{0}.Generated.cs", BusinessClassName));
+    RenderToFileHelper<SwitchableObject>(parentFileName);
+    RenderToFileHelper<SwitchableObjectGenerated>(fileName, parentFileName, true);
+ 
+    fileName = System.IO.Path.Combine(Location, String.Format("Entities\\{0}.DataAccess.cs", BusinessClassName));
     if(DataAccessImplementation == DataAccessMethod.None)
     {
-        SwitchableObjectDataAccess switchableObjectDataAccess = this.Create<SwitchableObjectDataAccess>();
-        this.CopyPropertiesTo(switchableObjectDataAccess);
-        
-        switchableObjectDataAccess.RenderToFile(fileName, parentFileName, true);
+        RenderToFileHelper<SwitchableObjectDataAccess>(fileName, parentFileName, true);
     }
     else if(DataAccessImplementation == DataAccessMethod.ParameterizedSQL)
     {
-        SwitchableObjectDataAccessParameterized switchableObjectDataAccessParameterized = this.Create<SwitchableObjectDataAccessParameterized>();
-        this.CopyPropertiesTo(switchableObjectDataAccessParameterized);
-        
-        switchableObjectDataAccessParameterized.RenderToFile(fileName, parentFileName, true);
+        RenderToFileHelper<SwitchableObjectDataAccessParameterized>(fileName, parentFileName, true);
     }
     else if(DataAccessImplementation == DataAccessMethod.LinqToSQL)
     {
-        SwitchableObjectDataAccessLinqToSQL switchableObjectDataAccessLinqToSQL = this.Create<SwitchableObjectDataAccessLinqToSQL>();
-        this.CopyPropertiesTo(switchableObjectDataAccessLinqToSQL);
-        
-        switchableObjectDataAccessLinqToSQL.RenderToFile(fileName, parentFileName, true);
+        RenderToFileHelper<SwitchableObjectDataAccessLinqToSQL>(fileName, parentFileName, true);
     }
     else if(DataAccessImplementation == DataAccessMethod.StoredProcedures)
     {
-        SwitchableObjectDataAccessStoredProcedures switchableObjectDataAccessStoredProcedures = this.Create<SwitchableObjectDataAccessStoredProcedures>();
-        this.CopyPropertiesTo(switchableObjectDataAccessStoredProcedures);
-
-        switchableObjectDataAccessStoredProcedures.RenderToFile(fileName, parentFileName, true);
+        RenderToFileHelper<SwitchableObjectDataAccessStoredProcedures>(fileName, parentFileName, true);
 
         //StoredProcedures
-        fileName = System.IO.Path.Combine(Location, String.Format("Entities\\{0}.StoredProcedures.sql", switchableObject.BusinessClassName));
+        fileName = System.IO.Path.Combine(Location, String.Format("Entities\\{0}.StoredProcedures.sql", BusinessClassName));
         SqlStoredProcedures sqlStoredProcedures = this.Create<SqlStoredProcedures>();
-        this.CopyPropertiesTo(sqlStoredProcedures);
+        this.CopyPropertiesTo(sqlStoredProcedures, true);
         sqlStoredProcedures.DataProjectName = "Not needed for sql stored procedures.";
         
         sqlStoredProcedures.RenderToFile(fileName, parentFileName, true);
     }
-    
-    #endregion
-    
-    #endregion
 }
 
 </script>

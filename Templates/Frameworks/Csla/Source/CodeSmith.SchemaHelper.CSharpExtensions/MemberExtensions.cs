@@ -45,7 +45,7 @@ namespace CodeSmith.SchemaHelper
                 return String.Format("{1}        [System.ComponentModel.DataObjectField(true, {0})]", property.IsType(PropertyType.Identity).ToString().ToLower(), Environment.NewLine);
             }
 
-            return string.Empty;
+            return String.Empty;
         }
 
         /// <summary>
@@ -55,13 +55,13 @@ namespace CodeSmith.SchemaHelper
         /// <returns></returns>
         public static string ResolveAssociationPropertyVariable(this IProperty property)
         {
-            foreach (Association association in property.Entity.Associations.Where(a => a.AssociationType == AssociationType.ManyToOne))
+            foreach (Association association in property.Entity.Associations.Where(a => a.AssociationType == AssociationType.ManyToOne || a.AssociationType == AssociationType.ManyToZeroOrOne))
             {
                 foreach (AssociationProperty associationProperty in association.Properties)
                 {
-                    if (property.KeyName == associationProperty.ForeignProperty.KeyName) // && property.ForeignProperty == associationProperty.ForeignProperty.ForeignProperty)
+                    if (property.KeyName == associationProperty.Property.KeyName && property == associationProperty.Property)
                     {
-                        var className = Util.NamingConventions.VariableName(associationProperty.Property.Name);
+                        var className = associationProperty.ForeignProperty.Entity.VariableName;
                         if (className.Equals("item", StringComparison.InvariantCultureIgnoreCase))
                             className += "1";
 
@@ -70,7 +70,7 @@ namespace CodeSmith.SchemaHelper
                 }
             }
 
-            return string.Empty;
+            return String.Empty;
         }
 
         /// <summary>
@@ -80,18 +80,18 @@ namespace CodeSmith.SchemaHelper
         /// <returns></returns>
         public static string ResolveAssociationPropertyClassName(this IProperty property)
         {
-            foreach (Association association in property.Entity.Associations.Where(a => a.AssociationType == AssociationType.ManyToOne))
+            foreach (Association association in property.Entity.Associations.Where(a => a.AssociationType == AssociationType.ManyToOne || a.AssociationType == AssociationType.ManyToZeroOrOne))
             {
                 foreach (AssociationProperty associationProperty in association.Properties)
                 {
-                    if (property.KeyName == associationProperty.ForeignProperty.KeyName)// && property.ForeignProperty == associationProperty.ForeignProperty.ForeignProperty)
+                    if (property.KeyName == associationProperty.Property.KeyName  && property == associationProperty.Property)
                     {
-                        return Util.NamingConventions.PropertyName(associationProperty.Property.Name);
+                        return associationProperty.ForeignProperty.Entity.Name;
                     }
                 }
             }
 
-            return string.Empty;
+            return String.Empty;
         }
 
         /// <summary>
@@ -101,22 +101,22 @@ namespace CodeSmith.SchemaHelper
         /// <returns></returns>
         public static string ResolveAssociationPropertyVariableWithChildProperty(this IProperty property)
         {
-            foreach (Association association in property.Entity.Associations.Where(a => a.AssociationType == AssociationType.ManyToOne))
+            foreach (Association association in property.Entity.Associations.Where(a => a.AssociationType == AssociationType.ManyToOne || a.AssociationType == AssociationType.ManyToZeroOrOne))
             {
                 foreach (AssociationProperty associationProperty in association.Properties)
                 {
-                    if (property.KeyName == associationProperty.ForeignProperty.KeyName)// && property.ForeignProperty == associationProperty.ForeignProperty.ForeignProperty)
+                    if (property.KeyName == associationProperty.Property.KeyName && property == associationProperty.Property)
                     {
-                        var className = Util.NamingConventions.VariableName(associationProperty.Property.Name);
+                        var className = associationProperty.ForeignProperty.Entity.VariableName;
                         if (className.Equals("item", StringComparison.InvariantCultureIgnoreCase))
                             className += "1";
 
-                        return String.Format("{0}.{1}", className, associationProperty.Property.Name);
+                        return String.Format("{0}.{1}", className, associationProperty.ForeignProperty.Name);
                     }
                 }
             }
 
-            return string.Empty;
+            return String.Empty;
         }
     }
 }

@@ -15,6 +15,8 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
+using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
 using CodeSmith.CustomProperties;
 using CodeSmith.Engine;
@@ -36,8 +38,8 @@ namespace Generator.CSLA
         private bool _silverlightSupport;
         private FrameworkVersion frameworkVersion;
 
-        private string _criteriaClassName = string.Empty;
-        private string _childBusinessClassName = string.Empty;
+        private string _criteriaClassName = String.Empty;
+        private string _childBusinessClassName = String.Empty;
         
 
         #endregion
@@ -48,6 +50,7 @@ namespace Generator.CSLA
         {
             DataAccessImplementation = DataAccessMethod.ParameterizedSQL;
             UseLazyLoading = true;
+            FrameworkVersion = FrameworkVersion.v40;
 
             CleanExpressions = new StringCollection();
             IgnoreExpressions = new StringCollection();
@@ -76,11 +79,17 @@ namespace Generator.CSLA
             set
             {
                 if (value != null)
+                {
                     Entity = new TableEntity(value);
+                    //if (State == TemplateState.RestoringProperties && Entity == null)
+                    //{
+                    //    var provider = new CSLASchemaExplorerEntityProvider(value);
+                    //    var entities = new EntityManager(provider).Entities;
+                    //    Entity = entities.FirstOrDefault(e => e is TableEntity && ((TableEntity)e).EntitySource == value) ?? new TableEntity(value);
+                    //}
+                }
             }
         }
-
-
 
         /// <summary>
         /// This is needed for legacy purposes..
@@ -301,7 +310,7 @@ namespace Generator.CSLA
             if (BusinessClassNameExists("Criteria", 8))
                 return BusinessClassName.Substring(0, BusinessClassName.Length - 8);
 
-            return ResolveTargetClassName(BusinessClassName, string.Empty);
+            return ResolveTargetClassName(BusinessClassName, String.Empty);
         }
 
 
@@ -332,11 +341,11 @@ namespace Generator.CSLA
             bool searchingForCriteriaObject = suffix.Equals("criteria", StringComparison.InvariantCultureIgnoreCase);
          
             if(string.IsNullOrEmpty(className))
-                className = Entity != null ? Entity.Name : string.Empty;
+                className = Entity != null ? Entity.Name : String.Empty;
 
             if (Entity != null)
             {
-                var temp = className.Replace(Entity.Name, string.Empty);
+                var temp = className.Replace(Entity.Name, String.Empty);
                 if (temp.Equals("criteria", StringComparison.InvariantCultureIgnoreCase) ||
                     temp.Equals("list", StringComparison.InvariantCultureIgnoreCase))
                 {
@@ -501,7 +510,7 @@ namespace Generator.CSLA
                            ? String.Format("[{0}].", Entity.SchemaName)
                            : String.Format("[{0}]", Entity.SchemaName);
 
-            return string.Empty;
+            return String.Empty;
         }
 
         /// <summary>
@@ -550,8 +559,9 @@ namespace Generator.CSLA
             if (association.Properties.Count <= 0)
                 return false;
 
-            string key = String.Format("{0}{1}", association.Entity.EntityKeyName, suffix);
-            if (ContextData.Get(key) == null) return false;
+            string key = String.Format("{0}{1}", association.ForeignEntity.EntityKeyName, suffix);
+            if (ContextData.Get(key) == null) 
+                return false;
 
             var value = ContextData[key];
             switch (value)
@@ -569,7 +579,8 @@ namespace Generator.CSLA
         public bool IsChildBusinessObject(string suffix)
         {
             string key = String.Format("{0}{1}", Entity.EntityKeyName, suffix);
-            if (ContextData.Get(key) == null) return false;
+            if (ContextData.Get(key) == null) 
+                return false;
 
             var value = ContextData[key];
             switch (value)
@@ -586,7 +597,7 @@ namespace Generator.CSLA
 
         public bool IsChildBusinessObject(Association association)
         {
-            return IsChildBusinessObject(association, string.Empty); 
+            return IsChildBusinessObject(association, String.Empty); 
         }
 
         public bool IsChildBusinessObject(Association association, string suffix)
@@ -594,8 +605,9 @@ namespace Generator.CSLA
             if (association.Properties.Count <= 0)
                 return false;
 
-            string key = String.Format("{0}{1}", association.Entity.EntityKeyName, suffix);
-            if (ContextData.Get(key) == null) return false;
+            string key = String.Format("{0}{1}", association.ForeignEntity.EntityKeyName, suffix);
+            if (ContextData.Get(key) == null) 
+                return false;
 
             var value = ContextData[key];
             switch (value)
@@ -627,7 +639,7 @@ namespace Generator.CSLA
 
         public bool IsSwitchableObject(Association association)
         {
-            return IsSwitchableObject(association, string.Empty);
+            return IsSwitchableObject(association, String.Empty);
         }
 
         public bool IsSwitchableObject(Association association, string suffix)
@@ -635,8 +647,9 @@ namespace Generator.CSLA
             if (association.Properties.Count <= 0)
                 return false;
 
-            string key = String.Format("{0}{1}", association.Entity.EntityKeyName, suffix);
-            if (ContextData.Get(key) == null) return false;
+            string key = String.Format("{0}{1}", association.ForeignEntity.EntityKeyName, suffix);
+            if (ContextData.Get(key) == null) 
+                return false;
 
             var value = ContextData[key];
             switch (value)
@@ -650,7 +663,7 @@ namespace Generator.CSLA
 
         public bool IsNameValueListBusinessObject(Association association)
         {
-            return IsNameValueListBusinessObject(association, string.Empty);
+            return IsNameValueListBusinessObject(association, String.Empty);
         }
 
         public bool IsNameValueListBusinessObject(Association association, string suffix)
@@ -658,8 +671,9 @@ namespace Generator.CSLA
             if (association.Properties.Count <= 0)
                 return false;
 
-            string key = String.Format("{0}{1}", association.Entity.EntityKeyName, suffix);
-            if (ContextData.Get(key) == null) return false;
+            string key = String.Format("{0}{1}", association.ForeignEntity.EntityKeyName, suffix);
+            if (ContextData.Get(key) == null) 
+                return false;
 
             var value = ContextData[key];
             switch (value)
@@ -683,7 +697,7 @@ namespace Generator.CSLA
                 return false;
 
             if (Entity.Name == BusinessClassName.Substring(0, BusinessClassName.Length - length))
-                return BusinessObjectExists(string.Empty);
+                return BusinessObjectExists(String.Empty);
 
             return BusinessObjectExists(BusinessClassName.Substring(BusinessClassName.Length - length, length));
         }
@@ -710,7 +724,7 @@ namespace Generator.CSLA
         /// <returns></returns>
         public bool BusinessObjectExists(Association association)
         {
-            return BusinessObjectExists(association, string.Empty);
+            return BusinessObjectExists(association, String.Empty);
         }
 
         /// <summary>
@@ -771,6 +785,50 @@ namespace Generator.CSLA
         public virtual string GetSelectStoredProcedureShortName()
         {
             return String.Format("{0}{1}_Select", ProcedurePrefix, Entity.Name);
+        }
+
+        #endregion
+
+        #region Render Helpers
+
+        public void RenderToFileHelper<T>(string filePath, IMergeStrategy strategy) where T : EntityCodeTemplate, new()
+        {
+            var template = this.Create<T>();
+            CopyPropertiesTo(template, true, new List<string> { "SourceTable", "SourceView", "SourceCommand" });
+            
+            template.RenderToFile(filePath, strategy);
+        }
+
+        public void RenderToFileHelper<T>(string filePath) where T : EntityCodeTemplate, new()
+        {
+            RenderToFileHelper<T>(filePath, true);
+        }
+
+        public void RenderToFileHelper<T>(string filePath, bool overwrite) where T : EntityCodeTemplate, new()
+        {
+            var template = this.Create<T>();
+            CopyPropertiesTo(template, true, new List<string> { "SourceTable", "SourceView", "SourceCommand" });
+
+            if (!overwrite)
+            {
+                if (!File.Exists(filePath))
+                    template.RenderToFile(filePath, false);
+            }
+            else
+                template.RenderToFile(filePath, true);
+        }
+
+        public void RenderToFileHelper<T>(string filePath, string dependentUpon) where T : EntityCodeTemplate, new()
+        {
+            RenderToFileHelper<T>(filePath, dependentUpon, true);
+        }
+
+        public void RenderToFileHelper<T>(string filePath, string dependentUpon, bool overwrite) where T : EntityCodeTemplate, new()
+        {
+            var template = this.Create<T>();
+            CopyPropertiesTo(template, true, new List<string> { "SourceTable", "SourceView", "SourceCommand" });
+            
+            template.RenderToFile(filePath, dependentUpon, overwrite);
         }
 
         #endregion

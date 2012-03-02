@@ -10,11 +10,11 @@ namespace CodeSmith.SchemaHelper
     {
         public static string BuildVariableArguments(this List<IProperty> members)
         {
-            string parameters = string.Empty;
+            string parameters = String.Empty;
 
             foreach (IProperty property in members)
             {
-                parameters += String.Format(", {0}{1}", property.VariableName, property.IsNullable && property.SystemType != "System.String" && property.SystemType != "System.Byte[]" ? ".Value" : string.Empty);
+                parameters += String.Format(", {0}{1}", property.VariableName, property.IsNullable && property.SystemType != "System.String" && property.SystemType != "System.Byte[]" ? ".Value" : String.Empty);
             }
 
             return parameters.TrimStart(new[] { ',', ' ' });
@@ -22,11 +22,11 @@ namespace CodeSmith.SchemaHelper
 
         public static string BuildPropertyVariableArguments(this List<IProperty> members)
         {
-            string parameters = string.Empty;
+            string parameters = String.Empty;
 
             foreach (IProperty property in members)
             {
-                parameters += String.Format(", {0}{1}", property.Name, property.IsNullable && property.SystemType != "System.String" && property.SystemType != "System.Byte[]" ? ".Value" : string.Empty);
+                parameters += String.Format(", {0}{1}", property.Name, property.IsNullable && property.SystemType != "System.String" && property.SystemType != "System.Byte[]" ? ".Value" : String.Empty);
             }
 
             return parameters.TrimStart(new[] { ',', ' ' });
@@ -34,11 +34,11 @@ namespace CodeSmith.SchemaHelper
 
         public static string BuildPrivateMemberVariableArguments(this List<IProperty> members)
         {
-            string parameters = string.Empty;
+            string parameters = String.Empty;
 
             foreach (IProperty property in members)
             {
-                parameters += String.Format(", {0}{1}", property.PrivateMemberVariableName, property.IsNullable && property.SystemType != "System.String" && property.SystemType != "System.Byte[]" ? ".Value" : string.Empty);
+                parameters += String.Format(", {0}{1}", property.PrivateMemberVariableName, property.IsNullable && property.SystemType != "System.String" && property.SystemType != "System.Byte[]" ? ".Value" : String.Empty);
             }
 
             return parameters.TrimStart(new[] { ',', ' ' });
@@ -46,7 +46,7 @@ namespace CodeSmith.SchemaHelper
 
         public static string BuildDataBaseColumns(this List<IProperty> members)
         {
-            string columnNames = string.Empty;
+            string columnNames = String.Empty;
 
             foreach (IProperty property in members)
             {
@@ -63,7 +63,7 @@ namespace CodeSmith.SchemaHelper
 
         public static string BuildDataBaseParameters(this List<IProperty> members, List<AssociationProperty> associationMembers)
         {
-            string columnNames = string.Empty;
+            string columnNames = String.Empty;
 
             foreach (IProperty property in members)
             {
@@ -103,7 +103,7 @@ namespace CodeSmith.SchemaHelper
 
         public static string BuildWhereStatements(this List<IProperty> members, bool isUpdate)
         {
-            string columnNames = string.Empty;
+            string columnNames = String.Empty;
 
             foreach (var property in members)
             {

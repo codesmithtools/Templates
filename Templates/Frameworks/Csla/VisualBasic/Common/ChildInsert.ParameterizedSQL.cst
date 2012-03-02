@@ -80,7 +80,7 @@
     <% If (Entity.Associations.Where(Function(a) a.AssociationType = AssociationType.OneToMany).Count() > 0 OrElse Entity.Associations.Where(Function(a) a.AssociationType = AssociationType.ManyToOne).Count() > 0 OrElse Entity.Associations.Where(Function(a) a.AssociationType = AssociationType.OneToZeroOrOne).Count() > 0) Then
         If (Not RenderOptionalContent) Then
         Dim childCount As Integer = 0
-        For Each a As Association In Entity.Associations.Where(Function(assoc) assoc.AssociationType = AssociationType.OneToMany)
+        For Each a As Association In Entity.Associations.Where(Function(assoc) assoc.AssociationType = AssociationType.OneToMany OrElse assoc.AssociationType = AssociationType.OneToOne OrElse assoc.AssociationType = AssociationType.OneToZeroOrOne OrElse assoc.AssociationType = AssociationType.ZeroOrOneToMany)
             If IsChildBusinessObject(a) Then
                 childCount += 1
             End If

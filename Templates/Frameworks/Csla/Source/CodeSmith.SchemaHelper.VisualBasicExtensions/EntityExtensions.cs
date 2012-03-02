@@ -22,7 +22,7 @@ namespace CodeSmith.SchemaHelper
             bool isFirst = true;
 
             // AssociatedOneToMany, contains properties that need to be passed into child entity update/insert.
-            // Associations.Where(a => a.AssociationType == AssociationType.ManyToOne), contains properties in the current entity.
+            // Associations.Where(a => a.AssociationType == AssociationType.ManyToOne || a.AssociationType == AssociationType.ManyToZeroOrOne), contains properties in the current entity.
             
             //In child class. Check its associations.. (Item)
             foreach (Association association in entity.Associations.Where(a => a.AssociationType == AssociationType.OneToMany))
@@ -71,7 +71,7 @@ namespace CodeSmith.SchemaHelper
             //        if (childMember.ForeignProperty.ForeignProperty.Equals(property.ForeignProperty) || childMember.ForeignProperty.Equals(property.ForeignProperty))
             //        {
             //            found = true;
-            //            foreach (Association association2 in entity.Associations.Where(a => a.AssociationType == AssociationType.ManyToOne))
+            //            foreach (Association association2 in entity.Associations.Where(a => a.AssociationType == AssociationType.ManyToOne || a.AssociationType == AssociationType.ManyToZeroOrOne))
             //            {
             //                foreach (AssociationProperty rootMember in association2)
             //                {

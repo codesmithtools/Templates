@@ -4,12 +4,8 @@
 <%@ Register Name="CriteriaGenerated" Template="Internal\Criteria.Generated.cst" %>
 <%@ Register Name="IGeneratedCriteriaTemplate" Template="Internal\IGeneratedCriteria.cst" %>
 
-<%@ Assembly Name="CodeSmith.CustomProperties" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\Common" %>
 <%@ Assembly Name="Generator.CSLA" Path="..\..\Common" %>
-
-<%@ Import Namespace="CodeSmith.CustomProperties" %>
-<%@ Import Namespace="CodeSmith.SchemaHelper" %>
 
 <script runat="template">
 
@@ -17,37 +13,12 @@ public override void Render(System.IO.TextWriter writer)
 {
     RegisterReferences();
 
-    #region Criteria
+    string parentFileName = System.IO.Path.Combine(this.Location, String.Format("Criteria\\{0}.cs", BusinessClassName));
+    string fileName = System.IO.Path.Combine(Location, String.Format("Criteria\\{0}.Generated.cs", BusinessClassName));
     
-    Criteria criteria = this.Create<Criteria>();
-    this.CopyPropertiesTo(criteria);
-    
-    string parentFileName = System.IO.Path.Combine(this.Location, String.Format("Criteria\\{0}.cs", criteria.BusinessClassName));
-    if (!System.IO.File.Exists(parentFileName))
-    {
-        criteria.RenderToFile(parentFileName, false);
-    }
-    
-    #region Criteria.Generated
-    
-    string fileName = System.IO.Path.Combine(Location, String.Format("Criteria\\{0}.Generated.cs", criteria.BusinessClassName));
-    
-    CriteriaGenerated criteriaGenerated = this.Create<CriteriaGenerated>();
-    this.CopyPropertiesTo(criteriaGenerated);
-
-    criteriaGenerated.RenderToFile(fileName, parentFileName, true);
-    
-    #endregion
-    
-    #endregion
-    
-    #region IGeneratedCriteriaTemplate
-
-    IGeneratedCriteriaTemplate IGeneratedCriteria = this.Create<IGeneratedCriteriaTemplate>();
-    this.CopyPropertiesTo(IGeneratedCriteria);
-    IGeneratedCriteria.RenderToFile(System.IO.Path.Combine(this.Location, "Criteria\\Interfaces\\IGeneratedCriteria.cs"), true);
-
-    #endregion
+    RenderToFileHelper<Criteria>(parentFileName);
+    RenderToFileHelper<CriteriaGenerated>(fileName, parentFileName, true);
+    RenderToFileHelper<IGeneratedCriteriaTemplate>(System.IO.Path.Combine(this.Location, "Criteria\\Interfaces\\IGeneratedCriteria.cs"), true);
 }
 
 public override bool OnEntityChanging()

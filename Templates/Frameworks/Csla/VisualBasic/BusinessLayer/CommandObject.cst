@@ -15,30 +15,14 @@ Public Overloads Overrides Sub Render(writer As System.IO.TextWriter)
 
     RegisterReferences()
 
-    'CommandObject
-    Dim commandObject As CommandObject = Me.Create(Of CommandObject)()
-    Me.CopyPropertiesTo(commandObject)
+Dim parentFileName As String = System.IO.Path.Combine(Me.Location, String.Format("Command\{0}.vb", BusinessClassName))
+Dim fileName As String = System.IO.Path.Combine(Location, String.Format("Command\{0}.Generated.vb", BusinessClassName))
+RenderToFileHelper(Of CommandObject)(parentFileName)
+RenderToFileHelper(Of CommandObjectGenerated)(fileName, parentFileName, True)
 
-    Dim parentFileName As String = System.IO.Path.Combine(Me.Location, String.Format("Command\{0}.vb", commandObject.BusinessClassName))
-    If Not System.IO.File.Exists(parentFileName) Then
-        commandObject.RenderToFile(parentFileName, False)
-    End If
+fileName = System.IO.Path.Combine(Location, String.Format("Command\{0}.DataAccess.vb", BusinessClassName))
+RenderToFileHelper(Of CommandObjectDataAccess)(fileName, parentFileName, True)
 
-    'CommandObject.Generated
-    Dim fileName As String = System.IO.Path.Combine(Location, String.Format("Command\{0}.Generated.vb", commandObject.BusinessClassName))
-
-    Dim commandObjectGenerated As CommandObjectGenerated = Me.Create(Of CommandObjectGenerated)()
-    Me.CopyPropertiesTo(commandObjectGenerated)
-
-    commandObjectGenerated.RenderToFile(fileName, parentFileName, True)
-
-    'CommandObject.DataAccess
-    fileName = System.IO.Path.Combine(Location, String.Format("Command\{0}.DataAccess.vb", commandObject.BusinessClassName))
-
-    Dim commandObjectDataAccess As CommandObjectDataAccess = Me.Create(Of CommandObjectDataAccess)()
-    Me.CopyPropertiesTo(commandObjectDataAccess)
-
-    commandObjectDataAccess.RenderToFile(fileName, parentFileName, True)
 End Sub
 
 </script>

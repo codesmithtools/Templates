@@ -37,9 +37,17 @@
       <Project>{29F4357A-A92D-458F-A266-A7231E75DA52}</Project>
       <Name>CodeSmith.SchemaHelper</Name>
     </ProjectReference>
+    <ProjectReference Include="..\CodeSmith.SchemaHelper.CSharpExtensions\CodeSmith.SchemaHelper.CSharpExtensions.csproj">
+      <Project>{41C50564-90B5-4566-946E-0C0513E7F2EB}</Project>
+      <Name>CodeSmith.SchemaHelper.CSharpExtensions</Name>
+    </ProjectReference>
     <ProjectReference Include="..\CodeSmith.SchemaHelper.Extensions\CodeSmith.SchemaHelper.Extensions.csproj">
       <Project>{830E1B3E-1BC8-4F16-8C47-260ACEF3B96D}</Project>
       <Name>CodeSmith.SchemaHelper.Extensions</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CodeSmith.SchemaHelper.VisualBasicExtensions\CodeSmith.SchemaHelper.VisualBasicExtensions.csproj">
+      <Project>{E139EDCF-9BC6-40E1-8280-5C4C1D54AB6E}</Project>
+      <Name>CodeSmith.SchemaHelper.VisualBasicExtensions</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

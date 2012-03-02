@@ -7,12 +7,8 @@
 <%@ Register Name="DynamicRootGenerated" Template="Internal\DynamicRoot.Generated.cst" %>
 <%@ Register Name="SqlStoredProcedures" Template="..\DataAccessLayer\Internal\SQLStoredProcedures.cst" %>
 
-<%@ Assembly Name="CodeSmith.CustomProperties" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\Common" %>
 <%@ Assembly Name="Generator.CSLA" Path="..\..\Common" %>
-
-<%@ Import Namespace="CodeSmith.CustomProperties" %>
-<%@ Import Namespace="CodeSmith.SchemaHelper" %>
 
 <script runat="template">
 
@@ -20,49 +16,28 @@ Public Overloads Overrides Sub Render(writer As System.IO.TextWriter)
 
     RegisterReferences()
 
-    'DynamicRoot
-    Dim dynamicRoot As DynamicRoot = Me.Create(Of DynamicRoot)()
-    Me.CopyPropertiesTo(dynamicRoot)
+Dim parentFileName As String = System.IO.Path.Combine(Me.Location, String.Format("Entities\{0}.vb", BusinessClassName))
+Dim fileName As String = System.IO.Path.Combine(Location, String.Format("Entities\{0}.Generated.vb", BusinessClassName))
+RenderToFileHelper(Of DynamicRoot)(parentFileName)
+RenderToFileHelper(Of DynamicRootGenerated)(fileName, parentFileName, True)
 
-    Dim parentFileName As String = System.IO.Path.Combine(Me.Location, String.Format("Entities\{0}.vb", dynamicRoot.BusinessClassName))
-    If Not System.IO.File.Exists(parentFileName) Then
-        dynamicRoot.RenderToFile(parentFileName, False)
-    End If
+fileName = System.IO.Path.Combine(Location, String.Format("Entities\{0}.DataAccess.vb", BusinessClassName))
+If DataAccessImplementation = DataAccessMethod.None Then
+    RenderToFileHelper(Of DynamicRootDataAccess)(fileName, parentFileName, True)
+ElseIf DataAccessImplementation = DataAccessMethod.ParameterizedSQL Then
+    RenderToFileHelper(Of DynamicRootDataAccessParameterized)(fileName, parentFileName, True)
+ElseIf DataAccessImplementation = DataAccessMethod.StoredProcedures Then
+    RenderToFileHelper(Of DynamicRootDataAccessStoredProcedures)(fileName, parentFileName, True)
 
-    'DynamicRoot.Generated
-    Dim fileName As String = System.IO.Path.Combine(Location, String.Format("Entities\{0}.Generated.vb", dynamicRoot.BusinessClassName))
+    'StoredProcedures
+    fileName = System.IO.Path.Combine(Location, String.Format("Entities\{0}.StoredProcedures.sql", BusinessClassName))
+    Dim sqlStoredProcedures As SqlStoredProcedures = Me.Create(Of SqlStoredProcedures)()
+    Me.CopyPropertiesTo(sqlStoredProcedures, True)
+    sqlStoredProcedures.DataProjectName = "Not needed for sql stored procedures."
 
-    Dim dynamicRootGenerated As DynamicRootGenerated = Me.Create(Of DynamicRootGenerated)()
-    Me.CopyPropertiesTo(dynamicRootGenerated)
+    sqlStoredProcedures.RenderToFile(fileName, parentFileName, True)
+End If
 
-    dynamicRootGenerated.RenderToFile(fileName, parentFileName, True)
-
-    'DynamicRoot.DataAccess
-    fileName = System.IO.Path.Combine(Location, String.Format("Entities\{0}.DataAccess.vb", dynamicRoot.BusinessClassName))
-    If DataAccessImplementation = DataAccessMethod.None Then
-        Dim dynamicRootDataAccess As DynamicRootDataAccess = Me.Create(Of DynamicRootDataAccess)()
-        Me.CopyPropertiesTo(dynamicRootDataAccess)
-
-        dynamicRootDataAccess.RenderToFile(fileName, parentFileName, True)
-    ElseIf DataAccessImplementation = DataAccessMethod.ParameterizedSQL Then
-        Dim dynamicRootDataAccessParameterized As DynamicRootDataAccessParameterized = Me.Create(Of DynamicRootDataAccessParameterized)()
-        Me.CopyPropertiesTo(dynamicRootDataAccessParameterized)
-
-        dynamicRootDataAccessParameterized.RenderToFile(fileName, parentFileName, True)
-    ElseIf DataAccessImplementation = DataAccessMethod.StoredProcedures Then
-        Dim dynamicRootDataAccessStoredProcedures As DynamicRootDataAccessStoredProcedures = Me.Create(Of DynamicRootDataAccessStoredProcedures)()
-        Me.CopyPropertiesTo(dynamicRootDataAccessStoredProcedures)
-
-        dynamicRootDataAccessStoredProcedures.RenderToFile(fileName, parentFileName, True)
-
-        'StoredProcedures
-        fileName = System.IO.Path.Combine(Location, String.Format("Entities\{0}.StoredProcedures.sql", dynamicRoot.BusinessClassName))
-        Dim sqlStoredProcedures As SqlStoredProcedures = Me.Create(Of SqlStoredProcedures)()
-        Me.CopyPropertiesTo(sqlStoredProcedures)
-        sqlStoredProcedures.DataProjectName = "Not needed for sql stored procedures."
-
-        sqlStoredProcedures.RenderToFile(fileName, parentFileName, True)
-    End If
 End Sub
 
 </script>

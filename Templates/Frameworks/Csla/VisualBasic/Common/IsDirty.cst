@@ -31,7 +31,7 @@
                     End If
     <% Next %>
     <%-- One-To-Many & Many-To-Many --%>
-    <% For Each association As Association In Entity.Associations.Where(Function(a) a.AssociationType = AssociationType.OneToMany) %>
+    <% For Each association As Association In Entity.Associations.Where(Function(a) a.AssociationType = AssociationType.OneToMany OrElse a.AssociationType = AssociationType.OneToOne OrElse a.AssociationType = AssociationType.OneToZeroOrOne OrElse a.AssociationType = AssociationType.ZeroOrOneToMany) %>
                     If (FieldManager.FieldExists(<%= association.PrivateMemberVariableName %>Property) AndAlso <%= association.Name %>.IsDirty) Then
                         Return True
                     End If

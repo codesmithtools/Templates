@@ -574,7 +574,7 @@ Public Function GetSqlParameterStatement(ByVal props As IProperty, ByVal isOutpu
                     param += String.Format("({0}, {1})", prop.Precision, prop.Scale)
                     Exit Select
                 End If
-            Case DbType.Binary, DbType.AnsiString, DbType.AnsiStringFixedLength, DbType.[String], DbType.StringFixedLength
+            Case DbType.Binary, DbType.AnsiString, DbType.AnsiStringFixedLength, DbType.String, DbType.StringFixedLength
                 If True Then
                     If prop.NativeType <> "text" AndAlso prop.NativeType <> "ntext" Then
                         If prop.Size > 0 Then
@@ -764,14 +764,14 @@ End If
 End Sub
 
 Public Function IsColumnFindable(prop As IProperty) As Boolean
-	If TypeOf prop Is ISchemaProperty Then
-		Dim p = DirectCast(prop, ISchemaProperty)
-		If p.DataType = DbType.Binary OrElse p.NativeType = "text" OrElse p.NativeType = "ntext" OrElse p.NativeType = "timestamp" OrElse p.NativeType = "image" OrElse p.NativeType = "xml" Then
-			Return False
-		End If
-	End If
+    If TypeOf prop Is ISchemaProperty Then
+        Dim p = DirectCast(prop, ISchemaProperty)
+        If p.DataType = DbType.Binary OrElse p.NativeType = "text" OrElse p.NativeType = "ntext" OrElse p.NativeType = "timestamp" OrElse p.NativeType = "image" OrElse p.NativeType = "xml" Then
+            Return False
+        End If
+    End If
 
-	Return True
+    Return True
 End Function
 
 ''' <summary>
@@ -850,16 +850,16 @@ End Function
 #Region "Events"
 
 Protected Overloads Overrides Sub OnPostRender(ByVal result As String)
-	If AutoExecuteStoredProcedures Then
-		Dim connectionString As String = If(TypeOf Entity Is ISchemaEntity, DirectCast(Entity, ISchemaEntity).ConnectionString, Nothing)
-		If Not [String].IsNullOrEmpty(connectionString) Then
-			' execute the output on the same database as the source table.
-			Dim scriptResult = CodeSmith.BaseTemplates.ScriptUtility.ExecuteScript(connectionString, result, New System.Data.SqlClient.SqlInfoMessageEventHandler(AddressOf cn_InfoMessage))
-			Trace.WriteLine(scriptResult.ToString())
-		End If
-	End If
+    If AutoExecuteStoredProcedures Then
+        Dim connectionString As String = If(TypeOf Entity Is ISchemaEntity, DirectCast(Entity, ISchemaEntity).ConnectionString, Nothing)
+        If Not String.IsNullOrEmpty(connectionString) Then
+            ' execute the output on the same database as the source table.
+            Dim scriptResult = CodeSmith.BaseTemplates.ScriptUtility.ExecuteScript(connectionString, result, New System.Data.SqlClient.SqlInfoMessageEventHandler(AddressOf cn_InfoMessage))
+            Trace.WriteLine(scriptResult.ToString())
+        End If
+    End If
 
-	MyBase.OnPostRender(result)
+    MyBase.OnPostRender(result)
 End Sub
 
 Private Sub cn_InfoMessage(ByVal sender As Object, ByVal ex As System.Data.SqlClient.SqlInfoMessageEventArgs)

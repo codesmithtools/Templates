@@ -98,7 +98,7 @@ public void RenderObjectFactoryTemplates(IEntity entity, bool IsReadOnly, bool I
     #region ObjectFactory
     
     ObjectFactory objectFactory = this.Create<ObjectFactory>();
-    this.CopyPropertiesTo(objectFactory);
+    this.CopyPropertiesTo(objectFactory, true);
     objectFactory.Entity = entity;
     
     if(IsReadOnly)
@@ -119,7 +119,7 @@ public void RenderObjectFactoryTemplates(IEntity entity, bool IsReadOnly, bool I
     if(DataAccessImplementation == DataAccessMethod.ObjectFactoryNone)
     {
         ObjectFactoryDataAccess objectFactoryDataAccess = this.Create<ObjectFactoryDataAccess>();
-        this.CopyPropertiesTo(objectFactoryDataAccess);
+        this.CopyPropertiesTo(objectFactoryDataAccess, true);
         objectFactoryDataAccess.Entity = entity;
         objectFactoryDataAccess.IsReadOnlyBusinessObject = IsReadOnly;
         objectFactoryDataAccess.IsChildBusinessObject = IsChild;
@@ -129,7 +129,7 @@ public void RenderObjectFactoryTemplates(IEntity entity, bool IsReadOnly, bool I
     else if(DataAccessImplementation == DataAccessMethod.ObjectFactoryParameterizedSQL)
     {
         ObjectFactoryDataAccessParameterized objectFactoryDataAccessParameterized = this.Create<ObjectFactoryDataAccessParameterized>();
-        this.CopyPropertiesTo(objectFactoryDataAccessParameterized);
+        this.CopyPropertiesTo(objectFactoryDataAccessParameterized, true);
         objectFactoryDataAccessParameterized.Entity = entity;
         objectFactoryDataAccessParameterized.IsReadOnlyBusinessObject = IsReadOnly;
         objectFactoryDataAccessParameterized.IsChildBusinessObject = IsChild;
@@ -145,7 +145,7 @@ public void RenderObjectFactoryTemplates(IEntity entity, bool IsReadOnly, bool I
     {
         //ObjectFactoryDataAccessStoredProcedures
         ObjectFactoryDataAccessStoredProcedures objectFactoryDataAccessStoredProcedures = this.Create<ObjectFactoryDataAccessStoredProcedures>();
-        this.CopyPropertiesTo(objectFactoryDataAccessStoredProcedures);
+        this.CopyPropertiesTo(objectFactoryDataAccessStoredProcedures, true);
         objectFactoryDataAccessStoredProcedures.Entity = entity;
         objectFactoryDataAccessStoredProcedures.IsReadOnlyBusinessObject = IsReadOnly;
         objectFactoryDataAccessStoredProcedures.IsChildBusinessObject = IsChild;
@@ -178,7 +178,7 @@ public void RenderObjectFactoryListTemplates(IEntity entity, bool IsReadOnly, bo
     #region ObjectFactory
     
     ObjectFactoryList objectFactory = this.Create<ObjectFactoryList>();
-    this.CopyPropertiesTo(objectFactory);
+    this.CopyPropertiesTo(objectFactory, true);
     objectFactory.Entity = entity;
 
     if(IsReadOnly)
@@ -199,7 +199,7 @@ public void RenderObjectFactoryListTemplates(IEntity entity, bool IsReadOnly, bo
     if(DataAccessImplementation == DataAccessMethod.ObjectFactoryNone)
     {
         ObjectFactoryListDataAccess objectFactoryDataAccess = this.Create<ObjectFactoryListDataAccess>();
-        this.CopyPropertiesTo(objectFactoryDataAccess);
+        this.CopyPropertiesTo(objectFactoryDataAccess, true);
         objectFactoryDataAccess.Entity = entity;
         objectFactoryDataAccess.IsReadOnlyBusinessObject = IsReadOnly;
         objectFactoryDataAccess.IsChildBusinessObject = IsChild;
@@ -209,7 +209,7 @@ public void RenderObjectFactoryListTemplates(IEntity entity, bool IsReadOnly, bo
     else if(DataAccessImplementation == DataAccessMethod.ObjectFactoryParameterizedSQL)
     {
         ObjectFactoryListDataAccessParameterized objectFactoryDataAccessParameterized = this.Create<ObjectFactoryListDataAccessParameterized>();
-        this.CopyPropertiesTo(objectFactoryDataAccessParameterized);
+        this.CopyPropertiesTo(objectFactoryDataAccessParameterized, true);
         objectFactoryDataAccessParameterized.Entity = entity;
         objectFactoryDataAccessParameterized.IsReadOnlyBusinessObject = IsReadOnly;
         objectFactoryDataAccessParameterized.IsChildBusinessObject = IsChild;
@@ -226,7 +226,7 @@ public void RenderObjectFactoryListTemplates(IEntity entity, bool IsReadOnly, bo
     {
         //ObjectFactoryDataAccessStoredProcedures
         ObjectFactoryListDataAccessStoredProcedures objectFactoryDataAccessStoredProcedures = this.Create<ObjectFactoryListDataAccessStoredProcedures>();
-        this.CopyPropertiesTo(objectFactoryDataAccessStoredProcedures);
+        this.CopyPropertiesTo(objectFactoryDataAccessStoredProcedures, true);
         objectFactoryDataAccessStoredProcedures.Entity = entity;
         objectFactoryDataAccessStoredProcedures.IsReadOnlyBusinessObject = IsReadOnly;
         objectFactoryDataAccessStoredProcedures.IsChildBusinessObject = IsChild;
