@@ -794,7 +794,7 @@ namespace Generator.CSLA
         public void RenderToFileHelper<T>(string filePath, IMergeStrategy strategy) where T : EntityCodeTemplate, new()
         {
             var template = this.Create<T>();
-            CopyPropertiesTo(template, true, new List<string> { "SourceTable", "SourceView", "SourceCommand" });
+            CopyPropertiesTo(template, true, PropertyIgnoreList);
             
             template.RenderToFile(filePath, strategy);
         }
@@ -807,7 +807,7 @@ namespace Generator.CSLA
         public void RenderToFileHelper<T>(string filePath, bool overwrite) where T : EntityCodeTemplate, new()
         {
             var template = this.Create<T>();
-            CopyPropertiesTo(template, true, new List<string> { "SourceTable", "SourceView", "SourceCommand" });
+            CopyPropertiesTo(template, true, PropertyIgnoreList);
 
             if (!overwrite)
             {
@@ -826,7 +826,7 @@ namespace Generator.CSLA
         public void RenderToFileHelper<T>(string filePath, string dependentUpon, bool overwrite) where T : EntityCodeTemplate, new()
         {
             var template = this.Create<T>();
-            CopyPropertiesTo(template, true, new List<string> { "SourceTable", "SourceView", "SourceCommand" });
+            CopyPropertiesTo(template, true, PropertyIgnoreList);
             
             template.RenderToFile(filePath, dependentUpon, overwrite);
         }
