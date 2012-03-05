@@ -88,6 +88,21 @@ namespace Generator.CSLA
             }
         }
 
+        [Optional]
+        [Category("1. DataSource")]
+        [Description("Includes Entity associations if set to true.")]
+        public bool IncludeAssociations
+        {
+            get
+            {
+                return Configuration.Instance.IncludeAssociations;
+            }
+            set
+            {
+                Configuration.Instance.IncludeAssociations = value;
+            }
+        }
+
         #endregion
 
         #region Private Method(s)
@@ -124,6 +139,8 @@ namespace Generator.CSLA
 
         #region Render Helpers
 
+        protected List<string> PropertyIgnoreList = new List<string> { "CommandObject", "Criteria", "DynamicRoot", "EditableChild", "EditableRoot", "ReadOnlyChild", "ReadOnlyRoot", "SwitchableObject", "DynamicListBase", "DynamicRootList", "EditableRootList", "EditableChildList", "ReadOnlyList", "ReadOnlyChildList", "NameValueList", "SourceTable", "SourceView", "SourceCommand" }; 
+
         public void RenderHelper<T>(T template) where T : EntityCodeTemplate
         {
             RenderHelper(template, false);
@@ -131,7 +148,7 @@ namespace Generator.CSLA
 
         public void RenderHelper<T>(T template, bool renderOptionalContent) where T : EntityCodeTemplate
         {
-            CopyPropertiesTo(template, true, new List<string>() { "SourceTable", "SourceView", "SourceCommand" });
+            CopyPropertiesTo(template, true, PropertyIgnoreList);
             template.RenderOptionalContent = renderOptionalContent;
             template.Render(this.Response);
         }
@@ -143,7 +160,7 @@ namespace Generator.CSLA
 
         public void RenderHelper<T>(T template, IEntity entity, bool renderOptionalContent) where T : EntityCodeTemplate
         {
-            this.CopyPropertiesTo(template, true, new List<string>() { "SourceTable", "SourceView", "SourceCommand" });
+            this.CopyPropertiesTo(template, true, PropertyIgnoreList);
             template.Entity = entity;
             template.RenderOptionalContent = renderOptionalContent;
             template.Render(this.Response);

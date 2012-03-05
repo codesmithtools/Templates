@@ -72,7 +72,7 @@ namespace CodeSmith.SchemaHelper
 
             if (sc.SearchCriteriaType == SearchCriteriaType.ForeignKey)
             {
-                foreach (AssociationProperty property in sc.Properties)
+                foreach (AssociationProperty property in sc.ForeignProperties)
                 {
                     var propertyName = isObjectFactory ? String.Format("item.{0}", property.Property.Name) : property.Property.VariableName;
                     var resolvedPropertyName = property.Property.Name;
@@ -127,7 +127,7 @@ namespace CodeSmith.SchemaHelper
 
             if (sc.SearchCriteriaType == SearchCriteriaType.ForeignKey)
             {
-                foreach (AssociationProperty property in sc.Properties)
+                foreach (AssociationProperty property in sc.ForeignProperties)
                 {
                     var propertyName = property.Property.Name;
                     var resolvedPropertyName = property.Property.Name;

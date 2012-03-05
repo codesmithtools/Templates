@@ -68,7 +68,7 @@ namespace CodeSmith.SchemaHelper
 
             if (sc.SearchCriteriaType == SearchCriteriaType.ForeignKey)
             {
-                foreach (AssociationProperty property in sc.Properties)
+                foreach (AssociationProperty property in sc.ForeignProperties)
                 {
                     var propertyName = property.Property.Name;
                     var resolvedPropertyName = property.Property.Name;

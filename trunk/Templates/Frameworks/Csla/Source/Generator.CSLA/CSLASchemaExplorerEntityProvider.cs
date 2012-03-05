@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using CodeSmith.SchemaHelper;
@@ -7,30 +8,49 @@ using Configuration = CodeSmith.SchemaHelper.Configuration;
 
 namespace Generator.CSLA
 {
+    // TODO: This needs to be profiled. We probably should be caching the table entities so they are not retreived repeatidly...
     class CSLASchemaExplorerEntityProvider : SchemaExplorerEntityProvider
     {
+        private static readonly Dictionary<string, SortedDictionary<string, IEntity>> _cache = new Dictionary<string, SortedDictionary<string, IEntity>>(); 
         private readonly string _extendedPropertyName;
+        private readonly List<TableSchema> _tablesToKeep = new List<TableSchema>(); 
+
         public CSLASchemaExplorerEntityProvider(DatabaseSchema database) : base(database)
         {
         }
 
         public CSLASchemaExplorerEntityProvider(TableSchema table) : base(table.Database)
         {
-            _tables = table.Database.Tables;
+            _tablesToKeep.Add(table);
         }
 
         public CSLASchemaExplorerEntityProvider(DatabaseSchema database, TableSchemaCollection tables) : base(database)
         {
-            _tables = tables;
-
-            if (_tables != null && _tables.Count > 0)
-                _database = _tables[0].Database;
+            _tablesToKeep.AddRange(tables);
         }
 
         public CSLASchemaExplorerEntityProvider(DatabaseSchema database, TableSchemaCollection tables, string extendedPropertyName) : this(database, tables)
         {
-            _tables = tables;
+            _tablesToKeep.AddRange(tables);
             _extendedPropertyName = extendedPropertyName;
+        }
+
+        protected override void Initialize(TableSchemaCollection tables, ViewSchemaCollection views, CommandSchemaCollection commands)
+        {
+            var key = _database != null ? _database.FullName + Configuration.Instance.IncludeAssociations : null;
+            if (String.IsNullOrEmpty(key) || !_cache.ContainsKey(key))
+            {
+                base.Initialize(tables, views, commands);
+                if (key != null)
+                    _cache[key] = EntityStore.Instance.EntityCollection;
+            }
+
+            var entities = key != null && _cache.ContainsKey(key) ? _cache[key] : EntityStore.Instance.EntityCollection;
+            var itemsToRemove = entities.Where(e => e.Value is TableEntity && !_tablesToKeep.Contains(((TableEntity)e.Value).EntitySource)).ToList();
+            foreach (var entity in itemsToRemove)
+            {
+                EntityStore.Instance.EntityCollection.Remove(entity.Key);
+            }
         }
 
         protected override void LoadViews(ViewSchemaCollection views)
