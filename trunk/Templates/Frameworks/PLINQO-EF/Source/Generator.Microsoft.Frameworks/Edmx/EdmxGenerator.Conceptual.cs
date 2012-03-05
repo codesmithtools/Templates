@@ -160,8 +160,8 @@ namespace Generator.Microsoft.Frameworks
                                     : ResolveEntityMappedName(entity.EntityKey(), entity.Name);
             if(exists)
             {
-                var type = function.ReturnType != null ? function.ReturnType.ToString().Replace("Collection(", string.Empty).Replace(")", string.Empty).Trim() : string.Empty;
-                var complexTypeName = NamingConventions.PropertyName(type.Replace(ConceptualSchema.Namespace + ".", string.Empty));
+                var type = function.ReturnType != null ? function.ReturnType.ToString().Replace("Collection(", String.Empty).Replace(")", String.Empty).Trim() : String.Empty;
+                var complexTypeName = NamingConventions.PropertyName(type.Replace(ConceptualSchema.Namespace + ".", String.Empty));
                 if (entity.IsStronglyTypedAssociatedEntity)
                 {
                     function.EntitySet = entitySetName;
@@ -458,7 +458,7 @@ namespace Generator.Microsoft.Frameworks
 
         private EntityContainer.EntitySetLocalType CreateConceptualEntitySet(IEntity entity, out string previousName, out bool isNewView)
         {
-            previousName = string.Empty;
+            previousName = String.Empty;
 
             //<EntitySet Name="Categories" EntityType="PetShopModel1.Category" />
             var entitySet = ConceptualSchemaEntityContainer.EntitySets.Where(e =>
@@ -767,7 +767,7 @@ namespace Generator.Microsoft.Frameworks
             }
             else
             {
-                _mappingAssociationNames[key] = associationSet.Association.Replace(string.Concat(ConceptualSchema.Namespace, "."), string.Empty);
+                _mappingAssociationNames[key] = associationSet.Association.Replace(string.Concat(ConceptualSchema.Namespace, "."), String.Empty);
 
                 // Remove the AssociationEnd's that don't exist.
                 var items = associationSet.Ends.Where(e => !e.Role.Equals(toRole) && !e.Role.Equals(principalEntity.Name) && !e.Role.Equals(fromRole) && !e.Role.Equals(dependentEntity.Name));

@@ -98,7 +98,7 @@ namespace CodeSmith.SchemaHelper
         /// <summary>
         /// Load the Search Criteria for the entity
         /// </summary>
-        protected override void AddSearchCriteria()
+        protected override void LoadSearchCriteria()
         {
         }
 

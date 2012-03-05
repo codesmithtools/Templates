@@ -27,7 +27,7 @@ namespace Generator.Microsoft.Frameworks
         #region Members
 
         private const string EdmxExtension = ".edmx";
-        private string _fileName = string.Empty;
+        private string _fileName = String.Empty;
 
         #endregion
 

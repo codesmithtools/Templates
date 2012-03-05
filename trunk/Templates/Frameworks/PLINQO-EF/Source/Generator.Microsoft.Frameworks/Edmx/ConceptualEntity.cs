@@ -269,7 +269,7 @@ namespace CodeSmith.SchemaHelper
         /// <summary>
         /// Load the Search Criteria for the entity
         /// </summary>
-        protected override void AddSearchCriteria()
+        protected override void LoadSearchCriteria()
         {
             switch (Configuration.Instance.SearchCriteriaProperty.SearchCriteria)
             {
@@ -323,27 +323,20 @@ namespace CodeSmith.SchemaHelper
             foreach (var association in AssociationMap.Values)
             {
                 var searchCriteria = new SearchCriteria(SearchCriteriaType.ForeignKey);
-                var childSearchCriteria = new SearchCriteria(SearchCriteriaType.ForeignKey, true);
-
                 searchCriteria.Association = association;
-                childSearchCriteria.Association = association;
 
-                foreach (var foreignProperty in association.Properties)
+                foreach (var property in association.Properties)
                 {
-                    //TODO: We need to test One-Many and Many-One to make sure the Properties are in the right collections
-                    searchCriteria.ForeignProperties.Add(foreignProperty);
-                    searchCriteria.Properties.Add(foreignProperty.Property);
-
-                    childSearchCriteria.ForeignProperties.Add(foreignProperty);
-                    childSearchCriteria.Properties.Add(foreignProperty.ForeignProperty);
+                    searchCriteria.ForeignProperties.Add(property);
+                    searchCriteria.Properties.Add(property.Property);
                 }
 
-                if (association.AssociationType == AssociationType.ManyToOne)
+                if (association.AssociationType == AssociationType.ManyToOne || association.AssociationType == AssociationType.ManyToZeroOrOne)
                 {
                     AddToSearchCriteria(searchCriteria);
                 }
 
-                association.SearchCriteria = childSearchCriteria;
+                association.SearchCriteria = searchCriteria;
             }
         }
 

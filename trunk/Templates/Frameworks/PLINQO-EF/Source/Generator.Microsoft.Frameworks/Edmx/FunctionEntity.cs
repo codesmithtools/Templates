@@ -58,7 +58,7 @@ namespace CodeSmith.SchemaHelper
             //  <FunctionImportMapping FunctionImportName="GetCategoryById" FunctionName="PetShopModel.Store.GetCategoryById" >
             if (EntitySource.ReturnType != null)
             {
-                var returnType = EntitySource.ReturnType.ToString().Replace("Collection(", string.Empty).Replace(Namespace + ".", string.Empty).Replace(")", string.Empty).Trim();
+                var returnType = EntitySource.ReturnType.ToString().Replace("Collection(", String.Empty).Replace(Namespace + ".", String.Empty).Replace(")", String.Empty).Trim();
                 if (EntitySource.ReturnType.ToString().Trim().StartsWith("Collection(" + Namespace))
                 {
                     AssociatedEntity = EntityStore.Instance.GetEntity(returnType);
@@ -108,7 +108,7 @@ namespace CodeSmith.SchemaHelper
         /// <summary>
         /// Load the Search Criteria for the entity
         /// </summary>
-        protected override void AddSearchCriteria()
+        protected override void LoadSearchCriteria()
         {
             if (EntitySource != null && EntitySource.Parameters.Count > 0)
             {
