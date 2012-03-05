@@ -13,7 +13,7 @@
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\Common" %>
 <%@ Assembly Name="Generator.CSLA" Path="..\..\Common" %>
 <%@ Import Namespace="CodeSmith.SchemaHelper" %>
-<% Generate(); %>
+<% Generate() %>
 
 <script runat="template">
 
@@ -115,7 +115,6 @@ Public Sub RenderObjectFactoryTemplates(entity As IEntity, IsReadOnly As Boolean
 
         Dim ADOHelper As ADOHelperTemplate = Me.Create(Of ADOHelperTemplate)()
         Me.CopyPropertiesTo(ADOHelper)
-        ADOHelper.Entity = entity
         ADOHelper.RenderToFile(System.IO.Path.Combine(Me.Location, "Utility\ADOHelper.vb"), strategy)
     ElseIf DataAccessImplementation = DataAccessMethod.ObjectFactoryStoredProcedures Then
         'ObjectFactoryDataAccessStoredProcedures
@@ -138,7 +137,6 @@ Public Sub RenderObjectFactoryTemplates(entity As IEntity, IsReadOnly As Boolean
         'ADOHelperTemplate
         Dim ADOHelper As ADOHelperTemplate = Me.Create(Of ADOHelperTemplate)()
         Me.CopyPropertiesTo(ADOHelper)
-        ADOHelper.Entity = entity
         ADOHelper.RenderToFile(System.IO.Path.Combine(Me.Location, "Utility\ADOHelper.vb"), strategy)
     End If
 End Sub
@@ -187,7 +185,6 @@ Public Sub RenderObjectFactoryListTemplates(entity As IEntity, IsReadOnly As Boo
 
         Dim ADOHelper As ADOHelperTemplate = Me.Create(Of ADOHelperTemplate)()
         Me.CopyPropertiesTo(ADOHelper)
-        ADOHelper.Entity = entity
         ADOHelper.RenderToFile(System.IO.Path.Combine(Me.Location, "Utility\ADOHelper.vb"), strategy)
     ElseIf DataAccessImplementation = DataAccessMethod.ObjectFactoryStoredProcedures Then
         'ObjectFactoryDataAccessStoredProcedures
@@ -210,7 +207,6 @@ Public Sub RenderObjectFactoryListTemplates(entity As IEntity, IsReadOnly As Boo
         'ADOHelperTemplate
         Dim ADOHelper As ADOHelperTemplate = Me.Create(Of ADOHelperTemplate)()
         Me.CopyPropertiesTo(ADOHelper)
-        ADOHelper.Entity = entity
         ADOHelper.RenderToFile(System.IO.Path.Combine(Me.Location, "Utility\ADOHelper.vb"), strategy)
     End If
 End Sub

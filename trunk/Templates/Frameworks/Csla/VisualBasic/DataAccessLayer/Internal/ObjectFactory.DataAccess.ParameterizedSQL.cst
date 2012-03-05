@@ -60,13 +60,13 @@ Namespace <%= DataProjectName %>
                 item.<%=prop.Name %> = Guid.NewGuid()
     <% End If
     Next
-<% End If %>
+End If
     For Each association As Association In Entity.Associations
         For Each prop As AssociationProperty In association.Properties
-    If (prop.ForeignProperty.SystemType = "System.String" And Not prop.ForeignProperty.IsType(PropertyType.Identity) And prop.ForeignProperty.IsType(PropertyType.Foreign)) Then %>
+    		If (prop.ForeignProperty.SystemType = "System.String" And Not prop.ForeignProperty.IsType(PropertyType.Identity) And prop.ForeignProperty.IsType(PropertyType.Foreign)) Then %>
                 item.<%= prop.ForeignProperty.Name %> = "BN"
-    <% End If
-    Next
+    		<% End If
+    	Next
     Next
     %>
     
@@ -74,7 +74,7 @@ Namespace <%= DataProjectName %>
                 MarkNew(item)
     <% If(IsChildBusinessObject) Then %>
                 MarkAsChild(item)
-    <% End If%>
+    <% End If %>
             End Using
     
             OnCreated()
@@ -108,7 +108,7 @@ Namespace <%= DataProjectName %>
             MarkNew(item)
     <% If(IsChildBusinessObject) Then %>
             MarkAsChild(item)
-    <% End If%>
+    <% End If %>
     
             OnCreated()
     
@@ -193,7 +193,7 @@ Namespace <%= DataProjectName %>
                             item.<%= Entity.ConcurrencyProperty.Name %> = ADOHelper.GetBytes(reader, "<%= Entity.ConcurrencyProperty.KeyName %>")
     <% End If %>
     
-    <% If (Entity.HasKey AndAlso Entity.IdentityProperty Is Not Nothing) Then %>
+    <% If (Entity.HasKey AndAlso Entity.IdentityProperty IsNot Nothing) Then %>
     <% for each prop As IProperty In Entity.GetProperties(PropertyType.Key) 
         If(prop.IsType(PropertyType.Identity) OrElse prop.IsDbType(DbType.Guid)) Then%>
                             item.<%= prop.Name %> = <%If Not prop.HasByteArrayColumn() Then %>reader.<%= prop.GetReaderMethod() %>("<%= prop.KeyName %>")<% else %>ADOHelper.GetBytes(reader, "<%= prop.KeyName %>")<% End If %>

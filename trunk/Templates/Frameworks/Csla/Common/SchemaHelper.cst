@@ -8,13 +8,11 @@ Description: Used to Quick Start Visual Studio Projects
 <%@ Property Name="SourceViews" Type="SchemaExplorer.ViewSchemaCollection" DeepLoad="True" Optional="True" %>
 <%@ Property Name="SourceCommands" Type="SchemaExplorer.CommandSchemaCollection" DeepLoad="True" Optional="True" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper" %>
-<%@ Assembly Name="CodeSmith.QuickStart" %>
 <%@ Assembly Name="SchemaExplorer" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper.Extensions" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper.VisualBasicExtensions"%>
 
 <%@ Import Namespace="CodeSmith.SchemaHelper" %>
-<%@ Import Namespace="CodeSmith.QuickStart" %>
 <%@ Import Namespace="SchemaExplorer" %>
 <%@ Import Namespace="System.IO" %>
 <%@ Import Namespace="System.Linq" %>

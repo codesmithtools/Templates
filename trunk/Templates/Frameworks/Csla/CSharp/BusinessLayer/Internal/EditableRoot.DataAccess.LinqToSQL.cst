@@ -1,6 +1,6 @@
 ﻿<%-- Author: Blake Niemyjski --%>
 <%--         Joe McPherson   --%>
-<%@ CodeTemplate Language="C#" TargetLanguage="C#" Inherits="Generator.CSLA.EntityCodeTemplate" Description="CSLA 3.8.X EditableRoot" %>
+<%@ CodeTemplate Language="C#" TargetLanguage="C#" Inherits="Generator.CSLA.EntityCodeTemplate" %>
 <%@ Register Name="MapLinqToSQL" Template="..\..\Common\MapLinqToSQL.cst" MergeProperties="False" ExcludeProperties="" %>
 <%@ Register Name="DataPortalCreate" Template="..\..\Common\DataPortalCreate.cst" MergeProperties="False" ExcludeProperties="" %>
 <%-- LinqToSQL Modification --%>
