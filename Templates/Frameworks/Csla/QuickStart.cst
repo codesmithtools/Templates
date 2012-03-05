@@ -150,9 +150,7 @@ public Generator.QuickStart.ProjectBuilderSettings CreateProjectBuilderSettings(
             DataProjectName = this.DataProjectName,
             BusinessProjectName = this.BusinessProjectName,
             InterfaceProjectName = this.InterfaceProjectName,
-            TestProjectName = this.TestProjectName,
             IncludeDataProject = !(DataAccessImplementation == DataAccessMethod.ObjectFactoryNone || DataAccessImplementation == DataAccessMethod.ObjectFactoryParameterizedSQL || DataAccessImplementation == DataAccessMethod.ObjectFactoryStoredProcedures),
-            IncludeTestProject = this.IncludeTestProject,
             WorkingDirectory = this.CodeTemplateInfo.DirectoryName
     };
 }
