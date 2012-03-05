@@ -138,7 +138,6 @@ public void RenderObjectFactoryTemplates(IEntity entity, bool IsReadOnly, bool I
         
         ADOHelperTemplate ADOHelper = this.Create<ADOHelperTemplate>();
         this.CopyPropertiesTo(ADOHelper);
-        ADOHelper.Entity = entity;
         ADOHelper.RenderToFile(System.IO.Path.Combine(this.Location, "Utility\\ADOHelper.cs"), strategy);
     }
     else if(DataAccessImplementation == DataAccessMethod.ObjectFactoryStoredProcedures)
@@ -163,7 +162,6 @@ public void RenderObjectFactoryTemplates(IEntity entity, bool IsReadOnly, bool I
         //ADOHelperTemplate
         ADOHelperTemplate ADOHelper = this.Create<ADOHelperTemplate>();
         this.CopyPropertiesTo(ADOHelper);
-        ADOHelper.Entity = entity;
         ADOHelper.RenderToFile(System.IO.Path.Combine(this.Location, "Utility\\ADOHelper.cs"), strategy);
     }
 
@@ -218,7 +216,6 @@ public void RenderObjectFactoryListTemplates(IEntity entity, bool IsReadOnly, bo
         
         ADOHelperTemplate ADOHelper = this.Create<ADOHelperTemplate>();
         this.CopyPropertiesTo(ADOHelper);
-        ADOHelper.Entity = entity;
         
         ADOHelper.RenderToFile(System.IO.Path.Combine(this.Location, "Utility\\ADOHelper.cs"), strategy);
     }
@@ -244,7 +241,6 @@ public void RenderObjectFactoryListTemplates(IEntity entity, bool IsReadOnly, bo
         //ADOHelperTemplate
         ADOHelperTemplate ADOHelper = this.Create<ADOHelperTemplate>();
         this.CopyPropertiesTo(ADOHelper);
-        ADOHelper.Entity = entity;
         ADOHelper.RenderToFile(System.IO.Path.Combine(this.Location, "Utility\\ADOHelper.cs"), strategy);
     }
 

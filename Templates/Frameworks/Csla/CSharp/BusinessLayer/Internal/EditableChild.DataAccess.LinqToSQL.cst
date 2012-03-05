@@ -1,6 +1,6 @@
 ﻿<%-- Author: Blake Niemyjski --%>
 <%--         Joe McPherson   --%>
-<%@ CodeTemplate Language="C#" TargetLanguage="C#" Inherits="Generator.CSLA.EntityCodeTemplate" Description="CSLA 3.8.X EditableRoot" %>
+<%@ CodeTemplate Language="C#" TargetLanguage="C#" Inherits="Generator.CSLA.EntityCodeTemplate" %>
 <%@ Register Name="MapLinqToSQL" Template="..\..\Common\MapLinqToSQL.cst" MergeProperties="False" ExcludeProperties="" %>
 <%@ Register Name="ChildCreate" Template="..\..\Common\ChildCreate.cst" MergeProperties="False" ExcludeProperties="" %>
 <%@ Register Name="ChildFetch" Template="..\..\Common\ChildFetch.LinqToSQL.cst" MergeProperties="False" ExcludeProperties="" %>

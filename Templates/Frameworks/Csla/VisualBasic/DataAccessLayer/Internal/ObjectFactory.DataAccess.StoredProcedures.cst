@@ -74,7 +74,7 @@ Namespace <%= DataProjectName %>
                 MarkNew(item)
     <% If(IsChildBusinessObject) Then %>
                 MarkAsChild(item)
-    <% End If%>
+    <% End If %>
             End Using
     
             OnCreated()
@@ -108,7 +108,7 @@ Namespace <%= DataProjectName %>
             MarkNew(item)
     <% If(IsChildBusinessObject) Then %>
             MarkAsChild(item)
-    <% End If%>
+    <% End If %>
     
             OnCreated()
     
@@ -116,8 +116,8 @@ Namespace <%= DataProjectName %>
         End Function
     
 #End Region
-    <% End If %>
-    
+<% End If %>
+
 #Region "Fetch"
     
         ''' <summary>
@@ -234,7 +234,8 @@ End If %>
         End Sub
     
 #End Region
-    
+<% End If %>
+
 #Region "Update"
     
         <Transactional(TransactionalTypes.TransactionScope)> _
@@ -265,7 +266,7 @@ End If %>
             ' Don't update If the item isn't dirty.
             If (item.IsDirty) Then
     
-    <% If (Entity.IdentityProperty Is Not Nothing AndAlso Entity.HasKey) Then %>
+    <% If (Entity.IdentityProperty IsNot Nothing AndAlso Entity.HasKey) Then %>
                 If <%= Entity.GetProperties(PropertyType.Key).BuildIdentityKeyEqualityStatements("item.")%> Then
                     ' Insert new child.
                     Dim temp As <%= Entity.Name %> = CType(Activator.CreateInstance(GetType(<%= Entity.Name %>), True), <%= Entity.Name %>)
@@ -335,8 +336,8 @@ End If %>
                         
     <% If Not(Entity.ConcurrencyProperty Is Nothing) Then %>
                         item.<%= Entity.ConcurrencyProperty.Name %> = DirectCast(command.Parameters("<%= ParameterPrefix  %><%= Entity.ConcurrencyProperty.KeyName %>").Value, <%= Entity.ConcurrencyProperty.SystemType %>)
-    <% End If 
-<% If (Entity.HasKey) Then %>
+    <% End If %>
+<% If (Entity.HasKey) Then
     For Each prop As IProperty In Entity.GetProperties(PropertyType.Key)
         If(prop.IsType(PropertyType.Identity) OrElse prop.IsDbType(DbType.Guid)) Then %>
                         item.<%= prop.Name %> = DirectCast(command.Parameters("<%= prop.BuildParameterVariableName() %>").Value, <%= prop.SystemType %>)
@@ -430,7 +431,6 @@ End If %>
         End Sub
 
 #End Region
-    <% End If %>
 
 #Region "Helper Methods"
     

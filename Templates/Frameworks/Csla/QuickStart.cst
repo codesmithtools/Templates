@@ -4,24 +4,16 @@ Author: Blake Niemyjski
 Description: Used to Quick Start Visual Studio Projects
 --%>
 <%@ CodeTemplate Language="C#" TargetLanguage="Text" Inherits="Generator.CSLA.QuickStartCodeTemplate" Description="QuickStart for CSLA" %>
-
+<%@ Property Name="IncludeInterfaceProject" Type="System.Boolean" Default="True" Category="5. Interface Project" Description="If true, the Interface Project will be included in the generated solution." %>
 <%@ Register Name="QuickStartSolution" Template="Common\QuickStartSolution.cst" %>
 <%@ Register Name="Entities" Template="CSharp\BusinessLayer\Entities.cst" MergeProperties="False" ExcludeProperties="" %>
 <%@ Register Name="DataAccess" Template="CSharp\DataAccessLayer\DataAccessLayer.cst" MergeProperties="False" ExcludeProperties="" %>
 <%@ Register Name="Web" Template="CSharp\WebLayer\Default.aspx.cst" MergeProperties="False" ExcludeProperties="" %>
-<%@ Register Name="NUnitTests" Template="CSharp\NUnitTests\NUnitTests.cst" MergeProperties="False" ExcludeProperties="" %>
-
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="Common" %>
 <%@ Assembly Name="Generator.CSLA" Path="Common" %>
-
-
+<%@ Assembly Name="Generator.QuickStart" Path="Common" %>
 <%@ Import Namespace="CodeSmith.SchemaHelper" %>
-
-
 <%@ Import Namespace="System.IO" %>
-
-<%@ Property Name="IncludeInterfaceProject" Type="System.Boolean" Default="True" Category="5. Interface Project" Description="If true, the Interface Project will be included in the generated solution." %>
-<%@ Property Name="IncludeTestProject" Type="System.Boolean" Default="False" Category="6. Test Project" Description="If true, the Test Project will be included in the generated solution." %>
 
 <% Generate(); %>
 
@@ -64,32 +56,24 @@ public override void Generate()
         web.Location = Path.Combine(this.Location, this.InterfaceProjectName);
         web.SavePropertiesToXmlFile(Path.Combine(CodeTemplateInfo.DirectoryName, "Common\\Web.csp"));
     }
-    
-    if(IncludeTestProject)
-    {
-        NUnitTests nUnitTests = this.Create<NUnitTests>();
-        this.CopyPropertiesTo(nUnitTests);
-        nUnitTests.Location = Path.Combine(this.Location, this.TestProjectName);
-        nUnitTests.SavePropertiesToXmlFile(Path.Combine(CodeTemplateInfo.DirectoryName, "Common\\NUnitTests.csp"));
-    }
 
     #endregion
 
-    List<SolutionItem> solutionItems = new List<SolutionItem>();
-    ProjectBuilderSettings pbs = CreateProjectBuilderSettings();
+    var solutionItems = new List<Generator.QuickStart.SolutionItem>();
+    var pbs = CreateProjectBuilderSettings();
 
     // Create Business Project
-    DataProjectCreator businessProjectCreator = new DataProjectCreator(pbs);
+    var businessProjectCreator = new Generator.QuickStart.DataProjectCreator(pbs);
     businessProjectCreator.CspFileName = "Entities.csp";
     businessProjectCreator.CreateProject(this.BusinessProjectName);
     solutionItems.Add(businessProjectCreator.SolutionItem);
 
-    DataProjectCreator dataProjectCreator = null;
+    Generator.QuickStart.DataProjectCreator dataProjectCreator = null;
     // Only create the data project if object factory is used.
     if(DataAccessImplementation == DataAccessMethod.ObjectFactoryNone || DataAccessImplementation == DataAccessMethod.ObjectFactoryParameterizedSQL || DataAccessImplementation == DataAccessMethod.ObjectFactoryStoredProcedures)
     {
         // Create Data Project
-        dataProjectCreator = new DataProjectCreator(pbs);
+        dataProjectCreator = new Generator.QuickStart.DataProjectCreator(pbs);
         dataProjectCreator.CspFileName = "DataAccess.csp";
         dataProjectCreator.CreateProject(this.DataProjectName, businessProjectCreator.SolutionItem);
         solutionItems.Add(dataProjectCreator.SolutionItem);
@@ -98,9 +82,9 @@ public override void Generate()
     // Create UI Project
     if(IncludeInterfaceProject)
     {
-        List<SolutionItem> projectReferences = new List<SolutionItem>();
+        var projectReferences = new List<Generator.QuickStart.SolutionItem>();
         
-        WebApplicationCreator webAppCreator = new WebApplicationCreator(pbs);
+        var webAppCreator = new Generator.QuickStart.WebApplicationCreator(pbs);
         webAppCreator.CspFileName = "Web.csp";
         projectReferences.Add(businessProjectCreator.SolutionItem);
         
@@ -113,15 +97,6 @@ public override void Generate()
         solutionItems.Add(webAppCreator.SolutionItem);
     }
 
-    //Create UnitTests Project
-    if(IncludeTestProject)
-    {
-        TestProjectCreator testProjectCreator = new TestProjectCreator(pbs);
-        testProjectCreator.CspFileName = "NUnitTests.csp";
-        testProjectCreator.CreateProject(this.TestProjectName, businessProjectCreator.SolutionItem);
-        solutionItems.Add(testProjectCreator.SolutionItem);
-    }
-
     // Create Solution
     string solutionPath = CreateSolution(solutionItems);
 
@@ -130,9 +105,9 @@ public override void Generate()
         LaunchVisualStudioWithSolution(solutionPath);
 }
 
-private string CreateSolution(List<SolutionItem> solutionItems)
+private string CreateSolution(List<Generator.QuickStart.SolutionItem> solutionItems)
 {
-    QuickStartSolution quickStartSolution = this.Create<QuickStartSolution>();
+    var quickStartSolution = this.Create<QuickStartSolution>();
     quickStartSolution.IsLatestCSLA = this.FrameworkVersion == FrameworkVersion.v40;
     quickStartSolution.SolutionItems = solutionItems;
 
@@ -163,14 +138,14 @@ private string AlreadyExistsMessage
     }
 }
 
- public ProjectBuilderSettings CreateProjectBuilderSettings()
+public Generator.QuickStart.ProjectBuilderSettings CreateProjectBuilderSettings()
 {
-    return new ProjectBuilderSettings()
+    return new Generator.QuickStart.ProjectBuilderSettings()
     {
             SourceDatabase = this.SourceDatabase,
             Location = this.Location,
             SolutionName = this.SolutionName,
-            Language = this.Language,
+            Language = this.Language, 
             FrameworkVersion = this.FrameworkVersion,
             DataProjectName = this.DataProjectName,
             BusinessProjectName = this.BusinessProjectName,

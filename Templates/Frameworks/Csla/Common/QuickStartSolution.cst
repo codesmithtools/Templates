@@ -1,23 +1,19 @@
-<%@ CodeTemplate Language="C#" TargetLanguage="Text" Src="" Encoding="UTF-8" Inherits="" Debug="True" Description="Template description here." CompilerVersion="v3.5" %>
-
-<%@ Assembly Name="CodeSmith.SchemaHelper" %>
-<%@ Assembly Name="CodeSmith.QuickStart" %>
-
-<%@ Import Namespace="CodeSmith.SchemaHelper" %>
-<%@ Import Namespace="CodeSmith.QuickStart" %>
-<%@ Import Namespace="System.Collections.Generic" %>
-
-<%@ Property Name="SolutionItems" Type="List<SolutionItem>" Optional="False" Category="1.Project" Description="" %>
-<%@ Property Name="Language" Type="LanguageEnum" Default="CSharp" Optional="False" Category="1.Project" Description="Language the project will be in." %>
+﻿<%@ CodeTemplate Language="C#" TargetLanguage="Text" %>
+<%@ Property Name="SolutionItems" Type="List<Generator.QuickStart.SolutionItem>" Optional="False" Category="1.Project" Description="" %>
+<%@ Property Name="Language" Type="CodeSmith.SchemaHelper.Language" Default="CSharp" Optional="False" Category="1.Project" Description="Language the project will be in." %>
 <%@ Property Name="IsLatestCSLA" Type="System.Boolean" Optional="False" Category="1.Project" Description="" %>
+<%@ Assembly Name="CodeSmith.SchemaHelper" %>
+<%@ Assembly Name="Generator.QuickStart" %>
+<%@ Import Namespace="CodeSmith.SchemaHelper" %>
+<%@ Import Namespace="System.Collections.Generic" %>
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
-<% foreach(SolutionItem solutionItem in SolutionItems) { 
+<% foreach(var solutionItem in SolutionItems) { 
     if(solutionItem.Website) { %>
 Project("{<%= solutionItem.LanguageGuidString %>}") = "<%= solutionItem.Name %>", "<%= solutionItem.Name %>\", "{<%= solutionItem.GuidString %>}"
     ProjectSection(WebsiteProperties) = preProject
         TargetFramework = "<% if(IsLatestCSLA) { %>4.0<% } else { %>3.5<% } %>"
-        <% foreach(SolutionItem item in solutionItem.ProjectReferences) { %>
+        <% foreach(var item in solutionItem.ProjectReferences) { %>
         ProjectReferences = "{<%=item.Guid.ToString()%>}|<%=item.Name%>.dll;"
         <% } %>
         Debug.AspNetCompiler.VirtualPath = "/<%= solutionItem.Name %>"
@@ -35,7 +31,7 @@ Project("{<%= solutionItem.LanguageGuidString %>}") = "<%= solutionItem.Name %>"
         Release.AspNetCompiler.FixedNames = "false"
         Release.AspNetCompiler.Debug = "False"
         VWDPort = "33693"
-        DefaultWebSiteLanguage = <%= solutionItem.Language == LanguageEnum.CSharp ? "Visual C#" : "Visual Basic" %>
+        DefaultWebSiteLanguage = <%= solutionItem.Language == Language.CSharp ? "Visual C#" : "Visual Basic" %> 
     EndProjectSection
     <% } 
     else {%>
@@ -49,7 +45,7 @@ Global
         Release|Any CPU = Release|Any CPU
     EndGlobalSection
     GlobalSection(ProjectConfigurationPlatforms) = postSolution
-<% foreach(SolutionItem solutionItem in SolutionItems) { %>
+<% foreach(var solutionItem in SolutionItems) { %>
         {<%= solutionItem.GuidString %>}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
         {<%= solutionItem.GuidString %>}.Debug|Any CPU.Build.0 = Debug|Any CPU
         {<%= solutionItem.GuidString %>}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -60,4 +56,3 @@ Global
         HideSolutionNode = FALSE
     EndGlobalSection
 EndGlobal
-

@@ -270,14 +270,6 @@ namespace Generator.CSLA
 
         #endregion
 
-        #region 6. Test Project
-
-        [Category("6. Test Project")]
-        [Description("The namespace for the test project.")]
-        public string TestProjectName { get; set; }
-
-        #endregion
-
         #region 7. LinqToSQL Data Access Layer 
         [Category("7. LinqToSQL Data Access Layer")]
         [Description("The data acces layer namespace to be used.  This should match with the data context used by LinqToSQL.")]
@@ -461,11 +453,6 @@ namespace Generator.CSLA
             if (string.IsNullOrEmpty(InterfaceProjectName))
             {
                 InterfaceProjectName = String.Format("{0}.UI", SolutionName);
-            }
-
-            if (string.IsNullOrEmpty(TestProjectName))
-            {
-                TestProjectName = String.Format("{0}.Test", SolutionName);
             }
         }
 

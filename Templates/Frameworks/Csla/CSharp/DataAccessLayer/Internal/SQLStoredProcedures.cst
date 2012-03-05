@@ -388,23 +388,23 @@ private StringCollection _generatedProcedureNames = new StringCollection();
 
 #region Isolation Level
 
-public void GenerateSetTransactionIsolationLevelStatement(TransactionIsolationLevelEnum isolationLevel)
+public void GenerateSetTransactionIsolationLevelStatement(Generator.CSLA.TransactionIsolationLevelEnum isolationLevel)
 {
     Response.Write("SET TRANSACTION ISOLATION LEVEL ");
     
     switch (isolationLevel)
     {
-        case TransactionIsolationLevelEnum.ReadUncommitted:
+        case Generator.CSLA.TransactionIsolationLevelEnum.ReadUncommitted:
         {
             Response.WriteLine("READ UNCOMMITTED");
             break;
         }
-        case TransactionIsolationLevelEnum.RepeatableRead:
+        case Generator.CSLA.TransactionIsolationLevelEnum.RepeatableRead:
         {
             Response.WriteLine("REPEATABLE READ");
             break;
         }
-        case TransactionIsolationLevelEnum.Serializable:
+        case Generator.CSLA.TransactionIsolationLevelEnum.Serializable:
         {
             Response.WriteLine("SERIALIZABLE");
             break;
