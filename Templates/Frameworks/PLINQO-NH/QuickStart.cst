@@ -1,4 +1,4 @@
-<%--
+﻿<%--
 Name: Quick Start
 Author: Blake Niemyjski
 Description: Used to Quick Start Visual Studio Projects
@@ -56,7 +56,7 @@ The <%= SolutionName %> Solution has been created at <%= Location %>.
         // Create Data Project
         DataProjectCreator dataProjectCreator = new DataProjectCreator(pbs)
         {
-            QueryCsp = @"Common\QuickStart\QuickStartQuery.csp",
+            CspFileName = @"Common\QuickStart\QuickStartQuery.csp",
             TemplateDirectory = this.CopyTemplatesToFolder ? @"..\Templates\" : @"..\..\Templates\"
         };
         dataProjectCreator.CreateProject(this.DataProjectName);
@@ -119,8 +119,8 @@ The <%= SolutionName %> Solution has been created at <%= Location %>.
             EnsureMultipleResultSets = false,
             ZipFileRoot = @"Common\QuickStart",
             SourceDatabase = this.SourceDatabase,
-            FrameworkVersion = Generator.QuickStart.FrameworkVersion.v40,
-            Language = LanguageEnum.CSharp,
+            FrameworkVersion = FrameworkVersion.v40,
+            Language = Language.CSharp,
             Location = this.Location,
             SolutionName = this.SolutionName,
             DataContextName = this.DataContextName,
@@ -145,7 +145,7 @@ The <%= SolutionName %> Solution has been created at <%= Location %>.
     {
         QuickStartSolution quickStartSolution = this.Create<QuickStartSolution>();
         quickStartSolution.SolutionItems = solutionItems;
-        quickStartSolution.Framework = Generator.QuickStart.FrameworkVersion.v40;
+        quickStartSolution.Framework = FrameworkVersion.v40;
         quickStartSolution.Location = this.Location;
 
         string filePathAboslute = Path.Combine(Location, String.Concat(SolutionName, ".sln"));

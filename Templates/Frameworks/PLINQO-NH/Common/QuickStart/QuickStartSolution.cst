@@ -1,4 +1,4 @@
-<%@ CodeTemplate Language="C#" TargetLanguage="Text" Src="" Encoding="UTF-8" Inherits="" Debug="True" Description="Template description here." CompilerVersion="v3.5" %>
+﻿<%@ CodeTemplate Language="C#" TargetLanguage="Text" %>
 
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="../SchemaHelper/" %>
 <%@ Assembly Name="Generator.QuickStart" %>
@@ -8,8 +8,8 @@
 <%@ Import Namespace="System.Collections.Generic" %>
 
 <%@ Property Name="SolutionItems" Type="List<SolutionItem>" Optional="False" Category="1.Project" Description="" %>
-<%@ Property Name="Language" Type="LanguageEnum" Default="CSharp" Optional="False" Category="1.Project" Description="Language the project will be in." %>
-<%@ Property Name="Framework" Type="Generator.QuickStart.FrameworkVersion" Default="v40" Optional="False" Category="1.Project"  Description="The .net Framework version." %>
+<%@ Property Name="Language" Type="Language" Default="CSharp" Optional="False" Category="1.Project" Description="Language the project will be in." %>
+<%@ Property Name="Framework" Type="FrameworkVersion" Default="v40" Optional="False" Category="1.Project"  Description="The .net Framework version." %>
 <%@ Property Name="Location" Type="System.String" Default="" Optional="True" Category="1.Project" Description="This is the path to the Solution location." %>
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
@@ -17,7 +17,7 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 	if(solutionItem.Website) { %>
 Project("{<%= solutionItem.LanguageGuidString %>}") = "<%= solutionItem.Name %>", "<%= solutionItem.Name %>\", "{<%= solutionItem.GuidString %>}"
 	ProjectSection(WebsiteProperties) = preProject
-		TargetFramework = <%= Framework == Generator.QuickStart.FrameworkVersion.v35 ? "3.5" : "4.0" %>
+		TargetFramework = <%= Framework == FrameworkVersion.v35 ? "3.5" : "4.0" %>
 		<% foreach(SolutionItem item in solutionItem.ProjectReferences) { %>
 		ProjectReferences = "{<%=item.Guid.ToString()%>}|<%=item.Name%>.dll;"
 		<% } %>
@@ -36,7 +36,7 @@ Project("{<%= solutionItem.LanguageGuidString %>}") = "<%= solutionItem.Name %>"
 		Release.AspNetCompiler.FixedNames = "false"
 		Release.AspNetCompiler.Debug = "False"
 		VWDPort = "33693"
-		DefaultWebSiteLanguage = <%= solutionItem.Language == LanguageEnum.CSharp ? "Visual C#" : "Visual Basic" %>
+		DefaultWebSiteLanguage = <%= solutionItem.Language == Language.CSharp ? "Visual C#" : "Visual Basic" %>
 	EndProjectSection
 	<% } 
 	else {%>
