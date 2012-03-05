@@ -313,6 +313,11 @@
             Returns the name of the association from the Database (E.G. ColumnName).
             </summary>
         </member>
+        <member name="P:CodeSmith.SchemaHelper.Association.TypeName">
+            <summary>
+            The resolved Type Name for this Entity.
+            </summary>
+        </member>
         <member name="P:CodeSmith.SchemaHelper.Association.Name">
             <summary>
             The resolved Name for this Entity.
@@ -776,19 +781,6 @@
             </summary>
             <param name="type"></param>
         </member>
-        <member name="M:CodeSmith.SchemaHelper.SearchCriteria.#ctor(CodeSmith.SchemaHelper.SearchCriteriaType,System.Boolean)">
-            <summary>
-            
-            </summary>
-            <param name="type"></param>
-            <param name="treatAsChild"></param>
-        </member>
-        <member name="M:CodeSmith.SchemaHelper.SearchCriteria.ToString">
-            <summary>
-            
-            </summary>
-            <returns></returns>
-        </member>
         <member name="P:CodeSmith.SchemaHelper.SearchCriteria.Association">
             <summary>
             The Association that the SearchCriteria is created for
@@ -809,14 +801,14 @@
             
             </summary>
         </member>
-        <member name="P:CodeSmith.SchemaHelper.SearchCriteria.IsChild">
-            <summary>
-            Is this a child Search Criteria.
-            </summary>
-        </member>
         <member name="P:CodeSmith.SchemaHelper.SearchCriteria.MethodName">
             <summary>
             What is the MethodName for this SearchCriteria
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.SearchCriteria.AssociatedMethodName">
+            <summary>
+            The associated method name for any ForeignKey Search Criteria
             </summary>
         </member>
         <member name="P:CodeSmith.SchemaHelper.SearchCriteria.SearchCriteriaDescription">
@@ -1058,7 +1050,7 @@
             Override to populate the extended properties from the implemented entity.
             </summary>
         </member>
-        <member name="M:CodeSmith.SchemaHelper.EntityBase`1.AddSearchCriteria">
+        <member name="M:CodeSmith.SchemaHelper.EntityBase`1.LoadSearchCriteria">
             <summary>
             Override to populate the SearchCriteria from the implemented entity.
             </summary>
@@ -1540,7 +1532,7 @@
             Load the extended properties for the entity.
             </summary>
         </member>
-        <member name="M:CodeSmith.SchemaHelper.TableEntity.AddSearchCriteria">
+        <member name="M:CodeSmith.SchemaHelper.TableEntity.LoadSearchCriteria">
             <summary>
             Load the Search Criteria for the table
             </summary>
@@ -1654,7 +1646,7 @@
             Load the Extended Properties
             </summary>
         </member>
-        <member name="M:CodeSmith.SchemaHelper.CommandEntity.AddSearchCriteria">
+        <member name="M:CodeSmith.SchemaHelper.CommandEntity.LoadSearchCriteria">
             <summary>
             Get all the parameters from the ICommandSchema and store them in the parameter collection.
             </summary>
@@ -1767,7 +1759,7 @@
             <param name="entity"></param>
             <returns></returns>
         </member>
-        <member name="M:CodeSmith.SchemaHelper.SchemaExplorerExtensions.ToCollection(System.Collections.Generic.List{CodeSmith.SchemaHelper.IEntity})">
+        <member name="M:CodeSmith.SchemaHelper.SchemaExplorerExtensions.ToCollection(System.Collections.Generic.IEnumerable{CodeSmith.SchemaHelper.IEntity})">
             <summary>
             
             </summary>
@@ -1857,6 +1849,58 @@
             <summary>
             Is this IProperty ReadOnly.  Computed by looking at IsIdentity, IsRowVersion, and IsComputed.
             </summary>
+        </member>
+        <member name="T:CodeSmith.SchemaHelper.SchemaExplorerEntityProvider">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.SchemaExplorerEntityProvider.#ctor(SchemaExplorer.DatabaseSchema)">
+            <summary>
+            
+            </summary>
+            <param name="database"></param>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.SchemaExplorerEntityProvider.#ctor(SchemaExplorer.TableSchemaCollection,SchemaExplorer.ViewSchemaCollection,SchemaExplorer.CommandSchemaCollection)">
+            <summary>
+            
+            </summary>
+            <param name="tables"></param>
+            <param name="views"></param>
+            <param name="commands"></param>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.SchemaExplorerEntityProvider.Validate">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.SchemaExplorerEntityProvider.Load">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.SchemaExplorerEntityProvider.Save">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.SchemaExplorerEntityProvider.Initialize(SchemaExplorer.TableSchemaCollection,SchemaExplorer.ViewSchemaCollection,SchemaExplorer.CommandSchemaCollection)">
+            <summary>
+            Load all the Entities into the EntityStore.
+            </summary>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.SchemaExplorerEntityProvider.LoadTables(SchemaExplorer.TableSchemaCollection)">
+            <summary>
+            Load the Tables.
+            </summary>
+            <param name="tables"></param>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.SchemaExplorerEntityProvider.LoadCommands(SchemaExplorer.CommandSchemaCollection)">
+            <summary>
+            Loop through all the commands and create the command objects.
+            </summary>
+            <param name="commands"></param>
         </member>
         <member name="T:CodeSmith.SchemaHelper.CommandParameter">
             <summary>
@@ -2049,7 +2093,7 @@
             Load the Extended Properties
             </summary>
         </member>
-        <member name="M:CodeSmith.SchemaHelper.ViewEntity.AddSearchCriteria">
+        <member name="M:CodeSmith.SchemaHelper.ViewEntity.LoadSearchCriteria">
             <summary>
             Add the Search Criteria
             </summary>
@@ -2057,46 +2101,6 @@
         <member name="P:CodeSmith.SchemaHelper.ViewEntity.SourceText">
             <summary>
             The text that created the view.
-            </summary>
-        </member>
-        <member name="T:CodeSmith.SchemaHelper.SchemaExplorerEntityProvider">
-            <summary>
-            
-            </summary>
-        </member>
-        <member name="M:CodeSmith.SchemaHelper.SchemaExplorerEntityProvider.#ctor(SchemaExplorer.DatabaseSchema)">
-            <summary>
-            
-            </summary>
-            <param name="database"></param>
-        </member>
-        <member name="M:CodeSmith.SchemaHelper.SchemaExplorerEntityProvider.#ctor(SchemaExplorer.TableSchemaCollection,SchemaExplorer.ViewSchemaCollection,SchemaExplorer.CommandSchemaCollection)">
-            <summary>
-            
-            </summary>
-            <param name="tables"></param>
-            <param name="views"></param>
-            <param name="commands"></param>
-        </member>
-        <member name="M:CodeSmith.SchemaHelper.SchemaExplorerEntityProvider.Validate">
-            <summary>
-            
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:CodeSmith.SchemaHelper.SchemaExplorerEntityProvider.Load">
-            <summary>
-            
-            </summary>
-        </member>
-        <member name="M:CodeSmith.SchemaHelper.SchemaExplorerEntityProvider.Save">
-            <summary>
-            
-            </summary>
-        </member>
-        <member name="M:CodeSmith.SchemaHelper.SchemaExplorerEntityProvider.Initialize(SchemaExplorer.TableSchemaCollection,SchemaExplorer.ViewSchemaCollection,SchemaExplorer.CommandSchemaCollection)">
-            <summary>
-            Load all the Entities into the EntityStore.
             </summary>
         </member>
     </members>
