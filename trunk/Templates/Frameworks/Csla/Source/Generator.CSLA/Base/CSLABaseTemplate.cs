@@ -57,7 +57,7 @@ namespace Generator.CSLA
         {
             get
             {
-                return IsLatestCSLA ? "4.3.0" : "3.8.4";
+                return IsLatestCSLA ? "4.3.10" : "3.8.4";
             }
         }
 

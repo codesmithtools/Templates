@@ -76,7 +76,7 @@
     <CommitFiles Include="Common\CodeSmith.SchemaHelper.Extensions.dll" />
     <CommitFiles Include="Common\CodeSmith.SchemaHelper.CSharpExtensions.dll" />
     <CommitFiles Include="Common\CodeSmith.SchemaHelper.VisualBasicExtensions.dll" />
-    <CommitFiles Include="Common\CodeSmith.QuickStart.dll" />
+    <CommitFiles Include="Common\Generator.QuickStart.dll" />
     <CommitFiles Include="Common\Generator.CSLA.dll" />
     <CommitFiles Include="Common\Generator.CSLA.xml" />
   </ItemGroup>
