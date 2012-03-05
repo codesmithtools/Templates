@@ -43,7 +43,7 @@ namespace CodeSmith.SchemaHelper.NHibernate
             // ReSharper restore PossibleNullReferenceException
         }
 
-        protected override void AddSearchCriteria()
+        protected override void LoadSearchCriteria()
         {
             var searchCriteria = new SearchCriteria(SearchCriteriaType.CustomCommand);
 
@@ -59,7 +59,7 @@ namespace CodeSmith.SchemaHelper.NHibernate
 
         public override void Initialize()
         {
-            AddSearchCriteria();
+            LoadSearchCriteria();
             LoadProperties();
         }
 
