@@ -1,284 +1,265 @@
-﻿//------------------------------------------------------------------------------
-//
-// Copyright (c) 2002-2012 CodeSmith Tools, LLC.  All rights reserved.
-// 
-// The terms of use for this software are contained in the file
-// named sourcelicense.txt, which can be found in the root of this distribution.
-// By using this software in any fashion, you are agreeing to be bound by the
-// terms of this license.
-// 
-// You must not remove this notice, or any other, from this software.
-//
-//------------------------------------------------------------------------------
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.IO;
 using System.Linq;
 using CodeSmith.Engine;
 using CodeSmith.SchemaHelper;
-using SchemaExplorer;
 using Configuration = CodeSmith.SchemaHelper.Configuration;
 
-namespace Generator.CSLA
+namespace Generator.CSLA.CodeTemplates
 {
-    /// <summary>
-    /// 
-    /// </summary>
-    public class DataAccessCodeTemplate : QuickStartCodeTemplate
+    public class EntitiesCodeTemplate : CSLABaseTemplate
     {
-        /// <summary>
-        /// 
-        /// </summary>
-        public DataAccessCodeTemplate()
+        public EntitiesCodeTemplate()
         {
-            UpdateTableCollections();
         }
 
-        #region Hidden Properties
+        [Browsable(false)]
+        public List<IEntity> CommandObjectEntities = new List<IEntity>();
 
         [Browsable(false)]
-        public new Language Language { get; set; }
-        [Browsable(false)]
-        public new bool LaunchVisualStudio { get; set; }
-        [Browsable(false)]
-        public new bool UseMemberVariables { get; set; }
-        [Browsable(false)]
-        public new string InterfaceProjectName { get; set; }
-
-        #endregion
-
-        [Browsable(false)]
-        public List<IEntity> DynamicRootEntities = new List<IEntity>();
-        [Browsable(false)]
-        public List<IEntity> EditableChildEntities = new List<IEntity>();
-        [Browsable(false)]
-        public List<IEntity> EditableRootEntities = new List<IEntity>();
-        [Browsable(false)]
-        public List<IEntity> ReadOnlyChildEntities = new List<IEntity>();
-        [Browsable(false)]
-        public List<IEntity> ReadOnlyRootEntities = new List<IEntity>();
-        [Browsable(false)]
-        public List<IEntity> SwitchableObjectEntities = new List<IEntity>();
-        [Browsable(false)]
-        public List<IEntity> DynamicListBaseEntities = new List<IEntity>();
-        [Browsable(false)]
-        public List<IEntity> DynamicRootListEntities = new List<IEntity>();
-        [Browsable(false)]
-        public List<IEntity> EditableRootListEntities = new List<IEntity>();
-        [Browsable(false)]
-        public List<IEntity> EditableChildListEntities = new List<IEntity>();
-        [Browsable(false)]
-        public List<IEntity> ReadOnlyListEntities = new List<IEntity>();
-        [Browsable(false)]
-        public List<IEntity> ReadOnlyChildListEntities = new List<IEntity>();
-        [Browsable(false)]
-        public List<IEntity> NameValueListEntities = new List<IEntity>();
-
-        #region 6a. Entities
-
-        [Category("6a. Entities")]
-        [Description("DynamicRoot")]
-        [Optional]
-        public TableSchemaCollection DynamicRoot
+        public List<IEntity> CriteriaEntities
         {
-            get { return DynamicRootEntities.ToCollection(); }
+            get { return DynamicRootEntities
+                .Union(EditableChildEntities)
+                .Union(EditableRootEntities)
+                .Union(ReadOnlyChildEntities)
+                .Union(ReadOnlyRootEntities)
+                .Union(SwitchableObjectEntities)
+                .Union(DynamicRootListEntities)
+                .Union(EditableRootListEntities)
+                .Union(EditableChildListEntities)
+                .Union(ReadOnlyListEntities)
+                .Union(ReadOnlyChildListEntities)
+                .Union(NameValueListEntities).ToList();
+            }
+        }
+
+        private List<IEntity> _dynamicRootEntities = new List<IEntity>();
+        [Browsable(false)]
+        public List<IEntity> DynamicRootEntities
+        {
+            get { return _dynamicRootEntities; }
             set
             {
                 if (value != null)
                 {
-                    DynamicRootEntities = new EntityManager(new CSLASchemaExplorerEntityProvider(SourceDatabase, value, Constants.DynamicRoot)).Entities;
+                    _dynamicRootEntities = value; 
                     OnDynamicRootChanged();
                 }
             }
         }
-
-        [Category("6a. Entities")]
-        [Description("EditableChild")]
-        [Optional]
-        public TableSchemaCollection EditableChild
+        
+        private List<IEntity> _editableChildEntities = new List<IEntity>();
+        [Browsable(false)]
+        public List<IEntity> EditableChildEntities
         {
-            get { return EditableChildEntities.ToCollection(); }
+            get { return _editableChildEntities; }
             set
             {
                 if (value != null)
                 {
-                    EditableChildEntities = new EntityManager(new CSLASchemaExplorerEntityProvider(SourceDatabase, value, Constants.EditableChild)).Entities;
+                    _editableChildEntities = value;
                     OnEditableChildChanged();
                 }
             }
         }
 
-        [Category("6a. Entities")]
-        [Description("EditableRoot")]
-        [Optional]
-        public TableSchemaCollection EditableRoot
+        private List<IEntity> _editableRootEntities = new List<IEntity>();
+        [Browsable(false)]
+        public List<IEntity> EditableRootEntities
         {
-            get { return EditableRootEntities.ToCollection(); }
+            get { return _editableRootEntities; }
             set
             {
                 if (value != null)
                 {
-                    EditableRootEntities = new EntityManager(new CSLASchemaExplorerEntityProvider(SourceDatabase, value, Constants.EditableRoot)).Entities;
+                    _editableRootEntities = value;
                     OnEditableRootChanged();
                 }
             }
         }
 
-        [Category("6a. Entities")]
-        [Description("ReadOnlyChild")]
-        [Optional]
-        public TableSchemaCollection ReadOnlyChild
+        private List<IEntity> _readOnlyChildEntities = new List<IEntity>();
+        [Browsable(false)]
+        public List<IEntity> ReadOnlyChildEntities
         {
-            get { return ReadOnlyChildEntities.ToCollection(); }
+            get { return _readOnlyChildEntities; }
             set
             {
                 if (value != null)
                 {
-                    ReadOnlyChildEntities = new EntityManager(new CSLASchemaExplorerEntityProvider(SourceDatabase, value, Constants.ReadOnlyChild)).Entities;
+                    _readOnlyChildEntities = value;
                     OnReadOnlyChildChanged();
                 }
             }
         }
 
-        [Category("6a. Entities")]
-        [Description("ReadOnlyRoot")]
-        [Optional]
-        public TableSchemaCollection ReadOnlyRoot
+        private List<IEntity> _readOnlyRootEntities = new List<IEntity>();
+        [Browsable(false)]
+        public List<IEntity> ReadOnlyRootEntities
         {
-            get { return ReadOnlyRootEntities.ToCollection(); }
+            get { return _readOnlyRootEntities; }
             set
             {
                 if (value != null)
                 {
-                    ReadOnlyRootEntities = new EntityManager(new CSLASchemaExplorerEntityProvider(SourceDatabase, value, Constants.ReadOnlyRoot)).Entities;
+                    _readOnlyRootEntities = value;
                     OnReadOnlyRootChanged();
                 }
             }
         }
 
-        [Category("6a. Entities")]
-        [Description("SwitchableObject")]
-        [Optional]
-        public TableSchemaCollection SwitchableObject
+        private List<IEntity> _switchableObjectEntities = new List<IEntity>();
+        [Browsable(false)]
+        public List<IEntity> SwitchableObjectEntities
         {
-            get { return SwitchableObjectEntities.ToCollection(); }
+            get { return _switchableObjectEntities; }
             set
             {
                 if (value != null)
                 {
-                    SwitchableObjectEntities = new EntityManager(new CSLASchemaExplorerEntityProvider(SourceDatabase, value, Constants.SwitchableObject)).Entities;
+                    _switchableObjectEntities = value;
                     OnSwitchableObjectChanged();
                 }
             }
         }
 
-        #endregion
-
-        #region 6b. List Entities
-
-        [Category("6b. List Entities")]
-        [Description("DynamicListBase")]
-        [Optional]
-        public TableSchemaCollection DynamicListBase
+        private List<IEntity> _dynamicListBaseEntities = new List<IEntity>();
+        [Browsable(false)]
+        public List<IEntity> DynamicListBaseEntities
         {
-            get { return this.DynamicListBaseEntities.ToCollection(); }
+            get { return _dynamicListBaseEntities; }
             set
             {
                 if (value != null)
                 {
-                    this.DynamicListBaseEntities = new EntityManager(new CSLASchemaExplorerEntityProvider(SourceDatabase, value, Constants.DynamicListBase)).Entities;
+                    _dynamicListBaseEntities = value;
                     OnDynamicListBaseChanged();
                 }
             }
         }
 
-        [Category("6b. List Entities")]
-        [Description("DynamicRootList")]
-        [Optional]
-        public TableSchemaCollection DynamicRootList
+        private List<IEntity> _dynamicRootListEntities = new List<IEntity>();
+        [Browsable(false)]
+        public List<IEntity> DynamicRootListEntities
         {
-            get { return DynamicRootListEntities.ToCollection(); }
+            get { return _dynamicRootListEntities; }
             set
             {
                 if (value != null)
                 {
-                    DynamicRootListEntities = new EntityManager(new CSLASchemaExplorerEntityProvider(SourceDatabase, value, Constants.DynamicRootList)).Entities;
+                    _dynamicRootListEntities = value;
                     OnDynamicRootListChanged();
                 }
             }
         }
 
-        [Category("6b. List Entities")]
-        [Description("EditableRootList")]
-        [Optional]
-        public TableSchemaCollection EditableRootList
+        private List<IEntity> _editableRootListEntities = new List<IEntity>();
+        [Browsable(false)]
+        public List<IEntity> EditableRootListEntities
         {
-            get { return EditableRootListEntities.ToCollection(); }
+            get { return _editableRootListEntities; }
             set
             {
                 if (value != null)
                 {
-                    EditableRootListEntities = new EntityManager(new CSLASchemaExplorerEntityProvider(SourceDatabase, value, Constants.EditableRootList)).Entities;
+                    _editableRootListEntities = value;
                     OnEditableRootListChanged();
                 }
             }
         }
 
-        [Category("6b. List Entities")]
-        [Description("EditableChildList")]
-        [Optional]
-        public TableSchemaCollection EditableChildList
+        private List<IEntity> _editableChildListEntities = new List<IEntity>();
+        [Browsable(false)]
+        public List<IEntity> EditableChildListEntities
         {
-            get { return EditableChildListEntities.ToCollection(); }
+            get { return _editableChildListEntities; }
             set
             {
                 if (value != null)
                 {
-                    EditableChildListEntities = new EntityManager(new CSLASchemaExplorerEntityProvider(SourceDatabase, value, Constants.EditableChildList)).Entities;
+                    _editableChildListEntities = value;
                     OnEditableChildListChanged();
                 }
             }
         }
 
-        [Category("6b. List Entities")]
-        [Description("ReadOnlyList")]
-        [Optional]
-        public TableSchemaCollection ReadOnlyList
+        private List<IEntity> _readOnlyListEntities = new List<IEntity>();
+        [Browsable(false)]
+        public List<IEntity> ReadOnlyListEntities
         {
-            get { return ReadOnlyListEntities.ToCollection(); }
+            get { return _readOnlyListEntities; }
             set
             {
                 if (value != null)
                 {
-                    ReadOnlyListEntities = new EntityManager(new CSLASchemaExplorerEntityProvider(SourceDatabase, value, Constants.ReadOnlyList)).Entities;
+                    _readOnlyListEntities = value;
                     OnReadOnlyListChanged();
                 }
             }
         }
 
-        [Category("6b. List Entities")]
-        [Description("ReadOnlyChildList")]
-        [Optional]
-        public TableSchemaCollection ReadOnlyChildList
+        private List<IEntity> _readOnlyChildListEntities = new List<IEntity>();
+        [Browsable(false)]
+        public List<IEntity> ReadOnlyChildListEntities
         {
-            get { return ReadOnlyChildListEntities.ToCollection(); }
+            get { return _readOnlyChildListEntities; }
             set
             {
                 if (value != null)
                 {
-                    ReadOnlyChildListEntities = new EntityManager(new CSLASchemaExplorerEntityProvider(SourceDatabase, value, Constants.ReadOnlyChildList)).Entities;
+                    _readOnlyChildListEntities = value;
                     OnReadOnlyChildListChanged();
                 }
             }
         }
 
-        #endregion
+        private List<IEntity> _nameValueListEntities = new List<IEntity>();
+        [Browsable(false)]
+        public List<IEntity> NameValueListEntities
+        {
+            get { return _nameValueListEntities; }
+            set
+            {
+                if (value != null)
+                {
+                    _nameValueListEntities = value;
+                    OnNameListChanged();
+                }
+            }
+        }
 
-        #region Private methods
+        public void PopulateDefaultEntities(List<IEntity> entities)
+        {
+            //EditableRoot
+            foreach (var entity in GetRootEntities(entities))
+            {
+                if (!EditableRootEntities.Contains(entity))
+                    EditableRootEntities.Add(entity);
+            }
 
-        #region OnEnitityChanged
+            //EditableChild
+            foreach (var entity in GetChildEntities(entities).Values)
+            {
+                if (!EditableChildEntities.Contains(entity))
+                    EditableChildEntities.Add(entity);
+            }
+
+            //EditableChild
+            foreach (var entity in GetExcludedEntities(entities))
+            {
+                if (!EditableChildEntities.Contains(entity))
+                    EditableChildEntities.Add(entity);
+            }
+
+            //EditableChildList
+            foreach (var entity in GetListEntities(entities).Values)
+            {
+                if (!EditableChildListEntities.Contains(entity))
+                    EditableChildListEntities.Add(entity);
+            }
+        }
 
         private void OnDynamicRootChanged()
         {
@@ -290,13 +271,11 @@ namespace Generator.CSLA
 
                 EditableChildEntities.Remove(entity);
                 EditableRootEntities.Remove(entity);
-                ReadOnlyChildEntities.Remove(entity);
-                ReadOnlyRootEntities.Remove(entity);
                 SwitchableObjectEntities.Remove(entity);
 
                 ContextData.Add(entity.EntityKeyName, Constants.DynamicRoot);
 
-                if (this.State == TemplateState.RestoringProperties || SourceDatabase == null)
+                if (State == TemplateState.RestoringProperties)
                     continue;
 
                 //Many-To-One
@@ -333,7 +312,7 @@ namespace Generator.CSLA
 
                 ContextData.Add(entity.EntityKeyName, Constants.EditableChild);
 
-                if (this.State == TemplateState.RestoringProperties || SourceDatabase == null)
+                if (State == TemplateState.RestoringProperties)
                     continue;
 
                 //Many-To-One
@@ -371,7 +350,7 @@ namespace Generator.CSLA
 
                 ContextData.Add(entity.EntityKeyName, Constants.EditableRoot);
 
-                if (this.State == TemplateState.RestoringProperties || SourceDatabase == null)
+                if (State == TemplateState.RestoringProperties)
                     continue;
 
                 //Many-To-One
@@ -409,7 +388,7 @@ namespace Generator.CSLA
 
                 ContextData.Add(key, Constants.ReadOnlyChild);
 
-                if (this.State == TemplateState.RestoringProperties || SourceDatabase == null)
+                if (State == TemplateState.RestoringProperties)
                     continue;
 
                 //Many-To-One
@@ -447,7 +426,7 @@ namespace Generator.CSLA
 
                 ContextData.Add(key, Constants.ReadOnlyRoot);
 
-                if (this.State == TemplateState.RestoringProperties || SourceDatabase == null)
+                if (State == TemplateState.RestoringProperties)
                     continue;
 
                 //Many-To-One
@@ -485,7 +464,7 @@ namespace Generator.CSLA
 
                 ContextData.Add(entity.EntityKeyName, Constants.SwitchableObject);
 
-                if (this.State == TemplateState.RestoringProperties || SourceDatabase == null)
+                if (State == TemplateState.RestoringProperties)
                     continue;
 
                 //Many-To-One
@@ -508,10 +487,6 @@ namespace Generator.CSLA
             }
         }
 
-        #endregion
-
-        #region OnListEnitityChanged Methods
-
         private void OnDynamicRootListChanged()
         {
             CleanTemplateContextByValue(Constants.DynamicRootList);
@@ -529,7 +504,7 @@ namespace Generator.CSLA
 
                 ContextData.Add(key, Constants.DynamicRootList);
 
-                if (this.State == TemplateState.RestoringProperties || SourceDatabase == null)
+                if (State == TemplateState.RestoringProperties)
                     continue;
 
                 AddChildEntity(entity, false, true);
@@ -553,7 +528,7 @@ namespace Generator.CSLA
 
                 ContextData.Add(key, Constants.EditableRootList);
 
-                if (this.State == TemplateState.RestoringProperties || SourceDatabase == null)
+                if (State == TemplateState.RestoringProperties)
                     continue;
 
                 AddChildEntity(entity, false, true);
@@ -577,7 +552,7 @@ namespace Generator.CSLA
 
                 ContextData.Add(key, Constants.DynamicListBase);
 
-                if (this.State == TemplateState.RestoringProperties || SourceDatabase == null)
+                if (State == TemplateState.RestoringProperties)
                     continue;
 
                 AddChildEntity(entity, false, false);
@@ -601,7 +576,7 @@ namespace Generator.CSLA
 
                 ContextData.Add(key, Constants.EditableChildList);
 
-                if (this.State == TemplateState.RestoringProperties || SourceDatabase == null)
+                if (State == TemplateState.RestoringProperties)
                     continue;
 
                 AddChildEntity(entity, false, true);
@@ -623,7 +598,7 @@ namespace Generator.CSLA
 
                 ContextData.Add(key, Constants.ReadOnlyList);
 
-                if (this.State == TemplateState.RestoringProperties || SourceDatabase == null)
+                if (State == TemplateState.RestoringProperties)
                     continue;
 
                 AddChildEntity(entity, true, true);
@@ -645,32 +620,28 @@ namespace Generator.CSLA
 
                 ContextData.Add(key, Constants.ReadOnlyChildList);
 
-                if (this.State == TemplateState.RestoringProperties || SourceDatabase == null)
+                if (State == TemplateState.RestoringProperties)
                     continue;
 
                 AddChildEntity(entity, true, true);
             }
         }
 
-        #endregion
-
-        #region Helper Methods
-
-        private void UpdateTableCollections()
+        private void OnNameListChanged()
         {
-            if (DynamicRoot == null) DynamicRoot = new TableSchemaCollection();
-            if (EditableChild == null) EditableChild = new TableSchemaCollection();
-            if (EditableRoot == null) EditableRoot = new TableSchemaCollection();
-            if (ReadOnlyChild == null) ReadOnlyChild = new TableSchemaCollection();
-            if (ReadOnlyRoot == null) ReadOnlyRoot = new TableSchemaCollection();
-            if (SwitchableObject == null) SwitchableObject = new TableSchemaCollection();
+            CleanTemplateContextByValue(Constants.NameValueList);
 
-            if (DynamicListBase == null) DynamicListBase = new TableSchemaCollection();
-            if (DynamicRootList == null) DynamicRootList = new TableSchemaCollection();
-            if (EditableRootList == null) EditableRootList = new TableSchemaCollection();
-            if (EditableChildList == null) EditableChildList = new TableSchemaCollection();
-            if (ReadOnlyList == null) ReadOnlyList = new TableSchemaCollection();
-            if (ReadOnlyChildList == null) ReadOnlyChildList = new TableSchemaCollection();
+            foreach (var entity in NameValueListEntities)
+            {
+                string key = String.Format(Constants.ListFormat, entity.Name);
+
+                if (ContextData.Get(key) != null)
+                    ContextData.Remove(key);
+
+                ReadOnlyListEntities.Remove(entity);
+
+                ContextData.Add(key, Constants.NameValueList);
+            }
         }
 
         private void AddChildList(IEntity entity, bool readOnly, bool child)
@@ -680,9 +651,9 @@ namespace Generator.CSLA
 
             if (readOnly)
             {
-                if (ReadOnlyList.Count > 0 && ReadOnlyList.Contains(entity.SchemaName, entity.EntityKeyName))
+                if (ReadOnlyListEntities.Count > 0 && ReadOnlyListEntities.Contains(entity))
                     return;
-                if (ReadOnlyChildList.Count > 0 && ReadOnlyChildList.Contains(entity.SchemaName, entity.EntityKeyName))
+                if (ReadOnlyChildListEntities.Count > 0 && ReadOnlyChildListEntities.Contains(entity))
                     return;
 
                 if (child)
@@ -692,11 +663,11 @@ namespace Generator.CSLA
             }
             else
             {
-                if (DynamicRootList.Count > 0 && DynamicRootList.Contains(entity.SchemaName, entity.EntityKeyName))
+                if (DynamicRootListEntities.Count > 0 && DynamicRootListEntities.Contains(entity))
                     return;
-                if (EditableRootList.Count > 0 && EditableRootList.Contains(entity.SchemaName, entity.EntityKeyName))
+                if (EditableRootListEntities.Count > 0 && EditableRootListEntities.Contains(entity))
                     return;
-                if (EditableChildList.Count > 0 && EditableChildList.Contains(entity.SchemaName, entity.EntityKeyName))
+                if (EditableChildListEntities.Count > 0 && EditableChildListEntities.Contains(entity))
                     return;
                 if (child)
                     EditableChildListEntities.Add(entity);
@@ -711,9 +682,9 @@ namespace Generator.CSLA
 
             if (readOnly)
             {
-                if (ReadOnlyChild.Count > 0 && ReadOnlyChild.Contains(entity.SchemaName, entity.EntityKeyName))
+                if (ReadOnlyChildEntities.Count > 0 && ReadOnlyChildEntities.Contains(entity))
                     return;
-                if (ReadOnlyRoot.Count > 0 && ReadOnlyRoot.Contains(entity.SchemaName, entity.EntityKeyName))
+                if (ReadOnlyRootEntities.Count > 0 && ReadOnlyRootEntities.Contains(entity))
                     return;
 
                 if (child)
@@ -723,13 +694,13 @@ namespace Generator.CSLA
             }
             else
             {
-                if (DynamicRoot.Count > 0 && DynamicRoot.Contains(entity.SchemaName, entity.EntityKeyName))
+                if (DynamicRootEntities.Count > 0 && DynamicRootEntities.Contains(entity))
                     return;
-                if (EditableChild.Count > 0 && EditableChild.Contains(entity.SchemaName, entity.EntityKeyName))
+                if (EditableChildEntities.Count > 0 && EditableChildEntities.Contains(entity))
                     return;
-                if (EditableRoot.Count > 0 && EditableRoot.Contains(entity.SchemaName, entity.EntityKeyName))
+                if (EditableRootEntities.Count > 0 && EditableRootEntities.Contains(entity))
                     return;
-                if (SwitchableObject.Count > 0 && SwitchableObject.Contains(entity.SchemaName, entity.EntityKeyName))
+                if (SwitchableObjectEntities.Count > 0 && SwitchableObjectEntities.Contains(entity))
                     return;
 
                 if (child)
@@ -739,10 +710,8 @@ namespace Generator.CSLA
             }
         }
 
-
         private void CleanTemplateContextByValue(string value)
         {
-            UpdateTableCollections();
             List<string> keys = (from key in ContextData.AllKeys
                                  let contextValues = ContextData.GetValues(key)
                                  where contextValues != null && contextValues.Length > 0 && contextValues[0] == value
@@ -752,70 +721,86 @@ namespace Generator.CSLA
                 ContextData.Remove(key);
         }
 
-        #endregion
-
-        #endregion
-
-        #region Public Overriden Methods
-
-        public override void OnDatabaseChanged()
+        private Dictionary<string, IEntity> GetChildEntities(IEnumerable<IEntity> list)
         {
-            base.OnDatabaseChanged();
-
-            string basePath = Path.Combine(CodeSmith.Engine.Configuration.Instance.CodeSmithTemplatesDirectory,
-                                           Path.Combine("CSLA", SourceDatabase.Name));
-            if (Location == basePath)
-                Location = Path.Combine(Location, BusinessProjectName);
-
-            if (DynamicRoot.Count == 0 &&
-                EditableChild.Count == 0 &&
-                EditableRoot.Count == 0 &&
-                ReadOnlyChild.Count == 0 &&
-                ReadOnlyRoot.Count == 0 &&
-                SwitchableObject.Count == 0 &&
-                DynamicListBase.Count == 0 &&
-                DynamicRootList.Count == 0 &&
-                EditableRootList.Count == 0 &&
-                EditableChildList.Count == 0 &&
-                ReadOnlyList.Count == 0 &&
-                ReadOnlyChildList.Count == 0)
+            var entities = new Dictionary<string, IEntity>();
+            foreach (var entity in list)
             {
-                PopulateDefaultTables();
+                foreach (Association associationProperty in entity.Associations.Where(a => a.AssociationType == AssociationType.ManyToOne || a.AssociationType == AssociationType.ManyToZeroOrOne))
+                {
+                    foreach (AssociationProperty property in associationProperty.Properties)
+                    {
+                        if (!entities.ContainsKey(property.Property.Entity.EntityKeyName))
+                        {
+                            entities.Add(property.Property.Entity.EntityKeyName, property.Property.Entity);
+                        }
+                    }
+                }
+
+                foreach (Association associationProperty in entity.Associations.Where(a => a.AssociationType == AssociationType.OneToZeroOrOne))
+                {
+                    foreach (AssociationProperty property in associationProperty.Properties)
+                    {
+                        if (!entities.ContainsKey(property.Property.Entity.EntityKeyName))
+                        {
+                            entities.Add(property.Property.Entity.EntityKeyName, property.Property.Entity);
+                        }
+                    }
+                }
             }
 
+            return entities;
         }
 
-        public void PopulateDefaultTables()
+        private Dictionary<string, IEntity> GetListEntities(IEnumerable<IEntity> list)
         {
-            //EditableRoot
-            foreach (var entity in GetRootEntities())
+            var entities = new Dictionary<string, IEntity>();
+            foreach (var entity in list)
             {
-                if (!EditableRoot.Contains(entity.SchemaName, entity.EntityKeyName))
-                    EditableRootEntities.Add(entity);
+                foreach (Association associationProperty in entity.Associations.Where(a => a.AssociationType == AssociationType.OneToMany || a.AssociationType == AssociationType.ManyToOne))
+                {
+                    foreach (AssociationProperty property in associationProperty.Properties)
+                    {
+                        if (!entities.ContainsKey(property.Property.Entity.EntityKeyName))
+                        {
+                            entities.Add(property.Property.Entity.EntityKeyName, property.Property.Entity);
+                        }
+                    }
+                }
             }
 
-            //EditableChild
-            foreach (var entity in GetChildEntities().Values)
-            {
-                if (!EditableChild.Contains(entity.SchemaName, entity.EntityKeyName))
-                    EditableChildEntities.Add(entity);
-            }
-
-            //EditableChild
-            foreach (var entity in GetExcludedEntities())
-            {
-                if (!EditableChild.Contains(entity.SchemaName, entity.EntityKeyName))
-                    EditableChildEntities.Add(entity);
-            }
-
-            //EditableChildList
-            foreach (var entity in GetListEntities().Values)
-            {
-                if (!EditableChildList.Contains(entity.SchemaName, entity.EntityKeyName))
-                    EditableChildListEntities.Add(entity);
-            }
+            return entities;
         }
 
-        #endregion
+        private IEnumerable<IEntity> GetRootEntities(IEnumerable<IEntity> list)
+        {
+            var entities = new Dictionary<string, IEntity>();
+            foreach (var entity in list)
+            {
+                if (entity.Associations.Count(a => a.AssociationType == AssociationType.ManyToOne) == 0)
+                {
+                    if (!entities.ContainsKey(entity.EntityKeyName))
+                    {
+                        entities.Add(entity.EntityKeyName, entity);
+                    }
+                }
+            }
+
+            return entities.Values;
+        }
+
+        private IEnumerable<IEntity> GetExcludedEntities(List<IEntity> list)
+        {
+            if(list == null)
+                return new List<IEntity>();
+
+            var excludedEntities = GetChildEntities(list);
+            if (excludedEntities == null || excludedEntities.Count == 0)
+                return list;
+
+            return from entity in list
+                   where !excludedEntities.ContainsKey(entity.EntityKeyName)
+                   select entity;
+        }
     }
 }

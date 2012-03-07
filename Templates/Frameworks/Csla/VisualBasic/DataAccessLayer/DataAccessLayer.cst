@@ -1,5 +1,5 @@
 ﻿<%-- Author: Blake Niemyjski --%>
-<%@ CodeTemplate Language="VB" TargetLanguage="VB" OutputType="None" Inherits="Generator.CSLA.DataAccessCodeTemplate" %>
+<%@ CodeTemplate Language="VB" TargetLanguage="VB" OutputType="None" Inherits="Generator.CSLA.QuickStartCodeTemplate" %>
 <%@ Register Name="ObjectFactory" Template="Internal\ObjectFactory.cst" MergeProperties="False" ExcludeProperties="" %>
 <%@ Register Name="ObjectFactoryDataAccess" Template="Internal\ObjectFactory.DataAccess.cst" MergeProperties="False" ExcludeProperties="" %>
 <%@ Register Name="ObjectFactoryDataAccessParameterized" Template="Internal\ObjectFactory.DataAccess.ParameterizedSQL.cst" MergeProperties="False" ExcludeProperties="" %>

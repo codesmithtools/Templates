@@ -39,9 +39,9 @@ using Csla.Data;
 using System.Data.SqlClient;
 <% } %>
 <% if(IsLatestCSLA) { %>
-Imports Csla.Rules
+using Csla.Rules
 <% } else { %>
-Imports Csla.Validation
+using Csla.Validation
 <% } %>
 
 namespace <%= BusinessProjectName %>

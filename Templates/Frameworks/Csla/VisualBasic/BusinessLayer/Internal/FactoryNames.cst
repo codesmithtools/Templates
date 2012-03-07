@@ -1,5 +1,5 @@
 ﻿<%-- Author: Blake Niemyjski --%>
-<%@ CodeTemplate Language="VB" TargetLanguage="VB" Inherits="Generator.CSLA.EntityMasterCodeTemplate" %>
+<%@ CodeTemplate Language="VB" TargetLanguage="VB" Inherits="Generator.CSLA.QuickStartCodeTemplate" %>
 <%@ Property Name="BusinessProjectName" Type="System.String" Optional="False" Category="3. Business Project" Description="The namespace for the business project." %>
 <%@ Property Name="DataProjectName" Type="System.String" Optional="False" Category="4. Data Project" Description="The namespace for the data project." %>
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\..\Common" %>

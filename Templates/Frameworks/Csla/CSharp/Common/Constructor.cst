@@ -43,10 +43,9 @@
             Map(DataSource);
 <% if(RenderOptionalContent) { %>
             MarkAsChild();  
-<% } %>
+<% } } %>
 <% if(IncludeSilverlightSupport) { %>
 #endif
-<% } } %>
+<% } %>
 
         #endregion
-

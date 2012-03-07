@@ -12,31 +12,22 @@
 //------------------------------------------------------------------------------
 
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Text.RegularExpressions;
 using CodeSmith.Engine;
 using CodeSmith.SchemaHelper;
-
-using SchemaExplorer;
-
+using Generator.CSLA.CodeTemplates;
 using Configuration=CodeSmith.SchemaHelper.Configuration;
 using StringCollection=CodeSmith.CustomProperties.StringCollection;
 
 namespace Generator.CSLA
 {
-    public class QuickStartCodeTemplate : CSLABaseTemplate
+    public class QuickStartCodeTemplate : DatabaseEntitiesCodeTemplate
     {
-        #region Private Member(s)
-
-        private DatabaseSchema _database;
         private string _solutionName; 
         private DataAccessMethod _dataAccessImplementation;
-
-        #endregion
 
         #region Constructor(s)
 
@@ -56,43 +47,16 @@ namespace Generator.CSLA
         #region 1. DataSource
 
         [Category("1. DataSource")]
-        [Description("Source Database")]
-        public DatabaseSchema SourceDatabase
-        {
-            get
-            {
-                return _database;
-            }
-            set
-            {
-                if (value != null)
-                {
-                    _database = value;
-                    if (!_database.DeepLoad)
-                    {
-                        _database.DeepLoad = true;
-                        _database.Refresh();
-                    }
-                
-                    OnDatabaseChanged();
-                }
-            }
-        }
-
-        [Category("1. DataSource")]
         [Description("List of regular expressions to clean table, view and column names.")]
         [Optional]
         [DefaultValue("^(sp|tbl|udf|vw)_")]
-        public CodeSmith.CustomProperties.StringCollection CleanExpressions { get; set; }
+        public StringCollection CleanExpressions { get; set; }
 
         [Category("1. DataSource")]
         [Description("List of regular expressions to ignore tables when generating.")]
         [Optional]
         [DefaultValue("sysdiagrams$")]
-        public CodeSmith.CustomProperties.StringCollection IgnoreExpressions { get; set; }
-
-        [Browsable(false)]
-        public IEnumerable<IEntity> Entities { get; set; }
+        public StringCollection IgnoreExpressions { get; set; }
 
         [Optional]
         [Category("1. DataSource")]
@@ -291,89 +255,6 @@ namespace Generator.CSLA
         {
         }
 
-        public Dictionary<string, IEntity> GetChildEntities()
-        {
-            var entities = new Dictionary<string, IEntity>();
-
-            foreach (var entity in Entities)
-            {
-                foreach (Association associationProperty in entity.Associations.Where(a => a.AssociationType == AssociationType.ManyToOne || a.AssociationType == AssociationType.ManyToZeroOrOne))
-                {
-                    foreach (AssociationProperty property in associationProperty.Properties)
-                    {
-                        if (!entities.ContainsKey(property.Property.Entity.EntityKeyName))
-                        {
-                            entities.Add(property.Property.Entity.EntityKeyName, property.Property.Entity);
-                        }
-                    }
-                }
-
-                foreach (Association associationProperty in entity.Associations.Where(a => a.AssociationType == AssociationType.OneToZeroOrOne))
-                {
-                    foreach (AssociationProperty property in associationProperty.Properties)
-                    {
-                        if (!entities.ContainsKey(property.Property.Entity.EntityKeyName))
-                        {
-                            entities.Add(property.Property.Entity.EntityKeyName, property.Property.Entity);
-                        }
-                    }
-                }
-            }
-
-            return entities;
-        }
-
-        public Dictionary<string, IEntity> GetListEntities()
-        {
-            var entities = new Dictionary<string, IEntity>();
-
-            foreach (var entity in Entities)
-            {
-                foreach (Association associationProperty in entity.Associations.Where(a => a.AssociationType == AssociationType.OneToMany || a.AssociationType == AssociationType.ManyToOne))
-                {
-                    foreach (AssociationProperty property in associationProperty.Properties)
-                    {
-                        if (!entities.ContainsKey(property.Property.Entity.EntityKeyName))
-                        {
-                            entities.Add(property.Property.Entity.EntityKeyName, property.Property.Entity);
-                        }
-                    }
-                }
-            }
-
-            return entities;
-        }
-
-        public IEnumerable<IEntity> GetRootEntities()
-        {
-            var entities = new Dictionary<string, IEntity>();
-
-            foreach (var entity in Entities)
-            {
-                if (entity.Associations.Count(a => a.AssociationType == AssociationType.ManyToOne) == 0)
-                {
-                    if (!entities.ContainsKey(entity.EntityKeyName))
-                    {
-                        entities.Add(entity.EntityKeyName, entity);
-                    }
-                }
-            }
-
-            return entities.Values;
-        }
-
-        public IEnumerable<IEntity> GetExcludedEntities()
-        {
-            var excludedEntities = GetChildEntities();
-
-            if(excludedEntities == null || excludedEntities.Count == 0)
-                return Entities;
-
-            return from entity in Entities
-                   where !excludedEntities.ContainsKey(entity.EntityKeyName)
-                    select entity;
-        }
-
         #endregion
 
         #region Private Method(s)
@@ -414,11 +295,7 @@ namespace Generator.CSLA
                 }
             }
 
-            using (TemplateContext.SetContext(this))
-            {
-                var provider = new SchemaExplorerEntityProvider(SourceDatabase);
-                Entities = new EntityManager(provider).Entities;
-            }
+            base.OnDatabaseChanged();
 
             //if (string.IsNullOrEmpty(DataClassName))
             //    DataClassName = "DataAccessLayer";
