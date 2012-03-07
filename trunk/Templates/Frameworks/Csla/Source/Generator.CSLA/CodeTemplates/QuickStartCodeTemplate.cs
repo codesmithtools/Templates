@@ -266,7 +266,7 @@ namespace Generator.CSLA
             { }
         }
 
-        public virtual void OnDatabaseChanged()
+        public override void OnDatabaseChanged()
         {
             if (CleanExpressions.Count == 0)
                 CleanExpressions.Add("^(sp|tbl|udf|vw)_");
