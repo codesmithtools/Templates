@@ -41,6 +41,6 @@
     <% End If %>
 <% If(IncludeSilverlightSupport) Then %>
 #End If
-    <% End If %>
+<% End If %>
 
 #End Region

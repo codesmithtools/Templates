@@ -38,7 +38,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\Libraries\bin\CodeSmith.Core.dll</HintPath>
     </Reference>
-    <Reference Include="CodeSmith.SchemaHelper, Version=3.0.0.0, Culture=neutral, processorArchitecture=MSIL" />
+    <Reference Include="CodeSmith.SchemaHelper, Version=3.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\Libraries\CodeSmith.SchemaHelper.dll</HintPath>
+    </Reference>
     <Reference Include="SchemaExplorer">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\Libraries\AddIns\SchemaExplorer.dll</HintPath>

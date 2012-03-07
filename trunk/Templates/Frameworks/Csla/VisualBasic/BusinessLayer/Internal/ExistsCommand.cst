@@ -1,5 +1,5 @@
 ﻿<%-- Author: Blake Niemyjski --%>
-<%@ CodeTemplate Language="VB" TargetLanguage="VB" Inherits="Generator.CSLA.EntityMasterCodeTemplate" %>
+<%@ CodeTemplate Language="VB" TargetLanguage="VB" Inherits="Generator.CSLA.QuickStartCodeTemplate" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\..\Common" %>
 <%@ Assembly Name="Generator.CSLA" Path="..\..\..\Common" %>
 <%@ Import Namespace="CodeSmith.SchemaHelper" %>
@@ -96,10 +96,10 @@ Namespace <%= BusinessProjectName %>
     
 #End Region
 
-#Region "Factory Methods"
 <% If(IncludeSilverlightSupport) Then %>
 #If Not SILVERLIGHT Then
 <% End If %>
+#Region "Factory Methods"
 
         Public Shared Function Execute(Of T As IGeneratedCriteria)(ByVal criteria As T) As Boolean
             If Not CanExecuteCommand() Then
@@ -113,10 +113,6 @@ Namespace <%= BusinessProjectName %>
     
             Return cmd.Result
         End Function
-
-<% If(IncludeSilverlightSupport) Then %>
-#End If
-<% End If %>
 
         Public Shared Sub Execute(Of T As IGeneratedCriteria)(ByVal criteria As T, ByVal handler As EventHandler(Of DataPortalResult(Of ExistsCommand)))
             If Not CanExecuteCommand() Then
@@ -135,9 +131,6 @@ Namespace <%= BusinessProjectName %>
     
 #Region "Data Access"
 
-<% If(IncludeSilverlightSupport) Then %>
-#If Not SILVERLIGHT Then
-<% End If %>
         Protected Overloads Overrides Sub DataPortal_Execute()
             Dim commandText As String = String.Format("SELECT COUNT(1) FROM {0} {1}", Criteria.TableFullName, ADOHelper.BuildWhereStatement(Criteria.StateBag))
             Using connection As New SqlConnection(ADOHelper.ConnectionString)
@@ -148,9 +141,6 @@ Namespace <%= BusinessProjectName %>
                 End Using
             End Using
         End Sub
-<% If(IncludeSilverlightSupport) Then %>
-#End If
-<% End If %>
 
 #End Region
 <% If(IncludeSilverlightSupport) Then %>
@@ -177,6 +167,8 @@ Namespace <%= BusinessProjectName %>
             Criteria = DirectCast(formatter.GetObject(criteriaData.ReferenceId), IGeneratedCriteria)
         End Sub
 #End Region
+
+#End If
 <% End If %>
     End Class
 End Namespace

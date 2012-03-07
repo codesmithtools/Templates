@@ -1,5 +1,5 @@
 ﻿<%-- Author: Blake Niemyjski --%>
-<%@ CodeTemplate Language="C#" TargetLanguage="C#" OutputType="None" Inherits="Generator.CSLA.EntityMasterCodeTemplate" Debug="True" %>
+<%@ CodeTemplate Language="C#" TargetLanguage="C#" OutputType="None" Inherits="Generator.CSLA.QuickStartCodeTemplate" %>
 <%@ Register Name="CommandObjectTemplate" Template="CommandObject.cst" %>
 <%@ Register Name="CriteriaTemplate" Template="Criteria.cst" %>
 <%@ Register Name="DynamicListBaseTemplate" Template="DynamicListBase.cst" %>

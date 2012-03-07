@@ -37,6 +37,10 @@
       <Project>{29F4357A-A92D-458F-A266-A7231E75DA52}</Project>
       <Name>CodeSmith.SchemaHelper</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Source\Generator.QuickStart\Generator.QuickStart.csproj">
+      <Project>{2143D00C-842D-4B62-82E9-95D262A6F88E}</Project>
+      <Name>Generator.QuickStart</Name>
+    </ProjectReference>
     <ProjectReference Include="..\CodeSmith.SchemaHelper.CSharpExtensions\CodeSmith.SchemaHelper.CSharpExtensions.csproj">
       <Project>{41C50564-90B5-4566-946E-0C0513E7F2EB}</Project>
       <Name>CodeSmith.SchemaHelper.CSharpExtensions</Name>
@@ -69,17 +73,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Base\CSLABaseTemplate.cs" />
-    <Compile Include="CSLASchemaExplorerEntityProvider.cs" />
+    <Compile Include="CodeTemplates\CSLABaseTemplate.cs" />
+    <Compile Include="CodeTemplates\DatabaseEntitiesCodeTemplate.cs" />
+    <Compile Include="CodeTemplates\EntitiesCodeTemplate.cs" />
+    <Compile Include="CSLAEntityProvider.cs" />
     <Compile Include="Util\Constants.cs" />
-    <Compile Include="DataAccessCodeTemplate.cs" />
-    <Compile Include="DataCodeTemplate.cs" />
-    <Compile Include="EntityCodeTemplate.cs" />
-    <Compile Include="EntityMasterCodeTemplate.cs" />
-    <Compile Include="Enums.cs" />
-    <Compile Include="InterfaceCodeTemplate.cs" />
+    <Compile Include="CodeTemplates\DataCodeTemplate.cs" />
+    <Compile Include="CodeTemplates\EntityCodeTemplate.cs" />
+    <Compile Include="Util\Enums.cs" />
+    <Compile Include="CodeTemplates\InterfaceCodeTemplate.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="QuickStartCodeTemplate.cs" />
+    <Compile Include="CodeTemplates\QuickStartCodeTemplate.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

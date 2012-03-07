@@ -30,7 +30,9 @@
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="CodeSmith.SchemaHelper, Version=3.0.0.0, Culture=neutral, processorArchitecture=MSIL" />
+    <Reference Include="CodeSmith.SchemaHelper, Version=3.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\Libraries\CodeSmith.SchemaHelper.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
