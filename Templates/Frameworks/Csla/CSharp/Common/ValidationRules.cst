@@ -23,13 +23,13 @@
 <% if(IsLatestCSLA) { %>
             BusinessRules.AddRule(new Csla.Rules.CommonRules.Required(<%= property.PrivateMemberVariableName %>Property));
 <% } else { %>
-            ValidationRules.AddRule(CommonRules.StringRequired, <%= property.PrivateMemberVariableName %>Property);
+            ValidationRules.AddRule(Csla.Validation.CommonRules.StringRequired, <%= property.PrivateMemberVariableName %>Property);
 <% } }
 if(!property.ExcludeBusinessSizeRule()) { %>
 <% if(IsLatestCSLA) { %>
             BusinessRules.AddRule(new Csla.Rules.CommonRules.MaxLength(<%= property.PrivateMemberVariableName %>Property, <%= property.Size %>));
 <% } else { %>
-            ValidationRules.AddRule(CommonRules.StringMaxLength, new CommonRules.MaxLengthRuleArgs(<%= property.PrivateMemberVariableName %>Property, <%= property.Size %>));
+            ValidationRules.AddRule(Csla.Validation.CommonRules.StringMaxLength, new Csla.Validation.CommonRules.MaxLengthRuleArgs(<%= property.PrivateMemberVariableName %>Property, <%= property.Size %>));
 <% } } } } %>
         }
 

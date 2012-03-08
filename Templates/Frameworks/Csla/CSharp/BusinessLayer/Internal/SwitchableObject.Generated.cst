@@ -39,9 +39,9 @@ using Csla.Data;
 using System.Data.SqlClient;
 <% } %>
 <% if(IsLatestCSLA) { %>
-using Csla.Rules
+using Csla.Rules;
 <% } else { %>
-using Csla.Validation
+using Csla.Validation;
 <% } %>
 
 namespace <%= BusinessProjectName %>
@@ -257,7 +257,7 @@ namespace <%= BusinessProjectName %>
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="cancel">Value returned from the method indicating whether the object insertion should proceed.</param>
-        partial void OnChildInserting(var connection, ref bool cancel);
+        partial void OnChildInserting(SqlConnection connection, ref bool cancel);
 
         /// <summary>
         /// Codesmith generated stub method that is called after the child <see cref="<%=ChildBusinessClassName%><%= Entity.GenericProperty %>"/> object has been inserted. 
@@ -275,7 +275,7 @@ namespace <%= BusinessProjectName %>
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="cancel">Value returned from the method indicating whether the object creation should proceed.</param>
-        partial void OnChildUpdating(var connection, ref bool cancel);
+        partial void OnChildUpdating(SqlConnection connection, ref bool cancel);
 
         /// <summary>
         /// Codesmith generated stub method that is called after the child <see cref="<%=ChildBusinessClassName%><%= Entity.GenericProperty %>"/> object has been updated. 
