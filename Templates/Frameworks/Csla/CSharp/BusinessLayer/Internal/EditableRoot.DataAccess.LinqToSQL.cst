@@ -43,7 +43,6 @@ namespace <%= BusinessProjectName %>
         /// <summary>
         /// Instantiates a CSLA editable root business object of type <see cref="<%=BusinessClassName%><%= Entity.GenericProperty %>"/>. 
         /// </summary>
-        /// <returns></returns>        
         [RunLocal]
         protected override void DataPortal_Create()
         {

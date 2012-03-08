@@ -35,11 +35,10 @@ namespace <%= BusinessProjectName %>
 {
     public partial class <%= BusinessClassName %><%= Entity.GenericProperty %>
     {
-        [RunLocal()]
         /// <summary>
         /// Instantiates a CSLA editable child business object of type <see cref="<%=BusinessClassName%><%= Entity.GenericProperty %>"/>. 
         /// </summary>
-        /// <returns></returns>
+        [RunLocal()]
         protected override void Child_Create()
         {
 <% RenderHelper(new ChildCreate()); %>

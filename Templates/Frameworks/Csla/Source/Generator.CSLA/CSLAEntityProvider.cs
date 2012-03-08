@@ -45,12 +45,13 @@ namespace Generator.CSLA
 
         public void Load()
         {
-            var entitiesTo = new List<string>();
             foreach (var entity in _entities)
             {
-                if (entity is TableEntity && _tablesToKeep.Contains(((TableEntity)entity).EntitySource))
+                if (entity is TableEntity)
                 {
-                    EntityStore.Instance.EntityCollection.Add(entity.EntityKey(), entity);
+                    if (_tablesToKeep.Contains(((TableEntity)entity).EntitySource))
+                        EntityStore.Instance.EntityCollection.Add(entity.EntityKey(), entity);
+
                     continue;
                 }
 

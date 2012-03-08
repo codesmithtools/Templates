@@ -15,12 +15,10 @@ using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
-using System.Text.RegularExpressions;
 using CodeSmith.Engine;
 using CodeSmith.SchemaHelper;
 using Generator.CSLA.CodeTemplates;
 using Configuration=CodeSmith.SchemaHelper.Configuration;
-using StringCollection=CodeSmith.CustomProperties.StringCollection;
 
 namespace Generator.CSLA
 {
@@ -37,55 +35,6 @@ namespace Generator.CSLA
             LaunchVisualStudio = true;
             UseLazyLoading = true;
             FrameworkVersion = FrameworkVersion.v40;
-
-            CleanExpressions = new StringCollection();
-            IgnoreExpressions = new StringCollection();
-        }
-
-        #endregion
-
-        #region 1. DataSource
-
-        [Category("1. DataSource")]
-        [Description("List of regular expressions to clean table, view and column names.")]
-        [Optional]
-        [DefaultValue("^(sp|tbl|udf|vw)_")]
-        public StringCollection CleanExpressions { get; set; }
-
-        [Category("1. DataSource")]
-        [Description("List of regular expressions to ignore tables when generating.")]
-        [Optional]
-        [DefaultValue("sysdiagrams$")]
-        public StringCollection IgnoreExpressions { get; set; }
-
-        [Optional]
-        [Category("1. DataSource")]
-        [Description("Include views that have an extended property declaring it's business type")]
-        public bool IncludeViews
-        {
-            get
-            {
-                return Configuration.Instance.IncludeViews;
-            }
-            set
-            {
-                Configuration.Instance.IncludeViews = value;
-            }
-        }
-
-        [Optional]
-        [Category("1. DataSource")]
-        [Description("Include stored procedures that have an extended property declaring it's business type")]
-        public bool IncludeFunctions
-        {
-            get
-            {
-                return Configuration.Instance.IncludeFunctions;
-            }
-            set
-            {
-                Configuration.Instance.IncludeFunctions = value;
-            }
         }
 
         #endregion
@@ -195,14 +144,8 @@ namespace Generator.CSLA
         [DefaultValue("@p_")]
         public string ParameterPrefix
         {
-            get
-            {
-                return Configuration.Instance.ParameterPrefix;
-            }
-            set
-            {
-                Configuration.Instance.ParameterPrefix = value;
-            }
+            get { return Configuration.Instance.ParameterPrefix; }
+            set { Configuration.Instance.ParameterPrefix = value; }
         }
 
         [Category("4. Data Project")]
@@ -268,33 +211,6 @@ namespace Generator.CSLA
 
         public override void OnDatabaseChanged()
         {
-            if (CleanExpressions.Count == 0)
-                CleanExpressions.Add("^(sp|tbl|udf|vw)_");
-
-            if (IgnoreExpressions.Count == 0)
-            {
-                IgnoreExpressions.Add("sysdiagrams$");
-                IgnoreExpressions.Add("^dbo.aspnet");
-            }
-
-            Configuration.Instance.CleanExpressions.Clear();
-            foreach (string clean in CleanExpressions)
-            {
-                if (!string.IsNullOrEmpty(clean))
-                {
-                    Configuration.Instance.CleanExpressions.Add(new Regex(clean, RegexOptions.IgnoreCase));
-                }
-            }
-
-            Configuration.Instance.IgnoreExpressions.Clear();
-            foreach (string ignore in IgnoreExpressions)
-            {
-                if (!string.IsNullOrEmpty(ignore))
-                {
-                    Configuration.Instance.IgnoreExpressions.Add(new Regex(ignore, RegexOptions.IgnoreCase));
-                }
-            }
-
             base.OnDatabaseChanged();
 
             //if (string.IsNullOrEmpty(DataClassName))
