@@ -4,14 +4,15 @@
 * Description: This template will generate standard CRUD stored procedures for a given database table.
 --------------------------------------------------------------------------------------------------------------%>
 <%@ CodeTemplate Language="C#"  TargetLanguage="T-SQL" Inherits="Generator.CSLA.DataCodeTemplate" %>
+<%@ Property Name="IncludeInsert" Type="System.Boolean" Default="True" %>
+<%@ Property Name="IncludeUpdate" Type="System.Boolean" Default="True" %>
+<%@ Property Name="IncludeDelete" Type="System.Boolean" Default="True" %>
 <%@ Assembly Name="CodeSmith.BaseTemplates" %>
 <%@ Assembly Name="CodeSmith.CustomProperties" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\..\Common" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper.CSharpExtensions" Path="..\..\..\Common" %>
 <%@ Assembly Name="Generator.CSLA" Path="..\..\..\Common" %>
-
 <%@ Assembly Name="System.Data" %>
-
 <%@ Import Namespace="System.Collections.Generic" %>
 <%@ Import Namespace="System.Data" %>
 <%@ Import Namespace="System.Text.RegularExpressions" %>
@@ -28,9 +29,15 @@ if (!Entity.HasKey)
 Response.WriteLine("--region Drop Existing Procedures");
 Response.WriteLine("");
 
-GenerateDropStatement(GetInsertStoredProcedureShortName());
-GenerateDropStatement(GetUpdateStoredProcedureShortName());
-GenerateDropStatement(GetDeleteStoredProcedureShortName());
+if(IncludeInsert)
+    GenerateDropStatement(GetInsertStoredProcedureShortName());
+
+if(IncludeUpdate)
+    GenerateDropStatement(GetUpdateStoredProcedureShortName());
+
+if(IncludeDelete) 
+    GenerateDropStatement(GetDeleteStoredProcedureShortName());
+
 GenerateDropStatement(GetSelectStoredProcedureShortName());
 
 Response.WriteLine("--endregion");
@@ -38,6 +45,7 @@ Response.WriteLine("");
 Response.WriteLine("GO");
 Response.WriteLine("");
 %>
+<% if(IncludeInsert) { %>
 <%------------------------------------------------------------------------------------------
 *
 * Insert Procedure
@@ -171,6 +179,8 @@ DROP TABLE #tmpErrors
 GO
 
 <% GenerateProcedureFooter(GetInsertStoredProcedureName()); %>
+<% } %>
+<% if(IncludeUpdate) { %>
 <%------------------------------------------------------------------------------------------
 *
 * Update Procedure
@@ -242,9 +252,9 @@ GO
 DROP TABLE #tmpErrors
 GO
 
-<%
-    GenerateProcedureFooter(GetUpdateStoredProcedureName());
-%>
+<% GenerateProcedureFooter(GetUpdateStoredProcedureName()); %>
+<% } %>
+<% if(IncludeDelete) { %>
 <%------------------------------------------------------------------------------------------
 *
 * Delete Procedure
@@ -307,9 +317,8 @@ GO
 DROP TABLE #tmpErrors
 GO
 
-<%
-    GenerateProcedureFooter(GetDeleteStoredProcedureName());
-%>
+<% GenerateProcedureFooter(GetDeleteStoredProcedureName()); %>
+<% } %>
 <%------------------------------------------------------------------------------------------
 *
 * Select Procedure
@@ -377,9 +386,7 @@ GO
 DROP TABLE #tmpErrors
 GO
 
-<%
-    GenerateProcedureFooter(GetSelectStoredProcedureName());
-%>
+<% GenerateProcedureFooter(GetSelectStoredProcedureName()); %>
 <script runat="template">
 #region IProperty Variables
 private StringCollection _droppedProcedureNames = new StringCollection();

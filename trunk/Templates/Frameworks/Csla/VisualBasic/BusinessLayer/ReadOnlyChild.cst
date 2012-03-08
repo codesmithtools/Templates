@@ -29,13 +29,8 @@ ElseIf DataAccessImplementation = DataAccessMethod.ParameterizedSQL Then
 ElseIf DataAccessImplementation = DataAccessMethod.StoredProcedures Then
     RenderToFileHelper(Of ReadOnlyChildDataAccessStoredProcedures)(fileName, parentFileName, True)
 
-    'StoredProcedures
     fileName = System.IO.Path.Combine(Location, String.Format("Entities\{0}.StoredProcedures.sql", BusinessClassName))
-    Dim sqlStoredProcedures As SqlStoredProcedures = Me.Create(Of SqlStoredProcedures)()
-    Me.CopyPropertiesTo(sqlStoredProcedures, True)
-    sqlStoredProcedures.DataProjectName = "Not needed for sql stored procedures."
-
-    sqlStoredProcedures.RenderToFile(fileName, parentFileName, True)
+    RenderProceduresToFileHelper(Of SqlStoredProcedures)(fileName, parentFileName, True, True, False)
 End If
 
 End Sub

@@ -830,6 +830,28 @@ namespace Generator.CSLA
             template.RenderToFile(filePath, dependentUpon, overwrite);
         }
 
+        public void RenderProceduresToFileHelper<T>(string filePath, string dependentUpon, bool overwrite) where T : DataCodeTemplate, new()
+        {
+            RenderProceduresToFileHelper<T>(filePath, dependentUpon, overwrite, false, false);
+        }
+
+        public void RenderProceduresToFileHelper<T>(string filePath, string dependentUpon, bool overwrite, bool readOnly, bool collection) where T : DataCodeTemplate, new()
+        {
+            if (!Entity.HasKey)
+                return;
+
+            if(Entity is CommandEntity || Entity is ViewEntity)
+                return;
+
+            var template = this.Create<T>();
+            CopyPropertiesTo(template, true, PropertyIgnoreList);
+            template.DataProjectName = "Not needed for sql stored procedures.";
+            template.SetProperty("IncludeInsert", Entity.CanInsert && !readOnly && !collection);
+            template.SetProperty("IncludeUpdate", Entity.CanUpdate && !readOnly && !collection);
+            template.SetProperty("IncludeDelete", Entity.CanDelete && !readOnly && !collection);
+
+            template.RenderToFile(filePath, dependentUpon, overwrite);
+        }
         #endregion
     }
 }

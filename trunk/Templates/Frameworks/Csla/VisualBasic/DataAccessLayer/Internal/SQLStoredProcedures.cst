@@ -4,14 +4,15 @@
 * Description: This template will generate standard CRUD stored procedures for a given database table.
 --------------------------------------------------------------------------------------------------------------%>
 <%@ CodeTemplate Language="VB"  TargetLanguage="T-SQL"  Inherits="Generator.CSLA.DataCodeTemplate" %>
+<%@ Property Name="IncludeInsert" Type="System.Boolean" Default="True" %>
+<%@ Property Name="IncludeUpdate" Type="System.Boolean" Default="True" %>
+<%@ Property Name="IncludeDelete" Type="System.Boolean" Default="True" %>
 <%@ Assembly Name="CodeSmith.BaseTemplates" %>
 <%@ Assembly Name="CodeSmith.CustomProperties" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\..\Common" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper.VisualBasicExtensions" Path="..\..\..\Common" %>
 <%@ Assembly Name="Generator.CSLA" Path="..\..\..\Common" %>
-
 <%@ Assembly Name="System.Data" %>
-
 <%@ Import Namespace="System.Collections.Generic" %>
 <%@ Import Namespace="System.Data" %>
 <%@ Import Namespace="System.Text.RegularExpressions" %>
@@ -29,9 +30,18 @@ End If
 Response.WriteLine("--region Drop Existing Procedures")
 Response.WriteLine("")
 
-GenerateDropStatement(GetInsertStoredProcedureShortName())
-GenerateDropStatement(GetUpdateStoredProcedureShortName())
-GenerateDropStatement(GetDeleteStoredProcedureShortName())
+If (IncludeInsert) Then
+	GenerateDropStatement(GetInsertStoredProcedureShortName())
+End If
+
+If (IncludeUpdate) Then
+	GenerateDropStatement(GetUpdateStoredProcedureShortName())
+End If
+
+If (IncludeDelete) Then
+	GenerateDropStatement(GetDeleteStoredProcedureShortName())
+End If
+
 GenerateDropStatement(GetSelectStoredProcedureShortName())
 
 Response.WriteLine("--endregion")
@@ -39,6 +49,7 @@ Response.WriteLine("")
 Response.WriteLine("GO")
 Response.WriteLine("")
 %>
+<% If (IncludeInsert) Then %>
 <%------------------------------------------------------------------------------------------
 *
 * Insert Procedure
@@ -171,6 +182,8 @@ DROP TABLE #tmpErrors
 GO
 
 <% GenerateProcedureFooter(GetInsertStoredProcedureName()) %>
+<% End If %>
+<% If (IncludeUpdate) Then %>
 <%------------------------------------------------------------------------------------------
 *
 * Update Procedure
@@ -242,9 +255,9 @@ GO
 DROP TABLE #tmpErrors
 GO
 
-<%
-    GenerateProcedureFooter(GetUpdateStoredProcedureName())
-%>
+<% GenerateProcedureFooter(GetUpdateStoredProcedureName()) %>
+<% End If %>
+<% If (IncludeDelete) Then %>
 <%------------------------------------------------------------------------------------------
 *
 * Delete Procedure
@@ -307,9 +320,8 @@ GO
 DROP TABLE #tmpErrors
 GO
 
-<%
-    GenerateProcedureFooter(GetDeleteStoredProcedureName())
-%>
+<% GenerateProcedureFooter(GetDeleteStoredProcedureName()) %>
+<% End If %>
 <%------------------------------------------------------------------------------------------
 *
 * Select Procedure
@@ -377,17 +389,11 @@ GO
 DROP TABLE #tmpErrors
 GO
 
-
-<%
-    GenerateProcedureFooter(GetSelectStoredProcedureName())
-%>
+<% GenerateProcedureFooter(GetSelectStoredProcedureName()) %>
 <script runat="template">
-#Region "IProperty Variables"
+
 Private _droppedProcedureNames As New StringCollection()
 Private _generatedProcedureNames As New StringCollection()
-#End Region
-
-#Region "Isolation Level"
 
 Public Sub GenerateSetTransactionIsolationLevelStatement(ByVal isolationLevel As TransactionIsolationLevelEnum)
     Response.Write("SET TRANSACTION ISOLATION LEVEL ")
@@ -415,7 +421,6 @@ Public Sub GenerateSetTransactionIsolationLevelStatement(ByVal isolationLevel As
         End If
     End Select
 End Sub
-#End Region
 
 #Region "Code Generation Helpers"
 

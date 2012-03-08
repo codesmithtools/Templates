@@ -1215,31 +1215,6 @@
             This class aids in the resolving of Types from the CodeSmith Generator into .NET related types as well.
             </summary>
         </member>
-        <member name="M:CodeSmith.SchemaHelper.Util.TypeHelper.ResolveSystemType(SchemaExplorer.IDataObject)">
-            <summary>
-            
-            </summary>
-            <param name="column"></param>
-            <returns></returns>
-        </member>
-        <member name="M:CodeSmith.SchemaHelper.Util.TypeHelper.ResolveSystemType(System.String,System.Boolean,System.Boolean)">
-            <summary>
-            
-            </summary>
-            <param name="systemType"></param>
-            <param name="isNullable"></param>
-            <param name="canAppendNullable"></param>
-            <returns></returns>
-        </member>
-        <member name="M:CodeSmith.SchemaHelper.Util.TypeHelper.ResolveSystemType(System.Type,System.Boolean,System.Boolean)">
-            <summary>
-            
-            </summary>
-            <param name="systemType"></param>
-            <param name="isNullable"></param>
-            <param name="canAppendNullable"></param>
-            <returns></returns>
-        </member>
         <member name="T:CodeSmith.SchemaHelper.IKey">
             <summary>
             Interface that describes the contract for an Entity.

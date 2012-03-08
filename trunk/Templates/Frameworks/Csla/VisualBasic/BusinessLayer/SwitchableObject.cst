@@ -1,4 +1,4 @@
-<%-- Author: Blake Niemyjski --%>
+﻿<%-- Author: Blake Niemyjski --%>
 <%@ CodeTemplate Language="VB" TargetLanguage="VB" OutputType="None" Inherits="Generator.CSLA.EntityCodeTemplate" %>
 <%@ Register Name="SwitchableObject" Template="Internal\SwitchableObject.cst" %>
 <%@ Register Name="SwitchableObjectDataAccess" Template="Internal\SwitchableObject.DataAccess.cst" %>
@@ -28,13 +28,8 @@ ElseIf DataAccessImplementation = DataAccessMethod.ParameterizedSQL Then
 ElseIf DataAccessImplementation = DataAccessMethod.StoredProcedures Then
     RenderToFileHelper(Of SwitchableObjectDataAccessStoredProcedures)(fileName, parentFileName, True)
 
-    'StoredProcedures
     fileName = System.IO.Path.Combine(Location, String.Format("Entities\{0}.StoredProcedures.sql", BusinessClassName))
-    Dim sqlStoredProcedures As SqlStoredProcedures = Me.Create(Of SqlStoredProcedures)()
-    Me.CopyPropertiesTo(sqlStoredProcedures, True)
-    sqlStoredProcedures.DataProjectName = "Not needed for sql stored procedures."
-
-    sqlStoredProcedures.RenderToFile(fileName, parentFileName, True)
+    RenderProceduresToFileHelper(Of SqlStoredProcedures)(fileName, parentFileName, true)
 End If
 
 End Sub

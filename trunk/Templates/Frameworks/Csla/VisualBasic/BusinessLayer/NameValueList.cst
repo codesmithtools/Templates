@@ -27,13 +27,8 @@ fileName = System.IO.Path.Combine(Location, String.Format("Entities\{0}.DataAcce
 RenderToFileHelper(Of NameValueListDataAccess)(fileName, parentFileName, True)
 
 If DataAccessImplementation = DataAccessMethod.StoredProcedures Then
-    'StoredProcedures
     fileName = System.IO.Path.Combine(Location, String.Format("Collections\{0}.StoredProcedures.sql", BusinessClassName))
-    Dim sqlStoredProcedures As SqlStoredProcedures = Me.Create(Of SqlStoredProcedures)()
-    Me.CopyPropertiesTo(sqlStoredProcedures, True)
-    sqlStoredProcedures.DataProjectName = "Not needed for sql stored procedures."
-
-    sqlStoredProcedures.RenderToFile(fileName, parentFileName, True)
+    RenderProceduresToFileHelper(Of SqlStoredProcedures)(fileName, parentFileName, True, False, True)
 End If
 
 End Sub
