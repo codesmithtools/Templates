@@ -1215,28 +1215,7 @@
             This class aids in the resolving of Types from the CodeSmith Generator into .NET related types as well.
             </summary>
         </member>
-        <member name="M:CodeSmith.SchemaHelper.Util.TypeHelper.ResolveSystemType(SchemaExplorer.IColumnSchema)">
-            <summary>
-            
-            </summary>
-            <param name="column"></param>
-            <returns></returns>
-        </member>
-        <member name="M:CodeSmith.SchemaHelper.Util.TypeHelper.ResolveSystemType(SchemaExplorer.IParameterSchema)">
-            <summary>
-            
-            </summary>
-            <param name="column"></param>
-            <returns></returns>
-        </member>
-        <member name="M:CodeSmith.SchemaHelper.Util.TypeHelper.ResolveSystemType(SchemaExplorer.IViewColumnSchema)">
-            <summary>
-            
-            </summary>
-            <param name="column"></param>
-            <returns></returns>
-        </member>
-        <member name="M:CodeSmith.SchemaHelper.Util.TypeHelper.ResolveSystemType(SchemaExplorer.ICommandResultColumnSchema)">
+        <member name="M:CodeSmith.SchemaHelper.Util.TypeHelper.ResolveSystemType(SchemaExplorer.IDataObject)">
             <summary>
             
             </summary>
@@ -1725,6 +1704,13 @@
         <member name="M:CodeSmith.SchemaHelper.SchemaExplorerExtensions.IsColumnComputed(SchemaExplorer.IDataObject)">
             <summary>
             Is the column a computed column.
+            </summary>
+            <param name="column"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.SchemaExplorerExtensions.SystemType(SchemaExplorer.IDataObject)">
+            <summary>
+            Tries to detect the correct SystemType
             </summary>
             <param name="column"></param>
             <returns></returns>
