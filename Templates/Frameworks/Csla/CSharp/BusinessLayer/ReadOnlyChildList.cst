@@ -39,13 +39,8 @@ public override void Render(System.IO.TextWriter writer)
     {
         RenderToFileHelper<ReadOnlyChildListDataAccessStoredProcedures>(fileName, parentFileName, true);
 
-        //StoredProcedures
         fileName = System.IO.Path.Combine(Location, String.Format("Collections\\{0}.StoredProcedures.sql", BusinessClassName));
-        SqlStoredProcedures sqlStoredProcedures = this.Create<SqlStoredProcedures>();
-        this.CopyPropertiesTo(sqlStoredProcedures, true);
-        sqlStoredProcedures.DataProjectName = "Not needed for sql stored procedures.";
-        
-        sqlStoredProcedures.RenderToFile(fileName, parentFileName, true);
+        RenderProceduresToFileHelper<SqlStoredProcedures>(fileName, parentFileName, true, true, true);
     }
 }
 

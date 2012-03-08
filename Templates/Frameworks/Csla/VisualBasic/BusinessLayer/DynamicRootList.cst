@@ -27,11 +27,13 @@ ElseIf DataAccessImplementation = DataAccessMethod.ParameterizedSQL Then
     RenderToFileHelper(Of DynamicRootListDataAccessParameterized)(fileName, parentFileName, True)
 ElseIf DataAccessImplementation = DataAccessMethod.StoredProcedures Then
     RenderToFileHelper(Of DynamicRootListDataAccessStoredProcedures)(fileName, parentFileName, True)
-    Dim sqlStoredProcedures As SqlStoredProcedures = Me.Create(Of SqlStoredProcedures)()
-    Me.CopyPropertiesTo(sqlStoredProcedures, True)
-    sqlStoredProcedures.DataProjectName = "Not needed for sql stored procedures."
 
-    sqlStoredProcedures.RenderToFile(fileName, parentFileName, True)
+	If Not(Entity.HasKey) Then
+		Exit Sub
+	End If
+
+    fileName = System.IO.Path.Combine(Location, String.Format("Collections\{0}.StoredProcedures.sql", BusinessClassName))
+    RenderProceduresToFileHelper(Of SqlStoredProcedures)(fileName, parentFileName, True, False, True)
 End If
 
 End Sub
