@@ -158,12 +158,12 @@ Namespace <%= BusinessProjectName %>
         End Sub
 
         Protected Overrides Sub OnGetChildren(info As SerializationInfo, formatter As MobileFormatter)
-            Dim serializedCriteria = formatter.SerializeObject(Criteria)
+            Dim serializedCriteria As SerializationInfo = formatter.SerializeObject(Criteria)
             info.AddChild("Criteria", 2)
         End Sub
 
         Protected Overrides Sub OnSetChildren(info As SerializationInfo, formatter As MobileFormatter)
-            Dim criteriaData = info.Children("Criteria")
+            Dim criteriaData As SerializationInfo.ChildData = info.Children("Criteria")
             Criteria = DirectCast(formatter.GetObject(criteriaData.ReferenceId), IGeneratedCriteria)
         End Sub
 #End Region
