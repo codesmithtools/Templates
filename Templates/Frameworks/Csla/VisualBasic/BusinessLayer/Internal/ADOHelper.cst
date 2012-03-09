@@ -71,7 +71,10 @@ Namespace <%= BusinessProjectName %>
             Dim columnNames As String = bag.Keys.Aggregate(String.Empty, Function(current, columnName) current + String.Format("[{0}] = <%= ParameterPrefix %>{0} AND ", columnName))
             Return String.Format("WHERE {0}", columnNames.Remove(columnNames.Length - 5, 5))
         End Function
-    
+
+<% If(IncludeSilverlightSupport) Then %>
+#If Not SILVERLIGHT Then
+<% End If %>
         ''' <summary>
         ''' Returns the Bytes stored In a binary prop.
         ''' </summary>
@@ -97,7 +100,10 @@ Namespace <%= BusinessProjectName %>
                 Return stream.ToArray()
             End Using
         End Function  
-        
+<% If(IncludeSilverlightSupport) Then %>
+#End If
+<% End If %>    
+		
 #End Region
     
 #Region "Nullable Helpers" 'This code is here to help In the Data access implementation of handling DBNull.Value.

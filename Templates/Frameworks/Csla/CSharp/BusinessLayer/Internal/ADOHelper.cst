@@ -71,6 +71,9 @@ namespace <%= BusinessProjectName %>
             return String.Format("WHERE {0}", columnNames.Remove(columnNames.Length - 5, 5));
         }
 
+<% if(IncludeSilverlightSupport) { %>
+#if !SILVERLIGHT
+<% } %>
         /// <summary>
         /// Returns the Bytes stored in a binary column.
         /// </summary>
@@ -97,6 +100,9 @@ namespace <%= BusinessProjectName %>
                 return stream.ToArray();
             }
         }
+<% if(IncludeSilverlightSupport) { %>
+#endif
+<% } %>
 
         #endregion
         
