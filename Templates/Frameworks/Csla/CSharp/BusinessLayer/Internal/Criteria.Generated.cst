@@ -116,7 +116,7 @@ foreach(var property in Entity.GetProperties(PropertyType.NoConcurrency)){ if(pr
         
         public override string ToString()
         {
-            var result = string.Empty;
+            var result = String.Empty;
             var cancel = false;
             
             OnToString(ref result, ref cancel);

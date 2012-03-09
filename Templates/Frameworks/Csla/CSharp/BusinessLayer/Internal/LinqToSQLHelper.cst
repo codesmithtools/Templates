@@ -27,7 +27,7 @@ namespace <%= BusinessProjectName %>
     {
         #region "Preserved Code"
 
-        private static string _connectionString = string.Empty;
+        private static string _connectionString = String.Empty;
 
         /// <summary>
         /// Returns the connection string to the data base.
@@ -58,7 +58,7 @@ namespace <%= BusinessProjectName %>
             if (bag.Count == 0)
                 return bool.TrueString;
 
-            var result = string.Empty;
+            var result = String.Empty;
             int cntr = -1;
             foreach (KeyValuePair<string, object> key in bag)
             {

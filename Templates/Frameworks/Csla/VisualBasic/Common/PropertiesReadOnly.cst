@@ -11,7 +11,7 @@
     
     <%  For Each prop As IProperty In Entity.GetProperties(PropertyType.NoConcurrency)
     If UseMemberVariables Then %>
-        Private Shared ReadOnly <%= prop.PrivateMemberVariableName %>Property As PropertyInfo(Of <%= prop.SystemType %>) = RegisterProperty(Of <%= prop.SystemType %>)(Function(p As <%= BusinessClassName %>) p.<%= prop.Name %>, String.Empty<% If(prop.IsNullable And prop.SystemType = "System.String") Then %>, vbNullString<% Else If(prop.CanGenerateNullDefault()) Then %>, CType(Nothing, <%= prop.SystemType %>)<%End If%><% If (IsLatestCSLA) Then %>, RelationshipTypes.PrivateField<% End If %>)
+        Private Shared ReadOnly <%= prop.PrivateMemberVariableName %>Property As PropertyInfo(Of <%= prop.SystemType %>) = RegisterProperty(Of <%= prop.SystemType %>)(Function(p As <%= BusinessClassName %>) p.<%= prop.Name %>, "<%= p.FriendlyName() %>"<% If(prop.IsNullable And prop.SystemType = "System.String") Then %>, vbNullString<% Else If(prop.CanGenerateNullDefault()) Then %>, CType(Nothing, <%= prop.SystemType %>)<%End If%><% If (IsLatestCSLA) Then %>, RelationshipTypes.PrivateField<% End If %>)
         Private <%= prop.PrivateMemberVariableName %> As <%= prop.SystemType %> = <%= prop.PrivateMemberVariableName %>Property.DefaultValue
     <% If(prop.HasDescription) Then %>
         ''' <summary>
@@ -32,7 +32,7 @@
                 Return GetProperty(<%= prop.PrivateMemberVariableName %>Property, <%= prop.PrivateMemberVariableName %>) 
             End Get
     <% Else %>
-        Private Shared ReadOnly <%= prop.PrivateMemberVariableName %>Property As PropertyInfo(Of <%= prop.SystemType %>) = RegisterProperty(Of <%= prop.SystemType %>)(Function(p As <%= BusinessClassName %>) p.<%= prop.Name %>, String.Empty<% If(prop.IsNullable And prop.SystemType = "System.String") Then %>, vbNullString<% Else If(prop.CanGenerateNullDefault()) Then %>, CType(Nothing, <%= prop.SystemType %>)<%End If%>)
+        Private Shared ReadOnly <%= prop.PrivateMemberVariableName %>Property As PropertyInfo(Of <%= prop.SystemType %>) = RegisterProperty(Of <%= prop.SystemType %>)(Function(p As <%= BusinessClassName %>) p.<%= prop.Name %>, "<%= p.FriendlyName() %>"<% If(prop.IsNullable And prop.SystemType = "System.String") Then %>, vbNullString<% Else If(prop.CanGenerateNullDefault()) Then %>, CType(Nothing, <%= prop.SystemType %>)<%End If%>)
     <% If(prop.HasDescription) Then %>
         ''' <summary>
         ''' <%= prop.Description %>
@@ -58,7 +58,7 @@
     <%-- One-To-Zero-Or-One --%>
     <% For Each association As Association In Entity.Associations.Where(Function(a) a.AssociationType = AssociationType.OneToZeroOrOne OrElse a.AssociationType = AssociationType.OneToOne) 
         ' For now, don't generate properties based on tables generated as generics.
-        If(association.GenericProperty = string.Empty) Then
+        If(association.GenericProperty = String.Empty) Then
     Dim associationClassName As String = association.Name
     If(IsReadOnlyBusinessObject( association, "Info")) Then
         associationClassName += "Info"
@@ -124,7 +124,7 @@
     <%-- Many-To-One --%>
     <% For Each association  As Association In Entity.Associations.Where(Function(a) a.AssociationType = AssociationType.ManyToOne OrElse a.AssociationType = AssociationType.ManyToZeroOrOne) 
         ' For now, don't generate properties based on tables generated as generics.
-        If(association.GenericProperty = string.Empty) Then
+        If(association.GenericProperty = String.Empty) Then
     Dim associationClassName As String = association.TypeName
     If(IsReadOnlyBusinessObject(association, "Info")) Then
         associationClassName += "Info"
@@ -193,7 +193,7 @@
     <%-- One-To-Many & Many-To-Many --%>
     <% For Each association As Association In Entity.Associations.Where(Function(a) a.AssociationType = AssociationType.ZeroOrOneToMany OrElse a.AssociationType = AssociationType.OneToMany OrElse a.AssociationType = AssociationType.ManyToMany) 
         ' For now, don't generate properties based on tables generated as generics.
-        If(association.GenericProperty = string.Empty) Then
+        If(association.GenericProperty = String.Empty) Then
         Dim associationClassName As String = association.TypeName
         If(IsReadOnlyBusinessObject( association, "InfoList")) Then
             associationClassName += "Info"

@@ -2064,5 +2064,17 @@
             The text that created the view.
             </summary>
         </member>
+        <member name="T:CodeSmith.SchemaHelper.PropertyExtensions">
+            <summary>
+            Extension methods for IProperty.
+            </summary>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.PropertyExtensions.FriendlyName(CodeSmith.SchemaHelper.IProperty)">
+            <summary>
+            
+            </summary>
+            <param name="property"></param>
+            <returns></returns>
+        </member>
     </members>
 </doc>
