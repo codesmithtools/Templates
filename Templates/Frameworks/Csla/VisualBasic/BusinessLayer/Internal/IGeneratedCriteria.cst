@@ -20,6 +20,7 @@ Imports System
 Imports System.Collections.Generic
 
 Namespace <%= BusinessProjectName %>
+    <System.Runtime.InteropServices.ComVisible(False)> _
     Public Interface IGeneratedCriteria
         ReadOnly Property StateBag() As Dictionary(Of String, Object)
         ReadOnly Property TableFullName() As String

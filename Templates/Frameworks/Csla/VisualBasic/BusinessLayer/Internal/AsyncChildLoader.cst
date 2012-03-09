@@ -26,6 +26,7 @@ Imports Csla.Serialization
 
 Namespace <%= BusinessProjectName %>
     <Serializable> _
+    <System.Runtime.InteropServices.ComVisible(False)> _
     Public Class AsyncChildLoader(Of T)
         Inherits ReadOnlyBase(Of AsyncChildLoader(Of T))
         Public Shared ChildProperty As PropertyInfo(Of T) = RegisterProperty(Of T)(Function(c) c.Child)
