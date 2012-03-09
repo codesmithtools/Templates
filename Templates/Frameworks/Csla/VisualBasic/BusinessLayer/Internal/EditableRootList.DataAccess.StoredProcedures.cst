@@ -1,7 +1,7 @@
 ﻿<%-- Author: Blake Niemyjski --%>
 <%@ CodeTemplate Language="VB" TargetLanguage="VB" Inherits="Generator.CSLA.EntityCodeTemplate" %>
-<%@ Register Name="DataPortalFetchList" Template="..\..\Common\DataPortalFetchList.StoredProcedures.cst" MergeProperties="False" ExcludeProperties="" %>
-<%@ Register Name="DataPortalUpdateList" Template="..\..\Common\DataPortalUpdateList.cst" MergeProperties="False" ExcludeProperties="" %>
+<%@ Register Name="DataPortalFetchList" Template="..\..\Common\DataPortalFetchList.StoredProcedures.cst" %>
+<%@ Register Name="DataPortalUpdateList" Template="..\..\Common\DataPortalUpdateList.cst" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\..\Common" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper.Extensions" Path="..\..\..\Common" %>
 <%@ Assembly Name="Generator.CSLA" Path="..\..\..\Common" %>

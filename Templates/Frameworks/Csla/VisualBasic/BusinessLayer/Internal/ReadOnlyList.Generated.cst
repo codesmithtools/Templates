@@ -1,7 +1,8 @@
 ﻿<%-- Author: Blake Niemyjski --%>
 <%@ CodeTemplate Language="VB" TargetLanguage="VB" Inherits="Generator.CSLA.EntityCodeTemplate" %>
-<%@ Register Name="Exists" Template="..\..\Common\ExistsList.cst" MergeProperties="False" ExcludeProperties="" %>
-<%@ Register Name="PartialMethods" Template="..\..\Common\ListDataPortalPartialMethods.cst" MergeProperties="False" ExcludeProperties="" %>
+<%@ Register Name="Exists" Template="..\..\Common\ExistsList.cst" %>
+<%@ Register Name="ListEnhancements" Template="..\..\Common\ListEnhancements.cst" %>
+<%@ Register Name="PartialMethods" Template="..\..\Common\ListDataPortalPartialMethods.cst" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\..\Common" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper.Extensions" Path="..\..\..\Common" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper.VisualBasicExtensions" Path="..\..\..\Common" %>
@@ -22,6 +23,7 @@ Option Strict On
 
 Imports System
 Imports System.Collections.Generic
+Imports System.Linq
 
 Imports Csla
 <% If(IncludeSilverlightSupport) Then %>
@@ -100,5 +102,6 @@ Namespace <%= BusinessProjectName %>
         
     <% RenderHelper(New PartialMethods()) %>
     <% RenderHelper(New Exists()) %>
+	<% RenderHelper(New ListEnhancements()) %>
     End Class
 End Namespace

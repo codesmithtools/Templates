@@ -2,8 +2,8 @@
 <%--         Joe McPherson   --%>
 <%@ CodeTemplate Language="C#" TargetLanguage="C#" Inherits="Generator.CSLA.EntityCodeTemplate" Description="CSLA 3.8.X ReadOnlyChild" %>
 <%-- LinqToSQL Modification --%>
-<%@ Register Name="MapLinqToSQL" Template="..\..\Common\MapLinqToSQLReadOnly.cst" MergeProperties="False" ExcludeProperties="" %>
-<%@ Register Name="ChildFetch" Template="..\..\Common\ChildFetch.LinqToSQL.cst" MergeProperties="False" ExcludeProperties="" %>
+<%@ Register Name="MapLinqToSQL" Template="..\..\Common\MapLinqToSQLReadOnly.cst" %>
+<%@ Register Name="ChildFetch" Template="..\..\Common\ChildFetch.LinqToSQL.cst" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\..\Common" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper.Extensions" Path="..\..\..\Common" %>
 <%@ Assembly Name="Generator.CSLA" Path="..\..\..\Common" %>

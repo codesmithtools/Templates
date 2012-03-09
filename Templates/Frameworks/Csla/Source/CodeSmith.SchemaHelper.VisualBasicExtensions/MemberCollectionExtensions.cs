@@ -216,5 +216,19 @@ namespace CodeSmith.SchemaHelper
 
             return statement.Substring(3, statement.Length - 3).TrimStart(new[] { ' ' });
         }
+
+        public static string BuildEqualityStatements(this List<IProperty> members, string prefix)
+        {
+            if (members == null || members.Count == 0)
+                return String.Empty;
+
+            string statement = String.Empty;
+            foreach (var property in members)
+            {
+                statement += String.Format(" AndAlso {0}.{1} = {2}", prefix, property.Name, property.VariableName);
+            }
+
+            return statement.Substring(8, statement.Length - 8).TrimStart(new[] { ' ' });
+        }
     }
 }

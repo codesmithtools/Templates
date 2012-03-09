@@ -1,13 +1,13 @@
 ﻿<%-- Author: Blake Niemyjski --%>
 <%--         Joe McPherson   --%>
 <%@ CodeTemplate Language="C#" TargetLanguage="C#" Inherits="Generator.CSLA.EntityCodeTemplate" %>
-<%@ Register Name="MapLinqToSQL" Template="..\..\Common\MapLinqToSQL.cst" MergeProperties="False" ExcludeProperties="" %>
-<%@ Register Name="DataPortalCreate" Template="..\..\Common\DataPortalCreate.cst" MergeProperties="False" ExcludeProperties="" %>
+<%@ Register Name="MapLinqToSQL" Template="..\..\Common\MapLinqToSQL.cst" %>
+<%@ Register Name="DataPortalCreate" Template="..\..\Common\DataPortalCreate.cst" %>
 <%-- LinqToSQL Modification --%>
-<%@ Register Name="DataPortalFetch" Template="..\..\Common\DataPortalFetch.LinqToSQL.cst" MergeProperties="False" ExcludeProperties="" %>
-<%@ Register Name="DataPortalInsert" Template="..\..\Common\DataPortalInsert.LinqToSQL.cst" MergeProperties="False" ExcludeProperties="" %>
-<%@ Register Name="DataPortalUpdate" Template="..\..\Common\DataPortalUpdate.LinqToSQL.cst" MergeProperties="False" ExcludeProperties="" %>
-<%@ Register Name="DataPortalDelete" Template="..\..\Common\DataPortalDelete.LinqToSQL.cst" MergeProperties="False" ExcludeProperties="" %>
+<%@ Register Name="DataPortalFetch" Template="..\..\Common\DataPortalFetch.LinqToSQL.cst" %>
+<%@ Register Name="DataPortalInsert" Template="..\..\Common\DataPortalInsert.LinqToSQL.cst" %>
+<%@ Register Name="DataPortalUpdate" Template="..\..\Common\DataPortalUpdate.LinqToSQL.cst" %>
+<%@ Register Name="DataPortalDelete" Template="..\..\Common\DataPortalDelete.LinqToSQL.cst" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\..\Common" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper.Extensions" Path="..\..\..\Common" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper.CSharpExtensions" Path="..\..\..\Common" %>

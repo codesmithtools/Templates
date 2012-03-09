@@ -1,8 +1,8 @@
 ﻿<%-- Author: Blake Niemyjski --%>
 <%@ CodeTemplate Language="C#" TargetLanguage="C#" Inherits="Generator.CSLA.EntityCodeTemplate" %>
-<%@ Register Name="Exists" Template="..\..\Common\ExistsList.cst" MergeProperties="False" ExcludeProperties="" %>
-<%@ Register Name="PartialMethods" Template="..\..\Common\ListDataPortalPartialMethods.cst" MergeProperties="False" ExcludeProperties="" %>
-
+<%@ Register Name="Exists" Template="..\..\Common\ExistsList.cst" %>
+<%@ Register Name="ListEnhancements" Template="..\..\Common\ListEnhancements.cst" %>
+<%@ Register Name="PartialMethods" Template="..\..\Common\ListDataPortalPartialMethods.cst" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\..\Common" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper.Extensions" Path="..\..\..\Common" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper.CSharpExtensions" Path="..\..\..\Common" %>
@@ -22,6 +22,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 using Csla;
 <%  if( DataAccessImplementation == DataAccessMethod.LinqToSQL) {%>
@@ -115,5 +116,6 @@ namespace <%= BusinessProjectName %>
    RenderHelper(new PartialMethods()); %>
 <%/*  Documentation code handled in the Exists.cst template  */
    RenderHelper(new Exists()); %>
+<% RenderHelper(new ListEnhancements()); %>
     }
 }

@@ -1,9 +1,9 @@
 ﻿<%-- Author: Blake Niemyjski --%>
 <%--         Joe McPherson   --%>
 <%@ CodeTemplate Language="C#" TargetLanguage="C#" Inherits="Generator.CSLA.EntityCodeTemplate" Description="CSLA 3.8.X ReadOnlyRoot" %>
-<%@ Register Name="MapLinqToSQL" Template="..\..\Common\MapLinqToSQLReadOnly.cst" MergeProperties="False" ExcludeProperties="" %>
+<%@ Register Name="MapLinqToSQL" Template="..\..\Common\MapLinqToSQLReadOnly.cst" %>
 <%-- LinqToSQL Modification --%>
-<%@ Register Name="DataPortalFetch" Template="..\..\Common\DataPortalFetch.LinqToSQL.cst" MergeProperties="False" ExcludeProperties="" %>
+<%@ Register Name="DataPortalFetch" Template="..\..\Common\DataPortalFetch.LinqToSQL.cst" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\..\Common" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper.Extensions" Path="..\..\..\Common" %>
 <%@ Assembly Name="Generator.CSLA" Path="..\..\..\Common" %>

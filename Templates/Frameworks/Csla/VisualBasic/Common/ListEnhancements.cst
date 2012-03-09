@@ -1,0 +1,35 @@
+﻿<%-- Author: Blake Niemyjski --%>
+<%@ CodeTemplate Language="VB" TargetLanguage="VB" Inherits="Generator.CSLA.EntityCodeTemplate" %>
+<%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\Common" %>
+<%@ Assembly Name="CodeSmith.SchemaHelper.Extensions" Path="..\..\Common" %>
+<%@ Assembly Name="CodeSmith.SchemaHelper.VisualBasicExtensions" Path="..\..\Common" %>
+<%@ Assembly Name="Generator.CSLA" Path="..\..\Common" %>
+<%@ Import Namespace="CodeSmith.SchemaHelper" %>
+<%@ Import Namespace="Generator.CSLA" %>
+ <% If(Entity.HasKey) Then %>
+ 
+#region "Enhancements"
+
+        Public Function Get<%= ChildBusinessClassName %>(<%= Entity.GetProperties(PropertyType.Key).BuildParametersVariables() %>) As <%= ChildBusinessClassName %>
+            Return Me.FirstOrDefault(Function(i) <%= Entity.GetProperties(PropertyType.Key).BuildEqualityStatements("i") %>) > 0
+        End Function
+		
+        Public Function Contains(<%= Entity.GetProperties(PropertyType.Key).BuildParametersVariables() %>) As Boolean
+            Return Me.Count(Function(i) <%= Entity.GetProperties(PropertyType.Key).BuildEqualityStatements("i") %>) > 0
+        End Function
+<% If(RenderOptionalContent) Then %>
+
+        Public Function ContainsDeleted(<%= Entity.GetProperties(PropertyType.Key).BuildParametersVariables() %>) As Boolean
+            Return DeletedList.Count(Function(i) <%= Entity.GetProperties(PropertyType.Key).BuildEqualityStatements("i") %>) > 0
+        End Function
+
+        Public Sub Remove(<%= Entity.GetProperties(PropertyType.Key).BuildParametersVariables() %>)
+			Dim item As <%= ChildBusinessClassName %> = Me.FirstOrDefault(Function(i) <%= Entity.GetProperties(PropertyType.Key).BuildEqualityStatements("i") %>)
+			If item IsNot Nothing Then
+				Remove(item)
+			End If
+        End Sub
+<% End If %>
+        
+#End Region
+<% End If %>

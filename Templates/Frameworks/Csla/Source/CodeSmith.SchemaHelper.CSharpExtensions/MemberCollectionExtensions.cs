@@ -245,7 +245,8 @@ namespace CodeSmith.SchemaHelper
 
         public static string BuildIdentityKeyEqualityStatements(this List<IProperty> members, string prefix)
         {
-            if (members == null || members.Count == 0) return String.Empty;
+            if (members == null || members.Count == 0) 
+                return String.Empty;
 
             string statement = String.Empty;
 
@@ -257,6 +258,21 @@ namespace CodeSmith.SchemaHelper
 
             return statement.TrimStart(new[] { '|', ' ' });
         }
+
+        public static string BuildEqualityStatements(this List<IProperty> members, string prefix)
+        {
+            if (members == null || members.Count == 0) 
+                return String.Empty;
+
+            string statement = String.Empty;
+            foreach (var property in members)
+            {
+                statement += String.Format(" && {0}.{1} == {2}", prefix, property.Name, property.VariableName);
+            }
+
+            return statement.TrimStart(new[] { '&', ' ' });
+        }
+
         //LinqToSQL MOdification
         /// <summary>
         /// 

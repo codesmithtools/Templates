@@ -1,12 +1,12 @@
 ﻿<%-- Author: Blake Niemyjski --%>
 <%@ CodeTemplate Language="VB" TargetLanguage="VB" Inherits="Generator.CSLA.EntityCodeTemplate" %>
-<%@ Register Name="Constructor" Template="..\..\Common\Constructor.cst" MergeProperties="False" ExcludeProperties="" %>
-<%@ Register Name="DataPortalCreate" Template="..\..\Common\DataPortalCreate.cst" MergeProperties="False" ExcludeProperties="" %>
-<%@ Register Name="Exists" Template="..\..\Common\Exists.cst" MergeProperties="False" ExcludeProperties="" %>
-<%@ Register Name="IsDirty" Template="..\..\Common\IsDirty.cst" MergeProperties="False" ExcludeProperties="" %>
-<%@ Register Name="Properties" Template="..\..\Common\Properties.cst" MergeProperties="False" ExcludeProperties="" %>
-<%@ Register Name="ValidationRules" Template="..\..\Common\ValidationRules.cst" MergeProperties="False" ExcludeProperties="" %>
-<%@ Register Name="PartialMethods" Template="..\..\Common\DataPortalPartialMethods.cst" MergeProperties="False" ExcludeProperties="" %>
+<%@ Register Name="Constructor" Template="..\..\Common\Constructor.cst" %>
+<%@ Register Name="DataPortalCreate" Template="..\..\Common\DataPortalCreate.cst" %>
+<%@ Register Name="Exists" Template="..\..\Common\Exists.cst" %>
+<%@ Register Name="IsDirty" Template="..\..\Common\IsDirty.cst" %>
+<%@ Register Name="Properties" Template="..\..\Common\Properties.cst" %>
+<%@ Register Name="ValidationRules" Template="..\..\Common\ValidationRules.cst" %>
+<%@ Register Name="PartialMethods" Template="..\..\Common\DataPortalPartialMethods.cst" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\..\Common" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper.Extensions" Path="..\..\..\Common" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper.VisualBasicExtensions" Path="..\..\..\Common" %>
