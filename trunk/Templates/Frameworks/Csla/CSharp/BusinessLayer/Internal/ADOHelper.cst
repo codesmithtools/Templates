@@ -28,7 +28,7 @@ namespace <%= BusinessProjectName %>
     {
         #region "Preserved Code"
 
-        private static string _connectionString = string.Empty;
+        private static string _connectionString = String.Empty;
 
         /// <summary>
         /// Returns the Connection String.
@@ -65,9 +65,9 @@ namespace <%= BusinessProjectName %>
         public static string BuildWhereStatement(Dictionary<string, object> bag)
         {
             if (bag.Count == 0)
-                return string.Empty;
+                return String.Empty;
 
-            string columnNames = bag.Keys.Aggregate(string.Empty, (current, columnName) => current + String.Format("[{0}] = <%= ParameterPrefix %>{0} AND ", columnName));
+            string columnNames = bag.Keys.Aggregate(String.Empty, (current, columnName) => current + String.Format("[{0}] = <%= ParameterPrefix %>{0} AND ", columnName));
             return String.Format("WHERE {0}", columnNames.Remove(columnNames.Length - 5, 5));
         }
 

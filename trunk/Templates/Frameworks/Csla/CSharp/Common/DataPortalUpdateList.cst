@@ -13,7 +13,7 @@
 <% if(Entity.CanUpdate) { %>  
             RaiseListChangedEvents = false;
 
-<% if(IsChildBusinessObject(string.Empty)) { %>
+<% if(IsChildBusinessObject(String.Empty)) { %>
             // Create a new connection.
             using (var connection = new SqlConnection(ADOHelper.ConnectionString))
             {

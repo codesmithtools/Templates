@@ -19,7 +19,7 @@
 
 <%  foreach(IProperty property in Entity.GetProperties(PropertyType.NoConcurrency)){ 
 if (UseMemberVariables){ %>
-        private static readonly PropertyInfo<<%= property.SystemType %>> <%= property.PrivateMemberVariableName %>Property = RegisterProperty<<%= property.SystemType %>>(p => p.<%= property.Name %>, string.Empty<% if(property.IsNullable) { %>, (<%= property.SystemType %>)null<% } %><%if (IsLatestCSLA) { %>, RelationshipTypes.PrivateField<% }%>);
+        private static readonly PropertyInfo<<%= property.SystemType %>> <%= property.PrivateMemberVariableName %>Property = RegisterProperty<<%= property.SystemType %>>(p => p.<%= property.Name %>, "<%= property.FriendlyName() %>"<% if(property.IsNullable) { %>, (<%= property.SystemType %>)null<% } %><%if (IsLatestCSLA) { %>, RelationshipTypes.PrivateField<% }%>);
         private <%= property.SystemType %> <%= property.PrivateMemberVariableName %> = <%= property.PrivateMemberVariableName %>Property.DefaultValue;<%= property.BuildDataObjectField(IncludeSilverlightSupport) %>
 <% if(property.HasDescription) { %>
         /// <summary>
@@ -33,7 +33,7 @@ if (UseMemberVariables){ %>
         }
 
 <%if (property.IsType(PropertyType.Key) && !property.IsType(PropertyType.Identity)) { %>
-        private static readonly PropertyInfo<<%= property.SystemType %>> _original<%= property.Name %>Property = RegisterProperty<<%= property.SystemType %>>(p => p.Original<%= property.Name %>, string.Empty<% if(property.IsNullable) { %>, (<%= property.SystemType %>)null<% } %><%if (IsLatestCSLA) { %>, RelationshipTypes.PrivateField<% }%>);
+        private static readonly PropertyInfo<<%= property.SystemType %>> _original<%= property.Name %>Property = RegisterProperty<<%= property.SystemType %>>(p => p.Original<%= property.Name %>, "Original <%= property.FriendlyName() %>"<% if(property.IsNullable) { %>, (<%= property.SystemType %>)null<% } %><%if (IsLatestCSLA) { %>, RelationshipTypes.PrivateField<% }%>);
         private <%= property.SystemType %> _original<%= property.Name %> = _original<%= property.Name %>Property.DefaultValue;
         /// <summary>
         /// Holds the original value for <%= property.Name %>. This is used for non identity primary keys.
@@ -45,7 +45,7 @@ if (UseMemberVariables){ %>
         }
 
 <% } } else { %>
-        private static readonly PropertyInfo<<%= property.SystemType %>> <%= property.PrivateMemberVariableName %>Property = RegisterProperty<<%= property.SystemType %>>(p => p.<%= property.Name %>, string.Empty<% if(property.IsNullable) { %>, (<%= property.SystemType %>)null<% } %>);<%= property.BuildDataObjectField(IncludeSilverlightSupport) %>
+        private static readonly PropertyInfo<<%= property.SystemType %>> <%= property.PrivateMemberVariableName %>Property = RegisterProperty<<%= property.SystemType %>>(p => p.<%= property.Name %>, "<%= property.FriendlyName() %>"<% if(property.IsNullable) { %>, (<%= property.SystemType %>)null<% } %>);<%= property.BuildDataObjectField(IncludeSilverlightSupport) %>
 <% if(property.HasDescription) { %>
         /// <summary>
         /// <%= property.Description %>
@@ -58,7 +58,7 @@ if (UseMemberVariables){ %>
         }
 
 <%if (property.IsType(PropertyType.Key) && !property.IsType(PropertyType.Identity)) { %>
-        private static readonly PropertyInfo<<%= property.SystemType %>> _original<%= property.Name %>Property = RegisterProperty<<%= property.SystemType %>>(p => p.Original<%= property.Name %>, string.Empty<% if(property.IsNullable) { %>, (<%= property.SystemType %>)null<% } %>);
+        private static readonly PropertyInfo<<%= property.SystemType %>> _original<%= property.Name %>Property = RegisterProperty<<%= property.SystemType %>>(p => p.Original<%= property.Name %>, "Original <%= property.FriendlyName() %>"<% if(property.IsNullable) { %>, (<%= property.SystemType %>)null<% } %>);
         /// <summary>
         /// Holds the original value for <%= property.Name %>. This is used for non identity primary keys.
         /// </summary>
@@ -72,7 +72,7 @@ if (UseMemberVariables){ %>
 <%-- One-To-Zero-Or-One --%>
 <% foreach(Association association in Entity.Associations.Where(a => a.AssociationType == AssociationType.OneToZeroOrOne || a.AssociationType == AssociationType.OneToOne)) { 
     // For now, don't generate properties based on tables generated as generics.
-    if(association.GenericProperty == string.Empty) {
+    if(association.GenericProperty == String.Empty) {
     string associationClassName = association.TypeName;
     if(!BusinessObjectExists(association) && IsReadOnlyBusinessObject( association, "Info")) {
         associationClassName += "Info";
@@ -184,7 +184,7 @@ if (UseMemberVariables){ %>
 <%-- Many-To-One --%>
 <% foreach(Association association in Entity.Associations.Where(a => a.AssociationType == AssociationType.ManyToOne || a.AssociationType == AssociationType.ManyToZeroOrOne)) {
     // For now, don't generate properties based on tables generated as generics.
-    if(association.GenericProperty == string.Empty) {
+    if(association.GenericProperty == String.Empty) {
     string associationClassName = association.TypeName;
     if(!BusinessObjectExists(association) && IsReadOnlyBusinessObject(association, "Info")) {
         associationClassName += "Info";
@@ -255,7 +255,7 @@ if(!result.Equals("(true)", StringComparison.CurrentCultureIgnoreCase) && !resul
 <%-- One-To-Many & Many-To-Many --%>
 <% foreach(Association association in Entity.Associations.Where(a => a.AssociationType == AssociationType.ZeroOrOneToMany || a.AssociationType == AssociationType.OneToMany || a.AssociationType == AssociationType.ManyToMany)) { 
     // For now, don't generate properties based on tables generated as generics.
-    if(association.GenericProperty == string.Empty) {
+    if(association.GenericProperty == String.Empty) {
     string associationClassName = association.TypeName;
     if(!BusinessObjectExists(association, "List") && IsReadOnlyBusinessObject(association, "InfoList")) {
         associationClassName += "Info";
