@@ -89,7 +89,8 @@ Associations (<%= e.Associations.Count %>)
 <%foreach(var am in a.Properties) { %>
         <%= am.Property.Name %>
 <% }%>
-            <%= a.SearchCriteria.MethodName %>
+            MethodName: <%= a.SearchCriteria.MethodName %>
+            AssociatedMethodName: <%= a.SearchCriteria.AssociatedMethodName%>
 <%    foreach(var m in a.SearchCriteria.Properties) { %>
                 <%= m.Name %>
 <% } } %>
@@ -99,7 +100,8 @@ Associations (<%= e.Associations.Count %>)
 <%foreach(var am in a.Properties) { %>
         <%= am.Property.Name %>
 <% }%>
-            <%= a.SearchCriteria.MethodName %>
+            MethodName: <%= a.SearchCriteria.MethodName %>
+            AssociatedMethodName: <%= a.SearchCriteria.AssociatedMethodName%>
 <%    foreach(var m in a.SearchCriteria.Properties) { %>
                 <%= m.Name %>
 <% } } %>
@@ -109,7 +111,8 @@ Associations (<%= e.Associations.Count %>)
 <%foreach(var am in a.Properties) { %>
         <%= am.Property.Name %>
 <% }%>
-            <%= a.SearchCriteria.MethodName %>
+            MethodName: <%= a.SearchCriteria.MethodName %>
+            AssociatedMethodName: <%= a.SearchCriteria.AssociatedMethodName%>
 <%    foreach(var m in a.SearchCriteria.Properties) { %>
                 <%= m.Name %>
 <% } } %>
@@ -119,7 +122,8 @@ Associations (<%= e.Associations.Count %>)
 <%foreach(var am in a.Properties) { %>
         <%= am.Property.Name %>
 <% }%>
-            <%= a.SearchCriteria.MethodName %>
+            MethodName: <%= a.SearchCriteria.MethodName %>
+            AssociatedMethodName: <%= a.SearchCriteria.AssociatedMethodName%>
 <%    foreach(var m in a.SearchCriteria.Properties) { %>
                 <%= m.Name %>
 <% } } %>
@@ -129,7 +133,8 @@ Associations (<%= e.Associations.Count %>)
 <%foreach(var am in a.Properties) { %>
         <%= am.Property.Name %>
 <% }%>
-            <%= a.SearchCriteria.MethodName %>
+            MethodName: <%= a.SearchCriteria.MethodName %>
+            AssociatedMethodName: <%= a.SearchCriteria.AssociatedMethodName%>
 <%    foreach(var m in a.SearchCriteria.Properties) { %>
                 <%= m.Name %>
 <% } } %>
@@ -139,7 +144,8 @@ Associations (<%= e.Associations.Count %>)
 <%foreach(var am in a.Properties) { %>
         <%= am.Property.Name %>
 <% }%>
-            <%= a.SearchCriteria.MethodName %>
+            MethodName: <%= a.SearchCriteria.MethodName %>
+            AssociatedMethodName: <%= a.SearchCriteria.AssociatedMethodName%>
 <%    foreach(var m in a.SearchCriteria.Properties) { %>
                 <%= m.Name %>
 <% } } %>
@@ -149,7 +155,8 @@ Associations (<%= e.Associations.Count %>)
 <%foreach(var am in a.Properties) { %>
         <%= am.Property.Name %>
 <% }%>
-            <%= a.SearchCriteria.MethodName %>
+            MethodName: <%= a.SearchCriteria.MethodName %>
+            AssociatedMethodName: <%= a.SearchCriteria.AssociatedMethodName%>
 <%    foreach(var m in a.SearchCriteria.Properties) { %>
                 <%= m.Name %>
 <% } } %>

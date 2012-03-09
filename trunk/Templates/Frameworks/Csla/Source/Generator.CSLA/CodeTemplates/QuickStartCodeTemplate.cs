@@ -32,24 +32,12 @@ namespace Generator.CSLA
         public QuickStartCodeTemplate()
         {
             DataAccessImplementation = DataAccessMethod.ParameterizedSQL;
-            LaunchVisualStudio = true;
             UseLazyLoading = true;
-            FrameworkVersion = FrameworkVersion.v40;
         }
 
         #endregion
 
         #region 2. Solution
-
-        [Category("2. Solution")]
-        [Description("Launch Visual Studio after generation.")]
-        [DefaultValue(true)]
-        public bool LaunchVisualStudio { get; set; }
-
-        [Category("2. Solution")]
-        [Description("The language the project will be built in.")]
-        [DefaultValue("")]
-        public Language Language { get; set; }
 
         [Editor(typeof(System.Windows.Forms.Design.FolderNameEditor), typeof(System.Drawing.Design.UITypeEditor))]
         [Optional, NotChecked]

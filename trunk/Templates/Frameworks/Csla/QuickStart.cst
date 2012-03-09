@@ -4,6 +4,8 @@ Author: Blake Niemyjski
 Description: Used to Quick Start Visual Studio Projects
 --%>
 <%@ CodeTemplate Language="C#" TargetLanguage="Text" Inherits="Generator.CSLA.QuickStartCodeTemplate" Description="QuickStart for CSLA" %>
+<%@ Property Name="LaunchVisualStudio" Type="System.Boolean" Default="True" Category="2. Solution" Description="Launch Visual Studio after generation." %>
+<%@ Property Name="Language" Type="CodeSmith.SchemaHelper.Language" Category="2. Solution" Description="The language the project will be built in." %>
 <%@ Property Name="IncludeInterfaceProject" Type="System.Boolean" Default="True" Category="5. Interface Project" Description="If true, the Interface Project will be included in the generated solution." %>
 <%@ Register Name="QuickStartSolution" Template="Common\QuickStartSolution.cst" %>
 <%@ Register Name="Entities" Template="CSharp\BusinessLayer\Entities.cst" MergeProperties="False" ExcludeProperties="" %>

@@ -35,7 +35,6 @@ namespace Generator.CSLA
         private StringCollection _ignoreExpressions;
         private StringCollection _cleanExpressions;
         private bool _silverlightSupport;
-        private FrameworkVersion frameworkVersion;
 
         private string _criteriaClassName = String.Empty;
         private string _childBusinessClassName = String.Empty;
@@ -49,7 +48,6 @@ namespace Generator.CSLA
         {
             DataAccessImplementation = DataAccessMethod.ParameterizedSQL;
             UseLazyLoading = true;
-            FrameworkVersion = FrameworkVersion.v40;
 
             CleanExpressions = new StringCollection();
             IgnoreExpressions = new StringCollection();
@@ -215,22 +213,6 @@ namespace Generator.CSLA
         [Description("The path to the Solution location.")]
         [DefaultValue(".\\")]
         public string Location { get; set; }
-
-        [Optional]
-        [Category("2. Solution")]
-        [Description("If this property is set to v35 then a .NET 3.5 Visual Studio 2008 Solution will be created targeting CSLA 3.8. If it is set to v40 than a .NET 4.0 Visual Studio 2010 solution will be created targeting CSLA 4.1.")]
-        public FrameworkVersion FrameworkVersion
-        {
-            get
-            {
-                return this.frameworkVersion;
-            }
-            set
-            {
-                this.frameworkVersion = value;
-                Configuration.Instance.FrameworkVersion = value;
-            }
-        }
 
         #endregion
 
@@ -525,15 +507,6 @@ namespace Generator.CSLA
         #endregion
 
         #region Public Method(s)
-
-        [Browsable(false)]
-        public override bool IsLatestCSLA
-        {
-            get
-            {
-                return this.frameworkVersion == FrameworkVersion.v40;
-            }
-        }
 
         public bool IsReadOnlyBusinessObject(string suffix)
         {

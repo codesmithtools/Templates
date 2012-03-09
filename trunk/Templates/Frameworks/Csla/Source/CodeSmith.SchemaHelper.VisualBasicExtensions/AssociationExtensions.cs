@@ -27,13 +27,13 @@ namespace CodeSmith.SchemaHelper
                         if(isNullable)
                         {
                             parameters += string.Format("\r\n                If({1}.HasValue) Then criteria.{0} = {1}.Value",
-                                associationProperty.Property.Name,
+                                associationProperty.ForeignProperty.Name,
                                 usePropertyName ? property.Name : property.VariableName);
                         }
                         else
                         {
                             parameters += String.Format("\r\n                criteria.{0} = {1}",
-                                associationProperty.Property.Name,
+                                associationProperty.ForeignProperty.Name,
                                 usePropertyName ? property.Name : property.VariableName);
                         }
                     }
