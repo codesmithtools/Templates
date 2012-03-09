@@ -73,7 +73,7 @@
 <% If(IncludeSilverlightSupport) Then %>
 #End If
     <% End If %>
-        Partial Private Sub OnAddNewCore(ByVal item As <%= ChildBusinessClassName %><%= Entity.GenericProperty %>, ByRef cancel As Boolean)
+        Partial Private Sub OnAddNewCore(ByRef item As <%= ChildBusinessClassName %><%= Entity.GenericProperty %>, ByRef cancel As Boolean)
         End Sub
     
 #End Region
