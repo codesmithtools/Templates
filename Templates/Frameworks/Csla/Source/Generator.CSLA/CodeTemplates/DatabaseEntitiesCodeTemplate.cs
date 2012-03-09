@@ -91,15 +91,6 @@ namespace Generator.CSLA.CodeTemplates
         }
 
         [Category("6a. Entities")]
-        [Description("Criteria")]
-        [Optional]
-        public TableSchemaCollection Criteria
-        {
-            get { return CriteriaEntities.ToCollection(); }
-            set {}
-        }
-
-        [Category("6a. Entities")]
         [Description("DynamicRoot")]
         [Optional]
         public TableSchemaCollection DynamicRoot
