@@ -11,7 +11,7 @@
     
     <%  For Each prop As IProperty In Entity.GetProperties(PropertyType.NoConcurrency)
     If UseMemberVariables Then %>
-        Private Shared ReadOnly <%= prop.PrivateMemberVariableName %>Property As PropertyInfo(Of <%= prop.SystemType %>) = RegisterProperty(Of <%= prop.SystemType %>)(Function(p As <%= BusinessClassName %>) p.<%= prop.Name %>, "<%= p.FriendlyName() %>"<% If(prop.IsNullable And prop.SystemType = "System.String") Then %>, vbNullString<% Else If(prop.CanGenerateNullDefault()) Then %>, CType(Nothing, <%= prop.SystemType %>)<%End If%><% If (IsLatestCSLA) Then %>, RelationshipTypes.PrivateField<% End If %>)
+        Private Shared ReadOnly <%= prop.PrivateMemberVariableName %>Property As PropertyInfo(Of <%= prop.SystemType %>) = RegisterProperty(Of <%= prop.SystemType %>)(Function(p As <%= BusinessClassName %>) p.<%= prop.Name %>, "<%= prop.FriendlyName() %>"<% If(prop.IsNullable And prop.SystemType = "System.String") Then %>, vbNullString<% Else If(prop.CanGenerateNullDefault()) Then %>, CType(Nothing, <%= prop.SystemType %>)<%End If%><% If (IsLatestCSLA) Then %>, RelationshipTypes.PrivateField<% End If %>)
         Private <%= prop.PrivateMemberVariableName %> As <%= prop.SystemType %> = <%= prop.PrivateMemberVariableName %>Property.DefaultValue
     <% If(prop.HasDescription) Then %>
         ''' <summary>
@@ -32,7 +32,7 @@
                 Return GetProperty(<%= prop.PrivateMemberVariableName %>Property, <%= prop.PrivateMemberVariableName %>) 
             End Get
     <% Else %>
-        Private Shared ReadOnly <%= prop.PrivateMemberVariableName %>Property As PropertyInfo(Of <%= prop.SystemType %>) = RegisterProperty(Of <%= prop.SystemType %>)(Function(p As <%= BusinessClassName %>) p.<%= prop.Name %>, "<%= p.FriendlyName() %>"<% If(prop.IsNullable And prop.SystemType = "System.String") Then %>, vbNullString<% Else If(prop.CanGenerateNullDefault()) Then %>, CType(Nothing, <%= prop.SystemType %>)<%End If%>)
+        Private Shared ReadOnly <%= prop.PrivateMemberVariableName %>Property As PropertyInfo(Of <%= prop.SystemType %>) = RegisterProperty(Of <%= prop.SystemType %>)(Function(p As <%= BusinessClassName %>) p.<%= prop.Name %>, "<%= prop.FriendlyName() %>"<% If(prop.IsNullable And prop.SystemType = "System.String") Then %>, vbNullString<% Else If(prop.CanGenerateNullDefault()) Then %>, CType(Nothing, <%= prop.SystemType %>)<%End If%>)
     <% If(prop.HasDescription) Then %>
         ''' <summary>
         ''' <%= prop.Description %>

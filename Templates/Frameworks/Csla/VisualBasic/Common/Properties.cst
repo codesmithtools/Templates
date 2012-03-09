@@ -19,7 +19,7 @@
     <% End If %>
     <%  For Each prop As IProperty In Entity.GetProperties(PropertyType.NoConcurrency)
     If UseMemberVariables Then %>
-        Private Shared ReadOnly <%= prop.PrivateMemberVariableName %>Property As PropertyInfo(Of <%= prop.SystemType %>) = RegisterProperty(Of <%= prop.SystemType %>)(Function(p As <%= BusinessClassName %>) p.<%= prop.Name %>, "<%= p.FriendlyName() %>"<% If(prop.IsNullable And prop.SystemType = "System.String") Then %>, vbNullString<% Else If(prop.CanGenerateNullDefault()) Then %>, CType(Nothing, <%= prop.SystemType %>)<%End If%><% If (IsLatestCSLA) Then %>, RelationshipTypes.PrivateField<% End If %>)
+        Private Shared ReadOnly <%= prop.PrivateMemberVariableName %>Property As PropertyInfo(Of <%= prop.SystemType %>) = RegisterProperty(Of <%= prop.SystemType %>)(Function(p As <%= BusinessClassName %>) p.<%= prop.Name %>, "<%= prop.FriendlyName() %>"<% If(prop.IsNullable And prop.SystemType = "System.String") Then %>, vbNullString<% Else If(prop.CanGenerateNullDefault()) Then %>, CType(Nothing, <%= prop.SystemType %>)<%End If%><% If (IsLatestCSLA) Then %>, RelationshipTypes.PrivateField<% End If %>)
         Private <%= prop.PrivateMemberVariableName %> As <%= prop.SystemType %> = <%= prop.PrivateMemberVariableName %>Property.DefaultValue
     <% If(prop.HasDescription) Then %>
         ''' <summary>
@@ -45,7 +45,7 @@
         End Property
 
     <%If(prop.IsType(PropertyType.Key) And Not prop.IsType(PropertyType.Identity)) %>
-        Private Shared ReadOnly _original<%= prop.Name %>Property As PropertyInfo(Of <%= prop.SystemType %>) = RegisterProperty(Of <%= prop.SystemType %>)(Function(p As <%= BusinessClassName %>) p.Original<%= prop.Name %>, "Original <%= p.FriendlyName() %>"<% If(prop.IsNullable And prop.SystemType = "System.String") Then %>, vbNullString<% Else If(prop.CanGenerateNullDefault()) Then %>, CType(Nothing, <%= prop.SystemType %>)<%End If%><% If (IsLatestCSLA) Then %>, RelationshipTypes.PrivateField<% End If %>)
+        Private Shared ReadOnly _original<%= prop.Name %>Property As PropertyInfo(Of <%= prop.SystemType %>) = RegisterProperty(Of <%= prop.SystemType %>)(Function(p As <%= BusinessClassName %>) p.Original<%= prop.Name %>, "Original <%= prop.FriendlyName() %>"<% If(prop.IsNullable And prop.SystemType = "System.String") Then %>, vbNullString<% Else If(prop.CanGenerateNullDefault()) Then %>, CType(Nothing, <%= prop.SystemType %>)<%End If%><% If (IsLatestCSLA) Then %>, RelationshipTypes.PrivateField<% End If %>)
         Private _original<%= prop.Name %> As <%= prop.SystemType %> = _original<%= prop.Name %>Property.DefaultValue
         ''' <summary>
         ''' Holds the original value for <%= prop.Name %>. This is used for non identity primary keys.
@@ -61,7 +61,7 @@
 
     <% End If %>
     <% Else %>
-        Private Shared ReadOnly <%= prop.PrivateMemberVariableName %>Property As PropertyInfo(Of <%= prop.SystemType %>) = RegisterProperty(Of <%= prop.SystemType %>)(Function(p As <%= BusinessClassName %>) p.<%= prop.Name %>, "<%= p.FriendlyName() %>"<% If(prop.IsNullable And prop.SystemType = "System.String") Then %>, vbNullString<% Else If(prop.CanGenerateNullDefault()) Then %>, CType(Nothing, <%= prop.SystemType %>)<%End If%>)
+        Private Shared ReadOnly <%= prop.PrivateMemberVariableName %>Property As PropertyInfo(Of <%= prop.SystemType %>) = RegisterProperty(Of <%= prop.SystemType %>)(Function(p As <%= BusinessClassName %>) p.<%= prop.Name %>, "<%= prop.FriendlyName() %>"<% If(prop.IsNullable And prop.SystemType = "System.String") Then %>, vbNullString<% Else If(prop.CanGenerateNullDefault()) Then %>, CType(Nothing, <%= prop.SystemType %>)<%End If%>)
     <% If(prop.HasDescription) Then %>
         ''' <summary>
         ''' <%= prop.Description %>
@@ -86,7 +86,7 @@
         End Property
 
     <%If(prop.IsType(PropertyType.Key) And Not prop.IsType(PropertyType.Identity)) %>
-        Private Shared ReadOnly _original<%= prop.Name %>Property As PropertyInfo(Of <%= prop.SystemType %>) = RegisterProperty(Of <%= prop.SystemType %>)(Function(p As <%= BusinessClassName %>) p.Original<%= prop.Name %>, "Original <%= p.FriendlyName() %>"<% If(prop.IsNullable And prop.SystemType = "System.String") Then %>, vbNullString<% Else If(prop.CanGenerateNullDefault()) Then %>, CType(Nothing, <%= prop.SystemType %>)<%End If%>)
+        Private Shared ReadOnly _original<%= prop.Name %>Property As PropertyInfo(Of <%= prop.SystemType %>) = RegisterProperty(Of <%= prop.SystemType %>)(Function(p As <%= BusinessClassName %>) p.Original<%= prop.Name %>, "Original <%= prop.FriendlyName() %>"<% If(prop.IsNullable And prop.SystemType = "System.String") Then %>, vbNullString<% Else If(prop.CanGenerateNullDefault()) Then %>, CType(Nothing, <%= prop.SystemType %>)<%End If%>)
         ''' <summary>
         ''' Holds the original value for <%= prop.Name %>. This is used for non identity primary keys.
         ''' </summary>
