@@ -1,12 +1,12 @@
 ﻿<%-- Author: Blake Niemyjski --%>
 <%--         Joe McPherson   --%>
 <%@ CodeTemplate Language="C#" TargetLanguage="C#" Inherits="Generator.CSLA.EntityCodeTemplate" %>
-<%@ Register Name="MapLinqToSQL" Template="..\..\Common\MapLinqToSQL.cst" MergeProperties="False" ExcludeProperties="" %>
-<%@ Register Name="ChildCreate" Template="..\..\Common\ChildCreate.cst" MergeProperties="False" ExcludeProperties="" %>
-<%@ Register Name="ChildFetch" Template="..\..\Common\ChildFetch.LinqToSQL.cst" MergeProperties="False" ExcludeProperties="" %>
-<%@ Register Name="ChildInsert" Template="..\..\Common\ChildInsert.LinqToSQL.cst" MergeProperties="False" ExcludeProperties="" %>
-<%@ Register Name="ChildUpdate" Template="..\..\Common\ChildUpdate.LinqToSQL.cst" MergeProperties="False" ExcludeProperties="" %>
-<%@ Register Name="DataPortalDelete" Template="..\..\Common\DataPortalDelete.LinqToSQL.cst" MergeProperties="False" ExcludeProperties="" %>
+<%@ Register Name="MapLinqToSQL" Template="..\..\Common\MapLinqToSQL.cst" %>
+<%@ Register Name="ChildCreate" Template="..\..\Common\ChildCreate.cst" %>
+<%@ Register Name="ChildFetch" Template="..\..\Common\ChildFetch.LinqToSQL.cst" %>
+<%@ Register Name="ChildInsert" Template="..\..\Common\ChildInsert.LinqToSQL.cst" %>
+<%@ Register Name="ChildUpdate" Template="..\..\Common\ChildUpdate.LinqToSQL.cst" %>
+<%@ Register Name="DataPortalDelete" Template="..\..\Common\DataPortalDelete.LinqToSQL.cst" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\..\Common" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper.Extensions" Path="..\..\..\Common" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper.CSharpExtensions" Path="..\..\..\Common" %>

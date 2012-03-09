@@ -1,7 +1,7 @@
 ﻿<%-- Author: Blake Niemyjski --%>
 <%@ CodeTemplate Language="VB" TargetLanguage="VB" Inherits="Generator.CSLA.EntityCodeTemplate" %>
-<%@ Register Name="MapDataReader" Template="..\..\Common\MapDataReaderReadOnly.cst" MergeProperties="False" ExcludeProperties="" %>
-<%@ Register Name="ChildFetch" Template="..\..\Common\ChildFetch.StoredProcedures.cst" MergeProperties="False" ExcludeProperties="" %>
+<%@ Register Name="MapDataReader" Template="..\..\Common\MapDataReaderReadOnly.cst" %>
+<%@ Register Name="ChildFetch" Template="..\..\Common\ChildFetch.StoredProcedures.cst" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\..\Common" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper.Extensions" Path="..\..\..\Common" %>
 <%@ Assembly Name="Generator.CSLA" Path="..\..\..\Common" %>

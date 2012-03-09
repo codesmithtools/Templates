@@ -1,9 +1,10 @@
 ﻿<%-- Author: Blake Niemyjski --%>
 <%@ CodeTemplate Language="C#" TargetLanguage="C#" Inherits="Generator.CSLA.EntityCodeTemplate" %>
-<%@ Register Name="Exists" Template="..\..\Common\ExistsList.cst" MergeProperties="False" ExcludeProperties="" %>
-<%@ Register Name="IsDirty" Template="..\..\Common\IsDirtyList.cst" MergeProperties="False" ExcludeProperties="" %>
-<%@ Register Name="AddNewCore" Template="..\..\Common\ListAddNewCore.cst" MergeProperties="False" ExcludeProperties="" %>
-<%@ Register Name="PartialMethods" Template="..\..\Common\ListDataPortalPartialMethods.cst" MergeProperties="False" ExcludeProperties="" %>
+<%@ Register Name="Exists" Template="..\..\Common\ExistsList.cst" %>
+<%@ Register Name="ListEnhancements" Template="..\..\Common\ListEnhancements.cst" %>
+<%@ Register Name="IsDirty" Template="..\..\Common\IsDirtyList.cst" %>
+<%@ Register Name="AddNewCore" Template="..\..\Common\ListAddNewCore.cst" %>
+<%@ Register Name="PartialMethods" Template="..\..\Common\ListDataPortalPartialMethods.cst" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\..\Common" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper.Extensions" Path="..\..\..\Common" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper.CSharpExtensions" Path="..\..\..\Common" %>
@@ -21,6 +22,7 @@
 //------------------------------------------------------------------------------
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 using Csla;
 <% if(IncludeSilverlightSupport) { %>
@@ -155,5 +157,6 @@ namespace <%= BusinessProjectName %>
    RenderHelper(new PartialMethods()); %>
 <%/*  Documentation code handled in the Exists.cst template  */
    RenderHelper(new Exists()); %>
+<% RenderHelper(new ListEnhancements(), true); %>
     }
 }

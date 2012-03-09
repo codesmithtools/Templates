@@ -1,9 +1,9 @@
 ﻿<%-- Author: Blake Niemyjski --%>
 <%@ CodeTemplate Language="VB" TargetLanguage="VB" Inherits="Generator.CSLA.EntityCodeTemplate" %>
-<%@ Register Name="Constructor" Template="..\..\Common\ConstructorReadOnly.cst" MergeProperties="False" ExcludeProperties="" %>
-<%@ Register Name="Exists" Template="..\..\Common\Exists.cst" MergeProperties="False" ExcludeProperties="" %>
-<%@ Register Name="Properties" Template="..\..\Common\PropertiesReadOnly.cst" MergeProperties="False" ExcludeProperties="" %>
-<%@ Register Name="PartialMethods" Template="..\..\Common\DataPortalPartialMethods.cst" MergeProperties="False" ExcludeProperties="" %>
+<%@ Register Name="Constructor" Template="..\..\Common\ConstructorReadOnly.cst" %>
+<%@ Register Name="Exists" Template="..\..\Common\Exists.cst" %>
+<%@ Register Name="Properties" Template="..\..\Common\PropertiesReadOnly.cst" %>
+<%@ Register Name="PartialMethods" Template="..\..\Common\DataPortalPartialMethods.cst" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\..\Common" %>
 <%@ Assembly Name="Generator.CSLA" Path="..\..\..\Common" %>
 <%@ Import Namespace="CodeSmith.SchemaHelper" %>

@@ -2,7 +2,7 @@
 <%--         Joe McPherson   --%>
 <%@ CodeTemplate Language="C#" TargetLanguage="C#" Inherits="Generator.CSLA.EntityCodeTemplate" Description="CSLA 3.8.X DynamicRootList" %>
 <%-- LinqToSQL Modification --%>
-<%@ Register Name="DataPortalFetchList" Template="..\..\Common\DataPortalFetchList.LinqToSQL.cst" MergeProperties="False" ExcludeProperties="" %>
+<%@ Register Name="DataPortalFetchList" Template="..\..\Common\DataPortalFetchList.LinqToSQL.cst" %>
 
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\..\Common" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper.Extensions" Path="..\..\..\Common" %>

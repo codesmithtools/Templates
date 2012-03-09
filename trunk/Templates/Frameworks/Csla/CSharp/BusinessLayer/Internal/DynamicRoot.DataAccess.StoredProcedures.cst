@@ -1,11 +1,11 @@
 ﻿<%-- Author: Blake Niemyjski --%>
 <%@ CodeTemplate Language="C#" TargetLanguage="C#" Inherits="Generator.CSLA.EntityCodeTemplate" %>
-<%@ Register Name="MapDataReader" Template="..\..\Common\MapDataReader.cst" MergeProperties="False" ExcludeProperties="" %>
-<%@ Register Name="DataPortalCreate" Template="..\..\Common\DataPortalCreate.cst" MergeProperties="False" ExcludeProperties="" %>
-<%@ Register Name="DataPortalFetch" Template="..\..\Common\DataPortalFetch.StoredProcedures.cst" MergeProperties="False" ExcludeProperties="" %>
-<%@ Register Name="DataPortalInsert" Template="..\..\Common\DataPortalInsert.StoredProcedures.cst" MergeProperties="False" ExcludeProperties="" %>
-<%@ Register Name="DataPortalUpdate" Template="..\..\Common\DataPortalUpdate.StoredProcedures.cst" MergeProperties="False" ExcludeProperties="" %>
-<%@ Register Name="DataPortalDelete" Template="..\..\Common\DataPortalDelete.StoredProcedures.cst" MergeProperties="False" ExcludeProperties="" %>
+<%@ Register Name="MapDataReader" Template="..\..\Common\MapDataReader.cst" %>
+<%@ Register Name="DataPortalCreate" Template="..\..\Common\DataPortalCreate.cst" %>
+<%@ Register Name="DataPortalFetch" Template="..\..\Common\DataPortalFetch.StoredProcedures.cst" %>
+<%@ Register Name="DataPortalInsert" Template="..\..\Common\DataPortalInsert.StoredProcedures.cst" %>
+<%@ Register Name="DataPortalUpdate" Template="..\..\Common\DataPortalUpdate.StoredProcedures.cst" %>
+<%@ Register Name="DataPortalDelete" Template="..\..\Common\DataPortalDelete.StoredProcedures.cst" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\..\Common" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper.Extensions" Path="..\..\..\Common" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper.CSharpExtensions" Path="..\..\..\Common" %>

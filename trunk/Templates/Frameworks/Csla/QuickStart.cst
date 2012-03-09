@@ -8,9 +8,9 @@ Description: Used to Quick Start Visual Studio Projects
 <%@ Property Name="Language" Type="CodeSmith.SchemaHelper.Language" Category="2. Solution" Description="The language the project will be built in." %>
 <%@ Property Name="IncludeInterfaceProject" Type="System.Boolean" Default="True" Category="5. Interface Project" Description="If true, the Interface Project will be included in the generated solution." %>
 <%@ Register Name="QuickStartSolution" Template="Common\QuickStartSolution.cst" %>
-<%@ Register Name="Entities" Template="CSharp\BusinessLayer\Entities.cst" MergeProperties="False" ExcludeProperties="" %>
-<%@ Register Name="DataAccess" Template="CSharp\DataAccessLayer\DataAccessLayer.cst" MergeProperties="False" ExcludeProperties="" %>
-<%@ Register Name="Web" Template="CSharp\WebLayer\Default.aspx.cst" MergeProperties="False" ExcludeProperties="" %>
+<%@ Register Name="Entities" Template="CSharp\BusinessLayer\Entities.cst" %>
+<%@ Register Name="DataAccess" Template="CSharp\DataAccessLayer\DataAccessLayer.cst" %>
+<%@ Register Name="Web" Template="CSharp\WebLayer\Default.aspx.cst" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="Common" %>
 <%@ Assembly Name="Generator.CSLA" Path="Common" %>
 <%@ Assembly Name="Generator.QuickStart" Path="Common" %>

@@ -1,0 +1,38 @@
+﻿<%-- Author: Blake Niemyjski --%>
+<%@ CodeTemplate Language="C#" TargetLanguage="C#" Inherits="Generator.CSLA.EntityCodeTemplate" %>
+<%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\Common" %>
+<%@ Assembly Name="CodeSmith.SchemaHelper.Extensions" Path="..\..\Common" %>
+<%@ Assembly Name="CodeSmith.SchemaHelper.CSharpExtensions" Path="..\..\Common" %>
+<%@ Assembly Name="Generator.CSLA" Path="..\..\Common" %>
+<%@ Import Namespace="CodeSmith.SchemaHelper" %>
+<%@ Import Namespace="Generator.CSLA" %>
+ <% if(Entity.HasKey) { %>
+ 
+        #region Enhancements
+
+        public <%= ChildBusinessClassName %> Get<%= ChildBusinessClassName %>(<%= Entity.GetProperties(PropertyType.Key).BuildParametersVariables() %>)
+        {
+            return this.FirstOrDefault(i => <%= Entity.GetProperties(PropertyType.Key).BuildEqualityStatements("i") %>);
+        }
+
+        public bool Contains(<%= Entity.GetProperties(PropertyType.Key).BuildParametersVariables() %>)
+        {
+            return this.Count(i => <%= Entity.GetProperties(PropertyType.Key).BuildEqualityStatements("i") %>) > 0;
+        }
+<% if(RenderOptionalContent) { %>
+ 
+        public bool ContainsDeleted(<%= Entity.GetProperties(PropertyType.Key).BuildParametersVariables() %>)
+        {
+            return DeletedList.Count(i => <%= Entity.GetProperties(PropertyType.Key).BuildEqualityStatements("i") %>) > 0;
+        }
+        
+        public void Remove(<%= Entity.GetProperties(PropertyType.Key).BuildParametersVariables() %>)
+        {
+            var item = this.FirstOrDefault(i => <%= Entity.GetProperties(PropertyType.Key).BuildEqualityStatements("i") %>);
+            if (item != null)
+                Remove(item);
+        }
+<% } %>        
+
+        #endregion
+<% } %>

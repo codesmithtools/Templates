@@ -1,7 +1,7 @@
 ﻿<%-- Author: Blake Niemyjski --%>
 <%@ CodeTemplate Language="C#" TargetLanguage="C#" Inherits="Generator.CSLA.EntityCodeTemplate" %>
-<%@ Register Name="AuthorizationRules" Template="..\..\Common\AuthorizationRules.cst" MergeProperties="False" ExcludeProperties="" %>
-<%@ Register Name="ValidationRules" Template="..\..\Common\ValidationRulesPartial.cst" MergeProperties="False" ExcludeProperties="" %>
+<%@ Register Name="AuthorizationRules" Template="..\..\Common\AuthorizationRules.cst" %>
+<%@ Register Name="ValidationRules" Template="..\..\Common\ValidationRulesPartial.cst" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\..\Common" %>
 <%@ Assembly Name="Generator.CSLA" Path="..\..\..\Common" %>
 <%@ Import Namespace="CodeSmith.SchemaHelper" %>

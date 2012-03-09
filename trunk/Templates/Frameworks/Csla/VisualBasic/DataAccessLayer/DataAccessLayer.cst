@@ -1,13 +1,13 @@
 ﻿<%-- Author: Blake Niemyjski --%>
 <%@ CodeTemplate Language="VB" TargetLanguage="VB" OutputType="None" Inherits="Generator.CSLA.QuickStartCodeTemplate" %>
-<%@ Register Name="ObjectFactory" Template="Internal\ObjectFactory.cst" MergeProperties="False" ExcludeProperties="" %>
-<%@ Register Name="ObjectFactoryDataAccess" Template="Internal\ObjectFactory.DataAccess.cst" MergeProperties="False" ExcludeProperties="" %>
-<%@ Register Name="ObjectFactoryDataAccessParameterized" Template="Internal\ObjectFactory.DataAccess.ParameterizedSQL.cst" MergeProperties="False" ExcludeProperties="" %>
-<%@ Register Name="ObjectFactoryDataAccessStoredProcedures" Template="Internal\ObjectFactory.DataAccess.StoredProcedures.cst" MergeProperties="False" ExcludeProperties="" %>
-<%@ Register Name="ObjectFactoryList" Template="Internal\ObjectFactoryList.cst" MergeProperties="False" ExcludeProperties="" %>
-<%@ Register Name="ObjectFactoryListDataAccess" Template="Internal\ObjectFactoryList.DataAccess.cst" MergeProperties="False" ExcludeProperties="" %>
-<%@ Register Name="ObjectFactoryListDataAccessParameterized" Template="Internal\ObjectFactoryList.DataAccess.ParameterizedSQL.cst" MergeProperties="False" ExcludeProperties="" %>
-<%@ Register Name="ObjectFactoryListDataAccessStoredProcedures" Template="Internal\ObjectFactoryList.DataAccess.StoredProcedures.cst" MergeProperties="False" ExcludeProperties="" %>
+<%@ Register Name="ObjectFactory" Template="Internal\ObjectFactory.cst" %>
+<%@ Register Name="ObjectFactoryDataAccess" Template="Internal\ObjectFactory.DataAccess.cst" %>
+<%@ Register Name="ObjectFactoryDataAccessParameterized" Template="Internal\ObjectFactory.DataAccess.ParameterizedSQL.cst" %>
+<%@ Register Name="ObjectFactoryDataAccessStoredProcedures" Template="Internal\ObjectFactory.DataAccess.StoredProcedures.cst" %>
+<%@ Register Name="ObjectFactoryList" Template="Internal\ObjectFactoryList.cst" %>
+<%@ Register Name="ObjectFactoryListDataAccess" Template="Internal\ObjectFactoryList.DataAccess.cst" %>
+<%@ Register Name="ObjectFactoryListDataAccessParameterized" Template="Internal\ObjectFactoryList.DataAccess.ParameterizedSQL.cst" %>
+<%@ Register Name="ObjectFactoryListDataAccessStoredProcedures" Template="Internal\ObjectFactoryList.DataAccess.StoredProcedures.cst" %>
 <%@ Register Name="ADOHelperTemplate" Template="Internal\ADOHelper.cst" %>
 <%@ Register Name="SqlStoredProcedures" Template="Internal\SQLStoredProcedures.cst" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\Common" %>
