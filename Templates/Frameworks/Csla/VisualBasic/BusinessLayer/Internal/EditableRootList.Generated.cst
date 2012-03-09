@@ -56,9 +56,11 @@ Namespace <%= BusinessProjectName %>
 <% If(IncludeSilverlightSupport) Then %>
 #If Not SILVERLIGHT Then
 <% End If %>
+
         Protected Overrides Function AddNewCore() As <% If (IsLatestCSLA) Then %><%= ChildBusinessClassName %><%= Entity.GenericProperty %><% Else %>Object<% End If %>
     <% RenderHelper(new AddNewCore()) %>
         End Function
+
 <% If(IncludeSilverlightSupport) Then %>
 #Else
 

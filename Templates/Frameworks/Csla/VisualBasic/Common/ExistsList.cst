@@ -9,6 +9,7 @@
 <% If(IncludeSilverlightSupport) Then %>
 #If Not SILVERLIGHT Then
 <% End If %>
+
         ''' <summary>
         ''' Determines if a record exists in the <%=ChildBusinessClassName%><%= Entity.GenericProperty %> in the database for the specified criteria. 
         ''' </summary>
@@ -17,9 +18,10 @@
         Public Shared Function Exists(ByVal criteria As <%= CriteriaClassName %>) As Boolean
             Return <%= BusinessProjectName %>.<%= ChildBusinessClassName %>.Exists(criteria)
         End Function
-
 <% If(IncludeSilverlightSupport) Then %>
-#Else
+
+#End If
+<% End If %>
 
         ''' <summary>
         ''' Determines if a record exists in the <%=ChildBusinessClassName%><%= Entity.GenericProperty %> in the database for the specified criteria. 
@@ -28,6 +30,4 @@
             <%= BusinessProjectName %>.<%= ChildBusinessClassName %>.Exists(criteria, handler)
         End Sub
 
-#End If
-<% End If %>
 #End Region

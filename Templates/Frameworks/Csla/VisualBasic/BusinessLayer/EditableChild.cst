@@ -1,5 +1,5 @@
 ﻿<%-- Author: Blake Niemyjski --%>
-<%@ CodeTemplate Language="VB" TargetLanguage="VB" OutputType="None" Inherits="Generator.CSLA.EntityCodeTemplate" Description="CSLA EditableChild" %>
+<%@ CodeTemplate Language="VB" TargetLanguage="VB" OutputType="None" Inherits="Generator.CSLA.EntityCodeTemplate" %>
 <%@ Register Name="EditableChild" Template="Internal\EditableChild.cst" %>
 <%@ Register Name="EditableChildDataAccess" Template="Internal\EditableChild.DataAccess.cst" %>
 <%@ Register Name="EditableChildDataAccessParameterized" Template="Internal\EditableChild.DataAccess.ParameterizedSQL.cst" %>

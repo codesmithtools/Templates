@@ -10,7 +10,6 @@
 <script runat="template">
 
 Public Overloads Overrides Sub Render(writer As System.IO.TextWriter)
-
     RegisterReferences()
 
 Dim parentFileName As String = System.IO.Path.Combine(Me.Location, String.Format("Criteria\{0}.vb", BusinessClassName))

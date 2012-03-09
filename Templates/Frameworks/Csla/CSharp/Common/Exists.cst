@@ -10,6 +10,7 @@
 <% if(IncludeSilverlightSupport) { %>
 #if !SILVERLIGHT
 <% } %>
+
         /// <summary>
         /// Determines if a record exists in the <%= Entity.EntityKeyName %> table in the database for the specified criteria. 
         /// </summary>
@@ -19,7 +20,11 @@
         {
             return <%= BusinessProjectName %>.ExistsCommand.Execute(criteria);
         }
-        
+<% if(IncludeSilverlightSupport) { %>
+
+#endif
+<% } %>
+
         /// <summary>
         /// Determines if a record exists in the <%= Entity.EntityKeyName %> table in the database for the specified criteria. 
         /// </summary>
@@ -27,8 +32,6 @@
         {
             <%= BusinessProjectName %>.ExistsCommand.Execute(criteria, handler);
         }
-<% if(IncludeSilverlightSupport) { %>
-#endif
-<% } %>
+
         #endregion
 

@@ -5,11 +5,11 @@
 <%@ Assembly Name="Generator.CSLA" Path="..\..\Common" %>
 <%@ Import Namespace="CodeSmith.SchemaHelper" %>
 
-
 #Region "Exists Command"
 <% If(IncludeSilverlightSupport) Then %>
 #If Not SILVERLIGHT Then
 <% End If %>
+
         ''' <summary>
         ''' Determines if a record exists in the <%= Entity.EntityKeyName %> table in the database for the specified criteria. 
         ''' </summary>
@@ -18,18 +18,16 @@
         Public Shared Function Exists(ByVal criteria As <%= CriteriaClassName %>) As Boolean
             Return <%= BusinessProjectName %>.ExistsCommand.Execute(criteria)
         End Function
-
 <% If(IncludeSilverlightSupport) Then %>
-#Else
-        
+
+#End If
+<% End If %>
+
         ''' <summary>
         ''' Determines if a record exists in the <%= Entity.EntityKeyName %> table in the database for the specified criteria. 
         ''' </summary>
         Public Shared Sub Exists(ByVal criteria As <%= CriteriaClassName %>, ByVal handler As EventHandler(Of DataPortalResult(Of ExistsCommand)))
             <%= BusinessProjectName %>.ExistsCommand.Execute(criteria, handler)
         End Sub
-
-#End If
-<% End If %>
 
 #End Region

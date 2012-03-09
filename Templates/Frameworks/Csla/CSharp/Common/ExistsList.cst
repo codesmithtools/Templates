@@ -6,10 +6,10 @@
 <%@ Import Namespace="CodeSmith.SchemaHelper" %>
 
         #region Exists Command
-
 <% if(IncludeSilverlightSupport) { %>
 #if !SILVERLIGHT
 <% } %>
+
         /// <summary>
         /// Determines if a record exists in the <%=ChildBusinessClassName%><%= Entity.GenericProperty %> in the database for the specified criteria. 
         /// </summary>
@@ -19,6 +19,10 @@
         {
             return <%= BusinessProjectName %>.<%= ChildBusinessClassName %>.Exists(criteria);
         }
+<% if(IncludeSilverlightSupport) { %>
+
+#endif
+<% } %>
 
         /// <summary>
         /// Determines if a record exists in the <%=ChildBusinessClassName%><%= Entity.GenericProperty %> in the database for the specified criteria. 
@@ -27,8 +31,6 @@
         {
             <%= BusinessProjectName %>.<%= ChildBusinessClassName %>.Exists(criteria,handler);
         }
-<% if(IncludeSilverlightSupport) { %>
-#endif
-<% } %>
+
         #endregion
 

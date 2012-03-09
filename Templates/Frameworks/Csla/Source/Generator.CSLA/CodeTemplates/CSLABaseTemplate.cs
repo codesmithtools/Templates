@@ -37,12 +37,21 @@ namespace Generator.CSLA
 
         #region Public Properties
 
+        [Optional]
+        [Category("2. Solution")]
+        [Description("The .NET Framework Version. If you use v40 then CSLA 4.0 will be used. If you use v35 then CSLA 3.8 will be used.")]
+        public FrameworkVersion FrameworkVersion
+        {
+            get { return Configuration.Instance.FrameworkVersion; }
+            set { Configuration.Instance.FrameworkVersion = value; }
+        }
+
         [Browsable(false)]
         public string TemplateVersion
         {
             get
             {
-                var fileName = GetType().Assembly.Location;
+                var fileName = typeof(CSLABaseTemplate).Assembly.Location;
                 if (fileName != null)
                 {
                     return FileVersionInfo.GetVersionInfo(fileName).FileVersion;
@@ -55,28 +64,19 @@ namespace Generator.CSLA
         [Browsable(false)]
         public string CSLAVersion
         {
-            get
-            {
-                return IsLatestCSLA ? "4.3.10" : "3.8.4";
-            }
+            get { return IsLatestCSLA ? "4.3.10" : "3.8.4"; }
         }
 
         [Browsable(false)]
         public virtual bool IsLatestCSLA
         {
-            get
-            {
-                return Configuration.Instance.FrameworkVersion == FrameworkVersion.v40;
-            }
+            get { return Configuration.Instance.FrameworkVersion == FrameworkVersion.v40; }
         }
 
         [Browsable(false)]
         public string CodeSmithVersion
         {
-            get
-            {
-                return CodeSmith.Engine.Configuration.Instance.ConfigurationVersion;
-            }
+            get { return CodeSmith.Engine.Configuration.Instance.ConfigurationVersion; }
         }
 
         [Browsable(false)]
@@ -93,14 +93,8 @@ namespace Generator.CSLA
         [Description("Includes Entity associations if set to true.")]
         public bool IncludeAssociations
         {
-            get
-            {
-                return Configuration.Instance.IncludeAssociations;
-            }
-            set
-            {
-                Configuration.Instance.IncludeAssociations = value;
-            }
+            get { return Configuration.Instance.IncludeAssociations; }
+            set { Configuration.Instance.IncludeAssociations = value; }
         }
 
         #endregion

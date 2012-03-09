@@ -386,7 +386,7 @@
     
         <% If(BusinessObjectExists(association, "List") = False AndAlso IsReadOnlyBusinessObject( association, "InfoList")) Then %>
                         If(<%= association.BuildNullCheckStatement(true, false, false, false) %><%= BusinessProjectName %>.<%= association.TypeName %>List<%= association.GenericProperty %>.Exists(criteria)) Then
-                            LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= BusinessProjectName %>.<%= association.TypeName %>List.<%= association.SearchCriteria.AssociatedMethodName%>(<%= association.SearchCriteria.Properties.BuildPropertyVariableArguments() %>))
+                            LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= BusinessProjectName %>.<%= association.TypeName %>List.<%= association.SearchCriteria.AssociatedMethodName %>(<%= association.SearchCriteria.Properties.BuildPropertyVariableArguments() %>))
                         End If
         <% Else %>
                         If (<%= association.BuildNullCheckStatement(true, true, false, false) %>Not <%= BusinessProjectName %>.<%= association.TypeName %>List<%= association.GenericProperty %>.Exists(criteria)) Then
