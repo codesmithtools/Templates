@@ -81,7 +81,7 @@ Namespace <%= BusinessProjectName %>
         Public Shared Function GetBytes(ByVal reader As SafeDataReader, ByVal columnName As String) As Byte()
             Using stream As MemoryStream = New MemoryStream()
                 Dim bufferSize As Integer = 1024
-                Dim buffer(bufferSize - 1) As Byte
+                Dim buffer(bufferSize) As Byte
                 Dim retVal As Long = 0
                 Dim startIndex As Long = 0
 
