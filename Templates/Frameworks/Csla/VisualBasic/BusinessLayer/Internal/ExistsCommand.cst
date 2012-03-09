@@ -17,29 +17,19 @@ Option Explicit On
 Option Strict On
 
 Imports System
+Imports Csla
+Imports Csla.Core
+Imports Csla.Serialization.Mobile
 <% If(IncludeSilverlightSupport) Then %>
 
 #If SILVERLIGHT Then
-
-Imports Csla
-Imports Csla.Core
 Imports Csla.Serialization
-Imports Csla.Serialization.Mobile
-
 #Else
-
 Imports System.Data.SqlClient
-
-Imports Csla
-Imports Csla.Core
 Imports Csla.Data
-Imports Csla.Serialization.Mobile
-
 #End If
 <% Else %>
 Imports System.Data.SqlClient
-
-Imports Csla
 Imports Csla.Data
 <% End If %>
 
