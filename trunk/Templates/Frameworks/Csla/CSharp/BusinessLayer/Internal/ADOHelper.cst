@@ -124,6 +124,11 @@ namespace <%= BusinessProjectName %>
             return value ?? (object) DBNull.Value;
         }
 
+        internal static object NullCheck(byte[] value)
+        {
+            return value ?? (object)DBNull.Value;
+        }
+        
         internal static object NullCheck(byte? value)
         {
             return value ?? (object)DBNull.Value;

@@ -60,5 +60,11 @@
   <ItemGroup>
     <Folder Include="Properties\" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\CodeSmith.SchemaHelper.Extensions\CodeSmith.SchemaHelper.Extensions.csproj">
+      <Project>{830E1B3E-1BC8-4F16-8C47-260ACEF3B96D}</Project>
+      <Name>CodeSmith.SchemaHelper.Extensions</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
