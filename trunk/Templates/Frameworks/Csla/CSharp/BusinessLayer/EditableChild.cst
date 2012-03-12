@@ -25,7 +25,7 @@ public override void Render(System.IO.TextWriter writer)
     fileName = System.IO.Path.Combine(Location, String.Format("Entities\\{0}.DataAccess.cs", BusinessClassName));
     if(DataAccessImplementation == DataAccessMethod.None)
     {
-        RenderToFileHelper<EditableChildDataAccess>(fileName, parentFileName, true);
+        RenderToFileHelper<EditableChildDataAccess>(fileName, parentFileName, false);
     }
     else if(DataAccessImplementation == DataAccessMethod.ParameterizedSQL)
     {

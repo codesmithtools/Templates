@@ -23,7 +23,7 @@ RenderToFileHelper(Of EditableRootListGenerated)(fileName, parentFileName, True)
 
 fileName = System.IO.Path.Combine(Location, String.Format("Collections\{0}.DataAccess.vb", BusinessClassName))
 If DataAccessImplementation = DataAccessMethod.None Then
-    RenderToFileHelper(Of EditableRootListDataAccess)(fileName, parentFileName, True)
+    RenderToFileHelper(Of EditableRootListDataAccess)(fileName, parentFileName, False)
 ElseIf DataAccessImplementation = DataAccessMethod.ParameterizedSQL Then
     RenderToFileHelper(Of EditableRootListDataAccessParameterized)(fileName, parentFileName, True)
 ElseIf DataAccessImplementation = DataAccessMethod.StoredProcedures Then

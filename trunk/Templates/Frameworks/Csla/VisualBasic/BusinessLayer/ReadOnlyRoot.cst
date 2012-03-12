@@ -23,7 +23,7 @@ RenderToFileHelper(Of ReadOnlyRootGenerated)(fileName, parentFileName, True)
 
 fileName = System.IO.Path.Combine(Location, String.Format("Entities\{0}.DataAccess.vb", BusinessClassName))
 If DataAccessImplementation = DataAccessMethod.None Then
-    RenderToFileHelper(Of ReadOnlyRootDataAccess)(fileName, parentFileName, True)
+    RenderToFileHelper(Of ReadOnlyRootDataAccess)(fileName, parentFileName, False)
 ElseIf DataAccessImplementation = DataAccessMethod.ParameterizedSQL Then
     RenderToFileHelper(Of ReadOnlyRootDataAccessParameterized)(fileName, parentFileName, True)
 ElseIf DataAccessImplementation = DataAccessMethod.StoredProcedures Then

@@ -799,8 +799,14 @@ namespace Generator.CSLA
         {
             var template = this.Create<T>();
             CopyPropertiesTo(template, true, PropertyIgnoreList);
-            
-            template.RenderToFile(filePath, dependentUpon, overwrite);
+
+            if (!overwrite)
+            {
+                if (!File.Exists(filePath))
+                    template.RenderToFile(filePath, dependentUpon, false);
+            }
+            else
+                template.RenderToFile(filePath, dependentUpon, true);
         }
 
         public void RenderProceduresToFileHelper<T>(string filePath, string dependentUpon, bool overwrite) where T : DataCodeTemplate, new()
@@ -823,7 +829,13 @@ namespace Generator.CSLA
             template.SetProperty("IncludeUpdate", Entity.CanUpdate && !readOnly && !collection);
             template.SetProperty("IncludeDelete", Entity.CanDelete && !readOnly && !collection);
 
-            template.RenderToFile(filePath, dependentUpon, overwrite);
+            if (!overwrite)
+            {
+                if (!File.Exists(filePath))
+                    template.RenderToFile(filePath, dependentUpon, false);
+            }
+            else
+                template.RenderToFile(filePath, dependentUpon, true);
         }
         #endregion
     }
