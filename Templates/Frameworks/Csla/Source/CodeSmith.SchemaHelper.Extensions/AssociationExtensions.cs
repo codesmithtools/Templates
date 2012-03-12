@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace CodeSmith.SchemaHelper
 {
@@ -37,6 +38,21 @@ namespace CodeSmith.SchemaHelper
             }
 
             return parameters;
+        }
+
+        public static string BuildArgumentVariables(this IEnumerable<Association> associations, bool includeConnectionParameter)
+        {
+            string parameters = String.Empty;
+
+            foreach (var association in associations)
+            {
+                parameters += String.Format(", {0}", association.ForeignEntity.VariableName);
+            }
+
+            if (includeConnectionParameter)
+                parameters += ", connection";
+
+            return parameters.TrimStart(new[] { ',', ' ' });
         }
     }
 }

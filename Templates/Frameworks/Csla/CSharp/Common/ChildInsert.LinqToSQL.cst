@@ -9,7 +9,12 @@
 <%@ Import Namespace="System.Linq" %>
             //LinqToSQL Modification
             bool cancel = false;
+<% var associations = Entity.Associations.Where(a => a.AssociationType == AssociationType.ManyToOne || a.AssociationType == AssociationType.ManyToZeroOrOne).Distinct();
+   if(!RenderOptionalContent && associations.Count() > 0) { %>
+            OnChildInserting(<%= associations.BuildArgumentVariables(false) %>, ref cancel);
+<% } else { %>
             OnChildInserting(ref cancel);
+<% } %>
             if (cancel) return;
 
 <% if(Entity.CanInsert) { %>            

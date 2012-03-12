@@ -7,7 +7,12 @@
 <%@ Import Namespace="CodeSmith.SchemaHelper" %>
 <%@ Import Namespace="System.Linq" %>
             Dim cancel As Boolean = False
+<% Dim associations As System.Collections.Generic.List(Of Association) = Entity.Associations.Where(Function(a) a.AssociationType = AssociationType.ManyToOne OrElse a.AssociationType = AssociationType.ManyToZeroOrOne).Distinct().ToList()
+   If Not RenderOptionalContent AndAlso associations.Count() > 0 Then %>
+            OnChildInserting(<%= associations.BuildArgumentVariables(true) %>, cancel)
+<% Else %>
             OnChildInserting(connection, cancel)
+<% End If %>
             If (cancel) Then
                 Return
             End If
