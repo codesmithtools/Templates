@@ -248,6 +248,15 @@ Namespace <%= BusinessProjectName %>
         ''' <param name="cancel">Value returned from the method indicating whether the object insertion should proceed.</param>
         Partial Private Sub OnChildInserting(ByVal connection As SqlConnection, ByRef cancel As Boolean)
         End Sub
+<% Dim associations As System.Collections.Generic.List(Of Association) = Entity.Associations.Where(Function(a) a.AssociationType = AssociationType.ManyToOne OrElse a.AssociationType = AssociationType.ManyToZeroOrOne).Distinct().ToList()
+   If (associations.Count() > 0) Then %>
+
+        ''' <summary>
+        ''' Codesmith generated stub method that is called when inserting the child <see cref="<%=ChildBusinessClassName%><%= Entity.GenericProperty %>"/> object. 
+        ''' </summary>
+        Partial Private Sub OnChildInserting(<%= associations.ToList().BuildParametersVariables(true) %>, ByRef cancel As Boolean)
+        End Sub
+<% End If %>
 
         ''' <summary>
         ''' Codesmith generated stub method that is called after the child <see cref="<%=ChildBusinessClassName%><%= Entity.GenericProperty %>"/> object has been inserted. 
@@ -269,6 +278,14 @@ Namespace <%= BusinessProjectName %>
         ''' <param name="cancel">Value returned from the method indicating whether the object creation should proceed.</param>
         Partial Private Sub OnChildUpdating(ByVal connection As SqlConnection, ByRef cancel As Boolean)
         End Sub
+<% If (associations.Count() > 0) Then %>
+
+        ''' <summary>
+        ''' Codesmith generated stub method that is called when updating the child <see cref="<%=ChildBusinessClassName%><%= Entity.GenericProperty %>"/> object. 
+        ''' </summary>
+        Partial Private Sub OnChildUpdating(<%= associations.ToList().BuildParametersVariables(true) %>, ByRef cancel As Boolean)
+        End Sub
+<% End If %>
 
         ''' <summary>
         ''' Codesmith generated stub method that is called after the child <see cref="<%=ChildBusinessClassName%><%= Entity.GenericProperty %>"/> object has been updated. 

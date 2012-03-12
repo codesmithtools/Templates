@@ -258,6 +258,14 @@ namespace <%= BusinessProjectName %>
         /// <param name="connection"></param>
         /// <param name="cancel">Value returned from the method indicating whether the object insertion should proceed.</param>
         partial void OnChildInserting(SqlConnection connection, ref bool cancel);
+<% var associations = Entity.Associations.Where(a => a.AssociationType == AssociationType.ManyToOne || a.AssociationType == AssociationType.ManyToZeroOrOne).Distinct();
+   if(associations.Count() > 0) { %>
+
+        /// <summary>
+        /// Codesmith generated stub method that is called when inserting the child <see cref="<%=ChildBusinessClassName%><%= Entity.GenericProperty %>"/> object. 
+        /// </summary>
+        partial void OnChildInserting(<%= associations.ToList().BuildParametersVariables(true) %>, ref bool cancel);
+<% } %>
 
         /// <summary>
         /// Codesmith generated stub method that is called after the child <see cref="<%=ChildBusinessClassName%><%= Entity.GenericProperty %>"/> object has been inserted. 
@@ -276,6 +284,13 @@ namespace <%= BusinessProjectName %>
         /// <param name="connection"></param>
         /// <param name="cancel">Value returned from the method indicating whether the object creation should proceed.</param>
         partial void OnChildUpdating(SqlConnection connection, ref bool cancel);
+<% if(associations.Count() > 0) { %>
+
+        /// <summary>
+        /// Codesmith generated stub method that is called when updating the child <see cref="<%=ChildBusinessClassName%><%= Entity.GenericProperty %>"/> object. 
+        /// </summary>
+        partial void OnChildUpdating(<%= associations.ToList().BuildParametersVariables(true) %>, ref bool cancel);
+<% } %>
 
         /// <summary>
         /// Codesmith generated stub method that is called after the child <see cref="<%=ChildBusinessClassName%><%= Entity.GenericProperty %>"/> object has been updated. 

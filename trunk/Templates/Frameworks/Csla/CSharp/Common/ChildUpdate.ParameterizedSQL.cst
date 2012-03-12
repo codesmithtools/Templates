@@ -7,7 +7,12 @@
 <%@ Import Namespace="CodeSmith.SchemaHelper" %>
 <%@ Import Namespace="System.Linq" %>
             bool cancel = false;
+<% var associations = Entity.Associations.Where(a => a.AssociationType == AssociationType.ManyToOne || a.AssociationType == AssociationType.ManyToZeroOrOne).Distinct();
+   if(!RenderOptionalContent && associations.Count() > 0) { %>
+            OnChildUpdating(<%= associations.BuildArgumentVariables(true) %>, ref cancel);
+<% } else { %>
             OnChildUpdating(connection, ref cancel);
+<% } %>
             if (cancel) return;
 
 <% if(Entity.CanUpdate) { %>  
