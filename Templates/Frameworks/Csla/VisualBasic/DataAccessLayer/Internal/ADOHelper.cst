@@ -115,7 +115,7 @@ Namespace <%= DataProjectName %>
                 Return value
             End If
         End Function
-    
+
         Friend Overloads Shared Function NullCheck(ByVal value As Nullable(Of Char)) As Object
             If value Is Nothing OrElse CStr(value) = vbNullString Then
                 Return DBNull.Value
@@ -123,7 +123,15 @@ Namespace <%= DataProjectName %>
                 Return value
             End If
         End Function
-    
+
+        Friend Overloads Shared Function NullCheck(ByVal value As Byte()) As Object
+            If value Is Nothing Then
+                Return DBNull.Value
+            Else
+                Return value
+            End If
+        End Function
+
         Friend Overloads Shared Function NullCheck(ByVal value As Nullable(Of Byte)) As Object
             If value Is Nothing OrElse Not value.HasValue Then
                 Return DBNull.Value

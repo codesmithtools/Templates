@@ -44,10 +44,15 @@ namespace CodeSmith.SchemaHelper
             if (property.IsType(PropertyType.Concurrency))
                 return true;
 
-            var prop = property as ISchemaProperty;
-            if (prop != null)
+            string dataType = null;
+            if (property is ISchemaProperty)
+                dataType = ((ISchemaProperty)property).DataType.ToString();
+            else if (property.ExtendedProperties.ContainsKey("DataType"))
+                dataType = property.ExtendedProperties["DataType"].ToString();
+
+            if (!String.IsNullOrEmpty(dataType))
             {
-                return DbTypeToDataReaderMethod[prop.DataType.ToString(), "GetValue"] == "GetBytes";
+                return DbTypeToDataReaderMethod[dataType, "GetValue"] == "GetBytes";
             }
 
             return false;
@@ -65,16 +70,61 @@ namespace CodeSmith.SchemaHelper
 
         public static bool ExcludeBusinessSizeRule(this IProperty property)
         {
+            string nativeType = null;
             if (property is ISchemaProperty)
+                nativeType = ((ISchemaProperty)property).NativeType;
+            else if (property.ExtendedProperties.ContainsKey("NativeType"))
+                nativeType = property.ExtendedProperties["NativeType"].ToString();
+
+            if (!String.IsNullOrEmpty(nativeType))
             {
-                var prop = (ISchemaProperty) property;
-                return prop.NativeType.Equals("ntext", StringComparison.InvariantCultureIgnoreCase) ||
-                       prop.NativeType.Equals("text", StringComparison.InvariantCultureIgnoreCase) ||
-                      (prop.NativeType.Equals("nvarchar", StringComparison.InvariantCultureIgnoreCase) && property.Size == -1) ||
-                      (prop.NativeType.Equals("varchar", StringComparison.InvariantCultureIgnoreCase) && property.Size == -1);
+                return nativeType.Equals("ntext", StringComparison.InvariantCultureIgnoreCase) ||
+                       nativeType.Equals("text", StringComparison.InvariantCultureIgnoreCase) ||
+                      (nativeType.Equals("nvarchar", StringComparison.InvariantCultureIgnoreCase) && property.Size == -1) ||
+                      (nativeType.Equals("varchar", StringComparison.InvariantCultureIgnoreCase) && property.Size == -1);
             }
 
             return false;
+        }
+
+        public static bool IsBinarySqlDbType(this IProperty property)
+        {
+            string nativeType = null;
+            if (property is ISchemaProperty)
+                nativeType = ((ISchemaProperty)property).NativeType;
+            else if (property.ExtendedProperties.ContainsKey("NativeType"))
+                nativeType = property.ExtendedProperties["NativeType"].ToString();
+
+            if (!String.IsNullOrEmpty(nativeType))
+            {
+                return nativeType.Equals("binary", StringComparison.InvariantCultureIgnoreCase) ||
+                       nativeType.Equals("varbinary", StringComparison.InvariantCultureIgnoreCase) ||
+                       nativeType.Equals("image", StringComparison.InvariantCultureIgnoreCase);
+            }
+
+            return false;
+        }
+
+
+        public static string GetBinarySqlDbType(this IProperty property)
+        {
+            string nativeType = null;
+            if (property is ISchemaProperty)
+                nativeType = ((ISchemaProperty)property).NativeType;
+            else if (property.ExtendedProperties.ContainsKey("NativeType"))
+                nativeType = property.ExtendedProperties["NativeType"].ToString();
+
+            if (!String.IsNullOrEmpty(nativeType))
+            {
+                if (nativeType.Equals("binary", StringComparison.InvariantCultureIgnoreCase) ||
+                   nativeType.Equals("varbinary", StringComparison.InvariantCultureIgnoreCase))
+                    return "SqlDbType.VarBinary";
+
+                if (nativeType.Equals("image", StringComparison.InvariantCultureIgnoreCase))
+                    return "SqlDbType.Binary";
+            }
+
+            return String.Empty;
         }
 
         internal static MapCollection _dbTypeToDataReaderMethod;

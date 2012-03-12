@@ -177,12 +177,12 @@ namespace CodeSmith.SchemaHelper
 
                 string originalCast;
                 string cast;
-                if (property.IsNullable && property.SystemType != "System.Byte[]")
+                if (property.IsNullable)
                 {
                     //includeThisPrefix = this.
                     //castprefix = item.
                     //propertyName = bo.propertyname or propertyname
-                    if (!string.IsNullOrEmpty(className))
+                    if (!string.IsNullOrEmpty(className) && property.SystemType != "System.Byte[]")
                     {
                         cast = String.Format("ADOHelper.NullCheck({3} != null ? {0}{1}{2} : {4}));", includeThisPrefix, castPrefix, propertyName, className, nullableType);
                         originalCast = String.Format("ADOHelper.NullCheck({3} != null ? {0}{1}{2} : {4}));", includeThisPrefix, castPrefix, originalPropertyName, className, originalNullableType);
@@ -195,7 +195,7 @@ namespace CodeSmith.SchemaHelper
                 }
                 else
                 {
-                    if (!string.IsNullOrEmpty(className))
+                    if (!string.IsNullOrEmpty(className) && property.SystemType != "System.Byte[]")
                     {
                         cast = String.Format("{3} != null ? {0}{1}{2} : {4});", includeThisPrefix, castPrefix, propertyName, className, nullableType);
                         originalCast = String.Format("{3} != null ? {0}{1}{2} : {4});", includeThisPrefix, castPrefix, originalPropertyName, className, originalNullableType);
@@ -205,6 +205,13 @@ namespace CodeSmith.SchemaHelper
                         cast = String.Format("{0}{1}{2});", includeThisPrefix, castPrefix, propertyName);
                         originalCast = String.Format("{0}{1}{2});", includeThisPrefix, castPrefix, originalPropertyName);
                     }
+                }
+
+                if (property.IsBinarySqlDbType())
+                {
+                    commandParameters += String.Format(Environment.NewLine + "                command.Parameters.Add(\"{0}{1}\", {2}, {3}).Value = {4};", Configuration.Instance.ParameterPrefix, property.KeyName, property.GetBinarySqlDbType(), property.Size, cast.Substring(0, cast.Length - 2));
+
+                    continue;
                 }
 
                 bool includeOriginalPropertyName = isUpdateStatement && property.IsType(PropertyType.Key) && !property.IsType(PropertyType.Identity);
