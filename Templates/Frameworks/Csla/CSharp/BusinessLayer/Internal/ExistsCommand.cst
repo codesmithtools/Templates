@@ -124,7 +124,7 @@ namespace <%= BusinessProjectName %>
 <% if(DataAccessImplementation == DataAccessMethod.LinqToSQL) {%>
         protected override void DataPortal_Execute()
         {
-            using (var ctx = ContextManager<DAL.PetshopDataContext>.GetManager(LinqToSQLHelper.ConnectionString, true))
+            using (var ctx = ContextManager<DAL.<%=LinqToSQLDataContextName%>>.GetManager(LinqToSQLHelper.ConnectionString, true))
             {
                 Result = ctx.DataContext.GetTable(Criteria.EntityType).Where(LinqToSQLHelper.BuildWhereStatement(Criteria.StateBag), Criteria.StateBag.Values.ToArray()).Count() > 0;
             }

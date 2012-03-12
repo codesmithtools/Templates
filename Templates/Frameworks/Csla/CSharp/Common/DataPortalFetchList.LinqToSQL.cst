@@ -15,7 +15,7 @@
             RaiseListChangedEvents = false;
             
             // Build a collection of <%= Entity.Name %> objects based on a specified criteria
-            using (var ctx = ContextManager<DAL.PetshopDataContext>.GetManager(LinqToSQLHelper.ConnectionString, true))
+            using (var ctx = ContextManager<DAL.<%=LinqToSQLDataContextName%>>.GetManager(LinqToSQLHelper.ConnectionString, true))
             {        
                 var items = ctx.DataContext.<%= Entity.Name %>
                     .Where(LinqToSQLHelper.BuildWhereStatement(criteria.StateBag), criteria.StateBag.Values.ToArray());

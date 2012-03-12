@@ -15,7 +15,7 @@
 
 <% if(Entity.CanUpdate) { %>  
             // Create a new connection.
-            using (var ctx = ContextManager<DAL.PetshopDataContext>.GetManager(LinqToSQLHelper.ConnectionString, true))
+            using (var ctx = ContextManager<DAL.<%=LinqToSQLDataContextName%>>.GetManager(LinqToSQLHelper.ConnectionString, true))
             {
 
 <%     if(Entity.IdentityProperty == null) { %>
