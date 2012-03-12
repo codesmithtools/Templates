@@ -76,6 +76,11 @@ namespace <%= BusinessProjectName %>
         
 <% } %>
 
+        public static <%= BusinessClassName %><%= Entity.GenericProperty %> GetByCriteria(<%= CriteriaClassName %><%= Entity.GenericProperty %> criteria)
+        {
+            return DataPortal.Fetch<<%= BusinessClassName %><%= Entity.GenericProperty %>>(criteria);
+        }
+
         public static <%= BusinessClassName %><%= Entity.GenericProperty %> GetAll()
         {
             return DataPortal.Fetch<<%= BusinessClassName %><%= Entity.GenericProperty %>>(new <%= CriteriaClassName %><%= Entity.GenericProperty %>());
@@ -99,6 +104,20 @@ namespace <%= BusinessProjectName %>
             dp.BeginFetch(criteria);
         }
 <% } %>
+
+        public static void GetByCriteriaAsync(<%= CriteriaClassName %><%= Entity.GenericProperty %> criteria, EventHandler<DataPortalResult<<%= BusinessClassName %><%= Entity.GenericProperty %>>> handler)
+        {  
+            var dp = new DataPortal<<%= BusinessClassName %><%= Entity.GenericProperty %>>();
+            dp.FetchCompleted += handler;
+            dp.BeginFetch(criteria);
+        }
+
+        public static void GetAllAsync(EventHandler<DataPortalResult<<%= BusinessClassName %><%= Entity.GenericProperty %>>> handler)
+        {
+            var dp = new DataPortal<<%= BusinessClassName %><%= Entity.GenericProperty %>>();
+            dp.FetchCompleted += handler;
+            dp.BeginFetch(new <%= CriteriaClassName %>());
+        }
 
         #endregion
 

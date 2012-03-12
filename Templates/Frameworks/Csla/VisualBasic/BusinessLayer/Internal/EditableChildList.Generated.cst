@@ -83,7 +83,11 @@ Namespace <%= BusinessProjectName %>
             Return DataPortal.Fetch<% If( Not DataAccessImplementation = DataAccessMethod.ObjectFactoryNone AndAlso Not DataAccessImplementation = DataAccessMethod.ObjectFactoryParameterizedSQL AndAlso Not DataAccessImplementation = DataAccessMethod.ObjectFactoryStoredProcedures) Then %>Child<% End If %>(Of <%= BusinessClassName %><%= Entity.GenericProperty %>)(criteria)
         End Function
     <% Next %>
-    
+
+        Friend Shared Function GetByCriteria(ByVal criteria As <%= CriteriaClassName %><%= Entity.GenericProperty %>) As <%= BusinessClassName %><%= Entity.GenericProperty %>
+            Return DataPortal.Fetch(Of <%= BusinessClassName %><%= Entity.GenericProperty %>)(criteria)
+        End Function
+
         Friend Shared Function GetAll() As <%= BusinessClassName %><%= Entity.GenericProperty %>
             Return DataPortal.Fetch<% If( Not DataAccessImplementation = DataAccessMethod.ObjectFactoryNone AndAlso Not DataAccessImplementation = DataAccessMethod.ObjectFactoryParameterizedSQL AndAlso Not DataAccessImplementation = DataAccessMethod.ObjectFactoryStoredProcedures) Then %>Child<% End If %>(Of <%= BusinessClassName %><%= Entity.GenericProperty %>)(New <%= CriteriaClassName %><%= Entity.GenericProperty %>())
         End Function
@@ -109,7 +113,15 @@ Namespace <%= BusinessProjectName %>
             DataPortal.BeginFetch(Of AsyncChildLoader(Of <%= BusinessClassName %><%= Entity.GenericProperty %>))(criteria, handler)
         End Sub
 <% Next %>
-    
+
+        Friend Shared Sub GetByCriteriaAsync(ByVal criteria As <%= CriteriaClassName %><%= Entity.GenericProperty %>, ByVal handler As EventHandler(Of DataPortalResult(Of <%= BusinessClassName %><%= Entity.GenericProperty %>)))
+            Dim dp As New DataPortal(Of <%= BusinessClassName %><%= Entity.GenericProperty %>)()
+            AddHandler dp.FetchCompleted, handler
+
+            ' Mark as child?
+            dp.BeginFetch(criteria)
+        End Sub
+
         Friend Shared Sub GetAllAsync(ByVal handler As EventHandler(Of DataPortalResult(Of AsyncChildLoader(Of <%= BusinessClassName %><%= Entity.GenericProperty %>))))
             DataPortal.BeginFetch(Of AsyncChildLoader(Of <%= BusinessClassName %><%= Entity.GenericProperty %>))(New <%= CriteriaClassName %><%= Entity.GenericProperty %>(), handler)
         End Sub 
