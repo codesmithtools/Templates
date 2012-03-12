@@ -66,15 +66,6 @@ Namespace <%= BusinessProjectName %>
         Public Shared Function NewList() As <%= BusinessClassName %><%= Entity.GenericProperty %>
             Return DataPortal.Create(Of <%= BusinessClassName %><%= Entity.GenericProperty %>)()
         End Function
-
-        ''' <summary>
-        ''' Returns a <see cref="<%=BusinessClassName%><%= Entity.GenericProperty %>"/> collection of all <see cref="<%=ChildBusinessClassName%><%= Entity.GenericProperty %>"/> items. 
-        ''' </summary>
-        ''' <returns>Collection of all <%=ChildBusinessClassName%><%= Entity.GenericProperty %> items.</returns>    
-        Public Shared Function GetAll() As <%= BusinessClassName %><%= Entity.GenericProperty %>
-            Return DataPortal.Fetch(Of <%= BusinessClassName %><%= Entity.GenericProperty %>)(New <%= CriteriaClassName %><%= Entity.GenericProperty %>())
-        End Function
-
     <% For Each sc As SearchCriteria In  Entity.SearchCriteria %>
 
         ''' <summary>
@@ -91,6 +82,18 @@ Namespace <%= BusinessProjectName %>
             Return DataPortal.Fetch(Of <%= BusinessClassName %><%= Entity.GenericProperty %>)(criteria)
         End Function
     <% Next %>
+
+        Public Shared Function GetByCriteria(ByVal criteria As <%= CriteriaClassName %><%= Entity.GenericProperty %>) As <%= BusinessClassName %><%= Entity.GenericProperty %>
+            Return DataPortal.Fetch(Of <%= BusinessClassName %><%= Entity.GenericProperty %>)(criteria)
+        End Function
+
+		''' <summary>
+        ''' Returns a <see cref="<%=BusinessClassName%><%= Entity.GenericProperty %>"/> collection of all <see cref="<%=ChildBusinessClassName%><%= Entity.GenericProperty %>"/> items. 
+        ''' </summary>
+        ''' <returns>Collection of all <%=ChildBusinessClassName%><%= Entity.GenericProperty %> items.</returns>    
+        Public Shared Function GetAll() As <%= BusinessClassName %><%= Entity.GenericProperty %>
+            Return DataPortal.Fetch(Of <%= BusinessClassName %><%= Entity.GenericProperty %>)(New <%= CriteriaClassName %><%= Entity.GenericProperty %>())
+        End Function
 
 <% If(IncludeSilverlightSupport) Then %>
 #End If
@@ -118,6 +121,14 @@ Namespace <%= BusinessProjectName %>
             dp.BeginFetch(criteria)
         End Sub
     <% Next %> 
+
+        Public Shared Sub GetByCriteriaAsync(ByVal criteria As <%= CriteriaClassName %><%= Entity.GenericProperty %>, ByVal handler As EventHandler(Of DataPortalResult(Of <%= BusinessClassName %><%= Entity.GenericProperty %>)))
+            Dim dp As New DataPortal(Of <%= BusinessClassName %><%= Entity.GenericProperty %>)()
+            AddHandler dp.FetchCompleted, handler
+
+            ' Mark as child?
+            dp.BeginFetch(criteria)
+        End Sub
 
         Public Shared Sub GetAllAsync(ByVal handler As EventHandler(Of DataPortalResult(Of <%= BusinessClassName %><%= Entity.GenericProperty %>)))
             Dim dp As New DataPortal(Of <%= BusinessClassName %><%= Entity.GenericProperty %>)()

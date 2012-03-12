@@ -71,7 +71,11 @@ Namespace <%= BusinessProjectName %>
             Return DataPortal.Fetch(Of <%= BusinessClassName %>)(criteria)
         End Function
     <% Next %>
-    
+
+        Public Shared Function GetByCriteria(ByVal criteria As <%= CriteriaClassName %><%= Entity.GenericProperty %>) As <%= BusinessClassName %><%= Entity.GenericProperty %>
+            Return DataPortal.Fetch(Of <%= BusinessClassName %><%= Entity.GenericProperty %>)(criteria)
+        End Function
+
         Public Shared Function GetAll() As <%= BusinessClassName %><%= Entity.GenericProperty %>
             Return DataPortal.Fetch(Of <%= BusinessClassName %><%= Entity.GenericProperty %>)(New <%= CriteriaClassName %>())
         End Function
@@ -82,7 +86,6 @@ Namespace <%= BusinessProjectName %>
 #End Region
     
 #Region "Asynchronous Factory Methods"
-
     <% For Each sc As SearchCriteria In Entity.SearchCriteria %>
     
         Public Shared Sub <%= sc.MethodName %>Async(<%= sc.Properties.BuildParametersVariables() %>, ByVal handler As EventHandler(Of DataPortalResult(Of <%= BusinessClassName %><%= Entity.GenericProperty %>)))
@@ -97,6 +100,20 @@ Namespace <%= BusinessProjectName %>
             dp.BeginFetch(criteria)
         End Sub
     <% Next %> 
+
+        Public Shared Sub GetByCriteriaAsync(ByVal criteria As <%= CriteriaClassName %><%= Entity.GenericProperty %>, ByVal handler As EventHandler(Of DataPortalResult(Of <%= BusinessClassName %><%= Entity.GenericProperty %>)))
+            Dim dp As New DataPortal(Of <%= BusinessClassName %><%= Entity.GenericProperty %>)()
+            AddHandler dp.FetchCompleted, handler
+
+            ' Mark as child?
+            dp.BeginFetch(criteria)
+        End Sub
+
+        Public Shared Sub GetAllAsync(ByVal handler As EventHandler(Of DataPortalResult(Of <%= BusinessClassName %><%= Entity.GenericProperty %>)))
+            Dim dp As New DataPortal(Of <%= BusinessClassName %><%= Entity.GenericProperty %>)()
+            AddHandler dp.FetchCompleted, handler
+            dp.BeginFetch(New <%= CriteriaClassName %><%= Entity.GenericProperty %>())
+        End Sub
 
 #End Region
         
