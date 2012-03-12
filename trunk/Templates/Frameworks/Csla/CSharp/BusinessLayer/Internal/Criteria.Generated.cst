@@ -181,7 +181,7 @@ foreach(var property in Entity.GetProperties(PropertyType.NoConcurrency)){ if(pr
         {
             get
             {
-                return typeof(DAL.<%= Entity.EntityKeyName%>);
+                return typeof(DAL.<%= Entity.Name %>);
             }
         }
 

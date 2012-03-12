@@ -129,7 +129,7 @@ namespace <%= BusinessProjectName %>
 
             // Check criteria
             // Build a collection of <%=ChildBusinessClassName%><%= Entity.GenericProperty %> objects based on a specified criteria
-            using (var ctx = ContextManager<DAL.PetshopDataContext>.GetManager(LinqToSQLHelper.ConnectionString, true))
+            using (var ctx = ContextManager<DAL.<%=LinqToSQLDataContextName%>>.GetManager(LinqToSQLHelper.ConnectionString, true))
             {
                 var items = ctx.DataContext.<%= Entity.Name %>.Where(LinqToSQLHelper.BuildWhereStatement(criteria.StateBag), criteria.StateBag.Values.ToArray());
                 // Add each item retrieved from the data base to the current collection object

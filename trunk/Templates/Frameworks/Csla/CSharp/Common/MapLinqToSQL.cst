@@ -31,10 +31,10 @@
             } 
             else 
             {%>
-                <%= property.PrivateMemberVariableName %> = <%if(!property.HasByteArrayColumn()) { %>DataSource.<%= property.Name %>);<% } else { %>LinqToSQLHelper.GetByteArray(DataSource.<%= property.KeyName %>);<% } %>
+                <%= property.PrivateMemberVariableName %> = <%if(!property.HasByteArrayColumn()) { %>DataSource.<%= property.Name %><% } else { %>LinqToSQLHelper.GetByteArray(DataSource.<%= property.KeyName %><% } %>;
 <%                if (property.IsType(PropertyType.Key) && !property.IsType(PropertyType.Identity)) 
                 { %>
-                _original<%= property.Name %> = <%if(!property.HasByteArrayColumn()) { %>DataSource.<%= property.Name %>);<% } else { %>LinqToSQLHelper.GetByteArray(DataSource.<%= property.KeyName %>);<% } %>
+                _original<%= property.Name %> = <%if(!property.HasByteArrayColumn()) { %>DataSource.<%= property.Name %><% } else { %>LinqToSQLHelper.GetByteArray(DataSource.<%= property.KeyName %><% } %>;
 <%                 } 
             } 
         } 

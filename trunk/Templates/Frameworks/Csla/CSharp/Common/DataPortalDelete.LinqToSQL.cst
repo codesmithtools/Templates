@@ -29,7 +29,7 @@
      memberCount = memberCount + 1 ; 
      } 
 %>    
-            using (var ctx = ContextManager<DAL.PetshopDataContext>.GetManager(LinqToSQLHelper.ConnectionString, true))
+            using (var ctx = ContextManager<DAL.<%=LinqToSQLDataContextName%>>.GetManager(LinqToSQLHelper.ConnectionString, true))
             {
                 ctx.DataContext.<%= Entity.Name %>.Delete(<%= PrimaryKeyCriteria %>);
             

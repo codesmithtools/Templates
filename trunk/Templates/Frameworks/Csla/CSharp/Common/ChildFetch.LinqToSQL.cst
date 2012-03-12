@@ -13,7 +13,7 @@
             if (cancel) return;
             
             // Get <%= Entity.Name %> data for a single criteria
-            using (var ctx = ContextManager<DAL.PetshopDataContext>.GetManager(LinqToSQLHelper.ConnectionString, true))
+            using (var ctx = ContextManager<DAL.<%=LinqToSQLDataContextName%>>.GetManager(LinqToSQLHelper.ConnectionString, true))
             {
 <%    string PrimaryKeyCriteria = "";    
     string PrimaryKeyFields = "";
