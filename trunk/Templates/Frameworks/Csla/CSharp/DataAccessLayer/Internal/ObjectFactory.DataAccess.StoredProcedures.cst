@@ -133,7 +133,7 @@ if(property.ForeignProperty.SystemType == "System.String" && !property.ForeignPr
                         if(reader.Read())
                            item = Map(reader);
                         else
-                            throw new Exception(String.Format("The record was not found in '<%= Entity.EntityKeyName %>' using the following criteria: {0}.", criteria));
+                            throw new Exception(String.Format("The record was not found in '<%= Entity.SchemaName %>.<%= Entity.EntityKeyName %>' using the following criteria: {0}.", criteria));
                     }
                 }
             }

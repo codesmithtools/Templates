@@ -12,7 +12,7 @@
                 Return
             End If
     
-            Dim commandText As String = String.Format("SELECT <%= entity.Properties.BuildDataBaseColumns() %> FROM <%= Entity.EntityKeyName %> {0}", ADOHelper.BuildWhereStatement(criteria.StateBag))
+            Dim commandText As String = String.Format("SELECT <%= entity.Properties.BuildDataBaseColumns() %> FROM [<%= Entity.SchemaName %>].[<%= Entity.EntityKeyName %>] {0}", ADOHelper.BuildWhereStatement(criteria.StateBag))
             Using connection As New SqlConnection(ADOHelper.ConnectionString)
                 connection.Open()
                 Using command As New SqlCommand(commandText, connection)
@@ -21,7 +21,7 @@
                         If reader.Read() Then
                             Map(reader)
                         Else
-                            Throw New Exception(String.Format("The record was not found In '<%= Entity.EntityKeyName %>' using the following criteria: {0}.", criteria))
+                            Throw New Exception(String.Format("The record was not found In '<%= Entity.SchemaName %>.<%= Entity.EntityKeyName %>' using the following criteria: {0}.", criteria))
                         End If
                     End Using
                 End Using

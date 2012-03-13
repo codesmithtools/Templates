@@ -52,7 +52,7 @@
             }
 
 <% } %>
-            const string commandText = "UPDATE <%= Entity.EntityKeyName %> <%= Entity.GetProperties(PropertyType.UpdateInsert).BuildSetStatements() %> <%= Entity.GetProperties(PropertyType.Key).BuildWhereStatements(true) %><% if(Entity.ConcurrencyProperty != null) { %> AND [<%= Entity.ConcurrencyProperty.KeyName %>] = <%= ParameterPrefix  %><%= Entity.ConcurrencyProperty.KeyName %><% } %><%= Entity.BuildUpdateSelectStatement() %>";
+            const string commandText = "UPDATE [<%= Entity.SchemaName %>].[<%= Entity.EntityKeyName %>] <%= Entity.GetProperties(PropertyType.UpdateInsert).BuildSetStatements() %> <%= Entity.GetProperties(PropertyType.Key).BuildWhereStatements(true) %><% if(Entity.ConcurrencyProperty != null) { %> AND [<%= Entity.ConcurrencyProperty.KeyName %>] = <%= ParameterPrefix  %><%= Entity.ConcurrencyProperty.KeyName %><% } %><%= Entity.BuildUpdateSelectStatement() %>";
             using (var connection = new SqlConnection(ADOHelper.ConnectionString))
             {
                 connection.Open();

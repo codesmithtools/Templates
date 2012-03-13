@@ -13,7 +13,7 @@
             End If
 
 <% If(Entity.CanInsert) Then %> 
-            Const commandText As String = "INSERT INTO <%= Entity.EntityKeyName %> (<%= entity.GetProperties(PropertyType.UpdateInsert).BuildDataBaseColumns() %>) VALUES (<%= entity.GetProperties(PropertyType.UpdateInsert).BuildDataBaseParameters() %>)<%= entity.BuildInsertSelectStatement() %>"
+            Const commandText As String = "INSERT INTO [<%= Entity.SchemaName %>].[<%= Entity.EntityKeyName %>] (<%= entity.GetProperties(PropertyType.UpdateInsert).BuildDataBaseColumns() %>) VALUES (<%= entity.GetProperties(PropertyType.UpdateInsert).BuildDataBaseParameters() %>)<%= entity.BuildInsertSelectStatement() %>"
             Using connection As New SqlConnection(ADOHelper.ConnectionString)
                 connection.Open()
                 Using command As New SqlCommand(commandText, connection)

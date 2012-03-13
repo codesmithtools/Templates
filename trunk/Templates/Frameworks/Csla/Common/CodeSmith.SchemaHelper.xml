@@ -1638,13 +1638,6 @@
             Returns the Commands Return Value.
             </summary>
         </member>
-        <member name="P:CodeSmith.SchemaHelper.CommandEntity.Owner">
-            <summary>
-            Returns the Owner / Schema that the table is a property of.
-            
-            If this is the default schema, it will return an empty string.
-            </summary>
-        </member>
         <member name="M:CodeSmith.SchemaHelper.TableEnumEntity.#ctor(SchemaExplorer.ITableSchema)">
             <summary>
             Constructor that passes in the Table that this class will represent.

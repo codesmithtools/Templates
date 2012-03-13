@@ -35,13 +35,13 @@ Imports Csla.Data
 <%
 Dim properties As System.Collections.Generic.List(Of IProperty) = New System.Collections.Generic.List(Of IProperty)()
 If Entity.HasKey Then
-	properties.AddRange(Entity.Key.Properties)
+    properties.AddRange(Entity.Key.Properties)
 End If
 
 properties.AddRange(Entity.GetProperties(PropertyType.NoKey).Take(2 - properties.Count))
 
 If properties.Count < 2 Then
-	Throw New ApplicationException([String].Format("NameValueList cannot be generated for Entity '{0}' as it requires atleast two properties to be present.", Entity.Name))
+    Throw New ApplicationException([String].Format("NameValueList cannot be generated for Entity '{0}' as it requires atleast two properties to be present.", Entity.Name))
 End If
 %>
 Namespace <%= BusinessProjectName %>
@@ -57,7 +57,7 @@ Namespace <%= BusinessProjectName %>
             IsReadOnly = false
     
             Dim criteria as New <%= CriteriaClassName %>()
-            Dim commandText As String = String.Format("SELECT <%= properties.BuildDataBaseColumns() %> FROM <%= Entity.EntityKeyName %> {0}", ADOHelper.BuildWhereStatement(criteria.StateBag))
+            Dim commandText As String = String.Format("SELECT <%= properties.BuildDataBaseColumns() %> FROM [<%= Entity.SchemaName %>].[<%= Entity.EntityKeyName %>] {0}", ADOHelper.BuildWhereStatement(criteria.StateBag))
             Using connection As New SqlConnection(ADOHelper.ConnectionString)
                 connection.Open()
                 Using command As New SqlCommand(commandText, connection)
@@ -68,7 +68,7 @@ Namespace <%= BusinessProjectName %>
                                 Me.Add(New NameValuePair(reader.<%= properties(0).GetReaderMethod() %>("<%= properties(0).KeyName %>"), reader.<%= properties(1).GetReaderMethod() %>("<%= properties(1).KeyName %>")))
                             Loop While reader.Read()
                         Else
-                            Throw New Exception(String.Format("The record was not found In '<%= Entity.EntityKeyName %>' using the following criteria: {0}.", criteria))
+                            Throw New Exception(String.Format("The record was not found In '<%= Entity.SchemaName %>.<%= Entity.EntityKeyName %>' using the following criteria: {0}.", criteria))
                         End If
                     End Using
                 End Using
@@ -99,7 +99,7 @@ Namespace <%= BusinessProjectName %>
                                 Me.Add(New NameValuePair(reader.<%= properties(0).GetReaderMethod() %>("<%= properties(0).KeyName %>"), reader.<%= properties(1).GetReaderMethod() %>("<%= properties(1).KeyName %>")))
                             Loop While reader.Read()
                         Else
-                            Throw New Exception(String.Format("The record was not found In '<%= Entity.EntityKeyName %>' using the following criteria: {0}.", criteria))
+                            Throw New Exception(String.Format("The record was not found In '<%= Entity.SchemaName %>.<%= Entity.EntityKeyName %>' using the following criteria: {0}.", criteria))
                         End If
                     End Using
                 End Using

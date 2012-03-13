@@ -19,8 +19,12 @@
                 connection.Open()
                 Using command As New SqlCommand("<%= GetSelectStoredProcedureName() %>", connection)
                     command.CommandType = CommandType.StoredProcedure
+<% If Entity.IsCommand() Then %>
+                    command.Parameters.AddRange(ADOHelper.SqlParameters(criteria.StateBag, False))
+<% Else %>
                     command.Parameters.AddRange(ADOHelper.SqlParameters(criteria.StateBag))
-                    <%= Entity.GetProperties(PropertyType.NoConcurrency).BuildHasValueCommandParameters() %>
+                    <%= Entity.GetCommandParameters().BuildHasValueCommandParameters() %>
+<% End If %>
                     Using reader As SafeDataReader = New SafeDataReader(command.ExecuteReader())
                         If reader.Read() Then
                             Do

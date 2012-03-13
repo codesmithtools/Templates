@@ -24,13 +24,17 @@ RenderToFileHelper(Of ReadOnlyChildGenerated)(fileName, parentFileName, True)
 fileName = System.IO.Path.Combine(Location, String.Format("Entities\{0}.DataAccess.vb", BusinessClassName))
 If DataAccessImplementation = DataAccessMethod.None Then
     RenderToFileHelper(Of ReadOnlyChildDataAccess)(fileName, parentFileName, False)
-ElseIf DataAccessImplementation = DataAccessMethod.ParameterizedSQL Then
-    RenderToFileHelper(Of ReadOnlyChildDataAccessParameterized)(fileName, parentFileName, True)
-ElseIf DataAccessImplementation = DataAccessMethod.StoredProcedures Then
+ElseIf DataAccessImplementation = DataAccessMethod.StoredProcedures OrElse Entity.IsCommand() Then
     RenderToFileHelper(Of ReadOnlyChildDataAccessStoredProcedures)(fileName, parentFileName, True)
+
+    If(Entity.IsCommand()) Then
+        Exit Sub
+    End If
 
     fileName = System.IO.Path.Combine(Location, String.Format("Entities\{0}.StoredProcedures.sql", BusinessClassName))
     RenderProceduresToFileHelper(Of SqlStoredProcedures)(fileName, parentFileName, True, True, False)
+ElseIf DataAccessImplementation = DataAccessMethod.ParameterizedSQL Then
+    RenderToFileHelper(Of ReadOnlyChildDataAccessParameterized)(fileName, parentFileName, True)
 End If
 
 End Sub

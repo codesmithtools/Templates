@@ -12,7 +12,7 @@
             if (cancel) return;
 
 <% if(Entity.CanInsert) { %> 
-            const string commandText = "INSERT INTO <%= Entity.EntityKeyName %> (<%= Entity.GetProperties(PropertyType.UpdateInsert).BuildDataBaseColumns() %>) VALUES (<%= Entity.GetProperties(PropertyType.UpdateInsert).BuildDataBaseParameters() %>)<%= Entity.BuildInsertSelectStatement() %>";
+            const string commandText = "INSERT INTO [<%= Entity.SchemaName %>].[<%= Entity.EntityKeyName %>] (<%= Entity.GetProperties(PropertyType.UpdateInsert).BuildDataBaseColumns() %>) VALUES (<%= Entity.GetProperties(PropertyType.UpdateInsert).BuildDataBaseParameters() %>)<%= Entity.BuildInsertSelectStatement() %>";
             using (var connection = new SqlConnection(ADOHelper.ConnectionString))
             {
                 connection.Open();

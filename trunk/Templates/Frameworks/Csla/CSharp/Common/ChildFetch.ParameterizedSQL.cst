@@ -9,7 +9,7 @@
             OnChildFetching(criteria, ref cancel);
             if (cancel) return;
 
-            string commandText = String.Format("SELECT <%= Entity.Properties.BuildDataBaseColumns() %> FROM <%= Entity.EntityKeyName %> {0}", ADOHelper.BuildWhereStatement(criteria.StateBag));
+            string commandText = String.Format("SELECT <%= Entity.Properties.BuildDataBaseColumns() %> FROM [<%= Entity.SchemaName %>].[<%= Entity.EntityKeyName %>] {0}", ADOHelper.BuildWhereStatement(criteria.StateBag));
             using (var connection = new SqlConnection(ADOHelper.ConnectionString))
             {
                 connection.Open();
@@ -21,7 +21,7 @@
                         if(reader.Read())
                             Map(reader);
                         else
-                            throw new Exception(String.Format("The record was not found in '<%= Entity.EntityKeyName %>' using the following criteria: {0}.", criteria));
+                            throw new Exception(String.Format("The record was not found in '<%= Entity.SchemaName %>.<%= Entity.EntityKeyName %>' using the following criteria: {0}.", criteria));
                     }
                 }
             }

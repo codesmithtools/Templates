@@ -19,7 +19,7 @@
 
 <% If(Entity.CanInsert) Then %> 
             If Not (connection.State = ConnectionState.Open) Then connection.Open()
-            Const commandText As String = "INSERT INTO <%= Entity.EntityKeyName %> (<%= entity.GetProperties(PropertyType.UpdateInsert).BuildDataBaseColumns() %>) VALUES (<%= entity.GetProperties(PropertyType.UpdateInsert).BuildDataBaseParameters() %>)<%= entity.BuildInsertSelectStatement() %>"
+            Const commandText As String = "INSERT INTO [<%= Entity.SchemaName %>].[<%= Entity.EntityKeyName %>] (<%= entity.GetProperties(PropertyType.UpdateInsert).BuildDataBaseColumns() %>) VALUES (<%= entity.GetProperties(PropertyType.UpdateInsert).BuildDataBaseParameters() %>)<%= entity.BuildInsertSelectStatement() %>"
             Using command As New SqlCommand(commandText, connection)
                 <%= entity.GetProperties(PropertyType.UpdateInsert).BuildCommandParameters(False, False, Not RenderOptionalContent) %>
     

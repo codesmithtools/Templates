@@ -56,7 +56,7 @@
             End If
     
     <% End If %>
-            Const commandText As String = "UPDATE <%= Entity.EntityKeyName %> <%= entity.GetProperties(PropertyType.UpdateInsert).BuildSetStatements() %> <%= entity.Key.Properties.BuildWhereStatements(True) %><% If entity.ConcurrencyProperty IsNot Nothing Then %> AND [<%= entity.ConcurrencyProperty.KeyName %>] = <%= ParameterPrefix  %><%= entity.ConcurrencyProperty.KeyName %><% End If %><%= entity.BuildUpdateSelectStatement() %>"
+            Const commandText As String = "UPDATE [<%= Entity.SchemaName %>].[<%= Entity.EntityKeyName %>] <%= entity.GetProperties(PropertyType.UpdateInsert).BuildSetStatements() %> <%= entity.Key.Properties.BuildWhereStatements(True) %><% If entity.ConcurrencyProperty IsNot Nothing Then %> AND [<%= entity.ConcurrencyProperty.KeyName %>] = <%= ParameterPrefix  %><%= entity.ConcurrencyProperty.KeyName %><% End If %><%= entity.BuildUpdateSelectStatement() %>"
             Using connection As New SqlConnection(ADOHelper.ConnectionString)
                 connection.Open()
                 Using command As New SqlCommand(commandText, connection)

@@ -107,7 +107,7 @@ AS
 SET <%= ParameterPrefix %><%= property.Name %> = NEWID()
 
 <% } } } %>
-INSERT INTO <%= Entity.EntityKeyName %> (
+INSERT INTO [<%= Entity.SchemaName %>].[<%= Entity.EntityKeyName %>] (
 <% if(Entity.HasKey) {
     foreach(var property in Entity.GetProperties(PropertyType.Key)) {
      if (property.IsDbType(DbType.Guid) || !IsIdentityColumn(property)) {%>
@@ -132,7 +132,7 @@ SET <%= ParameterPrefix %><%= property.Name %> = SCOPE_IDENTITY()
 
 <% } } } %>
 <% if(Entity.ConcurrencyProperty != null){ %>
-SET <%= ParameterPrefix %><%= Entity.ConcurrencyProperty.KeyName %> = (SELECT [<%= Entity.ConcurrencyProperty.KeyName %>] FROM <%= Entity.EntityKeyName %>WHERE <% GenerateConditions(Entity.GetProperties(PropertyType.Key), 1, false); %>)
+SET <%= ParameterPrefix %><%= Entity.ConcurrencyProperty.KeyName %> = (SELECT [<%= Entity.ConcurrencyProperty.KeyName %>] FROM [<%= Entity.SchemaName %>].[<%= Entity.EntityKeyName %>]WHERE <% GenerateConditions(Entity.GetProperties(PropertyType.Key), 1, false); %>)
 
 <%}%>
 
@@ -148,7 +148,7 @@ AS
 
 SET NOCOUNT ON
 
-INSERT INTO <%= Entity.EntityKeyName %> (
+INSERT INTO [<%= Entity.SchemaName %>].[<%= Entity.EntityKeyName %>] (
     <% GenerateColumns(Entity.Properties, 1, false); %>
 
 ) VALUES (
@@ -156,7 +156,7 @@ INSERT INTO <%= Entity.EntityKeyName %> (
 )
 
 <% if(Entity.ConcurrencyProperty != null){ %>
-SET <%= ParameterPrefix %><%= Entity.ConcurrencyProperty.KeyName %> = (SELECT [<%= Entity.ConcurrencyProperty.KeyName %>] FROM <%= Entity.EntityKeyName %>WHERE <% GenerateConditions(Entity.GetProperties(PropertyType.Key), 1, false); %>)
+SET <%= ParameterPrefix %><%= Entity.ConcurrencyProperty.KeyName %> = (SELECT [<%= Entity.ConcurrencyProperty.KeyName %>] FROM [<%= Entity.SchemaName %>].[<%= Entity.EntityKeyName %>]WHERE <% GenerateConditions(Entity.GetProperties(PropertyType.Key), 1, false); %>)
 <%}%>
 <% } %>
 
@@ -221,7 +221,7 @@ CREATE PROCEDURE <%= GetUpdateStoredProcedureName() %>
 
 AS
 
-UPDATE <%= Entity.EntityKeyName %> SET
+UPDATE [<%= Entity.SchemaName %>].[<%= Entity.EntityKeyName %>] SET
     <% GenerateUpdates(Entity.Properties, 1, false); %>
 
 WHERE
@@ -231,7 +231,7 @@ WHERE
 <%}%>
 
 <% if(Entity.ConcurrencyProperty != null){ %>
-SET <%= ParameterPrefix %><%= Entity.ConcurrencyProperty.KeyName %> = (SELECT [<%= Entity.ConcurrencyProperty.KeyName %>] FROM <%= Entity.EntityKeyName %>WHERE <% GenerateConditions(Entity.GetProperties(PropertyType.Key), 1, false); %>)
+SET <%= ParameterPrefix %><%= Entity.ConcurrencyProperty.KeyName %> = (SELECT [<%= Entity.ConcurrencyProperty.KeyName %>] FROM [<%= Entity.SchemaName %>].[<%= Entity.EntityKeyName %>]WHERE <% GenerateConditions(Entity.GetProperties(PropertyType.Key), 1, false); %>)
 <%}%>
 
 GO

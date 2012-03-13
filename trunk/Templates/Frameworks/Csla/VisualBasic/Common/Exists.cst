@@ -11,7 +11,7 @@
 <% End If %>
 
         ''' <summary>
-        ''' Determines if a record exists in the <%= Entity.EntityKeyName %> table in the database for the specified criteria. 
+        ''' Determines if a record exists in the [<%= Entity.SchemaName %>].[<%= Entity.EntityKeyName %>] table in the database for the specified criteria. 
         ''' </summary>
         ''' <param name="criteria">The criteria parameter is an <see cref="<%=BusinessClassName%><%= Entity.GenericProperty %>"/> object.</param>
         ''' <returns>A boolean value of true is returned if a record is found.</returns>
@@ -24,7 +24,7 @@
 <% End If %>
 
         ''' <summary>
-        ''' Determines if a record exists in the <%= Entity.EntityKeyName %> table in the database for the specified criteria. 
+        ''' Determines if a record exists in the [<%= Entity.SchemaName %>].[<%= Entity.EntityKeyName %>] table in the database for the specified criteria. 
         ''' </summary>
         Public Shared Sub Exists(ByVal criteria As <%= CriteriaClassName %>, ByVal handler As EventHandler(Of DataPortalResult(Of ExistsCommand)))
             <%= BusinessProjectName %>.ExistsCommand.Execute(criteria, handler)
