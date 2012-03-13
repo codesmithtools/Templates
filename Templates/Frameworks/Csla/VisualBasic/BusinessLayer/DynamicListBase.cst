@@ -18,7 +18,7 @@ Public Overloads Overrides Sub Render(writer As System.IO.TextWriter)
 
 Dim parentFileName As String = System.IO.Path.Combine(Me.Location, String.Format("Collections\{0}.vb", BusinessClassName))
 Dim fileName As String = System.IO.Path.Combine(Location, String.Format("Collections\{0}.Generated.vb", BusinessClassName))
-RenderToFileHelper(Of DynamicListBase)(parentFileName)
+RenderToFileHelper(Of DynamicListBase)(parentFileName, False)
 RenderToFileHelper(Of DynamicListBaseGenerated)(fileName, parentFileName, True)
 
 fileName = System.IO.Path.Combine(Location, String.Format("Collections\{0}.DataAccess.vb", BusinessClassName))

@@ -16,7 +16,7 @@ public override void Render(System.IO.TextWriter writer)
     string parentFileName = System.IO.Path.Combine(this.Location, String.Format("Criteria\\{0}.cs", BusinessClassName));
     string fileName = System.IO.Path.Combine(Location, String.Format("Criteria\\{0}.Generated.cs", BusinessClassName));
     
-    RenderToFileHelper<Criteria>(parentFileName);
+    RenderToFileHelper<Criteria>(parentFileName, false);
     RenderToFileHelper<CriteriaGenerated>(fileName, parentFileName, true);
     RenderToFileHelper<IGeneratedCriteriaTemplate>(System.IO.Path.Combine(this.Location, "Criteria\\Interfaces\\IGeneratedCriteria.cs"), true);
 }

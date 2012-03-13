@@ -18,7 +18,7 @@ Public Overloads Overrides Sub Render(writer As System.IO.TextWriter)
 
 Dim parentFileName As String = System.IO.Path.Combine(Me.Location, String.Format("Entities\{0}.vb", BusinessClassName))
 Dim fileName As String = System.IO.Path.Combine(Location, String.Format("Entities\{0}.Generated.vb", BusinessClassName))
-RenderToFileHelper(Of EditableChild)(parentFileName)
+RenderToFileHelper(Of EditableChild)(parentFileName, False)
 RenderToFileHelper(Of EditableChildGenerated)(fileName, parentFileName, True)
 
 fileName = System.IO.Path.Combine(Location, String.Format("Entities\{0}.DataAccess.vb", BusinessClassName))

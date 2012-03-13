@@ -15,7 +15,7 @@ Public Overloads Overrides Sub Render(writer As System.IO.TextWriter)
 Dim parentFileName As String = System.IO.Path.Combine(Me.Location, String.Format("Criteria\{0}.vb", BusinessClassName))
 Dim fileName As String = System.IO.Path.Combine(Location, String.Format("Criteria\{0}.Generated.vb", BusinessClassName))
 
-RenderToFileHelper(Of Criteria)(parentFileName)
+RenderToFileHelper(Of Criteria)(parentFileName, False)
 RenderToFileHelper(Of CriteriaGenerated)(fileName, parentFileName, True)
 RenderToFileHelper(Of IGeneratedCriteriaTemplate)(System.IO.Path.Combine(Me.Location, "Criteria\Interfaces\IGeneratedCriteria.vb"), True)
 

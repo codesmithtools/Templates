@@ -19,7 +19,7 @@ public override void Render(System.IO.TextWriter writer)
 
     string parentFileName = System.IO.Path.Combine(this.Location, String.Format("Collections\\{0}.cs", BusinessClassName));
     string fileName = System.IO.Path.Combine(Location, String.Format("Collections\\{0}.Generated.cs", BusinessClassName));
-    RenderToFileHelper<ReadOnlyChildList>(parentFileName);
+    RenderToFileHelper<ReadOnlyChildList>(parentFileName, false);
     RenderToFileHelper<ReadOnlyChildListGenerated>(fileName, parentFileName, true);
  
     fileName = System.IO.Path.Combine(Location, String.Format("Collections\\{0}.DataAccess.cs", BusinessClassName));
