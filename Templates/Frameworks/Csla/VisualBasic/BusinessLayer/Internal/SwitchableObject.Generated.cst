@@ -51,9 +51,9 @@ Namespace <%= BusinessProjectName %>
     <% End If %>
     Public Partial Class <%= BusinessClassName %><%= Entity.GenericProperty %> 
         Inherits BusinessBase(Of <%= BusinessClassName %><%= Entity.GenericProperty %>)
-    
+
     <% RenderHelper(New Constructor(), True) %>
-    
+
     <% RenderHelper(New ValidationRules()) %>
     <% RenderHelper(New Properties()) %>
     
