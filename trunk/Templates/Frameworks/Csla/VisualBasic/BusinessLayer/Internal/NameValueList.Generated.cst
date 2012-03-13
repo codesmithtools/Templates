@@ -1,5 +1,6 @@
 ﻿<%-- Author: Blake Niemyjski --%>
 <%@ CodeTemplate Language="VB" TargetLanguage="VB" Inherits="Generator.CSLA.EntityCodeTemplate" %>
+<%@ Register Name="Constructor" Template="..\..\Common\Constructor.cst" %>
 <%@ Register Name="Exists" Template="..\..\Common\ExistsList.cst" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\..\Common" %>
 <%@ Assembly Name="Generator.CSLA" Path="..\..\..\Common" %>
@@ -46,9 +47,7 @@ Namespace <%= BusinessProjectName %>
     Public Partial Class <%= BusinessClassName %> 
         Inherits NameValueListBase(Of <%= properties(0).SystemType %>, <%= properties(1).SystemType %>)
 
-        public Sub New()
-            ' require use of factory method 
-        End Sub
+    <% RenderHelper(New Constructor(), True) %>
     
 #Region "Synchronous Factory Methods"
 <% If(IncludeSilverlightSupport) Then %>
