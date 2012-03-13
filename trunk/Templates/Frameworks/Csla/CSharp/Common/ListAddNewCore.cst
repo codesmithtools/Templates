@@ -8,7 +8,7 @@
 <%@ Import Namespace="Generator.CSLA" %>
 
 <% if(!RenderOptionalContent) { %>
-            <%= ChildBusinessClassName %> item = <%= BusinessProjectName %>.<%= ChildBusinessClassName %>.New<%= ChildBusinessClassName %>();
+            <%= ChildBusinessClassName %> item = <%= BusinessProjectName %>.<%= ChildBusinessClassName %>.New<%= ChildBusinessClassName %><% if(IsSwitchableObject()){ %>Child<% }%>();
 
             bool cancel = false;
             OnAddNewCore(ref item, ref cancel);
@@ -16,7 +16,7 @@
             {
                 // Check to see if someone set the item to null in the OnAddNewCore.
                 if(item == null)
-                    item = <%= BusinessProjectName %>.<%= ChildBusinessClassName %>.New<%= ChildBusinessClassName %>();
+                    item = <%= BusinessProjectName %>.<%= ChildBusinessClassName %>.New<%= ChildBusinessClassName %><% if(IsSwitchableObject()){ %>Child<% }%>();
 
 <%  var list = new System.Collections.Generic.List<string>(); 
     bool isObjectFactory = DataAccessImplementation == DataAccessMethod.ObjectFactoryNone || DataAccessImplementation == DataAccessMethod.ObjectFactoryParameterizedSQL || DataAccessImplementation == DataAccessMethod.ObjectFactoryStoredProcedures;
@@ -42,7 +42,7 @@
 
             return item;
 <% } else { %>
-            <%= BusinessProjectName %>.<%= ChildBusinessClassName %>.New<%= ChildBusinessClassName %>Async((o, e) =>
+            <%= BusinessProjectName %>.<%= ChildBusinessClassName %>.New<%= ChildBusinessClassName %><% if(IsSwitchableObject()){ %>Child<% }%>Async((o, e) =>
                 {
                     <%= ChildBusinessClassName %> item = e.Object;
 
