@@ -6,6 +6,10 @@
 <%@ Assembly Name="Generator.CSLA" Path="..\..\Common" %>
 <%@ Import Namespace="CodeSmith.SchemaHelper" %>
 
+        #region Map
+
+        private void Map(DAL.<%=Entity.Name%> dto)
+        {
             //LinqToSQL Modification
             bool cancel = false;
             OnMapping(ref cancel);
@@ -15,7 +19,7 @@
             {
 <%     if(Entity.ConcurrencyProperty != null) 
     { %>
-                <%= Entity.ConcurrencyProperty.Name %> = LinqToSQLHelper.GetBytes(DataSource, "<%= Entity.ConcurrencyProperty.KeyName %>");
+                <%= Entity.ConcurrencyProperty.Name %> = LinqToSQLHelper.GetBytes(dto, "<%= Entity.ConcurrencyProperty.KeyName %>");
 <%     } %>
 <%     foreach(IProperty property in Entity.GetProperties(PropertyType.NoConcurrency)) 
     { 
@@ -23,30 +27,38 @@
         { %>
 <%             if(property.IsNullable && property.SystemType != "System.String" && property.SystemType != "System.Byte[]") 
             {%>
-                <%= property.PrivateMemberVariableName %> = DataSource.IsDBNull("<%= property.KeyName %>") ? (<%= property.SystemType %>)null : <%if(!property.HasByteArrayColumn()) { %>DataSource.<%= property.Name %>);<% } else { %>LinqToSQLHelper.GetByteArray(DataSource.<%= property.KeyName %>);<% } %>
+                <%= property.PrivateMemberVariableName %> = dto.IsDBNull("<%= property.KeyName %>") ? (<%= property.SystemType %>)null : <%if(!property.HasByteArrayColumn()) { %>dto.<%= property.Name %>);<% } else { %>LinqToSQLHelper.GetByteArray(dto.<%= property.KeyName %>);<% } %>
 <%                if (property.IsType(PropertyType.Key) && !property.IsType(PropertyType.Identity)) 
                 { %>
-                _original<%= property.Name %> = DataSource.IsDBNull("<%= property.KeyName %>") ? (<%= property.SystemType %>)null : <%if(!property.HasByteArrayColumn()) { %>DataSource.<%= property.Name %>);<% } else { %>LinqToSQLHelper.GetByteArray(DataSource.<%= property.KeyName %>);<% } %>
+                _original<%= property.Name %> = dto.IsDBNull("<%= property.KeyName %>") ? (<%= property.SystemType %>)null : <%if(!property.HasByteArrayColumn()) { %>dto.<%= property.Name %>);<% } else { %>LinqToSQLHelper.GetByteArray(dto.<%= property.KeyName %>);<% } %>
 <%                 }
             } 
             else 
             {%>
-                <%= property.PrivateMemberVariableName %> = <%if(!property.HasByteArrayColumn()) { %>DataSource.<%= property.Name %><% } else { %>LinqToSQLHelper.GetByteArray(DataSource.<%= property.KeyName %><% } %>;
+                <%= property.PrivateMemberVariableName %> = <%if(!property.HasByteArrayColumn()) { %>dto.<%= property.Name %><% } else { %>LinqToSQLHelper.GetByteArray(dto.<%= property.KeyName %><% } %>;
 <%                if (property.IsType(PropertyType.Key) && !property.IsType(PropertyType.Identity)) 
                 { %>
-                _original<%= property.Name %> = <%if(!property.HasByteArrayColumn()) { %>DataSource.<%= property.Name %><% } else { %>LinqToSQLHelper.GetByteArray(DataSource.<%= property.KeyName %><% } %>;
+                _original<%= property.Name %> = <%if(!property.HasByteArrayColumn()) { %>dto.<%= property.Name %><% } else { %>LinqToSQLHelper.GetByteArray(dto.<%= property.KeyName %><% } %>;
 <%                 } 
             } 
         } 
         else 
         { %>
-                LoadProperty(<%= property.PrivateMemberVariableName %>Property, <%if(!property.HasByteArrayColumn()) { %>DataSource.<%= property.Name %>);<% } else { %>LinqToSQLHelper.GetByteArray(DataSource.<%= property.KeyName %>));<% } %>
+                LoadProperty(<%= property.PrivateMemberVariableName %>Property, <%if(!property.HasByteArrayColumn()) { %>dto.<%= property.Name %>);<% } else { %>LinqToSQLHelper.GetByteArray(dto.<%= property.KeyName %>));<% } %>
 <%            if (property.IsType(PropertyType.Key) && !property.IsType(PropertyType.Identity)) 
             { %>
-                LoadProperty(_original<%= property.Name %>Property, <%if(!property.HasByteArrayColumn()) { %>DataSource.<%= property.Name %>);<% } else { %>LinqToSQLHelper.GetByteArray(DataSource.<%= property.KeyName %>));<% } %>
+                LoadProperty(_original<%= property.Name %>Property, <%if(!property.HasByteArrayColumn()) { %>dto.<%= property.Name %>);<% } else { %>LinqToSQLHelper.GetByteArray(dto.<%= property.KeyName %>));<% } %>
 <%             } 
         } 
     } %>
             }
 
             OnMapped();
+        }
+        
+        private void Child_Fetch(DAL.<%=Entity.Name%> dto)
+        {
+            Map(dto);
+        }
+
+        #endregion

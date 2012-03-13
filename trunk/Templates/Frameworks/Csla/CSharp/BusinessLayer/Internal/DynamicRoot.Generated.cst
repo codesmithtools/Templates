@@ -73,7 +73,20 @@ namespace <%= BusinessProjectName %>
         {
             return DataPortal.Create<<%= BusinessClassName %><%= Entity.GenericProperty %>>();
         }
+<%if(DataAccessImplementation == DataAccessMethod.ParameterizedSQL || DataAccessImplementation == DataAccessMethod.StoredProcedures){ %>
 
+        internal static <%= BusinessClassName %> Get<%= BusinessClassName %>(SafeDataReader reader)
+        {
+            return DataPortal.FetchChild<<%= BusinessClassName %>>(reader);
+        }
+<% } %>
+<% if(DataAccessImplementation == DataAccessMethod.LinqToSQL) { %>
+
+        internal static <%= BusinessClassName %> Get<%= BusinessClassName %>(DAL.<%= Entity.Name %> dto)
+        {
+            return DataPortal.FetchChild<<%= BusinessClassName %>(dto);
+        }
+<% } %>
 <% foreach(SearchCriteria sc in Entity.SearchCriteria) { %>
 
         /// <summary>

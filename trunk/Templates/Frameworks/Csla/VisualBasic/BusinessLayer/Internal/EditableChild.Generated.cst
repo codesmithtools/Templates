@@ -1,6 +1,6 @@
 ﻿<%-- Author: Blake Niemyjski --%>
 <%@ CodeTemplate Language="VB" TargetLanguage="VB" Inherits="Generator.CSLA.EntityCodeTemplate" %>
-<%@ Register Name="Constructor" Template="..\..\Common\ChildConstructor.cst" %>
+<%@ Register Name="Constructor" Template="..\..\Common\Constructor.cst" %>
 <%@ Register Name="Exists" Template="..\..\Common\Exists.cst" %>
 <%@ Register Name="IsDirty" Template="..\..\Common\IsDirty.cst" %>
 <%@ Register Name="Properties" Template="..\..\Common\Properties.cst" %>
@@ -85,6 +85,13 @@ Namespace <%= BusinessProjectName %>
             Return DataPortal.Fetch<% If( Not DataAccessImplementation = DataAccessMethod.ObjectFactoryNone AndAlso Not DataAccessImplementation = DataAccessMethod.ObjectFactoryParameterizedSQL AndAlso Not DataAccessImplementation = DataAccessMethod.ObjectFactoryStoredProcedures) Then %>Child<% End If %>(Of <%= ChildBusinessClassName %><%= Entity.GenericProperty %>)(criteria)
         End Function
     <% Next %>
+<%If(DataAccessImplementation = DataAccessMethod.ParameterizedSQL Or DataAccessImplementation = DataAccessMethod.StoredProcedures) Then %>
+
+        Friend Shared Function Get<%= BusinessClassName %>(ByVal reader As SafeDataReader) As <%= BusinessClassName %>
+            Return DataPortal.FetchChild(Of <%= BusinessClassName %>)(reader)
+        End Function
+<% End If %>
+
 <% If(IncludeSilverlightSupport) Then %>
 #End If
 <% End If %>

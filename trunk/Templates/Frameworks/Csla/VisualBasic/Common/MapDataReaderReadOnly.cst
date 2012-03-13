@@ -5,6 +5,9 @@
 <%@ Assembly Name="Generator.CSLA" Path="..\..\Common" %>
 <%@ Import Namespace="CodeSmith.SchemaHelper" %>
 
+#Region "Map"
+
+        Private Sub Map(ByVal reader As SafeDataReader)
             Dim cancel As Boolean = False
             OnMapping(reader, cancel)
             If (cancel) Then
@@ -24,3 +27,10 @@
     Next %>
     
             OnMapped()
+        End Sub
+
+        Private Sub Child_Fetch(reader As SafeDataReader)
+            Map(reader)
+        End Sub
+
+#End Region

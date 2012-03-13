@@ -1,6 +1,6 @@
 ﻿<%-- Author: Blake Niemyjski --%>
 <%@ CodeTemplate Language="C#" TargetLanguage="C#" Inherits="Generator.CSLA.EntityCodeTemplate" %>
-<%@ Register Name="Constructor" Template="..\..\Common\ConstructorReadOnly.cst" %>
+<%@ Register Name="Constructor" Template="..\..\Common\Constructor.cst" %>
 <%@ Register Name="Exists" Template="..\..\Common\Exists.cst" %>
 <%@ Register Name="Properties" Template="..\..\Common\PropertiesReadOnly.cst" %>
 <%@ Register Name="PartialMethods" Template="..\..\Common\DataPortalPartialMethods.cst" %>
@@ -52,6 +52,20 @@ namespace <%= BusinessProjectName %>
         #region Synchronous Factory Methods 
 <% if(IncludeSilverlightSupport) { %>
 #if !SILVERLIGHT
+<% } %>
+<%if(DataAccessImplementation == DataAccessMethod.ParameterizedSQL || DataAccessImplementation == DataAccessMethod.StoredProcedures){ %>
+
+        internal static <%= BusinessClassName %> Get<%= BusinessClassName %>(SafeDataReader reader)
+        {
+            return DataPortal.FetchChild<<%= BusinessClassName %>>(reader);
+        }
+<% } %>
+<% if(DataAccessImplementation == DataAccessMethod.LinqToSQL) { %>
+
+        internal static <%= BusinessClassName %> Get<%= BusinessClassName %>(DAL.<%= Entity.Name %> dto)
+        {
+            return DataPortal.FetchChild<<%= BusinessClassName %>(dto);
+        }
 <% } %>
 <% foreach(SearchCriteria sc in Entity.SearchCriteria) { %>
 

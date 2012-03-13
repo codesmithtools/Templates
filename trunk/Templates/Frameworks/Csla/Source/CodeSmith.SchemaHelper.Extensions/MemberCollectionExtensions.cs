@@ -103,17 +103,20 @@ namespace CodeSmith.SchemaHelper
 
         public static string BuildWhereStatements(this List<IProperty> members, bool isUpdate)
         {
-            string columnNames = String.Empty;
+            string whereStatement = String.Empty;
 
             foreach (var property in members)
             {
                 if (isUpdate && !property.IsType(PropertyType.Identity))
-                    columnNames += String.Format("[{0}] = {1} AND ", property.KeyName, String.Format("{0}Original{1}", Configuration.Instance.ParameterPrefix, property.KeyName));
+                    whereStatement += String.Format("[{0}] = {1} AND ", property.KeyName, String.Format("{0}Original{1}", Configuration.Instance.ParameterPrefix, property.KeyName));
                 else
-                    columnNames += String.Format("[{0}] = {1} AND ", property.KeyName, property.BuildParameterVariableName());
+                    whereStatement += String.Format("[{0}] = {1} AND ", property.KeyName, property.BuildParameterVariableName());
             }
 
-            return String.Format("WHERE {0}", columnNames.Remove(columnNames.Length - 5, 5));
+            if (String.IsNullOrWhiteSpace(whereStatement))
+                return String.Empty;
+
+            return String.Format("WHERE {0}", whereStatement.Remove(whereStatement.Length - 5, 5));
         }
     }
 }

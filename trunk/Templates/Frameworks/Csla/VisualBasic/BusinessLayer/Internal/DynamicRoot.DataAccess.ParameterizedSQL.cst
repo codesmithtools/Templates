@@ -73,11 +73,7 @@ Namespace <%= BusinessProjectName %>
     <% RenderHelper(New DataPortalDelete()) %>
         End Sub
         
-        Private Sub Map(ByVal reader As SafeDataReader)
     <% RenderHelper(New MapDataReader()) %>
-    
-            MarkOld()
-        End Sub
     End Class
 End Namespace
 <% If(IncludeSilverlightSupport) Then %>

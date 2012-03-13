@@ -146,7 +146,7 @@ Namespace <%= BusinessProjectName %>
 #End Region
 
         Protected Sub AddNewCoreAsync(ByVal handler As EventHandler(Of DataPortalResult(Of <%= ChildBusinessClassName %><%= Entity.GenericProperty %>)))
-            <%= BusinessProjectName %>.<%= ChildBusinessClassName %><%= Entity.GenericProperty %>.New<%= ChildBusinessClassName %>Async(Sub(o, e)
+            <%= BusinessProjectName %>.<%= ChildBusinessClassName %><%= Entity.GenericProperty %>.New<%= ChildBusinessClassName %><% If(IsSwitchableObject()) Then %>Child<% End If %>Async(Sub(o, e)
                     If e.Error Is Nothing Then
                         Add(e.Object)
                         handler.Invoke(Me, New DataPortalResult(Of <%= ChildBusinessClassName %><%= Entity.GenericProperty %>)(e.Object, Nothing, Nothing))

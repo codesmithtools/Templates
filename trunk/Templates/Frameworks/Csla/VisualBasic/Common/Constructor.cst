@@ -12,35 +12,4 @@
             ' require use of factory method 
         End Sub
 
-<% If(Entity.HasKey) Then %>
-        Friend Sub New(<%= Entity.GetProperties(PropertyType.Key).BuildParametersVariables() %>)
-            Using(BypassPropertyChecks)
-    <% For Each prop As IProperty In Entity.GetProperties(PropertyType.Key)
-    If UseMemberVariables Then %>
-                <%= prop.PrivateMemberVariableName %> = <%= prop.VariableName %>
-    <%  Else  %>
-            LoadProperty(<%= prop.PrivateMemberVariableName %>Property, <%= prop.VariableName %>)
-    <% End If
-    Next %>
-            End Using
-        End Sub
-
-<% End If %>
-<% If(IncludeSilverlightSupport) Then %>
-#If Not SILVERLIGHT Then
-    <% End If %>
-    <% If(DataAccessImplementation = DataAccessMethod.None Or DataAccessImplementation = DataAccessMethod.ParameterizedSQL Or DataAccessImplementation = DataAccessMethod.StoredProcedures) Then %>
-        Friend Sub New(Byval reader As SafeDataReader)
-    <%If(DataAccessImplementation = DataAccessMethod.ParameterizedSQL Or DataAccessImplementation = DataAccessMethod.StoredProcedures) Then %>
-            Map(reader)
-<% If(RenderOptionalContent) Then %>
-            MarkAsChild()   
-<% End If %>
-    <% End If %>
-        End Sub
-    <% End If %>
-<% If(IncludeSilverlightSupport) Then %>
-#End If
-<% End If %>
-
 #End Region

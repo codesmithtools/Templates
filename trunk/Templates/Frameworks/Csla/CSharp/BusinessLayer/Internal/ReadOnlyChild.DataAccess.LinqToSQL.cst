@@ -46,17 +46,7 @@ namespace <%= BusinessProjectName %>
 <% RenderHelper(new ChildFetch()); %>
         }
 
-        /// <summary>
-        /// Maps data columns retrieved from the data base to the respective properties in the current 
-        /// <see cref="<%= BusinessClassName %><%= Entity.GenericProperty %> CSLA read only child business object.
-        /// </summary>
-        /// <param name="criteria">Object of type <see cref="<%=LinqToSQLContextNamespace%>.<%=Entity.Name%> %>"/> containing the data retrieved from the data base.</param>
-        /// <returns></returns>
-        private void Map(DAL.<%=Entity.Name%> DataSource)
-        {
 <% RenderHelper(new MapLinqToSQL()); %>
-
-        }
     }
 }
 <% if(IncludeSilverlightSupport) { %>

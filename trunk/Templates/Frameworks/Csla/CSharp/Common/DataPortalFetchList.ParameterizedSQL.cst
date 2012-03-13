@@ -27,7 +27,7 @@
                         {
                             do
                             {
-                                this.Add(new <%= BusinessProjectName %>.<%= ChildBusinessClassName %>(reader));
+                                this.Add(<%= BusinessProjectName %>.<%= ChildBusinessClassName %>.Get<%= ChildBusinessClassName %>(reader));
                             } while(reader.Read());
                         }
                     }

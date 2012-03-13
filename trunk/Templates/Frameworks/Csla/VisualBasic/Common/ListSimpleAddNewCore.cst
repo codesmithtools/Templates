@@ -7,14 +7,14 @@
 <%@ Import Namespace="CodeSmith.SchemaHelper" %>
 
 <% If(Not RenderOptionalContent) Then %>
-            Dim item As <%= ChildBusinessClassName %> = <%= BusinessProjectName %>.<%= ChildBusinessClassName %>.New<%= ChildBusinessClassName %>()
+            Dim item As <%= ChildBusinessClassName %> = <%= BusinessProjectName %>.<%= ChildBusinessClassName %>.New<%= ChildBusinessClassName %><% If(IsSwitchableObject()) Then %>Child<% End If %>()
     
             Dim cancel As Boolean = False
             OnAddNewCore(item, cancel)
             If Not (cancel) Then
                 ' Check to see if someone set the item to null In the OnAddNewCore.
                 If(item Is Nothing) Then
-                    item = <%= BusinessProjectName %>.<%= ChildBusinessClassName %>.New<%= ChildBusinessClassName %>()
+                    item = <%= BusinessProjectName %>.<%= ChildBusinessClassName %>.New<%= ChildBusinessClassName %><% If(IsSwitchableObject()) Then %>Child<% End If %>()
                 End If
                 
                 Add(item)
@@ -22,7 +22,7 @@
 
             Return item
 <% Else %>
-            <%= BusinessProjectName %>.<%= ChildBusinessClassName %>.New<%= ChildBusinessClassName %>Async(Sub(o, e)
+            <%= BusinessProjectName %>.<%= ChildBusinessClassName %>.New<%= ChildBusinessClassName %><% If(IsSwitchableObject()) Then %>Child<% End If %>Async(Sub(o, e)
                     Dim item As <%= ChildBusinessClassName %> = e.Object
         
                     Dim cancel As Boolean = False

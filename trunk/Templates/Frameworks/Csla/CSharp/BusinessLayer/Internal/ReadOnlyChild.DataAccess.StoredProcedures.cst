@@ -35,10 +35,7 @@ namespace <%= BusinessProjectName %>
 <% RenderHelper(new ChildFetch()); %>
         }
 
-        private void Map(SafeDataReader reader)
-        {
 <% RenderHelper(new MapDataReader()); %>
-        }
     }
 }
 <% if(IncludeSilverlightSupport) { %>
