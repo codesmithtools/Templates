@@ -10,25 +10,54 @@ namespace CodeSmith.SchemaHelper
     /// </summary>
     public static class EntityExtensions
     {
+        /// <summary>
+        /// Returns true if the entity is a command.
+        /// </summary>
+        public static bool IsCommand(this IEntity entity)
+        {
+            // NOTE: This simple extension method allows us to change the detection logic in the future without effecting template code.
+            return entity is CommandEntity;
+        }
+
+        public static List<IProperty> GetCommandParameters(this IEntity entity)
+        {
+            if(entity.IsCommand())
+            {
+                var criteria = entity.SearchCriteria.FirstOrDefault(s => s.SearchCriteriaType == SearchCriteriaType.CustomCommand);
+                return criteria != null ? criteria.Properties : new List<IProperty>();
+            }
+
+            return entity.GetProperties(PropertyType.NoConcurrency);
+        }
+
+        /// <summary>
+        /// Returns true if the entity is a view.
+        /// </summary>
+        public static bool IsView(this IEntity entity)
+        {
+            // NOTE: This simple extension method allows us to change the detection logic in the future without effecting template code.
+            return entity is ViewEntity;
+        }
+
         public static List<IProperty> GetUniqueSearchCriteriaMembers(this IEntity entity)
         {
-            var members = new List<IProperty>();
+            var properties = new List<IProperty>();
 
             foreach (SearchCriteria sc in entity.SearchCriteria)
             {
-                members = members.Union(sc.Properties).ToList();
+                properties = properties.Union(sc.Properties).ToList();
             }
 
             foreach (IProperty property in entity.Key.Properties)
             {
                 IProperty member1 = property;
-                if (members.Exists(m => m.Name == member1.Name) == false)
+                if (properties.Exists(m => m.Name == member1.Name) == false)
                 {
-                    members.Add(property);
+                    properties.Add(property);
                 }
             }
 
-            return members;
+            return properties;
         }
 
         /// <summary>
@@ -157,7 +186,7 @@ namespace CodeSmith.SchemaHelper
                     entity.ConcurrencyProperty.BuildDataBaseColumn(),
                     entity.SchemaName,
                     entity.EntityKeyName,
-                    keyProperties.BuildWhereStatements()); ;
+                    keyProperties.BuildWhereStatements());
             }
 
             return String.Empty;

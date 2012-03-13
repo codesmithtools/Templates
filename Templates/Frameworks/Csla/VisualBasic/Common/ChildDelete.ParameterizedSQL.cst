@@ -12,7 +12,7 @@
             End If
 
 <% If(Entity.CanDelete) Then %>
-            Dim commandText As String = String.Format("DELETE FROM <%= Entity.EntityKeyName %> {0}", ADOHelper.BuildWhereStatement(criteria.StateBag))
+            Dim commandText As String = String.Format("DELETE FROM [<%= Entity.SchemaName %>].[<%= Entity.EntityKeyName %>] {0}", ADOHelper.BuildWhereStatement(criteria.StateBag))
             Using command As New SqlCommand(commandText, connection)
                 command.Parameters.AddRange(ADOHelper.SqlParameters(criteria.StateBag))
     

@@ -65,7 +65,7 @@ namespace <%= BusinessProjectName %>
         #region Public Properties
 
         #region Read-Write
-
+<% if(!Entity.IsCommand()) { %>
 <% foreach(var property in Entity.GetProperties(PropertyType.NoConcurrency)){ %>
 
         public <%= property.SystemType %> <%= property.Name %>
@@ -74,10 +74,20 @@ namespace <%= BusinessProjectName %>
             set { _bag["<%= property.KeyName %>"] = value; }
         }
 <% } %>
+<% } else { %>
+    <% foreach(var property in Entity.GetCommandParameters()){ %>
+
+        public <%= property.SystemType %> <%= property.Name %>
+        {
+            get { return GetValue<<%= property.SystemType %>>("<%= property.KeyName %>"); }
+            set { _bag["<%= property.KeyName %>"] = value; }
+        }
+<% } } %>
+
         #endregion
         
         #region Read-Only
-<% if(DataAccessImplementation == DataAccessMethod.StoredProcedures || DataAccessImplementation == DataAccessMethod.ObjectFactoryStoredProcedures){
+<% if(!Entity.IsCommand() && (DataAccessImplementation == DataAccessMethod.StoredProcedures || DataAccessImplementation == DataAccessMethod.ObjectFactoryStoredProcedures)){
 foreach(var property in Entity.GetProperties(PropertyType.NoConcurrency)){ if(property.IsNullable) { %>
 
         public bool <%= property.Name %>HasValue

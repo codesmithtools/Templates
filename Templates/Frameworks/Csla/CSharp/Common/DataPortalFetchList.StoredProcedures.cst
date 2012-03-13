@@ -19,8 +19,12 @@
                 using (var command = new SqlCommand("<%= GetSelectStoredProcedureName() %>", connection))
                 {
                     command.CommandType = CommandType.StoredProcedure;
+<% if(Entity.IsCommand()) { %>
+                    command.Parameters.AddRange(ADOHelper.SqlParameters(criteria.StateBag, false));
+<% } else { %>
                     command.Parameters.AddRange(ADOHelper.SqlParameters(criteria.StateBag));
-                    <%= Entity.GetProperties(PropertyType.NoConcurrency).BuildHasValueCommandParameters() %>
+                    <%= Entity.GetCommandParameters().BuildHasValueCommandParameters() %>
+<% } %>
                     using(var reader = new SafeDataReader(command.ExecuteReader()))
                     {
                         if(reader.Read())

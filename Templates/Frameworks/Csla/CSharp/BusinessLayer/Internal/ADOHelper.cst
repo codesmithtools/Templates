@@ -55,7 +55,16 @@ namespace <%= BusinessProjectName %>
         /// </summary>
         public static SqlParameter[] SqlParameters(Dictionary<string, object> bag)
         {
-            return new List<SqlParameter>(bag.Select(pair => new SqlParameter(String.Format("<%= ParameterPrefix %>{0}", pair.Key), pair.Value))).ToArray();
+            return SqlParameters(bag, true);
+        }
+        
+        /// <summary>
+        /// Returns an array of SqlParameters
+        /// </summary>
+        public static SqlParameter[] SqlParameters(Dictionary<string, object> bag, bool includePrefix)
+        {
+            string prefix = includePrefix ? "<%= ParameterPrefix %>" : String.Empty;
+            return new List<SqlParameter>(bag.Select(pair => new SqlParameter(String.Format("{0}{1}", prefix, pair.Key), pair.Value))).ToArray();
         }
 
         /// <summary>

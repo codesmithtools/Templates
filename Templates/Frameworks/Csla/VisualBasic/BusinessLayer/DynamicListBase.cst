@@ -24,13 +24,17 @@ RenderToFileHelper(Of DynamicListBaseGenerated)(fileName, parentFileName, True)
 fileName = System.IO.Path.Combine(Location, String.Format("Collections\{0}.DataAccess.vb", BusinessClassName))
 If DataAccessImplementation = DataAccessMethod.None Then
     RenderToFileHelper(Of DynamicListBaseDataAccess)(fileName, parentFileName, False)
-ElseIf DataAccessImplementation = DataAccessMethod.ParameterizedSQL Then
-    RenderToFileHelper(Of DynamicListBaseDataAccessParameterized)(fileName, parentFileName, True)
-ElseIf DataAccessImplementation = DataAccessMethod.StoredProcedures Then
+ElseIf DataAccessImplementation = DataAccessMethod.StoredProcedures OrElse Entity.IsCommand() Then
     RenderToFileHelper(Of DynamicListBaseDataAccessStoredProcedures)(fileName, parentFileName, True)
+
+    If(Entity.IsCommand()) Then
+        Exit Sub
+    End If
 
     fileName = System.IO.Path.Combine(Location, String.Format("Collections\{0}.StoredProcedures.sql", BusinessClassName))
     RenderProceduresToFileHelper(Of SqlStoredProcedures)(fileName, parentFileName, True, False, True)
+ElseIf DataAccessImplementation = DataAccessMethod.ParameterizedSQL Then
+    RenderToFileHelper(Of DynamicListBaseDataAccessParameterized)(fileName, parentFileName, True)
 End If
 
 End Sub

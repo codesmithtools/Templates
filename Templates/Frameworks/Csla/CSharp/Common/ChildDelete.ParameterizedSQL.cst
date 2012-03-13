@@ -10,7 +10,7 @@
             if (cancel) return;
 
 <% if(Entity.CanDelete) { %>
-            var commandText = String.Format("DELETE FROM <%= Entity.EntityKeyName %> {0}", ADOHelper.BuildWhereStatement(criteria.StateBag));
+            var commandText = String.Format("DELETE FROM [<%= Entity.SchemaName %>].[<%= Entity.EntityKeyName %>] {0}", ADOHelper.BuildWhereStatement(criteria.StateBag));
             using (var command = new SqlCommand(commandText, connection))
             {
                 command.Parameters.AddRange(ADOHelper.SqlParameters(criteria.StateBag));

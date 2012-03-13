@@ -73,7 +73,7 @@ Namespace <%= BusinessProjectName %>
 #Region "Public Properties"
 
 #Region "Read-Write"
-    
+<% If Not Entity.IsCommand() Then %>    
     <% For Each prop As IProperty In Entity.GetProperties(PropertyType.NoConcurrency) %>
         
         Public Property <%= prop.Name %>() As <%= prop.SystemType %>
@@ -85,11 +85,24 @@ Namespace <%= BusinessProjectName %>
             End Set
         End Property
     <% Next %>
-    
+<% Else %>    
+    <% For Each prop As IProperty In Entity.GetCommandParameters() %>
+        
+        Public Property <%= prop.Name %>() As <%= prop.SystemType %>
+            Get
+                Return GetValue(Of <%= prop.SystemType %>)("<%= prop.KeyName %>")
+            End Get
+            Set
+                _bag("<%= prop.KeyName %>") = value
+            End Set
+        End Property
+    <% Next %>
+<% End If %>
+
 #End Region
         
 #Region "Read-Only"
-    <% If(DataAccessImplementation = DataAccessMethod.StoredProcedures Or DataAccessImplementation = DataAccessMethod.ObjectFactoryStoredProcedures)
+    <% If((DataAccessImplementation = DataAccessMethod.StoredProcedures Or DataAccessImplementation = DataAccessMethod.ObjectFactoryStoredProcedures)) And Not Entity.IsCommand() Then
         For Each prop As IProperty In Entity.GetProperties(PropertyType.NoConcurrency)
             If(prop.IsNullable) Then
     %>

@@ -19,7 +19,7 @@
 
 <% If(Entity.CanUpdate) Then %> 
             If Not connection.State = ConnectionState.Open Then connection.Open()
-            Const commandText As String = "UPDATE <%= Entity.EntityKeyName %> <%= entity.GetProperties(PropertyType.UpdateInsert).BuildSetStatements() %> <%= entity.Key.Properties.BuildWhereStatements(True) %><% If entity.ConcurrencyProperty IsNot Nothing Then %> AND [<%= entity.ConcurrencyProperty.KeyName %>] = <%= ParameterPrefix  %><%= entity.ConcurrencyProperty.KeyName %><% End If %><%= entity.BuildUpdateSelectStatement() %>"
+            Const commandText As String = "UPDATE [<%= Entity.SchemaName %>].[<%= Entity.EntityKeyName %>] <%= entity.GetProperties(PropertyType.UpdateInsert).BuildSetStatements() %> <%= entity.Key.Properties.BuildWhereStatements(True) %><% If entity.ConcurrencyProperty IsNot Nothing Then %> AND [<%= entity.ConcurrencyProperty.KeyName %>] = <%= ParameterPrefix  %><%= entity.ConcurrencyProperty.KeyName %><% End If %><%= entity.BuildUpdateSelectStatement() %>"
             Using command As New SqlCommand(commandText, connection)
                 <%= entity.GetProperties(PropertyType.NoConcurrency).BuildCommandParameters(False, False, Not RenderOptionalContent, False, True) %>
     <% If Not(Entity.ConcurrencyProperty Is Nothing) Then %>

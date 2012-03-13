@@ -756,6 +756,9 @@ namespace Generator.CSLA
 
         public virtual string GetSelectStoredProcedureName()
         {
+            if (Entity is CommandEntity)
+                return String.Format("[{0}].[{01}]", Entity.SchemaName, Entity.EntityKeyName);
+
             return String.Format("{0}[{1}{2}_Select]", GetTableOwner(), ProcedurePrefix, Entity.Name);
         }
 

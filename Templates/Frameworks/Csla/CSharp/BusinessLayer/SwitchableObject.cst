@@ -26,6 +26,16 @@ public override void Render(System.IO.TextWriter writer)
     {
         RenderToFileHelper<SwitchableObjectDataAccess>(fileName, parentFileName, false);
     }
+    else if(DataAccessImplementation == DataAccessMethod.StoredProcedures  || Entity.IsCommand())
+    {
+        RenderToFileHelper<SwitchableObjectDataAccessStoredProcedures>(fileName, parentFileName, true);
+
+        if(Entity.IsCommand())
+            return;
+
+        fileName = System.IO.Path.Combine(Location, String.Format("Entities\\{0}.StoredProcedures.sql", BusinessClassName));
+        RenderProceduresToFileHelper<SqlStoredProcedures>(fileName, parentFileName, true);
+    }
     else if(DataAccessImplementation == DataAccessMethod.ParameterizedSQL)
     {
         RenderToFileHelper<SwitchableObjectDataAccessParameterized>(fileName, parentFileName, true);
@@ -33,13 +43,6 @@ public override void Render(System.IO.TextWriter writer)
     else if(DataAccessImplementation == DataAccessMethod.LinqToSQL)
     {
         RenderToFileHelper<SwitchableObjectDataAccessLinqToSQL>(fileName, parentFileName, true);
-    }
-    else if(DataAccessImplementation == DataAccessMethod.StoredProcedures)
-    {
-        RenderToFileHelper<SwitchableObjectDataAccessStoredProcedures>(fileName, parentFileName, true);
-
-        fileName = System.IO.Path.Combine(Location, String.Format("Entities\\{0}.StoredProcedures.sql", BusinessClassName));
-        RenderProceduresToFileHelper<SqlStoredProcedures>(fileName, parentFileName, true);
     }
 }
 

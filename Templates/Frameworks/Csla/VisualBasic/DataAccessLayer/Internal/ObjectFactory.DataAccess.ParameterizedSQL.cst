@@ -63,10 +63,10 @@ Namespace <%= DataProjectName %>
 End If
     For Each association As Association In Entity.Associations
         For Each prop As AssociationProperty In association.Properties
-    		If (prop.ForeignProperty.SystemType = "System.String" And Not prop.ForeignProperty.IsType(PropertyType.Identity) And prop.ForeignProperty.IsType(PropertyType.Foreign)) Then %>
+            If (prop.ForeignProperty.SystemType = "System.String" And Not prop.ForeignProperty.IsType(PropertyType.Identity) And prop.ForeignProperty.IsType(PropertyType.Foreign)) Then %>
                 item.<%= prop.ForeignProperty.Name %> = "BN"
-    		<% End If
-    	Next
+            <% End If
+        Next
     Next
     %>
     
@@ -134,7 +134,7 @@ End If
                 Return item
             End If
     
-            Dim commandText As String = String.Format("SELECT <%= entity.Properties.BuildDataBaseColumns() %> FROM <%= Entity.EntityKeyName %> {0}", ADOHelper.BuildWhereStatement(criteria.StateBag))
+            Dim commandText As String = String.Format("SELECT <%= entity.Properties.BuildDataBaseColumns() %> FROM [<%= Entity.SchemaName %>].[<%= Entity.EntityKeyName %>] {0}", ADOHelper.BuildWhereStatement(criteria.StateBag))
             Using connection As New SqlConnection(ADOHelper.ConnectionString)
                 connection.Open()
                 Using command As New SqlCommand(commandText, connection)
@@ -143,7 +143,7 @@ End If
                         If reader.Read() Then
                             item = Map(reader)
                         Else
-                            Throw New Exception(String.Format("The record was not found In '<%= Entity.EntityKeyName %>' using the following criteria: {0}.", criteria))
+                            Throw New Exception(String.Format("The record was not found In '<%= Entity.SchemaName %>.<%= Entity.EntityKeyName %>' using the following criteria: {0}.", criteria))
                         End If
                     End Using
                 End Using
@@ -176,7 +176,7 @@ End If
                 Return
             End If
     
-            Const commandText As String = "INSERT INTO <%= Entity.EntityKeyName %> (<%= entity.GetProperties(PropertyType.UpdateInsert).BuildDataBaseColumns() %>) VALUES (<%= entity.GetProperties(PropertyType.UpdateInsert).BuildDataBaseParameters() %>)<%= entity.BuildInsertSelectStatement() %>"
+            Const commandText As String = "INSERT INTO [<%= Entity.SchemaName %>].[<%= Entity.EntityKeyName %>] (<%= entity.GetProperties(PropertyType.UpdateInsert).BuildDataBaseColumns() %>) VALUES (<%= entity.GetProperties(PropertyType.UpdateInsert).BuildDataBaseParameters() %>)<%= entity.BuildInsertSelectStatement() %>"
             Using connection As New SqlConnection(ADOHelper.ConnectionString)
                 connection.Open()
                 Using command As New SqlCommand(commandText, connection)
@@ -319,7 +319,7 @@ End If %>
                 End If
     
     <% End If %>
-                Const commandText As String = "UPDATE <%= Entity.EntityKeyName %> <%= entity.GetProperties(PropertyType.UpdateInsert).BuildSetStatements() %> <%= entity.Key.Properties.BuildWhereStatements() %><% If entity.ConcurrencyProperty IsNot Nothing Then %> AND [<%= entity.ConcurrencyProperty.KeyName %>] = <%= ParameterPrefix  %><%= entity.ConcurrencyProperty.KeyName %><% End If %><%= entity.BuildUpdateSelectStatement() %>"
+                Const commandText As String = "UPDATE [<%= Entity.SchemaName %>].[<%= Entity.EntityKeyName %>] <%= entity.GetProperties(PropertyType.UpdateInsert).BuildSetStatements() %> <%= entity.Key.Properties.BuildWhereStatements() %><% If entity.ConcurrencyProperty IsNot Nothing Then %> AND [<%= entity.ConcurrencyProperty.KeyName %>] = <%= ParameterPrefix  %><%= entity.ConcurrencyProperty.KeyName %><% End If %><%= entity.BuildUpdateSelectStatement() %>"
                 Using connection As New SqlConnection(ADOHelper.ConnectionString)
                     connection.Open()
                     Using command As New SqlCommand(commandText, connection)
@@ -433,7 +433,7 @@ End If %>
                 Return
             End If
     
-            Dim commandText As String = String.Format("DELETE FROM <%= Entity.EntityKeyName %> {0}", ADOHelper.BuildWhereStatement(criteria.StateBag))
+            Dim commandText As String = String.Format("DELETE FROM [<%= Entity.SchemaName %>].[<%= Entity.EntityKeyName %>] {0}", ADOHelper.BuildWhereStatement(criteria.StateBag))
             Using connection As New SqlConnection(ADOHelper.ConnectionString)
                 connection.Open()
                 Using command As New SqlCommand(commandText, connection)

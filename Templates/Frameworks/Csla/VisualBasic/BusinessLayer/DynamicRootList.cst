@@ -23,13 +23,17 @@ RenderToFileHelper(Of DynamicRootListGenerated)(fileName, parentFileName, True)
 fileName = System.IO.Path.Combine(Location, String.Format("Collections\{0}.DataAccess.vb", BusinessClassName))
 If DataAccessImplementation = DataAccessMethod.None Then
     RenderToFileHelper(Of DynamicRootListDataAccess)(fileName, parentFileName, False)
-ElseIf DataAccessImplementation = DataAccessMethod.ParameterizedSQL Then
-    RenderToFileHelper(Of DynamicRootListDataAccessParameterized)(fileName, parentFileName, True)
-ElseIf DataAccessImplementation = DataAccessMethod.StoredProcedures Then
+ElseIf DataAccessImplementation = DataAccessMethod.StoredProcedures OrElse Entity.IsCommand() Then
     RenderToFileHelper(Of DynamicRootListDataAccessStoredProcedures)(fileName, parentFileName, True)
+
+    If(Entity.IsCommand()) Then
+        Exit Sub
+    End If
 
     fileName = System.IO.Path.Combine(Location, String.Format("Collections\{0}.StoredProcedures.sql", BusinessClassName))
     RenderProceduresToFileHelper(Of SqlStoredProcedures)(fileName, parentFileName, True, False, True)
+ElseIf DataAccessImplementation = DataAccessMethod.ParameterizedSQL Then
+    RenderToFileHelper(Of DynamicRootListDataAccessParameterized)(fileName, parentFileName, True)
 End If
 
 End Sub

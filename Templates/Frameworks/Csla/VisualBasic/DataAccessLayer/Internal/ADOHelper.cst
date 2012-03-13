@@ -51,12 +51,20 @@ Namespace <%= DataProjectName %>
 #End Region
     
 #Region "Methods"
-        
+
         ''' <summary>
         ''' Returns an array of SqlParameters
         ''' </summary>
         Public Shared Function SqlParameters(ByVal bag As Dictionary(Of String, Object)) As SqlParameter()
-            Return New List(Of SqlParameter)(bag.[Select](Function(pair) New SqlParameter(String.Format("<%= ParameterPrefix %>{0}", pair.Key), pair.Value))).ToArray()
+            Return SqlParameters(bag, True)
+        End Function
+
+        ''' <summary>
+        ''' Returns an array of SqlParameters
+        ''' </summary>
+        Public Shared Function SqlParameters(ByVal bag As Dictionary(Of String, Object), ByVal includePrefix As Boolean) As SqlParameter()
+            Dim prefix As String = If(includePrefix, "<%= ParameterPrefix %>", String.Empty)
+            Return New List(Of SqlParameter)(bag.[Select](Function(pair) New SqlParameter(String.Format("{0}{1}", prefix, pair.Key), pair.Value))).ToArray()
         End Function
     
         ''' <summary>
