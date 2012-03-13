@@ -1,4 +1,4 @@
-<%-- Author: Blake Niemyjski --%>
+﻿<%-- Author: Blake Niemyjski --%>
 <%@ CodeTemplate Language="VB" TargetLanguage="VB" OutputType="None" Inherits="Generator.CSLA.EntityCodeTemplate" %>
 <%@ Register Name="CommandObject" Template="Internal\CommandObject.cst" %>
 <%@ Register Name="CommandObjectDataAccess" Template="Internal\CommandObject.DataAccess.cst" %>
@@ -17,7 +17,7 @@ Public Overloads Overrides Sub Render(writer As System.IO.TextWriter)
 
 Dim parentFileName As String = System.IO.Path.Combine(Me.Location, String.Format("Command\{0}.vb", BusinessClassName))
 Dim fileName As String = System.IO.Path.Combine(Location, String.Format("Command\{0}.Generated.vb", BusinessClassName))
-RenderToFileHelper(Of CommandObject)(parentFileName)
+RenderToFileHelper(Of CommandObject)(parentFileName, False)
 RenderToFileHelper(Of CommandObjectGenerated)(fileName, parentFileName, True)
 
 fileName = System.IO.Path.Combine(Location, String.Format("Command\{0}.DataAccess.vb", BusinessClassName))
