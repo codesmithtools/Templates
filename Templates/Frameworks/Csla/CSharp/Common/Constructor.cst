@@ -11,41 +11,4 @@
         public <%= BusinessClassName %>()
         { /* Require use of factory methods */ }
 
-<% if(Entity.HasKey) { %>
-        internal <%= BusinessClassName %>(<%= Entity.GetProperties(PropertyType.Key).BuildParametersVariables() %>)
-        {
-            using(BypassPropertyChecks)
-            {
-<% foreach(var property in Entity.GetProperties(PropertyType.Key)) { if(UseMemberVariables) { %>
-                <%= property.PrivateMemberVariableName %> = <%= property.VariableName %>;
-<% } else { %>
-                LoadProperty(<%= property.PrivateMemberVariableName %>Property, <%= property.VariableName %>);
-<% } } %>
-            }
-        }
-
-<% } %>
-<% if(IncludeSilverlightSupport) { %>
-#if !SILVERLIGHT
-<% } %>
-<%if(DataAccessImplementation == DataAccessMethod.ParameterizedSQL || DataAccessImplementation == DataAccessMethod.StoredProcedures){ %>
-        internal <%= BusinessClassName %>(SafeDataReader reader)
-        {
-            Map(reader);
-<% if(RenderOptionalContent) { %>
-            MarkAsChild();  
-<% } %>
-        }
-<% } %>
-<%  if(DataAccessImplementation == DataAccessMethod.LinqToSQL ) { %>
-        internal <%= BusinessClassName %>(DAL.<%=Entity.Name%> DataSource)
-        {
-            Map(DataSource);
-<% if(RenderOptionalContent) { %>
-            MarkAsChild();  
-<% } } %>
-<% if(IncludeSilverlightSupport) { %>
-#endif
-<% } %>
-
         #endregion

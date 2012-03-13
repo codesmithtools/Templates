@@ -1,6 +1,6 @@
 ﻿<%-- Author: Blake Niemyjski --%>
 <%--         Joe McPherson   --%>
-<%@ CodeTemplate Language="C#" TargetLanguage="C#" Inherits="Generator.CSLA.EntityCodeTemplate" Description="CSLA 3.8.X DynamicRoot" %>
+<%@ CodeTemplate Language="C#" TargetLanguage="C#" Inherits="Generator.CSLA.EntityCodeTemplate" %>
 <%@ Register Name="MapLinqToSQL" Template="..\..\Common\MapLinqToSQL.cst" %>
 <%@ Register Name="DataPortalCreate" Template="..\..\Common\DataPortalCreate.cst" %>
 <%-- LinqToSQL Modification --%>
@@ -117,18 +117,7 @@ namespace <%= BusinessProjectName %>
 <% RenderHelper(new DataPortalDelete()); %>
         }
         
-        /// <summary>
-        /// Maps data columns retrieved from the data base to the respective properties in the current 
-        /// <see cref="<%= BusinessClassName %><%= Entity.GenericProperty %> CSLA dynamic root business object.
-        /// </summary>
-        /// <param name="criteria">Object of type <see cref="<%=LinqToSQLContextNamespace%>.<%=Entity.Name%> %>"/> containing the data retrieved from the data base.</param>
-        /// <returns></returns>
-        private void Map(DAL.<%=Entity.Name%> DataSource)
-        {
 <% RenderHelper(new MapLinqToSQL()); %>
-
-            MarkOld();
-        }
     }
 }
 <% if(IncludeSilverlightSupport) { %>

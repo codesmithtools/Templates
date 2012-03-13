@@ -1,5 +1,6 @@
 ﻿<%-- Author: Blake Niemyjski --%>
 <%@ CodeTemplate Language="C#" TargetLanguage="C#" Inherits="Generator.CSLA.EntityCodeTemplate" %>
+<%@ Register Name="Constructor" Template="..\..\Common\Constructor.cst" %>
 <%@ Register Name="Exists" Template="..\..\Common\ExistsList.cst" %>
 <%@ Register Name="ListEnhancements" Template="..\..\Common\ListEnhancements.cst" %>
 <%@ Register Name="PartialMethods" Template="..\..\Common\ListDataPortalPartialMethods.cst" %>
@@ -45,12 +46,7 @@ namespace <%= BusinessProjectName %>
 <% } %>
     public partial class <%= BusinessClassName %><%= Entity.GenericProperty %> : ReadOnlyListBase<<%= BusinessClassName %><%= Entity.GenericProperty %>, <%= ChildBusinessClassName %><%= Entity.GenericProperty %>>
     {
-        #region Constructor(s)
-
-        public <%= BusinessClassName %>()
-        { /* Require use of factory methods */ }
-
-        #endregion
+<% RenderHelper(new Constructor()); %>
     
         #region Synchronous Factory Methods
 <% if(IncludeSilverlightSupport) { %>

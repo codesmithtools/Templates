@@ -24,7 +24,7 @@
                 foreach(var item in items)
                 {
                     //<%= BusinessClassName%>
-                    this.Add(new <%= ChildBusinessClassName%>(item));
+                    this.Add(<%= BusinessProjectName %>.<%= ChildBusinessClassName %>.Get<%= ChildBusinessClassName %>(item));
                     //<% if(BusinessClassName.Contains("InfoList")) { %>Info<% }%>(item));
                 }
                 

@@ -60,12 +60,12 @@ namespace CodeSmith.SchemaHelper
 
         public static string BuildParameterVariableName(this IProperty property)
         {
-            return String.Format("{0}{1}", Configuration.Instance.ParameterPrefix, property.Name);
+            return String.Format("{0}{1}", Configuration.Instance.ParameterPrefix, property.KeyName);
         }
 
         public static string BuildDataBaseColumn(this IProperty property)
         {
-            return String.Format("[{0}]", property.Name);
+            return String.Format("[{0}]", property.KeyName);
         }
 
         public static bool ExcludeBusinessSizeRule(this IProperty property)

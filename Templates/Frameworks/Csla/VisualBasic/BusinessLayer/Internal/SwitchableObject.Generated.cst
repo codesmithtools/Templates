@@ -94,7 +94,12 @@ Namespace <%= BusinessProjectName %>
             DataPortal.Delete<% If (IsLatestCSLA) Then %>(Of <%= BusinessClassName %><%= Entity.GenericProperty %>)<% End If %>(New <%= CriteriaClassName %><%= Entity.GenericProperty %> (<%= Entity.GetProperties(PropertyType.Key).BuildVariableArguments() %>))
         End Sub
     <%End If%>
+<%If(DataAccessImplementation = DataAccessMethod.ParameterizedSQL Or DataAccessImplementation = DataAccessMethod.StoredProcedures) Then %>
 
+        Friend Shared Function Get<%= BusinessClassName %>(ByVal reader As SafeDataReader) As <%= BusinessClassName %>
+            Return DataPortal.FetchChild(Of <%= BusinessClassName %>)(reader)
+        End Function
+<% End If %>
 <% If(IncludeSilverlightSupport) Then %>
 #End If
 <% End If %>

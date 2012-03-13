@@ -5,6 +5,10 @@
 <%@ Assembly Name="Generator.CSLA" Path="..\..\Common" %>
 <%@ Import Namespace="CodeSmith.SchemaHelper" %>
 
+        #region Map
+
+        private void Map(SafeDataReader reader)
+        {
             bool cancel = false;
             OnMapping(reader, ref cancel);
             if (cancel) return;
@@ -31,3 +35,11 @@
             }
 
             OnMapped();
+        }
+        
+        private void Child_Fetch(SafeDataReader reader)
+        {
+            Map(reader);
+        }
+
+        #endregion

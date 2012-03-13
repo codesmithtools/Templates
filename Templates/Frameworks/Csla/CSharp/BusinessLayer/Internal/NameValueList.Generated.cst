@@ -1,5 +1,6 @@
 ﻿<%-- Author: Blake Niemyjski --%>
 <%@ CodeTemplate Language="C#" TargetLanguage="C#" Inherits="Generator.CSLA.EntityCodeTemplate" %>
+<%@ Register Name="Constructor" Template="..\..\Common\Constructor.cst" %>
 <%@ Register Name="Exists" Template="..\..\Common\ExistsList.cst" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\..\Common" %>
 <%@ Assembly Name="Generator.CSLA" Path="..\..\..\Common" %>
@@ -42,8 +43,7 @@ namespace <%= BusinessProjectName %>
     {
         private static <%= BusinessClassName %> _list;
 
-        public <%= BusinessClassName %>()
-        { /* Require use of factory methods */ }
+<% RenderHelper(new Constructor()); %>
         
         #region Synchronous Factory Methods
 <% if(IncludeSilverlightSupport) { %>

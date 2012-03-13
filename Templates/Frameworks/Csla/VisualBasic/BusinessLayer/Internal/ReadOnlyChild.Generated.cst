@@ -1,6 +1,6 @@
 ﻿<%-- Author: Blake Niemyjski --%>
 <%@ CodeTemplate Language="VB" TargetLanguage="VB" Inherits="Generator.CSLA.EntityCodeTemplate" %>
-<%@ Register Name="Constructor" Template="..\..\Common\ConstructorReadOnly.cst" %>
+<%@ Register Name="Constructor" Template="..\..\Common\Constructor.cst" %>
 <%@ Register Name="Exists" Template="..\..\Common\Exists.cst" %>
 <%@ Register Name="Properties" Template="..\..\Common\PropertiesReadOnly.cst" %>
 <%@ Register Name="PartialMethods" Template="..\..\Common\ChildPartialMethods.cst" %>

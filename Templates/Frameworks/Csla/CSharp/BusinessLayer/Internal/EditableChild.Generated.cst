@@ -1,6 +1,6 @@
 ﻿<%-- Author: Blake Niemyjski --%>
 <%@ CodeTemplate Language="C#" TargetLanguage="C#" Inherits="Generator.CSLA.EntityCodeTemplate" %>
-<%@ Register Name="Constructor" Template="..\..\Common\ChildConstructor.cst" %>
+<%@ Register Name="Constructor" Template="..\..\Common\Constructor.cst" %>
 <%@ Register Name="Exists" Template="..\..\Common\Exists.cst" %>
 <%@ Register Name="IsDirty" Template="..\..\Common\IsDirty.cst" %>
 <%@ Register Name="Properties" Template="..\..\Common\Properties.cst" %>
@@ -53,8 +53,7 @@ namespace <%= BusinessProjectName %>
 <% } %>
     public partial class <%= BusinessClassName %><%= Entity.GenericProperty %> : BusinessBase<<%= BusinessClassName %><%= Entity.GenericProperty %>>
     {
-<%/*  Documentation code handled in the Constructor.cst template  */
-   RenderHelper(new Constructor()); %>
+<% RenderHelper(new Constructor()); %>
 
 <%/*  Documentation code handled in the ValidationRules.cst template  */
    RenderHelper(new ValidationRules()); %>
@@ -74,6 +73,20 @@ namespace <%= BusinessProjectName %>
         {
             return DataPortal.CreateChild<<%= ChildBusinessClassName %><%= Entity.GenericProperty %>>();
         }
+<%if(DataAccessImplementation == DataAccessMethod.ParameterizedSQL || DataAccessImplementation == DataAccessMethod.StoredProcedures){ %>
+
+        internal static <%= BusinessClassName %> Get<%= BusinessClassName %>(SafeDataReader reader)
+        {
+            return DataPortal.FetchChild<<%= BusinessClassName %>>(reader);
+        }
+<% } %>
+<% if(DataAccessImplementation == DataAccessMethod.LinqToSQL) { %>
+
+        internal static <%= BusinessClassName %> Get<%= BusinessClassName %>(DAL.<%= Entity.Name %> dto)
+        {
+            return DataPortal.FetchChild<<%= BusinessClassName %>(dto);
+        }
+<% } %>
 <% foreach(SearchCriteria sc in Entity.SearchCriteria) { %>
 
         /// <summary>

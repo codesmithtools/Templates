@@ -180,12 +180,7 @@ namespace <%= BusinessProjectName %>
 
         #endregion
 
-        private void Map(SafeDataReader reader)
-        {
 <% RenderHelper(new MapDataReader()); %>
-
-            MarkOld();
-        }
     }
 }
 <% if(IncludeSilverlightSupport) { %>

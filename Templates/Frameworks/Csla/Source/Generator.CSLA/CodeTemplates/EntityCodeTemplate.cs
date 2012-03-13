@@ -594,6 +594,11 @@ namespace Generator.CSLA
             return false;
         }
 
+        public bool IsSwitchableObject()
+        {
+            return IsSwitchableObject(String.Empty);
+        }
+
         public bool IsSwitchableObject(string suffix)
         {
             string key = String.Format("{0}{1}", Entity.EntityKeyName, suffix);
