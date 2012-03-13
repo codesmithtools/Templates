@@ -7,7 +7,7 @@
 <%@ Import Namespace="CodeSmith.SchemaHelper" %>
 
 <% if(!RenderOptionalContent) { %>  
-            <%= ChildBusinessClassName %> item = <%= BusinessProjectName %>.<%= ChildBusinessClassName %>.New<%= ChildBusinessClassName %>();
+            <%= ChildBusinessClassName %> item = <%= BusinessProjectName %>.<%= ChildBusinessClassName %>.New<%= ChildBusinessClassName %><% if(IsSwitchableObject()){ %>Child<% }%>();
 
             bool cancel = false;
             OnAddNewCore(ref item, ref cancel);
@@ -15,14 +15,14 @@
             {
                 // Check to see if someone set the item to null in the OnAddNewCore.
                 if(item == null)
-                    item = <%= BusinessProjectName %>.<%= ChildBusinessClassName %>.New<%= ChildBusinessClassName %>();
+                    item = <%= BusinessProjectName %>.<%= ChildBusinessClassName %>.New<%= ChildBusinessClassName %><% if(IsSwitchableObject()){ %>Child<% }%>();
 
                 Add(item);
             }
 
             return item;
 <% } else { %>
-            <%= BusinessProjectName %>.<%= ChildBusinessClassName %>.New<%= ChildBusinessClassName %>Async((o, e) =>
+            <%= BusinessProjectName %>.<%= ChildBusinessClassName %>.New<%= ChildBusinessClassName %><% if(IsSwitchableObject()){ %>Child<% }%>Async((o, e) =>
                 {
                     <%= ChildBusinessClassName %> item = e.Object;
                     
