@@ -1643,6 +1643,11 @@
             Returns the Commands Return Value.
             </summary>
         </member>
+        <member name="T:CodeSmith.SchemaHelper.AssociationSuffix">
+            <summary>
+            Controls the naming for Associations.
+            </summary>
+        </member>
         <member name="M:CodeSmith.SchemaHelper.TableEnumEntity.#ctor(SchemaExplorer.ITableSchema)">
             <summary>
             Constructor that passes in the Table that this class will represent.

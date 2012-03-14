@@ -30,7 +30,11 @@ namespace Generator.CSLA
         public CSLABaseTemplate()
         {
             ResolveTargetLanguage();
-            Configuration.Instance.NamingProperty.AssociationSuffix = AssociationSuffix.None;
+
+            // Preserve Backwards Compat.
+            Configuration.Instance.NamingProperty.ColumnNaming = ColumnNaming.Preserve;
+            Configuration.Instance.NamingProperty.AssociationTypeNameSuffix = AssociationSuffix.Singular;
+            Configuration.Instance.NamingProperty.AssociationSuffix = AssociationSuffix.Plural;
         }
 
         #endregion
@@ -39,7 +43,7 @@ namespace Generator.CSLA
 
         [Optional]
         [Category("2. Solution")]
-        [Description("The .NET Framework Version. If you use v40 then CSLA 4.0 will be used. If you use v35 then CSLA 3.8 will be used.")]
+        [Description("The .NET Framework Version. If you use v40 then CSLA 4.3 will be used. If you use v35 then CSLA 3.8 will be used.")]
         public FrameworkVersion FrameworkVersion
         {
             get { return Configuration.Instance.FrameworkVersion; }
