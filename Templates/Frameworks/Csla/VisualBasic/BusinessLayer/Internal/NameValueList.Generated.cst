@@ -33,13 +33,13 @@ Imports Csla.Serialization
 <%
 Dim properties As System.Collections.Generic.List(Of IProperty) = New System.Collections.Generic.List(Of IProperty)()
 If Entity.HasKey Then
-	properties.AddRange(Entity.Key.Properties)
+    properties.AddRange(Entity.Key.Properties)
 End If
 
 properties.AddRange(Entity.GetProperties(PropertyType.NoKey).Take(2 - properties.Count))
 
 If properties.Count < 2 Then
-	Throw New ApplicationException([String].Format("NameValueList cannot be generated for Entity '{0}' as it requires atleast two properties to be present.", Entity.Name))
+    Throw New ApplicationException([String].Format("NameValueList cannot be generated for Entity '{0}' as it requires atleast two properties to be present.", Entity.Name))
 End If
 %>
 Namespace <%= BusinessProjectName %>

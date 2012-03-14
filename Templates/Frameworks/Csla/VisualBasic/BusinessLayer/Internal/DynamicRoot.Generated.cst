@@ -102,7 +102,7 @@ Namespace <%= BusinessProjectName %>
         End Sub
     <% For Each sc As SearchCriteria In Entity.SearchCriteria %>
 
-        Public Shared Sub <%= sc.MethodName %>Async(<%= sc.Properties.BuildParametersVariables() %>, ByVal handler As EventHandler(Of DataPortalResult(Of <%= BusinessClassName %><%= Entity.GenericProperty %>)))
+        Public Shared Sub <%= sc.MethodName %>Async(<% If(sc.Properties.Count > 0) Then %><%= sc.Properties.BuildParametersVariables() %>, <% End If %>ByVal handler As EventHandler(Of DataPortalResult(Of <%= BusinessClassName %><%= Entity.GenericProperty %>)))
             Dim dp As New DataPortal(Of <%= BusinessClassName %><%= Entity.GenericProperty %>)()
             AddHandler dp.FetchCompleted, handler
         

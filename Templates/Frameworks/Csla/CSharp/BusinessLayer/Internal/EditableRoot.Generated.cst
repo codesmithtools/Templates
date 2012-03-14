@@ -138,7 +138,7 @@ namespace <%= BusinessProjectName %>
         }
 <% foreach(SearchCriteria sc in Entity.SearchCriteria) { %>
 
-        public static void <%= sc.MethodName %>Async(<%= sc.Properties.BuildParametersVariables() %>, EventHandler<DataPortalResult<<%= BusinessClassName %><%= Entity.GenericProperty %>>> handler)
+        public static void <%= sc.MethodName %>Async(<% if(sc.Properties.Count > 0) { %><%= sc.Properties.BuildParametersVariables() %>, <% }%>EventHandler<DataPortalResult<<%= BusinessClassName %><%= Entity.GenericProperty %>>> handler)
         {
             var criteria = new <%= CriteriaClassName %><%= Entity.GenericProperty %>{ <%= sc.Properties.BuildObjectInitializer() %>};
             <%= sc.Properties.BuildNullableObjectInitializer()%>

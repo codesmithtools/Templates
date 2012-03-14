@@ -27,7 +27,7 @@ public override void Render(System.IO.TextWriter writer)
     {
         RenderToFileHelper<ReadOnlyListDataAccess>(fileName, parentFileName, false);
     }
-    else if(DataAccessImplementation == DataAccessMethod.StoredProcedures  || Entity.IsCommand())
+    else if(!Entity.IsView() && (DataAccessImplementation == DataAccessMethod.StoredProcedures || Entity.IsCommand()))
     {
         RenderToFileHelper<ReadOnlyListDataAccessStoredProcedures>(fileName, parentFileName, true);
 
@@ -37,7 +37,7 @@ public override void Render(System.IO.TextWriter writer)
         fileName = System.IO.Path.Combine(Location, String.Format("Collections\\{0}.StoredProcedures.sql", BusinessClassName));
         RenderProceduresToFileHelper<SqlStoredProcedures>(fileName, parentFileName, true, true, true);
     }
-    else if(DataAccessImplementation == DataAccessMethod.ParameterizedSQL)
+    else if(Entity.IsView() || DataAccessImplementation == DataAccessMethod.ParameterizedSQL)
     {
         RenderToFileHelper<ReadOnlyListDataAccessParameterized>(fileName, parentFileName, true);
     }
