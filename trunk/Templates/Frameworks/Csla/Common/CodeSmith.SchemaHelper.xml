@@ -610,6 +610,11 @@
             Is this IProperty ReadOnly.  Computed by looking at IsIdentity, IsRowVersion, and IsComputed.
             </summary>
         </member>
+        <member name="T:CodeSmith.SchemaHelper.SearchCriteriaType">
+            <summary>
+            Defines the type of Search Critiera.
+            </summary>
+        </member>
         <member name="T:CodeSmith.SchemaHelper.AccessibilityHelper">
             <summary>
             Helps determine the Access Modifier of Interfaces, Enumerations, Classes, Structs, Properties and Members.

@@ -23,7 +23,7 @@ namespace CodeSmith.SchemaHelper
         {
             if(entity.IsCommand())
             {
-                var criteria = entity.SearchCriteria.FirstOrDefault(s => s.SearchCriteriaType == SearchCriteriaType.CustomCommand);
+                var criteria = entity.SearchCriteria.FirstOrDefault(s => s.SearchCriteriaType == SearchCriteriaType.Command);
                 return criteria != null ? criteria.Properties : new List<IProperty>();
             }
 

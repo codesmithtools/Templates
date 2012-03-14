@@ -19,7 +19,7 @@
         Partial Private Sub OnChildCreating(ByRef cancel As Boolean)
         End Sub
 
-		''' <summary>
+        ''' <summary>
         ''' Codesmith generated stub method that is called after the child <see cref="<%=ChildBusinessClassName%><%= Entity.GenericProperty %>"/> object has been created. 
         ''' </summary>
         Partial Private Sub OnChildCreated()

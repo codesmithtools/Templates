@@ -26,7 +26,7 @@ public override void Render(System.IO.TextWriter writer)
     {
         RenderToFileHelper<SwitchableObjectDataAccess>(fileName, parentFileName, false);
     }
-    else if(DataAccessImplementation == DataAccessMethod.StoredProcedures  || Entity.IsCommand())
+    else if(!Entity.IsView() && (DataAccessImplementation == DataAccessMethod.StoredProcedures || Entity.IsCommand()))
     {
         RenderToFileHelper<SwitchableObjectDataAccessStoredProcedures>(fileName, parentFileName, true);
 
@@ -36,7 +36,7 @@ public override void Render(System.IO.TextWriter writer)
         fileName = System.IO.Path.Combine(Location, String.Format("Entities\\{0}.StoredProcedures.sql", BusinessClassName));
         RenderProceduresToFileHelper<SqlStoredProcedures>(fileName, parentFileName, true);
     }
-    else if(DataAccessImplementation == DataAccessMethod.ParameterizedSQL)
+    else if(Entity.IsView() || DataAccessImplementation == DataAccessMethod.ParameterizedSQL)
     {
         RenderToFileHelper<SwitchableObjectDataAccessParameterized>(fileName, parentFileName, true);
     }

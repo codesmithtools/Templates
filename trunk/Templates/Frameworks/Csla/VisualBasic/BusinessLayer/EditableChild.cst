@@ -24,7 +24,7 @@ RenderToFileHelper(Of EditableChildGenerated)(fileName, parentFileName, True)
 fileName = System.IO.Path.Combine(Location, String.Format("Entities\{0}.DataAccess.vb", BusinessClassName))
 If DataAccessImplementation = DataAccessMethod.None Then
     RenderToFileHelper(Of EditableChildDataAccess)(fileName, parentFileName, False)
-ElseIf DataAccessImplementation = DataAccessMethod.StoredProcedures OrElse Entity.IsCommand() Then
+ElseIf (DataAccessImplementation = DataAccessMethod.StoredProcedures OrElse Entity.IsCommand()) And Not Entity.IsView() Then
     RenderToFileHelper(Of EditableChildDataAccessStoredProcedures)(fileName, parentFileName, True)
 
     If(Entity.IsCommand()) Then
@@ -33,7 +33,7 @@ ElseIf DataAccessImplementation = DataAccessMethod.StoredProcedures OrElse Entit
 
     fileName = System.IO.Path.Combine(Location, String.Format("Entities\{0}.StoredProcedures.sql", BusinessClassName))
     RenderProceduresToFileHelper(Of SqlStoredProcedures)(fileName, parentFileName, true)
-ElseIf DataAccessImplementation = DataAccessMethod.ParameterizedSQL Then
+ElseIf Entity.IsView() OrElse DataAccessImplementation = DataAccessMethod.ParameterizedSQL Then
     RenderToFileHelper(Of EditableChildDataAccessParameterized)(fileName, parentFileName, True)
 End If
 

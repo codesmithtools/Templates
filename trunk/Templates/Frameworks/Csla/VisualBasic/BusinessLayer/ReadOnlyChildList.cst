@@ -28,7 +28,7 @@ RenderToFileHelper(Of ReadOnlyChildListGenerated)(fileName, parentFileName, True
 fileName = System.IO.Path.Combine(Location, String.Format("Collections\{0}.DataAccess.vb", BusinessClassName))
 If DataAccessImplementation = DataAccessMethod.None Then
     RenderToFileHelper(Of ReadOnlyChildListDataAccess)(fileName, parentFileName, False)
-ElseIf DataAccessImplementation = DataAccessMethod.StoredProcedures OrElse Entity.IsCommand() Then
+ElseIf (DataAccessImplementation = DataAccessMethod.StoredProcedures OrElse Entity.IsCommand()) And Not Entity.IsView() Then
     RenderToFileHelper(Of ReadOnlyChildListDataAccessStoredProcedures)(fileName, parentFileName, True)
 
     If(Entity.IsCommand()) Then
@@ -37,7 +37,7 @@ ElseIf DataAccessImplementation = DataAccessMethod.StoredProcedures OrElse Entit
 
     fileName = System.IO.Path.Combine(Location, String.Format("Collections\{0}.StoredProcedures.sql", BusinessClassName))
     RenderProceduresToFileHelper(Of SqlStoredProcedures)(fileName, parentFileName, True, True, True)
-ElseIf DataAccessImplementation = DataAccessMethod.ParameterizedSQL Then
+ElseIf Entity.IsView() OrElse DataAccessImplementation = DataAccessMethod.ParameterizedSQL Then
     RenderToFileHelper(Of ReadOnlyChildListDataAccessParameterized)(fileName, parentFileName, True)
 End If
 
