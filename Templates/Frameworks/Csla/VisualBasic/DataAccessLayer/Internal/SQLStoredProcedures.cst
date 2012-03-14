@@ -107,7 +107,7 @@ AS
 <% If(Entity.HasKey) Then %>
 <% For Each prop As IProperty In Entity.GetProperties(PropertyType.Key)
  If (prop.IsDbType(DbType.Guid) AndAlso Not prop.IsType(PropertyType.Foreign)) Then %>
-SET <%= ParameterPrefix %><%= prop.Name %> = NEWID()
+SET <%= ParameterPrefix %><%= prop.KeyName %> = NEWID()
 
 <% End If
 Next 
@@ -115,7 +115,7 @@ End If%>
 INSERT INTO [<%= Entity.SchemaName %>].[<%= Entity.EntityKeyName %>] (
 <% For Each prop As IProperty In Entity.GetProperties(PropertyType.Key)
     If (prop.IsDbType(DbType.Guid) Or Not IsIdentityColumn(prop)) Then %>
-    [<%= prop.Name %>],
+    [<%= prop.KeyName %>],
     <% End If 
 Next %>
     <% GenerateColumns(Entity.GetProperties(PropertyType.NoKey), 1, false) %>
@@ -123,7 +123,7 @@ Next %>
 ) VALUES (
 <% For Each prop As IProperty In Entity.GetProperties(PropertyType.Key)
     If (prop.IsDbType(DbType.Guid) Or Not IsIdentityColumn(prop)) Then %>
-    <%= ParameterPrefix %><%= prop.Name %>,
+    <%= ParameterPrefix %><%= prop.KeyName %>,
     <% End If 
 Next %>
     <% GenerateVariables(Entity.GetProperties(PropertyType.NoKey), 1, false) %>
@@ -132,7 +132,7 @@ Next %>
 <%-- If the primary key is an identity prop, then capture the newly assigned identity using SCOPE_IDENTITY(). --%>
 <% For Each prop As IProperty In Entity.GetProperties(PropertyType.Key)
     If (IsIdentityColumn(prop)) Then %>
-SET <%= ParameterPrefix %><%= prop.Name %> = SCOPE_IDENTITY()
+SET <%= ParameterPrefix %><%= prop.KeyName %> = SCOPE_IDENTITY()
 <% End If
 Next %>
 
@@ -543,7 +543,7 @@ Public Sub GenerateParameter(ByVal prop As IProperty, ByVal indentLevel As Integ
     End If
 
     If makeParametersNullable AndAlso prop.IsNullable Then
-        Response.Write(String.Format("," & vbCr & vbLf & vbTab & "{0}{1}HasValue BIT = 0", ParameterPrefix, prop.Name))
+        Response.Write(String.Format("," & vbCr & vbLf & vbTab & "{0}{1}HasValue BIT = 0", ParameterPrefix, prop.KeyName))
     End If
 
     If includeOriginalParam AndAlso prop.IsType(PropertyType.Key) AndAlso Not prop.IsType(PropertyType.Identity) Then
@@ -571,7 +571,7 @@ Public Function GetSqlParameterStatement(ByVal props As IProperty, ByVal isOutpu
 
     Dim prop = DirectCast(props, ISchemaProperty)
 
-    Dim param As String = String.Format("{0}{1}{2} {3}", ParameterPrefix, If(includeOriginalParam, "Original", ""), prop.Name, prop.NativeType)
+    Dim param As String = String.Format("{0}{1}{2} {3}", ParameterPrefix, If(includeOriginalParam, "Original", ""), prop.KeyName, prop.NativeType)
     If Not IsUserDefinedType(prop) And Not prop.IsType(PropertyType.Concurrency) Then
         Select Case prop.DataType
             Case DbType.[Decimal]
@@ -646,7 +646,7 @@ Public Sub GenerateColumn(ByVal prop As IProperty, ByVal indentLevel As Integer,
     End If
     GenerateIndent(indentLevel)
     Response.Write("[")
-    Response.Write(prop.Name)
+    Response.Write(prop.KeyName)
     Response.Write("]")
 End Sub
 
@@ -672,10 +672,10 @@ Public Sub GenerateUpdate(ByVal prop As IProperty, ByVal indentLevel As Integer,
     
     GenerateIndent(indentLevel)
     Response.Write("[")
-    Response.Write(prop.Name)
+    Response.Write(prop.KeyName)
     Response.Write("] = ")
     Response.Write(ParameterPrefix)
-    Response.Write(prop.Name)
+    Response.Write(prop.KeyName)
 End Sub
 
 Public Sub GenerateUpdates(ByVal columns As IList(Of IProperty), ByVal indentLevel As Integer, ByVal includeTimeStamp As Boolean)
@@ -701,7 +701,7 @@ Public Sub GenerateCondition(ByVal prop As IProperty, ByVal indentLevel As Integ
         Response.Write("AND ")
     End If
     Response.Write("[")
-    Response.Write(prop.Name)
+    Response.Write(prop.KeyName)
     Response.Write("] = ")
     Response.Write(ParameterPrefix)
 
@@ -709,7 +709,7 @@ If includeOriginal AndAlso prop.IsType(PropertyType.Key) AndAlso prop.IsType(Pro
     Response.Write("Original")
 End If
 
-    Response.Write(prop.Name)
+    Response.Write(prop.KeyName)
     If indentLevel >= 0 Then
         Response.WriteLine("")
     ElseIf Not isLast Then
@@ -742,22 +742,22 @@ Public Sub GenerateFindCondition(prop As IProperty, indentLevel As Integer, isFi
         Response.Write("AND ")
     End If
     Response.Write("([")
-    Response.Write(prop.Name)
+    Response.Write(prop.KeyName)
     Response.Write("] = ")
     Response.Write(ParameterPrefix)
-    Response.Write(prop.Name)
+    Response.Write(prop.KeyName)
 If prop.IsNullable Then
     Response.Write(" OR (")
     Response.Write(ParameterPrefix)
-    Response.Write(prop.Name)
+    Response.Write(prop.KeyName)
     Response.Write(" IS NULL AND ")
     Response.Write(ParameterPrefix)
-    Response.Write(prop.Name)
+    Response.Write(prop.KeyName)
     Response.Write("HasValue = 0))")
 Else
     Response.Write(" OR ")
     Response.Write(ParameterPrefix)
-    Response.Write(prop.Name)
+    Response.Write(prop.KeyName)
     Response.Write(" IS NULL)")
 End If
 
@@ -831,7 +831,7 @@ Public Sub GenerateVariable(ByVal prop As IProperty, ByVal indentLevel As Intege
     End If
     GenerateIndent(indentLevel)
     Response.Write(ParameterPrefix)
-    Response.Write(prop.Name)
+    Response.Write(prop.KeyName)
 End Sub
 
 Public Sub GenerateVariables(ByVal columns As List(Of IProperty), ByVal indentLevel As Integer, ByVal includeTimeStamp As Boolean)
