@@ -590,7 +590,7 @@ public string GetSqlParameterStatement(IProperty property, bool isOutput, bool i
     var prop = (ISchemaProperty)property;
 
     string param = String.Format("{0}{1}{2} {3}", ParameterPrefix, includeOriginalParam ? "Original" : "", prop.KeyName, prop.NativeType);
-    if (!IsUserDefinedType(prop) && !prop.IsType(PropertyType.Concurrency))
+    if (!prop.IsType(PropertyType.Concurrency))
     {
         switch (prop.DataType)
         {
@@ -619,19 +619,6 @@ public string GetSqlParameterStatement(IProperty property, bool isOutput, bool i
         param += " OUTPUT";
 
     return param;
-}
-
-/// <summary>
-/// Determine if the given property is using a UDT.
-/// </summary>
-/// <param name="property"></param>
-/// <returns></returns>
-public bool IsUserDefinedType(IProperty property)
-{
-    if(property.ExtendedProperties.ContainsKey("CS_UserDefinedType"))
-        return true;
-
-    return false;
 }
 
 public void GenerateParameters(IList<IProperty> columns, int indentLevel, bool includeTimeStamp)
