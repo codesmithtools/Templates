@@ -572,7 +572,7 @@ Public Function GetSqlParameterStatement(ByVal props As IProperty, ByVal isOutpu
     Dim prop = DirectCast(props, ISchemaProperty)
 
     Dim param As String = String.Format("{0}{1}{2} {3}", ParameterPrefix, If(includeOriginalParam, "Original", ""), prop.KeyName, prop.NativeType)
-    If Not IsUserDefinedType(prop) And Not prop.IsType(PropertyType.Concurrency) Then
+    If Not prop.IsType(PropertyType.Concurrency) Then
         Select Case prop.DataType
             Case DbType.[Decimal]
                 If True Then
@@ -598,19 +598,6 @@ Public Function GetSqlParameterStatement(ByVal props As IProperty, ByVal isOutpu
     End If
     
     Return param
-End Function
-
-''' <summary>
-''' Determine if the given prop is using a UDT.
-''' </summary>
-''' <param name="prop"></param>
-''' <returns></returns>
-Public Function IsUserDefinedType(ByVal prop As IProperty) As Boolean
-    If prop.ExtendedProperties.ContainsKey("CS_UserDefinedType") Then
-        Return True
-    End If
-
-    Return False
 End Function
 
 Public Sub GenerateParameters(ByVal columns As IList(Of IProperty), ByVal indentLevel As Integer, ByVal includeTimeStamp As Boolean)
