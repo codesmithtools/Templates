@@ -16,6 +16,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
 using CodeSmith.CustomProperties;
 using CodeSmith.Engine;
@@ -77,13 +78,9 @@ namespace Generator.CSLA
             {
                 if (value != null)
                 {
-                    Entity = new TableEntity(value);
-                    //if (State == TemplateState.RestoringProperties && Entity == null)
-                    //{
-                    //    var provider = new CSLASchemaExplorerEntityProvider(value);
-                    //    var entities = new EntityManager(provider).Entities;
-                    //    Entity = entities.FirstOrDefault(e => e is TableEntity && ((TableEntity)e).EntitySource == value) ?? new TableEntity(value);
-                    //}
+                    var provider = new SchemaExplorerEntityProvider(new TableSchemaCollection {value}, null, null);
+                    IEntity entity = new EntityManager(provider).Entities.FirstOrDefault();
+                    Entity = entity ?? new TableEntity(value);
                 }
             }
         }
@@ -104,8 +101,12 @@ namespace Generator.CSLA
             }
             set
             {
-                if(value != null)
-                    Entity = new ViewEntity(value);
+                if (value != null)
+                {
+                    var provider = new SchemaExplorerEntityProvider(null, new ViewSchemaCollection { value }, null);
+                    IEntity entity = new EntityManager(provider).Entities.FirstOrDefault();
+                    Entity = entity ?? new ViewEntity(value);
+                }
             }
         }
 
@@ -126,7 +127,11 @@ namespace Generator.CSLA
             set
             {
                 if (value != null)
-                    Entity = new CommandEntity(value);
+                {
+                    var provider = new SchemaExplorerEntityProvider(null, null, new CommandSchemaCollection { value });
+                    IEntity entity = new EntityManager(provider).Entities.FirstOrDefault();
+                    Entity = entity ?? new CommandEntity(value);
+                }
             }
         }
 
