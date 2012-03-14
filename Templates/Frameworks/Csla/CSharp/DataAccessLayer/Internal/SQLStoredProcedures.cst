@@ -132,7 +132,7 @@ SET <%= ParameterPrefix %><%= property.KeyName %> = SCOPE_IDENTITY()
 
 <% } } } %>
 <% if(Entity.ConcurrencyProperty != null){ %>
-SET <%= ParameterPrefix %><%= Entity.ConcurrencyProperty.KeyName %> = (SELECT [<%= Entity.ConcurrencyProperty.KeyName %>] FROM [<%= Entity.SchemaName %>].[<%= Entity.EntityKeyName %>]WHERE <% GenerateConditions(Entity.GetProperties(PropertyType.Key), 1, false); %>)
+SET <%= ParameterPrefix %><%= Entity.ConcurrencyProperty.KeyName %> = (SELECT [<%= Entity.ConcurrencyProperty.KeyName %>] FROM [<%= Entity.SchemaName %>].[<%= Entity.EntityKeyName %>] WHERE <% GenerateConditions(Entity.GetProperties(PropertyType.Key), 1, false); %>)
 
 <%}%>
 
@@ -156,7 +156,7 @@ INSERT INTO [<%= Entity.SchemaName %>].[<%= Entity.EntityKeyName %>] (
 )
 
 <% if(Entity.ConcurrencyProperty != null){ %>
-SET <%= ParameterPrefix %><%= Entity.ConcurrencyProperty.KeyName %> = (SELECT [<%= Entity.ConcurrencyProperty.KeyName %>] FROM [<%= Entity.SchemaName %>].[<%= Entity.EntityKeyName %>]WHERE <% GenerateConditions(Entity.GetProperties(PropertyType.Key), 1, false); %>)
+SET <%= ParameterPrefix %><%= Entity.ConcurrencyProperty.KeyName %> = (SELECT [<%= Entity.ConcurrencyProperty.KeyName %>] FROM [<%= Entity.SchemaName %>].[<%= Entity.EntityKeyName %>] WHERE <% GenerateConditions(Entity.GetProperties(PropertyType.Key), 1, false); %>)
 <%}%>
 <% } %>
 
@@ -231,7 +231,7 @@ WHERE
 <%}%>
 
 <% if(Entity.ConcurrencyProperty != null){ %>
-SET <%= ParameterPrefix %><%= Entity.ConcurrencyProperty.KeyName %> = (SELECT [<%= Entity.ConcurrencyProperty.KeyName %>] FROM [<%= Entity.SchemaName %>].[<%= Entity.EntityKeyName %>]WHERE <% GenerateConditions(Entity.GetProperties(PropertyType.Key), 1, false); %>)
+SET <%= ParameterPrefix %><%= Entity.ConcurrencyProperty.KeyName %> = (SELECT [<%= Entity.ConcurrencyProperty.KeyName %>] FROM [<%= Entity.SchemaName %>].[<%= Entity.EntityKeyName %>] WHERE <% GenerateConditions(Entity.GetProperties(PropertyType.Key), 1, false); %>)
 <%}%>
 
 GO
@@ -295,7 +295,7 @@ CREATE PROCEDURE <%= GetDeleteStoredProcedureName() %>
 AS
 
 DELETE FROM
-    <%= Entity.EntityKeyName %>
+    [<%= Entity.SchemaName %>].[<%= Entity.EntityKeyName %>]
 WHERE
     <% GenerateConditions(Entity.GetProperties(PropertyType.Key), 1, false); %>
 
@@ -364,7 +364,7 @@ SELECT
     <% GenerateColumns(Entity.Properties, 1, true); %>
 
 FROM
-    <%= Entity.EntityKeyName %>
+    [<%= Entity.SchemaName %>].[<%= Entity.EntityKeyName %>]
 WHERE
     <% GenerateFindConditions(Entity.Properties, 1); %>
 
@@ -589,7 +589,7 @@ public string GetSqlParameterStatement(IProperty property, bool isOutput, bool i
 
     var prop = (ISchemaProperty)property;
 
-    string param = String.Format("{0}{1}{2} {3}", ParameterPrefix, includeOriginalParam ? "Original" : "", prop.Name, prop.NativeType);
+    string param = String.Format("{0}{1}{2} {3}", ParameterPrefix, includeOriginalParam ? "Original" : "", prop.KeyName, prop.NativeType);
     if (!IsUserDefinedType(prop) && !prop.IsType(PropertyType.Concurrency))
     {
         switch (prop.DataType)
