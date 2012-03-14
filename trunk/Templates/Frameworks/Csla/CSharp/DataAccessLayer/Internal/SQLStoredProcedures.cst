@@ -104,14 +104,14 @@ AS
 <% if(Entity.HasKey) {
     foreach(var property in Entity.GetProperties(PropertyType.Key)) {
      if (property.IsDbType(DbType.Guid) && !property.IsType(PropertyType.Foreign)) {%>
-SET <%= ParameterPrefix %><%= property.Name %> = NEWID()
+SET <%= ParameterPrefix %><%= property.KeyName %> = NEWID()
 
 <% } } } %>
 INSERT INTO [<%= Entity.SchemaName %>].[<%= Entity.EntityKeyName %>] (
 <% if(Entity.HasKey) {
     foreach(var property in Entity.GetProperties(PropertyType.Key)) {
      if (property.IsDbType(DbType.Guid) || !IsIdentityColumn(property)) {%>
-    [<%= property.Name %>],
+    [<%= property.KeyName %>],
 <% } } } %>
     <% GenerateColumns(Entity.GetProperties(PropertyType.NoKey), 1, false); %>
     
@@ -119,7 +119,7 @@ INSERT INTO [<%= Entity.SchemaName %>].[<%= Entity.EntityKeyName %>] (
 <% if(Entity.HasKey) {
     foreach(var property in Entity.GetProperties(PropertyType.Key)) {
      if (property.IsDbType(DbType.Guid) || !IsIdentityColumn(property)) {%>
-    <%= ParameterPrefix %><%= property.Name %>,
+    <%= ParameterPrefix %><%= property.KeyName %>,
 <% } } } %>
     <% GenerateVariables(Entity.GetProperties(PropertyType.NoKey), 1, false); %>
 )
@@ -128,7 +128,7 @@ INSERT INTO [<%= Entity.SchemaName %>].[<%= Entity.EntityKeyName %>] (
 <% if(Entity.HasKey) {
     foreach(var property in Entity.GetProperties(PropertyType.Key)) {
      if (IsIdentityColumn(property)) {%>
-SET <%= ParameterPrefix %><%= property.Name %> = SCOPE_IDENTITY()
+SET <%= ParameterPrefix %><%= property.KeyName %> = SCOPE_IDENTITY()
 
 <% } } } %>
 <% if(Entity.ConcurrencyProperty != null){ %>
@@ -556,7 +556,7 @@ public void GenerateParameter(IProperty property, int indentLevel, bool isFirst,
     if(makeParametersNullable) Response.Write(" = NULL");
     if(makeParametersNullable && property.IsNullable)
     {
-        Response.Write(String.Format(",\r\n\t{0}{1}HasValue BIT = 0", ParameterPrefix, property.Name));
+        Response.Write(String.Format(",\r\n\t{0}{1}HasValue BIT = 0", ParameterPrefix, property.KeyName));
     }
     
     if(includeOriginalParam && property.IsType(PropertyType.Key) && !property.IsType(PropertyType.Identity))
@@ -676,7 +676,7 @@ public void GenerateColumn(IProperty property, int indentLevel, bool isFirst, bo
     }
     GenerateIndent(indentLevel);
     Response.Write("[");
-    Response.Write(property.Name);
+    Response.Write(property.KeyName);
     Response.Write("]");
 }
 
@@ -708,10 +708,10 @@ public void GenerateUpdate(IProperty property, int indentLevel, bool isFirst, bo
     
     GenerateIndent(indentLevel);
     Response.Write("[");
-    Response.Write(property.Name);
+    Response.Write(property.KeyName);
     Response.Write("] = ");
     Response.Write(ParameterPrefix);
-    Response.Write(property.Name);
+    Response.Write(property.KeyName);
 }
 
 public void GenerateUpdates(IList<IProperty> columns, int indentLevel, bool includeTimeStamp)
@@ -735,7 +735,7 @@ public void GenerateCondition(IProperty property, int indentLevel, bool isFirst,
     GenerateIndent(indentLevel);
     if (!isFirst) Response.Write("AND ");
     Response.Write("[");
-    Response.Write(property.Name);
+    Response.Write(property.KeyName);
     Response.Write("] = ");
     Response.Write(ParameterPrefix);
     
@@ -744,7 +744,7 @@ public void GenerateCondition(IProperty property, int indentLevel, bool isFirst,
         Response.Write("Original");
     }
     
-    Response.Write(property.Name);
+    Response.Write(property.KeyName);
     
     if (indentLevel >= 0)
     {
@@ -784,25 +784,25 @@ public void GenerateFindCondition(IProperty property, int indentLevel, bool isFi
     GenerateIndent(indentLevel);
     if (!isFirst) Response.Write("AND ");
     Response.Write("([");
-    Response.Write(property.Name);
+    Response.Write(property.KeyName);
     Response.Write("] = ");
     Response.Write(ParameterPrefix);
-    Response.Write(property.Name);
+    Response.Write(property.KeyName);
     if(property.IsNullable)
     {
         Response.Write(" OR (");
         Response.Write(ParameterPrefix);
-        Response.Write(property.Name);
+        Response.Write(property.KeyName);
         Response.Write(" IS NULL AND ");
         Response.Write(ParameterPrefix);
-        Response.Write(property.Name);
+        Response.Write(property.KeyName);
         Response.Write("HasValue = 0))");
     }
     else
     {
         Response.Write(" OR ");
         Response.Write(ParameterPrefix);
-        Response.Write(property.Name);
+        Response.Write(property.KeyName);
         Response.Write(" IS NULL)");
     }
     if (indentLevel >= 0)
@@ -892,7 +892,7 @@ public void GenerateVariable(IProperty property, int indentLevel, bool isFirst, 
     }
     GenerateIndent(indentLevel);
     Response.Write(ParameterPrefix);
-    Response.Write(property.Name);
+    Response.Write(property.KeyName);
 }
 
 public void GenerateVariables(List<IProperty> columns, int indentLevel, bool includeTimeStamp)
