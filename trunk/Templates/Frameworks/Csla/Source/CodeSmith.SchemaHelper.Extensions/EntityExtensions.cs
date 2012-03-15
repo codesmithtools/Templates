@@ -153,7 +153,7 @@ namespace CodeSmith.SchemaHelper
                                       entity.EntityKeyName,
                                       keyProperties.BuildWhereStatements(true));
             }
-            if (entity.Properties.Count(p => !p.IsType(PropertyType.Identity)) > 0)
+            if (keyProperties.Count(p => !p.IsType(PropertyType.Identity)) > 0)
             {
                 return String.Format("; SELECT {0} FROM [{1}].[{2}] {3}",
                     keyProperties.Where(p => !p.IsType(PropertyType.Identity)).ToList().BuildDataBaseColumns(),
