@@ -105,7 +105,7 @@ if (UseMemberVariables){ %>
 <% if(!BusinessObjectExists(association) && IsReadOnlyBusinessObject( association, "Info")) { %>
                         if(<%= association.BuildNullCheckStatement(true, false, false, false, true) %>)
                         {
-                            <%= BusinessProjectName %>.<%= association.TypeName %><%= association.GenericProperty %>.Exists(criteria, (o,e) =>
+                            <%= BusinessProjectName %>.<%= association.TypeName %><%= association.GenericProperty %>.ExistsAsync(criteria, (o,e) =>
                             {
                                 if (e.Error != null)
                                     throw e.Error;
@@ -128,7 +128,7 @@ if (UseMemberVariables){ %>
 <% } else { %>
                         if(<%= association.BuildNullCheckStatement(true, true, false, false, true) %>)
                         {
-                            <%= BusinessProjectName %>.<%= association.TypeName %><%= association.GenericProperty %>.Exists(criteria, (o,e) =>
+                            <%= BusinessProjectName %>.<%= association.TypeName %><%= association.GenericProperty %>.ExistsAsync(criteria, (o,e) =>
                             {
                                 if (e.Error != null)
                                     throw e.Error;
@@ -219,7 +219,7 @@ if(!result.Equals("(true)", StringComparison.CurrentCultureIgnoreCase) && !resul
 <% if(IncludeSilverlightSupport) { %>
 #if SILVERLIGHT
                         //MarkBusy();
-                        <%= BusinessProjectName %>.<%= association.TypeName %><%= association.GenericProperty %>.Exists(criteria, (o,e) =>
+                        <%= BusinessProjectName %>.<%= association.TypeName %><%= association.GenericProperty %>.ExistsAsync(criteria, (o,e) =>
                         {
                             if(e.Error != null)
                                 throw e.Error;
@@ -301,7 +301,7 @@ if(!result.Equals("(true)", StringComparison.CurrentCultureIgnoreCase) && !resul
 <% if(!BusinessObjectExists(association, "List") && IsReadOnlyBusinessObject(association, "InfoList")) { %>
                         if(<%= association.BuildNullCheckStatement(true, false, false, false, true) %>)
                         {
-                            <%= BusinessProjectName %>.<%= association.TypeName %>List<%= association.GenericProperty %>.Exists(criteria, (o,e) =>
+                            <%= BusinessProjectName %>.<%= association.TypeName %>List<%= association.GenericProperty %>.ExistsAsync(criteria, (o,e) =>
                             {
                                 if (e.Error != null)
                                     throw e.Error;

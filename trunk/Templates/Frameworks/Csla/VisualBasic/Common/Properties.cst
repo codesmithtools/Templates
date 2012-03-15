@@ -132,7 +132,7 @@
                         'Markbusy()
     <% If(BusinessObjectExists(association) = False AndAlso IsReadOnlyBusinessObject( association, "Info")) Then %>
                         If(<%= association.BuildNullCheckStatement(true, false, false, false, true) %>) Then
-                            <%= BusinessProjectName %>.<%= association.TypeName %><%= association.GenericProperty %>.Exists(criteria, Sub(o, e)
+                            <%= BusinessProjectName %>.<%= association.TypeName %><%= association.GenericProperty %>.ExistsAsync(criteria, Sub(o, e)
                                 If Not (e.Error Is Nothing) Then
                                     Throw e.Error
                                 End If
@@ -153,7 +153,7 @@
                         End If
     <% Else %>
                         If (<%= association.BuildNullCheckStatement(true, true, false, false, true) %>) Then
-                            <%= BusinessProjectName %>.<%= association.TypeName %><%= association.GenericProperty %>.Exists(criteria, Sub(o, e) 
+                            <%= BusinessProjectName %>.<%= association.TypeName %><%= association.GenericProperty %>.ExistsAsync(criteria, Sub(o, e) 
                                 If Not (e.Error Is Nothing) Then
                                     Throw e.Error
                                 End If
@@ -244,7 +244,7 @@
 <% If(IncludeSilverlightSupport) Then %>
 #If SILVERLIGHT Then
                         'Markbusy()
-                        <%= BusinessProjectName %>.<%= association.TypeName %><%= association.GenericProperty %>.Exists(criteria, Sub(o, e)
+                        <%= BusinessProjectName %>.<%= association.TypeName %><%= association.GenericProperty %>.ExistsAsync(criteria, Sub(o, e)
                             If Not (e.Error Is Nothing) Then
                                 Throw e.Error
                             End If
@@ -323,7 +323,7 @@
 
         <% If(BusinessObjectExists(association, "List") = False AndAlso IsReadOnlyBusinessObject( association, "InfoList")) Then %>
                         If(<%= association.BuildNullCheckStatement(true, false, false, false, true) %>)
-                            <%= BusinessProjectName %>.<%= associationClassName %>List<%= association.GenericProperty %>.Exists(criteria, Sub(o, e)
+                            <%= BusinessProjectName %>.<%= associationClassName %>List<%= association.GenericProperty %>.ExistsAsync(criteria, Sub(o, e)
                                 If Not (e.Error Is Nothing) Then
                                     Throw e.Error
                                 End If
@@ -344,7 +344,7 @@
                         End If
         <% Else %>
                         If (<%= association.BuildNullCheckStatement(true, true, false, false, true) %>) Then
-                            <%= BusinessProjectName %>.<%= association.TypeName %>List<%= association.GenericProperty %>.Exists(criteria, Sub(o, e)
+                            <%= BusinessProjectName %>.<%= association.TypeName %>List<%= association.GenericProperty %>.ExistsAsync(criteria, Sub(o, e)
                                 If Not (e.Error Is Nothing) Then
                                     Throw e.Error
                                 End If
