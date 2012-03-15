@@ -91,7 +91,7 @@ Namespace <%= BusinessProjectName %>
             criteria.<%= prop.Name %> = <%= prop.VariableName %>
     <% Next %>
     
-            dp.BeginFetch(criteria))
+            dp.BeginFetch(criteria)
         End Function
     <% Next %>
 
