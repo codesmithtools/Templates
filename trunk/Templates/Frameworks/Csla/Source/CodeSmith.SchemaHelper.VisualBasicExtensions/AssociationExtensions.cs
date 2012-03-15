@@ -93,8 +93,8 @@ namespace CodeSmith.SchemaHelper
                             continue;
 
                         lastParameter = parameters.Length == 0 ?
-                            String.Format("({0}{1}.HasValue {2}", useNot ? "Not" : String.Empty, usePropertyName ? associationProperty.Property.Name : associationProperty.Property.VariableName, exspression) :
-                            String.Format(" {0}{1}.HasValue {2}", useNot ? "Not" : String.Empty, usePropertyName ? associationProperty.Property.Name : associationProperty.Property.VariableName, exspression);
+                            String.Format("({0}{1}.HasValue {2}", useNot ? "Not " : String.Empty, usePropertyName ? associationProperty.Property.Name : associationProperty.Property.VariableName, exspression) :
+                            String.Format(" {0}{1}.HasValue {2}", useNot ? "Not " : String.Empty, usePropertyName ? associationProperty.Property.Name : associationProperty.Property.VariableName, exspression);
 
                         parameters += lastParameter;
                     }

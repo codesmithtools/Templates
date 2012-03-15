@@ -33,14 +33,6 @@
     <DocumentationFile>..\..\Common\Generator.CSLA.XML</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\Source\CodeSmith.SchemaHelper\CodeSmith.SchemaHelper.csproj">
-      <Project>{29F4357A-A92D-458F-A266-A7231E75DA52}</Project>
-      <Name>CodeSmith.SchemaHelper</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\..\Source\Generator.QuickStart\Generator.QuickStart.csproj">
-      <Project>{2143D00C-842D-4B62-82E9-95D262A6F88E}</Project>
-      <Name>Generator.QuickStart</Name>
-    </ProjectReference>
     <ProjectReference Include="..\CodeSmith.SchemaHelper.CSharpExtensions\CodeSmith.SchemaHelper.CSharpExtensions.csproj">
       <Project>{41C50564-90B5-4566-946E-0C0513E7F2EB}</Project>
       <Name>CodeSmith.SchemaHelper.CSharpExtensions</Name>
@@ -60,6 +52,8 @@
       <HintPath>C:\Program Files (x86)\CodeSmith\v6.0\AddIns\CodeSmith.CustomProperties.dll</HintPath>
     </Reference>
     <Reference Include="CodeSmith.Engine, Version=6.0.0.0, Culture=neutral, PublicKeyToken=9fd61cdb91609a7a, processorArchitecture=MSIL" />
+    <Reference Include="CodeSmith.SchemaHelper, Version=3.0.0.0, Culture=neutral, processorArchitecture=MSIL" />
+    <Reference Include="Generator.QuickStart, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL" />
     <Reference Include="SchemaExplorer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=9fd61cdb91609a7a, processorArchitecture=MSIL" />
     <Reference Include="System" />
     <Reference Include="System.Core" />

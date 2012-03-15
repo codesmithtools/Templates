@@ -11,19 +11,19 @@
 #region "Enhancements"
 
         Public Function Get<%= ChildBusinessClassName %>(<%= Entity.GetProperties(PropertyType.Key).BuildParametersVariables() %>) As <%= ChildBusinessClassName %>
-            Return Me.FirstOrDefault(Function(i) <%= Entity.GetProperties(PropertyType.Key).BuildEqualityStatements("i") %>) > 0
+            Return Me.FirstOrDefault(Function(i) <%= Entity.GetProperties(PropertyType.Key).BuildEqualityStatements("i") %>)
         End Function
         
         Public Function Contains(<%= Entity.GetProperties(PropertyType.Key).BuildParametersVariables() %>) As Boolean
-            Return Me.Count(Function(i) <%= Entity.GetProperties(PropertyType.Key).BuildEqualityStatements("i") %>) > 0
+            Return Me.Where(Function(i) <%= Entity.GetProperties(PropertyType.Key).BuildEqualityStatements("i") %>).Count() > 0
         End Function
 <% If(RenderOptionalContent) Then %>
 
         Public Function ContainsDeleted(<%= Entity.GetProperties(PropertyType.Key).BuildParametersVariables() %>) As Boolean
-            Return DeletedList.Count(Function(i) <%= Entity.GetProperties(PropertyType.Key).BuildEqualityStatements("i") %>) > 0
+            Return DeletedList.Where(Function(i) <%= Entity.GetProperties(PropertyType.Key).BuildEqualityStatements("i") %>).Count() > 0
         End Function
 
-        Public Sub Remove(<%= Entity.GetProperties(PropertyType.Key).BuildParametersVariables() %>)
+        Public Overloads Sub Remove(<%= Entity.GetProperties(PropertyType.Key).BuildParametersVariables() %>)
             Dim item As <%= ChildBusinessClassName %> = Me.FirstOrDefault(Function(i) <%= Entity.GetProperties(PropertyType.Key).BuildEqualityStatements("i") %>)
             If item IsNot Nothing Then
                 Remove(item)
