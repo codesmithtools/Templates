@@ -19,15 +19,15 @@
             {
                 if (base.IsDirty) return true;
 <%-- One-To-Zero-Or-One --%>
-<% foreach(Association association in Entity.Associations.Where(a => a.AssociationType == AssociationType.OneToZeroOrOne)) { %>
+<% foreach(Association association in Entity.Associations.Where(a => a.AssociationType == AssociationType.OneToZeroOrOne || a.AssociationType == AssociationType.OneToOne)) { %>
                 if (FieldManager.FieldExists(<%= association.PrivateMemberVariableName %>Property) && <%= association.Name %>.IsDirty) return true;
 <% } %>
 <%-- Many-To-One --%>
-<% foreach(Association association in Entity.Associations.Where(a => a.AssociationType == AssociationType.ManyToOne)) { %>
+<% foreach(Association association in Entity.Associations.Where(a => a.AssociationType == AssociationType.ManyToOne || a.AssociationType == AssociationType.ManyToZeroOrOne)) { %>
                 if (FieldManager.FieldExists(<%= association.PrivateMemberVariableName %>Property) && <%= association.Name %>.IsDirty) return true;
 <% } %>
 <%-- One-To-Many & Many-To-Many --%>
-<% foreach(Association association in Entity.Associations.Where(a => a.AssociationType == AssociationType.OneToMany || a.AssociationType == AssociationType.OneToOne || a.AssociationType == AssociationType.OneToZeroOrOne || a.AssociationType == AssociationType.ZeroOrOneToMany)) { %>
+<% foreach(Association association in Entity.Associations.Where(a => a.AssociationType == AssociationType.OneToMany  || a.AssociationType == AssociationType.ZeroOrOneToMany  || a.AssociationType == AssociationType.ManyToMany)) { %>
                 if (FieldManager.FieldExists(<%= association.PrivateMemberVariableName %>Property) && <%= association.Name %>.IsDirty) return true;
 <% } %>
 

@@ -59,9 +59,9 @@
                     ctx.DataContext.SubmitChanges();
 
                 // Mark child lists as dirty. This code may need to be updated to one-to-one relationships.
-<%         foreach(Association association in Entity.Associations.Where(a => a.AssociationType == AssociationType.OneToMany || a.AssociationType == AssociationType.OneToOne || a.AssociationType == AssociationType.OneToZeroOrOne || a.AssociationType == AssociationType.ZeroOrOneToMany)) 
+<%         foreach(Association association in Entity.Associations.Where(a => a.AssociationType == AssociationType.OneToMany  || a.AssociationType == AssociationType.ZeroOrOneToMany  || a.AssociationType == AssociationType.ManyToMany)) 
         { %>
-                    foreach(<%= association.Name %> itemToUpdate in <%= association.Name %>)
+                    foreach(<%= association.TypeName %> itemToUpdate in <%= association.Name %>)
                     {
         <%= association.SearchCriteria.BuildUpdateStatements("itemToUpdate", "") %>
                     }
@@ -166,7 +166,7 @@
 <%        }%>
 <%    } %>
 
-<%     if(Entity.Associations.Count(a => a.AssociationType == AssociationType.OneToMany) > 0 || Entity.Associations.Count(a => a.AssociationType == AssociationType.ManyToOne) > 0)
+<%     if(Entity.Associations.Count(a => a.AssociationType == AssociationType.OneToMany) > 0 || Entity.Associations.Count(a => a.AssociationType == AssociationType.ManyToOne  || a.AssociationType == AssociationType.ManyToZeroOrOne) > 0)
     {%>             
                 FieldManager.UpdateChildren(this);
 <%     } %>

@@ -51,7 +51,7 @@
         <% End If
         End If
     Next %>
-    <% If (Entity.Associations.Where(Function(a) a.AssociationType = AssociationType.OneToMany).Count() > 0 OrElse Entity.Associations.Where(Function(a) a.AssociationType = AssociationType.ManyToOne).Count() > 0 OrElse Entity.Associations.Where(Function(a) a.AssociationType = AssociationType.OneToZeroOrOne).Count() > 0) Then %>
+    <% If (Entity.Associations.Where(Function(a) a.AssociationType = AssociationType.OneToMany OrElse a.AssociationType = AssociationType.ZeroOrOneToMany OrElse a.AssociationType = AssociationType.ManyToMany).Count() > 0 OrElse Entity.Associations.Where(Function(a) a.AssociationType = AssociationType.ManyToOne OrElse a.AssociationType = AssociationType.ManyToZeroOrOne).Count() > 0 OrElse Entity.Associations.Where(Function(a) a.AssociationType = AssociationType.OneToZeroOrOne OrElse a.AssociationType = AssociationType.OneToOne).Count() > 0) Then %>
     
                 FieldManager.UpdateChildren(Me, connection)
     <% End If %>

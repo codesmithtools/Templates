@@ -75,7 +75,7 @@
 <%             }
         } 
     } %>
-<%     if(Entity.Associations.Count(a => a.AssociationType == AssociationType.OneToMany) > 0 || Entity.Associations.Count(a => a.AssociationType == AssociationType.ManyToOne) > 0)
+<%     if(Entity.Associations.Count(a => a.AssociationType == AssociationType.OneToMany) > 0 || Entity.Associations.Count(a => a.AssociationType == AssociationType.ManyToOne  || a.AssociationType == AssociationType.ManyToZeroOrOne) > 0)
     {%>             
                 FieldManager.UpdateChildren(this);
 <%     } %>

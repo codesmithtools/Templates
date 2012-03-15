@@ -42,21 +42,7 @@
             // AuthorizationRules.AllowRead(<%= property.PrivateMemberVariableName %>Property, canRead);
 
 <% } %>
-<%-- One-To-Zero-Or-One --%>
-<% foreach(Association association in Entity.Associations.Where(a => a.AssociationType == AssociationType.OneToZeroOrOne)){ %>
-            //// <%= association.Name %>
-            // AuthorizationRules.AllowRead(<%= association.PrivateMemberVariableName %>Property, canRead);
-
-<% } %>
-<%-- Many-To-One --%>
-<% foreach(Association association in Entity.Associations.Where(a => a.AssociationType == AssociationType.ManyToOne)){ %>
-            //// <%= association.Name %>
-            // AuthorizationRules.AllowRead(<%= association.PrivateMemberVariableName %>Property, canRead);
-
-<% } %>
-<%-- One-To-Many & Many-To-Many --%>
-// NOTE: Many-To-Many support coming soon.
-<% foreach(Association association in Entity.Associations.Where(a => a.AssociationType == AssociationType.OneToMany || a.AssociationType == AssociationType.OneToOne || a.AssociationType == AssociationType.OneToZeroOrOne || a.AssociationType == AssociationType.ZeroOrOneToMany)){ %>
+<% foreach(Association association in Entity.Associations){ %>
             //// <%= association.Name %>
             // AuthorizationRules.AllowRead(<%= association.PrivateMemberVariableName %>Property, canRead);
 

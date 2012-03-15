@@ -198,15 +198,15 @@ if(property.ForeignProperty.SystemType == "System.String" && !property.ForeignPr
             {
             // Update Child Items.
 <%-- One-To-Zero-Or-One --%>
-<% foreach(Association association in Entity.Associations.Where(a => a.AssociationType == AssociationType.OneToZeroOrOne)) { %>
+<% foreach(Association association in Entity.Associations.Where(a => a.AssociationType == AssociationType.OneToZeroOrOne || a.AssociationType == AssociationType.OneToOne)) { %>
                 Update_<%= association.Name %>_<%= association.Name %>_<%= association.AssociationKeyName %>(ref item);
 <% } %>
 <%-- Many-To-One --%>
-<% foreach(Association association in Entity.Associations.Where(a => a.AssociationType == AssociationType.ManyToOne)) { %>
+<% foreach(Association association in Entity.Associations.Where(a => a.AssociationType == AssociationType.ManyToOne || a.AssociationType == AssociationType.ManyToZeroOrOne)) { %>
                 Update_<%= association.Name %>_<%= association.Name %>_<%= association.AssociationKeyName %>(ref item);
 <% } %>
 <%-- One-To-Many & Many-To-Many --%>
-<% foreach(Association association in Entity.Associations.Where(a => a.AssociationType == AssociationType.OneToMany || a.AssociationType == AssociationType.OneToOne || a.AssociationType == AssociationType.OneToZeroOrOne || a.AssociationType == AssociationType.ZeroOrOneToMany)) { %>
+<% foreach(Association association in Entity.Associations.Where(a => a.AssociationType == AssociationType.OneToMany  || a.AssociationType == AssociationType.ZeroOrOneToMany  || a.AssociationType == AssociationType.ManyToMany)) { %>
                 Update_<%= association.Name %>_<%= association.Name %>_<%= association.AssociationKeyName %>(ref item);
 <% } %>
             }
@@ -263,8 +263,8 @@ if(property.ForeignProperty.SystemType == "System.String" && !property.ForeignPr
                     temp = temp.Save();
     
                     // Mark child lists as dirty. This code may need to be updated to one-to-one relationships.
-<% foreach(Association association in Entity.Associations.Where(a => a.AssociationType == AssociationType.OneToMany || a.AssociationType == AssociationType.OneToOne || a.AssociationType == AssociationType.OneToZeroOrOne || a.AssociationType == AssociationType.ZeroOrOneToMany)) { %>
-                    foreach(<%= association.Name %> itemToUpdate in item.<%= association.Name %>)
+<% foreach(Association association in Entity.Associations.Where(a => a.AssociationType == AssociationType.OneToMany  || a.AssociationType == AssociationType.ZeroOrOneToMany  || a.AssociationType == AssociationType.ManyToMany)) { %>
+                    foreach(<%= association.TypeName %> itemToUpdate in item.<%= association.Name %>)
                     {
 <%= association.SearchCriteria.BuildUpdateStatements("itemToUpdate", "item.") %>
                     }
@@ -272,15 +272,15 @@ if(property.ForeignProperty.SystemType == "System.String" && !property.ForeignPr
 
                     // Update Children
 <%-- One-To-Zero-Or-One --%>
-<% foreach(Association association in Entity.Associations.Where(a => a.AssociationType == AssociationType.OneToZeroOrOne)) { %>
+<% foreach(Association association in Entity.Associations.Where(a => a.AssociationType == AssociationType.OneToZeroOrOne || a.AssociationType == AssociationType.OneToOne)) { %>
                     Update_<%= association.Name %>_<%= association.Name %>_<%= association.AssociationKeyName %>(ref item);
 <% } %>
 <%-- Many-To-One --%>
-<% foreach(Association association in Entity.Associations.Where(a => a.AssociationType == AssociationType.ManyToOne)) { %>
+<% foreach(Association association in Entity.Associations.Where(a => a.AssociationType == AssociationType.ManyToOne || a.AssociationType == AssociationType.ManyToZeroOrOne)) { %>
                     Update_<%= association.Name %>_<%= association.Name %>_<%= association.AssociationKeyName %>(ref item);
 <% } %>
 <%-- One-To-Many & Many-To-Many --%>
-<% foreach(Association association in Entity.Associations.Where(a => a.AssociationType == AssociationType.OneToMany || a.AssociationType == AssociationType.OneToOne || a.AssociationType == AssociationType.OneToZeroOrOne || a.AssociationType == AssociationType.ZeroOrOneToMany)) { %>
+<% foreach(Association association in Entity.Associations.Where(a => a.AssociationType == AssociationType.OneToMany  || a.AssociationType == AssociationType.ZeroOrOneToMany  || a.AssociationType == AssociationType.ManyToMany)) { %>
                     Update_<%= association.Name %>_<%= association.Name %>_<%= association.AssociationKeyName %>(ref item);
 <% } %>
     
@@ -357,15 +357,15 @@ if(property.ForeignProperty.SystemType == "System.String" && !property.ForeignPr
             {
                 // Update Child Items.
 <%-- One-To-Zero-Or-One --%>
-<% foreach(Association association in Entity.Associations.Where(a => a.AssociationType == AssociationType.OneToZeroOrOne)) { %>
+<% foreach(Association association in Entity.Associations.Where(a => a.AssociationType == AssociationType.OneToZeroOrOne || a.AssociationType == AssociationType.OneToOne)) { %>
                 Update_<%= association.Name %>_<%= association.Name %>_<%= association.AssociationKeyName %>(ref item);
 <% } %>
 <%-- Many-To-One --%>
-<% foreach(Association association in Entity.Associations.Where(a => a.AssociationType == AssociationType.ManyToOne)) { %>
+<% foreach(Association association in Entity.Associations.Where(a => a.AssociationType == AssociationType.ManyToOne || a.AssociationType == AssociationType.ManyToZeroOrOne)) { %>
                 Update_<%= association.Name %>_<%= association.Name %>_<%= association.AssociationKeyName %>(ref item);
 <% } %>
 <%-- One-To-Many & Many-To-Many --%>
-<% foreach(Association association in Entity.Associations.Where(a => a.AssociationType == AssociationType.OneToMany || a.AssociationType == AssociationType.OneToOne || a.AssociationType == AssociationType.OneToZeroOrOne || a.AssociationType == AssociationType.ZeroOrOneToMany)) { %>
+<% foreach(Association association in Entity.Associations.Where(a => a.AssociationType == AssociationType.OneToMany  || a.AssociationType == AssociationType.ZeroOrOneToMany  || a.AssociationType == AssociationType.ManyToMany)) { %>
                 Update_<%= association.Name %>_<%= association.Name %>_<%= association.AssociationKeyName %>(ref item);
 <% } %>
             }
@@ -464,35 +464,35 @@ if(property.ForeignProperty.SystemType == "System.String" && !property.ForeignPr
         }
 
 <%-- One-To-Zero-Or-One --%>
-<% foreach(Association association in Entity.Associations.Where(a => a.AssociationType == AssociationType.OneToZeroOrOne)) { %>
-        //Associations.Where(a => a.AssociationType == AssociationType.OneToZeroOrOne)
+<% foreach(Association association in Entity.Associations.Where(a => a.AssociationType == AssociationType.OneToZeroOrOne || a.AssociationType == AssociationType.OneToOne)) { %>
+        //Associations.Where(a => a.AssociationType == AssociationType.OneToZeroOrOne || a.AssociationType == AssociationType.OneToOne)
         private static void Update_<%= association.Name %>_<%= association.Name %>_<%= association.AssociationKeyName %>(ref <%= Entity.Name %> item)
         {
 <%= association.SearchCriteria.BuildUpdateStatements("item." + association.Name) %>
 
-            new <%= association.Name %>Factory().Update(item.<%= association.Name %>, true);
+            new <%= association.TypeName %>Factory().Update(item.<%= association.Name %>, true);
         }
 <% } %>
 <%-- Many-To-One --%>
-<% foreach(Association association in Entity.Associations.Where(a => a.AssociationType == AssociationType.ManyToOne)) { %>
-        //Associations.Where(a => a.AssociationType == AssociationType.ManyToOne)
+<% foreach(Association association in Entity.Associations.Where(a => a.AssociationType == AssociationType.ManyToOne || a.AssociationType == AssociationType.ManyToZeroOrOne)) { %>
+        //Associations.Where(a => a.AssociationType == AssociationType.ManyToOne || a.AssociationType == AssociationType.ManyToZeroOrOne)
         private static void Update_<%= association.Name %>_<%= association.Name %>_<%= association.AssociationKeyName %>(ref <%= Entity.Name %> item)
         {
 <%= association.SearchCriteria.BuildUpdateStatements("item." + association.Name) %>
 
-            new <%= association.Name %>Factory().Update(item.<%= association.Name %>, true);
+            new <%= association.TypeName %>Factory().Update(item.<%= association.Name %>, true);
         }
 <% } %>
 <%-- One-To-Many & Many-To-Many --%>
-<% foreach(Association association in Entity.Associations.Where(a => a.AssociationType == AssociationType.OneToMany || a.AssociationType == AssociationType.OneToOne || a.AssociationType == AssociationType.OneToZeroOrOne || a.AssociationType == AssociationType.ZeroOrOneToMany)) { %>
-        //Where(a => a.AssociationType == AssociationType.OneToMany || a.AssociationType == AssociationType.OneToOne || a.AssociationType == AssociationType.OneToZeroOrOne || a.AssociationType == AssociationType.ZeroOrOneToMany)
+<% foreach(Association association in Entity.Associations.Where(a => a.AssociationType == AssociationType.OneToMany  || a.AssociationType == AssociationType.ZeroOrOneToMany  || a.AssociationType == AssociationType.ManyToMany)) { %>
+        //Where(a => a.AssociationType == AssociationType.OneToMany  || a.AssociationType == AssociationType.ZeroOrOneToMany  || a.AssociationType == AssociationType.ManyToMany)
         private static void Update_<%= association.Name %>_<%= association.Name %>_<%= association.AssociationKeyName %>(ref <%= Entity.Name %> item)
         {
-            foreach(<%= association.Name %> itemToUpdate in item.<%= association.Name %>)
+            foreach(<%= association.TypeName %> itemToUpdate in item.<%= association.Name %>)
             {
 <%= association.SearchCriteria.BuildUpdateStatements("itemToUpdate") %>
 
-                new <%= association.Name %>Factory().Update(itemToUpdate, true);
+                new <%= association.TypeName %>Factory().Update(itemToUpdate, true);
             }
         }
 <% } %>

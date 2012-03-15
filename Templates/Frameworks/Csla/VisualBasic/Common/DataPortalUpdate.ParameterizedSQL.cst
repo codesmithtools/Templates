@@ -22,12 +22,12 @@
                 item = item.Save()
     
                 ' Mark child lists as dirty. This code may need to be updated to one-to-one relationships.
-    <% For Each association As Association In Entity.Associations.Where(Function(a) a.AssociationType = AssociationType.OneToMany)
+    <% For Each association As Association In Entity.Associations.Where(Function(a) a.AssociationType = AssociationType.OneToMany OrElse a.AssociationType = AssociationType.ZeroOrOneToMany OrElse a.AssociationType = AssociationType.ManyToMany)
             If(BusinessObjectExists(association) = False AndAlso IsReadOnlyBusinessObject(association, "Info")) Then
                 Continue For
             End If %>
     
-                For Each itemToUpdate As <%= association.Name %> In <%= association.Name %>
+                For Each itemToUpdate As <%= association.TypeName %> In <%= association.Name %>
     <%= association.SearchCriteria.BuildUpdateStatements("itemToUpdate", "") %>
                 Next
     <% Next %>
@@ -110,7 +110,7 @@
         End If
     Next %>
     
-    <% If (Entity.Associations.Where(Function(a) a.AssociationType = AssociationType.OneToMany).Count() > 0 OrElse Entity.Associations.Where(Function(a) a.AssociationType = AssociationType.ManyToOne).Count() > 0 OrElse Entity.Associations.Where(Function(a) a.AssociationType = AssociationType.OneToZeroOrOne).Count() > 0) Then %>
+    <% If (Entity.Associations.Where(Function(a) a.AssociationType = AssociationType.OneToMany OrElse a.AssociationType = AssociationType.ZeroOrOneToMany OrElse a.AssociationType = AssociationType.ManyToMany).Count() > 0 OrElse Entity.Associations.Where(Function(a) a.AssociationType = AssociationType.ManyToOne OrElse a.AssociationType = AssociationType.ManyToZeroOrOne).Count() > 0 OrElse Entity.Associations.Where(Function(a) a.AssociationType = AssociationType.OneToZeroOrOne OrElse a.AssociationType = AssociationType.OneToOne).Count() > 0) Then %>
     
                 FieldManager.UpdateChildren(Me, connection)
     <% End If %>

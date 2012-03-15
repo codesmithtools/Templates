@@ -39,24 +39,10 @@
             'AuthorizationRules.AllowRead(<%= prop.PrivateMemberVariableName %>Property, canRead)
     
     <% Next %>
-    <%-- One-To-Zero-Or-One --%>
-    <% For Each association As Association In Entity.Associations.Where(Function(a) a.AssociationType = AssociationType.OneToZeroOrOne) %>
+    <% For Each association As Association In Entity.Associations %>
             ''<%= association.Name %>
             'AuthorizationRules.AllowRead(<%= association.PrivateMemberVariableName %>Property, canRead)
-    
-    <% Next %>
-    <%-- Many-To-One --%>
-    <% For Each association As Association In Entity.Associations.Where(Function(a) a.AssociationType = AssociationType.ManyToOne) %>
-            ''<%= association.Name %>
-            'AuthorizationRules.AllowRead(<%= association.PrivateMemberVariableName %>Property, canRead)
-    
-    <% Next %>
-    <%-- One-To-Many & Many-To-Many --%>
-    ' NOTE: Many-To-Many support coming soon.
-    <% For Each association As Association In Entity.Associations.Where(Function(a) a.AssociationType = AssociationType.OneToMany OrElse a.AssociationType = AssociationType.OneToOne OrElse a.AssociationType = AssociationType.OneToZeroOrOne OrElse a.AssociationType = AssociationType.ZeroOrOneToMany) %>
-            ''<%= association.Name %>
-            'AuthorizationRules.AllowRead(<%= association.PrivateMemberVariableName %>Property, canRead)
-    
+
     <% Next
     End If %>
         End Sub
