@@ -70,7 +70,7 @@
                         //MarkBusy();
                         if(<%= association.BuildNullCheckStatement(true, false, false, false, true) %>)
                         {
-                            <%= BusinessProjectName %>.<%= association.TypeName %><%= association.GenericProperty %>.Exists(criteria, (o,e) =>
+                            <%= BusinessProjectName %>.<%= association.TypeName %><%= association.GenericProperty %>.ExistsAsync(criteria, (o,e) =>
                             {
                                 if (e.Error != null)
                                     throw e.Error;
@@ -144,7 +144,7 @@ if(!result.Equals("(true)", StringComparison.CurrentCultureIgnoreCase) && !resul
 <% if(IncludeSilverlightSupport) { %>
 #if SILVERLIGHT
                         //MarkBusy();
-                        <%= BusinessProjectName %>.<%= association.TypeName %><%= association.GenericProperty %>.Exists(criteria, (o,e) =>
+                        <%= BusinessProjectName %>.<%= association.TypeName %><%= association.GenericProperty %>.ExistsAsync(criteria, (o,e) =>
                         {
                             if(e.Error != null)
                                 throw e.Error;
@@ -225,7 +225,7 @@ if(!result.Equals("(true)", StringComparison.CurrentCultureIgnoreCase) && !resul
 
                         if(<%= association.BuildNullCheckStatement(true, false, false, false, true) %>)
                         {
-                            <%= BusinessProjectName %>.<%= association.TypeName %>List<%= association.GenericProperty %>.Exists(criteria, (o,e) =>
+                            <%= BusinessProjectName %>.<%= association.TypeName %>List<%= association.GenericProperty %>.ExistsAsync(criteria, (o,e) =>
                             {
                                 if (e.Error != null)
                                     throw e.Error;

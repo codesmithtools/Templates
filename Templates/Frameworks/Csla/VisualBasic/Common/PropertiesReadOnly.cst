@@ -84,7 +84,7 @@
 #If SILVERLIGHT Then
                         'Markbusy()
                         If(<%= association.BuildNullCheckStatement(true, false, false, false, true) %>) Then
-                            <%= BusinessProjectName %>.<%= association.TypeName %><%= association.GenericProperty %>.Exists(criteria, Sub(o, e)
+                            <%= BusinessProjectName %>.<%= association.TypeName %><%= association.GenericProperty %>.ExistsAsync(criteria, Sub(o, e)
                                 If Not (e.Error Is Nothing) Then
                                     Throw e.Error
                                 End If
@@ -154,7 +154,7 @@
 <% If(IncludeSilverlightSupport) Then %>
 #If SILVERLIGHT Then
                         'Markbusy()
-                        <%= BusinessProjectName %>.<%= association.TypeName %><%= association.GenericProperty %>.Exists(criteria, Sub(o, e)
+                        <%= BusinessProjectName %>.<%= association.TypeName %><%= association.GenericProperty %>.ExistsAsync(criteria, Sub(o, e)
                             If Not (e.Error Is Nothing) Then
                                 Throw e.Error
                             End If
@@ -232,7 +232,7 @@
                         <%= association.BuildObjectInitializer(true) %>
 
                         If(<%= association.BuildNullCheckStatement(true, false, false, false, true) %>)
-                            <%= BusinessProjectName %>.<%= associationClassName %>List<%= association.GenericProperty %>.Exists(criteria, Sub(o, e)
+                            <%= BusinessProjectName %>.<%= associationClassName %>List<%= association.GenericProperty %>.ExistsAsync(criteria, Sub(o, e)
                                 If Not (e.Error Is Nothing) Then
                                     Throw e.Error
                                 End If
