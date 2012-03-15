@@ -48,7 +48,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Csla">
-      <HintPath>..\..\..\..\Templates\Common\Csla\4.0\Silverlight\Csla.dll</HintPath>
+      <HintPath>..\..\..\..\Templates\Common\Csla\4.3\Silverlight\Csla.dll</HintPath>
     </Reference>
     <Reference Include="mscorlib" />
     <Reference Include="System" />

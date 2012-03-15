@@ -111,6 +111,13 @@
     <Compile Include="Collections\LineItemList.Generated.cs">
       <DependentUpon>LineItemList.cs</DependentUpon>
     </Compile>
+    <Compile Include="Collections\OrderList.cs" />
+    <Compile Include="Collections\OrderList.DataAccess.cs">
+      <DependentUpon>OrderList.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Collections\OrderList.Generated.cs">
+      <DependentUpon>OrderList.cs</DependentUpon>
+    </Compile>
     <Compile Include="Collections\OrderStatusList.cs" />
     <Compile Include="Collections\OrderStatusList.DataAccess.cs">
       <DependentUpon>OrderStatusList.cs</DependentUpon>

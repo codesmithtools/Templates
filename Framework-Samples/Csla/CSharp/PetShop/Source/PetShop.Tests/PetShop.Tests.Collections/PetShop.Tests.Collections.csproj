@@ -95,6 +95,7 @@
       <DependentUpon>Category.cs</DependentUpon>
     </Compile>
     <Compile Include="Generated\DynamicRoot\Utility\ADOHelper.cs" />
+    <Compile Include="Generated\DynamicRoot\Utility\AsyncChildLoader.cs" />
     <Compile Include="Generated\EditableChild\Collections\CategoryList.cs" />
     <Compile Include="Generated\EditableChild\Collections\CategoryList.DataAccess.cs">
       <DependentUpon>CategoryList.cs</DependentUpon>
@@ -116,6 +117,7 @@
       <DependentUpon>Category.cs</DependentUpon>
     </Compile>
     <Compile Include="Generated\EditableChild\Utility\ADOHelper.cs" />
+    <Compile Include="Generated\EditableChild\Utility\AsyncChildLoader.cs" />
     <Compile Include="Generated\EditableRoot\Collections\CategoryList.cs" />
     <Compile Include="Generated\EditableRoot\Collections\CategoryList.DataAccess.cs">
       <DependentUpon>CategoryList.cs</DependentUpon>
@@ -137,6 +139,7 @@
       <DependentUpon>Category.cs</DependentUpon>
     </Compile>
     <Compile Include="Generated\EditableRoot\Utility\ADOHelper.cs" />
+    <Compile Include="Generated\EditableRoot\Utility\AsyncChildLoader.cs" />
     <Compile Include="Generated\ReadOnlyChild\Collections\CategoryInfoList.cs" />
     <Compile Include="Generated\ReadOnlyChild\Collections\CategoryInfoList.DataAccess.cs">
       <DependentUpon>CategoryInfoList.cs</DependentUpon>
@@ -158,6 +161,7 @@
       <DependentUpon>CategoryInfo.cs</DependentUpon>
     </Compile>
     <Compile Include="Generated\ReadOnlyChild\Utility\ADOHelper.cs" />
+    <Compile Include="Generated\ReadOnlyChild\Utility\AsyncChildLoader.cs" />
     <Compile Include="Generated\ReadOnlyRoot\Collections\CategoryInfoList.cs" />
     <Compile Include="Generated\ReadOnlyRoot\Collections\CategoryInfoList.DataAccess.cs">
       <DependentUpon>CategoryInfoList.cs</DependentUpon>
@@ -179,6 +183,7 @@
       <DependentUpon>CategoryInfo.cs</DependentUpon>
     </Compile>
     <Compile Include="Generated\ReadOnlyRoot\Utility\ADOHelper.cs" />
+    <Compile Include="Generated\ReadOnlyRoot\Utility\AsyncChildLoader.cs" />
     <Compile Include="ReadOnlyRootTests.cs" />
     <Compile Include="EditableChildTests.cs" />
     <Compile Include="EditableRootTests.cs" />

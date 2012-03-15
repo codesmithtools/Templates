@@ -93,6 +93,10 @@
     <Compile Include="Collections\LineItemListFactory.DataAccess.cs">
       <DependentUpon>LineItemListFactory.cs</DependentUpon>
     </Compile>
+    <Compile Include="Collections\OrderListFactory.cs" />
+    <Compile Include="Collections\OrderListFactory.DataAccess.cs">
+      <DependentUpon>OrderListFactory.cs</DependentUpon>
+    </Compile>
     <Compile Include="Collections\OrderStatusListFactory.cs" />
     <Compile Include="Collections\OrderStatusListFactory.DataAccess.cs">
       <DependentUpon>OrderStatusListFactory.cs</DependentUpon>

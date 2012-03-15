@@ -93,6 +93,10 @@
     <Compile Include="Collections\LineItemListFactory.DataAccess.cs">
       <DependentUpon>LineItemListFactory.cs</DependentUpon>
     </Compile>
+    <Compile Include="Collections\OrderListFactory.cs" />
+    <Compile Include="Collections\OrderListFactory.DataAccess.cs">
+      <DependentUpon>OrderListFactory.cs</DependentUpon>
+    </Compile>
     <Compile Include="Collections\OrderStatusListFactory.cs" />
     <Compile Include="Collections\OrderStatusListFactory.DataAccess.cs">
       <DependentUpon>OrderStatusListFactory.cs</DependentUpon>
@@ -234,6 +238,11 @@
       <ProductName>Windows Installer 3.1</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Collections\OrderListFactory.StoredProcedures.sql">
+      <DependentUpon>OrderListFactory.cs</DependentUpon>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

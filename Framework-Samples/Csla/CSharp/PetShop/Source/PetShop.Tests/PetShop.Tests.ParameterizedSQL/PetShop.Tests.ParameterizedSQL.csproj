@@ -204,13 +204,16 @@
       <DependentUpon>Supplier.cs</DependentUpon>
     </Compile>
     <Compile Include="Generated\Utility\ADOHelper.cs" />
+    <Compile Include="Generated\Utility\AsyncChildLoader.cs" />
     <Compile Include="LineItemTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestUtility.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <None Include="Generated\Entities.csp" />
+    <None Include="Generated\Entities.csp">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
