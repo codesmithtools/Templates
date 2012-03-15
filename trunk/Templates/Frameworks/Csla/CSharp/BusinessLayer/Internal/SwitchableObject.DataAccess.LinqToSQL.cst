@@ -155,17 +155,17 @@ namespace <%= BusinessProjectName %>
         {
 <% RenderHelper(new ChildInsert(), false); %>
         }
-<% if (Entity.Associations.Count(a => a.AssociationType == AssociationType.ManyToOne) > 0) {%>
-<% if (Entity.Associations.Where(a => a.AssociationType == AssociationType.ManyToOne).Distinct().Count() > 1) { int index = 0; foreach(Association association in Entity.Associations.Where(a => a.AssociationType == AssociationType.ManyToOne).Distinct()) { %>
+<% if (Entity.Associations.Count(a => a.AssociationType == AssociationType.ManyToOne  || a.AssociationType == AssociationType.ManyToZeroOrOne) > 0) {%>
+<% if (Entity.Associations.Where(a => a.AssociationType == AssociationType.ManyToOne || a.AssociationType == AssociationType.ManyToZeroOrOne).Distinct().Count() > 1) { int index = 0; foreach(Association association in Entity.Associations.Where(a => a.AssociationType == AssociationType.ManyToOne || a.AssociationType == AssociationType.ManyToZeroOrOne).Distinct()) { %>
 
         private void Child_Insert(<%= association.BuildParametersVariables(false) %>)
         {
-            Child_Insert(<%= association.BuildUpdateStatementVariables(Entity.Associations.Where(a => a.AssociationType == AssociationType.ManyToOne).Distinct().ToList(), index++, false) %>);
+            Child_Insert(<%= association.BuildUpdateStatementVariables(Entity.Associations.Where(a => a.AssociationType == AssociationType.ManyToOne || a.AssociationType == AssociationType.ManyToZeroOrOne).Distinct().ToList(), index++, false) %>);
         }
 
 <% } }%>
 
-        private void Child_Insert(<%= Entity.Associations.Where(a => a.AssociationType == AssociationType.ManyToOne).Distinct().ToList().BuildParametersVariables(false) %>)
+        private void Child_Insert(<%= Entity.Associations.Where(a => a.AssociationType == AssociationType.ManyToOne || a.AssociationType == AssociationType.ManyToZeroOrOne).Distinct().ToList().BuildParametersVariables(false) %>)
         {
 <% RenderHelper(new ChildInsert()); %>
         }
@@ -183,17 +183,17 @@ namespace <%= BusinessProjectName %>
         {
 <% RenderHelper(new ChildUpdate(), false); %>
         }
-<% if (Entity.Associations.Count(a => a.AssociationType == AssociationType.ManyToOne) > 0) {%>
-<% if (Entity.Associations.Where(a => a.AssociationType == AssociationType.ManyToOne).Distinct().Count() > 1) { int index = 0; foreach(Association association in Entity.Associations.Where(a => a.AssociationType == AssociationType.ManyToOne).Distinct()) { %>
+<% if (Entity.Associations.Count(a => a.AssociationType == AssociationType.ManyToOne  || a.AssociationType == AssociationType.ManyToZeroOrOne) > 0) {%>
+<% if (Entity.Associations.Where(a => a.AssociationType == AssociationType.ManyToOne || a.AssociationType == AssociationType.ManyToZeroOrOne).Distinct().Count() > 1) { int index = 0; foreach(Association association in Entity.Associations.Where(a => a.AssociationType == AssociationType.ManyToOne || a.AssociationType == AssociationType.ManyToZeroOrOne).Distinct()) { %>
 
         private void Child_Update(<%= association.BuildParametersVariables(false) %>)
         {
-            Child_Update(<%= association.BuildUpdateStatementVariables(Entity.Associations.Where(a => a.AssociationType == AssociationType.ManyToOne).Distinct().ToList(), index++, false) %>);
+            Child_Update(<%= association.BuildUpdateStatementVariables(Entity.Associations.Where(a => a.AssociationType == AssociationType.ManyToOne || a.AssociationType == AssociationType.ManyToZeroOrOne).Distinct().ToList(), index++, false) %>);
         }
 
 <% } }%>
  
-        private void Child_Update(<%= Entity.Associations.Where(a => a.AssociationType == AssociationType.ManyToOne).Distinct().ToList().BuildParametersVariables(false) %>)
+        private void Child_Update(<%= Entity.Associations.Where(a => a.AssociationType == AssociationType.ManyToOne || a.AssociationType == AssociationType.ManyToZeroOrOne).Distinct().ToList().BuildParametersVariables(false) %>)
         {
 <% RenderHelper(new ChildUpdate()); %>
         }

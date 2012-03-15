@@ -129,7 +129,7 @@
     If(IsReadOnlyBusinessObject(association, "Info")) Then
         associationClassName += "Info"
     End If %>
-        'Associations.Where(Function(a) a.AssociationType = AssociationType.ManyToOne)
+        'Associations.Where(Function(a) a.AssociationType = AssociationType.ManyToOne OrElse a.AssociationType = AssociationType.ManyToZeroOrOne)
         Private Shared ReadOnly <%= association.PrivateMemberVariableName %>Property As PropertyInfo(Of <%= associationClassName %>) = RegisterProperty(Of <%= associationClassName %>)(Function(p As <%= BusinessClassName %>) p.<%= association.Name %>, "<%= association.Name %>")
     <% If(association.HasDescription) Then %>
         ''' <summary>

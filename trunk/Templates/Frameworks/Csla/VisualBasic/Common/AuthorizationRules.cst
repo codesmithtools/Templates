@@ -9,7 +9,7 @@
     
 <% If(IncludeSilverlightSupport) Then %>
 #If Not SILVERLIGHT Then
-    <% End If %>
+<% End If %>
         ''' <summary>
         ''' Allows the specification of CSLA based authorization rules.  Specifies what roles can 
         ''' perform which operations for a given business object
@@ -40,22 +40,8 @@
     <% End If %>
             'AuthorizationRules.AllowRead(<%= prop.PrivateMemberVariableName %>Property, canRead)
     
-    <% Next%>
-    <%-- One-To-Zero-Or-One --%>
-    <% For Each association As Association In Entity.Associations.Where(Function(a) a.AssociationType = AssociationType.OneToZeroOrOne) %>
-            ''<%= association.Name %>
-            'AuthorizationRules.AllowRead(<%= association.PrivateMemberVariableName %>Property, canRead)
-    
-    <% Next%>
-    <%-- Many-To-One --%>
-    <% For Each association As Association In Entity.Associations.Where(Function(a) a.AssociationType = AssociationType.ManyToOne) %>
-            ''<%= association.Name %>
-            'AuthorizationRules.AllowRead(<%= association.PrivateMemberVariableName %>Property, canRead)
-    
-    <% Next%>
-    <%-- One-To-Many & Many-To-Many --%>
-    ' NOTE: Many-To-Many support coming soon.
-    <% For Each association As Association In Entity.Associations.Where(Function(a) a.AssociationType = AssociationType.OneToMany) %>
+    <% Next %>
+    <% For Each association As Association In Entity.Associations %>
             ''<%= association.Name %>
             'AuthorizationRules.AllowRead(<%= association.PrivateMemberVariableName %>Property, canRead)
     
@@ -65,5 +51,5 @@
     
 <% If(IncludeSilverlightSupport) Then %>
 #End If
-    <% End If %>
+<% End If %>
 #End Region

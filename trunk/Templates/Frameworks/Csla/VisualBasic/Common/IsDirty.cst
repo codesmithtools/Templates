@@ -19,13 +19,13 @@
                     End If
     
     <%-- One-To-Zero-Or-One --%>
-    <% For Each association As Association In Entity.Associations.Where(Function(a) a.AssociationType = AssociationType.OneToZeroOrOne) %>
+    <% For Each association As Association In Entity.Associations.Where(Function(a) a.AssociationType = AssociationType.OneToZeroOrOne OrElse a.AssociationType = AssociationType.OneToOne) %>
                     If (FieldManager.FieldExists(<%= association.PrivateMemberVariableName %>Property) AndAlso <%= association.Name %>.IsDirty) Then
                         Return True
                     End If
     <% Next %>
     <%-- Many-To-One --%>
-    <% For Each association As Association In Entity.Associations.Where(Function(a) a.AssociationType = AssociationType.ManyToOne) %>
+    <% For Each association As Association In Entity.Associations.Where(Function(a) a.AssociationType = AssociationType.ManyToOne OrElse a.AssociationType = AssociationType.ManyToZeroOrOne) %>
                     If (FieldManager.FieldExists(<%= association.PrivateMemberVariableName %>Property) AndAlso <%= association.Name %>.IsDirty) Then
                         Return True
                     End If
