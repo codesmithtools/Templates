@@ -43,7 +43,7 @@ namespace <%= BusinessProjectName %>
 <% if(IncludeSilverlightSupport) { %>
 #else
 
-        protected override void DataPortal_Fetch(object criteria)
+        protected <% if (!IsLatestCSLA) {%>override <% } %>void DataPortal_Fetch(object criteria)
         {
             Child = DataPortal.FetchChild<T>(criteria);
         }
