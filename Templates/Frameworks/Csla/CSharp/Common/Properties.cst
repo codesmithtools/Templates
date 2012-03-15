@@ -322,7 +322,7 @@ if(!result.Equals("(true)", StringComparison.CurrentCultureIgnoreCase) && !resul
 <% } else { %>
                         if(<%= association.BuildNullCheckStatement(true, true, false, false, true) %>)
                         {
-                            <%= BusinessProjectName %>.<%= association.TypeName %>List<%= association.GenericProperty %>.Exists(criteria,(o,e) =>
+                            <%= BusinessProjectName %>.<%= association.TypeName %>List<%= association.GenericProperty %>.ExistsAsync(criteria, (o,e) =>
                             {
                                 if (e.Error != null)
                                     throw e.Error;
