@@ -148,6 +148,6 @@ namespace <%= BusinessProjectName %>
 <% RenderHelper(new IsDirty()); %>
 <% RenderHelper(new PartialMethods()); %>
 <% RenderHelper(new Exists()); %>
-<% RenderHelper(new ListEnhancements(), true); %>
+<% RenderHelper(new ListEnhancements()); %>
     }
 }

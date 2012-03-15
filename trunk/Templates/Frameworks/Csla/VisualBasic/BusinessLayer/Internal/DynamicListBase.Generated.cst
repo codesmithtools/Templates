@@ -147,6 +147,6 @@ Namespace <%= BusinessProjectName %>
     <% RenderHelper(New IsDirty()) %>
     <% RenderHelper(New PartialMethods()) %>
     <% RenderHelper(New Exists()) %>
-    <% RenderHelper(New ListEnhancements(), True) %>
+    <% RenderHelper(New ListEnhancements()) %>
     End Class
 End Namespace
