@@ -26,8 +26,8 @@
         ''' <summary>
         ''' Determines if a record exists in the <%=ChildBusinessClassName%><%= Entity.GenericProperty %> in the database for the specified criteria. 
         ''' </summary>
-        Public Shared Sub Exists(ByVal criteria As <%= CriteriaClassName %>, ByVal handler As EventHandler(Of DataPortalResult(Of ExistsCommand)))
-            <%= BusinessProjectName %>.<%= ChildBusinessClassName %>.Exists(criteria, handler)
+        Public Shared Sub ExistsAsync(ByVal criteria As <%= CriteriaClassName %>, ByVal handler As EventHandler(Of DataPortalResult(Of ExistsCommand)))
+            <%= BusinessProjectName %>.<%= ChildBusinessClassName %>.ExistsAsync(criteria, handler)
         End Sub
 
 #End Region

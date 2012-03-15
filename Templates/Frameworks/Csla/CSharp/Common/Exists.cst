@@ -28,9 +28,9 @@
         /// <summary>
         /// Determines if a record exists in the <%= Entity.EntityKeyName %> table in the database for the specified criteria. 
         /// </summary>
-        public static void Exists(<%= CriteriaClassName %><%= Entity.GenericProperty %> criteria, EventHandler<DataPortalResult<ExistsCommand>> handler)
+        public static void ExistsAsync(<%= CriteriaClassName %><%= Entity.GenericProperty %> criteria, EventHandler<DataPortalResult<ExistsCommand>> handler)
         {
-            <%= BusinessProjectName %>.ExistsCommand.Execute(criteria, handler);
+            <%= BusinessProjectName %>.ExistsCommand.ExecuteAsync(criteria, handler);
         }
 
         #endregion

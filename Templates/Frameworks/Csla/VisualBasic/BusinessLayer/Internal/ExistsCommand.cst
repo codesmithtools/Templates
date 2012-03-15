@@ -86,10 +86,10 @@ Namespace <%= BusinessProjectName %>
     
 #End Region
 
+#Region "Factory Methods"
 <% If(IncludeSilverlightSupport) Then %>
 #If Not SILVERLIGHT Then
 <% End If %>
-#Region "Factory Methods"
 
         Public Shared Function Execute(Of T As IGeneratedCriteria)(ByVal criteria As T) As Boolean
             If Not CanExecuteCommand() Then
@@ -103,8 +103,11 @@ Namespace <%= BusinessProjectName %>
     
             Return cmd.Result
         End Function
+<% If(IncludeSilverlightSupport) Then %>
+#End If
+<% End If %>
 
-        Public Shared Sub Execute(Of T As IGeneratedCriteria)(ByVal criteria As T, ByVal handler As EventHandler(Of DataPortalResult(Of ExistsCommand)))
+        Public Shared Sub ExecuteAsync(Of T As IGeneratedCriteria)(ByVal criteria As T, ByVal handler As EventHandler(Of DataPortalResult(Of ExistsCommand)))
             If Not CanExecuteCommand() Then
                 Throw New System.Security.SecurityException("Not authorized to execute command")
             End If
@@ -118,7 +121,11 @@ Namespace <%= BusinessProjectName %>
         End Sub
 
 #End Region
-    
+
+<% If(IncludeSilverlightSupport) Then %>
+#If Not SILVERLIGHT Then
+<% End If %>
+	
 #Region "Data Access"
 
         Protected Overloads Overrides Sub DataPortal_Execute()
