@@ -63,8 +63,8 @@ Namespace <%= DataProjectName %>
 End If
     For Each association As Association In Entity.Associations
         For Each prop As AssociationProperty In association.Properties
-            If (prop.ForeignProperty.SystemType = "System.String" And Not prop.ForeignProperty.IsType(PropertyType.Identity) And prop.ForeignProperty.IsType(PropertyType.Foreign)) Then %>
-                item.<%= prop.ForeignProperty.Name %> = "BN"
+            If (prop.Property.SystemType = "System.String" And Not prop.Property.IsType(PropertyType.Identity) And prop.Property.IsType(PropertyType.Foreign)) Then %>
+                item.<%= prop.Property.Name %> = "BN"
             <% End If
         Next
     Next

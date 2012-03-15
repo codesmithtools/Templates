@@ -57,8 +57,8 @@ if(property.SystemType == "System.Guid") { %>
                 item.<%= property.Name %> = Guid.NewGuid();
 <%} } } 
     foreach(Association association in Entity.Associations) { foreach(AssociationProperty property in association.Properties) {
-if(property.ForeignProperty.SystemType == "System.String" && !property.ForeignProperty.IsType(PropertyType.Identity) && property.ForeignProperty.IsType(PropertyType.Foreign)) { %>
-                item.<%= property.ForeignProperty.Name %> = "BN";
+if(property.Property.SystemType == "System.String" && !property.Property.IsType(PropertyType.Identity) && property.Property.IsType(PropertyType.Foreign)) { %>
+                item.<%= property.Property.Name %> = "BN";
 <%} } } %>
             }
 
