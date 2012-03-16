@@ -266,8 +266,8 @@ End If %>
             ' Don't update If the item isn't dirty.
             If (item.IsDirty) Then
     
-    <% If (Entity.IdentityProperty IsNot Nothing AndAlso Entity.HasKey) Then %>
-                If <%= Entity.GetProperties(PropertyType.Key).BuildIdentityKeyEqualityStatements("item.")%> Then
+    <% If (Entity.HasKey AndAlso Entity.IdentityProperty Is Nothing) Then %>
+                If <%= Entity.GetProperties(PropertyType.Identity).BuildIdentityKeyEqualityStatements("item.")%> Then
                     ' Insert new child.
                     Dim temp As <%= Entity.Name %> = CType(Activator.CreateInstance(GetType(<%= Entity.Name %>), True), <%= Entity.Name %>)
                     <%= Entity.GetProperties(PropertyType.NoConcurrency).BuildObjectInitializer(true, true, false, "temp.") %>
