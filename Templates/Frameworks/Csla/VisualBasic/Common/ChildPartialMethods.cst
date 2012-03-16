@@ -99,7 +99,7 @@
 
         ''' <summary>
         ''' Codesmith generated stub method that is called when updating the child <see cref="<%=ChildBusinessClassName%><%= Entity.GenericProperty %>"/> object. 
-        ''' </summary
+        ''' </summary>
         Partial Private Sub OnChildUpdating(ByVal connection As SqlConnection, ByRef cancel As Boolean)
         End Sub
 <% If (associations.Count() > 0) Then %>
