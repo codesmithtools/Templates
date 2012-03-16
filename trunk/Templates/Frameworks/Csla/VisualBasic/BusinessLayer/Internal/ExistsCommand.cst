@@ -115,7 +115,7 @@ Namespace <%= BusinessProjectName %>
             Dim cmd As New ExistsCommand()
             cmd.BeforeServer(criteria)
 
-            Dim dp = New DataPortal(Of ExistsCommand)()
+            Dim dp As New DataPortal(Of ExistsCommand)() 
             AddHandler dp.ExecuteCompleted, handler
             dp.BeginExecute(cmd)
         End Sub
