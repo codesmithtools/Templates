@@ -47,14 +47,24 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="CodeSmith.Core, Version=1.1.0.0, Culture=neutral, PublicKeyToken=9fd61cdb91609a7a, processorArchitecture=MSIL" />
-    <Reference Include="CodeSmith.CustomProperties, Version=6.0.0.0, Culture=neutral, PublicKeyToken=9fd61cdb91609a7a, processorArchitecture=MSIL">
-      <HintPath>C:\Program Files (x86)\CodeSmith\v6.0\AddIns\CodeSmith.CustomProperties.dll</HintPath>
+    <Reference Include="CodeSmith.Engine">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Libraries\bin\CodeSmith.Engine.dll</HintPath>
     </Reference>
-    <Reference Include="CodeSmith.Engine, Version=6.0.0.0, Culture=neutral, PublicKeyToken=9fd61cdb91609a7a, processorArchitecture=MSIL" />
+    <Reference Include="CodeSmith.Core">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Libraries\bin\CodeSmith.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="CodeSmith.CustomProperties">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Libraries\bin\CodeSmith.CustomProperties.dll</HintPath>
+    </Reference>
+    <Reference Include="SchemaExplorer">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Libraries\bin\SchemaExplorer.dll</HintPath>
+    </Reference>
     <Reference Include="CodeSmith.SchemaHelper, Version=3.0.0.0, Culture=neutral, processorArchitecture=MSIL" />
     <Reference Include="Generator.QuickStart, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL" />
-    <Reference Include="SchemaExplorer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=9fd61cdb91609a7a, processorArchitecture=MSIL" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Design" />
