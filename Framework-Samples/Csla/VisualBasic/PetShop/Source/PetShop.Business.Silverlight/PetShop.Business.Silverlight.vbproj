@@ -90,10 +90,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Csla">
-      <HintPath>..\..\..\..\Templates\Common\Csla\4.0\Silverlight\Csla.dll</HintPath>
+      <HintPath>..\..\..\..\Templates\Common\Csla\4.3\Silverlight\Csla.dll</HintPath>
     </Reference>
     <Reference Include="Csla.Xaml">
-      <HintPath>..\..\..\..\Templates\Common\Csla\4.0\Silverlight\Csla.Xaml.dll</HintPath>
+      <HintPath>..\..\..\..\Templates\Common\Csla\4.3\Silverlight\Csla.Xaml.dll</HintPath>
     </Reference>
     <Reference Include="mscorlib" />
     <Reference Include="System.ComponentModel.DataAnnotations, Version=5.0.5.0, Culture=neutral, PublicKeyToken=ddd0da4d3e678217, processorArchitecture=MSIL">

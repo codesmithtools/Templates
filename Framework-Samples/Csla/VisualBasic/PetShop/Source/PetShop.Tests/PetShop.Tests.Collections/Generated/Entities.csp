@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <codeSmith xmlns="http://www.codesmithtools.com/schema/csp.xsd">
   <variables>
     <add key="ConnectionString1" value="Data Source=.;Integrated Security=True;Database=PetShop;" />
@@ -440,8 +440,8 @@
     <propertySet name="ReadOnlyRoot" template="..\..\..\..\..\..\Templates\VisualBasic\BusinessLayer\ReadOnlyRoot.cst">
       <property name="CleanExpressions">
         <stringList>
-          <string>^\w+_</string>
-        </stringList>
+      <string>^\w+_</string>
+    </stringList>
       </property>
       <property name="UseMemberVariables">False</property>
       <property name="ParameterPrefix">@p_</property>
@@ -455,16 +455,16 @@
         <connectionString>$(ConnectionString1)</connectionString>
         <providerType>SchemaExplorer.SqlSchemaProvider,SchemaExplorer.SqlSchemaProvider</providerType>
         <table>
-          <owner>dbo</owner>
-          <name>Category</name>
-        </table>
+      <owner>dbo</owner>
+      <name>Category</name>
+    </table>
       </property>
       <property name="IgnoreExpressions">
         <stringList>
-          <string>sysdiagrams$</string>
-          <string>^dbo.aspnet</string>
-          <string>^dbo.Product</string>
-        </stringList>
+      <string>sysdiagrams$</string>
+      <string>^dbo.aspnet</string>
+      <string>^dbo.Product</string>
+    </stringList>
       </property>
       <property name="Location">.\ReadOnlyRoot\</property>
       <property name="FrameworkVersion">v40</property>
@@ -473,6 +473,7 @@
       <property name="UseDeferredDeletion">False</property>
       <property name="IncludeSilverlightSupport">False</property>
       <property name="ChildBusinessClassName">CategoryInfo</property>
+      <property name="IncludeAssociations">True</property>
     </propertySet>
     <propertySet name="ReadOnlyList" template="..\..\..\..\..\..\Templates\VisualBasic\BusinessLayer\ReadOnlyList.cst">
       <property name="CleanExpressions">

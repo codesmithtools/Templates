@@ -89,7 +89,7 @@ Public NotInheritable Class PetShopProfileProvider
         Dim profile As Profile = ProfileManager.Instance.GetCurrentUser(username)
 
         For Each pv As SettingsPropertyValue In collection
-            If pv.PropertyValue <> Nothing Then
+            If pv.PropertyValue IsNot Nothing Then
                 Select Case pv.[Property].Name
                     Case _PROFILE_SHOPPINGCART
                         profile.ShoppingCart.Add(DirectCast(pv.PropertyValue, Cart))

@@ -60,7 +60,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Csla">
-      <HintPath>..\..\..\..\..\Templates\Common\Csla\4.0\Client\Csla.dll</HintPath>
+      <HintPath>..\..\..\..\..\Templates\Common\Csla\4.3\Client\Csla.dll</HintPath>
     </Reference>
     <Reference Include="nunit.framework">
       <HintPath>..\..\..\..\..\Templates\Common\nunit.framework.dll</HintPath>
@@ -111,6 +111,10 @@
       <DependentUpon>LineItemList.vb</DependentUpon>
     </Compile>
     <Compile Include="Generated\Collections\LineItemList.vb" />
+    <Compile Include="Generated\Collections\OrderList.Generated.vb">
+      <DependentUpon>OrderList.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Generated\Collections\OrderList.vb" />
     <Compile Include="Generated\Collections\OrderStatusList.Generated.vb">
       <DependentUpon>OrderStatusList.vb</DependentUpon>
     </Compile>
@@ -215,6 +219,7 @@
     <Compile Include="Generated\Entities\Supplier.vb" />
     <Compile Include="Generated\Factory\FactoryNames.vb" />
     <Compile Include="Generated\Utility\ADOHelper.vb" />
+    <Compile Include="Generated\Utility\AsyncChildLoader.vb" />
     <Compile Include="LineItemTests.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">

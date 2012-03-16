@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <codeSmith xmlns="http://www.codesmithtools.com/schema/csp.xsd">
   <variables>
     <add key="ConnectionString1" value="Data Source=.;Integrated Security=True;Database=PetShop;" />
@@ -134,6 +134,10 @@
       </table>
       <table>
         <owner>dbo</owner>
+        <name>Orders</name>
+      </table>
+      <table>
+        <owner>dbo</owner>
         <name>OrderStatus</name>
       </table>
     </tableList>
@@ -150,8 +154,16 @@
       <property name="IsolationLevel">ReadCommitted</property>
       <property name="FrameworkVersion">v40</property>
       <property name="IncludeSilverlightSupport">False</property>
-      <property name="TestProjectName">PetShop.Test</property>
       <property name="DynamicListBase" />
+      <property name="UseMemberVariables">False</property>
+      <property name="InterfaceProjectName">PetShop.UI</property>
+      <property name="LinqToSQLContextNamespace" />
+      <property name="LinqToSQLDataContextName" />
+      <property name="IncludeViews">False</property>
+      <property name="IncludeFunctions">False</property>
+      <property name="CommandObject" />
+      <property name="NameValueList" />
+      <property name="IncludeAssociations">True</property>
     </propertySet>
   </propertySets>
 </codeSmith>

@@ -60,7 +60,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Csla">
-      <HintPath>..\..\..\..\..\Templates\Common\Csla\4.0\Client\Csla.dll</HintPath>
+      <HintPath>..\..\..\..\..\Templates\Common\Csla\4.3\Client\Csla.dll</HintPath>
     </Reference>
     <Reference Include="nunit.framework">
       <HintPath>..\..\..\..\..\Templates\Common\nunit.framework.dll</HintPath>
@@ -111,6 +111,7 @@
     </Compile>
     <Compile Include="Generated\DynamicRoot\Entities\Category.vb" />
     <Compile Include="Generated\DynamicRoot\Utility\ADOHelper.vb" />
+    <Compile Include="Generated\DynamicRoot\Utility\AsyncChildLoader.vb" />
     <Compile Include="Generated\EditableChild\Collections\CategoryList.DataAccess.vb">
       <DependentUpon>CategoryList.vb</DependentUpon>
     </Compile>
@@ -132,6 +133,7 @@
     </Compile>
     <Compile Include="Generated\EditableChild\Entities\Category.vb" />
     <Compile Include="Generated\EditableChild\Utility\ADOHelper.vb" />
+    <Compile Include="Generated\EditableChild\Utility\AsyncChildLoader.vb" />
     <Compile Include="Generated\EditableRoot\Collections\CategoryList.DataAccess.vb">
       <DependentUpon>CategoryList.vb</DependentUpon>
     </Compile>
@@ -153,6 +155,7 @@
     </Compile>
     <Compile Include="Generated\EditableRoot\Entities\Category.vb" />
     <Compile Include="Generated\EditableRoot\Utility\ADOHelper.vb" />
+    <Compile Include="Generated\EditableRoot\Utility\AsyncChildLoader.vb" />
     <Compile Include="Generated\ReadOnlyChild\Collections\CategoryInfoList.DataAccess.vb">
       <DependentUpon>CategoryInfoList.vb</DependentUpon>
     </Compile>
@@ -174,6 +177,7 @@
     </Compile>
     <Compile Include="Generated\ReadOnlyChild\Entities\CategoryInfo.vb" />
     <Compile Include="Generated\ReadOnlyChild\Utility\ADOHelper.vb" />
+    <Compile Include="Generated\ReadOnlyChild\Utility\AsyncChildLoader.vb" />
     <Compile Include="Generated\ReadOnlyRoot\Collections\CategoryInfoList.DataAccess.vb">
       <DependentUpon>CategoryInfoList.vb</DependentUpon>
     </Compile>
@@ -195,6 +199,7 @@
     </Compile>
     <Compile Include="Generated\ReadOnlyRoot\Entities\CategoryInfo.vb" />
     <Compile Include="Generated\ReadOnlyRoot\Utility\ADOHelper.vb" />
+    <Compile Include="Generated\ReadOnlyRoot\Utility\AsyncChildLoader.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
       <AutoGen>True</AutoGen>
