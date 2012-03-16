@@ -67,7 +67,7 @@ Namespace <%= BusinessProjectName %>
         ''' </summary>
         ''' <returns>Returns a newly instantiated collection of type <see cref="<%=BusinessClassName%><%= Entity.GenericProperty %>"/>.</returns>
         Friend Shared Function New<%= ChildBusinessClassName %><%= Entity.GenericProperty %>() As <%= ChildBusinessClassName %> 
-            Return DataPortal.Create(Of <%= BusinessClassName %>)()
+            Return DataPortal.CreateChild(Of <%= BusinessClassName %>)()
         End Function
     <% For Each sc As SearchCriteria In  Entity.SearchCriteria %>
 
