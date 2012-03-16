@@ -491,7 +491,7 @@ namespace Generator.CSLA
 
         public virtual string GetTableOwner(bool includeDot)
         {
-            if (Entity.SchemaName.Length > 0)
+            if (Entity != null && !String.IsNullOrEmpty(Entity.SchemaName) && Entity.SchemaName.Length > 0)
                 return includeDot
                            ? String.Format("[{0}].", Entity.SchemaName)
                            : String.Format("[{0}]", Entity.SchemaName);
