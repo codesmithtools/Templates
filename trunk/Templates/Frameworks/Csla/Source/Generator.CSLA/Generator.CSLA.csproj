@@ -57,11 +57,11 @@
     </Reference>
     <Reference Include="CodeSmith.CustomProperties">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Libraries\bin\CodeSmith.CustomProperties.dll</HintPath>
+      <HintPath>..\..\Libraries\AddIns\CodeSmith.CustomProperties.dll</HintPath>
     </Reference>
     <Reference Include="SchemaExplorer">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Libraries\bin\SchemaExplorer.dll</HintPath>
+      <HintPath>..\..\Libraries\AddIns\SchemaExplorer.dll</HintPath>
     </Reference>
     <Reference Include="CodeSmith.SchemaHelper, Version=3.0.0.0, Culture=neutral, processorArchitecture=MSIL" />
     <Reference Include="Generator.QuickStart, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL" />
