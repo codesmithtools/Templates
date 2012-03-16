@@ -12,7 +12,7 @@
             if (cancel) return;
 
 <% if(Entity.CanUpdate) { %>  
-<% if(Entity.IdentityProperty == null) { %>
+<% if(Entity.IdentityProperty == null && Entity.HasKey) { %>
             if(<%= Entity.GetProperties(PropertyType.Key).BuildIdentityKeyEqualityStatements()%>)
             {
                 // Insert new child.
