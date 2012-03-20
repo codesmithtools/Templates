@@ -18,12 +18,12 @@ Public Overloads Overrides Sub Render(writer As System.IO.TextWriter)
     strategy.Language = "VB"
     strategy.RegionNameRegex = "^[ \t]*[ \s]*""?(?i:Preserved Code)""?"
 
-Dim parentFileName As String = System.IO.Path.Combine(Me.Location, String.Format("Entities\{0}.vb", BusinessClassName))
-Dim fileName As String = System.IO.Path.Combine(Location, String.Format("Entities\{0}.Generated.vb", BusinessClassName))
+Dim parentFileName As String = System.IO.Path.Combine(Me.Location, String.Format("Collections\{0}.vb", BusinessClassName))
+Dim fileName As String = System.IO.Path.Combine(Location, String.Format("Collections\{0}.Generated.vb", BusinessClassName))
 RenderToFileHelper(Of NameValueList)(parentFileName, strategy)
 RenderToFileHelper(Of NameValueListGenerated)(fileName, parentFileName, True)
 
-fileName = System.IO.Path.Combine(Location, String.Format("Entities\{0}.DataAccess.vb", BusinessClassName))
+fileName = System.IO.Path.Combine(Location, String.Format("Collections\{0}.DataAccess.vb", BusinessClassName))
 RenderToFileHelper(Of NameValueListDataAccess)(fileName, parentFileName, True)
 
 If DataAccessImplementation = DataAccessMethod.StoredProcedures Then

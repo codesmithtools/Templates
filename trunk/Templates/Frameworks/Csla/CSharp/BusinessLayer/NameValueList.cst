@@ -17,12 +17,12 @@ public override void Render(System.IO.TextWriter writer)
     PreserveRegionsMergeStrategy strategy = new PreserveRegionsMergeStrategy();
     strategy.RegionNameRegex = "^[ \\t]*[ \\s]*\"?(?i:Preserved Code)\"?";
 
-    string parentFileName = System.IO.Path.Combine(this.Location, String.Format("Entities\\{0}.cs", BusinessClassName));
-    string fileName = System.IO.Path.Combine(Location, String.Format("Entities\\{0}.Generated.cs", BusinessClassName));
+    string parentFileName = System.IO.Path.Combine(this.Location, String.Format("Collections\\{0}.cs", BusinessClassName));
+    string fileName = System.IO.Path.Combine(Location, String.Format("Collections\\{0}.Generated.cs", BusinessClassName));
     RenderToFileHelper<NameValueList>(parentFileName, strategy);
     RenderToFileHelper<NameValueListGenerated>(fileName, parentFileName, true);
  
-    fileName = System.IO.Path.Combine(Location, String.Format("Entities\\{0}.DataAccess.cs", BusinessClassName));
+    fileName = System.IO.Path.Combine(Location, String.Format("Collections\\{0}.DataAccess.cs", BusinessClassName));
     RenderToFileHelper<NameValueListDataAccess>(fileName, parentFileName, true);
     
     if(DataAccessImplementation == DataAccessMethod.StoredProcedures)
