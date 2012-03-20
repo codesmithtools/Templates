@@ -1,21 +1,15 @@
-<%-- 
+﻿<%-- 
 Name: Default.aspx
 Author: Blake Niemyjski
 Description: The following template will generate an ASP.Net page.
 --%>
 <%@ CodeTemplate Language="VB" TargetLanguage="Text" OutputType="None" Inherits="Generator.CSLA.InterfaceCodeTemplate" Description="The following template will generate a sample ASP.Net page." %>
-
 <%@ Register Name="SourceViewTemplate" Template="Internal\Default.aspx.cst" %>
 <%@ Register Name="CodeBehindTemplate" Template="Internal\Default.aspx.vb.cst" %>
-
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\Common" %>
 <%@ Assembly Name="Generator.CSLA" Path="..\..\Common" %>
-<%@ Assembly Name="SchemaExplorer" %>
-
 <%@ Import Namespace="Generator.CSLA" %>
 <%@ Import Namespace="CodeSmith.SchemaHelper" %>
-<%@ Import Namespace="SchemaExplorer" %>
-
 <% Generate() %>
 
 <script runat="template">

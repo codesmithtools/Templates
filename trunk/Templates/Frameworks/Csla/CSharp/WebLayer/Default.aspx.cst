@@ -7,6 +7,7 @@ Description: The following template will generate an ASP.Net page.
 <%@ Register Name="SourceViewTemplate" Template="Internal\Default.aspx.cst" %>
 <%@ Register Name="CodeBehindTemplate" Template="Internal\Default.aspx.cs.cst" %>
 <%@ Register Name="DesignerTemplate" Template="Internal\Default.aspx.designer.cs.cst" %>
+<%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\Common" %>
 <%@ Assembly Name="Generator.CSLA" Path="..\..\Common" %>
 <%@ Import Namespace="Generator.CSLA" %>
 
