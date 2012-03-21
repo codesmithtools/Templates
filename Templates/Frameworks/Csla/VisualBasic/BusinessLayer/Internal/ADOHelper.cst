@@ -120,8 +120,6 @@ Namespace <%= BusinessProjectName %>
         ''' Simple empty string to DBNull.Value function.
         ''' </summary>
         ''' <param name="value"></param>
-        ''' <returns></returns>
-        ''' <remarks></remarks>
         Friend Overloads Shared Function NullCheck(ByVal value As String) As Object
             If value Is Nothing OrElse value.Trim = vbNullString Then
                 Return DBNull.Value

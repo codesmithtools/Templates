@@ -102,7 +102,6 @@ Namespace <%= DataProjectName %>
         ''' Fetch <%= Entity.Name %>.
         ''' </summary>
         ''' <param name="criteria">The criteria.</param>
-        ''' <Returns></Returns>
         Public Function Fetch(ByVal criteria As <%= Entity.Name %>Criteria) As <%= Entity.Name %>
             Dim item As <%= Entity.Name %> = Nothing
             

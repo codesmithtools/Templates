@@ -70,7 +70,6 @@ Namespace <%= DataProjectName %>
         ''' Fetch <%= Entity.Name %>List.
         ''' </summary>
         ''' <param name="criteria">The criteria.</param>
-        ''' <Returns></Returns>
         Public Function Fetch(ByVal criteria As <%= Entity.Name %>Criteria) As <%= Entity.Name %>List
             Dim item As <%= Entity.Name %>List = CType(Activator.CreateInstance(GetType(<%= Entity.Name %>List), True), <%= Entity.Name %>List)
     

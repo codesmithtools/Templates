@@ -770,7 +770,6 @@ End Function
 ''' This method adds support for composite primary keys.
 ''' </summary>
 ''' <param name="key"></param>
-''' <returns></returns>
 Public Function HasGuidOrIdentityColumn(key As IKey) As Boolean
     For Each prop As IProperty In key.Properties
         If IsGuidOrIdentityColumn(prop) Then
