@@ -300,7 +300,7 @@ namespace Generator.CSLA.CodeTemplates
 
         #endregion
 
-        private bool _dontPopulateDefaultValues;
+        private bool _dontPopulateDefaultValues = true;
         private void EnsureEntitiesExists(TableSchemaCollection value)
         {
             // If entities exist then return.
@@ -311,9 +311,10 @@ namespace Generator.CSLA.CodeTemplates
             if (value == null || value.Count <= 0)
                 return;
 
+            bool previousValue = _dontPopulateDefaultValues;
             _dontPopulateDefaultValues = true;
             SourceDatabase = value[0].Database;
-            _dontPopulateDefaultValues = false;
+            _dontPopulateDefaultValues = previousValue;
         }
 
         public virtual void OnDatabaseChanged()
@@ -326,21 +327,7 @@ namespace Generator.CSLA.CodeTemplates
                 if (State == TemplateState.RestoringProperties)
                     return;
 
-                if (_dontPopulateDefaultValues)
-                    return;
-
-                if (DynamicRoot.Count == 0 &&
-                    EditableChild.Count == 0 &&
-                    EditableRoot.Count == 0 &&
-                    ReadOnlyChild.Count == 0 &&
-                    ReadOnlyRoot.Count == 0 &&
-                    SwitchableObject.Count == 0 &&
-                    DynamicListBase.Count == 0 &&
-                    DynamicRootList.Count == 0 &&
-                    EditableRootList.Count == 0 &&
-                    EditableChildList.Count == 0 &&
-                    ReadOnlyList.Count == 0 &&
-                    ReadOnlyChildList.Count == 0)
+                if (!_dontPopulateDefaultValues && ShouldPopulateDefaultEntities)
                 {
                     PopulateDefaultEntities(_entities);
                 }
@@ -354,9 +341,33 @@ namespace Generator.CSLA.CodeTemplates
         protected override void OnPropertiesLoaded()
         {
             if (TemplateContext.Current == null && UpdateEntities())
-                Refresh();
+            {
+                if (ShouldPopulateDefaultEntities)
+                    PopulateDefaultEntities(_entities);
+                else
+                    Refresh();
+            }
 
             base.OnPropertiesLoaded();
+        }
+
+        public bool ShouldPopulateDefaultEntities
+        {
+            get
+            {
+                return DynamicRoot.Count == 0 &&
+                       EditableChild.Count == 0 &&
+                       EditableRoot.Count == 0 &&
+                       ReadOnlyChild.Count == 0 &&
+                       ReadOnlyRoot.Count == 0 &&
+                       SwitchableObject.Count == 0 &&
+                       DynamicListBase.Count == 0 &&
+                       DynamicRootList.Count == 0 &&
+                       EditableRootList.Count == 0 &&
+                       EditableChildList.Count == 0 &&
+                       ReadOnlyList.Count == 0 &&
+                       ReadOnlyChildList.Count == 0;
+            }
         }
 
         private bool UpdateEntities()
