@@ -42,6 +42,15 @@ namespace Generator.CSLA.CodeTemplates
             }
         }
 
+        [Optional]
+        [Category("1. DataSource")]
+        [Description("Includes Entity associations if set to true.")]
+        public bool IncludeAssociations
+        {
+            get { return Configuration.Instance.IncludeAssociations; }
+            set { Configuration.Instance.IncludeAssociations = value; }
+        }
+
         [Category("1. DataSource")]
         [Description("List of regular expressions to clean table, view and column names.")]
         [Optional]
