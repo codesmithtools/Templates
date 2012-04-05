@@ -21,7 +21,7 @@ using CodeSmith.Engine;
 using CodeSmith.SchemaHelper;
 using Configuration = CodeSmith.SchemaHelper.Configuration;
 
-namespace Generator.CSLA
+namespace Generator.CSLA.CodeTemplates
 {
     public class CSLABaseTemplate : CodeTemplate
     {
@@ -90,15 +90,6 @@ namespace Generator.CSLA
             {
                 return String.Format("CodeSmith: v{0}, CSLA Templates: v{1}, CSLA Framework: v{2}", CodeSmithVersion, TemplateVersion, CSLAVersion);
             }
-        }
-
-        [Optional]
-        [Category("1. DataSource")]
-        [Description("Includes Entity associations if set to true.")]
-        public bool IncludeAssociations
-        {
-            get { return Configuration.Instance.IncludeAssociations; }
-            set { Configuration.Instance.IncludeAssociations = value; }
         }
 
         #endregion

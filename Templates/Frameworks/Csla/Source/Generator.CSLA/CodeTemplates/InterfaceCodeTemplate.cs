@@ -16,6 +16,7 @@ using System.ComponentModel;
 
 using CodeSmith.Engine;
 using CodeSmith.SchemaHelper;
+using Generator.CSLA.CodeTemplates;
 
 namespace Generator.CSLA
 {

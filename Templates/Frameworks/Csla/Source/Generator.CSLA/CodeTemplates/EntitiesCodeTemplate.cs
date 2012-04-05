@@ -1,7 +1,8 @@
 ﻿using System;
 using System.IO;
+using Generator.CSLA.CodeTemplates;
 
-namespace Generator.CSLA.CodeTemplates
+namespace Generator.CSLA
 {
     /// <summary>
     /// This template will be used in the Entities.cst and other related templates.

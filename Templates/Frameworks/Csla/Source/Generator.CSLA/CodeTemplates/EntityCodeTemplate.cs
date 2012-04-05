@@ -21,7 +21,7 @@ using System.Text.RegularExpressions;
 using CodeSmith.CustomProperties;
 using CodeSmith.Engine;
 using CodeSmith.SchemaHelper;
-
+using Generator.CSLA.CodeTemplates;
 using SchemaExplorer;
 
 using Configuration=CodeSmith.SchemaHelper.Configuration;
@@ -178,6 +178,15 @@ namespace Generator.CSLA
                 //if (SourceTable != null)
                 //    Entity = new TableEntity(SourceTable);
             }
+        }
+
+        [Optional]
+        [Category("1. DataSource")]
+        [Description("Includes Entity associations if set to true.")]
+        public bool IncludeAssociations
+        {
+            get { return Configuration.Instance.IncludeAssociations; }
+            set { Configuration.Instance.IncludeAssociations = value; }
         }
 
         [Category("1. DataSource")]
