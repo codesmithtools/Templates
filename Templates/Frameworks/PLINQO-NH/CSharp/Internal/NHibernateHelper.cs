@@ -68,9 +68,11 @@ public class NHibernateHelper : CodeTemplate
     
     public IEnumerable<string> GetEntityNamespaces(EntityManager manager)
     {
-        return manager.Entities
-            .Select(e => e.Namespace)
-            .Distinct();
+        HashSet<string> list = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        foreach(IEntity entity in manager.Entities)
+            list.Add(entity.Namespace);
+
+        return list;
     }
     
     public static readonly string GeneratedCodeAttribute =  string.Format(

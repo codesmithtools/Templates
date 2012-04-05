@@ -13,8 +13,6 @@ Description: Used to Quick Start Visual Studio Projects
 <%@ Property Name="IncludeWebProject" Type="System.Boolean" Default="True" Optional="False" Category="4.Web Project" Description="Include the DynamicData WebProject" %>
 <%@ Property Name="WebProjectName" Type="System.String" Default="" Optional="False" Category="4.Web Project" Description="Include the MVC2 WebProject" %>
 <%@ Property Name="SourceDatabase" Type="SchemaExplorer.DatabaseSchema" Default="" Optional="False" Category="1.Database" Description="Source Database"  OnChanged="OnSourceDatabaseChanged" %>
-<%@ Property Name="TestProjectName" Type="System.String" Default="" Optional="False" Category="5.Test Project" Description="Name Space for the Test Project." %>
-<%@ Property Name="IncludeTestProject" Type="System.Boolean" Default="True" Optional="False" Category="5.Test Project" Description="Name Space for the Test Project." %>
 <%@ Register Name="QuickStartSolution" Template="Common\QuickStartSolution.cst" %>
 <%@ Assembly Name="System" %>
 <%@ Assembly Name="Generator.QuickStart" Path="Common"%>
@@ -53,26 +51,15 @@ The <%= SolutionName %> Solution has been created at <%= Location %>.
             CspFileName = @"QuickStartQuery.csp",
             TemplateDirectory = this.CopyTemplatesToFolder ? @"..\Templates\" : @"..\..\Templates\"
         };
+        
         dataProjectCreator.CreateProject(this.DataProjectName);
         solutionItems.Add(dataProjectCreator.SolutionItem);
 
-        // Create UnitTests Project
-        if(IncludeTestProject)
-        {
-            TestProjectCreator testProjectCreator = new TestProjectCreator(pbs);
-            testProjectCreator.CreateProject(this.TestProjectName, pbs.DatabaseName, null, null, dataProjectCreator.SolutionItem);
-            solutionItems.Add(testProjectCreator.SolutionItem);
-            
-            QuickStartUtils.FindAndReplace(testProjectCreator.ProjectFile.FullName, @"\$" + DataProjectCreator.TemplatePathKey + @"\$", dataProjectCreator.TemplatePathValue);
-        }
-        
         if(IncludeWebProject)
         {
-            TestProjectCreator webProjectCreator = new TestProjectCreator(pbs, "WebProject.zip");
+            MVCProjectCreator webProjectCreator = new MVCProjectCreator(pbs);
             webProjectCreator.CreateProject(this.WebProjectName, pbs.DatabaseName, null, null, dataProjectCreator.SolutionItem);
             solutionItems.Add(webProjectCreator.SolutionItem);
-            
-            QuickStartUtils.FindAndReplace(webProjectCreator.ProjectFile.FullName, @"\$" + DataProjectCreator.TemplatePathKey + @"\$", dataProjectCreator.TemplatePathValue);
         }
 
         // Create Solution
@@ -88,7 +75,6 @@ The <%= SolutionName %> Solution has been created at <%= Location %>.
         get
         {
             return (Directory.Exists(Path.Combine(Location, this.DataProjectName))
-            || Directory.Exists(Path.Combine(Location, this.TestProjectName))
             || File.Exists(Path.Combine(Location, String.Concat(this.SolutionName, ".sln"))));
         }
     }
@@ -109,7 +95,7 @@ The <%= SolutionName %> Solution has been created at <%= Location %>.
         ProjectBuilderSettings settings = new ProjectBuilderSettings()
         {
             IncludeViews = true,
-            IncludeFunctions = !this.SourceDatabase.Name.Contains("MySQL"),
+            IncludeFunctions = !this.SourceDatabase.Provider.Name.Contains("MySQL"),
             EnsureMultipleResultSets = false,
             ZipFileRoot = @"Common",
             SourceDatabase = this.SourceDatabase,
@@ -125,9 +111,8 @@ The <%= SolutionName %> Solution has been created at <%= Location %>.
             CopyTemplatesToFolder = this.CopyTemplatesToFolder,
             IncludeDataServices = false,
             InterfaceProjectName = String.Empty,
-            IncludeTestProject = this.IncludeTestProject,
+            IncludeTestProject = false,
             ProjectType = ProjectTypeEnum.DynamicDataWebSite,
-            TestProjectName = this.TestProjectName,
             WorkingDirectory = this.CopyTemplatesToFolder
                 ? Path.Combine(Location, @"Templates\")
                 : this.CodeTemplateInfo.DirectoryName
@@ -168,9 +153,6 @@ The <%= SolutionName %> Solution has been created at <%= Location %>.
 
         if (string.IsNullOrEmpty(DataContextName))
             DataContextName = name + "DataContext";
-
-        if (string.IsNullOrEmpty(TestProjectName))
-            TestProjectName = name + ".Test";
             
         if (string.IsNullOrEmpty(WebProjectName))
             WebProjectName = name + ".UI";
