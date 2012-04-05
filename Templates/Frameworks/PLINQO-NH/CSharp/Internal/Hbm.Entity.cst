@@ -1,4 +1,4 @@
-<%-- Author: Tom DuPont --%>
+﻿<%-- Author: Tom DuPont --%>
 <%@ CodeTemplate Language="C#" TargetLanguage="XML" Debug="False" CompilerVersion="v3.5"
     Src="NHibernateHelper.cs" Inherits="NHibernateHelper"
     Description="Generates a HBM for PLINQO for NHibernate." %>
@@ -15,8 +15,8 @@
 
 <%@ Assembly Name="System.Xml.Linq" %>
 <%@ Assembly Name="SchemaExplorer" %>
-<%@ Assembly Name="CodeSmith.SchemaHelper" Path="../../Common/SchemaHelper" %>
-<%@ Assembly Name="CodeSmith.SchemaHelper.NHibernate" Path="../../Common/SchemaHelper" %>
+<%@ Assembly Name="CodeSmith.SchemaHelper" Path="../../Common" %>
+<%@ Assembly Name="CodeSmith.SchemaHelper.NHibernate" Path="../../Common" %>
 
 <%@ Import Namespace="SchemaExplorer" %>
 <%@ Import Namespace="System.Collections.Generic" %>

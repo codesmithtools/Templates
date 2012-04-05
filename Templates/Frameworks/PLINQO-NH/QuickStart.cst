@@ -3,31 +3,25 @@ Name: Quick Start
 Author: Blake Niemyjski
 Description: Used to Quick Start Visual Studio Projects
 --%>
-<%@ CodeTemplate Language="C#" TargetLanguage="Text" Debug="True" Description="PLINQO for NHibernate" CompilerVersion="v3.5" %>
+<%@ CodeTemplate Language="C#" TargetLanguage="Text" Debug="True" Description="PLINQO for NHibernate" %>
+<%@ Property Name="Location" Type="System.String" Default="" Optional="False" Category="2.Solution" Description="This is the path to the Solution location." Editor="System.Windows.Forms.Design.FolderNameEditor, System.Design" %>
+<%@ Property Name="SolutionName" Type="System.String" Default="" Optional="False" Category="2.Solution" Description="Name of the project to be generated." %>
+<%@ Property Name="LaunchVisualStudio" Type="System.Boolean" Default="True" Optional="False" Category="2.Solution" Description="Launch Visual Studio after generation." %>
+<%@ Property Name="DataProjectName" Type="System.String" Default="" Optional="False" Category="3.Data Project" Description="Name Space for the Data Project." %>
+<%@ Property Name="DataContextName" Type="System.String"  Default="" Optional="True" Category="3.Data Project" Description="Name Space for the Data Project." %>
+<%@ Property Name="CopyTemplatesToFolder" Type="System.Boolean"  Default="False" Optional="False" Category="3.Data Project" Description="Include a copy of the LinqToSql Templates in the project directory" %>
+<%@ Property Name="IncludeWebProject" Type="System.Boolean" Default="True" Optional="False" Category="4.Web Project" Description="Include the DynamicData WebProject" %>
+<%@ Property Name="WebProjectName" Type="System.String" Default="" Optional="False" Category="4.Web Project" Description="Include the MVC2 WebProject" %>
+<%@ Property Name="SourceDatabase" Type="SchemaExplorer.DatabaseSchema" Default="" Optional="False" Category="1.Database" Description="Source Database"  OnChanged="OnSourceDatabaseChanged" %>
+<%@ Property Name="TestProjectName" Type="System.String" Default="" Optional="False" Category="5.Test Project" Description="Name Space for the Test Project." %>
+<%@ Property Name="IncludeTestProject" Type="System.Boolean" Default="True" Optional="False" Category="5.Test Project" Description="Name Space for the Test Project." %>
+<%@ Register Name="QuickStartSolution" Template="Common\QuickStartSolution.cst" %>
 <%@ Assembly Name="System" %>
-<%@ Assembly Name="Generator.QuickStart" Path="Common\QuickStart"%>
+<%@ Assembly Name="Generator.QuickStart" Path="Common"%>
 <%@ Assembly Name="SchemaExplorer" %>
 <%@ Assembly Name="CodeSmith.Engine" %>
 <%@ Import Namespace="System.IO" %>
 <%@ Import Namespace="Generator.QuickStart" %>
-
-<%@ Register Name="QuickStartSolution" Template="Common\QuickStart\QuickStartSolution.cst" %>
-<%@ Property Name="SourceDatabase" Type="SchemaExplorer.DatabaseSchema" Default="" Optional="False" Category="1.Database" Description="Source Database"  OnChanged="OnSourceDatabaseChanged" %>
-
-<%@ Property Name="Location" Type="System.String" Default="" Optional="False" Category="2.Solution" Description="This is the path to the Solution location." Editor="System.Windows.Forms.Design.FolderNameEditor, System.Design" %>
-<%@ Property Name="SolutionName" Type="System.String" Default="" Optional="False" Category="2.Solution" Description="Name of the project to be generated." %>
-<%@ Property Name="LaunchVisualStudio" Type="System.Boolean" Default="True" Optional="False" Category="2.Solution" Description="Launch Visual Studio after generation." %>
-
-<%@ Property Name="DataProjectName" Type="System.String" Default="" Optional="False" Category="3.Data Project" Description="Name Space for the Data Project." %>
-<%@ Property Name="DataContextName" Type="System.String"  Default="" Optional="True" Category="3.Data Project" Description="Name Space for the Data Project." %>
-<%@ Property Name="CopyTemplatesToFolder" Type="System.Boolean"  Default="False" Optional="False" Category="3.Data Project" Description="Include a copy of the LinqToSql Templates in the project directory" %>
-
-<%@ Property Name="IncludeWebProject" Type="System.Boolean" Default="True" Optional="False" Category="4.Web Project" Description="Include the DynamicData WebProject" %>
-<%@ Property Name="WebProjectName" Type="System.String" Default="" Optional="False" Category="4.Web Project" Description="Include the MVC2 WebProject" %>
-
-<%@ Property Name="TestProjectName" Type="System.String" Default="" Optional="False" Category="5.Test Project" Description="Name Space for the Test Project." %>
-<%@ Property Name="IncludeTestProject" Type="System.Boolean" Default="True" Optional="False" Category="5.Test Project" Description="Name Space for the Test Project." %>
-
 <% CreateQuickStart(); %>
 The <%= SolutionName %> Solution has been created at <%= Location %>.
 
@@ -56,7 +50,7 @@ The <%= SolutionName %> Solution has been created at <%= Location %>.
         // Create Data Project
         DataProjectCreator dataProjectCreator = new DataProjectCreator(pbs)
         {
-            CspFileName = @"Common\QuickStart\QuickStartQuery.csp",
+            CspFileName = @"QuickStartQuery.csp",
             TemplateDirectory = this.CopyTemplatesToFolder ? @"..\Templates\" : @"..\..\Templates\"
         };
         dataProjectCreator.CreateProject(this.DataProjectName);
@@ -117,7 +111,7 @@ The <%= SolutionName %> Solution has been created at <%= Location %>.
             IncludeViews = true,
             IncludeFunctions = !this.SourceDatabase.Name.Contains("MySQL"),
             EnsureMultipleResultSets = false,
-            ZipFileRoot = @"Common\QuickStart",
+            ZipFileRoot = @"Common",
             SourceDatabase = this.SourceDatabase,
             FrameworkVersion = FrameworkVersion.v40,
             Language = Language.CSharp,

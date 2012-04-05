@@ -45,7 +45,7 @@ namespace CodeSmith.SchemaHelper.NHibernate
 
         protected override void LoadSearchCriteria()
         {
-            var searchCriteria = new SearchCriteria(SearchCriteriaType.CustomCommand);
+            var searchCriteria = new SearchCriteria(SearchCriteriaType.Command);
 
             var queryParams = EntitySource.Root.Descendants("query-param", XmlNamespace);
             foreach (var queryParam in queryParams)

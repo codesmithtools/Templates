@@ -1,5 +1,5 @@
-<%-- Author: Tom DuPont --%>
-<%@ CodeTemplate Language="C#" TargetLanguage="C#" Debug="False" CompilerVersion="v3.5"
+﻿<%-- Author: Tom DuPont --%>
+<%@ CodeTemplate Language="C#" TargetLanguage="C#" Debug="False"
     Src="NHibernateHelper.cs" Inherits="NHibernateHelper"
     Description="Generates a Business Entity for PLINQO for NHibernate." %>
 
@@ -13,10 +13,11 @@
     Optional="False" Default="Entity" 
     Description="The base class for PLINQO entities." %>
 
-<%@ Assembly Name="CodeSmith.SchemaHelper" Path="../../Common/SchemaHelper" %>
-<%@ Assembly Name="CodeSmith.SchemaHelper.NHibernate" Path="../../Common/SchemaHelper" %>
+<%@ Assembly Name="CodeSmith.SchemaHelper" Path="../../Common" %>
+<%@ Assembly Name="CodeSmith.SchemaHelper.NHibernate" Path="../../Common" %>
 
 <%@ Import Namespace="System.Collections.Generic" %>
+<%@ Import Namespace="System.Linq" %>
 <%@ Import Namespace="System.Text" %>
 <%@ Import Namespace="CodeSmith.SchemaHelper" %>
 <%@ Import Namespace="CodeSmith.SchemaHelper.NHibernate" %>

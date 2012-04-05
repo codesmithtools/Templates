@@ -1,5 +1,5 @@
-<%-- Author: Tom DuPont --%>
-<%@ CodeTemplate Language="C#" TargetLanguage="C#" Debug="False" CompilerVersion="v3.5"
+﻿<%-- Author: Tom DuPont --%>
+<%@ CodeTemplate Language="C#" TargetLanguage="C#" Debug="False"
     Description="Generates an editable EntityBase class for PLINQO for NHibernate." %>
 
 <%@ Property Category="1. Entities" Name="EntityBaseClass" Type="System.String" 
