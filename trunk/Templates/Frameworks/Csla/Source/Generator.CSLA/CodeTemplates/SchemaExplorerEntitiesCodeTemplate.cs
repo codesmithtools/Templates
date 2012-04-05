@@ -10,12 +10,12 @@ using Configuration = CodeSmith.SchemaHelper.Configuration;
 
 namespace Generator.CSLA.CodeTemplates
 {
-    public class DatabaseEntitiesCodeTemplate : EntitiesCodeTemplate
+    public class SchemaExplorerEntitiesCodeTemplate : SchemaHelperEntitiesCodeTemplate
     {
         private List<IEntity> _entities = new List<IEntity>();
         private DatabaseSchema _database;
 
-        public DatabaseEntitiesCodeTemplate()
+        public SchemaExplorerEntitiesCodeTemplate()
         {
             CleanExpressions = new StringCollection();
             IgnoreExpressions = new StringCollection();
@@ -300,7 +300,7 @@ namespace Generator.CSLA.CodeTemplates
 
         #endregion
 
-        private bool _dontPopulateDefaultValues = true;
+        private bool _restoringPropertyValues = true;
         private void EnsureEntitiesExists(TableSchemaCollection value)
         {
             // If entities exist then return.
@@ -311,10 +311,10 @@ namespace Generator.CSLA.CodeTemplates
             if (value == null || value.Count <= 0)
                 return;
 
-            bool previousValue = _dontPopulateDefaultValues;
-            _dontPopulateDefaultValues = true;
+            bool previousValue = _restoringPropertyValues;
+            _restoringPropertyValues = true;
             SourceDatabase = value[0].Database;
-            _dontPopulateDefaultValues = previousValue;
+            _restoringPropertyValues = previousValue;
         }
 
         public virtual void OnDatabaseChanged()
@@ -327,7 +327,7 @@ namespace Generator.CSLA.CodeTemplates
                 if (State == TemplateState.RestoringProperties)
                     return;
 
-                if (!_dontPopulateDefaultValues && ShouldPopulateDefaultEntities)
+                if (!_restoringPropertyValues && ShouldPopulateDefaultEntities)
                 {
                     PopulateDefaultEntities(_entities);
                 }
