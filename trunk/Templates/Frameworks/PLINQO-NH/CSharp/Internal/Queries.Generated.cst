@@ -1,5 +1,5 @@
-<%-- Author: Blake Niemyjski & Tom DuPont --%>
-<%@ CodeTemplate Language="C#" TargetLanguage="C#" CompilerVersion="v3.5" Encoding="UTF-8"
+﻿<%-- Author: Blake Niemyjski & Tom DuPont --%>
+<%@ CodeTemplate Language="C#" TargetLanguage="C#" Encoding="UTF-8"
     Src="NHibernateHelper.cs" Inherits="NHibernateHelper"
     Description="EF Query Extension Class." %>
 
@@ -25,10 +25,11 @@
     Optional="True" Default="" 
     Description="The namespace for the interfaces.  Leave blank to not generate them." %>
     
-<%@ Assembly Name="CodeSmith.SchemaHelper" Path="../../Common/SchemaHelper" %>
-<%@ Assembly Name="CodeSmith.SchemaHelper.NHibernate" Path="../../Common/SchemaHelper" %>
+<%@ Assembly Name="CodeSmith.SchemaHelper" Path="../../Common" %>
+<%@ Assembly Name="CodeSmith.SchemaHelper.NHibernate" Path="../../Common" %>
 
 <%@ Import Namespace="System.Collections.Generic" %>
+<%@ Import Namespace="System.Linq" %>
 <%@ Import Namespace="System.Text" %>
 <%@ Import Namespace="System.Text.RegularExpressions" %>
 <%@ Import Namespace="CodeSmith.SchemaHelper" %>

@@ -13,7 +13,7 @@ public class NHibernateHelper : CodeTemplate
 {
     #region Master Helpers
     
-	public OutputFile GetOutputFile(string fileName, string dependentUpon, params object[] metaData)
+    public OutputFile GetOutputFile(string fileName, string dependentUpon, params object[] metaData)
     {
         OutputFile outputFile = new OutputFile(fileName);
         

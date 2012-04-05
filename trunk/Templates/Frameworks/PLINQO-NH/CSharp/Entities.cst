@@ -1,44 +1,20 @@
-<%-- Author: Tom DuPont --%>
-<%@ CodeTemplate Language="C#" TargetLanguage="C#" OutputType="None" Debug="False" CompilerVersion="v3.5"
-    Src="Internal\NHibernateHelper.cs" Inherits="NHibernateHelper"
-    Description="Generates business entities for PLINQO for NHibernate." %>
-    
-<%@ Property Category="1. Required" Name="SourceDatabase" Type="SchemaExplorer.DatabaseSchema"
-    Optional="False"
-    Description="The source databse to generate from."
-    OnChanged="OnSourceDatabaseChanged" %>
-<%@ Property Category="1. Required" Name="AssemblyName" Type="System.String"
-    Optional="False" Default=""
-    Description="The name of the Assembly that will contain the business entities." %>
-<%@ Property Category="2. Directories" Name="BaseDirectory" Type="System.String"
-    Optional="True" Default="" 
-    Description="The output directory for base classes." %>
-<%@ Property Category="2. Directories" Name="MapsDirectory" Type="System.String" 
-    Optional="True" Default="Maps" 
-    Description="Folder containing HBM files." %>
-<%@ Property Category="2. Directories" Name="EntitiesDirectory" Type="System.String" 
-    Optional="True" Default="Entities" 
-    Description="The output directory for entity classes." %>
-<%@ Property Category="2. Directories" Name="ModelsDirectory" Type="System.String" 
-    Optional="True" Default="Models" 
-    Description="The output directory for model classes. (Function results and views.)" %>
-<%@ Property Category="3. Naming" Name="BaseNamespace" Type="System.String" 
-    Optional="False" Default="" 
-    Description="The namespace for base classes." %>
-<%@ Property Category="3. Naming" Name="DataContextName" Type="System.String" 
-    Optional="False" Default="" 
-    Description="Name of the generated DataContext." %>
-<%@ Property Category="3. Naming" Name="GenerateDataContext" Type="System.Boolean" 
-    Optional="False" Default="True" 
-    Description="True to generate the DataContext (queries require the DataContext)." %>
-<%@ Property Category="3. Naming" Name="EntityBaseClass" Type="System.String" 
-    Optional="False" Default="EntityBase" 
-    Description="The base class for PLINQO entities." %>
+﻿<%-- Author: Tom DuPont --%>
+<%@ CodeTemplate Language="C#" OutputType="None" Src="Internal\NHibernateHelper.cs" Inherits="NHibernateHelper" Description="Generates business entities for PLINQO for NHibernate." %>
+<%@ Property Category="1. Required" Name="SourceDatabase" Type="SchemaExplorer.DatabaseSchema" Optional="False" Description="The source databse to generate from." OnChanged="OnSourceDatabaseChanged" %>
+<%@ Property Category="1. Required" Name="AssemblyName" Type="System.String" Optional="False" Default="" Description="The name of the Assembly that will contain the business entities." %>
+<%@ Property Category="2. Directories" Name="BaseDirectory" Type="System.String" Optional="True" Default="" Description="The output directory for base classes." %>
+<%@ Property Category="2. Directories" Name="MapsDirectory" Type="System.String" Optional="True" Default="Maps" Description="Folder containing HBM files." %>
+<%@ Property Category="2. Directories" Name="EntitiesDirectory" Type="System.String" Optional="True" Default="Entities" Description="The output directory for entity classes." %>
+<%@ Property Category="2. Directories" Name="ModelsDirectory" Type="System.String" Optional="True" Default="Models" Description="The output directory for model classes. (Function results and views.)" %>
+<%@ Property Category="3. Naming" Name="BaseNamespace" Type="System.String" Optional="False" Default="" Description="The namespace for base classes." %>
+<%@ Property Category="3. Naming" Name="DataContextName" Type="System.String" Optional="False" Default="" Description="Name of the generated DataContext." %>
+<%@ Property Category="3. Naming" Name="GenerateDataContext" Type="System.Boolean" Optional="False" Default="True" Description="True to generate the DataContext (queries require the DataContext)." %>
+<%@ Property Category="3. Naming" Name="EntityBaseClass" Type="System.String" Optional="False" Default="EntityBase" Description="The base class for PLINQO entities." %>
     
 <%@ Assembly Name="System.Xml.Linq" %>
 <%@ Assembly Name="SchemaExplorer" %>
-<%@ Assembly Name="CodeSmith.SchemaHelper" Path="../Common/SchemaHelper" %>
-<%@ Assembly Name="CodeSmith.SchemaHelper.NHibernate" Path="../Common/SchemaHelper" %>
+<%@ Assembly Name="CodeSmith.SchemaHelper" Path="../Common" %>
+<%@ Assembly Name="CodeSmith.SchemaHelper.NHibernate" Path="../Common" %>
 
 <%@ Import Namespace="System.IO" %>
 <%@ Import Namespace="CodeSmith.SchemaHelper" %>

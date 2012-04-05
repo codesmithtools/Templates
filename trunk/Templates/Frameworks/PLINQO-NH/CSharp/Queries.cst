@@ -1,40 +1,18 @@
-<%-- Author: Tom DuPont --%>
-<%@ CodeTemplate Language="C#" TargetLanguage="C#" OutputType="None" Debug="False" CompilerVersion="v3.5"
-    Src="Internal\NHibernateHelper.cs" Inherits="NHibernateHelper"
-    Description="Generates business entities for PLINQO for NHibernate." %>
-    
-<%@ Property Category="1. Required" Name="SourceDatabase" Type="SchemaExplorer.DatabaseSchema"
-    Optional="False"
-    Description="The source databse to generate from."
-    OnChanged="OnSourceDatabaseChanged" %>
-<%@ Property Category="2. Directories" Name="MapsDirectory" Type="System.String" 
-    Optional="True" Default="Maps" 
-    Description="Folder containing HBM files." %>
-<%@ Property Category="2. Directories" Name="QueriesDirectory" Type="System.String" 
-    Optional="True" Default="Queries" 
-    Description="The output directory for query extensions." %>
-<%@ Property Category="3. Naming" Name="DataContextName" Type="System.String"
-    Optional="True" Default=""
-    Description="The class name of the DataContext." %>
-<%@ Property Category="3. Naming" Name="BaseNamespace" Type="System.String"
-    Optional="True" Default="" 
-    Description="The namespace for the Data Context." %>
-<%@ Property Category="3. Naming" Name="QueryNamespace" Type="System.String"
-    Optional="True" Default="" 
-    Description="The namespace for the generated queries. (Leave blank to use BaseNamesapce.)" %>
-<%@ Property Category="4. Queries" Name="MethodPrefix" Type="System.String" 
-    Optional="True" Default="By" 
-    Description="The prefix of query method names." %>
-<%@ Property Category="4. Queries" Name="UniqueMethodPrefix" Type="System.String" 
-    Optional="True" Default="GetBy" 
-    Description="The prefix of query methods with unique results." %>
-<%@ Property Category="4. Queries" Name="MethodKeySuffix" Type="System.String" 
-    Optional="False" Default="Key" 
-    Description="The property name of the primary key query method names." %>
+﻿<%-- Author: Tom DuPont --%>
+<%@ CodeTemplate Language="C#" OutputType="None" Src="Internal\NHibernateHelper.cs" Inherits="NHibernateHelper" Description="Generates business entities for PLINQO for NHibernate." %>
+<%@ Property Category="1. Required" Name="SourceDatabase" Type="SchemaExplorer.DatabaseSchema" Optional="False" Description="The source databse to generate from." OnChanged="OnSourceDatabaseChanged" %>
+<%@ Property Category="2. Directories" Name="MapsDirectory" Type="System.String" Optional="True" Default="Maps" Description="Folder containing HBM files." %>
+<%@ Property Category="2. Directories" Name="QueriesDirectory" Type="System.String" Optional="True" Default="Queries" Description="The output directory for query extensions." %>
+<%@ Property Category="3. Naming" Name="DataContextName" Type="System.String" Optional="True" Default="" Description="The class name of the DataContext." %>
+<%@ Property Category="3. Naming" Name="BaseNamespace" Type="System.String" Optional="True" Default="" Description="The namespace for the Data Context." %>
+<%@ Property Category="3. Naming" Name="QueryNamespace" Type="System.String" Optional="True" Default="" Description="The namespace for the generated queries. (Leave blank to use BaseNamesapce.)" %>
+<%@ Property Category="4. Queries" Name="MethodPrefix" Type="System.String" Optional="True" Default="By" Description="The prefix of query method names." %>
+<%@ Property Category="4. Queries" Name="UniqueMethodPrefix" Type="System.String" Optional="True" Default="GetBy" Description="The prefix of query methods with unique results." %>
+<%@ Property Category="4. Queries" Name="MethodKeySuffix" Type="System.String" Optional="False" Default="Key" Description="The property name of the primary key query method names." %>
     
 <%@ Assembly Name="SchemaExplorer" %>
-<%@ Assembly Name="CodeSmith.SchemaHelper" Path="../Common/SchemaHelper" %>
-<%@ Assembly Name="CodeSmith.SchemaHelper.NHibernate" Path="../Common/SchemaHelper" %>
+<%@ Assembly Name="CodeSmith.SchemaHelper" Path="../Common" %>
+<%@ Assembly Name="CodeSmith.SchemaHelper.NHibernate" Path="../Common" %>
 
 <%@ Import Namespace="System.IO" %>
 <%@ Import Namespace="CodeSmith.SchemaHelper" %>

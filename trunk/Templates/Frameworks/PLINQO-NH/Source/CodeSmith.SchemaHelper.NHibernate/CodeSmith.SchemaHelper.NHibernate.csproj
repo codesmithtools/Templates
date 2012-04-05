@@ -42,8 +42,7 @@
       <HintPath>..\..\Libraries\bin\CodeSmith.Engine.dll</HintPath>
     </Reference>
     <Reference Include="CodeSmith.SchemaHelper">
-      <HintPath>..\..\Common\SchemaHelper\CodeSmith.SchemaHelper.dll</HintPath>
-      <Private>False</Private>
+      <HintPath>..\..\Common\CodeSmith.SchemaHelper.dll</HintPath>
     </Reference>
     <Reference Include="SchemaExplorer">
       <SpecificVersion>False</SpecificVersion>
