@@ -78,8 +78,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CodeTemplates\CSLABaseTemplate.cs" />
-    <Compile Include="CodeTemplates\DatabaseEntitiesCodeTemplate.cs" />
+    <Compile Include="CodeTemplates\SchemaExplorerEntitiesCodeTemplate.cs" />
+    <Compile Include="CodeTemplates\EntitiesBaseCodeTemplate.cs" />
     <Compile Include="CodeTemplates\EntitiesCodeTemplate.cs" />
+    <Compile Include="CodeTemplates\SchemaHelperEntitiesCodeTemplate.cs" />
     <Compile Include="CSLAEntityProvider.cs" />
     <Compile Include="Util\Constants.cs" />
     <Compile Include="CodeTemplates\DataCodeTemplate.cs" />
@@ -88,6 +90,9 @@
     <Compile Include="CodeTemplates\InterfaceCodeTemplate.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="CodeTemplates\QuickStartCodeTemplate.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="CodeTemplates\CodeTemplates.cd" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

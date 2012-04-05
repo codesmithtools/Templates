@@ -89,5 +89,10 @@
             The Generic Entity Object that gets generated.
             </summary>
         </member>
+        <member name="T:Generator.CSLA.CodeTemplates.EntitiesCodeTemplate">
+            <summary>
+            This template will be used in the Entities.cst and other related templates.
+            </summary>
+        </member>
     </members>
 </doc>
