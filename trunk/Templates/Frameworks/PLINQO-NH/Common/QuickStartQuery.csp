@@ -2,7 +2,7 @@
 <codeSmith xmlns="http://www.codesmithtools.com/schema/csp.xsd">
   <variables>
     <add key="ConnectionString" value="$connectionString$" />
-    <add key="Provider" value="$connectionProvider$" />
+    <add key="Provider" value="$databaseProvider$" />
     <add key="AssemblyName" value="$safeprojectname$" />
     <add key="DataContextName" value="$datacontext$" />
     <add key="BaseNamespace" value="$baseNamespace$" />
