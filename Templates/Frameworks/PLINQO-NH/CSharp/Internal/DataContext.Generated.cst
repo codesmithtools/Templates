@@ -137,7 +137,8 @@ namespace <%= BaseNamespace %>
 <% foreach(IEntity entity in SourceManager.Entities) { %>
     <% NHibernateCommandEntity command = entity as NHibernateCommandEntity; %>
     <% if (command == null) { continue; } %>
-    <% SearchCriteria searchCriteria = command.SearchCriteria.First(); %>
+    <% SearchCriteria searchCriteria = command.SearchCriteria.FirstOrDefault(); 
+		if(searchCriteria == null) continue; %>
         public IList<<%= command.GetModelName() %>> <%= command.Name %>(<%= GetParameters(entity, searchCriteria.Properties) %>)
         {
             IQuery query = Advanced.DefaultSession.GetNamedQuery("<%= command.Name %>");
