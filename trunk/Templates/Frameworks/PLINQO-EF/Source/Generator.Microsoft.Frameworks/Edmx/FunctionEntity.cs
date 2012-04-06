@@ -112,7 +112,7 @@ namespace CodeSmith.SchemaHelper
         {
             if (EntitySource != null && EntitySource.Parameters.Count > 0)
             {
-                var searchCriteria = new SearchCriteria(SearchCriteriaType.CustomCommand);
+                var searchCriteria = new SearchCriteria(SearchCriteriaType.Command);
 
                 foreach (FunctionImportParameter parameter in EntitySource.Parameters)
                 {

@@ -8,8 +8,8 @@
   </defaultProperties>
   <propertySets>
     <propertySet name="EDMX" template="$template.path$$language$\edmx.cst">
-      <property name="IncludeViews">False</property>
-      <property name="IncludeFunctions">False</property>
+      <property name="IncludeViews">$includeViews$</property>
+      <property name="IncludeFunctions">$includeFunctions$</property>
       <property name="IgnoreList">
         <stringList>
           <string>^dbo.sysdiagrams$</string>
@@ -18,9 +18,9 @@
         </stringList>
       </property>
       <property name="IncludeList">
-        <stringList>
+        <sringList>
           <string></string>
-        </stringList>
+        </sringList>
       </property>
       <property name="CleanExpression">
         <stringList>
@@ -29,27 +29,21 @@
       </property>
       <property name="SourceDatabase">
         <connectionString>$($databaseName$ConnectionString)</connectionString>
-        <providerType>SchemaExplorer.SqlSchemaProvider,SchemaExplorer.SqlSchemaProvider</providerType>
+        <providerType>$databaseProvider$</providerType>
       </property>
       <property name="EntityNamespace">$entityNamespace$</property>
       <property name="ContextNamespace">$entityNamespace$</property>
       <property name="DataContextName">$datacontext$</property>
     </propertySet>
     <propertySet name="Entities" template="$template.path$$language$\Entities.cst">
-      <property name="OutputDirectory">.\Entities</property>
       <property name="BaseDirectory">.\</property>
+      <property name="OutputDirectory">.\Entities</property>
     </propertySet>
-    <propertySet name="Managers" template="$template.path$$language$\Managers.cst" enabled="false">
-      <property name="ManagerDirectory">.\Managers</property>
-      <property name="MethodPrefix">GetBy</property>
+    <propertySet name="Queries" template="$template.path$$language$\Queries.cst">
+      <property name="QueryDirectory">.\Queries</property>
+      <property name="MethodPrefix">By</property>
+      <property name="UniqueMethodPrefix">GetBy</property>
       <property name="MethodKeySuffix">Key</property>
-      <property name="SourceDatabase">
-        <connectionString>$($databaseName$ConnectionString)</connectionString>
-        <providerType>SchemaExplorer.SqlSchemaProvider,SchemaExplorer.SqlSchemaProvider</providerType>
-      </property>
-      <property name="DataContextFile">.\$datacontext$.$languageExtension$</property>
-      <property name="DataManagerName">$databaseName$DataManager</property>
-      <property name="ManagerNamespace">$entityNamespace$</property>
     </propertySet>
   </propertySets>
 </codeSmith>
