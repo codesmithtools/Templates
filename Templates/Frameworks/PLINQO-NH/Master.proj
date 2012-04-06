@@ -84,7 +84,7 @@
 
   <ItemGroup>
     <CommitFiles Include="Common\CodeSmith.Data\CodeSmith.Data.NHibernate.dll" />
-    <CommitFiles Include="Common\SchemaHelper\CodeSmith.SchemaHelper.NHibernate.dll" />
+    <CommitFiles Include="Common\CodeSmith.SchemaHelper.NHibernate.dll" />
   </ItemGroup>
 
   <Target Name="Zip" DependsOnTargets="Version;Compile">
