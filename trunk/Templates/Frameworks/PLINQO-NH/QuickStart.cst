@@ -48,7 +48,7 @@ The <%= SolutionName %> Solution has been created at <%= Location %>.
         // Create Data Project
         DataProjectCreator dataProjectCreator = new DataProjectCreator(pbs)
         {
-            CspFileName = @"QuickStartQuery.csp",
+            CspFileName = @"Entities.csp",
             TemplateDirectory = this.CopyTemplatesToFolder ? @"..\Templates\" : @"..\..\Templates\"
         };
         
