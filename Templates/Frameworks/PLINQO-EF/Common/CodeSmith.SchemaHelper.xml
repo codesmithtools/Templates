@@ -610,6 +610,11 @@
             Is this IProperty ReadOnly.  Computed by looking at IsIdentity, IsRowVersion, and IsComputed.
             </summary>
         </member>
+        <member name="T:CodeSmith.SchemaHelper.SearchCriteriaType">
+            <summary>
+            Defines the type of Search Critiera.
+            </summary>
+        </member>
         <member name="T:CodeSmith.SchemaHelper.AccessibilityHelper">
             <summary>
             Helps determine the Access Modifier of Interfaces, Enumerations, Classes, Structs, Properties and Members.
@@ -1215,52 +1220,6 @@
             This class aids in the resolving of Types from the CodeSmith Generator into .NET related types as well.
             </summary>
         </member>
-        <member name="M:CodeSmith.SchemaHelper.Util.TypeHelper.ResolveSystemType(SchemaExplorer.IColumnSchema)">
-            <summary>
-            
-            </summary>
-            <param name="column"></param>
-            <returns></returns>
-        </member>
-        <member name="M:CodeSmith.SchemaHelper.Util.TypeHelper.ResolveSystemType(SchemaExplorer.IParameterSchema)">
-            <summary>
-            
-            </summary>
-            <param name="column"></param>
-            <returns></returns>
-        </member>
-        <member name="M:CodeSmith.SchemaHelper.Util.TypeHelper.ResolveSystemType(SchemaExplorer.IViewColumnSchema)">
-            <summary>
-            
-            </summary>
-            <param name="column"></param>
-            <returns></returns>
-        </member>
-        <member name="M:CodeSmith.SchemaHelper.Util.TypeHelper.ResolveSystemType(SchemaExplorer.ICommandResultColumnSchema)">
-            <summary>
-            
-            </summary>
-            <param name="column"></param>
-            <returns></returns>
-        </member>
-        <member name="M:CodeSmith.SchemaHelper.Util.TypeHelper.ResolveSystemType(System.String,System.Boolean,System.Boolean)">
-            <summary>
-            
-            </summary>
-            <param name="systemType"></param>
-            <param name="isNullable"></param>
-            <param name="canAppendNullable"></param>
-            <returns></returns>
-        </member>
-        <member name="M:CodeSmith.SchemaHelper.Util.TypeHelper.ResolveSystemType(System.Type,System.Boolean,System.Boolean)">
-            <summary>
-            
-            </summary>
-            <param name="systemType"></param>
-            <param name="isNullable"></param>
-            <param name="canAppendNullable"></param>
-            <returns></returns>
-        </member>
         <member name="T:CodeSmith.SchemaHelper.IKey">
             <summary>
             Interface that describes the contract for an Entity.
@@ -1684,11 +1643,9 @@
             Returns the Commands Return Value.
             </summary>
         </member>
-        <member name="P:CodeSmith.SchemaHelper.CommandEntity.Owner">
+        <member name="T:CodeSmith.SchemaHelper.AssociationSuffix">
             <summary>
-            Returns the Owner / Schema that the table is a property of.
-            
-            If this is the default schema, it will return an empty string.
+            Controls the naming for Associations.
             </summary>
         </member>
         <member name="M:CodeSmith.SchemaHelper.TableEnumEntity.#ctor(SchemaExplorer.ITableSchema)">
@@ -1725,6 +1682,13 @@
         <member name="M:CodeSmith.SchemaHelper.SchemaExplorerExtensions.IsColumnComputed(SchemaExplorer.IDataObject)">
             <summary>
             Is the column a computed column.
+            </summary>
+            <param name="column"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.SchemaExplorerExtensions.SystemType(SchemaExplorer.IDataObject)">
+            <summary>
+            Tries to detect the correct SystemType
             </summary>
             <param name="column"></param>
             <returns></returns>
@@ -2062,6 +2026,18 @@
             <summary>
             Is this Key an Identity.
             </summary>
+        </member>
+        <member name="T:CodeSmith.SchemaHelper.PropertyExtensions">
+            <summary>
+            Extension methods for IProperty.
+            </summary>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.PropertyExtensions.FriendlyName(CodeSmith.SchemaHelper.IProperty)">
+            <summary>
+            
+            </summary>
+            <param name="property"></param>
+            <returns></returns>
         </member>
         <member name="T:CodeSmith.SchemaHelper.ViewEntity">
             <summary>

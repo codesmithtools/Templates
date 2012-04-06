@@ -1,4 +1,4 @@
-<%--
+﻿<%--
 Name: Quick Start
 Author: Blake Niemyjski
 Description: Used to Quick Start Visual Studio Projects
@@ -28,9 +28,6 @@ Description: Used to Quick Start Visual Studio Projects
 <%@ Property Name="IncludeDataServices" Type="System.Boolean" Default="True" Optional="False" Category="4.Web Project" Description="Include DataServices in Web Project" %>
 <%@ Property Name="InterfaceProjectName" Type="System.String" Default="" Optional="False" Category="4.Web Project" Description="Name Space for the Web Project." %>
 
-<%@ Property Name="TestProjectName" Type="System.String" Default="" Optional="False" Category="5.Test Project" Description="Name Space for the Test Project." %>
-<%@ Property Name="IncludeTestProject" Type="System.Boolean" Default="True" Optional="False" Category="5.Test Project" Description="Name Space for the Test Project." %>
-
 <% CreateQuickStart(); %>
 The <%= SolutionName %> Solution has been created at <%= Location %>.
 
@@ -58,6 +55,7 @@ The <%= SolutionName %> Solution has been created at <%= Location %>.
 
         // Create Data Project
         DataProjectCreator dataProjectCreator = new DataProjectCreator(pbs);
+        dataProjectCreator.CspFileName = "Entities.csp";
         dataProjectCreator.CreateProject(this.DataProjectName);
         solutionItems.Add(dataProjectCreator.SolutionItem);
 
@@ -66,14 +64,6 @@ The <%= SolutionName %> Solution has been created at <%= Location %>.
             WebSiteCreator websiteCreator = new WebSiteCreator(pbs, true);
             websiteCreator.CreateProject(this.InterfaceProjectName, DataContextName, BuildEFConnectionString(), "System.Data.EntityClient", dataProjectCreator.SolutionItem);
             solutionItems.Add(websiteCreator.SolutionItem);
-        }
-
-        // Create UnitTests Project
-        if(IncludeTestProject)
-        {
-            TestProjectCreator testProjectCreator = new TestProjectCreator (pbs);
-            testProjectCreator.CreateProject(this.TestProjectName, dataProjectCreator.SolutionItem);
-            solutionItems.Add(testProjectCreator.SolutionItem);
         }
 
         // Create Solution
@@ -90,7 +80,6 @@ The <%= SolutionName %> Solution has been created at <%= Location %>.
         {
             return (Directory.Exists(Path.Combine(Location, this.DataProjectName))
             || Directory.Exists(Path.Combine(Location, this.InterfaceProjectName))
-            || Directory.Exists(Path.Combine(Location, this.TestProjectName))
             || File.Exists(Path.Combine(Location, String.Concat(this.SolutionName, ".sln"))));
         }
     }
@@ -108,11 +97,12 @@ The <%= SolutionName %> Solution has been created at <%= Location %>.
 
     private ProjectBuilderSettings CreateProjectBuilderSettings()
     {
-        return new ProjectBuilderSettings()
+        ProjectBuilderSettings settings = new ProjectBuilderSettings()
         {
             SourceDatabase = this.SourceDatabase,
-            FrameworkVersion = Generator.QuickStart.FrameworkVersion.v40,
-            Language = LanguageEnum.CSharp,
+            FrameworkVersion = FrameworkVersion.v40,
+            ZipFileRoot = @"Common",
+            Language = Language.CSharp,
             Location = this.Location,
             SolutionName = this.SolutionName,
             DataContextName = this.DataContextName,
@@ -121,19 +111,22 @@ The <%= SolutionName %> Solution has been created at <%= Location %>.
             CopyTemplatesToFolder = this.CopyTemplatesToFolder,
             IncludeDataServices = this.IncludeDataServices,
             InterfaceProjectName = this.InterfaceProjectName,
-            IncludeTestProject = this.IncludeTestProject,
+            IncludeTestProject = false,
             ProjectType = ProjectTypeEnum.DynamicDataWebSite,
-            TestProjectName = this.TestProjectName,
+            TestProjectName = String.Empty,
             WorkingDirectory = this.CopyTemplatesToFolder
                 ? Path.Combine(Location, @"Templates\")
                 : this.CodeTemplateInfo.DirectoryName
         };
+        
+        settings.SetConnetionProvider(this.SourceDatabase.Provider);
+        return settings;
     }
     private string CreateSolution(List<SolutionItem> solutionItems)
     {
         QuickStartSolution quickStartSolution = this.Create<QuickStartSolution>();
         quickStartSolution.SolutionItems = solutionItems;
-        quickStartSolution.Framework = Generator.QuickStart.FrameworkVersion.v40;
+        quickStartSolution.Framework = FrameworkVersion.v40;
         quickStartSolution.Location = this.Location;
 
         string filePathAboslute = Path.Combine(Location, String.Concat(SolutionName, ".sln"));
@@ -165,9 +158,6 @@ The <%= SolutionName %> Solution has been created at <%= Location %>.
 
         if (string.IsNullOrEmpty(InterfaceProjectName))
             InterfaceProjectName = name + ".Web";
-
-        if (string.IsNullOrEmpty(TestProjectName))
-            TestProjectName = name + ".Test";
 
         if (string.IsNullOrEmpty(Location))
             Location = Path.Combine(CodeSmith.Engine.Configuration.Instance.CodeSmithTemplatesDirectory, Path.Combine("PLINQO EF", name));

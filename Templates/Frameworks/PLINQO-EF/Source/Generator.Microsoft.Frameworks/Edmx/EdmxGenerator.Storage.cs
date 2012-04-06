@@ -100,8 +100,8 @@ namespace Generator.Microsoft.Frameworks
             #region Validate the Function exists
 
             var function = StorageSchema.Functions.Where(f =>
-                (entity.EntityKeyName.Equals(f.Name, StringComparison.InvariantCultureIgnoreCase) && entity.Owner.Equals(f.Schema, StringComparison.InvariantCultureIgnoreCase)) ||
-                (entity.EntityKeyName.Equals(f.Name1, StringComparison.InvariantCultureIgnoreCase) && entity.Owner.Equals(f.Schema1, StringComparison.InvariantCultureIgnoreCase)) ||
+                (entity.EntityKeyName.Equals(f.Name, StringComparison.InvariantCultureIgnoreCase) && entity.SchemaName.Equals(f.Schema, StringComparison.InvariantCultureIgnoreCase)) ||
+                (entity.EntityKeyName.Equals(f.Name1, StringComparison.InvariantCultureIgnoreCase) && entity.SchemaName.Equals(f.Schema1, StringComparison.InvariantCultureIgnoreCase)) ||
                  entity.EntityKeyName.Equals(f.Name1, StringComparison.InvariantCultureIgnoreCase) || entity.EntityKeyName.Equals(f.Name, StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault();
             
             if (function == null)
@@ -122,8 +122,8 @@ namespace Generator.Microsoft.Frameworks
             function.NiladicFunction = false; //TODO:  A niladic function is a function that accepts no parameters and, when called, does not require parentheses.
             function.IsComposable = entity.IsFunction; 
             function.ParameterTypeSemantics = "AllowImplicitConversion"; //TODO: Determine if this stored procedure is an AllowImplicitConversion.
-            function.Schema = entity.Owner;
-            function.Schema1 = entity.Owner;
+            function.Schema = entity.SchemaName;
+            function.Schema1 = entity.SchemaName;
 
             // Return type cannot be set if the function is composible.
             if (entity.IsFunction)
