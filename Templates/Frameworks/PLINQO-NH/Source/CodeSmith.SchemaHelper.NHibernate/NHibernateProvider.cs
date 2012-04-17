@@ -89,6 +89,12 @@ namespace CodeSmith.SchemaHelper.NHibernate
                             Debug.WriteLine("Unable to load file " + file);
                             Debug.WriteLine(ex.ToString());
                         }
+
+            foreach (var entity in EntityStore.Instance.EntityCollection.Values)
+                entity.Initialize();
+
+            foreach (var entity in EntityStore.Instance.EntityCollection.Values)
+                entity.ValidateAllMembers();
         }
 
         public string Name
