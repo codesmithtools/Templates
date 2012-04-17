@@ -96,7 +96,7 @@ namespace CodeSmith.SchemaHelper
         /// </summary>
         protected override void LoadAssociations()
         {
-            if (_associations == null || _associations.Count() == 0 || _associationSets == null || _associationSets.Count() == 0) return;
+            if (_associations == null || !_associations.Any() || _associationSets == null || !_associationSets.Any()) return;
             
             //<AssociationSet Name="FK__Item__Supplier__1273C1CD" Association="PetShop.Data.FK__Item__Supplier__1273C1CD">
             //
