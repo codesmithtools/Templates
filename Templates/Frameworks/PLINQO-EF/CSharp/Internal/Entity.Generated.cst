@@ -42,7 +42,7 @@ namespace <%= EntityNamespace %>
 <% if(!IsComplexEntity()) { foreach (var entity in Entity.DerivedEntities) { %>
     [KnownTypeAttribute(typeof(<%= entity.Name %>))]
 <% } } %>
-   <%= Entity.TypeAccess %> <%= Entity.IsAbstract ? "abstract" : string.Empty %>partial class <%= Entity.Name %> : <%= ResolveBaseType() %>
+    <%= Entity.TypeAccess %> <% if(Entity.IsAbstract){ %>abstract <% } %>partial class <%= Entity.Name %> : <%= ResolveBaseType() %>
     {
 <% if(!Entity.IsAbstract && FactoryProperties().Count > 0) { %>
         #region Factory Methods
