@@ -84,6 +84,12 @@ namespace Generator.Microsoft.Frameworks
             CreateEntityTypes(edmx, conceptualNamespace);
             CreateEntityFunctions(edmx, conceptualNamespace);
             CreateComplexTypes(edmx, conceptualNamespace);
+
+            foreach (var entity in EntityStore.Instance.EntityCollection.Values)
+                entity.Initialize();
+
+            foreach (var entity in EntityStore.Instance.EntityCollection.Values)
+                entity.ValidateAllMembers();
         }
 
         public void Save()
