@@ -84,7 +84,7 @@ namespace <%= BusinessProjectName %>
 
         internal static <%= BusinessClassName %> Get<%= BusinessClassName %>(DAL.<%= Entity.Name %> dto)
         {
-            return DataPortal.FetchChild<<%= BusinessClassName %>(dto);
+            return DataPortal.FetchChild<<%= BusinessClassName %>>(dto);
         }
 <% } %>
 <% foreach(SearchCriteria sc in Entity.SearchCriteria) { %>
