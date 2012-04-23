@@ -133,12 +133,12 @@ namespace CodeSmith.SchemaHelper
                 // This sucks but is there a better way to try and detect user defined association's principal role?
                 var principalRoleName = rel.Association.ReferentialConstraint != null
                                             ? rel.Association.ReferentialConstraint.Principal.Role
-                                            : rel.Association.Name.StartsWith(rel.NavigationProperty.FromRole, StringComparison.InvariantCultureIgnoreCase)
-                                                  ? rel.NavigationProperty.FromRole
-                                                  : rel.NavigationProperty.ToRole;
+                                            : rel.Association.Name.EndsWith(rel.NavigationProperty.FromRole, StringComparison.InvariantCultureIgnoreCase)
+                                                  ? rel.NavigationProperty.ToRole
+                                                  : rel.NavigationProperty.FromRole;
 
-                var principalRole = rel.Association.Ends.Where(e => e.Role.Equals(principalRoleName, StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault();
-                var dependentRole = rel.Association.Ends.Where(e => e != principalRole).FirstOrDefault();
+                var principalRole = rel.Association.Ends.FirstOrDefault(e => e.Role.Equals(principalRoleName, StringComparison.InvariantCultureIgnoreCase));
+                var dependentRole = rel.Association.Ends.FirstOrDefault(e => e != principalRole);
                 if(principalRole == null || dependentRole == null) 
                     continue;
 
@@ -149,7 +149,7 @@ namespace CodeSmith.SchemaHelper
 
                 Association association;
                 AssociationType type;
-                if (principalEntity.Name.Equals(Name, StringComparison.InvariantCultureIgnoreCase)) // Current Entity is the principal entity (e --fk--> this ( Parent ).
+                if (String.Equals(rel.NavigationProperty.FromRole, principalRole.Role))
                 {
                     if (principalRole.Multiplicity == MultiplicityConstants.ZeroToOne)
                         type = dependentRole.Multiplicity == MultiplicityConstants.ZeroToOne || dependentRole.Multiplicity == MultiplicityConstants.One ? AssociationType.OneToZeroOrOne : AssociationType.ZeroOrOneToMany;
@@ -172,7 +172,7 @@ namespace CodeSmith.SchemaHelper
                         for (int index = 0; index < properties.Count; index++)
                         {
                             if (!PropertyMap.ContainsKey(properties[index].Name)) continue;
-                            association.AddAssociationProperty(PropertyMap[properties[index].Name], dependentEntity.Properties.Where(p => p.KeyName.Equals(otherProperties[index].Name)).FirstOrDefault());
+                            association.AddAssociationProperty(PropertyMap[properties[index].Name], dependentEntity.Properties.FirstOrDefault(p => p.KeyName.Equals(otherProperties[index].Name)));
                         }
                     }
                 }
@@ -188,7 +188,7 @@ namespace CodeSmith.SchemaHelper
                         throw new ArgumentException(String.Format("Invalid Multiplicity detected in the {0} Association.", rel.Association.Name));
 
                     // Note: There is no second association for ManyToMany associations...
-                    association = new Association(rel.Association.Name, type, dependentEntity, principalEntity, rel.Association.ReferentialConstraint != null ? false : true, Namespace) { Name = rel.NavigationProperty.Name };
+                    association = new Association(rel.Association.Name, type, dependentEntity, principalEntity, false, Namespace) { Name = rel.NavigationProperty.Name };
                     
                     if (rel.Association.ReferentialConstraint != null)
                     {
@@ -199,13 +199,13 @@ namespace CodeSmith.SchemaHelper
                         for (int index = 0; index < properties.Count; index++)
                         {
                             if (!PropertyMap.ContainsKey(properties[index].Name)) continue;
-                            association.AddAssociationProperty(PropertyMap[properties[index].Name], principalEntity.Properties.Where(p => p.KeyName.Equals(otherProperties[index].Name)).FirstOrDefault());
+                            association.AddAssociationProperty(PropertyMap[properties[index].Name], principalEntity.Properties.FirstOrDefault(p => p.KeyName.Equals(otherProperties[index].Name)));
                         }
                     }
                 }
 
-                if ((rel.Association.ReferentialConstraint == null || association.Properties.Count > 0) && !string.IsNullOrEmpty(association.AssociationKeyName) && !AssociationMap.ContainsKey(association.AssociationKeyName))
-                    AssociationMap.Add(association.AssociationKeyName, association);
+                if ((rel.Association.ReferentialConstraint == null || association.Properties.Count > 0) && !String.IsNullOrEmpty(association.AssociationKeyName) && !AssociationMap.ContainsKey(association.AssociationKey))
+                    AssociationMap.Add(association.AssociationKey, association);
             }
         }
 
