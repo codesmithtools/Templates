@@ -19,6 +19,7 @@ namespace Generator.CSLA.CodeTemplates
         {
             CleanExpressions = new StringCollection();
             IgnoreExpressions = new StringCollection();
+            IncludeExpressions = new StringCollection();
         }
 
         [Category("1. DataSource")]
@@ -62,6 +63,11 @@ namespace Generator.CSLA.CodeTemplates
         [Optional]
         [DefaultValue("sysdiagrams$")]
         public StringCollection IgnoreExpressions { get; set; }
+
+        [Category("1. DataSource")]
+        [Description("List of regular expressions to include tables and views when generating mapping.")]
+        [Optional]
+        public StringCollection IncludeExpressions { get; set; }
 
         [Optional]
         [Category("1. DataSource")]
@@ -410,6 +416,18 @@ namespace Generator.CSLA.CodeTemplates
                     Configuration.Instance.IgnoreExpressions.Add(new Regex(ignore, RegexOptions.IgnoreCase));
                 }
             }
+
+            Configuration.Instance.IncludeExpressions.Clear();
+            foreach (string include in IncludeExpressions)
+            {
+                if (!string.IsNullOrEmpty(include))
+                {
+                    Configuration.Instance.IncludeExpressions.Add(new Regex(include, RegexOptions.IgnoreCase));
+                }
+            }
+
+            if (Configuration.Instance.IncludeExpressions.Count == 0)
+                Configuration.Instance.IncludeExpressions.Add(new Regex(".*"));
 
             var provider = new SchemaExplorerEntityProvider(SourceDatabase);
             _entities = new EntityManager(provider).Entities;
