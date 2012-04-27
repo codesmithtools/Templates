@@ -36,6 +36,11 @@ namespace CodeSmith.SchemaHelper
             TypeAccess = !string.IsNullOrEmpty(EntitySource.TypeAccess) ? EntitySource.TypeAccess : AccessibilityConstants.Public;
 
             LoadProperties();
+
+            //Cannot update or insert tables with no Primary Key
+            CanUpdate = HasKey; //TODO: Or has a unique column. || (!excludenonprimarykey from config && isunqiue)
+            CanDelete = HasKey; //TODO: Or has a unique column.
+            CanInsert = true;
         }
 
         #endregion

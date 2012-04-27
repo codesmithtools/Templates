@@ -48,6 +48,11 @@ namespace CodeSmith.SchemaHelper
 
             LoadKeys();
             LoadProperties();
+
+            //Cannot update or insert tables with no Primary Key
+            CanUpdate = HasKey; //TODO: Or has a unique column. || (!excludenonprimarykey from config && isunqiue)
+            CanDelete = HasKey; //TODO: Or has a unique column.
+            CanInsert = true;
         }
 
         public ConceptualEntity(EntityType entity, IEnumerable<LinqToEdmx.Model.Conceptual.Association> associations, IEnumerable<EntityContainer.AssociationSetLocalType> associationSets, string @namespace) : this(entity, @namespace)
