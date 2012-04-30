@@ -32,6 +32,10 @@ Entities
 ----------------
 
 <%= e.Name %>
+	CanDelete: <%= e.CanDelete %>
+	CanInsert: <%= e.CanInsert %>
+	CanUpdate: <%= e.CanUpdate %>
+
     Search Criteria
 <%    foreach(SearchCriteria sc in e.SearchCriteria) { %>
         <%= sc.MethodName %>
