@@ -17,7 +17,7 @@ namespace Tracker.Tests
         {
             var db = new TrackerContext();
             string emailDomain = "@test.com";
-            int count = db.User.Delete(u => u.EmailAddress.EndsWith(emailDomain));
+            int count = db.User.Delete(u => u.Email.EndsWith(emailDomain));
         }
 
         [TestMethod]
@@ -26,7 +26,7 @@ namespace Tracker.Tests
             var db = new TrackerContext();
             string emailDomain = "@test.com";
             int count = db.User.Update(
-                u => u.EmailAddress.EndsWith(emailDomain),
+                u => u.Email.EndsWith(emailDomain),
                 u => new User { IsApproved = false, LastActivityDate = DateTime.Now });
         }
 
