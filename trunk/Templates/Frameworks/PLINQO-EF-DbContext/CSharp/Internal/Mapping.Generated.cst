@@ -34,7 +34,11 @@ namespace <%= MappingNamespace %>
         public <%= Entity.MappingName.ToSafeName() %>()
         {
             // table
+<% if (string.IsNullOrEmpty(Entity.TableSchema)) { %>            
+            ToTable("<%= Entity.TableName %>");
+<% } else {  %>
             ToTable("<%= Entity.TableName %>", "<%= Entity.TableSchema %>");
+<% }  %>
 
             // keys
 <% if (Entity.Properties.PrimaryKeys.Count() > 0) { %>

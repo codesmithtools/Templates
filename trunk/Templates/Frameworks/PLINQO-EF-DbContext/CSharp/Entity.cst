@@ -1,4 +1,4 @@
-<%@ Template Language="C#" TargetLanguage="Text" Debug="True" OutputType="None"  %>
+﻿<%@ Template Language="C#" TargetLanguage="Text" Debug="True" OutputType="None"  %>
 
 <%@ Assembly Name="SchemaExplorer" %>
 <%@ Assembly Name="CodeSmith.CustomProperties" %>
@@ -23,8 +23,6 @@
 <%@ Property Name="SourceDatabase"
              Type="SchemaExplorer.DatabaseSchema"
              Category="1.Database"
-             DeepLoad="true"
-             IncludeFunctions="true"
              OnChanged="OnSourceDatabaseChanged"
              Description="The source database." %>
 
@@ -41,6 +39,11 @@
              Type="System.String"
              Category="2.Class"
              Description="The namespace to use for the mapping class files."%>
+<%@ Property Name="QueryNamespace"
+             Type="System.String"
+             Category="2.Class" 
+             Optional="True"
+             Description="The namespace to use for the query extension files. If null, then queries will not be created."%>
 
 <%@ Property Name="ContextDirectory"
              Category="3.Output"
@@ -60,6 +63,13 @@
              Category="3.Output"
              Type="System.String"
              Default=".\Mapping"
+             Optional="True"
+             Description="The folder to save the generated mapping files."
+             Editor="System.Windows.Forms.Design.FolderNameEditor, System.Design, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" %>
+<%@ Property Name="QueryDirectory"
+             Category="3.Output"
+             Type="System.String"
+             Default=".\Queries"
              Optional="True"
              Description="The folder to save the generated mapping files."
              Editor="System.Windows.Forms.Design.FolderNameEditor, System.Design, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" %>
@@ -92,6 +102,14 @@
              Optional="True"
              Description="List of regular expressions to ignore tables, views and commands when generating mapping." %>
 
+<%@ Property Name="InclusionMode"
+             Type="Boolean"
+             Category="5.Customization"
+             Default="False"
+             Optional="True"
+             Description="Change the IgnoreList to be a list of table to include instead of ignore." %>
+
+
 <%@ Property Name="CleanExpressions"
              Type="CodeSmith.CustomProperties.StringCollection"
              Category="5.Customization"
@@ -116,6 +134,12 @@
              MergeProperties="False" %>
 <%@ Register Name="MappingEditableClass"
              Template="Internal\Mapping.Editable.cst"
+             MergeProperties="False" %>
+<%@ Register Name="QueryGeneratedClass"
+             Template="Internal\Query.Generated.cst"
+             MergeProperties="False" %>
+<%@ Register Name="QueryEditableClass"
+             Template="Internal\Query.Editable.cst"
              MergeProperties="False" %>
 
 Generating Entities ...
@@ -161,6 +185,9 @@ Generating Entities ...
         CreateContextClass(context);
         CreateMappingClasses(context);
         CreateEntityClasses(context);
+        
+        if (!string.IsNullOrEmpty(QueryNamespace))
+            CreateQueryClasses(context);
 
         this.RegisterReference("System.Configuration");
         this.RegisterReference("System.Data");
@@ -311,6 +338,59 @@ Generating Entities ...
     }
 
 
+    public void CreateQueryClasses(EntityContext entityContext)
+    {
+        QueryGeneratedClass generatedClass = this.Create<QueryGeneratedClass>();
+        this.CopyPropertiesTo(generatedClass);
+
+        QueryEditableClass editableClass = this.Create<QueryEditableClass>();
+        this.CopyPropertiesTo(editableClass);
+
+        foreach(Entity entity in entityContext.Entities)
+        {
+            Stopwatch watch = Stopwatch.StartNew();
+
+             Debug.WriteLine(string.Format(
+                "Creating Query Class '{0}'Extensions ...",
+                entity.ClassName));
+
+            string rootDirectory = Path.GetFullPath(QueryDirectory);
+            CreateQuery(generatedClass, editableClass, entity, rootDirectory);
+
+            Debug.WriteLine(string.Format(
+                "Created '{0}Extensions' in {1} ms.",
+                entity.ClassName,
+                watch.Elapsed.TotalMilliseconds.ToString()));
+
+            this.Progress.PerformStep();
+        }
+    }
+
+    public void CreateQuery(QueryGeneratedClass generatedClass, QueryEditableClass editableClass, Entity entity, string rootDirectory)
+    {
+        string className = entity.ClassName;
+
+        string editableFile = className + "Extensions.cs";
+        editableFile = Path.Combine(rootDirectory, editableFile);
+
+        if (!File.Exists(editableFile))
+        {
+          editableClass.Entity = entity;
+
+          Response.WriteLine(editableFile);
+          editableClass.RenderToFile(editableFile, true);
+        }
+
+        string generatedFile = className + "Extensions.Generated.cs";
+        generatedFile = Path.Combine(rootDirectory, generatedFile);
+
+        generatedClass.Entity = entity;
+
+        Response.WriteLine(generatedFile);
+        generatedClass.RenderToFile(generatedFile, editableFile, true);
+    }
+
+
     private void OnSchemaItemProcessed(object sender, SchemaItemProcessedEventArgs e)
     {
         this.Progress.PerformStep();
@@ -339,6 +419,9 @@ Generating Entities ...
 
         if (string.IsNullOrEmpty(MappingNamespace))
             MappingNamespace = ContextNamespace + ".Mapping";
+        
+        if (string.IsNullOrEmpty(QueryNamespace))
+            QueryNamespace = ContextNamespace + ".Queries";
     }
 
 </script>
