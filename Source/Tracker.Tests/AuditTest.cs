@@ -95,7 +95,7 @@ namespace Tracker.Tests
       var audit = db.BeginAudit();
 
       var user = new User();
-      user.EmailAddress = string.Format("email.{0}@test.com", DateTime.Now.Ticks);
+      user.Email = string.Format("email.{0}@test.com", DateTime.Now.Ticks);
       user.CreatedDate = DateTime.Now;
       user.ModifiedDate = DateTime.Now;
       user.PasswordHash = DateTime.Now.Ticks.ToString();
@@ -132,7 +132,7 @@ namespace Tracker.Tests
       var audit = db.BeginAudit();
 
       var user = new User();
-      user.EmailAddress = string.Format("email.{0}@test.com", DateTime.Now.Ticks);
+      user.Email = string.Format("email.{0}@test.com", DateTime.Now.Ticks);
       user.CreatedDate = DateTime.Now;
       user.ModifiedDate = DateTime.Now;
       user.PasswordHash = DateTime.Now.Ticks.ToString();

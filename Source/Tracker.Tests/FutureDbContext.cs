@@ -41,7 +41,7 @@ namespace Tracker.Tests
 
             string emailDomain = "@battlestar.com";
             var q1 = db.User
-                .Where(p => p.EmailAddress.EndsWith(emailDomain))
+                .Where(p => p.Email.EndsWith(emailDomain))
                 .Future();
 
             string search = "Earth";
@@ -76,7 +76,7 @@ namespace Tracker.Tests
 
             string emailDomain = "@battlestar.com";
             var q1 = db.User
-                .Where(p => p.EmailAddress.EndsWith(emailDomain))
+                .Where(p => p.Email.EndsWith(emailDomain))
                 .Future();
 
             string search = "Earth";
@@ -110,7 +110,7 @@ namespace Tracker.Tests
 
             string emailDomain = "@battlestar.com";
             var q1 = db.User
-                .Where(p => p.EmailAddress.EndsWith(emailDomain))
+                .Where(p => p.Email.EndsWith(emailDomain))
                 .Future();
 
             string search = "Earth";
@@ -144,7 +144,7 @@ namespace Tracker.Tests
             // build up queries
             string emailDomain = "@battlestar.com";
             var q1 = db.User
-                .Where(p => p.EmailAddress.EndsWith(emailDomain))
+                .Where(p => p.Email.EndsWith(emailDomain))
                 .FutureFirstOrDefault();
 
             string search = "Earth";
@@ -185,7 +185,7 @@ namespace Tracker.Tests
 
             string emailDomain = "@battlestar.com";
             var q1 = db.User
-                .Where(p => p.EmailAddress.EndsWith(emailDomain))
+                .Where(p => p.Email.EndsWith(emailDomain))
                 .FutureFirstOrDefault();
 
             string search = "Earth";

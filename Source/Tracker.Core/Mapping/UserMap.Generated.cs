@@ -28,7 +28,7 @@ namespace Tracker.Core.Mapping
                 .HasColumnName("Id")
                 .HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity)
                 .IsRequired();
-            Property(t => t.EmailAddress)
+            Property(t => t.Email)
                 .HasColumnName("EmailAddress")
                 .HasMaxLength(250)
                 .IsRequired();
