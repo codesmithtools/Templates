@@ -35,6 +35,35 @@ namespace <%= ContextNamespace %>
         {
             System.Data.Entity.Database.SetInitializer<<%= EntityContext.ClassName.ToSafeName() %>>(null);
         }
+        
+        public ExternalIntegrationContext()
+            :base ()
+        { }
+
+        public ExternalIntegrationContext(System.Data.Entity.Infrastructure.DbCompiledModel model)
+            : base(model)
+        { }
+
+        public ExternalIntegrationContext(string nameOrConnectionString)
+            : base(nameOrConnectionString)
+        { }
+
+        public ExternalIntegrationContext(string nameOrConnectionString, System.Data.Entity.Infrastructure.DbCompiledModel model)
+            : base(nameOrConnectionString, model)
+        { }
+
+        public ExternalIntegrationContext(System.Data.Common.DbConnection existingConnection, bool contextOwnsConnection)
+            : base(existingConnection, contextOwnsConnection)
+        { }
+
+        public ExternalIntegrationContext(System.Data.Common.DbConnection existingConnection, System.Data.Entity.Infrastructure.DbCompiledModel model, bool contextOwnsConnection)
+            : base(existingConnection, model, contextOwnsConnection)
+        { }
+
+        public ExternalIntegrationContext(System.Data.Objects.ObjectContext objectContext, bool dbContextOwnsObjectContext)
+            : base(objectContext, dbContextOwnsObjectContext)
+        { }
+
 
 <% foreach(var p in EntityContext.Entities) { %>
         public System.Data.Entity.DbSet<<%= EntityNamespace %>.<%= p.ClassName.ToSafeName() %>> <%= p.ContextName.ToSafeName() %> { get; set; }
