@@ -758,7 +758,7 @@
         </member>
         <member name="M:CodeSmith.SchemaHelper.AccessibilityHelper.GetAccessibilityModifier(System.String,System.String,System.Boolean)">
             <summary>
-            Parses the default Access Modifier from the passed in string.
+            Parses the default Access Modifier from the passed in String.
             </summary>
             <param name="modifier"></param>
             <param name="defaultAccessModifier"></param>
@@ -767,7 +767,7 @@
         </member>
         <member name="M:CodeSmith.SchemaHelper.AccessibilityHelper.GetAccessibilityModifier(System.String,System.Boolean@,System.String,System.Boolean)">
             <summary>
-            Parses the default Access Modifier from the passed in string.
+            Parses the default Access Modifier from the passed in String.
             </summary>
             <param name="modifier"></param>
             <param name="hasNewAccessModifier"></param>
