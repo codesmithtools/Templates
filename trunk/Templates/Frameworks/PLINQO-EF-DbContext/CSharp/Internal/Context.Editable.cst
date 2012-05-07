@@ -1,4 +1,4 @@
-<%@ Template Language="C#" TargetLanguage="C#" Debug="True" Encoding="UTF-8" %>
+﻿<%@ Template Language="C#" TargetLanguage="C#" Debug="True" Encoding="UTF-8" %>
 
 <%@ Assembly Src="Model.cs" %>
 <%@ Assembly Src="Extensions.cs" %>
@@ -15,6 +15,7 @@
 <%@ Property Name="ContextNamespace" Type="System.String"  %>
 <%@ Property Name="EntityNamespace" Type="System.String"  %>
 <%@ Property Name="MappingNamespace" Type="System.String"  %>
+<%@ Property Name="InterfaceMode" Type="Boolean" Default="False" Optional="True" %>
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -28,6 +29,13 @@ using <%= MappingNamespace %>;
 
 namespace <%= ContextNamespace %>
 {
+<% if (InterfaceMode) { %>
+    public partial interface I<%= EntityContext.ClassName.ToSafeName() %>
+    {
+
+    }
+    
+<% } // if interface %>    
     public partial class <%= EntityContext.ClassName.ToSafeName() %>
     {
         protected void InitializeMapping(DbModelBuilder modelBuilder)
