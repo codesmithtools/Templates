@@ -388,6 +388,13 @@
             Load the extended properties from the ExtendedPropertyCollection.
             </summary>
         </member>
+        <member name="M:CodeSmith.SchemaHelper.PropertyBase`1.IsType(CodeSmith.SchemaHelper.PropertyType)">
+            <summary>
+            Returns true if the passed in property has a specific flag set.
+            </summary>
+            <param name="type"></param>
+            <returns></returns>
+        </member>
         <member name="P:CodeSmith.SchemaHelper.PropertyBase`1.PropertySource">
             <summary>
             This is the source where the property is populated from (E.G. EDMX Node, ColumnSchema, CommandSchemaMember..);
@@ -786,6 +793,13 @@
             </summary>
             <param name="type"></param>
         </member>
+        <member name="M:CodeSmith.SchemaHelper.SearchCriteria.IsType(CodeSmith.SchemaHelper.SearchCriteriaType)">
+            <summary>
+            Returns true if the passed in property has a specific flag set.
+            </summary>
+            <param name="type"></param>
+            <returns></returns>
+        </member>
         <member name="P:CodeSmith.SchemaHelper.SearchCriteria.Association">
             <summary>
             The Association that the SearchCriteria is created for
@@ -814,11 +828,6 @@
         <member name="P:CodeSmith.SchemaHelper.SearchCriteria.AssociatedMethodName">
             <summary>
             The associated method name for any ForeignKey Search Criteria
-            </summary>
-        </member>
-        <member name="P:CodeSmith.SchemaHelper.SearchCriteria.SearchCriteriaDescription">
-            <summary>
-            Return the string description of this Search Criteria
             </summary>
         </member>
         <member name="P:CodeSmith.SchemaHelper.SearchCriteria.SearchCriteriaType">
@@ -1538,7 +1547,7 @@
             <summary>
             Add a SearchCriteria to the mapping collection
             </summary>
-            <param name="searchCriteria"></param>
+            <param name="criteria"></param>
             <returns></returns>
         </member>
         <member name="P:CodeSmith.SchemaHelper.TableEntity.Commands">
