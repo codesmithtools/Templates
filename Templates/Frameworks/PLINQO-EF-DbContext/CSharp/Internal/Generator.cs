@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -240,7 +241,7 @@ namespace SchemaMapper
         }
 
 
-        private Entity GetEntity(EntityContext entityContext, TableSchema tableSchema, bool processRelationships = true)
+        private Entity GetEntity(EntityContext entityContext, TableSchema tableSchema, bool processRelationships = true, bool processMethods = true)
         {
             string key = tableSchema.FullName;
 
@@ -252,6 +253,9 @@ namespace SchemaMapper
 
             if (processRelationships && !entity.Relationships.IsProcessed)
                 CreateRelationships(entityContext, entity, tableSchema);
+
+            if (processMethods && !entity.Methods.IsProcessed)
+                CreateMethods(entity, tableSchema);
 
             entity.IsProcessed = true;
             return entity;
@@ -364,7 +368,7 @@ namespace SchemaMapper
 
         private void CreateRelationship(EntityContext entityContext, Entity foreignEntity, TableKeySchema tableKeySchema)
         {
-            Entity primaryEntity = GetEntity(entityContext, tableKeySchema.PrimaryKeyTable, false);
+            Entity primaryEntity = GetEntity(entityContext, tableKeySchema.PrimaryKeyTable, false, false);
 
             string primaryName = primaryEntity.ClassName;
             string foreignName = foreignEntity.ClassName;
@@ -455,12 +459,12 @@ namespace SchemaMapper
             var leftForeignKey = joinTable.ForeignKeys[0];
             var leftTable = leftForeignKey.PrimaryKeyTable;
             var joinLeftColumn = leftForeignKey.ForeignKeyMemberColumns.Select(c => c.Name).ToList();
-            var leftEntity = GetEntity(entityContext, leftTable, false);
+            var leftEntity = GetEntity(entityContext, leftTable, false, false);
 
             var rightForeignKey = joinTable.ForeignKeys[1];
             var rightTable = rightForeignKey.PrimaryKeyTable;
             var joinRightColumn = rightForeignKey.ForeignKeyMemberColumns.Select(c => c.Name).ToList();
-            var rightEntity = GetEntity(entityContext, rightTable, false);
+            var rightEntity = GetEntity(entityContext, rightTable, false, false);
 
             string leftPropertyName = Settings.RelationshipName(rightEntity.ClassName);
             leftPropertyName = _namer.UniqueName(leftEntity.ClassName, leftPropertyName);
@@ -511,6 +515,83 @@ namespace SchemaMapper
             right.JoinOtherColumn = new List<string>(joinLeftColumn);
 
             rightEntity.Relationships.Add(right);
+        }
+
+
+        private void CreateMethods(Entity entity, TableSchema tableSchema)
+        {
+            if (tableSchema.HasPrimaryKey)
+            {
+                var method = GetMethodFromColumns(entity, tableSchema.PrimaryKey.MemberColumns);
+                if (method != null)
+                {
+                    method.IsKey = true;
+                    method.SourceName = tableSchema.PrimaryKey.FullName;
+
+                    if (!entity.Methods.Any(m=> m.NameSuffix == method.NameSuffix))
+                        entity.Methods.Add(method);
+                }
+            }
+
+            GetIndexMethods(entity, tableSchema);
+            GetForeignKeyMethods(entity, tableSchema);
+
+            entity.Methods.IsProcessed = true;
+        }
+
+        private static void GetForeignKeyMethods(Entity entity, TableSchema table)
+        {
+            var columns = new List<ColumnSchema>();
+
+            foreach (ColumnSchema column in table.ForeignKeyColumns)
+            {
+                columns.Add(column);
+
+                Method method = GetMethodFromColumns(entity, columns);                
+                if (method != null && !entity.Methods.Any(m => m.NameSuffix == method.NameSuffix))
+                    entity.Methods.Add(method);
+
+                columns.Clear();
+            }
+        }
+
+        private static void GetIndexMethods(Entity entity, TableSchema table)
+        {
+            foreach (IndexSchema index in table.Indexes)
+            {
+                Method method = GetMethodFromColumns(entity, index.MemberColumns);
+                if (method == null)
+                    continue;
+
+                method.SourceName = index.FullName;
+                method.IsUnique = index.IsUnique;
+                method.IsIndex = true;
+
+                if (!entity.Methods.Any(m => m.NameSuffix == method.NameSuffix))
+                    entity.Methods.Add(method);
+            }
+        }
+
+        private static Method GetMethodFromColumns(Entity entity, IEnumerable<ColumnSchema> columns)
+        {
+            var method = new Method();
+            string methodName = string.Empty;
+
+            foreach (var column in columns)
+            {
+                var property = entity.Properties.ByColumn(column.Name);
+                if (property == null)
+                    continue;
+
+                method.Properties.Add(property);
+                methodName += property.PropertyName;
+            }
+
+            if (method.Properties.Count == 0)
+                return null;
+
+            method.NameSuffix = methodName;
+            return method;
         }
 
 

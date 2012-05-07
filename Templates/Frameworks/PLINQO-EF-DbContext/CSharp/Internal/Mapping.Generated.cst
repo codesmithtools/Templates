@@ -34,7 +34,7 @@ namespace <%= MappingNamespace %>
         public <%= Entity.MappingName.ToSafeName() %>()
         {
             // table
-<% if (string.IsNullOrEmpty(Entity.TableSchema)) { %>            
+<% if (string.IsNullOrEmpty(Entity.TableSchema)) { %>
             ToTable("<%= Entity.TableName %>");
 <% } else {  %>
             ToTable("<%= Entity.TableName %>", "<%= Entity.TableSchema %>");
@@ -74,9 +74,9 @@ foreach(var r in Entity.Relationships.Where(e => e.IsMapped))
 public string PropertyExpression(Property property)
 {
     bool isString = property.SystemType == typeof(string);
-    bool isByteArray = property.SystemType == typeof(byte[]);    
-    bool isDecimal = property.SystemType == typeof(Decimal);    
-    
+    bool isByteArray = property.SystemType == typeof(byte[]);
+    bool isDecimal = property.SystemType == typeof(Decimal);
+
     StringBuilder sb = new StringBuilder();
     sb.Append(' ', 3 * 4);
     sb.Append("Property(t => t.");
@@ -88,7 +88,7 @@ public string PropertyExpression(Property property)
     sb.Append(".HasColumnName(\"");
     sb.Append(property.ColumnName);
     sb.Append("\")");
-    
+
     if (property.IsIdentity == true)
     {
       sb.AppendLine();
@@ -119,14 +119,14 @@ public string PropertyExpression(Property property)
       sb.Append(", ");
       sb.Append(property.Scale);
       sb.Append(")");
-    }    
+    }
     if (property.IsRowVersion == true && isByteArray)
     {
       sb.AppendLine();
       sb.Append(' ', 4 * 4);
       sb.Append(".IsRowVersion()");
     }
-    
+
     sb.AppendLine();
     sb.Append(' ', 4 * 4);
     if (property.IsRequired == true)
@@ -159,21 +159,21 @@ public string ManyToManyExpression(Relationship relationship)
     sb.AppendLine();
     sb.Append(' ', 4 * 4);
     sb.Append("{");
-    
+
     sb.AppendLine();
     sb.Append(' ', 5 * 4);
     sb.Append("m.ToTable(\"");
     sb.Append(relationship.JoinTable);
     sb.Append("\", \"");
-    sb.Append(relationship.JoinSchema);    
+    sb.Append(relationship.JoinSchema);
     sb.Append("\");");
-    
+
     sb.AppendLine();
     sb.Append(' ', 5 * 4);
     sb.Append("m.MapLeftKey(");
     sb.Append(relationship.JoinThisColumn.ToDelimitedString(", ", "\"{0}\""));
     sb.Append(");");
-    
+
     sb.AppendLine();
     sb.Append(' ', 5 * 4);
     sb.Append("m.MapRightKey(");
@@ -183,7 +183,7 @@ public string ManyToManyExpression(Relationship relationship)
     sb.AppendLine();
     sb.Append(' ', 4 * 4);
     sb.Append("})");
-        
+
     sb.Append(";");
     sb.AppendLine();
 

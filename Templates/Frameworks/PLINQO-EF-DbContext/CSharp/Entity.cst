@@ -39,11 +39,6 @@
              Type="System.String"
              Category="2.Class"
              Description="The namespace to use for the mapping class files."%>
-<%@ Property Name="QueryNamespace"
-             Type="System.String"
-             Category="2.Class" 
-             Optional="True"
-             Description="The namespace to use for the query extension files. If null, then queries will not be created."%>
 
 <%@ Property Name="ContextDirectory"
              Category="3.Output"
@@ -66,13 +61,6 @@
              Optional="True"
              Description="The folder to save the generated mapping files."
              Editor="System.Windows.Forms.Design.FolderNameEditor, System.Design, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" %>
-<%@ Property Name="QueryDirectory"
-             Category="3.Output"
-             Type="System.String"
-             Default=".\Queries"
-             Optional="True"
-             Description="The folder to save the generated mapping files."
-             Editor="System.Windows.Forms.Design.FolderNameEditor, System.Design, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" %>
 
 <%@ Property Name="TableNaming"
              Type="SchemaMapper.TableNaming"
@@ -87,12 +75,12 @@
 <%@ Property Name="RelationshipNaming"
              Type="SchemaMapper.RelationshipNaming"
              Category="4.Hints"
-             Default="ListSuffix"
+             Default="Plural"
              Description="Tell generator how the relationships are to be named." %>
 <%@ Property Name="ContextNaming"
              Type="SchemaMapper.ContextNaming"
              Category="4.Hints"
-             Default="Preserve"
+             Default="Plural"
              Description="Tell generator how the context properties are to be named." %>
 
 <%@ Property Name="IgnoreList"
@@ -101,21 +89,62 @@
              Default="sysdiagrams$"
              Optional="True"
              Description="List of regular expressions to ignore tables, views and commands when generating mapping." %>
-
 <%@ Property Name="InclusionMode"
              Type="Boolean"
              Category="5.Customization"
              Default="False"
              Optional="True"
              Description="Change the IgnoreList to be a list of table to include instead of ignore." %>
-
-
 <%@ Property Name="CleanExpressions"
              Type="CodeSmith.CustomProperties.StringCollection"
              Category="5.Customization"
              Default="^(sp|tbl|udf|vw)_"
              Optional="True"
              Description="List of regular expressions to clean table, view and column names." %>
+<%@ Property Name="InterfaceMode"
+             Type="Boolean"
+             Category="5.Customization"
+             Default="False"
+             Optional="True"
+             Description="Use interfaces for DbContext." %>
+
+
+<%@ Property Name="IncludeQuery"
+             Type="Boolean"
+             Category="6.Query"
+             Default="False"
+             Optional="True"
+             Description="Include query extensions." %>
+<%@ Property Name="QueryNamespace"
+             Type="System.String"
+             Category="6.Query" 
+             Optional="True"
+             Description="The namespace to use for the query extension files."%>
+<%@ Property Name="QueryDirectory"
+             Category="6.Query"
+             Type="System.String"
+             Default=".\Queries"
+             Optional="True"
+             Description="The folder to save the generated query files."
+             Editor="System.Windows.Forms.Design.FolderNameEditor, System.Design, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" %>
+<%@ Property Name="MethodPrefix"
+             Category="6.Query"
+             Type="System.String" 
+             Default="By" 
+             Optional="True"
+             Description="The prefix of query method names." %>
+<%@ Property Name="UniqueMethodPrefix"
+             Category="6.Query"
+             Type="System.String" 
+             Default="GetBy" 
+             Optional="True"
+             Description="The prefix of query method names." %>
+<%@ Property Name="MethodKeySuffix"
+             Category="6.Query"
+             Type="System.String"
+             Default="Key"
+             Optional="False"
+             Description="The suffix of the primary key query method names." %>
 
 <%@ Register Name="ContextGeneratedClass"
              Template="Internal\Context.Generated.cst"
@@ -186,9 +215,10 @@ Generating Entities ...
         CreateMappingClasses(context);
         CreateEntityClasses(context);
         
-        if (!string.IsNullOrEmpty(QueryNamespace))
+        if (IncludeQuery && !string.IsNullOrEmpty(QueryNamespace))
             CreateQueryClasses(context);
-
+        
+        
         this.RegisterReference("System.Configuration");
         this.RegisterReference("System.Data");
         this.RegisterReference("System.Data.Entity");
@@ -252,7 +282,7 @@ Generating Entities ...
             CreateMapping(generatedClass, editableClass, entity, rootDirectory);
 
             Debug.WriteLine(string.Format(
-                "Created '{0}' in {1} ms.",
+                "Created Mapping Class '{0}' in {1} ms.",
                 entity.ClassName,
                 watch.Elapsed.TotalMilliseconds.ToString()));
 
@@ -305,7 +335,7 @@ Generating Entities ...
             CreateEntity(generatedClass, editableClass, entity, rootDirectory);
 
             Debug.WriteLine(string.Format(
-                "Created '{0}' in {1} ms.",
+                "Created Entity Class '{0}' in {1} ms.",
                 entity.ClassName,
                 watch.Elapsed.TotalMilliseconds.ToString()));
 
@@ -358,7 +388,7 @@ Generating Entities ...
             CreateQuery(generatedClass, editableClass, entity, rootDirectory);
 
             Debug.WriteLine(string.Format(
-                "Created '{0}Extensions' in {1} ms.",
+                "Created Query Class '{0}Extensions' in {1} ms.",
                 entity.ClassName,
                 watch.Elapsed.TotalMilliseconds.ToString()));
 
@@ -389,8 +419,8 @@ Generating Entities ...
         Response.WriteLine(generatedFile);
         generatedClass.RenderToFile(generatedFile, editableFile, true);
     }
-
-
+   
+    
     private void OnSchemaItemProcessed(object sender, SchemaItemProcessedEventArgs e)
     {
         this.Progress.PerformStep();
@@ -422,6 +452,7 @@ Generating Entities ...
         
         if (string.IsNullOrEmpty(QueryNamespace))
             QueryNamespace = ContextNamespace + ".Queries";
+
     }
 
 </script>
