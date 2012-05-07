@@ -38,7 +38,7 @@ Entities
 
     Search Criteria
 <%    foreach(SearchCriteria sc in e.SearchCriteria) { %>
-        <%= sc.MethodName %>
+        <%= sc.MethodName %> (<%= sc.ToString() %>)
 <%    foreach(var m in sc.Properties) { %>
             <%= m.Name %>
 <% }} %>

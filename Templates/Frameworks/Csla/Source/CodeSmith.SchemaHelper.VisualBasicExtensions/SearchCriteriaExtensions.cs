@@ -16,7 +16,7 @@ namespace CodeSmith.SchemaHelper
         {
             string parameters = String.Empty;
 
-            if (sc.SearchCriteriaType == SearchCriteriaType.ForeignKey)
+            if (sc.IsType(SearchCriteriaType.ForeignKey))
             {
                 foreach (AssociationProperty property in sc.ForeignProperties)
                 {
@@ -66,7 +66,7 @@ namespace CodeSmith.SchemaHelper
         {
             string parameters = String.Empty;
 
-            if (sc.SearchCriteriaType == SearchCriteriaType.ForeignKey)
+            if (sc.IsType(SearchCriteriaType.ForeignKey))
             {
                 foreach (AssociationProperty property in sc.ForeignProperties)
                 {
