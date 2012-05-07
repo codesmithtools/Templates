@@ -51,7 +51,7 @@
 <script runat="template">
     public SearchCriteria GetSearchCriteria()
     {
-        return SourceCommand.SearchCriteria.FirstOrDefault(sc => sc.SearchCriteriaType == SearchCriteriaType.Command);
+        return SourceCommand.SearchCriteria.FirstOrDefault(sc => sc.IsType(SearchCriteriaType.Command));
     }
 
     public bool HasSearchCriteria()
