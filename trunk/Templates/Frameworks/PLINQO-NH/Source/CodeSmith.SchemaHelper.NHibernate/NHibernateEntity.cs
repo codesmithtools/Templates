@@ -12,8 +12,6 @@ namespace CodeSmith.SchemaHelper.NHibernate
 
         private string _safeName;
 
-        private readonly string _fileName;
-
         public bool IsView { get; private set; }
 
         public NHibernateEntity(XDocument doc, string fileName, bool isView = false)
@@ -40,7 +38,6 @@ namespace CodeSmith.SchemaHelper.NHibernate
             EntityKeyName = name;
             Name = name;
 
-            _fileName = fileName.Replace(NHibernateUtilities.MapExtension, String.Empty);
             _safeName = table;
             // ReSharper restore PossibleNullReferenceException
         }
