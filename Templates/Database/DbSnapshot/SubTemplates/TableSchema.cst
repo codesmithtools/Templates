@@ -1,4 +1,4 @@
-<%--
+﻿<%--
     Author: 
         Todd Carrico
     
@@ -120,7 +120,7 @@ GO
     // add all nonclustered last
     foreach ( IndexSchema idx in this.SourceTable.Indexes )
     {
-        if (idx.IsPrimaryKey == false && idx.IsClustered == false && (bool.Parse( this.SafeExtendedProperty(idx.ExtendedProperties[TableIndexesEXProps.CS_IsConstraint]) ) == false) )
+        if (idx.IsPrimaryKey == false && idx.IsClustered == false && (idx.ExtendedProperties.Contains(TableIndexesEXProps.CS_IsConstraint) && bool.Parse( this.SafeExtendedProperty(idx.ExtendedProperties[TableIndexesEXProps.CS_IsConstraint]) ) == false) )
         {
             sortedIndexes.Add ( idx );
         }
@@ -164,7 +164,7 @@ BEGIN
         }
         this.Response.WriteLine("\t)");
         
-        if ( byte.Parse( SafeExtendedProperty(this.SourceTable.PrimaryKey.ExtendedProperties["CS_OrigFillFactor"])) > 0 )
+        if (this.SourceTable.PrimaryKey.ExtendedProperties.Contains("CS_OrigFillFactor") && byte.Parse( SafeExtendedProperty(this.SourceTable.PrimaryKey.ExtendedProperties["CS_OrigFillFactor"])) > 0 )
         {
             this.Response.WriteLine("\tWITH FILLFACTOR = " + SafeExtendedProperty(this.SourceTable.PrimaryKey.ExtendedProperties["CS_OrigFillFactor"]) );
         }
@@ -194,7 +194,7 @@ BEGIN
         }
         this.Response.WriteLine("\t)");
         
-        if ( byte.Parse( SafeExtendedProperty(idx.ExtendedProperties["CS_OrigFillFactor"])) > 0 )
+        if (idx.ExtendedProperties.Contains("CS_OrigFillFactor") && byte.Parse( SafeExtendedProperty(idx.ExtendedProperties["CS_OrigFillFactor"])) > 0 )
         {
             this.Response.WriteLine("\tWITH FILLFACTOR = " + SafeExtendedProperty(idx.ExtendedProperties["CS_OrigFillFactor"]) );
         }
@@ -244,7 +244,7 @@ GO
     <% 
     foreach ( IndexSchema idx in this.SourceTable.Indexes )
     {
-        if ( idx.IsPrimaryKey == false &&  bool.Parse(this.SafeExtendedProperty(idx.ExtendedProperties[TableIndexesEXProps.CS_IsConstraint])) )
+        if ( idx.IsPrimaryKey == false && idx.ExtendedProperties.Contains(TableIndexesEXProps.CS_IsConstraint) && bool.Parse(this.SafeExtendedProperty(idx.ExtendedProperties[TableIndexesEXProps.CS_IsConstraint])) )
         {%>
 IF NOT EXISTS ( SELECT * FROM dbo.sysindexes WHERE [id] = OBJECT_ID('<%= this.SourceTable.Name %>') AND [name] = '<%= idx.Name %>' )
 BEGIN
@@ -265,7 +265,7 @@ BEGIN
             }
             this.Response.WriteLine("\n\t)");
             
-            if ( byte.Parse( SafeExtendedProperty(idx.ExtendedProperties["CS_OrigFillFactor"])) > 0 )
+            if (idx.ExtendedProperties.Contains("CS_OrigFillFactor") && byte.Parse( SafeExtendedProperty(idx.ExtendedProperties["CS_OrigFillFactor"])) > 0 )
             {
                 this.Response.WriteLine("\tWITH FILLFACTOR = " + SafeExtendedProperty(idx.ExtendedProperties["CS_OrigFillFactor"]) );
             }
@@ -385,9 +385,8 @@ public string GetColumnDefinition( ColumnSchema col )
     string modifier = "";
     string computedDef = "";
     
-    rowGuid = bool.Parse(SafeExtendedProperty(col.ExtendedProperties[TableColumnsEXProps.CS_IsRowGuidCol])) ? "ROWGUIDCOL " : "";
-    
-    if ( bool.Parse( SafeExtendedProperty(col.ExtendedProperties[TableColumnsEXProps.CS_IsIdentity]) ) )
+    rowGuid = col.ExtendedProperties.Contains(TableColumnsEXProps.CS_IsRowGuidCol) && bool.Parse(SafeExtendedProperty(col.ExtendedProperties[TableColumnsEXProps.CS_IsRowGuidCol])) ? "ROWGUIDCOL " : "";
+    if (col.ExtendedProperties.Contains(TableColumnsEXProps.CS_IsIdentity) && bool.Parse( SafeExtendedProperty(col.ExtendedProperties[TableColumnsEXProps.CS_IsIdentity]) ) )
     {
         identity = string.Format( "IDENTITY ({0}, {1}) ", SafeExtendedProperty(col.ExtendedProperties[TableColumnsEXProps.CS_IdentitySeed]), SafeExtendedProperty(col.ExtendedProperties[TableColumnsEXProps.CS_IdentityIncrement]));
     }
@@ -396,7 +395,7 @@ public string GetColumnDefinition( ColumnSchema col )
         identity = "";
     }
         
-    if ( bool.Parse( SafeExtendedProperty(col.ExtendedProperties[TableColumnsEXProps.CS_IsComputed] ) ) )
+    if (col.ExtendedProperties.Contains(TableColumnsEXProps.CS_IsComputed) && bool.Parse( SafeExtendedProperty(col.ExtendedProperties[TableColumnsEXProps.CS_IsComputed] ) ) )
     {
         computedDef = col.ExtendedProperties[TableColumnsEXProps.CS_ComputedDefinition].Value.ToString();
         
