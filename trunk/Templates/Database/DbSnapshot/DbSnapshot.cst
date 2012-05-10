@@ -1,4 +1,4 @@
-<%--
+﻿<%--
 	Author: 
 		Todd Carrico
 	
@@ -6,7 +6,7 @@
 		DBSnaptshot will create a file for every database object 
 		and if configured will attempt to script your database.
 	Remarks:
-		Only tested with Sql2000, Sql2005, SqlExpress
+		Only tested with Microsoft SQL Server
 --%>
 <%@ CodeTemplate Language="C#" TargetLanguage="TEXT" Src="SubTemplates/DbSnapshot.CodeBehind.cs" Inherits="_Main" Description="Scripts DatabaseObjects" Debug="True" %>
 <%@ Property Name="SourceDatabase" Type="SchemaExplorer.DatabaseSchema" Category="1. Context" Description="Database that the documentation should be based on." %>

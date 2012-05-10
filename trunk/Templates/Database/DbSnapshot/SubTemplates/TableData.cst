@@ -1,4 +1,4 @@
-<%--
+﻿<%--
 	Author: 
 		Todd Carrico
 	
@@ -389,7 +389,7 @@ public bool DoesTableHaveIdentityColumn()
 #region isIdentity
 private bool isIdentity(ColumnSchema column)
 {
-	return (bool)column.ExtendedProperties["CS_IsIdentity"].Value;
+	return column.ExtendedProperties.Contains("CS_IsIdentity") && bool.Parse(column.ExtendedProperties["CS_IsIdentity"].Value.ToString());
 }
 #endregion
 
