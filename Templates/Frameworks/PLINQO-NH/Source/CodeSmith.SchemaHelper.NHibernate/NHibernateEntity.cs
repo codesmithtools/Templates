@@ -6,7 +6,7 @@ namespace CodeSmith.SchemaHelper.NHibernate
 {
     public class NHibernateEntity : EntityBase<XDocument>
     {
-        public readonly static string[] DefaultAttributes = new[] { "name", "table", "lazy", "MS_DiagramPane1", "MS_DiagramPane2", "MS_DiagramPaneCount", NHibernateUtilities.FileName };
+        public readonly static string[] DefaultAttributes = new[] { "name", "table", "lazy", "MS_DiagramPane1", "MS_DiagramPane2", "MS_DiagramPaneCount" };
 
         internal readonly string XmlNamespace;
 
@@ -48,7 +48,6 @@ namespace CodeSmith.SchemaHelper.NHibernate
             var @class = EntitySource.Root.Descendant("class", XmlNamespace);
             var lazy = @class.Attribute("lazy");
 
-            ExtendedProperties.Add(NHibernateUtilities.FileName, _fileName);
             if (lazy != null)
                 ExtendedProperties.Add(NHibernateUtilities.Lazy, lazy.Value);
 
