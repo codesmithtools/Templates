@@ -105,7 +105,7 @@ Generating PLINQO for NHibernate Mapings...
         if (NHibernateUtilities.IsIgnoredCommand(command))
             return;
         
-        string fileName = command.ExtendedProperties[NHibernateUtilities.FileName] + NHibernateUtilities.MapExtension;
+        string fileName = String.Concat(command.Name, NHibernateUtilities.MapExtension);
         string folder = GetFolder(MapsDirectory, NHibernateProvider.FunctionsSubFolder);
         string filePath = Path.Combine(folder, fileName);
     
@@ -123,7 +123,7 @@ Generating PLINQO for NHibernate Mapings...
             ? NHibernateProvider.ViewsSubFolder
             : NHibernateProvider.EntitiesSubFolder;
         
-        string fileName = entity.ExtendedProperties[NHibernateUtilities.FileName] + NHibernateUtilities.MapExtension;
+        string fileName = String.Concat(entity.Name, NHibernateUtilities.MapExtension);
         string folder = GetFolder(MapsDirectory, subFolder);
         string filePath = Path.Combine(folder, fileName);
     

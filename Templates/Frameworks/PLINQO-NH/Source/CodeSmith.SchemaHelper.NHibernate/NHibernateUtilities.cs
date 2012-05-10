@@ -18,7 +18,6 @@ namespace CodeSmith.SchemaHelper.NHibernate
         private static MapCollection _fromNHibernateNullableTypeMap;
 
         public const string MapExtension = ".hbm.xml";
-        public const string FileName = "file-name";
         public const string NHibernateType = "nhibernate-type";
         public const string GeneratorClass = "generator-class";
         public const string Length = "length";
@@ -69,10 +68,6 @@ namespace CodeSmith.SchemaHelper.NHibernate
             entity.Namespace = defaultNamespace;
             
             entity.ExtendedProperties.Add(Lazy, "true");
-            entity.ExtendedProperties.Add(FileName, entity is CommandEntity
-                ? NamingConventions.CleanName(entity.EntityKeyName, false)
-                : entity.Name);
-
             foreach (var property in entity.Key.Properties)
             {
                 PrepProperty(property);
