@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <version>1.0.12</version>
+    <authors>LoreSoft</authors>
+    <owners>LoreSoft</owners>
+    <id>PLINQO.EntityFramework.DbContext</id>
+    <title />
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Entity Framework DbContext templates for CodeSmith Generator</description>
+    <language>en-US</language>
+    <tags>EntityFramework CodeSmith</tags>
+  </metadata>
+  <files>
+    <file src="..\..\Common\*.dll" target="tools\Common\" />
+    <file src="..\..\CSharp\Internal\*.cst" target="tools\CSharp\Internal\" />
+    <file src="..\..\CSharp\Internal\*.cs" target="tools\CSharp\Internal\" />
+    <file src="..\..\CSharp\*.cst" target="tools\CSharp\" />
+    <file src="install.ps1" target="tools\install.ps1" />
+    <file src="readme.txt" target="content\" />
+  </files>
+</package>
