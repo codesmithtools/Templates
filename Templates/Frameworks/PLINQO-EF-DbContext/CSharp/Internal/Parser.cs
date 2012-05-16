@@ -535,7 +535,8 @@ namespace SchemaMapper
             {
                 var parsedProperties = parsedRelationship.ThisProperties;
                 var relationship = entity.Relationships
-                  .FirstOrDefault(r => r.ThisProperties.Except(parsedProperties).Count() == 0);
+                    .Where(r => !r.IsManyToMany)
+                    .FirstOrDefault(r => r.ThisProperties.Except(parsedProperties).Count() == 0);
 
                 if (relationship == null)
                     continue;
