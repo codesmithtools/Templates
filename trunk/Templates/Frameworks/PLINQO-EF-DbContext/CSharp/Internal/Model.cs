@@ -213,7 +213,7 @@ namespace SchemaMapper
         }
     }
 
-    [DebuggerDisplay("Other: {OtherEntity}, Property: {PropertyName}, Relationship: {RelationshipName}")]
+    [DebuggerDisplay("Other: {OtherEntity}, Property: {OtherPropertyName}, Relationship: {RelationshipName}")]
     public class Relationship : EntityBase
     {
         public Relationship()
