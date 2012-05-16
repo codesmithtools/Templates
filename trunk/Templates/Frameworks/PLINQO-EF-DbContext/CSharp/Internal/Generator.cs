@@ -674,7 +674,8 @@ namespace SchemaMapper
                 return true;
 
             // check all non fkey columns to make sure db gen'd
-            return tableSchema.NonForeignKeyColumns.All(IsDbGenerated);
+            return tableSchema.NonForeignKeyColumns.All(c => 
+                IsDbGenerated(c) || HasDefaultValue(c));
         }
 
         #region Name Helpers
@@ -759,6 +760,24 @@ namespace SchemaMapper
             }
 
             return isIdentity;
+        }
+
+        private static bool HasDefaultValue(DataObjectBase column)
+        {
+            try
+            {
+                if (!column.ExtendedProperties.Contains(ExtendedPropertyNames.DefaultValue))
+                    return false;
+                
+                string value = column.ExtendedProperties[ExtendedPropertyNames.DefaultValue].Value.ToString();
+                return !string.IsNullOrEmpty(value);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("Error: " + ex.Message);
+            }
+
+            return false;
         }
         #endregion
     }
