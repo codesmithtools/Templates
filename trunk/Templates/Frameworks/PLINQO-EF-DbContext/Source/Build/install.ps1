@@ -31,11 +31,12 @@ public static class Updater
     {
         string projectDirectory = Path.GetDirectoryName(projectPath);
 
+        int updated = 0;
         string newPath = Path.Combine(toolPath, "CSharp");
         newPath = Path.Combine(newPath, "Entity.cst");
         newPath = RelativePathTo(projectDirectory, newPath);
 
-
+        
         XmlDocument document = new XmlDocument();
         document.Load(projectPath);
 
@@ -54,9 +55,11 @@ public static class Updater
                 continue;
 
             pathNavigator.SetValue(newPath);
+            updated++;
         }
 
-        document.Save(projectPath);
+        if (updated > 0)
+            document.Save(projectPath);
     }
 
     public static string RelativePathTo(string fromDirectory, string toPath)
