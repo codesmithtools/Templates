@@ -146,6 +146,33 @@
              Optional="False"
              Description="The suffix of the primary key query method names." %>
 
+<%@ Property Name="IncludeMock"
+             Type="Boolean"
+             Category="7.Mock"
+             Default="False"
+             Optional="True"
+             Description="Include generation of mocked DbContext and DbSet files." %>
+<%@ Property Name="MockNamespace"
+             Type="System.String"
+             Category="7.Mock"
+             Optional="True"
+             Description="The namespace to use for the mock files."%>
+<%@ Property Name="MockDirectory"
+             Category="7.Mock"
+             Type="System.String"
+             Default=".\Mocks"
+             Optional="True"
+             Description="The folder to save the generated mock files."
+             Editor="System.Windows.Forms.Design.FolderNameEditor, System.Design, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" %>
+<%@ Property Name="Internalize"
+             Type="Boolean"
+             Category="7.Mock"
+             Default="True"
+             Optional="True"
+             Description="Mark mock files as internal." %>
+
+
+
 <%@ Register Name="ContextGeneratedClass"
              Template="Internal\Context.Generated.cst"
              MergeProperties="False" %>
@@ -169,6 +196,13 @@
              MergeProperties="False" %>
 <%@ Register Name="QueryEditableClass"
              Template="Internal\Query.Editable.cst"
+             MergeProperties="False" %>
+
+<%@ Register Name="MockedContextGeneratedClass"
+             Template="Internal\MockedContext.Generated.cst"
+             MergeProperties="False" %>
+<%@ Register Name="MockedContextEditableClass"
+             Template="Internal\MockedContext.Editable.cst"
              MergeProperties="False" %>
 
 Generating Entities ...
@@ -218,6 +252,8 @@ Generating Entities ...
         if (IncludeQuery && !string.IsNullOrEmpty(QueryNamespace))
             CreateQueryClasses(context);
         
+        if (IncludeMock && !string.IsNullOrEmpty(MockNamespace))
+            CreateMockClass(context);
         
         this.RegisterReference("System.Configuration");
         this.RegisterReference("System.Data");
@@ -421,6 +457,38 @@ Generating Entities ...
     }
    
     
+    public void CreateMockClass(EntityContext entityContext)
+    {
+        MockedContextGeneratedClass generatedClass = this.Create<MockedContextGeneratedClass>();
+        this.CopyPropertiesTo(generatedClass);
+
+        MockedContextEditableClass editableClass = this.Create<MockedContextEditableClass>();
+        this.CopyPropertiesTo(editableClass);
+
+        string rootDirectory = Path.GetFullPath(MockDirectory);
+        string className = "Fake" + entityContext.ClassName;
+
+        string editableFile = className + ".cs";
+        editableFile = Path.Combine(rootDirectory, editableFile);
+
+        if (!File.Exists(editableFile))
+        {
+          editableClass.EntityContext = entityContext;
+
+          Response.WriteLine(editableFile);
+          editableClass.RenderToFile(editableFile, true);
+        }
+
+        string generatedFile = className + ".Generated.cs";
+        generatedFile = Path.Combine(rootDirectory, generatedFile);
+
+        generatedClass.EntityContext = entityContext;
+
+        Response.WriteLine(generatedFile);
+        generatedClass.RenderToFile(generatedFile, editableFile, true);
+    }
+
+    
     private void OnSchemaItemProcessed(object sender, SchemaItemProcessedEventArgs e)
     {
         this.Progress.PerformStep();
@@ -452,6 +520,9 @@ Generating Entities ...
         
         if (string.IsNullOrEmpty(QueryNamespace))
             QueryNamespace = ContextNamespace + ".Queries";
+
+        if (string.IsNullOrEmpty(MockNamespace))
+            MockNamespace = ContextNamespace + ".Mocks";
 
     }
 
