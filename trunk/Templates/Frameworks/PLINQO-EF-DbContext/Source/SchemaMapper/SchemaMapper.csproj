@@ -117,6 +117,12 @@
     <None Include="..\..\CSharp\Internal\Mapping.Generated.cst">
       <Link>Internal\Mapping.Generated.cst</Link>
     </None>
+    <None Include="..\..\CSharp\Internal\MockedContext.Editable.cst">
+      <Link>Internal\MockedContext.Editable.cst</Link>
+    </None>
+    <None Include="..\..\CSharp\Internal\MockedContext.Generated.cst">
+      <Link>Internal\MockedContext.Generated.cst</Link>
+    </None>
     <None Include="..\..\CSharp\Internal\Query.Editable.cst">
       <Link>Internal\Query.Editable.cst</Link>
     </None>
