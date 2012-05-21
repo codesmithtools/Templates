@@ -215,7 +215,7 @@ public string FindExpression(Entity entity)
         sb.Append(" == (");
         sb.Append(type);
         sb.Append(")v[");
-        sb.Append(c);
+        sb.Append(c++);
         sb.Append("]");
     }
     sb.Append(" }");
