@@ -878,7 +878,9 @@ namespace LinqToSqlShared.Generator
             foreach (ColumnSchema columnSchema in tableSchema.Columns)
             {
                 // skip unsupported type
-                if (columnSchema.NativeType.Equals("hierarchyid", StringComparison.OrdinalIgnoreCase))
+                if (columnSchema.NativeType.Equals("geography", StringComparison.OrdinalIgnoreCase)
+                    || columnSchema.NativeType.Equals("geometry", StringComparison.OrdinalIgnoreCase)
+                    || columnSchema.NativeType.Equals("hierarchyid", StringComparison.OrdinalIgnoreCase))
                 {
                     Debug.WriteLine(string.Format("Skipping column '{0}' because it has an unsupported db type '{1}'.",
                                                   columnSchema.Name, columnSchema.NativeType));
