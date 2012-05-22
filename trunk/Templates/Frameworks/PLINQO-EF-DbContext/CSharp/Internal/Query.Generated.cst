@@ -118,7 +118,7 @@ namespace <%= QueryNamespace %>
 
             if (property.IsNullable == true)
                 
-                lamba.AppendFormat("{0}.{1} == {2} || ({2} == null && {0}.{1} == null)",
+                lamba.AppendFormat("({0}.{1} == {2} || ({2} == null && {0}.{1} == null))",
                     alias, property.PropertyName, paramName);
             else
                 lamba.AppendFormat("{0}.{1} == {2}",
