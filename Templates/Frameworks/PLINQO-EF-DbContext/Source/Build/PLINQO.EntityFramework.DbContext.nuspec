@@ -1,15 +1,22 @@
 <?xml version="1.0"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
-    <version>1.0.12</version>
+    <id>PLINQO.EntityFramework.DbContext</id>
+    <version>1.0.0</version>
     <authors>LoreSoft</authors>
     <owners>LoreSoft</owners>
-    <id>PLINQO.EntityFramework.DbContext</id>
     <title />
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Entity Framework DbContext templates for CodeSmith Generator</description>
     <language>en-US</language>
     <tags>EntityFramework CodeSmith</tags>
+    <dependencies>
+      <dependency id="EntityFramework" version="4.3.0" />
+    </dependencies>
+    <frameworkAssemblies>
+      <frameworkAssembly assemblyName="System.Data.Entity" targetFramework="" />
+      <frameworkAssembly assemblyName="System.ComponentModel.DataAnnotations" targetFramework="" />
+    </frameworkAssemblies>
   </metadata>
   <files>
     <file src="..\..\Common\*.dll" target="tools\Common\" />
