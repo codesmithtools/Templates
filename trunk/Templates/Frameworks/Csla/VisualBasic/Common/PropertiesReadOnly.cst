@@ -59,7 +59,7 @@
     <% For Each association As Association In Entity.Associations.Where(Function(a) a.AssociationType = AssociationType.OneToZeroOrOne OrElse a.AssociationType = AssociationType.OneToOne) 
         ' For now, don't generate properties based on tables generated as generics.
         If(association.GenericProperty = String.Empty) Then
-    Dim associationClassName As String = association.Name
+    Dim associationClassName As String = association.TypeName
     If(IsReadOnlyBusinessObject( association, "Info")) Then
         associationClassName += "Info"
     End If %>
@@ -84,13 +84,13 @@
 #If SILVERLIGHT Then
                         'Markbusy()
                         If(<%= association.BuildNullCheckStatement(true, false, false, false, true) %>) Then
-                            <%= BusinessProjectName %>.<%= association.TypeName %><%= association.GenericProperty %>.ExistsAsync(criteria, Sub(o, e)
+                            <%= BusinessProjectName %>.<%= associationClassName %><%= association.GenericProperty %>.ExistsAsync(criteria, Sub(o, e)
                                 If Not (e.Error Is Nothing) Then
                                     Throw e.Error
                                 End If
                                 
                                 If Not (e.Object.Result) Then
-                                    <%= BusinessProjectName %>.<%= association.TypeName %><%= association.GenericProperty %>.<%= association.SearchCriteria.AssociatedMethodName%>Async(<%= association.SearchCriteria.Properties.BuildPropertyVariableArguments() %>, Sub(o1, e1)
+                                    <%= BusinessProjectName %>.<%= associationClassName %><%= association.GenericProperty %>.<%= association.SearchCriteria.AssociatedMethodName%>Async(<%= association.SearchCriteria.Properties.BuildPropertyVariableArguments() %>, Sub(o1, e1)
                                         If Not (e1.Error Is Nothing) Then
                                             Throw e1.Error
                                         End If
@@ -105,8 +105,8 @@
                         End If
 #Else
 <% End If %>
-                        If(<%= association.BuildNullCheckStatement(true, false, false, false) %><%= BusinessProjectName %>.<%= association.TypeName %><%= association.GenericProperty %>.Exists(criteria)) Then
-                            LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= BusinessProjectName %>.<%= association.TypeName %><%= association.GenericProperty %>.<%= association.SearchCriteria.AssociatedMethodName%>(<%= association.SearchCriteria.Properties.BuildPropertyVariableArguments() %>))
+                        If(<%= association.BuildNullCheckStatement(true, false, false, false) %><%= BusinessProjectName %>.<%= associationClassName %><%= association.GenericProperty %>.Exists(criteria)) Then
+                            LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= BusinessProjectName %>.<%= associationClassName %><%= association.GenericProperty %>.<%= association.SearchCriteria.AssociatedMethodName%>(<%= association.SearchCriteria.Properties.BuildPropertyVariableArguments() %>))
                         End If
 <% If(IncludeSilverlightSupport) Then %>
 #End If
@@ -154,13 +154,13 @@
 <% If(IncludeSilverlightSupport) Then %>
 #If SILVERLIGHT Then
                         'Markbusy()
-                        <%= BusinessProjectName %>.<%= association.TypeName %><%= association.GenericProperty %>.ExistsAsync(criteria, Sub(o, e)
+                        <%= BusinessProjectName %>.<%= associationClassName %><%= association.GenericProperty %>.ExistsAsync(criteria, Sub(o, e)
                             If Not (e.Error Is Nothing) Then
                                 Throw e.Error
                             End If
                             
                             If (e.Object.Result) Then
-                                <%= BusinessProjectName %>.<%= association.TypeName %><%= association.GenericProperty %>.<%= association.SearchCriteria.AssociatedMethodName%>Async(<%= association.SearchCriteria.Properties.BuildPropertyVariableArguments() %>, Sub(o1, e1)
+                                <%= BusinessProjectName %>.<%= associationClassName %><%= association.GenericProperty %>.<%= association.SearchCriteria.AssociatedMethodName%>Async(<%= association.SearchCriteria.Properties.BuildPropertyVariableArguments() %>, Sub(o1, e1)
                                     If Not (e1.Error Is Nothing) Then
                                         Throw e1.Error
                                     End If
@@ -174,8 +174,8 @@
                         End Sub)
 #Else
 <% End If %>
-                        If (<%= BusinessProjectName %>.<%= association.TypeName %><%= association.GenericProperty %>.Exists(criteria)) Then
-                            LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= BusinessProjectName %>.<%= association.TypeName %><%= association.GenericProperty %>.<%= association.SearchCriteria.AssociatedMethodName%>(<%= association.SearchCriteria.Properties.BuildPropertyVariableArguments() %>))
+                        If (<%= BusinessProjectName %>.<%= associationClassName %><%= association.GenericProperty %>.Exists(criteria)) Then
+                            LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= BusinessProjectName %>.<%= associationClassName %><%= association.GenericProperty %>.<%= association.SearchCriteria.AssociatedMethodName%>(<%= association.SearchCriteria.Properties.BuildPropertyVariableArguments() %>))
                         End If
 <% If(IncludeSilverlightSupport) Then %>
 #End If
@@ -238,7 +238,7 @@
                                 End If
                             
                                 If Not (e.Object.Result) Then
-                                    <%= BusinessProjectName %>.<%= association.TypeName %>List.<%= association.SearchCriteria.AssociatedMethodName%>Async(<%= association.SearchCriteria.Properties.BuildPropertyVariableArguments() %>, Sub(o1, e1)
+                                    <%= BusinessProjectName %>.<%= associationClassName %>List.<%= association.SearchCriteria.AssociatedMethodName%>Async(<%= association.SearchCriteria.Properties.BuildPropertyVariableArguments() %>, Sub(o1, e1)
                                         If Not (e1.Error Is Nothing) Then
                                             Throw e1.Error
                                         End If
@@ -260,8 +260,8 @@
                         Dim criteria As New <%= BusinessProjectName %>.<%= association.TypeName %>Criteria<%= association.GenericProperty %>()
                         <%= association.BuildObjectInitializer(true) %>
     
-                        If(<%= association.BuildNullCheckStatement(true, false, false, false) %><%= BusinessProjectName %>.<%= association.TypeName %>List<%= association.GenericProperty %>.Exists(criteria)) Then
-                            LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= BusinessProjectName %>.<%= association.TypeName %>List.<%= association.SearchCriteria.AssociatedMethodName%>(<%= association.SearchCriteria.Properties.BuildPropertyVariableArguments() %>))
+                        If(<%= association.BuildNullCheckStatement(true, false, false, false) %><%= BusinessProjectName %>.<%= associationClassName %>List<%= association.GenericProperty %>.Exists(criteria)) Then
+                            LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= BusinessProjectName %>.<%= associationClassName %>List.<%= association.SearchCriteria.AssociatedMethodName%>(<%= association.SearchCriteria.Properties.BuildPropertyVariableArguments() %>))
                         End If
     <% End If %>
 <% If(IncludeSilverlightSupport) Then %>

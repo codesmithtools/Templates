@@ -71,13 +71,13 @@
                 LoadProperty(_original<%= property.Name %>Property, this.<%= property.Name %>);
 <% } } } %>
             }
-<% if(Entity.Associations.Count(a => a.AssociationType == AssociationType.OneToMany) > 0 || Entity.Associations.Count(a => a.AssociationType == AssociationType.ManyToOne  || a.AssociationType == AssociationType.ManyToZeroOrOne) > 0 || Entity.Associations.Count(a => a.AssociationType == AssociationType.OneToZeroOrOne) > 0){ 
+<% if(Entity.Associations.Count() > 0){ 
     if(!RenderOptionalContent) { 
         int childCount = 0;
         foreach(Association a in Entity.Associations.Where(a => a.AssociationType == AssociationType.OneToMany  || a.AssociationType == AssociationType.ZeroOrOneToMany  || a.AssociationType == AssociationType.ManyToMany)) {
             if(IsChildBusinessObject(a) || IsSwitchableObject(a)) 
                 childCount++;
-    }%>
+        }%>
 <% if(childCount > 0) { %>
     
             FieldManager.UpdateChildren(<%= Entity.BuildUpdateChildrenParametersVariables(true) %>);
