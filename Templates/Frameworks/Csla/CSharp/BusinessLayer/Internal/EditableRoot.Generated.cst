@@ -92,7 +92,7 @@ namespace <%= BusinessProjectName %>
         /// <summary>
         /// Returns a <see cref="<%=BusinessClassName%><%= Entity.GenericProperty %>"/> object of the specified criteria. 
         /// </summary>
-<% foreach(var item in  sc.Properties) { %>
+<% foreach(var item in sc.Properties) { %>
         /// <param name="<%= item.VariableName%>"><%if(item.HasDescription){%><%=item.Description%>.<%}else{%>No additional detail available.<%}%></param>
 <%}%>
         /// <returns>A <see cref="<%=BusinessClassName%><%= Entity.GenericProperty %>"/> object of the specified criteria.</returns>
@@ -160,8 +160,8 @@ namespace <%= BusinessProjectName %>
 <% } else { %>
         public static void Delete<%= BusinessClassName %>Async(<% if(Entity.HasKey){ %><%= Entity.Key.Properties.BuildParametersVariables()%>, <% } %>EventHandler<DataPortalResult<<%= BusinessClassName %><%= Entity.GenericProperty %>>> handler)
         {
-            var criteria = new <%= CriteriaClassName %><%= Entity.GenericProperty %>{<%= Entity.Key.Properties.BuildObjectInitializer() %>};
-            <%=Entity.Key.Properties.BuildNullableObjectInitializer()%>
+            var criteria = new <%= CriteriaClassName %><%= Entity.GenericProperty %>{<%= Entity.GetProperties(PropertyType.Key).BuildObjectInitializer() %>};
+            <%= Entity.GetProperties(PropertyType.Key).BuildNullableObjectInitializer()%>
             
             var dp = new DataPortal<<%= BusinessClassName %><%= Entity.GenericProperty %>>();
             dp.DeleteCompleted += handler;
