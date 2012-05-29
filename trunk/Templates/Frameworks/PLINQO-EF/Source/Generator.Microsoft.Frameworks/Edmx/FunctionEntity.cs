@@ -32,7 +32,7 @@ namespace CodeSmith.SchemaHelper
         {
             EntityKeyName = EntitySource.Name;
             Name = EntitySource.Name;
-            TypeAccess = !string.IsNullOrEmpty(EntitySource.MethodAccess) ? EntitySource.MethodAccess : AccessibilityConstants.Public;
+            TypeAccess = !String.IsNullOrEmpty(EntitySource.MethodAccess) ? EntitySource.MethodAccess : AccessibilityConstants.Public;
 
             LoadProperties();
         }
@@ -63,13 +63,13 @@ namespace CodeSmith.SchemaHelper
                 {
                     AssociatedEntity = EntityStore.Instance.GetEntity(returnType);
                 }
-                else if (!string.IsNullOrEmpty(returnType) && SystemTypeMapper.EfConceptualTypeToSystemType.ContainsKey(returnType))
+                else if (!String.IsNullOrEmpty(returnType) && SystemTypeMapper.EfConceptualTypeToSystemType.ContainsKey(returnType))
                 {
-                    ReturnType = string.Concat(SystemTypeMapper.EfConceptualTypeToSystemType[returnType, "System.Int32"], "?");
+                    ReturnType = String.Concat(SystemTypeMapper.EfConceptualTypeToSystemType[returnType, "System.Int32"], "?");
                 }
             }
 
-            if(string.IsNullOrEmpty(ReturnType))
+            if(String.IsNullOrEmpty(ReturnType))
                 ReturnType = "System.Int32";
         }
         
@@ -120,7 +120,7 @@ namespace CodeSmith.SchemaHelper
                         searchCriteria.Properties.Add(new FunctionParameter(parameter, this));
                 }
 
-                if (!string.IsNullOrEmpty(searchCriteria.Key) && searchCriteria.Properties.Count > 0)
+                if (!String.IsNullOrEmpty(searchCriteria.Key) && searchCriteria.Properties.Count > 0)
                     SearchCriteria.Add(searchCriteria);
             }
         }

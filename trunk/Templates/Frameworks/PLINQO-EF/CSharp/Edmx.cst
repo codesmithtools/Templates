@@ -64,7 +64,7 @@
         {
             foreach (string clean in CleanExpression)
             {
-                if (!string.IsNullOrEmpty(clean))
+                if (!String.IsNullOrEmpty(clean))
                 {
                     CodeSmith.SchemaHelper.Configuration.Instance.CleanExpressions.Add(new Regex(clean, RegexOptions.IgnoreCase));
                 }
@@ -76,7 +76,7 @@
         {
             foreach (string ignore in IgnoreList)
             {
-                if (!string.IsNullOrEmpty(ignore))
+                if (!String.IsNullOrEmpty(ignore))
                 {
                     CodeSmith.SchemaHelper.Configuration.Instance.IgnoreExpressions.Add(new Regex(ignore, RegexOptions.IgnoreCase));
                 }
@@ -88,7 +88,7 @@
         {
             foreach (string include in IncludeList)
             {
-                if (!string.IsNullOrEmpty(include))
+                if (!String.IsNullOrEmpty(include))
                 {
                     CodeSmith.SchemaHelper.Configuration.Instance.IncludeExpressions.Add(new Regex(include, RegexOptions.IgnoreCase));
                 }
@@ -131,27 +131,27 @@
         
         string name = StringUtil.ToPascalCase(SourceDatabase.Database.Name);
         
-        if(string.IsNullOrEmpty(EdmxFile) || EdmxFile.Equals("Database.edmx"))
+        if(String.IsNullOrEmpty(EdmxFile) || EdmxFile.Equals("Database.edmx"))
             EdmxFile = name + ".edmx";
             
-        //if (string.IsNullOrEmpty(ContextNamespace))
+        //if (String.IsNullOrEmpty(ContextNamespace))
          //   ContextNamespace = name + ".Data";
     }
     
     private void OnEntityNamespaceChanged(object sender, EventArgs e)
     {
-        //if (string.IsNullOrEmpty(EntityNamespace))
+        //if (String.IsNullOrEmpty(EntityNamespace))
         //    return;
             
-        //if (string.IsNullOrEmpty(ContextNamespace))
+        //if (String.IsNullOrEmpty(ContextNamespace))
         //    ContextNamespace = EntityNamespace;
     }
     private void OnContextNamespaceChanged(object sender, EventArgs e)
     {
-        //if (string.IsNullOrEmpty(ContextNamespace))
+        //if (String.IsNullOrEmpty(ContextNamespace))
         //    return;
             
-        //if (string.IsNullOrEmpty(EntityNamespace))
+        //if (String.IsNullOrEmpty(EntityNamespace))
         //    EntityNamespace = ContextNamespace;
     }
 

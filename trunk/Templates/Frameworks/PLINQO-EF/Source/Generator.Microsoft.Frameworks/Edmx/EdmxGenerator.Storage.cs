@@ -18,7 +18,6 @@ using System.Linq;
 
 using CodeSmith.SchemaHelper;
 using LinqToEdmx.Model.Storage;
-using Association = CodeSmith.SchemaHelper.Association;
 
 namespace Generator.Microsoft.Frameworks
 {
@@ -240,8 +239,8 @@ namespace Generator.Microsoft.Frameworks
             var entitySetsToRemove = new List<EntityContainer.EntitySetLocalType>();
             foreach (var e in StorageSchemaEntityContainer.EntitySets)
             {
-                var isTableOrView = _storageEntitys.Contains(e.Name) && !string.IsNullOrEmpty(e.Type);
-                var isEntityDefined = string.IsNullOrEmpty(e.Type) && StorageSchema.EntityTypeStores.Count(et => et.Name.Equals(e.Name, StringComparison.InvariantCultureIgnoreCase)) > 0;
+                var isTableOrView = _storageEntitys.Contains(e.Name) && !String.IsNullOrEmpty(e.Type);
+                var isEntityDefined = String.IsNullOrEmpty(e.Type) && StorageSchema.EntityTypeStores.Count(et => et.Name.Equals(e.Name, StringComparison.InvariantCultureIgnoreCase)) > 0;
                 if (processed.Contains(e.Name) || (!isTableOrView && !isEntityDefined))
                     entitySetsToRemove.Add(e);
                 else
@@ -303,7 +302,7 @@ namespace Generator.Microsoft.Frameworks
                 {
                     RunTime.StorageModels.StorageSchema = new StorageSchema
                     {
-                        Namespace = string.Concat(_settings.DatabaseName, "Model.Store"),
+                        Namespace = String.Concat(_settings.DatabaseName, "Model.Store"),
                         Alias = "Self",
                         Provider = "System.Data.SqlClient",
                         ProviderManifestToken = "2008"
@@ -322,7 +321,7 @@ namespace Generator.Microsoft.Frameworks
                 {
                     StorageSchema.EntityContainers.Add(new EntityContainer()
                     {
-                        Name = string.Concat(_settings.DatabaseName, "ModelStoreContainer")
+                        Name = String.Concat(_settings.DatabaseName, "ModelStoreContainer")
                     });
                 }
 
@@ -353,7 +352,7 @@ namespace Generator.Microsoft.Frameworks
             // Set or sync the default values.
             // http://msdn.microsoft.com/en-us/library/bb387152.aspx
             entitySet.Name = entity.EntityKeyName;
-            entitySet.EntityType = string.Concat(StorageSchema.Namespace, ".", entity.EntityKeyName);
+            entitySet.EntityType = String.Concat(StorageSchema.Namespace, ".", entity.EntityKeyName);
             entitySet.Type = entity is TableEntity ? EdmxConstants.StorageSchemaGenerationTypeAttributeValueTables : null;
             entitySet.Schema = entity is TableEntity ? entity.SchemaName : null;
 
@@ -365,8 +364,8 @@ namespace Generator.Microsoft.Frameworks
             else
                 entitySet.Table = entity.EntityKeyName;
 
-            if (!string.IsNullOrEmpty(entitySet.Schema1)) entitySet.Schema1 = entity.SchemaName;
-            if (!string.IsNullOrEmpty(entitySet.Name1)) entitySet.Name1 = entity.EntityKeyName;
+            if (!String.IsNullOrEmpty(entitySet.Schema1)) entitySet.Schema1 = entity.SchemaName;
+            if (!String.IsNullOrEmpty(entitySet.Name1)) entitySet.Name1 = entity.EntityKeyName;
 
             return entitySet;
         }
@@ -491,14 +490,32 @@ namespace Generator.Microsoft.Frameworks
                 if (!property.IsNullable)
                     entityProperty.Nullable = property.IsNullable;
 
-                entityProperty.DefaultValue = string.IsNullOrEmpty(entityProperty.DefaultValue) && !string.IsNullOrEmpty(property.DefaultValue) ? property.DefaultValue : null;
-                entityProperty.MaxLength = !string.IsNullOrEmpty(GetMaxLength(property)) && !GetMaxLength(property).Equals("Max", StringComparison.InvariantCultureIgnoreCase) && !GetNativeType(property).Equals("timestamp", StringComparison.InvariantCultureIgnoreCase) ? GetMaxLength(property) : null;
+                if (String.IsNullOrEmpty(entityProperty.DefaultValue) && !String.IsNullOrEmpty(property.DefaultValue)) {
+                    if (String.Equals(property.BaseSystemType, "System.Boolean", StringComparison.OrdinalIgnoreCase))
+                        entityProperty.DefaultValue = property.DefaultValue.ToLower();
+                    else if (String.Equals(property.BaseSystemType, "System.Single", StringComparison.OrdinalIgnoreCase)
+                        || String.Equals(property.BaseSystemType, "System.Int16", StringComparison.OrdinalIgnoreCase)
+                        || String.Equals(property.BaseSystemType, "System.Int32", StringComparison.OrdinalIgnoreCase)
+                        || String.Equals(property.BaseSystemType, "System.Int64", StringComparison.OrdinalIgnoreCase)
+                        || String.Equals(property.BaseSystemType, "System.Byte", StringComparison.OrdinalIgnoreCase)
+                        || String.Equals(property.BaseSystemType, "System.Decimal", StringComparison.OrdinalIgnoreCase)
+                        || String.Equals(property.BaseSystemType, "System.Double", StringComparison.OrdinalIgnoreCase)
+                        || String.Equals(property.BaseSystemType, "System.String", StringComparison.OrdinalIgnoreCase))
+                        entityProperty.DefaultValue = property.DefaultValue;
+                    else
+                        entityProperty.DefaultValue = null;
+                }
+                else {
+                    entityProperty.DefaultValue = null;
+                }
+
+                entityProperty.MaxLength = !String.IsNullOrEmpty(GetMaxLength(property)) && !GetMaxLength(property).Equals("Max", StringComparison.InvariantCultureIgnoreCase) && !GetNativeType(property).Equals("timestamp", StringComparison.InvariantCultureIgnoreCase) ? GetMaxLength(property) : null;
 
                 entityProperty.StoreGeneratedPattern = property.IsIdentity ? EdmxConstants.StoreGeneratedPatternIdentity : property.IsComputed ? EdmxConstants.StoreGeneratedPatternComputed : null;
             }
         }
 
-        private void CreateStorageAssociationSet(Association association)
+        private void CreateStorageAssociationSet(IAssociation association)
         {
             IEntity principalEntity;
             IEntity dependentEntity;
@@ -535,7 +552,7 @@ namespace Generator.Microsoft.Frameworks
 
             // Set or sync the default values.
             associationSet.Name = association.AssociationKeyName;
-            associationSet.Association = string.Concat(StorageSchema.Namespace, ".", association.AssociationKeyName);
+            associationSet.Association = String.Concat(StorageSchema.Namespace, ".", association.AssociationKeyName);
 
             var principalEnd = CreateStorageAssociationSetEnd(principalEntity, toRole, associationSet);
             var dependentEnd = CreateStorageAssociationSetEnd(dependentEntity, fromRole, associationSet, principalEnd);
@@ -562,7 +579,7 @@ namespace Generator.Microsoft.Frameworks
             return end;
         }
 
-        private void CreateStorageAssociation(Association association)
+        private void CreateStorageAssociation(IAssociation association)
         {   
             //<Association Name="FK__Product__Categor__0CBAE877">
             //  <End Role="Category" Type="PetShopModel1.Store.Category" Multiplicity="1" />
@@ -620,7 +637,7 @@ namespace Generator.Microsoft.Frameworks
             var end = new AssociationEnd()
             {
                 Role = role,
-                Type = string.Concat(StorageSchema.Namespace, ".", entity.EntityKeyName)
+                Type = String.Concat(StorageSchema.Namespace, ".", entity.EntityKeyName)
             };
 
             if (isCascadeDelete)
@@ -633,7 +650,7 @@ namespace Generator.Microsoft.Frameworks
             return end;
         }
 
-        private static void UpdateStorageAssociationEndMultiplicity(Association association, AssociationEnd principalEnd, AssociationEnd dependentEnd)
+        private static void UpdateStorageAssociationEndMultiplicity(IAssociation association, AssociationEnd principalEnd, AssociationEnd dependentEnd)
         {
             switch (association.AssociationType)
             {
@@ -698,7 +715,7 @@ namespace Generator.Microsoft.Frameworks
             }
         }
 
-        private static void ResolveStorageAssociationValues(Association association, out IEntity principalEntity, out IEntity dependentEntity, out bool isParentEntity, out string keyName, out string toRole, out string fromRole)
+        private static void ResolveStorageAssociationValues(IAssociation association, out IEntity principalEntity, out IEntity dependentEntity, out bool isParentEntity, out string keyName, out string toRole, out string fromRole)
         {
             bool isManyToManyEntity = association.IsParentManyToMany();
             principalEntity = !isManyToManyEntity ? association.Entity : association.ForeignEntity;

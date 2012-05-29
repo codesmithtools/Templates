@@ -58,7 +58,7 @@ namespace CodeSmith.SchemaHelper
             }
             else
             {
-                SystemType = PropertySource.Type.ToString().Replace(string.Concat(((ComplexEntity)Entity).Namespace, "."), "");
+                SystemType = PropertySource.Type.ToString().Replace(String.Concat(((ComplexEntity)Entity).Namespace, "."), "");
                 ExtendedProperties.Add(EdmxConstants.ComplexPropertyExtendedProperty, true);
             }
             
@@ -92,7 +92,7 @@ namespace CodeSmith.SchemaHelper
             PropertyType? type = null;
 
             // Concurrency
-            if (!string.IsNullOrEmpty(PropertySource.ConcurrencyMode) && PropertySource.ConcurrencyMode.Equals(EdmxConstants.ConcurrencyModeFixed, StringComparison.InvariantCultureIgnoreCase))
+            if (!String.IsNullOrEmpty(PropertySource.ConcurrencyMode) && PropertySource.ConcurrencyMode.Equals(EdmxConstants.ConcurrencyModeFixed, StringComparison.InvariantCultureIgnoreCase))
             {
                 type = PropertyType.Concurrency;
             }

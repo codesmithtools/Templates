@@ -28,7 +28,7 @@ RegisterReferences();
 <script runat="template">
 public void Generate()
 {
-    if(string.IsNullOrEmpty(EdmxFile) || !System.IO.File.Exists(EdmxFile))
+    if(String.IsNullOrEmpty(EdmxFile) || !System.IO.File.Exists(EdmxFile))
     {
         Response.WriteLine("The Edmx File does not exist, the queries will not be generated.");
         return;
@@ -44,9 +44,9 @@ public void Generate()
     var entityManager = new EntityManager((IEntityProvider)entityProvider);
     foreach(var entity in entityManager.Entities.Where(e => IsConceptualEntity(e)))
     {
-        var className = string.Concat(entity.Name, "Extensions");
-        var parentFileName = Path.Combine(QueryDirectory, string.Concat(className, ".cs"));
-        var fileName = Path.Combine(QueryDirectory, string.Concat(className, ".Generated.cs"));
+        var className = String.Concat(entity.Name, "Extensions");
+        var parentFileName = Path.Combine(QueryDirectory, String.Concat(className, ".cs"));
+        var fileName = Path.Combine(QueryDirectory, String.Concat(className, ".Generated.cs"));
         if (!File.Exists(parentFileName))
         {
             this.CopyPropertiesTo(queryExtensionsEditable);

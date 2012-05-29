@@ -19,7 +19,6 @@ using CodeSmith.SchemaHelper;
 using CodeSmith.SchemaHelper.Util;
 using Generator.Microsoft.Frameworks.Utility;
 using LinqToEdmx.Model.Conceptual;
-using Association = CodeSmith.SchemaHelper.Association;
 using Constraint = LinqToEdmx.Model.Conceptual.Constraint;
 
 namespace Generator.Microsoft.Frameworks
@@ -90,7 +89,7 @@ namespace Generator.Microsoft.Frameworks
             }
 
             //<NavigationProperty Name="Products" Relationship="PetShopModel1.FK__Product__Categor__0CBAE877" FromRole="Category" ToRole="Product" />
-            var entityType = ConceptualSchema.EntityTypes.Where(e => ResolveEntityMappedName(entity.EntityKey(), entity.Name).Equals(e.Name, StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault();
+            var entityType = ConceptualSchema.EntityTypes.FirstOrDefault(e => ResolveEntityMappedName(entity.EntityKey(), entity.Name).Equals(e.Name, StringComparison.InvariantCultureIgnoreCase));
             if (!entity.IsParentManyToMany() && entityType != null)
             {
                 // Add new Associations.
@@ -137,7 +136,7 @@ namespace Generator.Microsoft.Frameworks
             var function = ConceptualSchemaEntityContainer.FunctionImports.Where(f =>
                 entity.Name.Equals(f.Name, StringComparison.InvariantCultureIgnoreCase) ||
                 entity.EntityKeyName.Equals(f.Name, StringComparison.InvariantCultureIgnoreCase) ||
-                (!string.IsNullOrEmpty(f.EntitySet) && entity.EntityKeyName.Equals(f.EntitySet, StringComparison.InvariantCultureIgnoreCase))).FirstOrDefault();
+                (!String.IsNullOrEmpty(f.EntitySet) && entity.EntityKeyName.Equals(f.EntitySet, StringComparison.InvariantCultureIgnoreCase))).FirstOrDefault();
 
             if (function == null)
             {
@@ -173,7 +172,7 @@ namespace Generator.Microsoft.Frameworks
                     function.ReturnType = String.Format("Collection({0}.{1})", ConceptualSchema.Namespace, complexTypeName);
                     CreateConceptualComplexType(entity, complexTypeName);
                 }
-                else if (!string.IsNullOrEmpty(type) && !SystemTypeMapper.EfConceptualTypeToSystemType.ContainsKey(type))
+                else if (!String.IsNullOrEmpty(type) && !SystemTypeMapper.EfConceptualTypeToSystemType.ContainsKey(type))
                 {
                     function.ReturnType = null;
                     function.EntitySet = null;
@@ -246,7 +245,7 @@ namespace Generator.Microsoft.Frameworks
 
         private void CreateConceptualComplexType(IEntity entity, string complexTypeName = "")
         {
-            complexTypeName = !string.IsNullOrEmpty(complexTypeName)
+            complexTypeName = !String.IsNullOrEmpty(complexTypeName)
                                   ? complexTypeName
                                   : entity is CommandEntity
                                         ? ResolveEntityMappedName(entity.EntityKey() + "complex", entity.Name)
@@ -318,7 +317,7 @@ namespace Generator.Microsoft.Frameworks
             var associationSetsToRemove = new List<EntityContainer.AssociationSetLocalType>();
             foreach (var a in ConceptualSchemaEntityContainer.AssociationSets)
             {
-               var isEndPointValid = a.Ends.Count(e => ConceptualSchemaEntityContainer.EntitySets.Count(es => es.EntityType.Equals(string.Concat(ConceptualSchema.Namespace, ".", e.EntitySet), StringComparison.InvariantCultureIgnoreCase)) > 0) == 2;
+               var isEndPointValid = a.Ends.Count(e => ConceptualSchemaEntityContainer.EntitySets.Count(es => es.EntityType.Equals(String.Concat(ConceptualSchema.Namespace, ".", e.EntitySet), StringComparison.InvariantCultureIgnoreCase)) > 0) == 2;
                 if (processed.Contains(a.Name) || !isEndPointValid)
                     associationSetsToRemove.Add(a);
                 else
@@ -359,8 +358,8 @@ namespace Generator.Microsoft.Frameworks
                 RemoveDuplicateConceptualEntityTypeKeysAndProperties(entity);
 
                 var isEntitySetDefined = ConceptualSchemaEntityContainer.EntitySets.Count(e =>
-                    e.EntityType.Equals(string.Concat(ConceptualSchema.Namespace, ".", entity.Name), StringComparison.InvariantCultureIgnoreCase) ||
-                    (!string.IsNullOrEmpty(entity.BaseType) && e.EntityType.Equals(entity.BaseType, StringComparison.InvariantCultureIgnoreCase))) > 0;
+                    e.EntityType.Equals(String.Concat(ConceptualSchema.Namespace, ".", entity.Name), StringComparison.InvariantCultureIgnoreCase) ||
+                    (!String.IsNullOrEmpty(entity.BaseType) && e.EntityType.Equals(entity.BaseType, StringComparison.InvariantCultureIgnoreCase))) > 0;
 
                 if (_conceptualEntitiesToRemove.Contains(entity.Name) || processed.Contains(entity.Name) || !isEntitySetDefined || entity.Key == null || entity.Key.PropertyRefs.Count == 0)
                     entitiesToRemove.Add(entity);
@@ -379,7 +378,7 @@ namespace Generator.Microsoft.Frameworks
             foreach (var e in ConceptualSchemaEntityContainer.EntitySets)
             {
                 var isEntityTypeDefined = ConceptualSchema.EntityTypes.Count(et => et.Name.Equals(e.Name, StringComparison.InvariantCultureIgnoreCase)) > 0; 
-                //var isEntityDefinedInMappingLayer = MappingEntityContainer.EntitySetMappings.Count(es => es.EntityTypeMappings.Count(et => et.TypeName.Equals(string.Concat(ConceptualSchema.Namespace, ".", ResolveEntityMappedName(e.Name)), StringComparison.InvariantCultureIgnoreCase)) > 0) > 0;
+                //var isEntityDefinedInMappingLayer = MappingEntityContainer.EntitySetMappings.Count(es => es.EntityTypeMappings.Count(et => et.TypeName.Equals(String.Concat(ConceptualSchema.Namespace, ".", ResolveEntityMappedName(e.Name)), StringComparison.InvariantCultureIgnoreCase)) > 0) > 0;
                 if (processed.Contains(e.Name) || !isEntityTypeDefined)// || !isEntityDefinedInMappingLayer)
                     entitySetsToRemove.Add(e);
                 else
@@ -462,8 +461,8 @@ namespace Generator.Microsoft.Frameworks
 
             //<EntitySet Name="Categories" EntityType="PetShopModel1.Category" />
             var entitySet = ConceptualSchemaEntityContainer.EntitySets.Where(e =>
-                                                                             e.EntityType.Equals(string.Concat(ConceptualSchema.Namespace, ".", ResolveEntityMappedName(entity.EntityKey(), entity.Name)), StringComparison.InvariantCultureIgnoreCase) ||
-                                                                             e.EntityType.Equals(string.Concat(ConceptualSchema.Namespace, ".", entity.EntityKeyName), StringComparison.InvariantCultureIgnoreCase) ||
+                                                                             e.EntityType.Equals(String.Concat(ConceptualSchema.Namespace, ".", ResolveEntityMappedName(entity.EntityKey(), entity.Name)), StringComparison.InvariantCultureIgnoreCase) ||
+                                                                             e.EntityType.Equals(String.Concat(ConceptualSchema.Namespace, ".", entity.EntityKeyName), StringComparison.InvariantCultureIgnoreCase) ||
                                                                              entity.EntityKeyName.Equals(e.Name, StringComparison.InvariantCultureIgnoreCase) ||
                                                                              ResolveEntityMappedName(entity.EntityKey(), entity.Name).Equals(e.Name, StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault();
 
@@ -480,7 +479,7 @@ namespace Generator.Microsoft.Frameworks
 
             // Set or sync the default values.
             entitySet.Name = ResolveEntityMappedName(entity.EntityKey(), entity.Name);
-            entitySet.EntityType = string.Concat(ConceptualSchema.Namespace, ".", ResolveEntityMappedName(entity.EntityKey(), entity.Name));
+            entitySet.EntityType = String.Concat(ConceptualSchema.Namespace, ".", ResolveEntityMappedName(entity.EntityKey(), entity.Name));
 
             return entitySet;
         }
@@ -618,8 +617,26 @@ namespace Generator.Microsoft.Frameworks
                 if (!property.IsNullable)
                     entityProperty.Nullable = property.IsNullable;
 
-                entityProperty.DefaultValue = string.IsNullOrEmpty(entityProperty.DefaultValue) && !string.IsNullOrEmpty(property.DefaultValue) ? property.DefaultValue : null;
-                entityProperty.MaxLength = !string.IsNullOrEmpty(GetMaxLength(property)) ? GetMaxLength(property) : null;
+                if (String.IsNullOrEmpty(entityProperty.DefaultValue) && !String.IsNullOrEmpty(property.DefaultValue)) {
+                    if (String.Equals(property.BaseSystemType, "System.Boolean", StringComparison.OrdinalIgnoreCase))
+                        entityProperty.DefaultValue = property.DefaultValue.ToLower();
+                    else if (String.Equals(property.BaseSystemType, "System.Single", StringComparison.OrdinalIgnoreCase)
+                        || String.Equals(property.BaseSystemType, "System.Int16", StringComparison.OrdinalIgnoreCase)
+                        || String.Equals(property.BaseSystemType, "System.Int32", StringComparison.OrdinalIgnoreCase)
+                        || String.Equals(property.BaseSystemType, "System.Int64", StringComparison.OrdinalIgnoreCase)
+                        || String.Equals(property.BaseSystemType, "System.Byte", StringComparison.OrdinalIgnoreCase)
+                        || String.Equals(property.BaseSystemType, "System.Decimal", StringComparison.OrdinalIgnoreCase)
+                        || String.Equals(property.BaseSystemType, "System.Double", StringComparison.OrdinalIgnoreCase)
+                        || String.Equals(property.BaseSystemType, "System.String", StringComparison.OrdinalIgnoreCase))
+                        entityProperty.DefaultValue = property.DefaultValue;
+                    else
+                        entityProperty.DefaultValue = null;
+                }
+                else {
+                    entityProperty.DefaultValue = null;
+                }
+
+                entityProperty.MaxLength = !String.IsNullOrEmpty(GetMaxLength(property)) ? GetMaxLength(property) : null;
                 entityProperty.Precision = (property.DataType == DbType.Decimal || property.DataType == DbType.Currency && property.Precision > 0) ? property.Precision : (decimal?)null;
                 entityProperty.Scale = (property.DataType == DbType.Decimal || property.DataType == DbType.Currency && property.Scale > 0) ? property.Scale : (decimal?)null;
                 entityProperty.FixedLength = entityProperty.Type.Equals("String") || property.DataType == DbType.Binary ? property.FixedLength : (bool?)null;
@@ -736,11 +753,11 @@ namespace Generator.Microsoft.Frameworks
                 if (!property.IsNullable)
                     entityProperty.Nullable = property.IsNullable;
 
-                entityProperty.MaxLength = !string.IsNullOrEmpty(GetMaxLength(property)) ? GetMaxLength(property) : null;
+                entityProperty.MaxLength = !String.IsNullOrEmpty(GetMaxLength(property)) ? GetMaxLength(property) : null;
             }
         }
 
-        private void CreateConceptualAssociationSet(Association association)
+        private void CreateConceptualAssociationSet(IAssociation association)
         {
             IEntity principalEntity;
             IEntity dependentEntity;
@@ -767,7 +784,7 @@ namespace Generator.Microsoft.Frameworks
             }
             else
             {
-                _mappingAssociationNames[key] = associationSet.Association.Replace(string.Concat(ConceptualSchema.Namespace, "."), String.Empty);
+                _mappingAssociationNames[key] = associationSet.Association.Replace(String.Concat(ConceptualSchema.Namespace, "."), String.Empty);
 
                 // Remove the AssociationEnd's that don't exist.
                 var items = associationSet.Ends.Where(e => !e.Role.Equals(toRole) && !e.Role.Equals(principalEntity.Name) && !e.Role.Equals(fromRole) && !e.Role.Equals(dependentEntity.Name));
@@ -779,7 +796,7 @@ namespace Generator.Microsoft.Frameworks
 
             // Set or sync the default values.
             associationSet.Name = key;
-            associationSet.Association = string.Concat(ConceptualSchema.Namespace, ".", key);
+            associationSet.Association = String.Concat(ConceptualSchema.Namespace, ".", key);
 
             var principalEnd = CreateConceptualAssociationSetEnd(principalEntity, toRole, associationSet);
             var dependentEnd = CreateConceptualAssociationSetEnd(dependentEntity, fromRole, associationSet, principalEnd);
@@ -806,7 +823,7 @@ namespace Generator.Microsoft.Frameworks
             return end;
         }
 
-        private void CreateConceptualAssociation(Association association)
+        private void CreateConceptualAssociation(IAssociation association)
         {
             IEntity principalEntity;
             IEntity dependentEntity;
@@ -872,7 +889,7 @@ namespace Generator.Microsoft.Frameworks
             var end = new AssociationEnd()
             {
                 Role = role,
-                Type = string.Concat(ConceptualSchema.Namespace, ".", ResolveEntityMappedName(entity.EntityKey(), entity.Name))
+                Type = String.Concat(ConceptualSchema.Namespace, ".", ResolveEntityMappedName(entity.EntityKey(), entity.Name))
             };
 
             if (isCascadeDelete)
@@ -885,7 +902,7 @@ namespace Generator.Microsoft.Frameworks
             return end;
         }
 
-        private static void UpdateConceptualAssociationEndMultiplicity(Association association, AssociationEnd principalEnd, AssociationEnd dependentEnd)
+        private static void UpdateConceptualAssociationEndMultiplicity(IAssociation association, AssociationEnd principalEnd, AssociationEnd dependentEnd)
         {
             switch (association.AssociationType)
             {
@@ -954,7 +971,7 @@ namespace Generator.Microsoft.Frameworks
             }
         }
 
-        private void CreateConceptualNavigationProperty(EntityType entity, Association association)
+        private void CreateConceptualNavigationProperty(EntityType entity, IAssociation association)
         {
             IEntity principalEntity;
             IEntity dependentEntity;
@@ -984,10 +1001,10 @@ namespace Generator.Microsoft.Frameworks
                 entity.NavigationProperties.Add(navigationProperty);
             }
 
-            if (string.IsNullOrEmpty(navigationProperty.Name) || association.Name.StartsWith(navigationProperty.Name))
+            if (String.IsNullOrEmpty(navigationProperty.Name) || association.Name.StartsWith(navigationProperty.Name))
                 navigationProperty.Name = association.Name;
 
-            navigationProperty.Relationship = string.Concat(ConceptualSchema.Namespace, ".", key);
+            navigationProperty.Relationship = String.Concat(ConceptualSchema.Namespace, ".", key);
             navigationProperty.FromRole = fromRole;
             navigationProperty.ToRole = toRole;
         }
@@ -1003,7 +1020,7 @@ namespace Generator.Microsoft.Frameworks
             foreach (var nav in entity.NavigationProperties)
             {
                 //from navigationProperty in type.NavigationProperties
-                //                       where !(from a in entity.Associations select string.Concat(ConceptualSchema.Namespace, ".", ResolveAssociationMappedName(a.AssociationKeyName))).Contains(navigationProperty.Relationship)
+                //                       where !(from a in entity.Associations select String.Concat(ConceptualSchema.Namespace, ".", ResolveAssociationMappedName(a.AssociationKeyName))).Contains(navigationProperty.Relationship)
                 //                       select navigationProperty;
 
                 if (!proccessed.Contains(nav.Name) && ValidateConceptualNavigationProperty(nav))
@@ -1026,7 +1043,7 @@ namespace Generator.Microsoft.Frameworks
             if (associationSet == null) 
                 return false;
 
-            var association = ConceptualSchema.Associations.Where(a => a.Name == associationSet.Association.Replace(string.Concat(ConceptualSchema.Namespace, "."), "")).FirstOrDefault();
+            var association = ConceptualSchema.Associations.Where(a => a.Name == associationSet.Association.Replace(String.Concat(ConceptualSchema.Namespace, "."), "")).FirstOrDefault();
             if (association == null) 
                 return false;
 
@@ -1035,8 +1052,8 @@ namespace Generator.Microsoft.Frameworks
             if (fromRoleEnd == null || toRoleEnd == null)
                 return false;
 
-            var isValidFromRoleEntity = ConceptualSchema.EntityTypes.Count(es => fromRoleEnd.Type.Replace(string.Concat(ConceptualSchema.Namespace, "."), "").Equals(es.Name, StringComparison.InvariantCultureIgnoreCase)) > 0;
-            var isValidToRoleEntity = ConceptualSchema.EntityTypes.Count(es => toRoleEnd.Type.Replace(string.Concat(ConceptualSchema.Namespace, "."), "").Equals(es.Name, StringComparison.InvariantCultureIgnoreCase)) > 0;
+            var isValidFromRoleEntity = ConceptualSchema.EntityTypes.Count(es => fromRoleEnd.Type.Replace(String.Concat(ConceptualSchema.Namespace, "."), "").Equals(es.Name, StringComparison.InvariantCultureIgnoreCase)) > 0;
+            var isValidToRoleEntity = ConceptualSchema.EntityTypes.Count(es => toRoleEnd.Type.Replace(String.Concat(ConceptualSchema.Namespace, "."), "").Equals(es.Name, StringComparison.InvariantCultureIgnoreCase)) > 0;
             if (!isValidFromRoleEntity || !isValidToRoleEntity)
                 return false;
 
@@ -1046,7 +1063,7 @@ namespace Generator.Microsoft.Frameworks
             return false;
         }
 
-        private void ResolveConceptualAssociationValues(Association association, out IEntity principalEntity, out IEntity dependentEntity, out bool isParentEntity, out string keyName, out string toRole, out string fromRole)
+        private void ResolveConceptualAssociationValues(IAssociation association, out IEntity principalEntity, out IEntity dependentEntity, out bool isParentEntity, out string keyName, out string toRole, out string fromRole)
         {
             bool isManyToManyEntity = association.IsParentManyToMany();
             principalEntity = !isManyToManyEntity ? association.Entity : association.ForeignEntity;

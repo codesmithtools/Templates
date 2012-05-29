@@ -38,13 +38,13 @@ namespace CodeSmith.SchemaHelper
             EntityKeyName = EntitySource.Name;
             Name = EntitySource.Name;
 
-            if (!string.IsNullOrEmpty(EntitySource.BaseType))
+            if (!String.IsNullOrEmpty(EntitySource.BaseType))
             {
-                BaseType = EntitySource.BaseType.Replace(string.Concat(Namespace, "."), "");
+                BaseType = EntitySource.BaseType.Replace(String.Concat(Namespace, "."), "");
             }
 
             IsAbstract = EntitySource.IsAbstract;
-            TypeAccess = !string.IsNullOrEmpty(EntitySource.TypeAccess) ? EntitySource.TypeAccess : AccessibilityConstants.Public;
+            TypeAccess = !String.IsNullOrEmpty(EntitySource.TypeAccess) ? EntitySource.TypeAccess : AccessibilityConstants.Public;
 
             LoadKeys();
             LoadProperties();
@@ -147,12 +147,12 @@ namespace CodeSmith.SchemaHelper
                 if(principalRole == null || dependentRole == null) 
                     continue;
 
-                IEntity principalEntity = EntityStore.Instance.GetEntity(principalRole.Type.Replace(string.Concat(Namespace, "."), ""));
-                IEntity dependentEntity = EntityStore.Instance.GetEntity(dependentRole.Type.Replace(string.Concat(Namespace, "."), ""));
+                IEntity principalEntity = EntityStore.Instance.GetEntity(principalRole.Type.Replace(String.Concat(Namespace, "."), ""));
+                IEntity dependentEntity = EntityStore.Instance.GetEntity(dependentRole.Type.Replace(String.Concat(Namespace, "."), ""));
                 if (principalEntity == null || dependentEntity == null) 
                     continue;
 
-                Association association;
+                IAssociation association;
                 AssociationType type;
                 if (String.Equals(rel.NavigationProperty.FromRole, principalRole.Role))
                 {
@@ -166,20 +166,10 @@ namespace CodeSmith.SchemaHelper
                         throw new ArgumentException(String.Format("Invalid Multiplicity detected in the {0} Association.", rel.Association.Name));
 
                     // Note: There is no second association for ManyToMany associations...
-                    association = new Association(rel.Association.Name, type, principalEntity, dependentEntity, true, Namespace) { Name = rel.NavigationProperty.Name };
+                    association = new ConceptualAssociation(rel.Association, type, principalEntity, dependentEntity, true, Namespace) { Name = rel.NavigationProperty.Name };
 
                     if (rel.Association.ReferentialConstraint != null)
-                    {
-                        var properties = rel.Association.ReferentialConstraint.Principal.PropertyRefs;
-                        var otherProperties = rel.Association.ReferentialConstraint.Dependent.PropertyRefs;
-                        UpdatePropertyTypesWithForeignKeys(properties);
-
-                        for (int index = 0; index < properties.Count; index++)
-                        {
-                            if (!PropertyMap.ContainsKey(properties[index].Name)) continue;
-                            association.AddAssociationProperty(PropertyMap[properties[index].Name], dependentEntity.Properties.FirstOrDefault(p => p.KeyName.Equals(otherProperties[index].Name)));
-                        }
-                    }
+                        UpdatePropertyTypesWithForeignKeys(rel.Association.ReferentialConstraint.Principal.PropertyRefs);
                 }
                 else // Current Entity is the dependent entity (child).
                 {
@@ -193,20 +183,9 @@ namespace CodeSmith.SchemaHelper
                         throw new ArgumentException(String.Format("Invalid Multiplicity detected in the {0} Association.", rel.Association.Name));
 
                     // Note: There is no second association for ManyToMany associations...
-                    association = new Association(rel.Association.Name, type, dependentEntity, principalEntity, false, Namespace) { Name = rel.NavigationProperty.Name };
-                    
+                    association = new ConceptualAssociation(rel.Association, type, dependentEntity, principalEntity, false, Namespace) { Name = rel.NavigationProperty.Name };
                     if (rel.Association.ReferentialConstraint != null)
-                    {
-                        var properties = rel.Association.ReferentialConstraint.Dependent.PropertyRefs;
-                        var otherProperties = rel.Association.ReferentialConstraint.Principal.PropertyRefs;
-                        UpdatePropertyTypesWithForeignKeys(properties);
-
-                        for (int index = 0; index < properties.Count; index++)
-                        {
-                            if (!PropertyMap.ContainsKey(properties[index].Name)) continue;
-                            association.AddAssociationProperty(PropertyMap[properties[index].Name], principalEntity.Properties.FirstOrDefault(p => p.KeyName.Equals(otherProperties[index].Name)));
-                        }
-                    }
+                        UpdatePropertyTypesWithForeignKeys(rel.Association.ReferentialConstraint.Dependent.PropertyRefs);
                 }
 
                 if ((rel.Association.ReferentialConstraint == null || association.Properties.Count > 0) && !String.IsNullOrEmpty(association.AssociationKeyName) && !AssociationMap.ContainsKey(association.AssociationKey))
@@ -214,10 +193,8 @@ namespace CodeSmith.SchemaHelper
             }
         }
 
-        private void UpdatePropertyTypesWithForeignKeys(IEnumerable<PropertyRef> properties)
-        {
-            foreach (var property in properties)
-            {
+        private void UpdatePropertyTypesWithForeignKeys(IEnumerable<PropertyRef> properties) {
+            foreach (PropertyRef property in properties) {
                 var prop = PropertyMap[property.Name];
                 prop.PropertyType |= PropertyType.Foreign;
             }
@@ -255,13 +232,13 @@ namespace CodeSmith.SchemaHelper
 
         protected override void PopulateInheritanceProperties()
         {
-            if(!string.IsNullOrEmpty(BaseType))
+            if(!String.IsNullOrEmpty(BaseType))
                 BaseEntity = EntityStore.Instance.GetEntity(BaseType);
             
             foreach (IEntity entity in EntityStore.Instance.EntityCollection.Values)
             {
                 if ((entity is ConceptualEntity) == false || Name.Equals(entity.Name, StringComparison.InvariantCultureIgnoreCase) ||
-                    string.IsNullOrEmpty(((ConceptualEntity)entity).BaseType) || !Name.Equals(((ConceptualEntity)entity).BaseType, StringComparison.InvariantCultureIgnoreCase))
+                    String.IsNullOrEmpty(((ConceptualEntity)entity).BaseType) || !Name.Equals(((ConceptualEntity)entity).BaseType, StringComparison.InvariantCultureIgnoreCase))
                     continue;
 
                 if (!DerivedEntities.Contains(entity))
@@ -379,7 +356,7 @@ namespace CodeSmith.SchemaHelper
         {
             var key = searchCriteria.Key;
 
-            var result = (!string.IsNullOrEmpty(key) && searchCriteria.Properties.Count > 0 && SearchCriteria.Where(x => x.Key == key).Count() == 0);
+            var result = (!String.IsNullOrEmpty(key) && searchCriteria.Properties.Count > 0 && SearchCriteria.Where(x => x.Key == key).Count() == 0);
 
             if (result)
                 SearchCriteria.Add(searchCriteria);

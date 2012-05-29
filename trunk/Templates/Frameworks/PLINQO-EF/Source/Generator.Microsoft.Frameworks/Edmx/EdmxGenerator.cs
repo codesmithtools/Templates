@@ -173,7 +173,7 @@ namespace Generator.Microsoft.Frameworks
         //           entity.ExtendedProperties["CS_IsDeleteOnNull"] is bool && (bool)entity.ExtendedProperties["CS_IsDeleteOnNull"]);
         //}
 
-        private static bool IsCascadeDelete(Association association)
+        private static bool IsCascadeDelete(IAssociation association)
         {
            return (association.ExtendedProperties.ContainsKey("CS_CascadeDelete") && association.ExtendedProperties["CS_CascadeDelete"] != null &&
                    association.ExtendedProperties["CS_CascadeDelete"] is bool && (bool)association.ExtendedProperties["CS_CascadeDelete"]);
@@ -257,7 +257,7 @@ namespace Generator.Microsoft.Frameworks
         }
 
 
-        private static bool ExcludeAssociation(Association association)
+        private static bool ExcludeAssociation(IAssociation association)
         {
             foreach (var property in association.Properties)
             {
@@ -272,7 +272,7 @@ namespace Generator.Microsoft.Frameworks
             return false;
         }
 
-        private static void ResolveAssociationValues(Association association, out IEntity principalEntity, out IEntity dependentEntity, out bool isParentEntity)
+        private static void ResolveAssociationValues(IAssociation association, out IEntity principalEntity, out IEntity dependentEntity, out bool isParentEntity)
         {
             bool isManyToManyEntity = association.IsParentManyToMany();
             principalEntity = !isManyToManyEntity ? association.Entity : association.ForeignEntity;
@@ -291,7 +291,7 @@ namespace Generator.Microsoft.Frameworks
             {
                 if (_edmx.Runtimes.Count == 0)
                 {
-                    if (string.IsNullOrEmpty(_edmx.Version) || (!_edmx.Version.Equals("1.0") && !_edmx.Version.Equals("2.0")))
+                    if (String.IsNullOrEmpty(_edmx.Version) || (!_edmx.Version.Equals("1.0") && !_edmx.Version.Equals("2.0")))
                     {
                         _edmx.Version = "2.0";
                     }

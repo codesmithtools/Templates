@@ -89,8 +89,8 @@ namespace Generator.Microsoft.Frameworks
                 entity.Name.Equals(e.Name, StringComparison.InvariantCultureIgnoreCase) || // Safe Name.
                 entity.EntityKeyName.Equals(e.Name, StringComparison.InvariantCultureIgnoreCase) || // Database Name.
                 (e.EntityTypeMappings.Count > 0 &&
-                    e.EntityTypeMappings.Count(et => et.TypeName.Equals(string.Concat(ConceptualSchema.Namespace, ".", entity.Name), StringComparison.InvariantCultureIgnoreCase)) > 0 ||
-                    e.EntityTypeMappings.Count(et => et.TypeName.Equals(string.Concat(ConceptualSchema.Namespace, ".", entity.EntityKeyName), StringComparison.InvariantCultureIgnoreCase)) > 0 ||
+                    e.EntityTypeMappings.Count(et => et.TypeName.Equals(String.Concat(ConceptualSchema.Namespace, ".", entity.Name), StringComparison.InvariantCultureIgnoreCase)) > 0 ||
+                    e.EntityTypeMappings.Count(et => et.TypeName.Equals(String.Concat(ConceptualSchema.Namespace, ".", entity.EntityKeyName), StringComparison.InvariantCultureIgnoreCase)) > 0 ||
                     e.EntityTypeMappings.Count(et => et.TypeName.Equals(String.Format("IsTypeOf({0}.{1})", ConceptualSchema.Namespace, entity.Name), StringComparison.InvariantCultureIgnoreCase)) > 0 ||
                     e.EntityTypeMappings.Count(et => et.TypeName.Equals(String.Format("IsTypeOf({0}.{1})", ConceptualSchema.Namespace, entity.EntityKeyName), StringComparison.InvariantCultureIgnoreCase)) > 0 ||
                     e.EntityTypeMappings.Count(et => et.MappingFragments.Count > 0 && et.MappingFragments.Count(mf => mf.StoreEntitySet.Equals(entity.EntityKeyName, StringComparison.InvariantCultureIgnoreCase)) > 0) > 0)
@@ -115,10 +115,10 @@ namespace Generator.Microsoft.Frameworks
             var mapping = entitySet.EntityTypeMappings.FirstOrDefault();
             if (mapping == null)
             {
-                mapping = new EntityTypeMapping() { TypeName = string.Concat(ConceptualSchema.Namespace, ".", entity.Name) };
+                mapping = new EntityTypeMapping() { TypeName = String.Concat(ConceptualSchema.Namespace, ".", entity.Name) };
                 entitySet.EntityTypeMappings.Add(mapping);
             }
-            else if (!string.IsNullOrEmpty(mapping.TypeName))
+            else if (!String.IsNullOrEmpty(mapping.TypeName))
             {
                 entityName = mapping.TypeName.Replace("IsTypeOf(", "").Replace(String.Format("{0}.", ConceptualSchema.Namespace), "").Replace(")", "");
                 entityName = entityName.Equals(entity.Name, StringComparison.InvariantCultureIgnoreCase)
@@ -131,7 +131,7 @@ namespace Generator.Microsoft.Frameworks
             // Check for inheritance.
             mapping.TypeName = mapping.TypeName != null && mapping.TypeName.StartsWith("IsTypeOf") ?
                 String.Format("IsTypeOf({0}.{1})", ConceptualSchema.Namespace, entityName) :
-                string.Concat(ConceptualSchema.Namespace, ".", entityName);
+                String.Concat(ConceptualSchema.Namespace, ".", entityName);
 
             _mappingEntityNames.Add(entity.EntityKey(), entityName);
 
@@ -198,7 +198,7 @@ namespace Generator.Microsoft.Frameworks
 
                     MappingEntityContainer.AssociationSetMappings.Add(associationSetMapping);
                 }
-                else if (!string.IsNullOrEmpty(associationSetMapping.TypeName))
+                else if (!String.IsNullOrEmpty(associationSetMapping.TypeName))
                 {
                     typeName = associationSetMapping.TypeName.Replace(String.Format("{0}.", ConceptualSchema.Namespace), "");
                     typeName = typeName.Equals(association.Entity.EntityKeyName, StringComparison.InvariantCultureIgnoreCase)
@@ -207,7 +207,7 @@ namespace Generator.Microsoft.Frameworks
 
                 // Set or sync the default values.
                 associationSetMapping.Name = association.Entity.EntityKeyName;
-                associationSetMapping.TypeName = string.Concat(ConceptualSchema.Namespace, ".", typeName);
+                associationSetMapping.TypeName = String.Concat(ConceptualSchema.Namespace, ".", typeName);
                 associationSetMapping.StoreEntitySet = association.Entity.EntityKeyName;
 
                 _mappingAssociationNames[association.AssociationKeyName] = typeName;
@@ -302,7 +302,7 @@ namespace Generator.Microsoft.Frameworks
             foreach (var a in MappingEntityContainer.AssociationSetMappings)
             {
                 var isValidConceptualAssociation = ConceptualSchemaEntityContainer.AssociationSets.Count(es => a.TypeName.Equals(es.Association, StringComparison.InvariantCultureIgnoreCase)) > 0;
-                var isValidStorageAssociation = StorageSchemaEntityContainer.EntitySets.Count(es => a.StoreEntitySet.Equals(es.Name, StringComparison.InvariantCultureIgnoreCase) && !string.IsNullOrEmpty(es.Table)) > 0;
+                var isValidStorageAssociation = StorageSchemaEntityContainer.EntitySets.Count(es => a.StoreEntitySet.Equals(es.Name, StringComparison.InvariantCultureIgnoreCase) && !String.IsNullOrEmpty(es.Table)) > 0;
                 if (processed.Contains(a.Name) || (!isValidConceptualAssociation || !_conceptualAssociations.Contains(a.Name) || !isValidStorageAssociation))
                     associationSetMappingsToRemove.Add(a);
                 else
@@ -377,10 +377,10 @@ namespace Generator.Microsoft.Frameworks
                 entity.Name.Equals(e.FunctionImportName, StringComparison.InvariantCultureIgnoreCase) || // Safe Name.
                 entity.EntityKeyName.Equals(e.FunctionImportName, StringComparison.InvariantCultureIgnoreCase) || // Database Name.
                 (e.ResultMapping != null && e.ResultMapping.ComplexTypeMappings.Count > 0 &&
-                    (e.ResultMapping.ComplexTypeMappings.Count(et => et.TypeName.Equals(string.Concat(ConceptualSchema.Namespace, ".", entity.Name), StringComparison.InvariantCultureIgnoreCase)) > 0 ||
-                    e.ResultMapping.ComplexTypeMappings.Count(et => et.TypeName.Equals(string.Concat(ConceptualSchema.Namespace, ".", entity.Name, "Result"), StringComparison.InvariantCultureIgnoreCase)) > 0 ||
-                    e.ResultMapping.ComplexTypeMappings.Count(et => et.TypeName.Equals(string.Concat(ConceptualSchema.Namespace, ".", entity.EntityKeyName), StringComparison.InvariantCultureIgnoreCase)) > 0 ||
-                    e.ResultMapping.ComplexTypeMappings.Count(et => et.TypeName.Equals(string.Concat(ConceptualSchema.Namespace, ".", entity.EntityKeyName, "Result"), StringComparison.InvariantCultureIgnoreCase)) > 0))).FirstOrDefault();
+                    (e.ResultMapping.ComplexTypeMappings.Count(et => et.TypeName.Equals(String.Concat(ConceptualSchema.Namespace, ".", entity.Name), StringComparison.InvariantCultureIgnoreCase)) > 0 ||
+                    e.ResultMapping.ComplexTypeMappings.Count(et => et.TypeName.Equals(String.Concat(ConceptualSchema.Namespace, ".", entity.Name, "Result"), StringComparison.InvariantCultureIgnoreCase)) > 0 ||
+                    e.ResultMapping.ComplexTypeMappings.Count(et => et.TypeName.Equals(String.Concat(ConceptualSchema.Namespace, ".", entity.EntityKeyName), StringComparison.InvariantCultureIgnoreCase)) > 0 ||
+                    e.ResultMapping.ComplexTypeMappings.Count(et => et.TypeName.Equals(String.Concat(ConceptualSchema.Namespace, ".", entity.EntityKeyName, "Result"), StringComparison.InvariantCultureIgnoreCase)) > 0))).FirstOrDefault();
 
             //NOTE: We could also possibly look up the table name by looking at the StorageModel's EntitySet Tables Property.
 
@@ -396,9 +396,9 @@ namespace Generator.Microsoft.Frameworks
                 MappingEntityContainer.FunctionImportMappings.Add(importMapping);
             }
 
-            importMapping.FunctionName = string.Concat(StorageSchema.Namespace, ".", entity.EntityKeyName);
+            importMapping.FunctionName = String.Concat(StorageSchema.Namespace, ".", entity.EntityKeyName);
 
-            if (string.IsNullOrEmpty(importMapping.FunctionImportName) || !ConceptualSchemaEntityContainer.FunctionImports.Exists(importMapping.FunctionImportName))
+            if (String.IsNullOrEmpty(importMapping.FunctionImportName) || !ConceptualSchemaEntityContainer.FunctionImports.Exists(importMapping.FunctionImportName))
                 importMapping.FunctionImportName = entity.Name;
 
             #endregion
@@ -434,10 +434,10 @@ namespace Generator.Microsoft.Frameworks
                     EntityTypeMappings = new List<FunctionImportEntityTypeMapping>()
                 };
 
-                mapping = new FunctionImportEntityTypeMapping() { TypeName = string.Concat(ConceptualSchema.Namespace, ".", entityName) };
+                mapping = new FunctionImportEntityTypeMapping() { TypeName = String.Concat(ConceptualSchema.Namespace, ".", entityName) };
                 importMapping.ResultMapping.EntityTypeMappings.Add(mapping);
             }
-            else if (!string.IsNullOrEmpty(mapping.TypeName))
+            else if (!String.IsNullOrEmpty(mapping.TypeName))
             {
                 entityName = mapping.TypeName.Replace("IsTypeOf(", "").Replace(String.Format("{0}.", ConceptualSchema.Namespace), "").Replace(")", "");
                 entityName = entityName.Equals(entity.Name, StringComparison.InvariantCultureIgnoreCase) ? entity.Name : entityName;
@@ -460,7 +460,7 @@ namespace Generator.Microsoft.Frameworks
         {
             //<ResultMapping>
             //  <ComplexTypeMapping TypeName="PetShopModel.GetCategoryById_Result">
-            string entityName = string.Concat(entity.Name, "Result");
+            string entityName = String.Concat(entity.Name, "Result");
             var mapping = importMapping.ResultMapping != null && importMapping.ResultMapping.ComplexTypeMappings != null
                               ? importMapping.ResultMapping.ComplexTypeMappings.FirstOrDefault()
                               : null;
@@ -472,17 +472,17 @@ namespace Generator.Microsoft.Frameworks
                                                       ComplexTypeMappings = new List<FunctionImportComplexTypeMapping>()
                                                   };
 
-                mapping = new FunctionImportComplexTypeMapping() { TypeName = string.Concat(ConceptualSchema.Namespace, ".", entityName) };
+                mapping = new FunctionImportComplexTypeMapping() { TypeName = String.Concat(ConceptualSchema.Namespace, ".", entityName) };
                 importMapping.ResultMapping.ComplexTypeMappings.Add(mapping);
             }
-            else if (!string.IsNullOrEmpty(mapping.TypeName))
+            else if (!String.IsNullOrEmpty(mapping.TypeName))
             {
                 entityName = mapping.TypeName.Replace("IsTypeOf(", "").Replace(String.Format("{0}.", ConceptualSchema.Namespace), "").Replace(")", "");
                 entityName = entityName.Equals(entity.Name, StringComparison.InvariantCultureIgnoreCase) ? entity.Name : entityName;
             }
 
             if(ConceptualSchema.ComplexTypes.Count(c => c.Name.Equals(entityName, StringComparison.InvariantCultureIgnoreCase)) == 0)
-                entityName = string.Concat(entity.Name, "Result");
+                entityName = String.Concat(entity.Name, "Result");
 
             // Check for inheritance.
             mapping.TypeName = String.Format("{0}.{1}", ConceptualSchema.Namespace, entityName);
@@ -640,7 +640,7 @@ namespace Generator.Microsoft.Frameworks
         /// </summary>
         /// <param name="endProperty">The EndProperty.</param>
         /// <param name="association">The association.</param>
-        private void MergeScalarProperties(EndProperty endProperty, Association association)
+        private void MergeScalarProperties(EndProperty endProperty, IAssociation association)
         {
             var properties = new List<ScalarProperty>();
 

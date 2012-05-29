@@ -250,7 +250,7 @@ namespace LinqToEdmx
     /// </param>
     /// <returns>An <see cref="Edmx"/> instance loaded with metadata from the <paramref name="path"/>.</returns>
     /// <remarks>
-    /// The path to the workspace metadata follows the same rules as paths for embedded resources in the Entity Data Model connection string. 
+    /// The path to the workspace metadata follows the same rules as paths for embedded resources in the Entity Data Model connection String. 
     /// See <see cref="http://msdn.microsoft.com/en-us/library/cc716756(VS.100).aspx">Connection Strings (Entity Framework)</see> for more information.
     /// </remarks>
     public static Edmx Load(string path)
