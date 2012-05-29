@@ -8,12 +8,12 @@ namespace CodeSmith.SchemaHelper
     /// </summary>
     public static class AssociationExtensions
     {
-        public static string BuildObjectInitializer(this Association association)
+        public static string BuildObjectInitializer(this IAssociation association)
         {
             return association.BuildObjectInitializer(false);
         }
 
-        public static string BuildObjectInitializer(this Association association, bool usePropertyName)
+        public static string BuildObjectInitializer(this IAssociation association, bool usePropertyName)
         {
             string parameters = String.Empty;
 
@@ -35,12 +35,12 @@ namespace CodeSmith.SchemaHelper
             return parameters.TrimStart(new[] { ',', ' ' });
         }
 
-        public static string BuildNullableObjectInitializer(this Association association)
+        public static string BuildNullableObjectInitializer(this IAssociation association)
         {
             return association.BuildNullableObjectInitializer(false);
         }
 
-        public static string BuildNullableObjectInitializer(this Association association, bool usePropertyName)
+        public static string BuildNullableObjectInitializer(this IAssociation association, bool usePropertyName)
         {
             string parameters = String.Empty;
 
@@ -67,7 +67,7 @@ namespace CodeSmith.SchemaHelper
         /// </summary>
         /// <param name="association"></param>
         /// <returns></returns>
-        public static string BuildNullCheckStatement(this Association association)
+        public static string BuildNullCheckStatement(this IAssociation association)
         {
             return association.BuildNullCheckStatement(false, true, false, false);
         }
@@ -81,7 +81,7 @@ namespace CodeSmith.SchemaHelper
         /// <param name="useAndAlso"></param>
         /// <param name="trimEnd"></param>
         /// <returns></returns>
-        public static string BuildNullCheckStatement(this Association association, bool usePropertyName, bool useNot, bool useAndAlso, bool trimEnd)
+        public static string BuildNullCheckStatement(this IAssociation association, bool usePropertyName, bool useNot, bool useAndAlso, bool trimEnd)
         {
             return association.BuildNullCheckStatement(false, true, false, false, null);
         }
@@ -96,7 +96,7 @@ namespace CodeSmith.SchemaHelper
         /// <param name="trimEnd"></param>
         /// <param name="nullExpression">If this value is not set to null and the parameters is blank, then this exspression will be returned.</param>
         /// <returns></returns>
-        public static string BuildNullCheckStatement(this Association association, bool usePropertyName, bool useNot, bool useAndAlso, bool trimEnd, bool? nullExpression)
+        public static string BuildNullCheckStatement(this IAssociation association, bool usePropertyName, bool useNot, bool useAndAlso, bool trimEnd, bool? nullExpression)
         {
             string exspression = useAndAlso ? "&& " : "|| ";
             string lastParameter = String.Empty;
@@ -140,12 +140,12 @@ namespace CodeSmith.SchemaHelper
             return parameters.TrimStart(new[] { ' ' });
         }
 
-        public static string BuildParametersVariables(this Association association)
+        public static string BuildParametersVariables(this IAssociation association)
         {
             return association.BuildParametersVariables(false);
         }
 
-        public static string BuildParametersVariables(this Association association, bool includeConnectionParameter)
+        public static string BuildParametersVariables(this IAssociation association, bool includeConnectionParameter)
         {
             string parameters = String.Empty;
 
@@ -162,7 +162,7 @@ namespace CodeSmith.SchemaHelper
             return parameters.TrimStart(new[] { ',', ' ' });
         }
 
-        public static string BuildUpdateStatementVariables(this Association association, List<Association> associations, int currentRecord, bool includeConnectionParameter)
+        public static string BuildUpdateStatementVariables(this IAssociation association, List<IAssociation> associations, int currentRecord, bool includeConnectionParameter)
         {
             string parameters = String.Empty;
 

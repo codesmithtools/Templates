@@ -49,13 +49,13 @@ public override void Render(System.IO.TextWriter writer)
 
 public override bool OnEntityChanging()
 {
-    if (string.IsNullOrEmpty(BusinessClassName))
+    if (String.IsNullOrEmpty(BusinessClassName))
     {
-        BusinessClassName = string.Concat(Entity.Name, "List");
+        BusinessClassName = String.Concat(Entity.Name, "List");
         ChildBusinessClassName = Entity.Name;
     }
 
-    if (string.IsNullOrEmpty(CriteriaClassName) || CriteriaClassName.Equals("Criteria", StringComparison.InvariantCultureIgnoreCase))
+    if (String.IsNullOrEmpty(CriteriaClassName) || CriteriaClassName.Equals("Criteria", StringComparison.InvariantCultureIgnoreCase))
         CriteriaClassName = String.Concat(Entity.Name, "Criteria");
 
     return false;

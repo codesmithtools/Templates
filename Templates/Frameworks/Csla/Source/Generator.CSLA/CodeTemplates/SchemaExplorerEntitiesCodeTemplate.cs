@@ -396,7 +396,7 @@ namespace Generator.CSLA.CodeTemplates
             Configuration.Instance.CleanExpressions.Clear();
             foreach (string clean in CleanExpressions)
             {
-                if (!string.IsNullOrEmpty(clean))
+                if (!String.IsNullOrEmpty(clean))
                 {
                     Configuration.Instance.CleanExpressions.Add(new Regex(clean, RegexOptions.IgnoreCase));
                 }
@@ -411,7 +411,7 @@ namespace Generator.CSLA.CodeTemplates
             Configuration.Instance.IgnoreExpressions.Clear();
             foreach (string ignore in IgnoreExpressions)
             {
-                if (!string.IsNullOrEmpty(ignore))
+                if (!String.IsNullOrEmpty(ignore))
                 {
                     Configuration.Instance.IgnoreExpressions.Add(new Regex(ignore, RegexOptions.IgnoreCase));
                 }
@@ -420,7 +420,7 @@ namespace Generator.CSLA.CodeTemplates
             Configuration.Instance.IncludeExpressions.Clear();
             foreach (string include in IncludeExpressions)
             {
-                if (!string.IsNullOrEmpty(include))
+                if (!String.IsNullOrEmpty(include))
                 {
                     Configuration.Instance.IncludeExpressions.Add(new Regex(include, RegexOptions.IgnoreCase));
                 }

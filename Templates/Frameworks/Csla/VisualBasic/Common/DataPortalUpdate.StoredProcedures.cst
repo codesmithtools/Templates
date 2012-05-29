@@ -21,7 +21,7 @@
                 item = item.Save()
     
                 ' Mark editable child lists as dirty. This code may need to be updated to one-to-one relationships.
-    <% For Each association As Association In Entity.Associations.Where(Function(a) a.AssociationType = AssociationType.OneToMany OrElse a.AssociationType = AssociationType.ZeroOrOneToMany OrElse a.AssociationType = AssociationType.ManyToMany)
+    <% For Each association As IAssociation In Entity.Associations.Where(Function(a) a.AssociationType = AssociationType.OneToMany OrElse a.AssociationType = AssociationType.ZeroOrOneToMany OrElse a.AssociationType = AssociationType.ManyToMany)
             If(BusinessObjectExists(association, "List") = False AndAlso IsReadOnlyBusinessObject(association, "InfoList")) Then
                 Continue For
             End If %>

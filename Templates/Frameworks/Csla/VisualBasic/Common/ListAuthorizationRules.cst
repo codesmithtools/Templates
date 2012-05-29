@@ -39,7 +39,7 @@
             'AuthorizationRules.AllowRead(<%= prop.PrivateMemberVariableName %>Property, canRead)
     
     <% Next %>
-    <% For Each association As Association In Entity.Associations %>
+    <% For Each association As IAssociation In Entity.Associations %>
             ''<%= association.Name %>
             'AuthorizationRules.AllowRead(<%= association.PrivateMemberVariableName %>Property, canRead)
 

@@ -7,7 +7,7 @@
 <%@ Import Namespace="CodeSmith.SchemaHelper" %>
 <%@ Import Namespace="System.Linq" %>
             Dim cancel As Boolean = False
-<% Dim associations As System.Collections.Generic.List(Of Association) = Entity.Associations.Where(Function(a) a.AssociationType = AssociationType.ManyToOne OrElse a.AssociationType = AssociationType.ManyToZeroOrOne).Distinct().ToList()
+<% Dim associations As System.Collections.Generic.List(Of IAssociation) = Entity.Associations.Where(Function(a) a.AssociationType = AssociationType.ManyToOne OrElse a.AssociationType = AssociationType.ManyToZeroOrOne).Distinct().ToList()
    If Not RenderOptionalContent AndAlso associations.Count() > 0 Then %>
             OnChildUpdating(<%= associations.BuildArgumentVariables(true) %>, cancel)
 <% Else %>
@@ -81,7 +81,7 @@
     <% If (Entity.Associations.Count() > 0) Then
         If (Not RenderOptionalContent) Then
         Dim childCount As Integer = 0
-        For Each a As Association In Entity.Associations.Where(Function(assoc) assoc.AssociationType = AssociationType.OneToMany OrElse assoc.AssociationType = AssociationType.ZeroOrOneToMany OrElse assoc.AssociationType = AssociationType.ManyToMany)
+        For Each a As IAssociation In Entity.Associations.Where(Function(assoc) assoc.AssociationType = AssociationType.OneToMany OrElse assoc.AssociationType = AssociationType.ZeroOrOneToMany OrElse assoc.AssociationType = AssociationType.ManyToMany)
             If IsChildBusinessObject(a) Or IsSwitchableObject(a) Then
                 childCount += 1
             End If

@@ -150,7 +150,7 @@ namespace CodeSmith.SchemaHelper
                 // Resolve property Name from relationship.
                 if (isChildInsertUpdate && property.IsType(PropertyType.Foreign))
                 {
-                    foreach (Association association in property.Entity.Associations.Where(a => a.AssociationType == AssociationType.ManyToOne || a.AssociationType == AssociationType.ManyToZeroOrOne))
+                    foreach (var association in property.Entity.Associations.Where(a => a.AssociationType == AssociationType.ManyToOne || a.AssociationType == AssociationType.ManyToZeroOrOne))
                     {
                         foreach (AssociationProperty associationProperty in association.Properties)
                         {
@@ -182,7 +182,7 @@ namespace CodeSmith.SchemaHelper
                     //includeThisPrefix = this.
                     //castprefix = item.
                     //propertyName = bo.propertyname or propertyname
-                    if (!string.IsNullOrEmpty(className) && property.SystemType != "System.Byte[]")
+                    if (!String.IsNullOrEmpty(className) && property.SystemType != "System.Byte[]")
                     {
                         cast = String.Format("ADOHelper.NullCheck({3} != null ? {0}{1}{2} : {4}));", includeThisPrefix, castPrefix, propertyName, className, nullableType);
                         originalCast = String.Format("ADOHelper.NullCheck({3} != null ? {0}{1}{2} : {4}));", includeThisPrefix, castPrefix, originalPropertyName, className, originalNullableType);
@@ -195,7 +195,7 @@ namespace CodeSmith.SchemaHelper
                 }
                 else
                 {
-                    if (!string.IsNullOrEmpty(className) && property.SystemType != "System.Byte[]")
+                    if (!String.IsNullOrEmpty(className) && property.SystemType != "System.Byte[]")
                     {
                         cast = String.Format("{3} != null ? {0}{1}{2} : {4});", includeThisPrefix, castPrefix, propertyName, className, nullableType);
                         originalCast = String.Format("{3} != null ? {0}{1}{2} : {4});", includeThisPrefix, castPrefix, originalPropertyName, className, originalNullableType);

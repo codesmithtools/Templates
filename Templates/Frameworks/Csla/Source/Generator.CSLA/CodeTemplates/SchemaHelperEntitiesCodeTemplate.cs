@@ -722,7 +722,7 @@ namespace Generator.CSLA.CodeTemplates
             var entities = new Dictionary<string, IEntity>();
             foreach (var entity in list)
             {
-                foreach (Association associationProperty in entity.Associations.Where(a => a.AssociationType == AssociationType.ManyToOne || a.AssociationType == AssociationType.ManyToZeroOrOne))
+                foreach (var associationProperty in entity.Associations.Where(a => a.AssociationType == AssociationType.ManyToOne || a.AssociationType == AssociationType.ManyToZeroOrOne))
                 {
                     foreach (AssociationProperty property in associationProperty.Properties)
                     {
@@ -733,7 +733,7 @@ namespace Generator.CSLA.CodeTemplates
                     }
                 }
 
-                foreach (Association associationProperty in entity.Associations.Where(a => a.AssociationType == AssociationType.OneToZeroOrOne))
+                foreach (var associationProperty in entity.Associations.Where(a => a.AssociationType == AssociationType.OneToZeroOrOne))
                 {
                     foreach (AssociationProperty property in associationProperty.Properties)
                     {
@@ -753,7 +753,7 @@ namespace Generator.CSLA.CodeTemplates
             var entities = new Dictionary<string, IEntity>();
             foreach (var entity in list)
             {
-                foreach (Association associationProperty in entity.Associations.Where(a => a.AssociationType == AssociationType.OneToMany || a.AssociationType == AssociationType.ManyToOne))
+                foreach (var associationProperty in entity.Associations.Where(a => a.AssociationType == AssociationType.OneToMany || a.AssociationType == AssociationType.ManyToOne))
                 {
                     foreach (AssociationProperty property in associationProperty.Properties)
                     {

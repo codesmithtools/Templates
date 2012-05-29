@@ -130,7 +130,7 @@ foreach(var property in Entity.GetProperties(PropertyType.NoConcurrency)){ if(pr
             var cancel = false;
             
             OnToString(ref result, ref cancel);
-            if(cancel && !string.IsNullOrEmpty(result))
+            if(cancel && !String.IsNullOrEmpty(result))
                 return result;
             
             if (_bag.Count == 0)

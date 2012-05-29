@@ -40,7 +40,7 @@
             // AuthorizationRules.AllowRead(<%= property.PrivateMemberVariableName %>Property, canRead);
 
 <% } %>
-<% foreach(Association association in Entity.Associations){ %>
+<% foreach(IAssociation association in Entity.Associations){ %>
             //// <%= association.Name %>
             // AuthorizationRules.AllowRead(<%= association.PrivateMemberVariableName %>Property, canRead);
 

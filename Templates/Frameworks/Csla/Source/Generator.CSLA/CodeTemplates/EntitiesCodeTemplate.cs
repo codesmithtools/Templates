@@ -13,16 +13,16 @@ namespace Generator.CSLA
         {
             base.OnDatabaseChanged();
 
-            //if (string.IsNullOrEmpty(DataClassName))
+            //if (String.IsNullOrEmpty(DataClassName))
             //    DataClassName = "DataAccessLayer";
 
-            if (string.IsNullOrEmpty(SolutionName))
+            if (String.IsNullOrEmpty(SolutionName))
                 SolutionName = SourceDatabase.Name; //.Namespace();
 
-            if (string.IsNullOrEmpty(ProcedurePrefix))
+            if (String.IsNullOrEmpty(ProcedurePrefix))
                 ProcedurePrefix = "CSLA_";
 
-            if (string.IsNullOrEmpty(Location))
+            if (String.IsNullOrEmpty(Location))
                 Location = Path.Combine(CodeSmith.Engine.Configuration.Instance.CodeSmithTemplatesDirectory, Path.Combine("CSLA", SourceDatabase.Name));
         }
 
@@ -30,7 +30,7 @@ namespace Generator.CSLA
         {
             if (DataAccessImplementation == DataAccessMethod.LinqToSQL)
             {
-                if (string.IsNullOrEmpty(LinqToSQLContextNamespace))
+                if (String.IsNullOrEmpty(LinqToSQLContextNamespace))
                 {
                     LinqToSQLContextNamespace = String.Format("{0}.Data", SourceDatabase);
                     LinqToSQLDataContextName = String.Format("{0}DataContext", SourceDatabase);

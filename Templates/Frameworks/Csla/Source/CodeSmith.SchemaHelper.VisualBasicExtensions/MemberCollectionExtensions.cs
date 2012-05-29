@@ -42,7 +42,7 @@ namespace CodeSmith.SchemaHelper
 
                 if (includeOriginal && property.IsType(PropertyType.Key) && !property.IsType(PropertyType.Identity))
                     propertyName = isObjectFactory ? String.Format("item.Original{0}", property.Name) : String.Format("Original{0}", property.Name);
-                parameters += string.Format("\r\n            {3}{0} = {1}{2}", property.Name, propertyName, property.IsNullable && property.SystemType != "System.String" && property.SystemType != "System.Byte()" ? ".Value" : String.Empty, prefix);
+                parameters += String.Format("\r\n            {3}{0} = {1}{2}", property.Name, propertyName, property.IsNullable && property.SystemType != "System.String" && property.SystemType != "System.Byte()" ? ".Value" : String.Empty, prefix);
             }
 
             return parameters.TrimStart(new[] { '\r', '\n', ',' });
@@ -60,7 +60,7 @@ namespace CodeSmith.SchemaHelper
             foreach (var property in members)
             {
                 string systemType = isNullable ? property.SystemType : property.SystemType.TrimEnd(new[] { '?' });
-                parameters += string.Format(", ByVal {0} As {1}", property.VariableName, systemType);
+                parameters += String.Format(", ByVal {0} As {1}", property.VariableName, systemType);
             }
 
             return parameters.TrimStart(new[] { ',', ' ' });
@@ -106,7 +106,7 @@ namespace CodeSmith.SchemaHelper
                 // Resolve property Name from relationship.
                 if (isChildInsertUpdate && property.IsType(PropertyType.Foreign))
                 {
-                    foreach (Association association in property.Entity.Associations.Where(a => a.AssociationType == AssociationType.ManyToOne || a.AssociationType == AssociationType.ManyToZeroOrOne))
+                    foreach (var association in property.Entity.Associations.Where(a => a.AssociationType == AssociationType.ManyToOne || a.AssociationType == AssociationType.ManyToZeroOrOne))
                     {
                         foreach (AssociationProperty associationProperty in association.Properties)
                         {
@@ -127,7 +127,7 @@ namespace CodeSmith.SchemaHelper
 
                 var nullableType = String.Format("{0}{1}", !isObjectFactory ? "Me." : String.Empty, property.Name);
                 var originalNullableType = String.Format("{0}Original{1}", !isObjectFactory ? "Me." : String.Empty, property.Name);
-                //var nullableType = string.Format("New {0}()", property.SystemType);
+                //var nullableType = String.Format("New {0}()", property.SystemType);
                 //if (property.SystemType == "System.String" || property.SystemType == "System.Byte()")
                 //    nullableType = "Nothing";
 
@@ -138,28 +138,28 @@ namespace CodeSmith.SchemaHelper
                     //includeThisPrefix = this.
                     //castprefix = item.
                     //propertyName = bo.propertyname or propertyname
-                    if (!string.IsNullOrEmpty(className) && property.SystemType != "System.Byte()")
+                    if (!String.IsNullOrEmpty(className) && property.SystemType != "System.Byte()")
                     {
-                        cast = string.Format("ADOHelper.NullCheck(If(Not({3} Is Nothing), {0}{1}{2}, {4})))", includeThisPrefix, castPrefix, propertyName, className, nullableType);
-                        originalCast = string.Format("ADOHelper.NullCheck(If(Not({3} Is Nothing), {0}{1}{2}, {4})))", includeThisPrefix, castPrefix, originalPropertyName, className, originalNullableType);
+                        cast = String.Format("ADOHelper.NullCheck(If(Not({3} Is Nothing), {0}{1}{2}, {4})))", includeThisPrefix, castPrefix, propertyName, className, nullableType);
+                        originalCast = String.Format("ADOHelper.NullCheck(If(Not({3} Is Nothing), {0}{1}{2}, {4})))", includeThisPrefix, castPrefix, originalPropertyName, className, originalNullableType);
                     }
                     else
                     {
-                        cast = string.Format("ADOHelper.NullCheck({0}{1}{2}))", includeThisPrefix, castPrefix, propertyName);
-                        originalCast = string.Format("ADOHelper.NullCheck({0}{1}{2}))", includeThisPrefix, castPrefix, originalPropertyName);
+                        cast = String.Format("ADOHelper.NullCheck({0}{1}{2}))", includeThisPrefix, castPrefix, propertyName);
+                        originalCast = String.Format("ADOHelper.NullCheck({0}{1}{2}))", includeThisPrefix, castPrefix, originalPropertyName);
                     }
                 }
                 else
                 {
-                    if (!string.IsNullOrEmpty(className) && property.SystemType != "System.Byte()")
+                    if (!String.IsNullOrEmpty(className) && property.SystemType != "System.Byte()")
                     {
-                        cast = string.Format("If(Not({3} Is Nothing), {0}{1}{2}, {4}))", includeThisPrefix, castPrefix, propertyName, className, nullableType);
-                        originalCast = string.Format("If(Not({3} Is Nothing), {0}{1}{2}, {4}))", includeThisPrefix, castPrefix, originalPropertyName, className, originalNullableType);
+                        cast = String.Format("If(Not({3} Is Nothing), {0}{1}{2}, {4}))", includeThisPrefix, castPrefix, propertyName, className, nullableType);
+                        originalCast = String.Format("If(Not({3} Is Nothing), {0}{1}{2}, {4}))", includeThisPrefix, castPrefix, originalPropertyName, className, originalNullableType);
                     }
                     else
                     {
-                        cast = string.Format("{0}{1}{2})", includeThisPrefix, castPrefix, propertyName);
-                        originalCast = string.Format("{0}{1}{2})", includeThisPrefix, castPrefix, originalPropertyName);
+                        cast = String.Format("{0}{1}{2})", includeThisPrefix, castPrefix, propertyName);
+                        originalCast = String.Format("{0}{1}{2})", includeThisPrefix, castPrefix, originalPropertyName);
                     }
                 }
 
@@ -215,7 +215,7 @@ namespace CodeSmith.SchemaHelper
             foreach (var property in members)
             {
                 if (property.IsType(PropertyType.Key) && !property.IsType(PropertyType.Identity))
-                    statement += string.Format(" Or Not {1}Original{0} = {1}{0}", property.Name, prefix);
+                    statement += String.Format(" Or Not {1}Original{0} = {1}{0}", property.Name, prefix);
             }
 
             if (String.IsNullOrWhiteSpace(statement))

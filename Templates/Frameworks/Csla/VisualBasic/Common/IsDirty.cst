@@ -19,19 +19,19 @@
                     End If
     
     <%-- One-To-Zero-Or-One --%>
-    <% For Each association As Association In Entity.Associations.Where(Function(a) a.AssociationType = AssociationType.OneToZeroOrOne OrElse a.AssociationType = AssociationType.OneToOne) %>
+    <% For Each association As IAssociation In Entity.Associations.Where(Function(a) a.AssociationType = AssociationType.OneToZeroOrOne OrElse a.AssociationType = AssociationType.OneToOne) %>
                     If (FieldManager.FieldExists(<%= association.PrivateMemberVariableName %>Property) AndAlso <%= association.Name %>.IsDirty) Then
                         Return True
                     End If
     <% Next %>
     <%-- Many-To-One --%>
-    <% For Each association As Association In Entity.Associations.Where(Function(a) a.AssociationType = AssociationType.ManyToOne OrElse a.AssociationType = AssociationType.ManyToZeroOrOne) %>
+    <% For Each association As IAssociation In Entity.Associations.Where(Function(a) a.AssociationType = AssociationType.ManyToOne OrElse a.AssociationType = AssociationType.ManyToZeroOrOne) %>
                     If (FieldManager.FieldExists(<%= association.PrivateMemberVariableName %>Property) AndAlso <%= association.Name %>.IsDirty) Then
                         Return True
                     End If
     <% Next %>
     <%-- One-To-Many & Many-To-Many --%>
-    <% For Each association As Association In Entity.Associations.Where(Function(a) a.AssociationType = AssociationType.OneToMany OrElse a.AssociationType = AssociationType.OneToOne OrElse a.AssociationType = AssociationType.OneToZeroOrOne OrElse a.AssociationType = AssociationType.ZeroOrOneToMany) %>
+    <% For Each association As IAssociation In Entity.Associations.Where(Function(a) a.AssociationType = AssociationType.OneToMany OrElse a.AssociationType = AssociationType.OneToOne OrElse a.AssociationType = AssociationType.OneToZeroOrOne OrElse a.AssociationType = AssociationType.ZeroOrOneToMany) %>
                     If (FieldManager.FieldExists(<%= association.PrivateMemberVariableName %>Property) AndAlso <%= association.Name %>.IsDirty) Then
                         Return True
                     End If

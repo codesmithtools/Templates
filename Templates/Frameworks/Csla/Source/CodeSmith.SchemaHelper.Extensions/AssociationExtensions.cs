@@ -8,12 +8,12 @@ namespace CodeSmith.SchemaHelper
     /// </summary>
     public static class AssociationExtensions
     {
-        public static string BuildPropertyVariableArguments(this Association association)
+        public static string BuildPropertyVariableArguments(this IAssociation association)
         {
             return association.BuildPropertyVariableArguments(true);
         }
 
-        public static string BuildPropertyVariableArguments(this Association association, bool useAssociatedColumn)
+        public static string BuildPropertyVariableArguments(this IAssociation association, bool useAssociatedColumn)
         {
             string parameters = String.Empty;
 
@@ -28,7 +28,7 @@ namespace CodeSmith.SchemaHelper
             return parameters.TrimStart(new[] { ',', ' ' });
         }
 
-        public static string BuildPropertyVariables(this Association association)
+        public static string BuildPropertyVariables(this IAssociation association)
         {
             string parameters = String.Empty;
 
@@ -40,7 +40,7 @@ namespace CodeSmith.SchemaHelper
             return parameters;
         }
 
-        public static string BuildArgumentVariables(this IEnumerable<Association> associations, bool includeConnectionParameter)
+        public static string BuildArgumentVariables(this IEnumerable<IAssociation> associations, bool includeConnectionParameter)
         {
             string parameters = String.Empty;
 
