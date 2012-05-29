@@ -59,6 +59,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Edmx\ConceptualAssociation.cs" />
     <Compile Include="Edmx\ConceptualEntity.cs" />
     <Compile Include="Edmx\ConceptualProperty.cs" />
     <Compile Include="Edmx\FunctionEntity.cs" />
