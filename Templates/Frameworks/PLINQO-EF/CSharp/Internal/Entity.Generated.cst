@@ -156,7 +156,7 @@ namespace <%= EntityNamespace %>
 <% if(Entity.Associations.Count > 0) { %>
 
         #region Navigation Properties
-<% foreach(Association association in Entity.Associations) { %>
+<% foreach(IAssociation association in Entity.Associations) { %>
 
         [XmlIgnoreAttribute()]
         [SoapIgnoreAttribute()]
@@ -232,7 +232,7 @@ namespace <%= EntityNamespace %>
     private List<IProperty> FactoryProperties()
     {
         // NOTE: Should we check to see if the type is the same as the declaring type?
-        return Entity.Properties.Where(p => !p.IsNullable && string.IsNullOrEmpty(p.DefaultValue) && p.TypeAccess.Equals("public") && p.GetterAccess.Equals("") && p.GetterAccess.Equals("")).ToList();
+        return Entity.Properties.Where(p => !p.IsNullable && String.IsNullOrEmpty(p.DefaultValue) && p.TypeAccess.Equals("public") && p.GetterAccess.Equals("") && p.GetterAccess.Equals("")).ToList();
     }
 
     private string ResolveBaseType()

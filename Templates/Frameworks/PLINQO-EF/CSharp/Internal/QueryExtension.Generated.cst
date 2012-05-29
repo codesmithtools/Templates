@@ -30,7 +30,7 @@ using System.Linq;
 using CodeSmith.Data.Linq;
 using CodeSmith.Data.Linq.Dynamic;
 
-namespace <%= string.IsNullOrEmpty(QueryNamespace)? EntityNamespace : QueryNamespace %>
+namespace <%= String.IsNullOrEmpty(QueryNamespace)? EntityNamespace : QueryNamespace %>
 {
     /// <summary>
     /// The query extension class for <%= Entity.Name %>.
@@ -335,7 +335,7 @@ foreach(IProperty property in Entity.Properties) {
 
     public string GetParametersNames(List<IProperty> properties)
     {
-        return GetParametersNames(properties, string.Empty);
+        return GetParametersNames(properties, String.Empty);
     }
 
     public string GetParametersNames(List<IProperty> properties, string suffix)
@@ -393,6 +393,6 @@ foreach(IProperty property in Entity.Properties) {
         return lamba.ToString();
     }
 
-    private static readonly string GeneratedCodeAttribute =  string.Format("[System.CodeDom.Compiler.GeneratedCode(\"CodeSmith Generator\", \"{0}\")]", typeof(CodeTemplate).Assembly.GetName().Version.ToString());
+    private static readonly string GeneratedCodeAttribute =  String.Format("[System.CodeDom.Compiler.GeneratedCode(\"CodeSmith Generator\", \"{0}\")]", typeof(CodeTemplate).Assembly.GetName().Version.ToString());
 
 </script>

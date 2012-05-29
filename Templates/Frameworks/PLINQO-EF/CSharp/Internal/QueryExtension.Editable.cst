@@ -11,7 +11,7 @@
 <%@ Property Category="3. Query" Name="QueryNamespace" Type="System.String" Default="" Optional="True" Description="The namespace for the interfaces.  Leave blank to not generate them." %>
 using System;
 
-namespace <%= string.IsNullOrEmpty(QueryNamespace)? EntityNamespace : QueryNamespace %>
+namespace <%= String.IsNullOrEmpty(QueryNamespace)? EntityNamespace : QueryNamespace %>
 {
     public static partial class <%= Entity.Name %>Extensions
     {

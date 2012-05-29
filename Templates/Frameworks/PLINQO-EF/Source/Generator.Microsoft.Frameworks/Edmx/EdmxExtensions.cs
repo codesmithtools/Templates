@@ -18,7 +18,6 @@ using System.Xml.Linq;
 using CodeSmith.SchemaHelper;
 using LinqToEdmx.Model.Conceptual;
 using Xml.Schema.Linq;
-using Association = CodeSmith.SchemaHelper.Association;
 
 namespace Generator.Microsoft.Frameworks
 {
@@ -26,21 +25,21 @@ namespace Generator.Microsoft.Frameworks
     {
         public static void SetAttributeValue(this XTypedElement element, string key, string value)
         {
-            if (element == null || string.IsNullOrEmpty(key)) return;
+            if (element == null || String.IsNullOrEmpty(key)) return;
 
             element.Untyped.SetAttributeValue(XName.Get(key, EdmxConstants.CustomAttributeNameSpace), value);
         }
 
         public static string GetAttributeValue(this XTypedElement element, string key)
         {
-            if (element == null || string.IsNullOrEmpty(key)) return null;
+            if (element == null || String.IsNullOrEmpty(key)) return null;
 
             var attribute = element.Untyped.Attribute(XName.Get(key, EdmxConstants.CustomAttributeNameSpace));
 
             return attribute != null ? attribute.Value : null;
         }
 
-        public static bool IsParentManyToMany(this Association association)
+        public static bool IsParentManyToMany(this IAssociation association)
         {
             return association.AssociationType == AssociationType.ManyToMany && association.IntermediaryAssociation != null && association.IntermediaryAssociation.IsParentEntity ||
                    association.AssociationType == AssociationType.ManyToMany && association.IntermediaryAssociation == null && association.IsParentEntity;
@@ -62,17 +61,17 @@ namespace Generator.Microsoft.Frameworks
 
         public static bool Exists(this IEnumerable<ComplexType> types, string name, string conceptualNamespace = "")
         {
-            if (types == null || string.IsNullOrEmpty(name)) return false;
+            if (types == null || String.IsNullOrEmpty(name)) return false;
 
-            name = string.IsNullOrEmpty(conceptualNamespace) ? name : name.Replace(string.Concat(conceptualNamespace, "."), "");
+            name = String.IsNullOrEmpty(conceptualNamespace) ? name : name.Replace(String.Concat(conceptualNamespace, "."), "");
             return types.Count(c => c.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase)) > 0;
         }
 
         public static ComplexType Find(this IEnumerable<ComplexType> types, string name, string conceptualNamespace = "")
         {
-            if (types == null || string.IsNullOrEmpty(name)) return null;
+            if (types == null || String.IsNullOrEmpty(name)) return null;
 
-            name = string.IsNullOrEmpty(conceptualNamespace) ? name : name.Replace(string.Concat(conceptualNamespace, "."), "");
+            name = String.IsNullOrEmpty(conceptualNamespace) ? name : name.Replace(String.Concat(conceptualNamespace, "."), "");
             return types.Where(c => c.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault();
         }
 
@@ -92,20 +91,20 @@ namespace Generator.Microsoft.Frameworks
         {
             if (function == null || function.ReturnType == null) return false;
 
-            return function.ReturnType.ToString().Trim().StartsWith(string.Concat("Collection(", conceptualNamespace));
+            return function.ReturnType.ToString().Trim().StartsWith(String.Concat("Collection(", conceptualNamespace));
         }
 
         public static bool Exists(this IEnumerable<LinqToEdmx.Model.Storage.Function> functions, string name, string storageNamespace = "")
         {
-            if (functions == null || string.IsNullOrEmpty(name)) return false;
+            if (functions == null || String.IsNullOrEmpty(name)) return false;
 
-            name = string.IsNullOrEmpty(storageNamespace) ? name : name.Replace(string.Concat(storageNamespace, "."), "");
+            name = String.IsNullOrEmpty(storageNamespace) ? name : name.Replace(String.Concat(storageNamespace, "."), "");
             return functions.Count(f => f.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase)) > 0;
         }
 
         public static bool Exists(this IEnumerable<EntityContainer.FunctionImportLocalType> functions, string name)
         {
-            if (functions == null || string.IsNullOrEmpty(name)) return false;
+            if (functions == null || String.IsNullOrEmpty(name)) return false;
 
             return functions.Count(f => f.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase)) > 0;
         }

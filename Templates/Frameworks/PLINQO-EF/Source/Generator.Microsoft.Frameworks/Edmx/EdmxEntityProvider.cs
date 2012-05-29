@@ -46,7 +46,7 @@ namespace Generator.Microsoft.Frameworks
 
         public bool Validate()
         {
-            if (string.IsNullOrEmpty(_fileName))
+            if (String.IsNullOrEmpty(_fileName))
                 return false;
 
             _fileName = System.IO.Path.GetFullPath(_fileName);

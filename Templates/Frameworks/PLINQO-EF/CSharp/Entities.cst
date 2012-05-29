@@ -34,13 +34,13 @@ RegisterReferences();
 
 public void Generate()
 {
-    if(string.IsNullOrEmpty(EdmxFile) || !System.IO.File.Exists(EdmxFile))
+    if(String.IsNullOrEmpty(EdmxFile) || !System.IO.File.Exists(EdmxFile))
     {
         Response.WriteLine("The Edmx File does not exist, the entities will not be generated.");
         return;
     }
 
-    OutputDirectory = string.IsNullOrEmpty(OutputDirectory) ? BaseDirectory : OutputDirectory;
+    OutputDirectory = String.IsNullOrEmpty(OutputDirectory) ? BaseDirectory : OutputDirectory;
     if (!Directory.Exists(this.OutputDirectory))
         Directory.CreateDirectory(this.OutputDirectory);
 
@@ -68,8 +68,8 @@ private void CreateCodeFirstEntities(IEnumerable<IEntity> entities, string entit
                 Directory.CreateDirectory(outputFolder);
         }
 
-        var parentFileName = string.Format("{0}\\{1}.cs", outputFolder, entity.Name);
-        var fileName = string.Format("{0}\\{1}.generated.cs", outputFolder, entity.Name);
+        var parentFileName = String.Format("{0}\\{1}.cs", outputFolder, entity.Name);
+        var fileName = String.Format("{0}\\{1}.generated.cs", outputFolder, entity.Name);
 
 
 		// TODO: Add Smart Regeneration Support via NRefactory.
@@ -96,8 +96,8 @@ private void CreateCodeFirstObjectContext(IEnumerable<IEntity> entities, string 
     var dataContextTemplate = this.Create<DataContext>();
     var dataContextGeneratedTemplate = this.Create<DataContextGenerated>();
 
-    var parentFileName = string.Format("{0}\\{1}.cs", BaseDirectory, dataContextName);
-    var fileName = string.Format("{0}\\{1}.generated.cs", BaseDirectory, dataContextName);
+    var parentFileName = String.Format("{0}\\{1}.cs", BaseDirectory, dataContextName);
+    var fileName = String.Format("{0}\\{1}.generated.cs", BaseDirectory, dataContextName);
 
     if(!File.Exists(parentFileName))
     {

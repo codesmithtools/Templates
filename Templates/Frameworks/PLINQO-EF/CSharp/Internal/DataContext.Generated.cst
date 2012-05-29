@@ -35,8 +35,8 @@ using System.Runtime.Serialization;
 
 [assembly: EdmSchemaAttribute()]
 
-<% foreach(Association association in UniqueAssociations()) {%>
-[assembly: EdmRelationshipAttribute("<%= association.Namespace %>", "<%= association.AssociationKeyName %>", "<%= association.Entity.Name %>", <%= GetRelationshipMultiplicity(association, false) %>, typeof(<%= EntityNamespace %>.<%= association.Entity.Name %>), "<%=  association.ForeignEntity.Name.Equals(association.Entity.Name) ? association.ForeignEntity.Name + "1" : association.ForeignEntity.Name%>", <%= GetRelationshipMultiplicity(association, true) %>, typeof(<%= EntityNamespace %>.<%= association.ForeignEntity.Name %>)<%= association.Properties.Count > 0 ? ", true" : string.Empty %>)]
+<% foreach(IAssociation association in UniqueAssociations()) {%>
+[assembly: EdmRelationshipAttribute("<%= association.Namespace %>", "<%= association.AssociationKeyName %>", "<%= association.Entity.Name %>", <%= GetRelationshipMultiplicity(association, false) %>, typeof(<%= EntityNamespace %>.<%= association.Entity.Name %>), "<%=  association.ForeignEntity.Name.Equals(association.Entity.Name) ? association.ForeignEntity.Name + "1" : association.ForeignEntity.Name%>", <%= GetRelationshipMultiplicity(association, true) %>, typeof(<%= EntityNamespace %>.<%= association.ForeignEntity.Name %>)<%= association.Properties.Count > 0 ? ", true" : String.Empty %>)]
 <%}%>
 namespace <%= ContextNamespace %>
 {
@@ -109,7 +109,7 @@ namespace <%= ContextNamespace %>
         #region Function Imports
 <% foreach(FunctionEntity entity in Entities.Where(e => IsFunctionEntity(e))) { 
     bool isConceptualEntityReturnType = entity.AssociatedEntity != null && entity.AssociatedEntity is ConceptualEntity;
-    string returnType = entity.AssociatedEntity != null ? string.Concat(ResolveEntityNamespace(), entity.AssociatedEntity.Name) : entity.ReturnType;
+    string returnType = entity.AssociatedEntity != null ? String.Concat(ResolveEntityNamespace(), entity.AssociatedEntity.Name) : entity.ReturnType;
 %>
 
         <% if(entity.HasDescription) { %>
@@ -117,7 +117,7 @@ namespace <%= ContextNamespace %>
         /// <%= entity.Description %>
         /// </summary>
         <% } %>
-        public ObjectResult<<%= returnType %>> <%= entity.Name %>(<%= HasParameters(entity) ? GetParameters(entity.SearchCriteria[0].Properties) : string.Empty %>)
+        public ObjectResult<<%= returnType %>> <%= entity.Name %>(<%= HasParameters(entity) ? GetParameters(entity.SearchCriteria[0].Properties) : String.Empty %>)
         {
 <%if(HasParameters(entity)) {%>
 <% foreach(IProperty property in entity.SearchCriteria[0].Properties) { %>
@@ -152,9 +152,9 @@ namespace <%= ContextNamespace %>
 #pragma warning restore 1591
 <script runat="template">
 
-private List<Association> UniqueAssociations()
+private List<IAssociation> UniqueAssociations()
 {
-    Dictionary<string, Association> associations = new Dictionary<string, Association>();
+    Dictionary<string, IAssociation> associations = new Dictionary<string, IAssociation>();
     foreach(IEntity entity in Entities) 
     {
         foreach(var association in entity.Associations)
@@ -167,7 +167,7 @@ private List<Association> UniqueAssociations()
     return associations.Values.ToList();
 }
 
-private string GetRelationshipMultiplicity(Association assocation, bool isForeignEntity)
+private string GetRelationshipMultiplicity(IAssociation assocation, bool isForeignEntity)
 {
     //System.Data.Metadata.Edm.RelationshipMultiplicity.One
     //System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne
@@ -211,11 +211,11 @@ private string GetRelationshipMultiplicity(Association assocation, bool isForeig
 private string ResolveEntityNamespace()
 {
     if(ContextNamespace.Equals(EntityNamespace))
-        return string.Empty;
-    if(EntityNamespace.StartsWith(string.Concat(ContextNamespace, ".")))
-        return string.Concat(EntityNamespace.Replace(string.Concat(ContextNamespace, "."), string.Empty), ".");
+        return String.Empty;
+    if(EntityNamespace.StartsWith(String.Concat(ContextNamespace, ".")))
+        return String.Concat(EntityNamespace.Replace(String.Concat(ContextNamespace, "."), String.Empty), ".");
 
-    return string.Concat(EntityNamespace, ".");
+    return String.Concat(EntityNamespace, ".");
 }
 
 private bool IsConceptualEntity(IEntity entity)
@@ -249,7 +249,7 @@ public string GetParameters(List<IProperty> properties)
 
 public string GetParametersNames(List<IProperty> properties)
 {
-    return GetParametersNames(properties, string.Empty);
+    return GetParametersNames(properties, String.Empty);
 }
 
 public string GetParametersNames(List<IProperty> properties, string suffix)

@@ -33,7 +33,7 @@ namespace CodeSmith.SchemaHelper
         {
             EntityKeyName = EntitySource.Name;
             Name = EntitySource.Name;
-            TypeAccess = !string.IsNullOrEmpty(EntitySource.TypeAccess) ? EntitySource.TypeAccess : AccessibilityConstants.Public;
+            TypeAccess = !String.IsNullOrEmpty(EntitySource.TypeAccess) ? EntitySource.TypeAccess : AccessibilityConstants.Public;
 
             LoadProperties();
 

@@ -56,7 +56,7 @@ namespace CodeSmith.SchemaHelper
             }
             else
             {
-                SystemType = PropertySource.Type.ToString().Replace(string.Concat(((FunctionEntity)Entity).Namespace, "."), "");
+                SystemType = PropertySource.Type.ToString().Replace(String.Concat(((FunctionEntity)Entity).Namespace, "."), "");
                 ExtendedProperties.Add(EdmxConstants.ComplexPropertyExtendedProperty, true);
             }
             
