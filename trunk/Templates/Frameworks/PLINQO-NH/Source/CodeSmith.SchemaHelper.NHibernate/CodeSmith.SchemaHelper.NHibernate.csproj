@@ -56,6 +56,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="NHibernateAssociation.cs" />
     <Compile Include="NHibernateAssociationProperty.cs" />
     <Compile Include="NHibernateCommandEntity.cs" />
     <Compile Include="NHibernateCommandProperty.cs" />
