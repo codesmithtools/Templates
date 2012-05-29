@@ -22,7 +22,7 @@
     bool isObjectFactory = DataAccessImplementation == DataAccessMethod.ObjectFactoryNone || DataAccessImplementation == DataAccessMethod.ObjectFactoryParameterizedSQL || DataAccessImplementation == DataAccessMethod.ObjectFactoryStoredProcedures;
     foreach(IProperty property in Entity.Properties) { if(property.IsType(PropertyType.Foreign) && !property.IsType(PropertyType.Identity)) {
         string className = property.ResolveAssociationPropertyClassName();
-        if(string.IsNullOrEmpty(className)) continue;
+        if(String.IsNullOrEmpty(className)) continue;
 
         string variableName = property.ResolveAssociationPropertyVariable();
         string variableWithChildProperty = property.ResolveAssociationPropertyVariableWithChildProperty(); %>
@@ -57,7 +57,7 @@
             bool isObjectFactory = DataAccessImplementation == DataAccessMethod.ObjectFactoryNone || DataAccessImplementation == DataAccessMethod.ObjectFactoryParameterizedSQL || DataAccessImplementation == DataAccessMethod.ObjectFactoryStoredProcedures;
             foreach(IProperty property in Entity.Properties) { if(property.IsType(PropertyType.Foreign) && !property.IsType(PropertyType.Identity)) {
                 string className = property.ResolveAssociationPropertyClassName();
-                if(string.IsNullOrEmpty(className)) continue;
+                if(String.IsNullOrEmpty(className)) continue;
         
                 string variableName = property.ResolveAssociationPropertyVariable();
                 string variableWithChildProperty = property.ResolveAssociationPropertyVariableWithChildProperty(); %>

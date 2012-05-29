@@ -8,20 +8,20 @@ namespace CodeSmith.SchemaHelper
     /// </summary>
     public static class AssociationMemberCollectionExtensions
     {
-        public static string BuildParametersVariables(this List<Association> associations)
+        public static string BuildParametersVariables(this List<IAssociation> associations)
         {
             return associations.BuildParametersVariables(false);
         }
 
-        public static string BuildParametersVariables(this List<Association> associations, bool includeConnectionParameter)
+        public static string BuildParametersVariables(this List<IAssociation> associations, bool includeConnectionParameter)
         {
             string parameters = String.Empty;
 
-            foreach (Association association in associations)
+            foreach (var association in associations)
             {
                 foreach (AssociationProperty property in association.Properties)
                 {
-                    var parameter = string.Format(", ByVal {0} As {1}", property.ForeignProperty.Entity.VariableName, property.ForeignProperty.Entity.Name);
+                    var parameter = String.Format(", ByVal {0} As {1}", property.ForeignProperty.Entity.VariableName, property.ForeignProperty.Entity.Name);
 
                     if (!parameters.Contains(parameter))
                         parameters += parameter;

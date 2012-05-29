@@ -88,7 +88,7 @@ Entities
 <% } %>
 Associations (<%= e.Associations.Count %>)
     ZeroOrOneToMany (<%= e.Associations.Count(a => a.AssociationType == AssociationType.ZeroOrOneToMany) %>)
-<%    foreach(Association a in e.Associations.Where(a => a.AssociationType == AssociationType.ZeroOrOneToMany)) {  %>
+<%    foreach(IAssociation a in e.Associations.Where(a => a.AssociationType == AssociationType.ZeroOrOneToMany)) {  %>
   Name: <%= a.Name %> Key: <%= a.AssociationKey %>
 <%foreach(var am in a.Properties) { %>
         <%= am.Property.Name %>
@@ -99,7 +99,7 @@ Associations (<%= e.Associations.Count %>)
                 <%= m.Name %>
 <% } } %>
     OneToOne (<%= e.Associations.Count(a => a.AssociationType == AssociationType.OneToOne) %>)
-<%    foreach(Association a in e.Associations.Where(a => a.AssociationType == AssociationType.OneToOne)) {  %>
+<%    foreach(IAssociation a in e.Associations.Where(a => a.AssociationType == AssociationType.OneToOne)) {  %>
   Name: <%= a.Name %> Key: <%= a.AssociationKey %>
 <%foreach(var am in a.Properties) { %>
         <%= am.Property.Name %>
@@ -110,7 +110,7 @@ Associations (<%= e.Associations.Count %>)
                 <%= m.Name %>
 <% } } %>
     OneToMany (<%= e.Associations.Count(a => a.AssociationType == AssociationType.OneToMany) %>)
-<%    foreach(Association a in e.Associations.Where(a => a.AssociationType == AssociationType.OneToMany || a.AssociationType == AssociationType.OneToOne || a.AssociationType == AssociationType.OneToZeroOrOne || a.AssociationType == AssociationType.ZeroOrOneToMany)) { %>
+<%    foreach(IAssociation a in e.Associations.Where(a => a.AssociationType == AssociationType.OneToMany || a.AssociationType == AssociationType.OneToOne || a.AssociationType == AssociationType.OneToZeroOrOne || a.AssociationType == AssociationType.ZeroOrOneToMany)) { %>
   Name: <%= a.Name %> Key: <%= a.AssociationKey %>
 <%foreach(var am in a.Properties) { %>
         <%= am.Property.Name %>
@@ -121,7 +121,7 @@ Associations (<%= e.Associations.Count %>)
                 <%= m.Name %>
 <% } } %>
     OneToZeroOrOne (<%= e.Associations.Count(a => a.AssociationType == AssociationType.OneToZeroOrOne) %>)
-<%    foreach(Association a in e.Associations.Where(a => a.AssociationType == AssociationType.OneToZeroOrOne)) { %>
+<%    foreach(IAssociation a in e.Associations.Where(a => a.AssociationType == AssociationType.OneToZeroOrOne)) { %>
   Name: <%= a.Name %> Key: <%= a.AssociationKey %>
 <%foreach(var am in a.Properties) { %>
         <%= am.Property.Name %>
@@ -132,7 +132,7 @@ Associations (<%= e.Associations.Count %>)
                 <%= m.Name %>
 <% } } %>
     ManyToOne (<%= e.Associations.Count(a => a.AssociationType == AssociationType.ManyToOne) %>)
-<%    foreach(Association a in e.Associations.Where(a => a.AssociationType == AssociationType.ManyToOne)) {  %>
+<%    foreach(IAssociation a in e.Associations.Where(a => a.AssociationType == AssociationType.ManyToOne)) {  %>
   Name: <%= a.Name %> Key: <%= a.AssociationKey %>
 <%foreach(var am in a.Properties) { %>
         <%= am.Property.Name %>
@@ -143,7 +143,7 @@ Associations (<%= e.Associations.Count %>)
                 <%= m.Name %>
 <% } } %>
     ManyToZeroOrOne (<%= e.Associations.Count(a => a.AssociationType == AssociationType.ManyToZeroOrOne) %>)
-<%    foreach(Association a in e.Associations.Where(a => a.AssociationType == AssociationType.ManyToZeroOrOne)) {  %>
+<%    foreach(IAssociation a in e.Associations.Where(a => a.AssociationType == AssociationType.ManyToZeroOrOne)) {  %>
   Name: <%= a.Name %> Key: <%= a.AssociationKey %>
 <%foreach(var am in a.Properties) { %>
         <%= am.Property.Name %>
@@ -154,7 +154,7 @@ Associations (<%= e.Associations.Count %>)
                 <%= m.Name %>
 <% } } %>
     ManyToMany (<%= e.Associations.Count(a => a.AssociationType == AssociationType.ManyToMany) %>)
-<%    foreach(Association a in e.Associations.Where(a => a.AssociationType == AssociationType.ManyToMany)) { %>
+<%    foreach(IAssociation a in e.Associations.Where(a => a.AssociationType == AssociationType.ManyToMany)) { %>
   Name: <%= a.Name %> Key: <%= a.AssociationKey %>
 <%foreach(var am in a.Properties) { %>
         <%= am.Property.Name %>

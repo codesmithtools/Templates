@@ -8,16 +8,16 @@ namespace CodeSmith.SchemaHelper
     /// </summary>
     public static class AssociationMemberCollectionExtensions
     {
-        public static string BuildParametersVariables(this List<Association> associations)
+        public static string BuildParametersVariables(this List<IAssociation> associations)
         {
             return associations.BuildParametersVariables(false);
         }
 
-        public static string BuildParametersVariables(this List<Association> associations, bool includeConnectionParameter)
+        public static string BuildParametersVariables(this List<IAssociation> associations, bool includeConnectionParameter)
         {
             string parameters = String.Empty;
 
-            foreach (Association association in associations)
+            foreach (var association in associations)
             {
                 foreach (AssociationProperty property in association.Properties)
                 {

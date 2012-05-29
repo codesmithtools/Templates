@@ -55,7 +55,7 @@ namespace CodeSmith.SchemaHelper
         /// <returns></returns>
         public static string ResolveAssociationPropertyVariable(this IProperty property)
         {
-            foreach (Association association in property.Entity.Associations.Where(a => a.AssociationType == AssociationType.ManyToOne || a.AssociationType == AssociationType.ManyToZeroOrOne))
+            foreach (var association in property.Entity.Associations.Where(a => a.AssociationType == AssociationType.ManyToOne || a.AssociationType == AssociationType.ManyToZeroOrOne))
             {
                 foreach (AssociationProperty associationProperty in association.Properties)
                 {
@@ -80,7 +80,7 @@ namespace CodeSmith.SchemaHelper
         /// <returns></returns>
         public static string ResolveAssociationPropertyClassName(this IProperty property)
         {
-            foreach (Association association in property.Entity.Associations.Where(a => a.AssociationType == AssociationType.ManyToOne || a.AssociationType == AssociationType.ManyToZeroOrOne))
+            foreach (var association in property.Entity.Associations.Where(a => a.AssociationType == AssociationType.ManyToOne || a.AssociationType == AssociationType.ManyToZeroOrOne))
             {
                 foreach (AssociationProperty associationProperty in association.Properties)
                 {
@@ -101,7 +101,7 @@ namespace CodeSmith.SchemaHelper
         /// <returns></returns>
         public static string ResolveAssociationPropertyVariableWithChildProperty(this IProperty property)
         {
-            foreach (Association association in property.Entity.Associations.Where(a => a.AssociationType == AssociationType.ManyToOne || a.AssociationType == AssociationType.ManyToZeroOrOne))
+            foreach (var association in property.Entity.Associations.Where(a => a.AssociationType == AssociationType.ManyToOne || a.AssociationType == AssociationType.ManyToZeroOrOne))
             {
                 foreach (AssociationProperty associationProperty in association.Properties)
                 {

@@ -37,7 +37,7 @@ namespace <%= BusinessProjectName %>
         {
             get
             {
-                if(string.IsNullOrEmpty(_connectionString))
+                if(String.IsNullOrEmpty(_connectionString))
                 {
                     _connectionString = System.Configuration.ConfigurationManager.ConnectionStrings["<%= SolutionName %>ConnectionString"].ConnectionString;
                 }
@@ -125,7 +125,7 @@ namespace <%= BusinessProjectName %>
         /// <remarks></remarks>
         internal static object NullCheck(string value)
         {
-            return string.IsNullOrEmpty(value) ? (object) DBNull.Value : value;
+            return String.IsNullOrEmpty(value) ? (object) DBNull.Value : value;
         }
 
         internal static object NullCheck(char? value)

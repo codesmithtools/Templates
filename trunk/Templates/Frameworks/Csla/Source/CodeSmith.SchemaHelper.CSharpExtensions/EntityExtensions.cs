@@ -25,10 +25,10 @@ namespace CodeSmith.SchemaHelper
             // Associations.Where(a => a.AssociationType == AssociationType.ManyToOne || a.AssociationType == AssociationType.ManyToZeroOrOne), contains properties in the current entity.
             
             //In child class. Check its associations.. (Item)
-            foreach (Association association in entity.Associations.Where(a => a.AssociationType == AssociationType.OneToMany))
+            foreach (var association in entity.Associations.Where(a => a.AssociationType == AssociationType.OneToMany))
             {
                 //Child's Parameter List. (Product, supplier)
-                foreach (Association childAssociation in GetRelatedEntity(association.Properties[0]).Associations.Where(a => a.AssociationType == AssociationType.OneToMany))
+                foreach (var childAssociation in GetRelatedEntity(association.Properties[0]).Associations.Where(a => a.AssociationType == AssociationType.OneToMany))
                 {
                     // see if we already passed in the param.
                     var childParameter = String.Format(", {0}", Util.NamingConventions.VariableName(childAssociation.Properties[0].Property.Name));
@@ -60,7 +60,7 @@ namespace CodeSmith.SchemaHelper
             return associationProperty.Association.Entity;
         }
 
-        private static string GetRelatedTableParameter(IEntity entity, Association association)
+        private static string GetRelatedTableParameter(IEntity entity, IAssociation association)
         {
             //AssociationProperty childMember = association[0];
             //foreach (var searchCriteria in entity.SearchCriteria(SearchCriteriaType.ForeignKey))
@@ -71,7 +71,7 @@ namespace CodeSmith.SchemaHelper
             //        if (childMember.ForeignProperty.ForeignProperty.Equals(property.ForeignProperty) || childMember.ForeignProperty.Equals(property.ForeignProperty))
             //        {
             //            found = true;
-            //            foreach (Association association2 in entity.Associations.Where(a => a.AssociationType == AssociationType.ManyToOne || a.AssociationType == AssociationType.ManyToZeroOrOne))
+            //            foreach (IAssociation association2 in entity.Associations.Where(a => a.AssociationType == AssociationType.ManyToOne || a.AssociationType == AssociationType.ManyToZeroOrOne))
             //            {
             //                foreach (AssociationProperty rootMember in association2)
             //                {

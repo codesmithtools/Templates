@@ -61,7 +61,7 @@ Namespace <%= DataProjectName %>
     <% End If
     Next
 End If
-    For Each association As Association In Entity.Associations
+    For Each association As IAssociation In Entity.Associations
         For Each prop As AssociationProperty In association.Properties
             If (prop.Property.SystemType = "System.String" And Not prop.Property.IsType(PropertyType.Identity) And prop.Property.IsType(PropertyType.Foreign)) Then %>
                 item.<%= prop.Property.Name %> = "BN"
@@ -218,15 +218,15 @@ End If %>
             If Not (stopProccessingChildren) Then
                 ' Update Child Items.
     <%-- One-To-Zero-Or-One --%>
-    <% For Each association As Association In Entity.Associations.Where(Function(a) a.AssociationType = AssociationType.OneToZeroOrOne OrElse a.AssociationType = AssociationType.OneToOne) %>
+    <% For Each association As IAssociation In Entity.Associations.Where(Function(a) a.AssociationType = AssociationType.OneToZeroOrOne OrElse a.AssociationType = AssociationType.OneToOne) %>
                 Update_<%= association.Name %>_<%= association.Name %>_<%= association.AssociationKeyName %>(item)
     <% Next %>
     <%-- Many-To-One --%>
-    <% For Each association As Association In Entity.Associations.Where(Function(a) a.AssociationType = AssociationType.ManyToOne OrElse a.AssociationType = AssociationType.ManyToZeroOrOne) %>
+    <% For Each association As IAssociation In Entity.Associations.Where(Function(a) a.AssociationType = AssociationType.ManyToOne OrElse a.AssociationType = AssociationType.ManyToZeroOrOne) %>
                 Update_<%= association.Name %>_<%= association.Name %>_<%= association.AssociationKeyName %>(item)
     <% Next %>
     <%-- One-To-Many & Many-To-Many --%>
-    <% For Each association As Association In Entity.Associations.Where(Function(a) a.AssociationType = AssociationType.OneToMany OrElse a.AssociationType = AssociationType.OneToOne OrElse a.AssociationType = AssociationType.OneToZeroOrOne OrElse a.AssociationType = AssociationType.ZeroOrOneToMany) %>
+    <% For Each association As IAssociation In Entity.Associations.Where(Function(a) a.AssociationType = AssociationType.OneToMany OrElse a.AssociationType = AssociationType.OneToOne OrElse a.AssociationType = AssociationType.OneToZeroOrOne OrElse a.AssociationType = AssociationType.ZeroOrOneToMany) %>
                 Update_<%= association.Name %>_<%= association.Name %>_<%= association.AssociationKeyName %>(item)
     <% Next %>
             End If
@@ -273,22 +273,22 @@ End If %>
                     temp = temp.Save()
     
                     ' Mark child lists as dirty. This code may need to be updated to one-to-one relationships.
-    <% For Each association As Association In Entity.Associations.Where(Function(a) a.AssociationType = AssociationType.OneToMany OrElse a.AssociationType = AssociationType.ZeroOrOneToMany OrElse a.AssociationType = AssociationType.ManyToMany)  %>
+    <% For Each association As IAssociation In Entity.Associations.Where(Function(a) a.AssociationType = AssociationType.OneToMany OrElse a.AssociationType = AssociationType.ZeroOrOneToMany OrElse a.AssociationType = AssociationType.ManyToMany)  %>
                     For Each itemToUpdate As <%= association.TypeName %> In item.<%= association.Name %>
     <%= association.SearchCriteria.BuildUpdateStatements("itemToUpdate", "item.") %>
                     Next
     <% Next %>
                     ' Update Child Items.
     <%-- One-To-Zero-Or-One --%>
-    <% For Each association As Association In Entity.Associations.Where(Function(a) a.AssociationType = AssociationType.OneToZeroOrOne OrElse a.AssociationType = AssociationType.OneToOne) %>
+    <% For Each association As IAssociation In Entity.Associations.Where(Function(a) a.AssociationType = AssociationType.OneToZeroOrOne OrElse a.AssociationType = AssociationType.OneToOne) %>
                     Update_<%= association.Name %>_<%= association.Name %>_<%= association.AssociationKeyName %>(item)
     <% Next %>
     <%-- Many-To-One --%>
-    <% For Each association As Association In Entity.Associations.Where(Function(a) a.AssociationType = AssociationType.ManyToOne OrElse AssociationType.ManyToZeroOrOne) %>
+    <% For Each association As IAssociation In Entity.Associations.Where(Function(a) a.AssociationType = AssociationType.ManyToOne OrElse AssociationType.ManyToZeroOrOne) %>
                     Update_<%= association.Name %>_<%= association.Name %>_<%= association.AssociationKeyName %>(item)
     <% Next %>
     <%-- One-To-Many & Many-To-Many --%>
-    <% For Each association As Association In Entity.Associations.Where(Function(a) a.AssociationType = AssociationType.OneToMany OrElse a.AssociationType = AssociationType.ZeroOrOneToMany OrElse a.AssociationType = AssociationType.ManyToMany) %>
+    <% For Each association As IAssociation In Entity.Associations.Where(Function(a) a.AssociationType = AssociationType.OneToMany OrElse a.AssociationType = AssociationType.ZeroOrOneToMany OrElse a.AssociationType = AssociationType.ManyToMany) %>
                     Update_<%= association.Name %>_<%= association.Name %>_<%= association.AssociationKeyName %>(item)
     <% Next %>
         
@@ -375,15 +375,15 @@ End If %>
             If Not (stopProccessingChildren) Then
                 ' Update Child Items.
     <%-- One-To-Zero-Or-One --%>
-    <% For Each association As Association In Entity.Associations.Where(Function(a) a.AssociationType = AssociationType.OneToZeroOrOne OrElse a.AssociationType = AssociationType.OneToOne) %>
+    <% For Each association As IAssociation In Entity.Associations.Where(Function(a) a.AssociationType = AssociationType.OneToZeroOrOne OrElse a.AssociationType = AssociationType.OneToOne) %>
                 Update_<%= association.Name %>_<%= association.Name %>_<%= association.AssociationKeyName %>(item)
     <% Next %>
     <%-- Many-To-One --%>
-    <% For Each association As Association In Entity.Associations.Where(Function(a) a.AssociationType = AssociationType.ManyToOne OrElse a.AssociationType = AssociationType.ManyToZeroOrOne) %>
+    <% For Each association As IAssociation In Entity.Associations.Where(Function(a) a.AssociationType = AssociationType.ManyToOne OrElse a.AssociationType = AssociationType.ManyToZeroOrOne) %>
                 Update_<%= association.Name %>_<%= association.Name %>_<%= association.AssociationKeyName %>(item)
     <% Next %>
     <%-- One-To-Many & Many-To-Many --%>
-    <% For Each association As Association In Entity.Associations.Where(Function(a) a.AssociationType = AssociationType.OneToMany OrElse a.AssociationType = AssociationType.ZeroOrOneToMany OrElse a.AssociationType = AssociationType.ManyToMany) %>
+    <% For Each association As IAssociation In Entity.Associations.Where(Function(a) a.AssociationType = AssociationType.OneToMany OrElse a.AssociationType = AssociationType.ZeroOrOneToMany OrElse a.AssociationType = AssociationType.ManyToMany) %>
                 Update_<%= association.Name %>_<%= association.Name %>_<%= association.AssociationKeyName %>(item)
     <% Next %>
             End If
@@ -483,7 +483,7 @@ End If %>
         End Function
     
     <%-- One-To-Zero-Or-One --%>
-    <% For Each association As Association In Entity.Associations.Where(Function(a) a.AssociationType = AssociationType.OneToZeroOrOne OrElse a.AssociationType = AssociationType.OneToOne) %>
+    <% For Each association As IAssociation In Entity.Associations.Where(Function(a) a.AssociationType = AssociationType.OneToZeroOrOne OrElse a.AssociationType = AssociationType.OneToOne) %>
         'Associations.Where(Function(a) a.AssociationType = AssociationType.OneToZeroOrOne OrElse a.AssociationType = AssociationType.OneToOne)
         Private Shared Sub Update_<%= association.Name %>_<%= association.Name %>_<%= association.AssociationKeyName %>(ByRef item As <%= Entity.Name %>)
     <%= association.SearchCriteria.BuildUpdateStatements("item." + association.Name) %>
@@ -493,7 +493,7 @@ End If %>
         End Sub
     <% Next %>
     <%-- Many-To-One --%>
-    <% For Each association As Association In Entity.Associations.Where(Function(a) a.AssociationType = AssociationType.ManyToOne OrElse a.AssociationType = AssociationType.ManyToZeroOrOne) %>
+    <% For Each association As IAssociation In Entity.Associations.Where(Function(a) a.AssociationType = AssociationType.ManyToOne OrElse a.AssociationType = AssociationType.ManyToZeroOrOne) %>
         'Associations.Where(Function(a) a.AssociationType = AssociationType.ManyToOne OrElse a.AssociationType = AssociationType.ManyToZeroOrOne)
         Private Shared Sub  Update_<%= association.Name %>_<%= association.Name %>_<%= association.AssociationKeyName %>(ByRef item As <%= Entity.Name %>)
     <%= association.SearchCriteria.BuildUpdateStatements("item." + association.Name) %>
@@ -503,7 +503,7 @@ End If %>
         End Sub
     <% Next %>
     <%-- One-To-Many & Many-To-Many --%>
-    <% For Each association As Association In Entity.Associations.Where(Function(a) a.AssociationType = AssociationType.OneToMany OrElse a.AssociationType = AssociationType.ZeroOrOneToMany OrElse a.AssociationType = AssociationType.ManyToMany) %>
+    <% For Each association As IAssociation In Entity.Associations.Where(Function(a) a.AssociationType = AssociationType.OneToMany OrElse a.AssociationType = AssociationType.ZeroOrOneToMany OrElse a.AssociationType = AssociationType.ManyToMany) %>
         'Where(Function(a) a.AssociationType = AssociationType.OneToMany OrElse a.AssociationType = AssociationType.ZeroOrOneToMany OrElse a.AssociationType = AssociationType.ManyToMany)
         Private Shared Sub  Update_<%= association.Name %>_<%= association.Name %>_<%= association.AssociationKeyName %>(ByRef item As <%= Entity.Name %>)
             For Each itemToUpdate As <%= association.TypeName %> In item.<%= association.Name %>

@@ -166,22 +166,22 @@ namespace Generator.CSLA.CodeTemplates
 
         public virtual void OnSolutionNameChanged()
         {
-            if (string.IsNullOrEmpty(SolutionName))
+            if (String.IsNullOrEmpty(SolutionName))
             {
                 return;
             }
 
-            if (string.IsNullOrEmpty(BusinessProjectName))
+            if (String.IsNullOrEmpty(BusinessProjectName))
             {
                 BusinessProjectName = String.Format("{0}.Business", SolutionName);
             }
 
-            if (string.IsNullOrEmpty(DataProjectName))
+            if (String.IsNullOrEmpty(DataProjectName))
             {
                 DataProjectName = String.Format("{0}.Data", SolutionName);
             }
 
-            if (string.IsNullOrEmpty(InterfaceProjectName))
+            if (String.IsNullOrEmpty(InterfaceProjectName))
             {
                 InterfaceProjectName = String.Format("{0}.UI", SolutionName);
             }

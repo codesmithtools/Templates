@@ -112,7 +112,7 @@ namespace <%= BusinessProjectName %>
         }
 <% var associations = Entity.Associations.Where(a => a.AssociationType == AssociationType.ManyToOne || a.AssociationType == AssociationType.ManyToZeroOrOne).Distinct();
    if (associations.Count() > 0) {%>
-<% if (associations.Count() > 1) { int index = 0; foreach(Association association in associations) { %>
+<% if (associations.Count() > 1) { int index = 0; foreach(IAssociation association in associations) { %>
 
         private void Child_Insert(<%= association.BuildParametersVariables(true) %>)
         {
@@ -136,7 +136,7 @@ namespace <%= BusinessProjectName %>
 <% RenderHelper(new ChildUpdate(), true); %>
         }
 <% if (associations.Count() > 0) {%>
-<% if (associations.Count() > 1) { int index = 0; foreach(Association association in associations) { %>
+<% if (associations.Count() > 1) { int index = 0; foreach(IAssociation association in associations) { %>
 
         private void Child_Update(<%= association.BuildParametersVariables(true) %>)
         {

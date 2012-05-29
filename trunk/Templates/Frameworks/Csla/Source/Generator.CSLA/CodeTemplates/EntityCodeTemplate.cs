@@ -169,7 +169,7 @@ namespace Generator.CSLA
                 Configuration.Instance.CleanExpressions = new List<Regex>();
                 foreach (string clean in _cleanExpressions)
                 {
-                    if (!string.IsNullOrEmpty(clean))
+                    if (!String.IsNullOrEmpty(clean))
                     {
                         Configuration.Instance.CleanExpressions.Add(new Regex(clean, RegexOptions.IgnoreCase));
                     }
@@ -206,7 +206,7 @@ namespace Generator.CSLA
                 Configuration.Instance.IgnoreExpressions = new List<Regex>();
                 foreach (string ignore in _ignoreExpressions)
                 {
-                    if (!string.IsNullOrEmpty(ignore))
+                    if (!String.IsNullOrEmpty(ignore))
                     {
                         Configuration.Instance.IgnoreExpressions.Add(new Regex(ignore, RegexOptions.IgnoreCase));
                     }
@@ -246,7 +246,7 @@ namespace Generator.CSLA
         {
             get
             {
-                if (string.IsNullOrEmpty(_childBusinessClassName))
+                if (String.IsNullOrEmpty(_childBusinessClassName))
                     _childBusinessClassName = ResolveChildBusinessClassName();
 
                 return _childBusinessClassName;
@@ -263,14 +263,14 @@ namespace Generator.CSLA
         {
             get
             {
-                if(string.IsNullOrEmpty(_criteriaClassName))
+                if(String.IsNullOrEmpty(_criteriaClassName))
                     _criteriaClassName = ResolveTargetClassName(ChildBusinessClassName, "Criteria");
 
                 return _criteriaClassName;
             }
             set
             {
-                if (!string.IsNullOrEmpty(value) && value.EndsWith("Criteria", StringComparison.InvariantCultureIgnoreCase)) 
+                if (!String.IsNullOrEmpty(value) && value.EndsWith("Criteria", StringComparison.InvariantCultureIgnoreCase)) 
                     _criteriaClassName = value;
             }
         }
@@ -281,7 +281,7 @@ namespace Generator.CSLA
         /// <returns></returns>
         private string ResolveChildBusinessClassName()
         {
-            if (string.IsNullOrEmpty(BusinessClassName))
+            if (String.IsNullOrEmpty(BusinessClassName))
                 return BusinessClassName;
 
             if (BusinessClassName.Equals(Entity.Name, StringComparison.InvariantCultureIgnoreCase))
@@ -335,7 +335,7 @@ namespace Generator.CSLA
             //bool isReadOnly;
             bool searchingForCriteriaObject = suffix.Equals("criteria", StringComparison.InvariantCultureIgnoreCase);
          
-            if(string.IsNullOrEmpty(className))
+            if(String.IsNullOrEmpty(className))
                 className = Entity != null ? Entity.Name : String.Empty;
 
             if (Entity != null)
@@ -351,7 +351,7 @@ namespace Generator.CSLA
                 if (temp.Equals("info", StringComparison.InvariantCultureIgnoreCase) || temp.Equals("infolist", StringComparison.InvariantCultureIgnoreCase))
                 {
                     if (searchingForCriteriaObject && expression)
-                        return string.Concat(Entity.Name, suffix.Trim());
+                        return String.Concat(Entity.Name, suffix.Trim());
 
                     // Try to detect double endings.
                     if (suffix.Equals("info", StringComparison.InvariantCultureIgnoreCase)) 
@@ -364,9 +364,9 @@ namespace Generator.CSLA
 
             // If the keys are 0 then that means they are not generating from the entities.csp.
             if ((BusinessObjectExists(suffix) && expression) || ContextData.Keys.Count == 0 && expression)
-                return string.Concat(className, suffix);
+                return String.Concat(className, suffix);
 
-            return expression ? string.Concat(className, suffix.Trim()) : className;
+            return expression ? String.Concat(className, suffix.Trim()) : className;
         }
 
         [Category("3. Business Project")]
@@ -476,20 +476,20 @@ namespace Generator.CSLA
         {
             if (OnEntityChanging()) return;
 
-            if (string.IsNullOrEmpty(BusinessClassName))
+            if (String.IsNullOrEmpty(BusinessClassName))
                 BusinessClassName = Entity.Name;
 
-            if (string.IsNullOrEmpty(CriteriaClassName) ||
+            if (String.IsNullOrEmpty(CriteriaClassName) ||
                 CriteriaClassName.Equals("Criteria", StringComparison.InvariantCultureIgnoreCase))
                 CriteriaClassName = String.Concat(Entity.Name, "Criteria");
 
-            if (string.IsNullOrEmpty(BusinessProjectName))
+            if (String.IsNullOrEmpty(BusinessProjectName))
                 BusinessProjectName = String.Concat(Entity.Namespace, ".Business");
 
-            if (string.IsNullOrEmpty(Location))
+            if (String.IsNullOrEmpty(Location))
                 Location = ".\\";
 
-            if (string.IsNullOrEmpty(ProcedurePrefix))
+            if (String.IsNullOrEmpty(ProcedurePrefix))
                 ProcedurePrefix = "CSLA_";
         }
 
@@ -540,7 +540,7 @@ namespace Generator.CSLA
             return false;
         }
 
-        public bool IsReadOnlyBusinessObject(Association association, string suffix)
+        public bool IsReadOnlyBusinessObject(IAssociation association, string suffix)
         {
             if (association.Properties.Count <= 0)
                 return false;
@@ -581,12 +581,12 @@ namespace Generator.CSLA
             return false;
         }
 
-        public bool IsChildBusinessObject(Association association)
+        public bool IsChildBusinessObject(IAssociation association)
         {
             return IsChildBusinessObject(association, String.Empty); 
         }
 
-        public bool IsChildBusinessObject(Association association, string suffix)
+        public bool IsChildBusinessObject(IAssociation association, string suffix)
         {
             if (association.Properties.Count <= 0)
                 return false;
@@ -628,12 +628,12 @@ namespace Generator.CSLA
             return false;
         }
 
-        public bool IsSwitchableObject(Association association)
+        public bool IsSwitchableObject(IAssociation association)
         {
             return IsSwitchableObject(association, String.Empty);
         }
 
-        public bool IsSwitchableObject(Association association, string suffix)
+        public bool IsSwitchableObject(IAssociation association, string suffix)
         {
             if (association.Properties.Count <= 0)
                 return false;
@@ -652,12 +652,12 @@ namespace Generator.CSLA
             return false;
         }
 
-        public bool IsNameValueListBusinessObject(Association association)
+        public bool IsNameValueListBusinessObject(IAssociation association)
         {
             return IsNameValueListBusinessObject(association, String.Empty);
         }
 
-        public bool IsNameValueListBusinessObject(Association association, string suffix)
+        public bool IsNameValueListBusinessObject(IAssociation association, string suffix)
         {
             if (association.Properties.Count <= 0)
                 return false;
@@ -713,7 +713,7 @@ namespace Generator.CSLA
         /// </summary>
         /// <param name="association"></param>
         /// <returns></returns>
-        public bool BusinessObjectExists(Association association)
+        public bool BusinessObjectExists(IAssociation association)
         {
             return BusinessObjectExists(association, String.Empty);
         }
@@ -724,7 +724,7 @@ namespace Generator.CSLA
         /// <param name="association"></param>
         /// <param name="suffix"></param>
         /// <returns></returns>
-        public bool BusinessObjectExists(Association association, string suffix)
+        public bool BusinessObjectExists(IAssociation association, string suffix)
         {
             if (association.Properties.Count <= 0)
                 return false;

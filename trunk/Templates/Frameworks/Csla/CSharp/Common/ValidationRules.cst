@@ -7,7 +7,7 @@
         #region Business Rules
 
         /// <summary>
-        /// Contains the Codesmith generated validation rules.
+        /// Contains the CodeSmith generated validation rules.
         /// </summary>
         protected override void AddBusinessRules()
         {

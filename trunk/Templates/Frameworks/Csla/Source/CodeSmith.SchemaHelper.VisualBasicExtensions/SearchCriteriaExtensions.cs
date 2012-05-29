@@ -28,17 +28,17 @@ namespace CodeSmith.SchemaHelper
                         //{
                         //    resolvedPropertyName = property.Property.Name;
                         //    var nullable = property.ForeignProperty.IsNullable && property.ForeignProperty.SystemType != "System.String" ? ".Value" : String.Empty;
-                        //    propertyName = string.Format("item.{0}{1}", property.ForeignProperty.Name, nullable);
+                        //    propertyName = String.Format("item.{0}{1}", property.ForeignProperty.Name, nullable);
                         //}
                         //else
                         //{
                             resolvedPropertyName = property.ForeignProperty.Name;
                             var nullable = property.Property.IsNullable && property.Property.SystemType != "System.String" && property.Property.SystemType != "System.Byte()" ? ".Value" : String.Empty;
-                            propertyName = string.Format("item.{0}{1}", property.Property.Name, nullable);
+                            propertyName = String.Format("item.{0}{1}", property.Property.Name, nullable);
                         //}
                     }
 
-                    parameters += string.Format("\r\n        {0} = {1}", resolvedPropertyName, propertyName);
+                    parameters += String.Format("\r\n        {0} = {1}", resolvedPropertyName, propertyName);
                 }
             }
             else
