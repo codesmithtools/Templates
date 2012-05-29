@@ -6,13 +6,11 @@ namespace CodeSmith.SchemaHelper.NHibernate
     {
         private string _safeName;
 
-        public NHibernateAssociationProperty(XElement property, IEntity entity) : base(property, entity)
-        {
-            _safeName = property.Attribute("name").Value;
-        }
+        public NHibernateAssociationProperty(XElement property, IEntity entity)
+            : base(property, entity) {}
 
-        public override void Initialize()
-        {
+        public override void Initialize() {
+            KeyName = Name = _safeName = PropertySource.Attribute("name").Value;
         }
 
         public override string GetSafeName()

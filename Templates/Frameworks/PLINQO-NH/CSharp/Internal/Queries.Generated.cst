@@ -77,7 +77,7 @@ namespace <%= String.IsNullOrEmpty(QueryNamespace)? BaseNamespace : QueryNamespa
         {
             return queryable
         <% if(Entity.Key.Associations.Count > 0) { %>
-            <% foreach(Association association in Entity.Key.Associations) { %>
+            <% foreach(IAssociation association in Entity.Key.Associations) { %>
                 .Where(<%= GetLamba(association, 5, true) %>)
             <% } %>
         <% } %>
@@ -101,7 +101,7 @@ namespace <%= String.IsNullOrEmpty(QueryNamespace)? BaseNamespace : QueryNamespa
             )
         {
             return queryable
-        <% foreach(Association association in Entity.Key.Associations) { %>
+        <% foreach(IAssociation association in Entity.Key.Associations) { %>
                 .Where(<%= alias %> => <%= alias %>.<%= association.Name %> != <%= association.VariableName %>)
         <% } %>
         <% if(Entity.Key.Properties.Count > 0) { %>
@@ -301,7 +301,7 @@ namespace <%= String.IsNullOrEmpty(QueryNamespace)? BaseNamespace : QueryNamespa
         
         #region By Association
         
-        <% foreach(Association association in Entity.Associations) { %>
+        <% foreach(IAssociation association in Entity.Associations) { %>
             <% if (association.AssociationType != AssociationType.ManyToOne && association.AssociationType != AssociationType.ManyToZeroOrOne) { continue; } %>
         /// <summary>
         /// Gets a query for <see cref="<%= Entity.Namespace %>.<%= Entity.Name %> by <%= association.Name %>'s primary key."/>.
@@ -442,10 +442,10 @@ namespace <%= String.IsNullOrEmpty(QueryNamespace)? BaseNamespace : QueryNamespa
         return args.ToString();
     }
     
-    public string GetParametersPrimitives(IEnumerable<Association> associations)
+    public string GetParametersPrimitives(IEnumerable<IAssociation> associations)
     {
         StringBuilder args = new StringBuilder();
-        foreach(Association association in associations)
+        foreach(IAssociation association in associations)
         {
             foreach(IProperty property in association.ForeignEntity.Key.Properties)
             {
@@ -459,10 +459,10 @@ namespace <%= String.IsNullOrEmpty(QueryNamespace)? BaseNamespace : QueryNamespa
         return args.ToString();
     }
     
-    public string GetParametersAssociations(IEnumerable<Association> associations)
+    public string GetParametersAssociations(IEnumerable<IAssociation> associations)
     {
         StringBuilder args = new StringBuilder();
-        foreach(Association association in associations)
+        foreach(IAssociation association in associations)
         {
             if (args.Length > 0)
                 args.Append(", ");
@@ -520,7 +520,7 @@ namespace <%= String.IsNullOrEmpty(QueryNamespace)? BaseNamespace : QueryNamespa
         return GetLamba(values, tabCount, equals);
     }
     
-    public string GetLamba(Association association, int tabCount, bool equals)
+    public string GetLamba(IAssociation association, int tabCount, bool equals)
     {
         List<LambaValue> values = association.ForeignEntity.Key.Properties
             .Select(p => new LambaValue

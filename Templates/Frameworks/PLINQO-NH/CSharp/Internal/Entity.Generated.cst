@@ -104,7 +104,7 @@ namespace <%= SourceEntity.Namespace %>
         
         #region Associations Mappings
         
-        <% foreach(Association association in SourceEntity.Associations) { %>
+        <% foreach(IAssociation association in SourceEntity.Associations) { %>
         <%= GeneratedCodeAttribute %>
         private <%= GetAssociationSystemType(association) %> <%= association.PrivateMemberVariableName %>;
         
@@ -162,7 +162,7 @@ namespace <%= SourceEntity.Namespace %>
         
         <% } %>
         
-        <% foreach(Association association in SourceEntity.Associations) { %>
+        <% foreach(IAssociation association in SourceEntity.Associations) { %>
         partial void On<%= association.Name %>Changing(<%= GetAssociationSystemType(association) %> newValue, <%= GetAssociationSystemType(association) %> oldValue);
         
         partial void On<%= association.Name %>Changed(<%= GetAssociationSystemType(association) %> value);
@@ -186,7 +186,7 @@ namespace <%= SourceEntity.Namespace %>
         /// Deserializes an instance of <see cref="Account"/> from XML.
         /// </summary>
         /// <param name="xml">The XML string representing a <see cref="Account"/> instance.</param>
-        /// <returns>An instance of <see cref="Account"/> that is deserialized from the XML string.</returns>
+        /// <returns>An instance of <see cref="Account"/> that is deserialized from the XML String.</returns>
         <%= GeneratedCodeAttribute %>
         public static <%= SourceEntity.Name %> FromXml(string xml)
         {
@@ -224,7 +224,7 @@ namespace <%= SourceEntity.Namespace %>
 #pragma warning restore 0414
 
 <script runat="template">
-    public string GetAssociationSystemType(Association association)
+    public string GetAssociationSystemType(IAssociation association)
     {
         return association.AssociationType == AssociationType.ManyToOne || association.AssociationType == AssociationType.ManyToZeroOrOne
             ? association.ForeignEntity.Name
@@ -280,7 +280,7 @@ namespace <%= SourceEntity.Namespace %>
             sb.Append(property.Name);
         }
         
-        foreach(Association association in SourceEntity.Key.Associations)
+        foreach(IAssociation association in SourceEntity.Key.Associations)
         {
             if (sb.Length > 14)
                 sb.Append(concat);

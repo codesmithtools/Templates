@@ -71,19 +71,19 @@ Generating PLINQO for NHibernate Mapings...
         CodeSmith.SchemaHelper.Configuration.Instance.CleanExpressions = new List<Regex>();
         if(CleanExpression != null)
             foreach (string clean in CleanExpression)
-                if (!string.IsNullOrEmpty(clean))
+                if (!String.IsNullOrEmpty(clean))
                     CodeSmith.SchemaHelper.Configuration.Instance.CleanExpressions.Add(new Regex(clean, RegexOptions.IgnoreCase));
         
         CodeSmith.SchemaHelper.Configuration.Instance.IgnoreExpressions = new List<Regex>();
         if(IgnoreList != null)
             foreach (string ignore in IgnoreList)
-                if (!string.IsNullOrEmpty(ignore))
+                if (!String.IsNullOrEmpty(ignore))
                     CodeSmith.SchemaHelper.Configuration.Instance.IgnoreExpressions.Add(new Regex(ignore, RegexOptions.IgnoreCase));
         
         CodeSmith.SchemaHelper.Configuration.Instance.IncludeExpressions = new List<Regex>();
         if(IncludeList != null)
             foreach (string include in IncludeList)
-                if (!string.IsNullOrEmpty(include))
+                if (!String.IsNullOrEmpty(include))
                     CodeSmith.SchemaHelper.Configuration.Instance.IncludeExpressions.Add(new Regex(include, RegexOptions.IgnoreCase));
         
         if (CodeSmith.SchemaHelper.Configuration.Instance.IncludeExpressions.Count == 0)
