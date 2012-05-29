@@ -75,7 +75,7 @@ public class NHibernateHelper : CodeTemplate
         return list;
     }
     
-    public static readonly string GeneratedCodeAttribute =  string.Format(
+    public static readonly string GeneratedCodeAttribute =  String.Format(
         "[System.CodeDom.Compiler.GeneratedCode(\"CodeSmith\", \"{0}\")]",
         typeof(CodeTemplate).Assembly.GetName().Version.ToString());
     

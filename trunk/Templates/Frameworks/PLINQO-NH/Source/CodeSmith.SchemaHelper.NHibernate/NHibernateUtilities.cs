@@ -105,7 +105,7 @@ namespace CodeSmith.SchemaHelper.NHibernate
                 property.ExtendedProperties[Length] = property.Size;
         }
 
-        private static void PrepAssociation(Association assocication)
+        private static void PrepAssociation(IAssociation assocication)
         {
             bool isNullable;
 
@@ -168,7 +168,7 @@ namespace CodeSmith.SchemaHelper.NHibernate
             }
         }
 
-        private static void Merge(IEnumerable<Association> destinationAssociations, IEnumerable<Association> sourceAssociations)
+        private static void Merge(IEnumerable<IAssociation> destinationAssociations, IEnumerable<IAssociation> sourceAssociations)
         {
             foreach (var sourceAssociation in sourceAssociations)
             {
@@ -176,13 +176,13 @@ namespace CodeSmith.SchemaHelper.NHibernate
                 if (destinationAssociation == null)
                     continue;
 
-                destinationAssociation.Name = sourceAssociation.Name;
+                destinationAssociation.SetName(sourceAssociation.Name);
                 foreach (var pair in sourceAssociation.ExtendedProperties)
                     destinationAssociation.ExtendedProperties.AddOrSet(pair);
             }
         }
 
-        private static bool IsAssociationMatch(Association destination, Association source)
+        private static bool IsAssociationMatch(IAssociation destination, IAssociation source)
         {
             if (destination.ForeignEntity.Name != source.ForeignEntity.Name)
                 return false;
@@ -190,7 +190,7 @@ namespace CodeSmith.SchemaHelper.NHibernate
             return GetAssociationKey(destination) == GetAssociationKey(source);
         }
 
-        private static string GetAssociationKey(Association association)
+        private static string GetAssociationKey(IAssociation association)
         {
             IEnumerable<string> columns;
             string type;

@@ -10,7 +10,7 @@ namespace CodeSmith.SchemaHelper.NHibernate
 
         internal readonly string XmlNamespace;
 
-        private string _safeName;
+        private readonly string _safeName;
 
         public bool IsView { get; private set; }
 
@@ -97,73 +97,24 @@ namespace CodeSmith.SchemaHelper.NHibernate
 
         protected override void LoadAssociations()
         {
-            foreach (var associate in EntitySource.Root.Descendants("many-to-one", XmlNamespace))
-                LoadAssociation(associate, associate, AssociationType.ManyToOne);
+            foreach (var associate in EntitySource.Root.Descendants("many-to-one", XmlNamespace)) {
+                var association = NHibernateAssociation.FromElement(this, associate, associate, AssociationType.ManyToOne, XmlNamespace);
+                if (association != null && !AssociationMap.ContainsKey(association.Name))
+                    AssociationMap.Add(association.Name, association);
+            }
 
             var bags = EntitySource.Root.Descendants("bag", XmlNamespace);
-            foreach (var bag in bags)
-            {
+            foreach (var bag in bags) {
                 var oneToMany = bag.Descendant("one-to-many", XmlNamespace);
-                LoadAssociation(bag, oneToMany, AssociationType.OneToMany);
+                var association = NHibernateAssociation.FromElement(this, bag, oneToMany, AssociationType.OneToMany, XmlNamespace);
+                if (association != null && !AssociationMap.ContainsKey(association.Name))
+                    AssociationMap.Add(association.Name, association);
 
                 var manyToMany = bag.Descendant("many-to-many", XmlNamespace);
-                LoadAssociation(bag, manyToMany, AssociationType.ManyToMany);
+                association = NHibernateAssociation.FromElement(this, bag, manyToMany, AssociationType.ManyToMany, XmlNamespace);
+                if (association != null && !AssociationMap.ContainsKey(association.Name))
+                    AssociationMap.Add(association.Name, association);
             }
-        }
-
-        private Association LoadAssociation(XElement nameElement, XElement typeElement, AssociationType type)
-        {
-            if (nameElement == null || typeElement == null)
-                return null;
-
-            var associationName = nameElement.Attribute("name");
-            var associationType = typeElement.Attribute("class");
-            if (associationName == null || associationType == null)
-                return null;
-
-            if (Configuration.Instance.ExcludeRegexIsMatch(associationName.Value) || AssociationMap.ContainsKey(associationName.Value))
-                return null;
-
-            var associationEntity = EntityStore.Instance.GetEntity(associationType.Value);
-            if (associationEntity == null)
-                return null;
-
-            var isParentEntity = type == AssociationType.ManyToMany || type == AssociationType.OneToMany;
-            var association = new Association(associationName.Value, type, this, associationEntity, isParentEntity);
-            association.Name = associationName.Value;
-            
-            switch(type)
-            {
-                case AssociationType.ManyToMany:
-                case AssociationType.OneToMany:
-                    var key = nameElement.Descendant("key", XmlNamespace);
-                    foreach (var column in key.Descendants("column", XmlNamespace))
-                    {
-                        var associationProperty = new NHibernateAssociationProperty(column, this);
-                        association.AddAssociationProperty(null, associationProperty);
-                    }
-                    break;
-
-                case AssociationType.ManyToOne:
-                    foreach (var column in nameElement.Descendants("column", XmlNamespace))
-                    {
-                        var associationProperty = new NHibernateAssociationProperty(column, this);
-                        association.AddAssociationProperty(associationProperty, null);
-                    }
-                    break;
-
-                default:
-                    break;
-            }
-
-            var customAttributes = nameElement
-                .Attributes()
-                .Where(a => !NHibernateUtilities.AssociationDefaultAttributes.Contains(a.Name.ToString()));
-            foreach (var customAttribute in customAttributes)
-                association.ExtendedProperties.Add(customAttribute.Name.ToString(), customAttribute.Value);
-
-            AssociationMap.Add(association.Name, association);
-            return association;
         }
 
         protected override void LoadExtendedProperties()
@@ -183,23 +134,20 @@ namespace CodeSmith.SchemaHelper.NHibernate
                 return;
 
             var keys = compositeKey.Descendants("key-property", XmlNamespace);
-            foreach(var key in keys)
-            {
+            foreach(var key in keys) {
                 var property = new NHibernateProperty(key, this);
                 Key.Properties.Add(property);
             }
 
             var foriegnKeys = compositeKey.Descendants("key-many-to-one", XmlNamespace);
-            foreach (var foriegnKey in foriegnKeys)
-            {
-                var association = LoadAssociation(foriegnKey, foriegnKey, AssociationType.ManyToOne);
-                if (association != null)
+            foreach (var foriegnKey in foriegnKeys) {
+                var association = NHibernateAssociation.FromElement(this, foriegnKey, foriegnKey, AssociationType.ManyToOne, XmlNamespace);
+                if (association != null && !AssociationMap.ContainsKey(association.Name))
                     Key.Associations.Add(association);
             }
         }
 
-        private void LoadKey()
-        {
+        private void LoadKey() {
             var key = EntitySource.Root.Descendant("id", XmlNamespace);
             if (key == null)
                 return;
