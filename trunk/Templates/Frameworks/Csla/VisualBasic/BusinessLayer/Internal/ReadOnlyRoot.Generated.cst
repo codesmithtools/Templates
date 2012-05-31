@@ -53,10 +53,10 @@ Namespace <%= BusinessProjectName %>
 <%If(DataAccessImplementation = DataAccessMethod.ParameterizedSQL Or DataAccessImplementation = DataAccessMethod.StoredProcedures) Then %>
 
         Friend Shared Function Get<%= BusinessClassName %>(ByVal reader As SafeDataReader) As <%= BusinessClassName %>
-            Return DataPortal.FetchChild(Of <%= BusinessClassName %>)(reader)
+            Return DataPortal.FetchChild(Of <%= BusinessClassName %><%= Entity.GenericProperty %>)(reader)
         End Function
 <% End If %>
-<% For Each sc As SearchCriteria In  Entity.SearchCriteria %>
+<% For Each sc As SearchCriteria In Entity.SearchCriteria %>
     
         ''' <summary>
         ''' Returns a <see cref="<%=BusinessClassName%><%= Entity.GenericProperty %>"/> object of the specified criteria. 
