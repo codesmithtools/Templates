@@ -1441,6 +1441,310 @@
             List of custom commands (Stored Procedures) for this IEntity
             </summary>
         </member>
+        <member name="T:CodeSmith.SchemaHelper.TableAssociation">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:CodeSmith.SchemaHelper.AssociationBase`1">
+            <summary>
+            
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="T:CodeSmith.SchemaHelper.IAssociation">
+            <summary>
+            Interface that describes the contract for an Entity.
+            </summary>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.IAssociation.SetName(System.String)">
+            <summary>
+            Set name without formatting it.
+            </summary>
+            <param name="name"></param>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.IAssociation.AssociationKeyName">
+            <summary>
+            This is the name of the Association from the DataSource.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.IAssociation.AssociationKey">
+            <summary>
+            This is the unique key of the Association.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.IAssociation.Namespace">
+            <summary>
+            The namespace that the Association belongs in.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.IAssociation.AssociationType">
+            <summary>
+            Returns the association type of the first associated property.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.IAssociation.Entity">
+            <summary>
+            Returns the Entity.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.IAssociation.ForeignEntity">
+            <summary>
+            Returns the Associated Entity.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.IAssociation.IntermediaryAssociation">
+            <summary>
+            Returns the Intermediary Entity for a Many to Many Association
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.IAssociation.IsParentEntity">
+            <summary>
+            Returns true if the current association was created by the parent table and not the child.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.IAssociation.Properties">
+            <summary>
+            Returns a list of all the Properties of this Association.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.IAssociation.TypeName">
+            <summary>
+            The resolved Type Name for this Association.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.IAssociation.GenericProperty">
+            <summary>
+            Resolved GenericProperty for this Association.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.IAssociation.SearchCriteria">
+            <summary>
+            The SearchCriteria for this Association.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.IAssociation.TypeAccess">
+            <summary>
+            Controls the Access Modifier the class is defined with.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.IAssociation.GetterAccess">
+            <summary>
+            The Getter Access of the Association.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.IAssociation.SetterAccess">
+            <summary>
+            The Setter Access of the Association.
+            </summary>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.AssociationBase`1.AppendNameSuffix(System.Int32)">
+            <summary>
+            Appends a suffix to the name.
+            </summary>
+            <param name="suffix">The suffix.</param>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.AssociationBase`1.Initialize">
+            <summary>
+            Do any Post constructor initialization here.
+            By default, this does nothing.
+            </summary>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.AssociationBase`1.LoadProperties">
+            <summary>
+            Override to populate the properties from the implemented association.
+            </summary>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.AssociationBase`1.LoadExtendedProperties">
+            <summary>
+            Override to populate the extended properties from the implemented association.
+            </summary>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.AssociationBase`1.GetGenericProperty">
+            <summary>
+            Returns the GenericProperty for this association.  This must be implemented by the inheriting class.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.AssociationBase`1.GetDescription">
+            <summary>
+            Returns the description for this association.  This must be implemented by the inheriting class.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.AssociationBase`1.AssociationSource">
+            <summary>
+            This is the source where the Association is populated from (E.G. EDMX Node, ITableKeySchema...);
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.AssociationBase`1.AssociationKeyName">
+            <summary>
+            This is the name of the IAssociation from the DataSource.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.AssociationBase`1.AssociationKey">
+            <summary>
+            This is the unique key of the IAssociation.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.AssociationBase`1.Namespace">
+            <summary>
+            The namespace that the Association belongs in.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.AssociationBase`1.AssociationType">
+            <summary>
+            Returns the association type of the first associated property.
+            TODO: Handle different association types between members
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.AssociationBase`1.Entity">
+            <summary>
+            Returns the Entity.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.AssociationBase`1.ForeignEntity">
+            <summary>
+            Returns the Associated Entity.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.AssociationBase`1.IntermediaryAssociation">
+            <summary>
+            Returns the Intermediary Entity for a Many to Many association
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.AssociationBase`1.IsParentEntity">
+            <summary>
+            Returns true if the current association was created by the parent table and not the child.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.AssociationBase`1.Properties">
+            <summary>
+            Returns a list of all the Properties of this Association.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.AssociationBase`1.TypeName">
+            <summary>
+            The resolved Type Name for this Entity.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.AssociationBase`1.GenericProperty">
+            <summary>
+            Resolved GenericProperty for this Association.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.AssociationBase`1.SearchCriteria">
+            <summary>
+            The associated SearchCriteria for this Association
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.AssociationBase`1.TypeAccess">
+            <summary>
+            The Type Access of the Association
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.AssociationBase`1.GetterAccess">
+            <summary>
+            The Getter Access of the Association
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.AssociationBase`1.SetterAccess">
+            <summary>
+            The Setter Access of the Association
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.AssociationBase`1.Name">
+            <summary>
+            The resolved Name for this Entity.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.AssociationBase`1.PrivateMemberVariableName">
+            <summary>
+            Returns the concatenated PrivateMemberVariableName of all properties.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.AssociationBase`1.VariableName">
+            <summary>
+            Returns the concatenated VariableName of all properties.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.AssociationBase`1.HasDescription">
+            <summary>
+            Returns whether or not Description contains a value
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.AssociationBase`1.Description">
+            <summary>
+            Resolved Description for this Entity.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.AssociationBase`1.ExtendedProperties">
+            <summary>
+            Returns a list of Extended properties.
+            </summary>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.TableAssociation.#ctor(SchemaExplorer.ITableKeySchema,CodeSmith.SchemaHelper.AssociationType,CodeSmith.SchemaHelper.IEntity,CodeSmith.SchemaHelper.IEntity,System.Boolean,System.String,CodeSmith.SchemaHelper.IAssociation,System.Boolean,CodeSmith.SchemaHelper.IEntity)">
+            <summary>
+            
+            </summary>
+            <param name="source"></param>
+            <param name="associationType"></param>
+            <param name="entity"></param>
+            <param name="foreignEntity"></param>
+            <param name="isParentEntity"></param>
+            <param name="namespace"></param>
+            <param name="intermediaryAssociation"></param>
+            <param name="isChildManyToMany"> </param>
+            <param name="sourceManyToManyTable"> </param>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.TableAssociation.Initialize">
+            <summary>
+            Do any Post constructor initialization here.
+            By default, this does nothing.
+            </summary>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.TableAssociation.LoadProperties">
+            <summary>
+            Override to populate the properties from the implemented association.
+            </summary>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.TableAssociation.LoadExtendedProperties">
+            <summary>
+            Override to populate the extended properties from the implemented association.
+            </summary>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.TableAssociation.FromParentForeignKey(CodeSmith.SchemaHelper.TableEntity,SchemaExplorer.ITableKeySchema)">
+            <summary>
+            Gets a parent association from a foreign key.
+            </summary>
+            <param name="source"></param>
+            <param name="tableKeySchema"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.TableAssociation.FromParentManyToMany(CodeSmith.SchemaHelper.TableEntity)">
+            <summary>
+            Gets a parent many to many association from a foreign key.
+            </summary>
+            <param name="source"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.TableAssociation.FromChildPrimaryKey(CodeSmith.SchemaHelper.TableEntity,SchemaExplorer.ITableKeySchema)">
+            <summary>
+            
+            </summary>
+            <param name="source"></param>
+            <param name="tableKeySchema"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.TableAssociation.FromChildManyToMany(CodeSmith.SchemaHelper.TableEntity,SchemaExplorer.IMemberColumnSchema,System.String)">
+            <summary>
+            
+            </summary>
+            <param name="source"></param>
+            <param name="foreignColumn"></param>
+            <param name="foreignTableName"></param>
+            <returns></returns>
+        </member>
         <member name="T:CodeSmith.SchemaHelper.AssociationProperty">
             <summary>
             The Association property.
@@ -1973,310 +2277,6 @@
             <summary>
             The text that created the view.
             </summary>
-        </member>
-        <member name="T:CodeSmith.SchemaHelper.AssociationBase`1">
-            <summary>
-            
-            </summary>
-            <typeparam name="T"></typeparam>
-        </member>
-        <member name="T:CodeSmith.SchemaHelper.IAssociation">
-            <summary>
-            Interface that describes the contract for an Entity.
-            </summary>
-        </member>
-        <member name="M:CodeSmith.SchemaHelper.IAssociation.SetName(System.String)">
-            <summary>
-            Set name without formatting it.
-            </summary>
-            <param name="name"></param>
-        </member>
-        <member name="P:CodeSmith.SchemaHelper.IAssociation.AssociationKeyName">
-            <summary>
-            This is the name of the Association from the DataSource.
-            </summary>
-        </member>
-        <member name="P:CodeSmith.SchemaHelper.IAssociation.AssociationKey">
-            <summary>
-            This is the unique key of the Association.
-            </summary>
-        </member>
-        <member name="P:CodeSmith.SchemaHelper.IAssociation.Namespace">
-            <summary>
-            The namespace that the Association belongs in.
-            </summary>
-        </member>
-        <member name="P:CodeSmith.SchemaHelper.IAssociation.AssociationType">
-            <summary>
-            Returns the association type of the first associated property.
-            </summary>
-        </member>
-        <member name="P:CodeSmith.SchemaHelper.IAssociation.Entity">
-            <summary>
-            Returns the Entity.
-            </summary>
-        </member>
-        <member name="P:CodeSmith.SchemaHelper.IAssociation.ForeignEntity">
-            <summary>
-            Returns the Associated Entity.
-            </summary>
-        </member>
-        <member name="P:CodeSmith.SchemaHelper.IAssociation.IntermediaryAssociation">
-            <summary>
-            Returns the Intermediary Entity for a Many to Many Association
-            </summary>
-        </member>
-        <member name="P:CodeSmith.SchemaHelper.IAssociation.IsParentEntity">
-            <summary>
-            Returns true if the current association was created by the parent table and not the child.
-            </summary>
-        </member>
-        <member name="P:CodeSmith.SchemaHelper.IAssociation.Properties">
-            <summary>
-            Returns a list of all the Properties of this Association.
-            </summary>
-        </member>
-        <member name="P:CodeSmith.SchemaHelper.IAssociation.TypeName">
-            <summary>
-            The resolved Type Name for this Association.
-            </summary>
-        </member>
-        <member name="P:CodeSmith.SchemaHelper.IAssociation.GenericProperty">
-            <summary>
-            Resolved GenericProperty for this Association.
-            </summary>
-        </member>
-        <member name="P:CodeSmith.SchemaHelper.IAssociation.SearchCriteria">
-            <summary>
-            The SearchCriteria for this Association.
-            </summary>
-        </member>
-        <member name="P:CodeSmith.SchemaHelper.IAssociation.TypeAccess">
-            <summary>
-            Controls the Access Modifier the class is defined with.
-            </summary>
-        </member>
-        <member name="P:CodeSmith.SchemaHelper.IAssociation.GetterAccess">
-            <summary>
-            The Getter Access of the Association.
-            </summary>
-        </member>
-        <member name="P:CodeSmith.SchemaHelper.IAssociation.SetterAccess">
-            <summary>
-            The Setter Access of the Association.
-            </summary>
-        </member>
-        <member name="M:CodeSmith.SchemaHelper.AssociationBase`1.AppendNameSuffix(System.Int32)">
-            <summary>
-            Appends a suffix to the name.
-            </summary>
-            <param name="suffix">The suffix.</param>
-        </member>
-        <member name="M:CodeSmith.SchemaHelper.AssociationBase`1.Initialize">
-            <summary>
-            Do any Post constructor initialization here.
-            By default, this does nothing.
-            </summary>
-        </member>
-        <member name="M:CodeSmith.SchemaHelper.AssociationBase`1.LoadProperties">
-            <summary>
-            Override to populate the properties from the implemented association.
-            </summary>
-        </member>
-        <member name="M:CodeSmith.SchemaHelper.AssociationBase`1.LoadExtendedProperties">
-            <summary>
-            Override to populate the extended properties from the implemented association.
-            </summary>
-        </member>
-        <member name="M:CodeSmith.SchemaHelper.AssociationBase`1.GetGenericProperty">
-            <summary>
-            Returns the GenericProperty for this association.  This must be implemented by the inheriting class.
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:CodeSmith.SchemaHelper.AssociationBase`1.GetDescription">
-            <summary>
-            Returns the description for this association.  This must be implemented by the inheriting class.
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="P:CodeSmith.SchemaHelper.AssociationBase`1.AssociationSource">
-            <summary>
-            This is the source where the Association is populated from (E.G. EDMX Node, ITableKeySchema...);
-            </summary>
-        </member>
-        <member name="P:CodeSmith.SchemaHelper.AssociationBase`1.AssociationKeyName">
-            <summary>
-            This is the name of the IAssociation from the DataSource.
-            </summary>
-        </member>
-        <member name="P:CodeSmith.SchemaHelper.AssociationBase`1.AssociationKey">
-            <summary>
-            This is the unique key of the IAssociation.
-            </summary>
-        </member>
-        <member name="P:CodeSmith.SchemaHelper.AssociationBase`1.Namespace">
-            <summary>
-            The namespace that the Association belongs in.
-            </summary>
-        </member>
-        <member name="P:CodeSmith.SchemaHelper.AssociationBase`1.AssociationType">
-            <summary>
-            Returns the association type of the first associated property.
-            TODO: Handle different association types between members
-            </summary>
-        </member>
-        <member name="P:CodeSmith.SchemaHelper.AssociationBase`1.Entity">
-            <summary>
-            Returns the Entity.
-            </summary>
-        </member>
-        <member name="P:CodeSmith.SchemaHelper.AssociationBase`1.ForeignEntity">
-            <summary>
-            Returns the Associated Entity.
-            </summary>
-        </member>
-        <member name="P:CodeSmith.SchemaHelper.AssociationBase`1.IntermediaryAssociation">
-            <summary>
-            Returns the Intermediary Entity for a Many to Many association
-            </summary>
-        </member>
-        <member name="P:CodeSmith.SchemaHelper.AssociationBase`1.IsParentEntity">
-            <summary>
-            Returns true if the current association was created by the parent table and not the child.
-            </summary>
-        </member>
-        <member name="P:CodeSmith.SchemaHelper.AssociationBase`1.Properties">
-            <summary>
-            Returns a list of all the Properties of this Association.
-            </summary>
-        </member>
-        <member name="P:CodeSmith.SchemaHelper.AssociationBase`1.TypeName">
-            <summary>
-            The resolved Type Name for this Entity.
-            </summary>
-        </member>
-        <member name="P:CodeSmith.SchemaHelper.AssociationBase`1.GenericProperty">
-            <summary>
-            Resolved GenericProperty for this Association.
-            </summary>
-        </member>
-        <member name="P:CodeSmith.SchemaHelper.AssociationBase`1.SearchCriteria">
-            <summary>
-            The associated SearchCriteria for this Association
-            </summary>
-        </member>
-        <member name="P:CodeSmith.SchemaHelper.AssociationBase`1.TypeAccess">
-            <summary>
-            The Type Access of the Association
-            </summary>
-        </member>
-        <member name="P:CodeSmith.SchemaHelper.AssociationBase`1.GetterAccess">
-            <summary>
-            The Getter Access of the Association
-            </summary>
-        </member>
-        <member name="P:CodeSmith.SchemaHelper.AssociationBase`1.SetterAccess">
-            <summary>
-            The Setter Access of the Association
-            </summary>
-        </member>
-        <member name="P:CodeSmith.SchemaHelper.AssociationBase`1.Name">
-            <summary>
-            The resolved Name for this Entity.
-            </summary>
-        </member>
-        <member name="P:CodeSmith.SchemaHelper.AssociationBase`1.PrivateMemberVariableName">
-            <summary>
-            Returns the concatenated PrivateMemberVariableName of all properties.
-            </summary>
-        </member>
-        <member name="P:CodeSmith.SchemaHelper.AssociationBase`1.VariableName">
-            <summary>
-            Returns the concatenated VariableName of all properties.
-            </summary>
-        </member>
-        <member name="P:CodeSmith.SchemaHelper.AssociationBase`1.HasDescription">
-            <summary>
-            Returns whether or not Description contains a value
-            </summary>
-        </member>
-        <member name="P:CodeSmith.SchemaHelper.AssociationBase`1.Description">
-            <summary>
-            Resolved Description for this Entity.
-            </summary>
-        </member>
-        <member name="P:CodeSmith.SchemaHelper.AssociationBase`1.ExtendedProperties">
-            <summary>
-            Returns a list of Extended properties.
-            </summary>
-        </member>
-        <member name="T:CodeSmith.SchemaHelper.TableAssociation">
-            <summary>
-            
-            </summary>
-        </member>
-        <member name="M:CodeSmith.SchemaHelper.TableAssociation.#ctor(SchemaExplorer.ITableKeySchema,CodeSmith.SchemaHelper.AssociationType,CodeSmith.SchemaHelper.IEntity,CodeSmith.SchemaHelper.IEntity,System.Boolean,System.String,CodeSmith.SchemaHelper.IAssociation,System.Boolean,CodeSmith.SchemaHelper.IEntity)">
-            <summary>
-            
-            </summary>
-            <param name="source"></param>
-            <param name="associationType"></param>
-            <param name="entity"></param>
-            <param name="foreignEntity"></param>
-            <param name="isParentEntity"></param>
-            <param name="namespace"></param>
-            <param name="intermediaryAssociation"></param>
-            <param name="isChildManyToMany"> </param>
-            <param name="sourceManyToManyTable"> </param>
-        </member>
-        <member name="M:CodeSmith.SchemaHelper.TableAssociation.Initialize">
-            <summary>
-            Do any Post constructor initialization here.
-            By default, this does nothing.
-            </summary>
-        </member>
-        <member name="M:CodeSmith.SchemaHelper.TableAssociation.LoadProperties">
-            <summary>
-            Override to populate the properties from the implemented association.
-            </summary>
-        </member>
-        <member name="M:CodeSmith.SchemaHelper.TableAssociation.LoadExtendedProperties">
-            <summary>
-            Override to populate the extended properties from the implemented association.
-            </summary>
-        </member>
-        <member name="M:CodeSmith.SchemaHelper.TableAssociation.FromParentForeignKey(CodeSmith.SchemaHelper.TableEntity,SchemaExplorer.ITableKeySchema)">
-            <summary>
-            Gets a parent association from a foreign key.
-            </summary>
-            <param name="source"></param>
-            <param name="tableKeySchema"></param>
-            <returns></returns>
-        </member>
-        <member name="M:CodeSmith.SchemaHelper.TableAssociation.FromParentManyToMany(CodeSmith.SchemaHelper.TableEntity)">
-            <summary>
-            Gets a parent many to many association from a foreign key.
-            </summary>
-            <param name="source"></param>
-            <returns></returns>
-        </member>
-        <member name="M:CodeSmith.SchemaHelper.TableAssociation.FromChildPrimaryKey(CodeSmith.SchemaHelper.TableEntity,SchemaExplorer.ITableKeySchema)">
-            <summary>
-            
-            </summary>
-            <param name="source"></param>
-            <param name="tableKeySchema"></param>
-            <returns></returns>
-        </member>
-        <member name="M:CodeSmith.SchemaHelper.TableAssociation.FromChildManyToMany(CodeSmith.SchemaHelper.TableEntity,SchemaExplorer.IMemberColumnSchema,System.String)">
-            <summary>
-            
-            </summary>
-            <param name="source"></param>
-            <param name="foreignColumn"></param>
-            <param name="foreignTableName"></param>
-            <returns></returns>
         </member>
     </members>
 </doc>
