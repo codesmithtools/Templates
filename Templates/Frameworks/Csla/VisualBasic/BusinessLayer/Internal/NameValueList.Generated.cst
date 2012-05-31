@@ -74,8 +74,7 @@ Namespace <%= BusinessProjectName %>
             Dim dp As New DataPortal(Of <%= BusinessClassName %><%= Entity.GenericProperty %>)()
             AddHandler dp.FetchCompleted, handler
             dp.BeginFetch()
-        End Sub 
-#End If
+        End Sub
 
 #End Region
 
