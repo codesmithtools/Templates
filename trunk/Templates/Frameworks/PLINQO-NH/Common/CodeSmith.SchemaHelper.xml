@@ -963,6 +963,11 @@
             Override to populate the SearchCriteria from the implemented entity.
             </summary>
         </member>
+        <member name="M:CodeSmith.SchemaHelper.EntityBase`1.ValidateAllMembers">
+            <summary>
+            
+            </summary>
+        </member>
         <member name="M:CodeSmith.SchemaHelper.EntityBase`1.ToString">
             <summary>
             Return the Name of the class.
@@ -1463,6 +1468,11 @@
             </summary>
             <param name="name"></param>
         </member>
+        <member name="M:CodeSmith.SchemaHelper.IAssociation.MakeUnique">
+            <summary>
+            Expands an associations name into the full name with column properties.
+            </summary>
+        </member>
         <member name="P:CodeSmith.SchemaHelper.IAssociation.AssociationKeyName">
             <summary>
             This is the name of the Association from the DataSource.
@@ -1544,6 +1554,11 @@
             </summary>
             <param name="suffix">The suffix.</param>
         </member>
+        <member name="M:CodeSmith.SchemaHelper.AssociationBase`1.CodeSmith#SchemaHelper#IAssociation#MakeUnique">
+            <summary>
+            Expands an associations name into the full name with column properties.
+            </summary>
+        </member>
         <member name="M:CodeSmith.SchemaHelper.AssociationBase`1.Initialize">
             <summary>
             Do any Post constructor initialization here.
@@ -1571,6 +1586,12 @@
             Returns the description for this association.  This must be implemented by the inheriting class.
             </summary>
             <returns></returns>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.AssociationBase`1.ValidateAssocationNames(CodeSmith.SchemaHelper.IEntity)">
+            <summary>
+            Ensures that all the names are unique.
+            </summary>
+            <param name="entity"></param>
         </member>
         <member name="P:CodeSmith.SchemaHelper.AssociationBase`1.AssociationSource">
             <summary>
