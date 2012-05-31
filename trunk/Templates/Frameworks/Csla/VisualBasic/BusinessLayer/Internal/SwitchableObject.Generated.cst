@@ -253,7 +253,7 @@ Namespace <%= BusinessProjectName %>
         ''' <param name="cancel">Value returned from the method indicating whether the object insertion should proceed.</param>
         Partial Private Sub OnChildInserting(ByVal connection As SqlConnection, ByRef cancel As Boolean)
         End Sub
-<% Dim associations As System.Collections.Generic.List(Of IAssociation) = Entity.Associations.Where(Function(a) a.AssociationType = AssociationType.ManyToOne OrElse a.AssociationType = AssociationType.ManyToZeroOrOne).Distinct().ToList()
+<% Dim associations As System.Collections.Generic.List(Of IAssociation) = Entity.Associations.Where(Function(a) a.AssociationType = AssociationType.ManyToOne OrElse a.AssociationType = AssociationType.ManyToZeroOrOne).GroupBy(Function(a As IAssociation) a.TypeName).Select(Function(a) a.FirstOrDefault()).ToList()
    If (associations.Count() > 0) Then %>
 
         ''' <summary>

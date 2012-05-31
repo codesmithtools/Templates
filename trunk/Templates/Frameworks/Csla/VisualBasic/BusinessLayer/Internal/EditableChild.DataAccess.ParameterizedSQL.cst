@@ -50,7 +50,7 @@ Namespace <%= BusinessProjectName %>
         Private Sub Child_Insert(ByVal connection as SqlConnection)
     <% RenderHelper(New ChildInsert(), true) %>
         End Sub
-    <% Dim associations As List(Of IAssociation) = Entity.Associations.Where(Function(a) a.AssociationType = AssociationType.ManyToOne OrElse a.AssociationType = AssociationType.ManyToZeroOrOne).Distinct().ToList()
+<% Dim associations As List(Of IAssociation) = Entity.Associations.Where(Function(a) a.AssociationType = AssociationType.ManyToOne OrElse a.AssociationType = AssociationType.ManyToZeroOrOne).GroupBy(Function(a As IAssociation) a.TypeName).Select(Function(a) a.FirstOrDefault()).ToList()
         If (associations.Count() > 0) Then
         If (associations.Count() > 1) Then
             Dim index As Integer = 0
