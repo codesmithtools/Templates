@@ -61,11 +61,11 @@ namespace <%= BusinessProjectName %>
         /// <summary>
         /// Returns a <see cref="<%=BusinessClassName%><%= Entity.GenericProperty %>"/> object of the specified criteria. 
         /// </summary>
-<% foreach(var item in  sc.Properties) { %>
+<% foreach(var item in sc.Properties) { %>
         /// <param name="<%= item.VariableName%>"><%if(item.HasDescription){%><%=item.Description%>.<%}else{%>No additional detail available.<%}%></param>
 <%}%>
         /// <returns>A <see cref="<%=BusinessClassName%><%= Entity.GenericProperty %>"/> object of the specified criteria.</returns>
-        internal static <%= BusinessClassName %> <%= sc.MethodName %>(<%= sc.Properties.BuildParametersVariables() %>)
+        internal static <%= BusinessClassName %><%= Entity.GenericProperty %> <%= sc.MethodName %>(<%= sc.Properties.BuildParametersVariables() %>)
         {
             var criteria = new <%= CriteriaClassName %>{<%= sc.Properties.BuildObjectInitializer() %>};
             <%= sc.Properties.BuildNullableObjectInitializer()%>

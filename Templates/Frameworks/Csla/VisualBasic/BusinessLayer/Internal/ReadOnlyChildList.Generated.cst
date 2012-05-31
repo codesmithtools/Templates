@@ -60,7 +60,7 @@ Namespace <%= BusinessProjectName %>
         ''' <param name="<%= item.VariableName%>"><%If(item.HasDescription) Then%><%=item.Description%>.<% Else %>No additional detail available.<% End If %></param>
 <% Next %>
         ''' <returns>A <see cref=
-        Friend Shared Function <%= sc.MethodName %>(<%= sc.Properties.BuildParametersVariables() %>) As <%= BusinessClassName %> 
+        Friend Shared Function <%= sc.MethodName %>(<%= sc.Properties.BuildParametersVariables() %>) As <%= BusinessClassName %><%= Entity.GenericProperty %>
             Dim criteria As New <%= CriteriaClassName %>()
             <%= sc.Properties.BuildObjectInitializer() %>
     
@@ -72,7 +72,7 @@ Namespace <%= BusinessProjectName %>
             Return DataPortal.Fetch(Of <%= BusinessClassName %><%= Entity.GenericProperty %>)(criteria)
         End Function
 
-        Friend Shared Function GetAll() As <%= BusinessClassName %>
+        Friend Shared Function GetAll() As <%= BusinessClassName %><%= Entity.GenericProperty %>
             Return DataPortal.Fetch<% If( Not DataAccessImplementation = DataAccessMethod.ObjectFactoryNone AndAlso Not DataAccessImplementation = DataAccessMethod.ObjectFactoryParameterizedSQL AndAlso Not DataAccessImplementation = DataAccessMethod.ObjectFactoryStoredProcedures) Then %>Child<% End If %>(Of <%= BusinessClassName %>)(New <%= CriteriaClassName %>())
         End Function
     
