@@ -110,7 +110,7 @@ namespace <%= BusinessProjectName %>
         {
 <% RenderHelper(new ChildInsert(), true); %>
         }
-<% var associations = Entity.Associations.Where(a => a.AssociationType == AssociationType.ManyToOne || a.AssociationType == AssociationType.ManyToZeroOrOne).Distinct();
+<% var associations = Entity.Associations.Where(a => a.AssociationType == AssociationType.ManyToOne || a.AssociationType == AssociationType.ManyToZeroOrOne).GroupBy(a => a.TypeName, () => a.FirstOrDefault()).ToList();
    if (associations.Count() > 0) {%>
 <% if (associations.Count() > 1) { int index = 0; foreach(IAssociation association in associations) { %>
 
