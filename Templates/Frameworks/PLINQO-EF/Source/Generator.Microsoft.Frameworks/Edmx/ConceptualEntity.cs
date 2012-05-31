@@ -166,7 +166,8 @@ namespace CodeSmith.SchemaHelper
                         throw new ArgumentException(String.Format("Invalid Multiplicity detected in the {0} Association.", rel.Association.Name));
 
                     // Note: There is no second association for ManyToMany associations...
-                    association = new ConceptualAssociation(rel.Association, type, principalEntity, dependentEntity, true, Namespace) { Name = rel.NavigationProperty.Name };
+                    association = new ConceptualAssociation(rel.Association, type, principalEntity, dependentEntity, true, Namespace);
+                    association.SetName(rel.NavigationProperty.Name);
 
                     if (rel.Association.ReferentialConstraint != null)
                         UpdatePropertyTypesWithForeignKeys(rel.Association.ReferentialConstraint.Principal.PropertyRefs);
@@ -183,7 +184,9 @@ namespace CodeSmith.SchemaHelper
                         throw new ArgumentException(String.Format("Invalid Multiplicity detected in the {0} Association.", rel.Association.Name));
 
                     // Note: There is no second association for ManyToMany associations...
-                    association = new ConceptualAssociation(rel.Association, type, dependentEntity, principalEntity, false, Namespace) { Name = rel.NavigationProperty.Name };
+                    association = new ConceptualAssociation(rel.Association, type, dependentEntity, principalEntity, false, Namespace);
+                    association.SetName(rel.NavigationProperty.Name);
+
                     if (rel.Association.ReferentialConstraint != null)
                         UpdatePropertyTypesWithForeignKeys(rel.Association.ReferentialConstraint.Dependent.PropertyRefs);
                 }
