@@ -252,8 +252,8 @@ if(!result.Equals("(true)", StringComparison.CurrentCultureIgnoreCase) && !resul
                         var criteria = new <%= BusinessProjectName %>.<%= association.TypeName %>Criteria<%= association.GenericProperty %> {<%= association.BuildObjectInitializer(true) %>};
                         <%= association.BuildNullableObjectInitializer(true)%>
     
-                        if(<%= association.BuildNullCheckStatement(true, false, false, false) %><%= BusinessProjectName %>.<%= association.TypeName %>List<%= association.GenericProperty %>.Exists(criteria))
-                            LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= BusinessProjectName %>.<%= association.TypeName %>List.<%= association.SearchCriteria.AssociatedMethodName%>(<%= association.SearchCriteria.Properties.BuildPropertyVariableArguments() %>));
+                        if(<%= association.BuildNullCheckStatement(true, false, false, false) %><%= BusinessProjectName %>.<%= associationClassName %>List<%= association.GenericProperty %>.Exists(criteria))
+                            LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= BusinessProjectName %>.<%= associationClassName %>List.<%= association.SearchCriteria.AssociatedMethodName%>(<%= association.SearchCriteria.Properties.BuildPropertyVariableArguments() %>));
 <% } %>
 <% if(IncludeSilverlightSupport) { %>
 #endif

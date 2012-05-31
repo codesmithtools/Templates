@@ -128,7 +128,7 @@ if (UseMemberVariables){ %>
 <% } else { %>
                         if(<%= association.BuildNullCheckStatement(true, true, false, false, true) %>)
                         {
-                            <%= BusinessProjectName %>.<%= association.TypeName %><%= association.GenericProperty %>.ExistsAsync(criteria, (o,e) =>
+                            <%= BusinessProjectName %>.<%= associationClassName %><%= association.GenericProperty %>.ExistsAsync(criteria, (o,e) =>
                             {
                                 if (e.Error != null)
                                     throw e.Error;
