@@ -164,9 +164,8 @@ namespace Generator.CSLA
             }
             set
             {
-                _cleanExpressions = value;
-
                 Configuration.Instance.CleanExpressions = new List<Regex>();
+                _cleanExpressions = value ?? new StringCollection();
                 foreach (string clean in _cleanExpressions)
                 {
                     if (!String.IsNullOrEmpty(clean))
@@ -201,13 +200,11 @@ namespace Generator.CSLA
             }
             set
             {
-                _ignoreExpressions = value;
-
                 Configuration.Instance.IgnoreExpressions = new List<Regex>();
-                foreach (string ignore in _ignoreExpressions)
-                {
-                    if (!String.IsNullOrEmpty(ignore))
-                    {
+                _ignoreExpressions = value ?? new StringCollection();
+
+                foreach (string ignore in _ignoreExpressions) {
+                    if (!String.IsNullOrEmpty(ignore)) {
                         Configuration.Instance.IgnoreExpressions.Add(new Regex(ignore, RegexOptions.IgnoreCase));
                     }
                 }
