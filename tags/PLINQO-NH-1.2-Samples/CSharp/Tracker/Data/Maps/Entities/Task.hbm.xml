@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" namespace="Tracker.Data.Entities" assembly="Tracker">
+    <class name="Task" table="[dbo].[Task]" >
+        <id name="Id" column="[Id]" type="Int32" >
+            <generator class="native" />
+        </id>
+        <version name="RowVersion" column="[RowVersion]" type="BinaryBlob" generated="always" unsaved-value="null" />
+        <property name="Summary" column="[Summary]" type="String" not-null="true" length="255" /> 
+        <property name="Details" column="[Details]" type="String" not-null="false" length="2000" /> 
+        <property name="StartDate" column="[StartDate]" type="DateTime" not-null="false" /> 
+        <property name="DueDate" column="[DueDate]" type="DateTime" not-null="false" /> 
+        <property name="CompleteDate" column="[CompleteDate]" type="DateTime" not-null="false" /> 
+        <property name="CreatedDate" column="[CreatedDate]" type="DateTime" not-null="true" /> 
+        <property name="ModifiedDate" column="[ModifiedDate]" type="DateTime" not-null="true" /> 
+        <property name="LastModifiedBy" column="[LastModifiedBy]" type="String" not-null="false" length="50" /> 
+        <many-to-one name="Priority" class="Priority" not-null="false" >
+            <column name="[PriorityId]" />
+        </many-to-one>
+        <many-to-one name="Status" class="Status" not-null="true" >
+            <column name="[StatusId]" />
+        </many-to-one>
+        <many-to-one name="UserAssigned" class="User" not-null="false" >
+            <column name="[AssignedId]" />
+        </many-to-one>
+        <many-to-one name="UserCreated" class="User" not-null="true" >
+            <column name="[CreatedId]" />
+        </many-to-one>
+        <bag name="AuditList" inverse="true" cascade="all-delete-orphan" lazy="true" >
+            <key>
+                <column name="[TaskId]" />
+            </key>
+            <one-to-many class="Audit" />
+        </bag>
+    </class>
+</hibernate-mapping>
+

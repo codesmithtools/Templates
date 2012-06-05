@@ -1,0 +1,220 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{7B9B6273-E603-4BCB-AF8A-C4A848E29615}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Tracker</RootNamespace>
+    <AssemblyName>Tracker</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Castle.Core">
+      <HintPath>..\..\Templates\Common\NHibernate\Castle.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="CodeSmith.Data">
+      <HintPath>..\..\Templates\Common\CodeSmith.Data\CodeSmith.Data.dll</HintPath>
+    </Reference>
+    <Reference Include="CodeSmith.Data.NHibernate">
+      <HintPath>..\..\Templates\Common\CodeSmith.Data\CodeSmith.Data.NHibernate.dll</HintPath>
+    </Reference>
+    <Reference Include="Iesi.Collections">
+      <HintPath>..\..\Templates\Common\NHibernate\Iesi.Collections.dll</HintPath>
+    </Reference>
+    <Reference Include="NHibernate">
+      <HintPath>..\..\Templates\Common\NHibernate\NHibernate.dll</HintPath>
+    </Reference>
+    <Reference Include="NHibernate.ByteCode.Castle">
+      <HintPath>..\..\Templates\Common\NHibernate\NHibernate.ByteCode.Castle.dll</HintPath>
+    </Reference>
+    <Reference Include="nunit.framework">
+      <HintPath>..\..\Templates\Common\NUnit\nunit.framework.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.Linq" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Data\Entities\Audit.cs" />
+    <Compile Include="Data\Entities\Audit.generated.cs">
+      <DependentUpon>Audit.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Entities\Guid.cs" />
+    <Compile Include="Data\Entities\Guid.generated.cs">
+      <DependentUpon>Guid.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Entities\Priority.cs" />
+    <Compile Include="Data\Entities\Priority.generated.cs">
+      <DependentUpon>Priority.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Entities\Role.cs" />
+    <Compile Include="Data\Entities\Role.generated.cs">
+      <DependentUpon>Role.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Entities\Self.cs" />
+    <Compile Include="Data\Entities\Self.generated.cs">
+      <DependentUpon>Self.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Entities\Status.cs" />
+    <Compile Include="Data\Entities\Status.generated.cs">
+      <DependentUpon>Status.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Entities\Task.cs" />
+    <Compile Include="Data\Entities\Task.generated.cs">
+      <DependentUpon>Task.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Entities\TaskExtended.cs" />
+    <Compile Include="Data\Entities\TaskExtended.generated.cs">
+      <DependentUpon>TaskExtended.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Entities\User.cs" />
+    <Compile Include="Data\Entities\User.generated.cs">
+      <DependentUpon>User.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Data\EntityBase.cs" />
+    <Compile Include="Data\EntityBase.generated.cs">
+      <DependentUpon>EntityBase.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Models\RolesForUserResult.cs" />
+    <Compile Include="Data\Models\RolesForUserResult.generated.cs">
+      <DependentUpon>RolesForUserResult.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Models\TaskDetail.cs" />
+    <Compile Include="Data\Models\TaskDetail.generated.cs">
+      <DependentUpon>TaskDetail.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Queries\Audit.cs" />
+    <Compile Include="Data\Queries\Audit.generated.cs">
+      <DependentUpon>Audit.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Queries\Guid.cs" />
+    <Compile Include="Data\Queries\Guid.generated.cs">
+      <DependentUpon>Guid.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Queries\Priority.cs" />
+    <Compile Include="Data\Queries\Priority.generated.cs">
+      <DependentUpon>Priority.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Queries\Role.cs" />
+    <Compile Include="Data\Queries\Role.generated.cs">
+      <DependentUpon>Role.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Queries\Self.cs" />
+    <Compile Include="Data\Queries\Self.generated.cs">
+      <DependentUpon>Self.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Queries\Status.cs" />
+    <Compile Include="Data\Queries\Status.generated.cs">
+      <DependentUpon>Status.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Queries\Task.cs" />
+    <Compile Include="Data\Queries\Task.generated.cs">
+      <DependentUpon>Task.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Queries\TaskDetail.cs" />
+    <Compile Include="Data\Queries\TaskDetail.generated.cs">
+      <DependentUpon>TaskDetail.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Queries\TaskExtended.cs" />
+    <Compile Include="Data\Queries\TaskExtended.generated.cs">
+      <DependentUpon>TaskExtended.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Queries\User.cs" />
+    <Compile Include="Data\Queries\User.generated.cs">
+      <DependentUpon>User.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Data\TrackerDataContext.cs" />
+    <Compile Include="Data\TrackerDataContext.generated.cs">
+      <DependentUpon>TrackerDataContext.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Tests.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="Data\PLINQO.csp">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Data\Maps\Views\TaskDetail.hbm.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Data\Maps\Functions\GetUsersWithRoles.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Data\Maps\Functions\RolesForUser.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="Data\Maps\Entities\Audit.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Data\Maps\Entities\Guid.hbm.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Data\Maps\Entities\Priority.hbm.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Data\Maps\Entities\Role.hbm.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Data\Maps\Entities\Self.hbm.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Data\Maps\Entities\Status.hbm.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Data\Maps\Entities\Task.hbm.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Data\Maps\Entities\TaskExtended.hbm.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Data\Maps\Entities\User.hbm.xml" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

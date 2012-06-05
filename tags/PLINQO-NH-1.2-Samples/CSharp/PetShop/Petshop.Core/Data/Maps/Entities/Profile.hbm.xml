@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" namespace="Petshop.Data.Entities" assembly="Petshop.Core">
+    <class name="Profile" table="[dbo].[Profiles]" >
+        <id name="UniqueID" column="[UniqueID]" type="Int32" >
+            <generator class="native" />
+        </id>
+        <property name="Username" column="[Username]" type="AnsiString" not-null="true" length="256" /> 
+        <property name="ApplicationName" column="[ApplicationName]" type="AnsiString" not-null="true" length="256" /> 
+        <property name="IsAnonymous" column="[IsAnonymous]" type="Boolean" not-null="false" /> 
+        <property name="LastActivityDate" column="[LastActivityDate]" type="DateTime" not-null="false" /> 
+        <property name="LastUpdatedDate" column="[LastUpdatedDate]" type="DateTime" not-null="false" /> 
+        <bag name="AccountList" inverse="true" cascade="all-delete-orphan" lazy="true" >
+            <key>
+                <column name="[UniqueID]" />
+            </key>
+            <one-to-many class="Account" />
+        </bag>
+        <bag name="CartList" inverse="true" cascade="all-delete-orphan" lazy="true" >
+            <key>
+                <column name="[UniqueID]" />
+            </key>
+            <one-to-many class="Cart" />
+        </bag>
+    </class>
+</hibernate-mapping>
+

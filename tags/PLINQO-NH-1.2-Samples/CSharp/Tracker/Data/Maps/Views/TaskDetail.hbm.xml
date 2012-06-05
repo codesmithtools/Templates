@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" namespace="Tracker.Data.Entities" assembly="Tracker">
+    <class name="TaskDetail" table="[dbo].[TaskDetail]" >
+        <composite-id>
+            <key-property name="Identification" column="[Id]" type="Int32" /> 
+            <key-property name="Summary" column="[Summary]" type="String" length="255" /> 
+            <key-property name="Priority" column="[Priority]" type="String" length="50" /> 
+            <key-property name="Status" column="[Status]" type="String" length="50" /> 
+            <key-property name="Assigned" column="[Assigned]" type="String" length="250" /> 
+            <key-property name="Created" column="[Created]" type="String" length="250" /> 
+        </composite-id>
+    </class>
+</hibernate-mapping>
+

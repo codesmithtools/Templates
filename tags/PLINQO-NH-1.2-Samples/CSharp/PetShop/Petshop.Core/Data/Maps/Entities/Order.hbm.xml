@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" namespace="Petshop.Data.Entities" assembly="Petshop.Core">
+    <class name="Order" table="[dbo].[Orders]" >
+        <id name="OrderId" column="[OrderId]" type="Int32" >
+            <generator class="native" />
+        </id>
+        <property name="UserId" column="[UserId]" type="AnsiString" not-null="true" length="20" /> 
+        <property name="OrderDate" column="[OrderDate]" type="DateTime" not-null="true" /> 
+        <property name="ShipAddr1" column="[ShipAddr1]" type="AnsiString" not-null="true" length="80" /> 
+        <property name="ShipAddr2" column="[ShipAddr2]" type="AnsiString" not-null="false" length="80" /> 
+        <property name="ShipCity" column="[ShipCity]" type="AnsiString" not-null="true" length="80" /> 
+        <property name="ShipState" column="[ShipState]" type="AnsiString" not-null="true" length="80" /> 
+        <property name="ShipZip" column="[ShipZip]" type="AnsiString" not-null="true" length="20" /> 
+        <property name="ShipCountry" column="[ShipCountry]" type="AnsiString" not-null="true" length="20" /> 
+        <property name="BillAddr1" column="[BillAddr1]" type="AnsiString" not-null="true" length="80" /> 
+        <property name="BillAddr2" column="[BillAddr2]" type="AnsiString" not-null="false" length="80" /> 
+        <property name="BillCity" column="[BillCity]" type="AnsiString" not-null="true" length="80" /> 
+        <property name="BillState" column="[BillState]" type="AnsiString" not-null="true" length="80" /> 
+        <property name="BillZip" column="[BillZip]" type="AnsiString" not-null="true" length="20" /> 
+        <property name="BillCountry" column="[BillCountry]" type="AnsiString" not-null="true" length="20" /> 
+        <property name="Courier" column="[Courier]" type="AnsiString" not-null="true" length="80" /> 
+        <property name="TotalPrice" column="[TotalPrice]" type="Decimal" not-null="true" /> 
+        <property name="BillToFirstName" column="[BillToFirstName]" type="AnsiString" not-null="true" length="80" /> 
+        <property name="BillToLastName" column="[BillToLastName]" type="AnsiString" not-null="true" length="80" /> 
+        <property name="ShipToFirstName" column="[ShipToFirstName]" type="AnsiString" not-null="true" length="80" /> 
+        <property name="ShipToLastName" column="[ShipToLastName]" type="AnsiString" not-null="true" length="80" /> 
+        <property name="AuthorizationNumber" column="[AuthorizationNumber]" type="Int32" not-null="true" /> 
+        <property name="Locale" column="[Locale]" type="AnsiString" not-null="true" length="20" /> 
+        <bag name="LineItemList" inverse="true" cascade="all-delete-orphan" lazy="true" >
+            <key>
+                <column name="[OrderId]" />
+            </key>
+            <one-to-many class="LineItem" />
+        </bag>
+        <bag name="OrderStatusList" inverse="true" cascade="all-delete-orphan" lazy="true" >
+            <key>
+                <column name="[OrderId]" />
+            </key>
+            <one-to-many class="OrderStatus" />
+        </bag>
+    </class>
+</hibernate-mapping>
+
