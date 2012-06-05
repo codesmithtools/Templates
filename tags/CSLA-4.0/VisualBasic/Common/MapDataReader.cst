@@ -1,0 +1,51 @@
+﻿<%-- Author: Blake Niemyjski --%>
+<%@ CodeTemplate Language="VB" TargetLanguage="VB" Inherits="Generator.CSLA.EntityCodeTemplate" %>
+<%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\Common" %>
+<%@ Assembly Name="CodeSmith.SchemaHelper.Extensions" Path="..\..\Common" %>
+<%@ Assembly Name="Generator.CSLA" Path="..\..\Common" %>
+<%@ Import Namespace="CodeSmith.SchemaHelper" %>
+
+#Region "Map"
+
+        Private Sub Map(ByVal reader As SafeDataReader)
+            Dim cancel As Boolean = False
+            OnMapping(reader, cancel)
+            If (cancel) Then
+                Return
+            End If
+    
+            Using(BypassPropertyChecks)
+    <% If Not(Entity.ConcurrencyProperty Is Nothing) Then %>
+                <%= Entity.ConcurrencyProperty.Name %> = ADOHelper.GetBytes(reader, "<%= Entity.ConcurrencyProperty.KeyName %>")
+    <% End If %>
+    <% for each prop as IProperty In Entity.GetProperties(PropertyType.NoConcurrency) 
+    If UseMemberVariables Then
+        If prop.IsNullable And Not prop.SystemType = "System.String" And Not prop.SystemType = "System.Byte()" Then
+    %>
+                <%= prop.PrivateMemberVariableName %> = If(reader.IsDBNull("<%= prop.KeyName %>"), Nothing, <%If not prop.HasByteArrayColumn() Then %>reader.<%= prop.GetReaderMethod() %>("<%= prop.KeyName %>")<% else %>ADOHelper.GetBytes(reader)<% End If %>)
+    <%If(prop.IsType(PropertyType.Key) And Not prop.IsType(PropertyType.Identity)) %>
+                _original<%= prop.Name %> = If(reader.IsDBNull("<%= prop.KeyName %>"), Nothing, <%If not prop.HasByteArrayColumn() Then %>reader.<%= prop.GetReaderMethod() %>("<%= prop.KeyName %>")<% else %>ADOHelper.GetBytes(reader)<% End If %>)
+    <% End If %>
+    <% Else%>
+                <%= prop.PrivateMemberVariableName %> = <%If not prop.HasByteArrayColumn() Then %>reader.<%= prop.GetReaderMethod() %>("<%= prop.KeyName %>")<% else %>ADOHelper.GetBytes(reader)<% End If %>
+    <%If(prop.IsType(PropertyType.Key) And Not prop.IsType(PropertyType.Identity)) %>
+                _original<%= prop.Name %> = <%If not prop.HasByteArrayColumn() Then %>reader.<%= prop.GetReaderMethod() %>("<%= prop.KeyName %>")<% else %>ADOHelper.GetBytes(reader)<% End If %>
+    <% End If 
+    End If %>
+    <%  else  %>
+                LoadProperty(<%= prop.PrivateMemberVariableName %>Property, <%If not prop.HasByteArrayColumn() Then %>reader.Item("<%= prop.KeyName %>"))<% else %>ADOHelper.GetBytes(reader, "<%= prop.KeyName %>"))<% End If %>
+    <%If(prop.IsType(PropertyType.Key) And Not prop.IsType(PropertyType.Identity)) %>
+                LoadProperty(_original<%= prop.Name %>Property, <%If not prop.HasByteArrayColumn() Then %>reader.Item("<%= prop.KeyName %>"))<% else %>ADOHelper.GetBytes(reader, "<%= prop.KeyName %>"))<% End If %>
+    <% End If %>
+    <% End If 
+    Next %>
+            End Using
+    
+            OnMapped()
+        End Sub
+
+        Private Sub Child_Fetch(reader As SafeDataReader)
+            Map(reader)
+        End Sub
+
+#End Region

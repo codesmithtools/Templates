@@ -1,0 +1,67 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Generator.CSLA.CSLABaseTemplate" Collapsed="true">
+    <Position X="5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAAAAAAAAAQAgAgAAFAAIAAAAAAAAAgAAAAgCEAAAAA=</HashCode>
+      <FileName>CodeTemplates\CSLABaseTemplate.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Generator.CSLA.DataCodeTemplate">
+    <Position X="8.5" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAASA=</HashCode>
+      <FileName>CodeTemplates\DataCodeTemplate.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Generator.CSLA.EntityCodeTemplate" Collapsed="true">
+    <Position X="8.5" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>GAwAJEAAhAAIFNAACAJgCAiAgEASALAQAYiUFQRAArA=</HashCode>
+      <FileName>CodeTemplates\EntityCodeTemplate.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Generator.CSLA.InterfaceCodeTemplate">
+    <Position X="1.75" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAACAAAAAAAAAIAAAAAAAAAAAAAAACAAEAAAIA=</HashCode>
+      <FileName>CodeTemplates\InterfaceCodeTemplate.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Generator.CSLA.QuickStartCodeTemplate">
+    <Position X="4" Y="4.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>KAAAAAAAACAAAAAAAAAAAAIAAAAAAAQAAAAAAAAAAAA=</HashCode>
+      <FileName>CodeTemplates\QuickStartCodeTemplate.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Generator.CSLA.CodeTemplates.SchemaHelperEntitiesCodeTemplate" Collapsed="true">
+    <Position X="6.25" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACBAAQAiIAUwHAAiggoCAIgrEACRGRgAAECISAIGABA=</HashCode>
+      <FileName>CodeTemplates\SchemaHelperEntitiesCodeTemplate.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Generator.CSLA.CodeTemplates.EntitiesBaseCodeTemplate" Collapsed="true">
+    <Position X="5" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAgAIABAAAQEAIAAAAJAQAIAgAAQACAAAAiAAEQAAZA=</HashCode>
+      <FileName>CodeTemplates\EntitiesBaseCodeTemplate.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Generator.CSLA.CodeTemplates.EntitiesCodeTemplate">
+    <Position X="6.25" Y="7.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>CodeTemplates\EntitiesCodeTemplate.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Generator.CSLA.CodeTemplates.SchemaExplorerEntitiesCodeTemplate" Collapsed="true">
+    <Position X="6.25" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>qAAAgAQoAAhIgCACAQAAAAAAgQAKAAQQAWjAABAAAAA=</HashCode>
+      <FileName>CodeTemplates\SchemaExplorerEntitiesCodeTemplate.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

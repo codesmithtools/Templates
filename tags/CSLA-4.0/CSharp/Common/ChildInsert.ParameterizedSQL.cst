@@ -1,0 +1,94 @@
+﻿<%-- Author: Blake Niemyjski --%>
+<%@ CodeTemplate Language="C#" TargetLanguage="C#" Inherits="Generator.CSLA.EntityCodeTemplate" %>
+<%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\Common" %>
+<%@ Assembly Name="CodeSmith.SchemaHelper.Extensions" Path="..\..\Common" %>
+<%@ Assembly Name="CodeSmith.SchemaHelper.CSharpExtensions" Path="..\..\Common" %>
+<%@ Assembly Name="Generator.CSLA" Path="..\..\Common" %>
+<%@ Import Namespace="System.Linq" %>
+<%@ Import Namespace="CodeSmith.SchemaHelper" %>
+            bool cancel = false;
+<% var associations = Entity.Associations.Where(a => a.AssociationType == AssociationType.ManyToOne || a.AssociationType == AssociationType.ManyToZeroOrOne).GroupBy(a => a.TypeName).Select(a => a.FirstOrDefault()).ToList();
+   if(!RenderOptionalContent && associations.Count() > 0) { %>
+            OnChildInserting(<%= associations.BuildArgumentVariables(true) %>, ref cancel);
+<% } else { %>
+            OnChildInserting(connection, ref cancel);
+<% } %>
+            if (cancel) return;
+
+<% if(Entity.CanInsert) { %>  
+            if(connection.State != ConnectionState.Open) connection.Open();
+            const string commandText = "INSERT INTO [<%= Entity.SchemaName %>].[<%= Entity.EntityKeyName %>] (<%= Entity.GetProperties(PropertyType.UpdateInsert).BuildDataBaseColumns() %>) VALUES (<%= Entity.GetProperties(PropertyType.UpdateInsert).BuildDataBaseParameters() %>)<%= Entity.BuildInsertSelectStatement() %>";
+            using(var command = new SqlCommand(commandText, connection))
+            {
+                <%= Entity.GetProperties(PropertyType.UpdateInsert).BuildCommandParameters(false, false, !RenderOptionalContent) %>
+
+<% if(Entity.ConcurrencyProperty != null || Entity.IdentityProperty != null) { %>
+                using(var reader = new SafeDataReader(command.ExecuteReader()))
+                {
+                    if(reader.Read())
+                    {
+<% if(Entity.ConcurrencyProperty != null) { %>
+                        <%= Entity.ConcurrencyProperty.Name %> = ADOHelper.GetBytes(reader, "<%= Entity.ConcurrencyProperty.KeyName %>");
+<% } %>
+<% foreach(IProperty property in Entity.GetProperties(PropertyType.Key).Where(p => p.IsType(PropertyType.Identity) || (p.IsDbType(DbType.Guid) && !p.IsType(PropertyType.Foreign)))) {%> 
+
+                        // Update identity primary key value.
+<% if(UseMemberVariables) { %>
+                        <%= property.PrivateMemberVariableName %> = <%if(!property.HasByteArrayColumn()) { %>reader.<%= property.GetReaderMethod() %>("<%= property.KeyName %>");<% } else { %>ADOHelper.GetBytes(reader);<% } %>
+<% } else { %>
+                        LoadProperty(<%= property.PrivateMemberVariableName %>Property, <%if(!property.HasByteArrayColumn()) { %>reader.<%= property.GetReaderMethod() %>("<%= property.KeyName %>"));<% } else { %>ADOHelper.GetBytes(reader, "<%= property.KeyName %>"));<% } %>
+<% } } %>
+                    }
+                }
+<% } else { %>
+                //result: The number of rows changed, inserted, or deleted. -1 for select statements; 0 if no rows were affected, or the statement failed. 
+                int result = command.ExecuteNonQuery();
+                if (result == 0)
+                    throw new DBConcurrencyException("The entity is out of date on the client. Please update the entity and try again. This could also be thrown if the sql statement failed to execute.");
+<% } %>
+<% if(!RenderOptionalContent) { 
+    foreach(IProperty property in Entity.GetProperties(PropertyType.Foreign)) {
+        if(String.IsNullOrEmpty(property.ResolveAssociationPropertyClassName())) 
+            continue; %> 
+
+                // Update foreign keys values. This code will update the values passed in from the parent only if no errors occurred after executing the query.
+<% string localParameterName = property.ResolveAssociationPropertyVariable();
+   string localParameterNameWithChildProperty = property.ResolveAssociationPropertyVariableWithChildProperty();%>
+                if(<%= localParameterName %> != null && <%= localParameterNameWithChildProperty %> != this.<%= property.Name %>)
+<% if(UseMemberVariables) { %>
+                    <%= property.PrivateMemberVariableName %> = <%= localParameterNameWithChildProperty %>;
+<% } else { %>
+                    LoadProperty(<%= property.PrivateMemberVariableName %>Property, <%= localParameterNameWithChildProperty %>);
+<% } } }%>
+<% foreach(IProperty property in Entity.GetProperties(PropertyType.Key).Where(p => !p.IsType(PropertyType.Identity) || p.IsDbType(DbType.Guid))) {%> 
+
+                // Update the original non-identity primary key value.
+<% if(UseMemberVariables) { %>
+                _original<%= property.Name %> = this.<%= property.Name %>;
+<% } else { %>
+                LoadProperty(_original<%= property.Name %>Property, this.<%= property.Name %>);
+<% } } %>
+            }
+<% if(Entity.Associations.Count() > 0){ 
+    if(!RenderOptionalContent) { 
+        int childCount = 0;
+        foreach(IAssociation a in Entity.Associations.Where(a => a.AssociationType == AssociationType.OneToMany  || a.AssociationType == AssociationType.ZeroOrOneToMany  || a.AssociationType == AssociationType.ManyToMany)) {
+            if(IsChildBusinessObject(a)) childCount++; 
+        }%>
+<% if(childCount > 0) { %>
+    
+            FieldManager.UpdateChildren(<%= Entity.BuildUpdateChildrenParametersVariables(true) %>);
+<% } else { %>
+            
+            // A child relationship exists on this Business Object but its type is not a child type (E.G. EditableChild). 
+            // TODO: Please override OnChildInserted() and insert this child manually.
+            // FieldManager.UpdateChildren(<%= Entity.BuildUpdateChildrenParametersVariables(true) %>);
+<% } } else { %>
+
+            FieldManager.UpdateChildren(this, connection);
+<% } } %>
+
+            OnChildInserted();
+<% } else { %>
+            throw new NotSupportedException("This business object cannot be inserted.");
+<% } %>

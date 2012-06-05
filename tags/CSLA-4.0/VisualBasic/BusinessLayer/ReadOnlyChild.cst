@@ -1,0 +1,54 @@
+﻿<%-- Author: Blake Niemyjski --%>
+<%@ CodeTemplate Language="VB" TargetLanguage="VB" OutputType="None" Inherits="Generator.CSLA.EntityCodeTemplate" %>
+<%@ Register Name="ReadOnlyChild" Template="Internal\ReadOnlyChild.cst" %>
+<%@ Register Name="ReadOnlyChildDataAccess" Template="Internal\ReadOnlyChild.DataAccess.cst" %>
+<%@ Register Name="ReadOnlyChildDataAccessParameterized" Template="Internal\ReadOnlyChild.DataAccess.ParameterizedSQL.cst" %>
+<%@ Register Name="ReadOnlyChildDataAccessStoredProcedures" Template="Internal\ReadOnlyChild.DataAccess.StoredProcedures.cst" %>
+<%@ Register Name="ReadOnlyChildGenerated" Template="Internal\ReadOnlyChild.Generated.cst" %>
+<%@ Register Name="SqlStoredProcedures" Template="..\DataAccessLayer\Internal\SQLStoredProcedures.cst" %>
+
+<%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\Common" %>
+<%@ Assembly Name="Generator.CSLA" Path="..\..\Common" %>
+
+<script runat="template">
+
+Public Overloads Overrides Sub Render(writer As System.IO.TextWriter)
+
+    RegisterReferences()
+
+Dim parentFileName As String = System.IO.Path.Combine(Me.Location, String.Format("Entities\{0}.vb", BusinessClassName))
+Dim fileName As String = System.IO.Path.Combine(Location, String.Format("Entities\{0}.Generated.vb", BusinessClassName))
+RenderToFileHelper(Of ReadOnlyChild)(parentFileName, False)
+RenderToFileHelper(Of ReadOnlyChildGenerated)(fileName, parentFileName, True)
+
+fileName = System.IO.Path.Combine(Location, String.Format("Entities\{0}.DataAccess.vb", BusinessClassName))
+If DataAccessImplementation = DataAccessMethod.None Then
+    RenderToFileHelper(Of ReadOnlyChildDataAccess)(fileName, parentFileName, False)
+ElseIf (DataAccessImplementation = DataAccessMethod.StoredProcedures OrElse Entity.IsCommand()) And Not Entity.IsView() Then
+    RenderToFileHelper(Of ReadOnlyChildDataAccessStoredProcedures)(fileName, parentFileName, True)
+
+    If(Entity.IsCommand()) Then
+        Exit Sub
+    End If
+
+    fileName = System.IO.Path.Combine(Location, String.Format("Entities\{0}.StoredProcedures.sql", BusinessClassName))
+    RenderProceduresToFileHelper(Of SqlStoredProcedures)(fileName, parentFileName, True, True, False)
+ElseIf Entity.IsView() OrElse DataAccessImplementation = DataAccessMethod.ParameterizedSQL Then
+    RenderToFileHelper(Of ReadOnlyChildDataAccessParameterized)(fileName, parentFileName, True)
+End If
+
+End Sub
+
+Public Overrides Function OnEntityChanging() As Boolean
+    If String.IsNullOrEmpty(BusinessClassName) Then
+        BusinessClassName = String.Concat(Entity.Name, "Info")
+    End If
+
+    If String.IsNullOrEmpty(CriteriaClassName) OrElse CriteriaClassName.Equals("Criteria", StringComparison.InvariantCultureIgnoreCase) Then
+        CriteriaClassName = String.Concat(Entity.Name, "Criteria")
+    End If
+
+    Return False
+End Function
+
+</script>

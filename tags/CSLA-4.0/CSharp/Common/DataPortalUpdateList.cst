@@ -1,0 +1,42 @@
+﻿<%-- Author: Blake Niemyjski --%>
+<%@ CodeTemplate Language="C#" TargetLanguage="C#" Inherits="Generator.CSLA.EntityCodeTemplate" %>
+<%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\Common" %>
+<%@ Assembly Name="CodeSmith.SchemaHelper.Extensions" Path="..\..\Common" %>
+<%@ Assembly Name="CodeSmith.SchemaHelper.CSharpExtensions" Path="..\..\Common" %>
+<%@ Assembly Name="Generator.CSLA" Path="..\..\Common" %>
+<%@ Import Namespace="CodeSmith.SchemaHelper" %>
+
+            bool cancel = false;
+            OnUpdating(ref cancel);
+            if (cancel) return;
+
+<% if(Entity.CanUpdate) { %>  
+            RaiseListChangedEvents = false;
+
+<% if(IsChildBusinessObject(String.Empty)) { %>
+            // Create a new connection.
+            using (var connection = new SqlConnection(ADOHelper.ConnectionString))
+            {
+                connection.Open();
+                Child_Update(connection);
+            }
+<% } else { %>
+            for (int index = 0; index < DeletedList.Count; index++)
+            {
+                DeletedList[index] = DeletedList[index].Save();
+            }
+           
+            DeletedList.Clear();
+
+            for (int index = 0; index < Items.Count; index++)
+            {
+                Items[index] = Items[index].Save();
+            }
+<% } %>
+
+            RaiseListChangedEvents = true;
+
+            OnUpdated();
+<% } else { %>
+            throw new NotSupportedException("This business object cannot be updated.");
+<% } %>

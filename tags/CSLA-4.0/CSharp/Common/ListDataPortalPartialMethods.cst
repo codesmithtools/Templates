@@ -1,0 +1,69 @@
+﻿<%-- Author: Blake Niemyjski --%>
+<%@ CodeTemplate Language="C#" TargetLanguage="C#" Inherits="Generator.CSLA.EntityCodeTemplate" %>
+<%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\Common" %>
+<%@ Assembly Name="CodeSmith.SchemaHelper.Extensions" Path="..\..\Common" %>
+<%@ Assembly Name="Generator.CSLA" Path="..\..\Common" %>
+<%@ Import Namespace="CodeSmith.SchemaHelper" %>
+
+        #region DataPortal partial methods
+
+<% if(IncludeSilverlightSupport) { %>
+#if !SILVERLIGHT
+<% } %>
+        /// <summary>
+        /// CodeSmith generated stub method that is called when creating the child <see cref="<%=ChildBusinessClassName%><%= Entity.GenericProperty %>"/> object. 
+        /// </summary>
+        /// <param name="cancel">Value returned from the method indicating whether the object creation should proceed.</param>
+        partial void OnCreating(ref bool cancel);
+
+        /// <summary>
+        /// CodeSmith generated stub method that is called after the child <see cref="<%=ChildBusinessClassName%><%= Entity.GenericProperty %>"/> object has been created. 
+        /// </summary>
+        partial void OnCreated();
+
+        /// <summary>
+        /// CodeSmith generated stub method that is called when fetching the child <see cref="<%=ChildBusinessClassName%><%= Entity.GenericProperty %>"/> object. 
+        /// </summary>
+        /// <param name="criteria"><see cref="<%= ChildBusinessClassName %>Criteria<%= Entity.GenericProperty %>"/> object containing the criteria of the object to fetch.</param>
+        /// <param name="cancel">Value returned from the method indicating whether the object fetching should proceed.</param>
+        partial void OnFetching(<%= CriteriaClassName %><%= Entity.GenericProperty %> criteria, ref bool cancel);
+
+        /// <summary>
+        /// CodeSmith generated stub method that is called after the child <see cref="<%=ChildBusinessClassName%><%= Entity.GenericProperty %>"/> object has been fetched. 
+        /// </summary>
+        partial void OnFetched();
+
+        /// <summary>
+        /// CodeSmith generated stub method that is called when mapping the child <see cref="<%=ChildBusinessClassName%><%= Entity.GenericProperty %>"/> object. 
+        /// </summary>
+        /// <param name="cancel">Value returned from the method indicating whether the object mapping should proceed.</param>
+        partial void OnMapping(ref bool cancel);
+
+        /// <summary>
+        /// CodeSmith generated stub method that is called when mapping the child <see cref="<%=ChildBusinessClassName%><%= Entity.GenericProperty %>"/> object. 
+        /// </summary>
+        /// <param name="reader"></param>
+        /// <param name="cancel">Value returned from the method indicating whether the object mapping should proceed.</param>
+        partial void OnMapping(SafeDataReader reader, ref bool cancel);
+
+        /// <summary>
+        /// CodeSmith generated stub method that is called after the child <see cref="<%=ChildBusinessClassName%><%= Entity.GenericProperty %>"/> object has been mapped. 
+        /// </summary>
+        partial void OnMapped();
+
+        /// <summary>
+        /// CodeSmith generated stub method that is called when updating the <see cref="<%=ChildBusinessClassName%><%= Entity.GenericProperty %>"/> object. 
+        /// </summary>
+        /// <param name="cancel">Value returned from the method indicating whether the object creation should proceed.</param>
+        partial void OnUpdating(ref bool cancel);
+
+        /// <summary>
+        /// CodeSmith generated stub method that is called after the <see cref="<%=ChildBusinessClassName%><%= Entity.GenericProperty %>"/> object has been updated. 
+        /// </summary>
+        partial void OnUpdated();
+<% if(IncludeSilverlightSupport) { %>
+#endif
+<% } %>
+        partial void OnAddNewCore(ref <%= ChildBusinessClassName %><%= Entity.GenericProperty %> item, ref bool cancel);
+
+        #endregion

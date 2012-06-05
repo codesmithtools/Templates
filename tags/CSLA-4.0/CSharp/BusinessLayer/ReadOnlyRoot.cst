@@ -1,0 +1,63 @@
+﻿<%-- Author: Blake Niemyjski --%>
+<%@ CodeTemplate Language="C#" TargetLanguage="C#" OutputType="None" Inherits="Generator.CSLA.EntityCodeTemplate" Debug="True" %>
+<%@ Register Name="ReadOnlyRoot" Template="Internal\ReadOnlyRoot.cst" %>
+<%@ Register Name="ReadOnlyRootDataAccess" Template="Internal\ReadOnlyRoot.DataAccess.cst" %>
+<%@ Register Name="ReadOnlyRootDataAccessParameterized" Template="Internal\ReadOnlyRoot.DataAccess.ParameterizedSQL.cst" %>
+<%@ Register Name="ReadOnlyRootDataAccessLinqToSQL" Template="Internal\ReadOnlyRoot.DataAccess.LinqToSQL.cst" %>
+<%@ Register Name="ReadOnlyRootDataAccessStoredProcedures" Template="Internal\ReadOnlyRoot.DataAccess.StoredProcedures.cst" %>
+<%@ Register Name="ReadOnlyRootGenerated" Template="Internal\ReadOnlyRoot.Generated.cst" %>
+<%@ Register Name="SqlStoredProcedures" Template="..\DataAccessLayer\Internal\SQLStoredProcedures.cst" %>
+
+<%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\Common" %>
+<%@ Assembly Name="Generator.CSLA" Path="..\..\Common" %>
+
+<script runat="template">
+
+public override void Render(System.IO.TextWriter writer)
+{
+    RegisterReferences();
+
+    string parentFileName = System.IO.Path.Combine(this.Location, String.Format("Entities\\{0}.cs", BusinessClassName));
+    string fileName = System.IO.Path.Combine(Location, String.Format("Entities\\{0}.Generated.cs", BusinessClassName));
+    RenderToFileHelper<ReadOnlyRoot>(parentFileName, false);
+    RenderToFileHelper<ReadOnlyRootGenerated>(fileName, parentFileName, true);
+ 
+    fileName = System.IO.Path.Combine(Location, String.Format("Entities\\{0}.DataAccess.cs", BusinessClassName));
+    if(DataAccessImplementation == DataAccessMethod.None)
+    {
+        RenderToFileHelper<ReadOnlyRootDataAccess>(fileName, parentFileName, false);
+    }
+    else if(!Entity.IsView() && (DataAccessImplementation == DataAccessMethod.StoredProcedures || Entity.IsCommand()))
+    {
+        RenderToFileHelper<ReadOnlyRootDataAccessStoredProcedures>(fileName, parentFileName, true);
+
+        if(Entity.IsCommand())
+            return;
+
+        fileName = System.IO.Path.Combine(Location, String.Format("Entities\\{0}.StoredProcedures.sql", BusinessClassName));
+        RenderProceduresToFileHelper<SqlStoredProcedures>(fileName, parentFileName, true, true, false);
+    }
+    else if(Entity.IsView() || DataAccessImplementation == DataAccessMethod.ParameterizedSQL)
+    {
+        RenderToFileHelper<ReadOnlyRootDataAccessParameterized>(fileName, parentFileName, true);
+    }
+    else if(DataAccessImplementation == DataAccessMethod.LinqToSQL)
+    {
+        RenderToFileHelper<ReadOnlyRootDataAccessLinqToSQL>(fileName, parentFileName, true);
+    }
+}
+
+public override bool OnEntityChanging()
+{
+    if (String.IsNullOrEmpty(BusinessClassName))
+    {
+        BusinessClassName = String.Concat(Entity.Name, "Info");
+    }
+
+    if (String.IsNullOrEmpty(CriteriaClassName) || CriteriaClassName.Equals("Criteria", StringComparison.InvariantCultureIgnoreCase))
+        CriteriaClassName = String.Concat(Entity.Name, "Criteria");
+
+    return false;
+}
+
+</script>
