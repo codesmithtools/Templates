@@ -1,4 +1,4 @@
-<%--
+﻿<%--
 Author:
     Milan Negovan
     milan@aspnetresources.com
@@ -18,8 +18,7 @@ Type.registerNamespace('<%= Namespace %>');
 }
     
 <%= Namespace %>.<%= InterfaceName %>.prototype = {
-	
-<%  int count = Methods.Count;
+<%  int count = Methods != null ? Methods.Count : 0;
 
     for (int i=0; i < count; i++) { %>
 	<%= Methods[i] %>: function() {}<% if (i != count - 1) %>,<% %>
