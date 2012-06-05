@@ -13,7 +13,11 @@
         protected bool AddBusinessValidationRules()
         {
             // TODO: add validation rules
+<% if(IsLatestCSLA) { %>
+            //BusinessRules.AddRule(new Csla.Rules.CommonRules.Required(MyProperty));
+<% } else { %>
             //ValidationRules.AddRule(RuleMethod, "");
+<% } %>
 
             return false;
         }
