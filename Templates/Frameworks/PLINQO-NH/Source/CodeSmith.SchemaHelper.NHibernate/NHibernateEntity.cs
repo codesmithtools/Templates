@@ -142,8 +142,12 @@ namespace CodeSmith.SchemaHelper.NHibernate
             var foriegnKeys = compositeKey.Descendants("key-many-to-one", XmlNamespace);
             foreach (var foriegnKey in foriegnKeys) {
                 var association = NHibernateAssociation.FromElement(this, foriegnKey, foriegnKey, AssociationType.ManyToOne, XmlNamespace);
-                if (association != null && !AssociationMap.ContainsKey(association.Name))
+                if (association != null) {
+                    if(!AssociationMap.ContainsKey(association.Name))
+                        AssociationMap.Add(association.Name, association);
+
                     Key.Associations.Add(association);
+                }
             }
         }
 
