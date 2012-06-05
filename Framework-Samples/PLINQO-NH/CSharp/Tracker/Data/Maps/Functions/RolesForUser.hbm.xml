@@ -10,8 +10,7 @@
     <return-scalar column="UserId" type="Int32" />
     <return-scalar column="RoleId" type="Int32" />
     <query-param name="UserId" type="Int32" />
-    exec [RolesForUser] :UserId
+    exec [dbo].[RolesForUser] :UserId
   </sql-query>
 </hibernate-mapping>
-
 
