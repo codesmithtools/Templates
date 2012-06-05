@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" namespace="Petshop.Data.Entities" assembly="Petshop.Core">
+    <class name="Product" table="[dbo].[Product]" >
+        <id name="ProductId" column="[ProductId]" type="AnsiString" length="10" >
+            <generator class="native" />
+        </id>
+        <property name="Name" column="[Name]" type="AnsiString" not-null="false" length="80" /> 
+        <property name="Description" column="[Descn]" type="AnsiString" not-null="false" length="255" /> 
+        <property name="Image" column="[Image]" type="AnsiString" not-null="false" length="80" /> 
+        <many-to-one name="Category" class="Category" not-null="true" >
+            <column name="[CategoryId]" />
+        </many-to-one>
+        <bag name="ItemList" inverse="true" cascade="all-delete-orphan" lazy="true" >
+            <key>
+                <column name="[ProductId]" />
+            </key>
+            <one-to-many class="Item" />
+        </bag>
+    </class>
+</hibernate-mapping>
+

@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" namespace="Tracker.Data.Entities" assembly="Tracker">
+  <sql-query name="GetUsersWithRoles" >
+    <return class="User" >
+      <return-property name="Id" column="Id" />
+      <return-property name="EmailAddress" column="EmailAddress" />
+      <return-property name="FirstName" column="FirstName" />
+      <return-property name="LastName" column="LastName" />
+      <return-property name="Avatar" column="Avatar" />
+      <return-property name="CreatedDate" column="CreatedDate" />
+      <return-property name="ModifiedDate" column="ModifiedDate" />
+      <return-property name="RowVersion" column="RowVersion" />
+      <return-property name="PasswordHash" column="PasswordHash" />
+      <return-property name="PasswordSalt" column="PasswordSalt" />
+      <return-property name="Comment" column="Comment" />
+      <return-property name="IsApproved" column="IsApproved" />
+      <return-property name="LastLoginDate" column="LastLoginDate" />
+      <return-property name="LastActivityDate" column="LastActivityDate" />
+      <return-property name="LastPasswordChangeDate" column="LastPasswordChangeDate" />
+      <return-property name="AvatarType" column="AvatarType" />
+    </return>
+    exec [dbo].[GetUsersWithRoles] 
+  </sql-query>
+</hibernate-mapping>
+

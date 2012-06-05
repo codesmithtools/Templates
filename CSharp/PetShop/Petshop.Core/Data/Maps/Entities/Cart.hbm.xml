@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" namespace="Petshop.Data.Entities" assembly="Petshop.Core">
+    <class name="Cart" table="[dbo].[Cart]" >
+        <id name="CartId" column="[CartId]" type="Int32" >
+            <generator class="native" />
+        </id>
+        <property name="ItemId" column="[ItemId]" type="AnsiString" not-null="true" length="10" /> 
+        <property name="Name" column="[Name]" type="AnsiString" not-null="true" length="80" /> 
+        <property name="Type" column="[Type]" type="AnsiString" not-null="true" length="80" /> 
+        <property name="Price" column="[Price]" type="Decimal" not-null="true" /> 
+        <property name="CategoryId" column="[CategoryId]" type="AnsiString" not-null="true" length="10" /> 
+        <property name="ProductId" column="[ProductId]" type="AnsiString" not-null="true" length="10" /> 
+        <property name="IsShoppingCart" column="[IsShoppingCart]" type="Boolean" not-null="true" /> 
+        <property name="Quantity" column="[Quantity]" type="Int32" not-null="true" /> 
+        <many-to-one name="Profile" class="Profile" not-null="true" >
+            <column name="[UniqueID]" />
+        </many-to-one>
+    </class>
+</hibernate-mapping>
+

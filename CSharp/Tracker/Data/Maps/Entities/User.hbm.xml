@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" namespace="Tracker.Data.Entities" assembly="Tracker">
+    <class name="User" table="[dbo].[User]" >
+        <id name="Id" column="[Id]" type="Int32" >
+            <generator class="native" />
+        </id>
+        <version name="RowVersion" column="[RowVersion]" type="BinaryBlob" generated="always" unsaved-value="null" />
+        <property name="EmailAddress" column="[EmailAddress]" type="String" not-null="true" length="250" /> 
+        <property name="FirstName" column="[FirstName]" type="String" not-null="false" length="200" /> 
+        <property name="LastName" column="[LastName]" type="String" not-null="false" length="200" /> 
+        <property name="Avatar" column="[Avatar]" type="BinaryBlob" not-null="false" /> 
+        <property name="CreatedDate" column="[CreatedDate]" type="DateTime" not-null="true" /> 
+        <property name="ModifiedDate" column="[ModifiedDate]" type="DateTime" not-null="true" /> 
+        <property name="PasswordHash" column="[PasswordHash]" type="AnsiString" not-null="true" length="86" /> 
+        <property name="PasswordSalt" column="[PasswordSalt]" type="AnsiString" not-null="true" length="5" /> 
+        <property name="Comment" column="[Comment]" type="AnsiString" not-null="false" length="16" /> 
+        <property name="IsApproved" column="[IsApproved]" type="Boolean" not-null="true" /> 
+        <property name="LastLoginDate" column="[LastLoginDate]" type="DateTime" not-null="false" /> 
+        <property name="LastActivityDate" column="[LastActivityDate]" type="DateTime" not-null="true" /> 
+        <property name="LastPasswordChangeDate" column="[LastPasswordChangeDate]" type="DateTime" not-null="false" /> 
+        <property name="AvatarType" column="[AvatarType]" type="String" not-null="false" length="150" /> 
+        <bag name="AuditList" inverse="true" cascade="all-delete-orphan" lazy="true" >
+            <key>
+                <column name="[UserId]" />
+            </key>
+            <one-to-many class="Audit" />
+        </bag>
+        <bag name="TaskAssignedList" inverse="true" cascade="all-delete-orphan" lazy="true" >
+            <key>
+                <column name="[AssignedId]" />
+            </key>
+            <one-to-many class="Task" />
+        </bag>
+        <bag name="TaskCreatedList" inverse="true" cascade="all-delete-orphan" lazy="true" >
+            <key>
+                <column name="[CreatedId]" />
+            </key>
+            <one-to-many class="Task" />
+        </bag>
+        <bag name="RoleList" table="[dbo].[UserRole]" inverse="false" cascade="all" lazy="true" >
+            <key>
+                <column name="[UserId]" />
+            </key>
+            <many-to-many class="Role" >
+                <column name="[RoleId]" />
+            </many-to-many>
+        </bag>
+    </class>
+</hibernate-mapping>
+

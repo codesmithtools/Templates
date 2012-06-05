@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" namespace="Tracker.Data.Entities" assembly="Tracker">
+    <class name="Role" table="[dbo].[Role]" >
+        <id name="Id" column="[Id]" type="Int32" >
+            <generator class="native" />
+        </id>
+        <version name="RowVersion" column="[RowVersion]" type="BinaryBlob" generated="always" unsaved-value="null" />
+        <property name="Name" column="[Name]" type="String" not-null="true" length="50" /> 
+        <property name="Description" column="[Description]" type="String" not-null="false" length="150" /> 
+        <property name="CreatedDate" column="[CreatedDate]" type="DateTime" not-null="true" /> 
+        <property name="ModifiedDate" column="[ModifiedDate]" type="DateTime" not-null="true" /> 
+        <bag name="UserList" table="[dbo].[UserRole]" inverse="false" cascade="all" lazy="true" >
+            <key>
+                <column name="[RoleId]" />
+            </key>
+            <many-to-many class="User" >
+                <column name="[UserId]" />
+            </many-to-many>
+        </bag>
+    </class>
+</hibernate-mapping>
+

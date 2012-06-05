@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+<codeSmith xmlns="http://www.codesmithtools.com/schema/csp.xsd">
+  <variables>
+    <add key="ConnectionString1" value="Data Source=localhost;Initial Catalog=Tracker;Integrated Security=True" />
+  </variables>
+  <propertySets>
+    <propertySet name="Hbms" template="..\..\..\Templates\CSharp\Hbms.cst">
+      <property name="IgnoreList">
+        <stringList>
+          <string>sysdiagrams$</string>
+          <string>^dbo.aspnet</string>
+        </stringList>
+      </property>
+      <property name="CleanExpression">
+        <stringList>
+          <string>^(sp|tbl|udf|vw)_</string>
+          <string>^\\w+_</string>
+        </stringList>
+      </property>
+      <property name="IncludeFunctions">True</property>
+      <property name="IncludeViews">True</property>
+      <property name="MapsDirectory">Maps</property>
+      <property name="SourceDatabase">
+        <connectionString>$(ConnectionString1)</connectionString>
+        <providerType>SchemaExplorer.SqlSchemaProvider,SchemaExplorer.SqlSchemaProvider</providerType>
+      </property>
+      <property name="AssemblyName">Tracker</property>
+      <property name="EntityNamespace">Tracker.Data.Entities</property>
+    </propertySet>
+    <propertySet name="Entities" template="..\..\..\Templates\CSharp\Entities.cst">
+      <property name="MapsDirectory">Maps</property>
+      <property name="EntitiesDirectory">Entities</property>
+      <property name="GenerateDataContext">True</property>
+      <property name="EntityBaseClass">EntityBase</property>
+      <property name="BaseNamespace">Tracker.Data</property>
+      <property name="DataContextName">TrackerDataContext</property>
+      <property name="SourceDatabase">
+        <connectionString>$(ConnectionString1)</connectionString>
+        <providerType>SchemaExplorer.SqlSchemaProvider,SchemaExplorer.SqlSchemaProvider</providerType>
+      </property>
+      <property name="AssemblyName">Tracker</property>
+    </propertySet>
+    <propertySet name="Queries" template="..\..\..\Templates\CSharp\Queries.cst">
+      <property name="MapsDirectory">Maps</property>
+      <property name="QueriesDirectory">Queries</property>
+      <property name="MethodPrefix">By</property>
+      <property name="UniqueMethodPrefix">GetBy</property>
+      <property name="MethodKeySuffix">Key</property>
+      <property name="DataContextName">TrackerDataContext</property>
+      <property name="BaseNamespace">Tracker.Data</property>
+      <property name="SourceDatabase">
+        <connectionString>$(ConnectionString1)</connectionString>
+        <providerType>SchemaExplorer.SqlSchemaProvider,SchemaExplorer.SqlSchemaProvider</providerType>
+      </property>
+    </propertySet>
+  </propertySets>
+</codeSmith>
