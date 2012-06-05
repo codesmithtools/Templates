@@ -19,7 +19,7 @@
                 <table cellspacing="0" cellpadding="0" border="0">
 		            <tr>
 			            <td class="itemText">Name:</td>
-			            <td class="itemName"><%# string.Format("{0} {1}", Eval("Products.Name"), Eval("Name")) %></td>
+			            <td class="itemName"><%# string.Format("{0} {1}", Eval("Product.Name"), Eval("Name")) %></td>
 		            </tr>
 		            <tr class="itemText">
 			            <td>Quantity:</td>
