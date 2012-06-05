@@ -114,7 +114,7 @@ foreach(var property in Entity.GetProperties(PropertyType.NoConcurrency)){ if(pr
         {
             get
             {
-                return "<%= Entity.EntityKeyName%>";
+                return "[<%= Entity.SchemaName%>].[<%= Entity.EntityKeyName%>]";
             }
         }
 
