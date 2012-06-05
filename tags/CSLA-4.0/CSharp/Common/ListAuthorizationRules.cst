@@ -1,0 +1,52 @@
+﻿<%-- Author: Blake Niemyjski --%>
+<%@ CodeTemplate Language="C#" TargetLanguage="C#" Inherits="Generator.CSLA.EntityCodeTemplate" %>
+<%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\Common" %>
+<%@ Assembly Name="CodeSmith.SchemaHelper.Extensions" Path="..\..\Common" %>
+<%@ Assembly Name="Generator.CSLA" Path="..\..\Common" %>
+<%@ Import Namespace="CodeSmith.SchemaHelper" %>
+<%@ Import Namespace="System.Linq" %>
+        #region Authorization Rules
+
+<% if(IncludeSilverlightSupport) { %>
+#if !SILVERLIGHT
+<% } %>
+        /// <summary>
+        /// Allows the specification of CSLA based authorization rules for a collection list.  Specifies what roles can 
+        /// perform which operations for a given business object
+        /// </summary>
+        protected void AddAuthorizationRules()
+        {
+<% if(IsLatestCSLA) { %>
+            //Csla.Rules.BusinessRules.AddRule(typeof(<%= BusinessClassName %>), new Csla.Rules.CommonRules.IsInRole(Csla.Rules.AuthorizationActions.CreateObject, "SomeRole"));
+            //Csla.Rules.BusinessRules.AddRule(typeof(<%= BusinessClassName %>), new Csla.Rules.CommonRules.IsInRole(Csla.Rules.AuthorizationActions.EditObject, "SomeRole"));
+            //Csla.Rules.BusinessRules.AddRule(typeof(<%= BusinessClassName %>), new Csla.Rules.CommonRules.IsInRole(Csla.Rules.AuthorizationActions.DeleteObject, "SomeRole", "SomeAdminRole"));
+<% } else { %>
+            //// More information on these rules can be found here (http://www.devx.com/codemag/Article/40663/1763/page/2).
+
+            //string[] canWrite = { "AdminUser", "RegularUser" };
+            //string[] canRead = { "AdminUser", "RegularUser", "ReadOnlyUser" };
+            //string[] admin = { "AdminUser" };
+
+            // AuthorizationRules.AllowCreate(typeof(<%= BusinessClassName %>), admin);
+            // AuthorizationRules.AllowDelete(typeof(<%= BusinessClassName %>), admin);
+            // AuthorizationRules.AllowEdit(typeof(<%= BusinessClassName %>), canWrite);
+            // AuthorizationRules.AllowGet(typeof(<%= BusinessClassName %>), canRead);
+
+<% foreach(IProperty property in Entity.GetProperties(PropertyType.NoConcurrency)){ %>
+            //// <%= property.Name %>
+<% if (property.IsReadOnly()) { %>
+            // AuthorizationRules.AllowWrite(<%= property.PrivateMemberVariableName %>Property, canWrite);
+<% } %>
+            // AuthorizationRules.AllowRead(<%= property.PrivateMemberVariableName %>Property, canRead);
+
+<% } %>
+<% foreach(IAssociation association in Entity.Associations){ %>
+            //// <%= association.Name %>
+            // AuthorizationRules.AllowRead(<%= association.PrivateMemberVariableName %>Property, canRead);
+
+<% } } %>
+        }
+<% if(IncludeSilverlightSupport) { %>
+#endif
+<% } %>
+        #endregion

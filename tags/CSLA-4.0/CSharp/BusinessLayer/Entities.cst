@@ -1,0 +1,286 @@
+﻿<%-- Author: Blake Niemyjski --%>
+<%@ CodeTemplate Language="C#" TargetLanguage="C#" OutputType="None" Inherits="Generator.CSLA.EntitiesCodeTemplate" %>
+<%@ Register Name="CommandObjectTemplate" Template="CommandObject.cst" %>
+<%@ Register Name="CriteriaTemplate" Template="Criteria.cst" %>
+<%@ Register Name="DynamicListBaseTemplate" Template="DynamicListBase.cst" %>
+<%@ Register Name="DynamicRootTemplate" Template="DynamicRoot.cst" %>
+<%@ Register Name="DynamicRootListTemplate" Template="DynamicRootList.cst" %>
+<%@ Register Name="EditableChildTemplate" Template="EditableChild.cst" %>
+<%@ Register Name="EditableChildListTemplate" Template="EditableChildList.cst" %>
+<%@ Register Name="EditableRootTemplate" Template="EditableRoot.cst" %>
+<%@ Register Name="EditableRootListTemplate" Template="EditableRootList.cst" %>
+<%@ Register Name="NameValueListTemplate" Template="NameValueList.cst" %>
+<%@ Register Name="ReadOnlyChildTemplate" Template="ReadOnlyChild.cst" %>
+<%@ Register Name="ReadOnlyChildListTemplate" Template="ReadOnlyChildList.cst" %>
+<%@ Register Name="ReadOnlyListTemplate" Template="ReadOnlyList.cst" %>
+<%@ Register Name="ReadOnlyRootTemplate" Template="ReadOnlyRoot.cst" %>
+<%@ Register Name="SwitchableObjectTemplate" Template="SwitchableObject.cst" %>
+<%@ Register Name="ADOHelperTemplate" Template="Internal\ADOHelper.cst" %>
+<%@ Register Name="LinqToSQLHelperTemplate" Template="Internal\LinqToSQLHelper.cst" %>
+<%@ Register Name="FactoryNamesTemplate" Template="Internal\FactoryNames.cst" %>
+<%@ Register Name="ExistsCommandTemplate" Template="Internal\ExistsCommand.cst" %>
+<%@ Register Name="AsyncChildLoaderTemplate" Template="Internal\AsyncChildLoader.cst" %>
+
+<%@ Assembly Name="CodeSmith.CustomProperties" %>
+<%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\Common" %>
+<%@ Assembly Name="Generator.CSLA" Path="..\..\Common" %>
+<%@ Assembly Name="SchemaExplorer" %>
+
+<%@ Import Namespace="CodeSmith.CustomProperties" %>
+<%@ Import Namespace="CodeSmith.SchemaHelper" %>
+<%@ Import Namespace="System.Collections.Generic" %>
+<%@ Import Namespace="SchemaExplorer" %>
+
+<% Generate(); %>
+
+<script runat="template">
+
+public override void Generate()
+{
+    #region CommandObjectTemplate
+
+    if(this.CommandObjectEntities != null)
+    {
+        foreach(var entity in this.CommandObjectEntities)
+        {
+            CommandObjectTemplate template = this.Create<CommandObjectTemplate>();
+            RenderHelper(template, entity);
+        }
+    }
+    
+    #endregion
+    
+    #region CriteriaTemplate
+
+    if(this.CriteriaEntities != null)
+    {
+        foreach(var entity in this.CriteriaEntities)
+        {
+            CriteriaTemplate template = this.Create<CriteriaTemplate>();
+            RenderHelper(template, entity);
+        }
+    }
+
+    #endregion
+    
+    #region DynamicRootTemplate
+
+    if(this.DynamicRootEntities != null)
+    {
+        foreach(var entity in this.DynamicRootEntities)
+        {
+            DynamicRootTemplate template = this.Create<DynamicRootTemplate>();
+            RenderHelper(template, entity);
+        }
+    }
+
+    #endregion
+    
+    #region DynamicRootListTemplate
+
+    if(this.DynamicRootListEntities != null)
+    {
+        foreach(var entity in this.DynamicRootListEntities)
+        {
+            DynamicRootListTemplate template = this.Create<DynamicRootListTemplate>();
+            RenderHelper(template, entity);
+        }
+    }
+
+    #endregion    
+    
+    #region EditableChildTemplate
+
+    if(this.EditableChildEntities != null)
+    {
+        foreach(var entity in this.EditableChildEntities)
+        {
+            EditableChildTemplate template = this.Create<EditableChildTemplate>();
+            RenderHelper(template, entity);
+        }
+    }
+
+    #endregion
+    
+    #region EditableChildListTemplate
+
+    if(this.EditableChildListEntities != null)
+    {
+        foreach(var entity in this.EditableChildListEntities)
+        {
+            EditableChildListTemplate template = this.Create<EditableChildListTemplate>();
+            RenderHelper(template, entity);
+        }
+    }
+
+    #endregion    
+    
+    #region EditableRootTemplate
+
+    if(this.EditableRootEntities != null)
+    {
+        foreach(var entity in this.EditableRootEntities)
+        {
+            EditableRootTemplate template = this.Create<EditableRootTemplate>();
+            RenderHelper(template, entity);
+        }
+    }
+
+    #endregion    
+    
+    #region EditableRootListTemplate
+
+    if(this.EditableRootListEntities != null)
+    {
+        foreach(var entity in this.EditableRootListEntities)
+        {
+            EditableRootListTemplate template = this.Create<EditableRootListTemplate>();
+            RenderHelper(template, entity);
+        }
+    }
+
+    #endregion
+     
+    #region DynamicListBase
+
+    if(this.DynamicListBaseEntities != null)
+    {
+        foreach(var entity in this.DynamicListBaseEntities)
+        {
+            DynamicListBaseTemplate template = this.Create<DynamicListBaseTemplate>();
+            RenderHelper(template, entity);
+        }
+    }
+
+    #endregion
+    
+    #region NameValueListTemplate
+
+    if(this.NameValueListEntities != null)
+    {
+        foreach(var entity in this.NameValueListEntities)
+        {
+            NameValueListTemplate template = this.Create<NameValueListTemplate>();
+            RenderHelper(template, entity);
+        }
+    }
+
+    #endregion    
+    
+    #region ReadOnlyChildTemplate
+
+    if(this.ReadOnlyChildEntities != null)
+    {
+        foreach(var entity in this.ReadOnlyChildEntities)
+        {
+            ReadOnlyChildTemplate template = this.Create<ReadOnlyChildTemplate>();
+            RenderHelper(template, entity);
+        }
+    }
+
+    #endregion
+    
+    #region ReadOnlyChildListTemplate
+
+    if(this.ReadOnlyChildListEntities != null)
+    {
+        foreach(var entity in this.ReadOnlyChildListEntities)
+        {
+            ReadOnlyChildListTemplate template = this.Create<ReadOnlyChildListTemplate>();
+            RenderHelper(template, entity);
+        }
+    }
+
+    #endregion    
+    
+    #region ReadOnlyListTemplate
+
+    if(this.ReadOnlyListEntities != null)
+    {
+        foreach(var entity in this.ReadOnlyListEntities)
+        {
+            ReadOnlyListTemplate template = this.Create<ReadOnlyListTemplate>();
+            RenderHelper(template, entity);
+        }
+    }
+
+    #endregion
+    
+    #region ReadOnlyRootTemplate
+
+    if(this.ReadOnlyRootEntities != null)
+    {
+        foreach(var entity in this.ReadOnlyRootEntities)
+        {
+            ReadOnlyRootTemplate template = this.Create<ReadOnlyRootTemplate>();
+            RenderHelper(template, entity);
+        }
+    }
+
+    #endregion    
+    
+    #region SwitchableObjectTemplate
+
+    if(this.SwitchableObjectEntities != null)
+    {
+        foreach(var entity in this.SwitchableObjectEntities)
+        {
+            SwitchableObjectTemplate template = this.Create<SwitchableObjectTemplate>();
+            RenderHelper(template, entity);
+        }
+    }
+
+    #endregion
+    
+    PreserveRegionsMergeStrategy strategy = new PreserveRegionsMergeStrategy();
+    strategy.RegionNameRegex = "^[ \\t]*[ \\s]*\"?(?i:Preserved Code)\"?";
+    
+    #region ADOHelperTemplate
+    
+    if(DataAccessImplementation == DataAccessMethod.ParameterizedSQL || DataAccessImplementation == DataAccessMethod.StoredProcedures || DataAccessImplementation == DataAccessMethod.ObjectFactoryParameterizedSQL || DataAccessImplementation == DataAccessMethod.ObjectFactoryStoredProcedures)
+    {
+        ADOHelperTemplate ADOHelper = this.Create<ADOHelperTemplate>();
+        this.CopyPropertiesTo(ADOHelper);
+        ADOHelper.RenderToFile(System.IO.Path.Combine(this.Location, "Utility\\ADOHelper.cs"), strategy);
+    }
+
+    #endregion
+
+    #region LinqToSQLHelperTemplate
+
+    if(DataAccessImplementation == DataAccessMethod.LinqToSQL )
+    {
+        LinqToSQLHelperTemplate LinqToSQLHelper = this.Create<LinqToSQLHelperTemplate>();
+        this.CopyPropertiesTo(LinqToSQLHelper);
+        LinqToSQLHelper.RenderToFile(System.IO.Path.Combine(this.Location, "Utility\\LinqToSQLHelper.cs"), strategy);
+    }
+
+    #endregion
+    
+    #region FactoryNamesTemplate
+
+    if(DataAccessImplementation == DataAccessMethod.ObjectFactoryNone || DataAccessImplementation == DataAccessMethod.ObjectFactoryParameterizedSQL || DataAccessImplementation == DataAccessMethod.ObjectFactoryStoredProcedures)
+    {
+        FactoryNamesTemplate factoryNames = this.Create<FactoryNamesTemplate>();
+        this.CopyPropertiesTo(factoryNames);
+        factoryNames.RenderToFile(System.IO.Path.Combine(this.Location, "Factory\\FactoryNames.cs"), strategy);
+    }
+
+    #endregion
+
+    #region ExistsCommandTemplate
+    ExistsCommandTemplate ExistsCommand = this.Create<ExistsCommandTemplate>();
+    this.CopyPropertiesTo(ExistsCommand);
+    ExistsCommand.RenderToFile(System.IO.Path.Combine(this.Location, "Commands\\ExistsCommand.cs"), true);
+    #endregion
+
+    #region AsyncChildLoaderTemplate
+
+    AsyncChildLoaderTemplate AsyncChildLoader = this.Create<AsyncChildLoaderTemplate>();
+    this.CopyPropertiesTo(AsyncChildLoader);
+    AsyncChildLoader.RenderToFile(System.IO.Path.Combine(this.Location, "Utility\\AsyncChildLoader.cs"), true);
+   
+    #endregion
+}
+
+</script>

@@ -1,0 +1,43 @@
+﻿<%-- Author: Blake Niemyjski --%>
+<%@ CodeTemplate Language="C#" TargetLanguage="C#" Inherits="Generator.CSLA.EntityCodeTemplate" %>
+<%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\Common" %>
+<%@ Assembly Name="CodeSmith.SchemaHelper.Extensions" Path="..\..\Common" %>
+<%@ Assembly Name="CodeSmith.SchemaHelper.CSharpExtensions" Path="..\..\Common" %>
+<%@ Assembly Name="Generator.CSLA" Path="..\..\Common" %>
+<%@ Import Namespace="CodeSmith.SchemaHelper" %>
+            bool cancel = false;
+            OnDeleting(criteria, ref cancel);
+            if (cancel) return;
+
+<% if(Entity.CanDelete) { %>
+            string commandText = String.Format("DELETE FROM [<%= Entity.SchemaName %>].[<%= Entity.EntityKeyName %>] {0}", ADOHelper.BuildWhereStatement(criteria.StateBag));
+<%  if(!RenderOptionalContent) { %>
+            using (var connection = new SqlConnection(ADOHelper.ConnectionString))
+            {
+                connection.Open();
+                using (var command = new SqlCommand(commandText, connection))
+                {
+                    command.Parameters.AddRange(ADOHelper.SqlParameters(criteria.StateBag));
+
+                    //result: The number of rows changed, inserted, or deleted. -1 for select statements; 0 if no rows were affected, or the statement failed. 
+                    int result = command.ExecuteNonQuery();
+                    if (result == 0)
+                        throw new DBConcurrencyException("The entity is out of date on the client. Please update the entity and try again. This could also be thrown if the sql statement failed to execute.");
+                }
+            }
+<%} else {%>
+            using (var command = new SqlCommand(commandText, connection))
+            {
+                command.Parameters.AddRange(ADOHelper.SqlParameters(criteria.StateBag));
+
+                //result: The number of rows changed, inserted, or deleted. -1 for select statements; 0 if no rows were affected, or the statement failed. 
+                int result = command.ExecuteNonQuery();
+                if (result == 0)
+                    throw new DBConcurrencyException("The entity is out of date on the client. Please update the entity and try again. This could also be thrown if the sql statement failed to execute.");
+            }
+<%}%>
+
+            OnDeleted();
+<% } else { %>
+            throw new NotSupportedException("This business object cannot be deleted.");
+<% } %>

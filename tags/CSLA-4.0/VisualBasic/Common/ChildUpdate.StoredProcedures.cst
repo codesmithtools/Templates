@@ -1,0 +1,105 @@
+﻿<%-- Author: Blake Niemyjski --%>
+<%@ CodeTemplate Language="VB" TargetLanguage="VB" Inherits="Generator.CSLA.EntityCodeTemplate" %>
+<%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\Common" %>
+<%@ Assembly Name="CodeSmith.SchemaHelper.Extensions" Path="..\..\Common" %>
+<%@ Assembly Name="CodeSmith.SchemaHelper.VisualBasicExtensions" Path="..\..\Common" %>
+<%@ Assembly Name="Generator.CSLA" Path="..\..\Common" %>
+<%@ Import Namespace="CodeSmith.SchemaHelper" %>
+<%@ Import Namespace="System.Linq" %>
+            Dim cancel As Boolean = False
+<% Dim associations As System.Collections.Generic.List(Of IAssociation) = Entity.Associations.Where(Function(a) a.AssociationType = AssociationType.ManyToOne OrElse a.AssociationType = AssociationType.ManyToZeroOrOne).GroupBy(Function(a As IAssociation) a.TypeName).Select(Function(a) a.FirstOrDefault()).ToList()
+   If Not RenderOptionalContent AndAlso associations.Count() > 0 Then %>
+            OnChildUpdating(<%= associations.BuildArgumentVariables(true) %>, cancel)
+<% Else %>
+            OnChildUpdating(connection, cancel)
+<% End If %>
+            If (cancel) Then
+                Return
+            End If
+
+<% If(Entity.CanUpdate) Then %> 
+            If Not connection.State = ConnectionState.Open Then connection.Open()
+            Using command As New SqlCommand("<%= GetUpdateStoredProcedureName() %>", connection)
+                command.CommandType = CommandType.StoredProcedure
+                <%= entity.GetProperties(PropertyType.NoConcurrency).BuildCommandParameters(False, False, Not RenderOptionalContent, True, True) %>
+    <% If Not(Entity.ConcurrencyProperty Is Nothing) Then %>
+                command.Parameters.AddWithValue("<%= ParameterPrefix  %><%= Entity.ConcurrencyProperty.KeyName %>", SqlDbType.Timestamp)
+                command.Parameters("<%= ParameterPrefix  %><%= Entity.ConcurrencyProperty.KeyName %>").Value = Me.<%= Entity.ConcurrencyProperty.Name %>
+                command.Parameters("<%= ParameterPrefix  %><%= Entity.ConcurrencyProperty.KeyName %>").Direction = ParameterDirection.InputOutput
+    <% End If %>
+    
+                'result: The number of rows changed, inserted, or deleted. -1 for select statements; 0 if no rows were affected, or the statement failed. 
+                Dim result As Integer = command.ExecuteNonQuery()
+                If (result = 0) Then
+                    throw new DBConcurrencyException("The entity is out of date on the client. Please update the entity and try again. This could also be thrown if the sql statement failed to execute.")
+                End If
+    
+    <% If Not(Entity.ConcurrencyProperty Is Nothing) Then %>
+                <%= Entity.ConcurrencyProperty.Name %> = DirectCast(command.Parameters("<%= ParameterPrefix  %><%= Entity.ConcurrencyProperty.KeyName %>").Value, <%= Entity.ConcurrencyProperty.SystemType %>)
+    <% End If %>
+    <% For Each prop As IProperty In Entity.GetProperties(PropertyType.Key)
+        If(Not prop.IsType(PropertyType.Identity)) Then %> 
+                ' Update non-identity primary key value.
+        <% If(UseMemberVariables) Then %>
+                <%= prop.PrivateMemberVariableName %> = DirectCast(command.Parameters("<%= prop.BuildParameterVariableName() %>").Value, <%= prop.SystemType %>)
+        <% Else %>
+                LoadProperty(<%= prop.PrivateMemberVariableName %>Property, DirectCast(command.Parameters("<%= prop.BuildParameterVariableName() %>").Value, <%= prop.SystemType %>))
+        <% End If
+        End If
+    Next %>
+    <% If Not RenderOptionalContent Then
+        For Each prop As IProperty In Entity.Properties
+            If prop.IsType(PropertyType.Foreign) Then
+                If String.IsNullOrEmpty(prop.ResolveAssociationPropertyClassName()) Then
+                    Continue For
+                End If  %>
+    
+                'Update foreign keys values. This code will update the values passed In from the parent only if no errors occurred after executing the query.
+    <% Dim localParameterName As String = prop.ResolveAssociationPropertyVariable()
+    Dim localParameterNameWithChildProperty As String = prop.ResolveAssociationPropertyVariableWithChildProperty() %>
+                If(Not IsNothing(<%= localParameterName %>) AndAlso Not <%= localParameterNameWithChildProperty %> = Me.<%= prop.Name %>) Then
+    <% If(UseMemberVariables) Then %>
+                        <%= prop.PrivateMemberVariableName %> = <%= localParameterNameWithChildProperty %>
+    <% Else %>
+                        LoadProperty(<%= prop.PrivateMemberVariableName %>Property, <%= localParameterNameWithChildProperty %>)
+    <% End If %>
+                End If
+            <% End If
+        Next
+    End If %>
+    <% For Each prop As IProperty In Entity.GetProperties(PropertyType.Key)
+        If Not (prop.IsType(PropertyType.Identity)) Then %>
+                ' Update non-identity primary key value.
+            <% If(UseMemberVariables) Then %>
+                _original<%= prop.Name %> = Me.<%= prop.Name %>
+        <% Else %>
+                LoadProperty(_original<%= prop.Name %>Property, Me.<%= prop.Name %>)
+        <% End If
+        End If
+    Next %>
+            End Using
+    <% If (Entity.Associations.Count() > 0) Then
+        If (Not RenderOptionalContent) Then
+        Dim childCount As Integer = 0
+        For Each a As IAssociation In Entity.Associations.Where(Function(assoc) assoc.AssociationType = AssociationType.OneToMany OrElse assoc.AssociationType = AssociationType.ZeroOrOneToMany OrElse assoc.AssociationType = AssociationType.ManyToMany)
+            If IsChildBusinessObject(a) Or IsSwitchableObject(a) Then
+                childCount += 1
+            End If
+        Next
+    
+        If childCount > 0 Then %>
+            FieldManager.UpdateChildren(<%= Entity.BuildUpdateChildrenParametersVariables(true) %>)
+        <% Else %>
+            ' A child relationship exists on this Business Object but its type is not a child type (E.G. EditableChild). 
+            ' TODO: Please override OnChildUpdated() and update this child manually.
+            'FieldManager.UpdateChildren(<%= Entity.BuildUpdateChildrenParametersVariables(true) %>)
+        <% End If 
+        Else %>
+            FieldManager.UpdateChildren(Me, connection)
+    <% End If
+    End If %>
+    
+            OnChildUpdated()
+<% Else %>
+            Throw New NotSupportedException("This business object cannot be updated.")
+<% End If %>

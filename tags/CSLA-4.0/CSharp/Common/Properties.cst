@@ -1,0 +1,385 @@
+﻿<%-- Author: Blake Niemyjski --%>
+<%@ CodeTemplate Language="C#" TargetLanguage="C#" Inherits="Generator.CSLA.EntityCodeTemplate" %>
+<%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\Common" %>
+<%@ Assembly Name="CodeSmith.SchemaHelper.Extensions" Path="..\..\Common" %>
+<%@ Assembly Name="CodeSmith.SchemaHelper.CSharpExtensions" Path="..\..\Common" %>
+<%@ Assembly Name="Generator.CSLA" Path="..\..\Common" %>
+<%@ Import Namespace="CodeSmith.SchemaHelper" %>
+<%@ Import Namespace="System.Linq" %>
+
+        #region Properties
+<% if(Entity.ConcurrencyProperty != null) { %>
+
+        /// <summary>
+        /// Used for optimistic concurrency.
+        /// </summary>
+        [NotUndoable]
+        internal <%= Entity.ConcurrencyProperty.SystemType %> <%= Entity.ConcurrencyProperty.Name %> = new <%= Entity.ConcurrencyProperty.SystemTypeWithSize %>;
+<% } %>
+
+<%  foreach(IProperty property in Entity.GetProperties(PropertyType.NoConcurrency)){ 
+if (UseMemberVariables){ %>
+        private static readonly PropertyInfo<<%= property.SystemType %>> <%= property.PrivateMemberVariableName %>Property = RegisterProperty<<%= property.SystemType %>>(p => p.<%= property.Name %>, "<%= property.FriendlyName() %>"<% if(property.IsNullable) { %>, (<%= property.SystemType %>)null<% } %><%if (IsLatestCSLA) { %>, RelationshipTypes.PrivateField<% }%>);
+        private <%= property.SystemType %> <%= property.PrivateMemberVariableName %> = <%= property.PrivateMemberVariableName %>Property.DefaultValue;<%= property.BuildDataObjectField(IncludeSilverlightSupport) %>
+<% if(property.HasDescription) { %>
+        /// <summary>
+        /// <%= property.Description %>
+        /// </summary>
+<% } %>
+        public <%= property.SystemType %> <%= property.Name %>
+        {
+            get { return GetProperty(<%= property.PrivateMemberVariableName %>Property, <%= property.PrivateMemberVariableName %>); }
+            <% if(property.IsReadOnly()) { %>internal <% } %>set { SetProperty(<%= property.PrivateMemberVariableName %>Property, ref <%= property.PrivateMemberVariableName %>, value); }
+        }
+
+<%if (property.IsType(PropertyType.Key) && !property.IsType(PropertyType.Identity)) { %>
+        private static readonly PropertyInfo<<%= property.SystemType %>> _original<%= property.Name %>Property = RegisterProperty<<%= property.SystemType %>>(p => p.Original<%= property.Name %>, "Original <%= property.FriendlyName() %>"<% if(property.IsNullable) { %>, (<%= property.SystemType %>)null<% } %><%if (IsLatestCSLA) { %>, RelationshipTypes.PrivateField<% }%>);
+        private <%= property.SystemType %> _original<%= property.Name %> = _original<%= property.Name %>Property.DefaultValue;
+        /// <summary>
+        /// Holds the original value for <%= property.Name %>. This is used for non identity primary keys.
+        /// </summary>
+        internal <%= property.SystemType %> Original<%= property.Name %>
+        {
+            get { return GetProperty(_original<%= property.Name %>Property, _original<%= property.Name %>); }
+            set { SetProperty(_original<%= property.Name %>Property, ref _original<%= property.Name %>, value); }
+        }
+
+<% } } else { %>
+        private static readonly PropertyInfo<<%= property.SystemType %>> <%= property.PrivateMemberVariableName %>Property = RegisterProperty<<%= property.SystemType %>>(p => p.<%= property.Name %>, "<%= property.FriendlyName() %>"<% if(property.IsNullable) { %>, (<%= property.SystemType %>)null<% } %>);<%= property.BuildDataObjectField(IncludeSilverlightSupport) %>
+<% if(property.HasDescription) { %>
+        /// <summary>
+        /// <%= property.Description %>
+        /// </summary>
+<% } %>
+        public <%= property.SystemType %> <%= property.Name %>
+        {
+            get { return GetProperty(<%= property.PrivateMemberVariableName %>Property); }
+            <% if(property.IsReadOnly()) { %>internal <% } %>set{ SetProperty(<%= property.PrivateMemberVariableName %>Property, value); }
+        }
+
+<%if (property.IsType(PropertyType.Key) && !property.IsType(PropertyType.Identity)) { %>
+        private static readonly PropertyInfo<<%= property.SystemType %>> _original<%= property.Name %>Property = RegisterProperty<<%= property.SystemType %>>(p => p.Original<%= property.Name %>, "Original <%= property.FriendlyName() %>"<% if(property.IsNullable) { %>, (<%= property.SystemType %>)null<% } %>);
+        /// <summary>
+        /// Holds the original value for <%= property.Name %>. This is used for non identity primary keys.
+        /// </summary>
+        internal <%= property.SystemType %> Original<%= property.Name %>
+        {
+            get { return GetProperty(_original<%= property.Name %>Property); }
+            set{ SetProperty(_original<%= property.Name %>Property, value); }
+        }
+
+<% } } } %>
+<%-- One-To-Zero-Or-One --%>
+<% foreach(IAssociation association in Entity.Associations.Where(a => a.AssociationType == AssociationType.OneToZeroOrOne || a.AssociationType == AssociationType.OneToOne)) { 
+    // For now, don't generate properties based on tables generated as generics.
+    if(association.GenericProperty == String.Empty) {
+    string associationClassName = association.TypeName;
+    if(!BusinessObjectExists(association) && IsReadOnlyBusinessObject( association, "Info")) {
+        associationClassName += "Info";
+    } %>
+        // <%= association.AssociationType.ToString() %>
+        private static readonly PropertyInfo<<%= associationClassName %><%= association.GenericProperty %>> <%= association.PrivateMemberVariableName %>Property = RegisterProperty<<%= associationClassName %><%= association.GenericProperty %>>(p => p.<%= association.Name %>, Csla.RelationshipTypes.Child);
+<% if(association.HasDescription) { %>
+        /// <summary>
+        /// <%= association.Description %>
+        /// </summary>
+<% } %>
+        public <%= associationClassName %><%= association.GenericProperty %> <%= association.Name %>
+        {
+            get
+            {
+                bool cancel = false;
+                OnChildLoading(<%= association.PrivateMemberVariableName %>Property, ref cancel);
+
+                if (!cancel)
+                {
+<% if(UseLazyLoading) { %>
+                    if(!FieldManager.FieldExists(<%= association.PrivateMemberVariableName %>Property))
+                    {
+                        var criteria = new <%= BusinessProjectName %>.<%= association.TypeName %>Criteria<%= association.GenericProperty %> {<%= association.BuildObjectInitializer(true) %>};
+                        <%= association.BuildNullableObjectInitializer(true)%>
+
+<% if(IncludeSilverlightSupport) { %>
+#if SILVERLIGHT
+                        //MarkBusy();
+<% if(!BusinessObjectExists(association) && IsReadOnlyBusinessObject( association, "Info")) { %>
+                        if(<%= association.BuildNullCheckStatement(true, false, false, false, true) %>)
+                        {
+                            <%= BusinessProjectName %>.<%= associationClassName %><%= association.GenericProperty %>.ExistsAsync(criteria, (o,e) =>
+                            {
+                                if (e.Error != null)
+                                    throw e.Error;
+                            
+                                if (!e.Object.Result)
+                                {
+                                    <%= BusinessProjectName %>.<%= associationClassName %><%= association.GenericProperty %>.<%= association.SearchCriteria.AssociatedMethodName%>Async(<%= association.SearchCriteria.Properties.BuildPropertyVariableArguments() %>, (o1, e1) =>
+                                    {
+                                        if (e1.Error != null)
+                                            throw e1.Error; 
+
+                                        this.LoadProperty(<%= association.PrivateMemberVariableName %>Property, e1.Object);
+
+                                        //MarkIdle();
+                                        OnPropertyChanged(<%= association.PrivateMemberVariableName %>Property);
+                                    });
+                                }
+                            });
+                        }
+<% } else { %>
+                        if(<%= association.BuildNullCheckStatement(true, true, false, false, true) %>)
+                        {
+                            <%= BusinessProjectName %>.<%= associationClassName %><%= association.GenericProperty %>.ExistsAsync(criteria, (o,e) =>
+                            {
+                                if (e.Error != null)
+                                    throw e.Error;
+
+                                if (!e.Object.Result)
+                                    <%= BusinessProjectName %>.<%= associationClassName %><%= association.GenericProperty %>.New<%= associationClassName %>Async((o1, e1) =>
+                                    {
+                                        if (e1.Error != null)
+                                            throw e1.Error; 
+
+                                        this.LoadProperty(<%= association.PrivateMemberVariableName %>Property, e1.Object);
+
+                                        //MarkIdle();
+                                        OnPropertyChanged(<%= association.PrivateMemberVariableName %>Property);
+                                    });
+                                else
+                                    <%= BusinessProjectName %>.<%= associationClassName %><%= association.GenericProperty %>.<%= association.SearchCriteria.AssociatedMethodName%>Async(<%= association.SearchCriteria.Properties.BuildPropertyVariableArguments() %>, (o2, e2) =>
+                                    {
+                                        if (e2.Error != null)
+                                            throw e2.Error; 
+
+                                        this.LoadProperty(<%= association.PrivateMemberVariableName %>Property, e2.Object);
+
+                                        //MarkIdle();
+                                        OnPropertyChanged(<%= association.PrivateMemberVariableName %>Property);
+                                    });
+                            });
+                        }
+<% } %>
+#else
+<% } %>
+<% if(!BusinessObjectExists(association) && IsReadOnlyBusinessObject( association, "Info")) { %>
+                        if(<%= association.BuildNullCheckStatement(true, false, false, false) %><%= BusinessProjectName %>.<%= associationClassName %><%= association.GenericProperty %>.Exists(criteria))
+                            LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= BusinessProjectName %>.<%= associationClassName %><%= association.GenericProperty %>.<%= association.SearchCriteria.AssociatedMethodName%>(<%= association.SearchCriteria.Properties.BuildPropertyVariableArguments() %>));
+<% } else { %>
+                        if(<%= association.BuildNullCheckStatement(true, true, false, false) %>!<%= BusinessProjectName %>.<%= associationClassName %><%= association.GenericProperty %>.Exists(criteria))
+                            LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= BusinessProjectName %>.<%= associationClassName %><%= association.GenericProperty %>.New<%= associationClassName %>());
+                        else
+                            LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= BusinessProjectName %>.<%= associationClassName %><%= association.GenericProperty %>.<%= association.SearchCriteria.AssociatedMethodName%>(<%= association.SearchCriteria.Properties.BuildPropertyVariableArguments() %>));
+<% } %>
+<% if(IncludeSilverlightSupport) { %>
+#endif
+<% } %>
+                    }
+<% } %>
+                }
+
+                return GetProperty(<%= association.PrivateMemberVariableName %>Property); 
+            }
+        }
+
+<% } } %>
+<%-- Many-To-One --%>
+<% foreach(IAssociation association in Entity.Associations.Where(a => a.AssociationType == AssociationType.ManyToOne || a.AssociationType == AssociationType.ManyToZeroOrOne)) {
+    // For now, don't generate properties based on tables generated as generics.
+    if(association.GenericProperty == String.Empty) {
+    string associationClassName = association.TypeName;
+    if(!BusinessObjectExists(association) && IsReadOnlyBusinessObject(association, "Info")) {
+        associationClassName += "Info";
+    } %>
+        // <%= association.AssociationType.ToString() %>
+        private static readonly PropertyInfo<<%= associationClassName %><%= association.GenericProperty %>> <%= association.PrivateMemberVariableName %>Property = RegisterProperty<<%= associationClassName %><%= association.GenericProperty %>>(p => p.<%= association.Name %>, Csla.RelationshipTypes.Child);
+<% if(association.HasDescription) { %>
+        /// <summary>
+        /// <%= association.Description %>
+        /// </summary>
+<% } %>
+        public <%= associationClassName %><%= association.GenericProperty %> <%= association.Name %>
+        {
+            get
+            {
+                bool cancel = false;
+                OnChildLoading(<%= association.PrivateMemberVariableName %>Property, ref cancel);
+
+                if (!cancel)
+                {
+<% if(UseLazyLoading) { %>
+<% string result = association.BuildNullCheckStatement(true, true, false, true, false);
+if(!result.Equals("(true)", StringComparison.CurrentCultureIgnoreCase) && !result.Equals("(false)", StringComparison.CurrentCultureIgnoreCase)) {%>
+                    if<%= result %>
+                        return null;
+
+<% }%>
+                    if(!FieldManager.FieldExists(<%= association.PrivateMemberVariableName %>Property))
+                    {
+                        var criteria = new <%= BusinessProjectName %>.<%= association.TypeName %>Criteria<%= association.GenericProperty %> {<%= association.BuildObjectInitializer(true) %>};
+                        <%= association.BuildNullableObjectInitializer(true)%>
+<% if(IncludeSilverlightSupport) { %>
+#if SILVERLIGHT
+                        //MarkBusy();
+                        <%= BusinessProjectName %>.<%= associationClassName %><%= association.GenericProperty %>.ExistsAsync(criteria, (o,e) =>
+                        {
+                            if(e.Error != null)
+                                throw e.Error;
+                                
+                            if(e.Object.Result)
+                                <%= BusinessProjectName %>.<%= associationClassName %><%= association.GenericProperty %>.<%= association.SearchCriteria.AssociatedMethodName%>Async(<%= association.SearchCriteria.Properties.BuildPropertyVariableArguments() %>, (o1, e1) =>
+                                    {
+                                        if (e1.Error != null)
+                                            throw e1.Error; 
+    
+                                        this.LoadProperty(<%= association.PrivateMemberVariableName %>Property, e1.Object<% if(IsChildBusinessObject(association)) { %>.Child<% } %>);
+    
+                                        //MarkIdle();
+                                        OnPropertyChanged(<%= association.PrivateMemberVariableName %>Property);
+                                    });
+                        });
+#else
+<% } %>
+                        if(<%= BusinessProjectName %>.<%= associationClassName %><%= association.GenericProperty %>.Exists(criteria))
+                            LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= BusinessProjectName %>.<%= associationClassName %><%= association.GenericProperty %>.<%= association.SearchCriteria.AssociatedMethodName%>(<%= association.SearchCriteria.Properties.BuildPropertyVariableArguments() %>));
+<% if(IncludeSilverlightSupport) { %>
+#endif
+<% } %>
+                    }
+<% } %>
+                }
+
+                return GetProperty(<%= association.PrivateMemberVariableName %>Property); 
+            }
+        }
+
+<% } } %>
+<%-- One-To-Many & Many-To-Many --%>
+<% foreach(IAssociation association in Entity.Associations.Where(a => a.AssociationType == AssociationType.ZeroOrOneToMany || a.AssociationType == AssociationType.OneToMany || a.AssociationType == AssociationType.ManyToMany)) { 
+    // For now, don't generate properties based on tables generated as generics.
+    if(association.GenericProperty == String.Empty) {
+    string associationClassName = association.TypeName;
+    if(!BusinessObjectExists(association, "List") && IsReadOnlyBusinessObject(association, "InfoList")) {
+        associationClassName += "Info";
+    }
+    %>
+        // <%= association.AssociationType.ToString() %>
+        private static readonly PropertyInfo<<%= associationClassName %>List<%= association.GenericProperty %>> <%= association.PrivateMemberVariableName %>Property = RegisterProperty<<%= associationClassName %>List<%= association.GenericProperty %>>(p => p.<%= association.Name %>, Csla.RelationshipTypes.Child);
+<% if(association.HasDescription) { %>
+        /// <summary>
+        /// <%= association.Description %>
+        /// </summary>
+<% } %>
+        public <%= associationClassName %>List<%= association.GenericProperty %> <%= association.Name %>
+        {
+            get
+            {
+                bool cancel = false;
+                OnChildLoading(<%= association.PrivateMemberVariableName %>Property, ref cancel);
+    
+                if (!cancel)
+                {
+<% if(UseLazyLoading) { %>
+                    if(!FieldManager.FieldExists(<%= association.PrivateMemberVariableName %>Property))
+                    {
+<% if(IncludeSilverlightSupport) { %>
+#if SILVERLIGHT
+                        //MarkBusy();
+<% if(IsNameValueListBusinessObject(association, "NameValueList")) { %>
+                        <%= BusinessProjectName %>.<%= association.TypeName %>List<%= association.GenericProperty %>.GetAllAsync((o, e) =>
+                                {
+                                    if (e.Error != null)
+                                        throw e.Error; 
+    
+                                    this.LoadProperty(<%= association.PrivateMemberVariableName %>Property, e.Object);
+    
+                                    //MarkIdle();
+                                    OnPropertyChanged(<%= association.PrivateMemberVariableName %>Property);
+                                });
+<% } else { %>
+                        var criteria = new <%= BusinessProjectName %>.<%= association.TypeName %>Criteria<%= association.GenericProperty %> {<%= association.BuildObjectInitializer(true) %>};
+                        <%= association.BuildNullableObjectInitializer(true)%>
+
+<% if(!BusinessObjectExists(association, "List") && IsReadOnlyBusinessObject(association, "InfoList")) { %>
+                        if(<%= association.BuildNullCheckStatement(true, false, false, false, true) %>)
+                        {
+                            <%= BusinessProjectName %>.<%= associationClassName %>List<%= association.GenericProperty %>.ExistsAsync(criteria, (o,e) =>
+                            {
+                                if (e.Error != null)
+                                    throw e.Error;
+
+                                if(!e.Object.Result)
+                                    <%= BusinessProjectName %>.<%= associationClassName %>List.<%= association.SearchCriteria.AssociatedMethodName%>Async(<%= association.SearchCriteria.Properties.BuildPropertyVariableArguments() %>, (o1, e1) =>
+                                    {
+                                        if (e1.Error != null)
+                                            throw e1.Error; 
+    
+                                        this.LoadProperty(<%= association.PrivateMemberVariableName %>Property, e1.Object);
+    
+                                        //MarkIdle();
+                                        OnPropertyChanged(<%= association.PrivateMemberVariableName %>Property);
+                                    });
+                            });
+                        }
+<% } else { %>
+                        if(<%= association.BuildNullCheckStatement(true, true, false, false, true) %>)
+                        {
+                            <%= BusinessProjectName %>.<%= associationClassName %>List<%= association.GenericProperty %>.ExistsAsync(criteria, (o,e) =>
+                            {
+                                if (e.Error != null)
+                                    throw e.Error;
+
+                                if(!e.Object.Result)
+                                <%= BusinessProjectName %>.<%= associationClassName %>List<%= association.GenericProperty %>.NewListAsync((o1, e1) =>
+                                {
+                                    if (e1.Error != null)
+                                        throw e1.Error; 
+
+                                    this.LoadProperty(<%= association.PrivateMemberVariableName %>Property, e1.Object);
+
+                                    //MarkIdle();
+                                    OnPropertyChanged(<%= association.PrivateMemberVariableName %>Property);
+                                });
+                                else
+                                <%= BusinessProjectName %>.<%= associationClassName %>List<%= association.GenericProperty %>.<%= association.SearchCriteria.AssociatedMethodName%>Async(<%= association.SearchCriteria.Properties.BuildPropertyVariableArguments() %>, (o2, e2) =>
+                                {
+                                    if (e2.Error != null)
+                                        throw e2.Error; 
+
+                                    this.LoadProperty(<%= association.PrivateMemberVariableName %>Property, e2.Object<% if(IsChildBusinessObject(association,"List")) { %>.Child<% } %>);
+
+                                    //MarkIdle();
+                                    OnPropertyChanged(<%= association.PrivateMemberVariableName %>Property);
+                                });
+                            });
+                        }
+<% } } %>
+#else
+<% } %>
+<% if(IsNameValueListBusinessObject(association, "NameValueList")) { %>
+                        LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= BusinessProjectName %>.<%= association.TypeName %>List<%= association.GenericProperty %>.GetAll());
+<% } else { %>
+                        var criteria = new <%= BusinessProjectName %>.<%= association.TypeName %>Criteria<%= association.GenericProperty %> {<%= association.BuildObjectInitializer(true) %>};
+                        <%= association.BuildNullableObjectInitializer(true)%>
+    
+<% if(!BusinessObjectExists(association, "List") && IsReadOnlyBusinessObject(association, "InfoList")) { %>
+                        if(<%= association.BuildNullCheckStatement(true, false, false, false) %><%= BusinessProjectName %>.<%= associationClassName %>List<%= association.GenericProperty %>.Exists(criteria))
+                            LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= BusinessProjectName %>.<%= associationClassName %>List.<%= association.SearchCriteria.AssociatedMethodName%>(<%= association.SearchCriteria.Properties.BuildPropertyVariableArguments() %>));
+<% } else { %>
+                        if(<%= association.BuildNullCheckStatement(true, true, false, false) %>!<%= BusinessProjectName %>.<%= associationClassName %>List<%= association.GenericProperty %>.Exists(criteria))
+                            LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= BusinessProjectName %>.<%= associationClassName %>List<%= association.GenericProperty %>.NewList());
+                        else
+                            LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= BusinessProjectName %>.<%= associationClassName %>List<%= association.GenericProperty %>.<%= association.SearchCriteria.AssociatedMethodName%>(<%= association.SearchCriteria.Properties.BuildPropertyVariableArguments() %>));
+<% } } %>
+<% if(IncludeSilverlightSupport) { %>
+#endif
+<% } %>
+                    }
+<% } %>
+                }
+
+                return GetProperty(<%= association.PrivateMemberVariableName %>Property);
+            }
+        }
+
+<% } } %>
+
+        #endregion

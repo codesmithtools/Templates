@@ -1,0 +1,63 @@
+﻿<%-- Author: Blake Niemyjski --%>
+<%@ CodeTemplate Language="C#" TargetLanguage="C#" Inherits="Generator.CSLA.EntityCodeTemplate" %>
+<%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\Common" %>
+<%@ Assembly Name="CodeSmith.SchemaHelper.Extensions" Path="..\..\Common" %>
+<%@ Assembly Name="CodeSmith.SchemaHelper.CSharpExtensions" Path="..\..\Common" %>
+<%@ Assembly Name="Generator.CSLA" Path="..\..\Common" %>
+<%@ Import Namespace="CodeSmith.SchemaHelper" %>
+<%@ Import Namespace="System.Linq" %>
+
+            bool cancel = false;
+            OnInserting(ref cancel);
+            if (cancel) return;
+
+<% if(Entity.CanInsert) { %> 
+            const string commandText = "INSERT INTO [<%= Entity.SchemaName %>].[<%= Entity.EntityKeyName %>] (<%= Entity.GetProperties(PropertyType.UpdateInsert).BuildDataBaseColumns() %>) VALUES (<%= Entity.GetProperties(PropertyType.UpdateInsert).BuildDataBaseParameters() %>)<%= Entity.BuildInsertSelectStatement() %>";
+            using (var connection = new SqlConnection(ADOHelper.ConnectionString))
+            {
+                connection.Open();
+                using(var command = new SqlCommand(commandText, connection))
+                {
+                    <%= Entity.GetProperties(PropertyType.UpdateInsert).BuildCommandParameters(false, true) %>
+
+<% if(Entity.ConcurrencyProperty != null || Entity.IdentityProperty != null) { %>
+                    using(var reader = new SafeDataReader(command.ExecuteReader()))
+                    {
+                        if(reader.Read())
+                        {
+                            using (BypassPropertyChecks)
+                            {
+<% if(Entity.ConcurrencyProperty != null) { %>
+                                <%= Entity.ConcurrencyProperty.Name %> = ADOHelper.GetBytes(reader, "<%= Entity.ConcurrencyProperty.KeyName %>");                        
+<% } foreach(IProperty property in Entity.GetProperties(PropertyType.Key)) { if(property.IsType(PropertyType.Identity) || property.IsDbType(DbType.Guid)) { if(UseMemberVariables) { %>
+                                <%= property.PrivateMemberVariableName %> = <%if(!property.HasByteArrayColumn()) { %>reader.<%= property.GetReaderMethod() %>("<%= property.KeyName %>");<% } else { %>ADOHelper.GetBytes(reader);<% } %>
+<% } else { %>
+                                LoadProperty(<%= property.PrivateMemberVariableName %>Property, <%if(!property.HasByteArrayColumn()) { %>reader.<%= property.GetReaderMethod() %>("<%= property.KeyName %>"));<% } else { %>ADOHelper.GetBytes(reader, "<%= property.KeyName %>"));<% } %>
+<% } } } %>
+                            }
+                        }
+                    }
+<% } else { %>
+                    //result: The number of rows changed, inserted, or deleted. -1 for select statements; 0 if no rows were affected, or the statement failed. 
+                    int result = command.ExecuteNonQuery();
+                    if (result == 0)
+                        throw new DBConcurrencyException("The entity is out of date on the client. Please update the entity and try again. This could also be thrown if the sql statement failed to execute.");
+<% } %>
+
+<% foreach(IProperty property in Entity.GetProperties(PropertyType.Key)) { if(!property.IsType(PropertyType.Identity)) { if(UseMemberVariables) { %>
+                    _original<%= property.Name %> = this.<%= property.Name %>;
+<% } else { %>
+                    LoadProperty(_original<%= property.Name %>Property, this.<%= property.Name %>);
+<% } } } %>
+                }
+<% if(Entity.Associations.Count() > 0){ %>
+
+                FieldManager.UpdateChildren(this, connection);
+<% } %>
+            }
+
+            OnInserted();
+<% } else { %>
+            throw new NotSupportedException("This business object cannot be inserted.");
+<% } %>
+

@@ -1,0 +1,42 @@
+﻿<%-- Author: Blake Niemyjski --%>
+<%--         Joe McPherson   --%>
+<%@ CodeTemplate Language="C#" TargetLanguage="C#" Inherits="Generator.CSLA.EntityCodeTemplate" %>
+<%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\Common" %>
+<%@ Assembly Name="CodeSmith.SchemaHelper.Extensions" Path="..\..\Common" %>
+<%@ Assembly Name="CodeSmith.SchemaHelper.CSharpExtensions" Path="..\..\Common" %>
+<%@ Assembly Name="Generator.CSLA" Path="..\..\Common" %>
+<%@ Import Namespace="CodeSmith.SchemaHelper" %>
+<%@ Import Namespace="System.Linq" %>
+            //LinqToSQL Modification
+            bool cancel = false;
+<% var associations = Entity.Associations.Where(a => a.AssociationType == AssociationType.ManyToOne || a.AssociationType == AssociationType.ManyToZeroOrOne).GroupBy(a => a.TypeName).Select(a => a.FirstOrDefault()).ToList();
+   if(!RenderOptionalContent && associations.Count() > 0) { %>
+            OnChildInserting(<%= associations.BuildArgumentVariables(false) %>, ref cancel);
+<% } else { %>
+            OnChildInserting(ref cancel);
+<% } %>
+            if (cancel) return;
+
+<% if(Entity.CanInsert) { %>            
+            // Get <%= Entity.Name %> data for a single criteria
+            using (var ctx = ContextManager<DAL.<%=LinqToSQLDataContextName%>>.GetManager(LinqToSQLHelper.ConnectionString, true))
+            {
+                DAL.<%= Entity.Name %> item = new DAL.<%= Entity.Name %>();
+            
+<%= Entity.GetProperties(PropertyType.UpdateInsert).BuildLinqToSQLCommandParameters(false,true,false,4)%>
+            
+                ctx.DataContext.<%= Entity.Name %>.InsertOnSubmit(item);
+                    ctx.DataContext.SubmitChanges();
+
+<%     foreach(IProperty property in Entity.GetProperties(PropertyType.Key).Where(p => !p.IsType(PropertyType.Identity))) { %>
+                LoadProperty(_<%= property.VariableName %>Property, this.<%= property.Name %>);
+<%    } %>
+<%     if(Entity.Associations.Count(a => a.AssociationType == AssociationType.OneToMany) > 0 || Entity.Associations.Count(a => a.AssociationType == AssociationType.ManyToOne  || a.AssociationType == AssociationType.ManyToZeroOrOne) > 0)
+    {%>             
+                FieldManager.UpdateChildren(this);
+<%     } %>
+                OnChildInserted();
+            }
+<% } else { %>
+            throw new NotSupportedException("This business object cannot be inserted.");
+<% } %>

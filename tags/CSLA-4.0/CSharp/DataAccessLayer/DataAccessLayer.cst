@@ -1,0 +1,249 @@
+﻿<%-- Author: Blake Niemyjski --%>
+<%@ CodeTemplate Language="C#" TargetLanguage="C#" OutputType="None" Inherits="Generator.CSLA.EntitiesCodeTemplate" %>
+<%@ Register Name="ObjectFactory" Template="Internal\ObjectFactory.cst" %>
+<%@ Register Name="ObjectFactoryDataAccess" Template="Internal\ObjectFactory.DataAccess.cst" %>
+<%@ Register Name="ObjectFactoryDataAccessParameterized" Template="Internal\ObjectFactory.DataAccess.ParameterizedSQL.cst" %>
+<%@ Register Name="ObjectFactoryDataAccessStoredProcedures" Template="Internal\ObjectFactory.DataAccess.StoredProcedures.cst" %>
+<%@ Register Name="ObjectFactoryList" Template="Internal\ObjectFactoryList.cst" %>
+<%@ Register Name="ObjectFactoryListDataAccess" Template="Internal\ObjectFactoryList.DataAccess.cst" %>
+<%@ Register Name="ObjectFactoryListDataAccessParameterized" Template="Internal\ObjectFactoryList.DataAccess.ParameterizedSQL.cst" %>
+<%@ Register Name="ObjectFactoryListDataAccessStoredProcedures" Template="Internal\ObjectFactoryList.DataAccess.StoredProcedures.cst" %>
+<%@ Register Name="ADOHelperTemplate" Template="Internal\ADOHelper.cst" %>
+<%@ Register Name="SqlStoredProcedures" Template="Internal\SQLStoredProcedures.cst" %>
+<%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\Common" %>
+<%@ Assembly Name="Generator.CSLA" Path="..\..\Common" %>
+<%@ Import Namespace="CodeSmith.SchemaHelper" %>
+<% Generate(); %>
+
+<script runat="template">
+
+public override void Generate()
+{
+    RegisterReferences();
+
+    #region Entities
+
+    foreach(IEntity entity in DynamicRootEntities)
+    {
+        RenderObjectFactoryTemplates(entity, false, false);
+    }
+
+    foreach(IEntity entity in EditableChildEntities)
+    {
+        RenderObjectFactoryTemplates(entity, false, true);
+    }
+    
+    foreach(IEntity entity in EditableRootEntities)
+    {
+        RenderObjectFactoryTemplates(entity, false, false);
+    }
+    
+    foreach(IEntity entity in ReadOnlyChildEntities)
+    {
+        RenderObjectFactoryTemplates(entity, true, true);
+    }
+    
+    foreach(IEntity entity in ReadOnlyRootEntities)
+    {
+        RenderObjectFactoryTemplates(entity, true, false);
+    }
+    
+    foreach(IEntity entity in SwitchableObjectEntities)
+    {
+        RenderObjectFactoryTemplates(entity, false, false);
+    }
+
+    #endregion
+
+    #region Lists
+
+    foreach(IEntity entity in DynamicListBaseEntities)
+    {
+        RenderObjectFactoryListTemplates(entity, false, false);
+    }
+
+    foreach(IEntity entity in DynamicRootListEntities)
+    {
+        RenderObjectFactoryListTemplates(entity, false, false);
+    }
+
+    foreach(IEntity entity in EditableRootListEntities)
+    {
+        RenderObjectFactoryListTemplates(entity, false, false);
+    }
+    
+    foreach(IEntity entity in EditableChildListEntities)
+    {
+        RenderObjectFactoryListTemplates(entity, false, true);
+    }
+    
+    foreach(IEntity entity in ReadOnlyListEntities)
+    {
+        RenderObjectFactoryListTemplates(entity, true, false);
+    }
+    
+    foreach(IEntity entity in ReadOnlyChildListEntities)
+    {
+        RenderObjectFactoryListTemplates(entity, true, true);
+    }
+
+    #endregion
+}
+
+public void RenderObjectFactoryTemplates(IEntity entity, bool IsReadOnly, bool IsChild)
+{
+    PreserveRegionsMergeStrategy strategy = new PreserveRegionsMergeStrategy();
+    strategy.RegionNameRegex = "^[ \\t]*[ \\s]*\"?(?i:Preserved Code)\"?";
+    
+    #region ObjectFactory
+    
+    ObjectFactory objectFactory = this.Create<ObjectFactory>();
+    this.CopyPropertiesTo(objectFactory, true);
+    objectFactory.Entity = entity;
+    
+    if(IsReadOnly)
+        objectFactory.BusinessClassName = entity.Name + "InfoFactory";
+    else
+        objectFactory.BusinessClassName = entity.Name + "Factory";
+    
+    objectFactory.IsReadOnlyBusinessObject = IsReadOnly;
+    objectFactory.IsChildBusinessObject = IsChild;
+
+    string parentFileName = System.IO.Path.Combine(this.Location, String.Format("Entities\\{0}.cs", objectFactory.BusinessClassName));
+    if (!System.IO.File.Exists(parentFileName))
+    {
+        objectFactory.RenderToFile(parentFileName, false);
+    }
+
+    var fileName = System.IO.Path.Combine(Location, String.Format("Entities\\{0}.DataAccess.cs", objectFactory.BusinessClassName));
+    if(DataAccessImplementation == DataAccessMethod.ObjectFactoryNone)
+    {
+        ObjectFactoryDataAccess objectFactoryDataAccess = this.Create<ObjectFactoryDataAccess>();
+        this.CopyPropertiesTo(objectFactoryDataAccess, true);
+        objectFactoryDataAccess.Entity = entity;
+        objectFactoryDataAccess.IsReadOnlyBusinessObject = IsReadOnly;
+        objectFactoryDataAccess.IsChildBusinessObject = IsChild;
+    
+        objectFactoryDataAccess.RenderToFile(fileName, parentFileName, true);
+    }
+    else if(DataAccessImplementation == DataAccessMethod.ObjectFactoryParameterizedSQL)
+    {
+        ObjectFactoryDataAccessParameterized objectFactoryDataAccessParameterized = this.Create<ObjectFactoryDataAccessParameterized>();
+        this.CopyPropertiesTo(objectFactoryDataAccessParameterized, true);
+        objectFactoryDataAccessParameterized.Entity = entity;
+        objectFactoryDataAccessParameterized.IsReadOnlyBusinessObject = IsReadOnly;
+        objectFactoryDataAccessParameterized.IsChildBusinessObject = IsChild;
+    
+        objectFactoryDataAccessParameterized.RenderToFile(fileName, parentFileName, true);
+        
+        ADOHelperTemplate ADOHelper = this.Create<ADOHelperTemplate>();
+        this.CopyPropertiesTo(ADOHelper);
+        ADOHelper.RenderToFile(System.IO.Path.Combine(this.Location, "Utility\\ADOHelper.cs"), strategy);
+    }
+    else if(DataAccessImplementation == DataAccessMethod.ObjectFactoryStoredProcedures)
+    {
+        //ObjectFactoryDataAccessStoredProcedures
+        ObjectFactoryDataAccessStoredProcedures objectFactoryDataAccessStoredProcedures = this.Create<ObjectFactoryDataAccessStoredProcedures>();
+        this.CopyPropertiesTo(objectFactoryDataAccessStoredProcedures, true);
+        objectFactoryDataAccessStoredProcedures.Entity = entity;
+        objectFactoryDataAccessStoredProcedures.IsReadOnlyBusinessObject = IsReadOnly;
+        objectFactoryDataAccessStoredProcedures.IsChildBusinessObject = IsChild;
+    
+        objectFactoryDataAccessStoredProcedures.RenderToFile(fileName, parentFileName, true);
+        
+        //SqlStoredProcedures
+        SqlStoredProcedures sqlStoredProcedures = this.Create<SqlStoredProcedures>();
+        this.CopyPropertiesTo(sqlStoredProcedures);
+        sqlStoredProcedures.Entity = entity;
+        
+        fileName = System.IO.Path.Combine(Location, String.Format("Entities\\{0}.StoredProcedures.sql", objectFactory.BusinessClassName));
+        sqlStoredProcedures.RenderToFile(fileName, parentFileName, true);
+        
+        //ADOHelperTemplate
+        ADOHelperTemplate ADOHelper = this.Create<ADOHelperTemplate>();
+        this.CopyPropertiesTo(ADOHelper);
+        ADOHelper.RenderToFile(System.IO.Path.Combine(this.Location, "Utility\\ADOHelper.cs"), strategy);
+    }
+
+    #endregion
+}
+
+public void RenderObjectFactoryListTemplates(IEntity entity, bool IsReadOnly, bool IsChild)
+{
+    PreserveRegionsMergeStrategy strategy = new PreserveRegionsMergeStrategy();
+    strategy.RegionNameRegex = "^[ \\t]*[ \\s]*\"?(?i:Preserved Code)\"?";
+    
+    #region ObjectFactory
+    
+    ObjectFactoryList objectFactory = this.Create<ObjectFactoryList>();
+    this.CopyPropertiesTo(objectFactory, true);
+    objectFactory.Entity = entity;
+
+    if(IsReadOnly)
+        objectFactory.BusinessClassName = entity.Name + "InfoListFactory";
+    else
+        objectFactory.BusinessClassName = entity.Name + "ListFactory";
+
+    objectFactory.IsReadOnlyBusinessObject = IsReadOnly;
+    objectFactory.IsChildBusinessObject = IsChild;
+    
+    string parentFileName = System.IO.Path.Combine(this.Location, String.Format("Collections\\{0}.cs", objectFactory.BusinessClassName));
+    if (!System.IO.File.Exists(parentFileName))
+    {
+        objectFactory.RenderToFile(parentFileName, false);
+    }
+
+    var fileName = System.IO.Path.Combine(Location, String.Format("Collections\\{0}.DataAccess.cs", objectFactory.BusinessClassName));
+    if(DataAccessImplementation == DataAccessMethod.ObjectFactoryNone)
+    {
+        ObjectFactoryListDataAccess objectFactoryDataAccess = this.Create<ObjectFactoryListDataAccess>();
+        this.CopyPropertiesTo(objectFactoryDataAccess, true);
+        objectFactoryDataAccess.Entity = entity;
+        objectFactoryDataAccess.IsReadOnlyBusinessObject = IsReadOnly;
+        objectFactoryDataAccess.IsChildBusinessObject = IsChild;
+    
+        objectFactoryDataAccess.RenderToFile(fileName, parentFileName, true);
+    }
+    else if(DataAccessImplementation == DataAccessMethod.ObjectFactoryParameterizedSQL)
+    {
+        ObjectFactoryListDataAccessParameterized objectFactoryDataAccessParameterized = this.Create<ObjectFactoryListDataAccessParameterized>();
+        this.CopyPropertiesTo(objectFactoryDataAccessParameterized, true);
+        objectFactoryDataAccessParameterized.Entity = entity;
+        objectFactoryDataAccessParameterized.IsReadOnlyBusinessObject = IsReadOnly;
+        objectFactoryDataAccessParameterized.IsChildBusinessObject = IsChild;
+    
+        objectFactoryDataAccessParameterized.RenderToFile(fileName, parentFileName, true);
+        
+        ADOHelperTemplate ADOHelper = this.Create<ADOHelperTemplate>();
+        this.CopyPropertiesTo(ADOHelper);
+        
+        ADOHelper.RenderToFile(System.IO.Path.Combine(this.Location, "Utility\\ADOHelper.cs"), strategy);
+    }
+    else if(DataAccessImplementation == DataAccessMethod.ObjectFactoryStoredProcedures)
+    {
+        //ObjectFactoryDataAccessStoredProcedures
+        ObjectFactoryListDataAccessStoredProcedures objectFactoryDataAccessStoredProcedures = this.Create<ObjectFactoryListDataAccessStoredProcedures>();
+        this.CopyPropertiesTo(objectFactoryDataAccessStoredProcedures, true);
+        objectFactoryDataAccessStoredProcedures.Entity = entity;
+        objectFactoryDataAccessStoredProcedures.IsReadOnlyBusinessObject = IsReadOnly;
+        objectFactoryDataAccessStoredProcedures.IsChildBusinessObject = IsChild;
+    
+        objectFactoryDataAccessStoredProcedures.RenderToFile(fileName, parentFileName, true);
+        
+        //SqlStoredProcedures
+        SqlStoredProcedures sqlStoredProcedures = this.Create<SqlStoredProcedures>();
+        this.CopyPropertiesTo(sqlStoredProcedures);
+        sqlStoredProcedures.Entity = entity;
+        
+        fileName = System.IO.Path.Combine(Location, String.Format("Collections\\{0}.StoredProcedures.sql", objectFactory.BusinessClassName));
+        sqlStoredProcedures.RenderToFile(fileName, parentFileName, true);
+        
+        //ADOHelperTemplate
+        ADOHelperTemplate ADOHelper = this.Create<ADOHelperTemplate>();
+        this.CopyPropertiesTo(ADOHelper);
+        ADOHelper.RenderToFile(System.IO.Path.Combine(this.Location, "Utility\\ADOHelper.cs"), strategy);
+    }
+
+    #endregion
+}
+</script>
