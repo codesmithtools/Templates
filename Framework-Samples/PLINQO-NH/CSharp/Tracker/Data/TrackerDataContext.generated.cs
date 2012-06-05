@@ -207,9 +207,9 @@ namespace Tracker.Data
         
         #region Functions
         
-        public IList<User> GetUsersWithRolez()
+        public IList<User> GetUsersWithRoles()
         {
-            IQuery query = Advanced.DefaultSession.GetNamedQuery("GetUsersWithRolez");
+            IQuery query = Advanced.DefaultSession.GetNamedQuery("GetUsersWithRoles");
             
             return query.List<User>();
         }

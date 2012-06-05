@@ -218,7 +218,7 @@ namespace Petshop.Data.Entities
         /// Deserializes an instance of <see cref="Account"/> from XML.
         /// </summary>
         /// <param name="xml">The XML string representing a <see cref="Account"/> instance.</param>
-        /// <returns>An instance of <see cref="Account"/> that is deserialized from the XML string.</returns>
+        /// <returns>An instance of <see cref="Account"/> that is deserialized from the XML String.</returns>
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         public static Product FromXml(string xml)
         {

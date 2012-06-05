@@ -18,7 +18,7 @@ namespace Tracker.Data.Entities
 {
     [System.Runtime.Serialization.DataContract(IsReference = true)]
     [System.ComponentModel.DataAnnotations.ScaffoldTable(true)]
-    [System.Diagnostics.DebuggerDisplay("Id: {Id}, Summary: {Summary}, Priority: {Priority}, Status: {Status}, Assigned: {Assigned}, Created: {Created}")]
+    [System.Diagnostics.DebuggerDisplay("Identification: {Identification}, Summary: {Summary}, Priority: {Priority}, Status: {Status}, Assigned: {Assigned}, Created: {Created}")]
     public partial class TaskDetail : EntityBase
     {
         #region Static Constructor
@@ -56,20 +56,20 @@ namespace Tracker.Data.Entities
         #region Column Mapped Properties
         
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
-        private System.Int32 _id;
+        private System.Int32 _identification;
         
         [System.Runtime.Serialization.DataMember(Order = 1)]
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
-        public virtual System.Int32 Id
+        public virtual System.Int32 Identification
         {
-            get { return _id; }
+            get { return _identification; }
             set
             {
-                OnIdChanging(value, _id);
-                SendPropertyChanging("Id");
-                _id = value;
-                SendPropertyChanged("Id");
-                OnIdChanged(value);
+                OnIdentificationChanging(value, _identification);
+                SendPropertyChanging("Identification");
+                _identification = value;
+                SendPropertyChanged("Identification");
+                OnIdentificationChanged(value);
             }
         }
         
@@ -178,13 +178,13 @@ namespace Tracker.Data.Entities
             if (entity == null)
                 return false;
 
-            return Id == entity.Id && Summary == entity.Summary && Priority == entity.Priority && Status == entity.Status && Assigned == entity.Assigned && Created == entity.Created;
+            return Identification == entity.Identification && Summary == entity.Summary && Priority == entity.Priority && Status == entity.Status && Assigned == entity.Assigned && Created == entity.Created;
         }
 
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         public override int GetHashCode()
         {
-            var hashString = String.Concat(Id, "|", Summary, "|", Priority, "|", Status, "|", Assigned, "|", Created);
+            var hashString = String.Concat(Identification, "|", Summary, "|", Priority, "|", Status, "|", Assigned, "|", Created);
             return hashString.GetHashCode();
         }
         
@@ -196,9 +196,9 @@ namespace Tracker.Data.Entities
         
         partial void OnCreated();
         
-        partial void OnIdChanging(System.Int32 newValue, System.Int32 oldValue);
+        partial void OnIdentificationChanging(System.Int32 newValue, System.Int32 oldValue);
         
-        partial void OnIdChanged(System.Int32 value);
+        partial void OnIdentificationChanged(System.Int32 value);
         
         partial void OnSummaryChanging(System.String newValue, System.String oldValue);
         
@@ -239,7 +239,7 @@ namespace Tracker.Data.Entities
         /// Deserializes an instance of <see cref="Account"/> from XML.
         /// </summary>
         /// <param name="xml">The XML string representing a <see cref="Account"/> instance.</param>
-        /// <returns>An instance of <see cref="Account"/> that is deserialized from the XML string.</returns>
+        /// <returns>An instance of <see cref="Account"/> that is deserialized from the XML String.</returns>
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         public static TaskDetail FromXml(string xml)
         {

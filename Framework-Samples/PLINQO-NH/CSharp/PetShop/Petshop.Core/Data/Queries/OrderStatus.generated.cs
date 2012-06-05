@@ -37,7 +37,6 @@ namespace Petshop.Data
         }
         
         
-        
         #endregion
         
         #region By Property

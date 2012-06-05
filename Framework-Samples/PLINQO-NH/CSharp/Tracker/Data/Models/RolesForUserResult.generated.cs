@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 using NHibernate;
@@ -8,9 +8,9 @@ namespace Tracker.Data.Entities
 {
 	public partial class RolesForUserResult
     {
-        public RolesForUserResult(System.Int32 id, System.String name, System.String description, System.DateTime createdDate, System.DateTime modifiedDate, System.Byte[] rowVersion, System.Int32 userId, System.Int32 roleId)
+        public RolesForUserResult(System.Int32 identification, System.String name, System.String description, System.DateTime createdDate, System.DateTime modifiedDate, System.Byte[] rowVersion, System.Int32 userId, System.Int32 roleId)
         {
-            Id = id;
+            Identification = identification;
             Name = name;
             Description = description;
             CreatedDate = createdDate;
@@ -20,7 +20,7 @@ namespace Tracker.Data.Entities
             RoleId = roleId;
         }
         
-        public System.Int32 Id { get; set; }
+        public System.Int32 Identification { get; set; }
         
         public System.String Name { get; set; }
         

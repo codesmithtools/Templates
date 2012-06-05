@@ -26,11 +26,11 @@ namespace Tracker.Data
         /// </summary>
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
         public static Tracker.Data.Entities.TaskDetail GetByKey(this IQueryable<Tracker.Data.Entities.TaskDetail> queryable
-            , System.Int32 id, System.String summary, System.String priority, System.String status, System.String assigned, System.String created
+            , System.Int32 identification, System.String summary, System.String priority, System.String status, System.String assigned, System.String created
             )
         {
             return queryable
-                .Where(t => t.Id == id 
+                .Where(t => t.Identification == identification 
 					&& t.Summary == summary 
 					&& t.Priority == priority 
 					&& t.Status == status 
@@ -45,75 +45,75 @@ namespace Tracker.Data
         
 
         /// <summary>
-        /// Gets a query for <see cref="Tracker.Data.Entities.TaskDetail.Id"/>.
+        /// Gets a query for <see cref="Tracker.Data.Entities.TaskDetail.Identification"/>.
         /// </summary>
         /// <param name="queryable">Query to append where clause.</param>
-        /// <param name="id">Id to search for.</param>
+        /// <param name="identification">Identification to search for.</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
-        public static IQueryable<Tracker.Data.Entities.TaskDetail> ById(this IQueryable<Tracker.Data.Entities.TaskDetail> queryable, System.Int32 id)
+        public static IQueryable<Tracker.Data.Entities.TaskDetail> ByIdentification(this IQueryable<Tracker.Data.Entities.TaskDetail> queryable, System.Int32 identification)
         {
-            return queryable.Where(t => t.Id == id);
+            return queryable.Where(t => t.Identification == identification);
         }
 
         /// <summary>
-        /// Gets a query for <see cref="Tracker.Data.Entities.TaskDetail.Id"/>.
+        /// Gets a query for <see cref="Tracker.Data.Entities.TaskDetail.Identification"/>.
         /// </summary>
         /// <param name="queryable">Query to append where clause.</param>
-        /// <param name="id">Id to search for. This is on the right side of the operator.</param>
+        /// <param name="identification">Identification to search for. This is on the right side of the operator.</param>
         /// <param name="comparisonOperator">The comparison operator.</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
-        public static IQueryable<Tracker.Data.Entities.TaskDetail> ById(this IQueryable<Tracker.Data.Entities.TaskDetail> queryable, ComparisonOperator comparisonOperator, System.Int32 id)
+        public static IQueryable<Tracker.Data.Entities.TaskDetail> ByIdentification(this IQueryable<Tracker.Data.Entities.TaskDetail> queryable, ComparisonOperator comparisonOperator, System.Int32 identification)
         {
             switch (comparisonOperator)
             {
                 case ComparisonOperator.GreaterThan:
-                    return queryable.Where(t => t.Id > id);
+                    return queryable.Where(t => t.Identification > identification);
                 case ComparisonOperator.GreaterThanOrEquals:
-                    return queryable.Where(t => t.Id >= id);
+                    return queryable.Where(t => t.Identification >= identification);
                 case ComparisonOperator.LessThan:
-                    return queryable.Where(t => t.Id < id);
+                    return queryable.Where(t => t.Identification < identification);
                 case ComparisonOperator.LessThanOrEquals:
-                    return queryable.Where(t => t.Id <= id);
+                    return queryable.Where(t => t.Identification <= identification);
                 case ComparisonOperator.NotEquals:
-                    return queryable.Where(t => t.Id != id);
+                    return queryable.Where(t => t.Identification != identification);
                 default:
-                    return queryable.Where(t => t.Id == id);
+                    return queryable.Where(t => t.Identification == identification);
             }
         }
 
         /// <summary>
-        /// Gets a query for <see cref="Tracker.Data.Entities.TaskDetail.Id"/>.
+        /// Gets a query for <see cref="Tracker.Data.Entities.TaskDetail.Identification"/>.
         /// </summary>
         /// <param name="queryable">Query to append where clause.</param>
-        /// <param name="id">Id to search for.</param>
+        /// <param name="identification">Identification to search for.</param>
         /// <param name="additionalValues">Additional values to search for.</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
-        public static IQueryable<Tracker.Data.Entities.TaskDetail> ById(this IQueryable<Tracker.Data.Entities.TaskDetail> queryable, System.Int32 id, params System.Int32[] additionalValues)
+        public static IQueryable<Tracker.Data.Entities.TaskDetail> ByIdentification(this IQueryable<Tracker.Data.Entities.TaskDetail> queryable, System.Int32 identification, params System.Int32[] additionalValues)
         {
-            var idList = new List<System.Int32> { id };
+            var identificationList = new List<System.Int32> { identification };
 
             if (additionalValues != null)
-                idList.AddRange(additionalValues);
+                identificationList.AddRange(additionalValues);
 
-            if (idList.Count == 1)
-                return queryable.ById(idList[0]);
+            if (identificationList.Count == 1)
+                return queryable.ByIdentification(identificationList[0]);
 
-            return queryable.ById(idList);
+            return queryable.ByIdentification(identificationList);
         }
 
         /// <summary>
-        /// Gets a query for <see cref="Tracker.Data.Entities.TaskDetail.Id"/>.
+        /// Gets a query for <see cref="Tracker.Data.Entities.TaskDetail.Identification"/>.
         /// </summary>
         /// <param name="queryable">Query to append where clause.</param>
         /// <param name="values">The values to search for..</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "6.0.0.0")]
-        public static IQueryable<Tracker.Data.Entities.TaskDetail> ById(this IQueryable<Tracker.Data.Entities.TaskDetail> queryable, IEnumerable<System.Int32> values)
+        public static IQueryable<Tracker.Data.Entities.TaskDetail> ByIdentification(this IQueryable<Tracker.Data.Entities.TaskDetail> queryable, IEnumerable<System.Int32> values)
         {
-            return queryable.Where(t => values.Contains(t.Id));
+            return queryable.Where(t => values.Contains(t.Identification));
         }
 
         /// <summary>

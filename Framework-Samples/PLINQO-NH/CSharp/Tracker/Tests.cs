@@ -224,7 +224,7 @@ namespace Tracker
             using (var db = new TrackerDataContext())
             {
                 var roles = db.RolesForUser(UserId);
-                var users = db.GetUsersWithRolez();
+                var users = db.GetUsersWithRoles();
 
                 Assert.AreEqual(1, roles.Count);
                 Assert.Greater(users.Count, 0);

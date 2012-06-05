@@ -22,8 +22,8 @@
       <string>^\\w+_</string>
     </stringList>
       </property>
-      <property name="IncludeFunctions">True</property>
-      <property name="IncludeViews">True</property>
+      <property name="IncludeFunctions">False</property>
+      <property name="IncludeViews">False</property>
       <property name="MapsDirectory">Maps</property>
       <property name="SourceDatabase">
         <connectionString>$(ConnectionString1)</connectionString>
