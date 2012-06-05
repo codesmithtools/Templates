@@ -1,0 +1,86 @@
+﻿<%-- Author: Blake Niemyjski --%>
+<%@ CodeTemplate Language="VB" TargetLanguage="VB" Inherits="Generator.CSLA.EntityCodeTemplate" %>
+<%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\Common" %>
+<%@ Assembly Name="CodeSmith.SchemaHelper.Extensions" Path="..\..\Common" %>
+<%@ Assembly Name="CodeSmith.SchemaHelper.VisualBasicExtensions" Path="..\..\Common" %>
+<%@ Assembly Name="Generator.CSLA" Path="..\..\Common" %>
+<%@ Import Namespace="CodeSmith.SchemaHelper" %>
+<%@ Import Namespace="Generator.CSLA" %>
+
+<% If(Not RenderOptionalContent) Then %>
+            Dim item As <%= ChildBusinessClassName %> = <%= BusinessProjectName %>.<%= ChildBusinessClassName %>.New<%= ChildBusinessClassName %><% If(IsSwitchableObject()) Then %>Child<% End If %>()
+
+            Dim cancel As Boolean = False
+            OnAddNewCore(item, cancel)
+            If Not (cancel) Then
+                ' Check to see if someone set the item to null In the OnAddNewCore.
+                If(item Is Nothing) Then
+                    item = <%= BusinessProjectName %>.<%= ChildBusinessClassName %>.New<%= ChildBusinessClassName %><% If(IsSwitchableObject()) Then %>Child<% End If %>()
+                End If
+    <%  Dim list As New System.Collections.Generic.List(Of String) 
+        Dim isObjectFactory As Boolean = DataAccessImplementation = DataAccessMethod.ObjectFactoryNone OrElse DataAccessImplementation = DataAccessMethod.ObjectFactoryParameterizedSQL OrElse DataAccessImplementation = DataAccessMethod.ObjectFactoryStoredProcedures
+        For Each prop As IProperty In Entity.Properties
+        If prop.IsType(PropertyType.Foreign) AndAlso Not prop.IsType(PropertyType.Identity) Then
+    
+            Dim className As String = prop.ResolveAssociationPropertyClassName()
+            If String.IsNullOrEmpty(className) Then
+                Continue For
+            End If
+    
+            Dim variableName As String = prop.ResolveAssociationPropertyVariable()
+            Dim variableWithChildProperty As String = prop.ResolveAssociationPropertyVariableWithChildProperty() %>
+            ' Pass the parent value down to the child.
+    <% If Not(list.Contains(className)) Then
+        list.Add(className) %>
+                <%If(isObjectFactory) Then %>'<% End If%>Dim <%= variableName %> As <%= className %> = CType(Me.Parent, <%= className %>)
+    <% Else %>
+                <%If(isObjectFactory) Then %>'<% End If%><%= variableName %> = CType(Me.Parent, <%= className %>)
+    <% End If %>
+                <%If(isObjectFactory) Then %>'<% End If%>If Not(<%= variableName %> Is Nothing)
+                <%If(isObjectFactory) Then %>'<% End If%>    item.<%= prop.Name %> = <%= variableWithChildProperty %>
+                <%If(isObjectFactory) Then %>'<% End If%>End If
+    <% End If
+    Next %>
+                Add(item)
+            End If
+
+            Return item
+<% Else %>
+            <%= BusinessProjectName %>.<%= ChildBusinessClassName %>.New<%= ChildBusinessClassName %><% If(IsSwitchableObject()) Then %>Child<% End If %>Async(Sub(o, e)
+                    Dim item As <%= ChildBusinessClassName %> = e.Object
+        
+                    Dim cancel As Boolean = False
+                    OnAddNewCore(item, cancel)
+                    If Not (cancel) Then
+                        ' Check to see if someone set the item to null In the OnAddNewCore.
+                        If(item Is Nothing) Then
+                            Return
+                        End If
+    <%  Dim list As New System.Collections.Generic.List(Of String) 
+        Dim isObjectFactory As Boolean = DataAccessImplementation = DataAccessMethod.ObjectFactoryNone OrElse DataAccessImplementation = DataAccessMethod.ObjectFactoryParameterizedSQL OrElse DataAccessImplementation = DataAccessMethod.ObjectFactoryStoredProcedures
+        For Each prop As IProperty In Entity.Properties
+        If prop.IsType(PropertyType.Foreign) AndAlso Not prop.IsType(PropertyType.Identity) Then
+    
+            Dim className As String = prop.ResolveAssociationPropertyClassName()
+            If String.IsNullOrEmpty(className) Then
+                Continue For
+            End If
+    
+            Dim variableName As String = prop.ResolveAssociationPropertyVariable()
+            Dim variableWithChildProperty As String = prop.ResolveAssociationPropertyVariableWithChildProperty() %>
+                        ' Pass the parent value down to the child.
+    <% If Not(list.Contains(className)) Then
+        list.Add(className) %>
+                        <%If(isObjectFactory) Then %>'<% End If%>Dim <%= variableName %> As <%= className %> = CType(Me.Parent, <%= className %>)
+    <% Else %>
+                        <%If(isObjectFactory) Then %>'<% End If%><%= variableName %> = CType(Me.Parent, <%= className %>)
+    <% End If %>
+                        <%If(isObjectFactory) Then %>'<% End If%>If Not(<%= variableName %> Is Nothing)
+                        <%If(isObjectFactory) Then %>'<% End If%>    item.<%= prop.Name %> = <%= variableWithChildProperty %>
+                        <%If(isObjectFactory) Then %>'<% End If%>End If
+    <% End If
+    Next %>
+                        Add(item)
+                    End If
+                End Sub)
+<% End If %>

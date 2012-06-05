@@ -1,0 +1,30 @@
+﻿<%-- Author: Blake Niemyjski --%>
+<%@ CodeTemplate Language="VB" TargetLanguage="VB" Inherits="Generator.CSLA.EntityCodeTemplate" %>
+<%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\Common" %>
+<%@ Assembly Name="CodeSmith.SchemaHelper.Extensions" Path="..\..\Common" %>
+<%@ Assembly Name="CodeSmith.SchemaHelper.VisualBasicExtensions" Path="..\..\Common" %>
+<%@ Assembly Name="Generator.CSLA" Path="..\..\Common" %>
+<%@ Import Namespace="CodeSmith.SchemaHelper" %>
+            Dim cancel As Boolean = False
+            OnChildCreating(cancel)
+            If (cancel) Then
+                Return
+            End If
+    
+    <% For Each prop As IProperty In Entity.GetProperties(PropertyType.Key)
+    If (prop.SystemType = "System.Guid") Then
+        If (UseMemberVariables) Then %>
+            <%=prop.PrivateMemberVariableName %> = Guid.NewGuid()
+    <% Else %>
+            LoadProperty(<%= prop.PrivateMemberVariableName %>Property, Guid.NewGuid())
+    <% End If
+    End If
+    Next %>
+
+    <% If(IsLatestCSLA) Then %>
+            BusinessRules.CheckRules()
+    <% Else %>
+            ValidationRules.CheckRules()
+    <% End If %>
+    
+            OnChildCreated()

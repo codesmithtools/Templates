@@ -1,0 +1,64 @@
+﻿<%-- Author: Blake Niemyjski --%>
+<%@ CodeTemplate Language="C#" TargetLanguage="C#" OutputType="None" Inherits="Generator.CSLA.EntityCodeTemplate" %>
+<%@ Register Name="DynamicRootList" Template="Internal\DynamicRootList.cst" %>
+<%@ Register Name="DynamicRootListDataAccess" Template="Internal\DynamicRootList.DataAccess.cst" %>
+<%@ Register Name="DynamicRootListDataAccessParameterized" Template="Internal\DynamicRootList.DataAccess.ParameterizedSQL.cst" %>
+<%@ Register Name="DynamicRootListDataAccessLinqToSQL" Template="Internal\DynamicRootList.DataAccess.LinqToSQL.cst" %>
+<%@ Register Name="DynamicRootListDataAccessStoredProcedures" Template="Internal\DynamicRootList.DataAccess.StoredProcedures.cst" %>
+<%@ Register Name="DynamicRootListGenerated" Template="Internal\DynamicRootList.Generated.cst" %>
+<%@ Register Name="SqlStoredProcedures" Template="..\DataAccessLayer\Internal\SQLStoredProcedures.cst" %>
+
+<%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\Common" %>
+<%@ Assembly Name="Generator.CSLA" Path="..\..\Common" %>
+
+<script runat="template">
+
+public override void Render(System.IO.TextWriter writer)
+{
+    RegisterReferences();
+
+    string parentFileName = System.IO.Path.Combine(this.Location, String.Format("Collections\\{0}.cs", BusinessClassName));
+    string fileName = System.IO.Path.Combine(Location, String.Format("Collections\\{0}.Generated.cs", BusinessClassName));
+    RenderToFileHelper<DynamicRootList>(parentFileName, false);
+    RenderToFileHelper<DynamicRootListGenerated>(fileName, parentFileName, true);
+ 
+    fileName = System.IO.Path.Combine(Location, String.Format("Collections\\{0}.DataAccess.cs", BusinessClassName));
+    if(DataAccessImplementation == DataAccessMethod.None)
+    {
+        RenderToFileHelper<DynamicRootListDataAccess>(fileName, parentFileName, false);
+    }
+    else if(!Entity.IsView() && (DataAccessImplementation == DataAccessMethod.StoredProcedures || Entity.IsCommand()))
+    {
+        RenderToFileHelper<DynamicRootListDataAccessStoredProcedures>(fileName, parentFileName, true);
+
+        if(Entity.IsCommand())
+            return;
+
+        fileName = System.IO.Path.Combine(Location, String.Format("Collections\\{0}.StoredProcedures.sql", BusinessClassName));
+        RenderProceduresToFileHelper<SqlStoredProcedures>(fileName, parentFileName, true, false, true);
+    }
+    else if(Entity.IsView() || DataAccessImplementation == DataAccessMethod.ParameterizedSQL)
+    {
+        RenderToFileHelper<DynamicRootListDataAccessParameterized>(fileName, parentFileName, true);
+    }
+    else if(DataAccessImplementation == DataAccessMethod.LinqToSQL)
+    {
+        RenderToFileHelper<DynamicRootListDataAccessLinqToSQL>(fileName, parentFileName, true);
+    }
+}
+
+public override bool OnEntityChanging()
+{
+    if (String.IsNullOrEmpty(BusinessClassName))
+    {
+        BusinessClassName = String.Concat(Entity.Name, "List");
+        ChildBusinessClassName = Entity.Name;
+    }
+
+    if (String.IsNullOrEmpty(CriteriaClassName) || CriteriaClassName.Equals("Criteria", StringComparison.InvariantCultureIgnoreCase))
+        CriteriaClassName = String.Concat(Entity.Name, "Criteria");
+
+    return false;
+}
+
+</script>
