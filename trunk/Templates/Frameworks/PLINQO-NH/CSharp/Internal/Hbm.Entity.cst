@@ -129,7 +129,7 @@
             return String.Empty;
             
         var attributes = extendedProperties
-            .Where(ep => !ignore.Contains(ep.Key.ToString()) && !ep.Key.StartsWith("CS_"))
+            .Where(ep => !ignore.Contains(ep.Key.ToString()) && !ep.Key.StartsWith("CS_") && !String.Equals("DataType", ep.Key) && !String.Equals("NativeType", ep.Key))
             .Select(ep => String.Format(@"{0}=""{1}"" ", ep.Key, ep.Value));
         
         if (attributes.Count() < 2)
