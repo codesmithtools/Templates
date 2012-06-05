@@ -1,0 +1,64 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="CodeSmith.SchemaHelper.ComplexEntity">
+    <Position X="9.5" Y="0.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAIAAAABQAAAAAGAAIAAAAAAAEAAAAAAAAAAAA=</HashCode>
+      <FileName>Edmx\ComplexEntity.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CodeSmith.SchemaHelper.ComplexProperty">
+    <Position X="9.5" Y="3.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Edmx\ComplexProperty.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CodeSmith.SchemaHelper.ConceptualEntity">
+    <Position X="6" Y="0.5" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AACCAAIIgAAABQAAAAAGAAIAIAAAAAEIACAAAAAAEAA=</HashCode>
+      <FileName>Edmx\ConceptualEntity.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CodeSmith.SchemaHelper.ConceptualProperty">
+    <Position X="6" Y="5.5" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Edmx\ConceptualProperty.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Generator.Microsoft.Frameworks.EdmxGenerator">
+    <Position X="16.25" Y="0.5" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AYAACIACADLBhIEGihABWAqEIQeAJEAATYYBhADgABg=</HashCode>
+      <FileName>Edmx\EdmxGenerator.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Generator.Microsoft.Frameworks.EdmxEntityProvider" BaseTypeListCollapsed="true">
+    <Position X="13" Y="3" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAgICAAACgABQCAACAAAQAAAAAAAAAAAAAAQACgAg=</HashCode>
+      <FileName>Edmx\EdmxEntityProvider.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="CodeSmith.SchemaHelper.EntityBase&lt;T&gt;">
+    <Position X="3" Y="0.5" Width="2.5" />
+    <TypeIdentifier />
+    <Lollipop Position="0.2" />
+  </Class>
+  <Interface Name="CodeSmith.SchemaHelper.ICommonEntityProperty">
+    <Position X="0.5" Y="0.5" Width="2.25" />
+    <TypeIdentifier />
+  </Interface>
+  <Interface Name="CodeSmith.SchemaHelper.IEntity">
+    <Position X="0.5" Y="3.75" Width="2.25" />
+    <TypeIdentifier />
+  </Interface>
+  <Interface Name="CodeSmith.SchemaHelper.IEntityProvider">
+    <Position X="13" Y="0.5" Width="2.5" />
+    <TypeIdentifier />
+  </Interface>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

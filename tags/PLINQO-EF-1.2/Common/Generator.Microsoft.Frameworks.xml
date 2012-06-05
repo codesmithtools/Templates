@@ -1,0 +1,5254 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Generator.Microsoft.Frameworks</name>
+    </assembly>
+    <members>
+        <member name="T:LinqToEdmx.Model.Storage.Association">
+            <summary>
+            <para>
+            Regular expression: (Documentation?, End+, ReferentialConstraint?, any)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Storage.Association.Documentation">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            <para>
+            Regular expression: (Documentation?, End+, ReferentialConstraint?, any)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Storage.Association.Ends">
+            <summary>
+            <para>
+            Occurrence: required, repeating
+            </para>
+            <para>
+            Regular expression: (Documentation?, End+, ReferentialConstraint?, any)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Storage.Association.ReferentialConstraint">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            <para>
+            Regular expression: (Documentation?, End+, ReferentialConstraint?, any)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Storage.Association.Any">
+            <summary>
+            <para>
+            Regular expression: (Documentation?, End+, ReferentialConstraint?, any)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Storage.Association.Name">
+            <summary>
+            <para>
+            Occurrence: required
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Map.ScalarProperty.Name">
+            <summary>
+            <para>
+            Occurrence: required
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Map.ScalarProperty.ColumnName">
+            <summary>
+            <para>
+            Occurrence: required
+            </para>
+            </summary>
+        </member>
+        <member name="M:LinqToEdmx.Edmx.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:LinqToEdmx.Edmx"/> class.
+            </summary>
+        </member>
+        <member name="M:LinqToEdmx.Edmx.#ctor(LinqToEdmx.Designer.TEdmx)">
+            <summary>
+            Initializes a new instance of the <see cref="T:LinqToEdmx.Edmx"/> class.
+            </summary>
+            <param name="content">The content.</param>
+        </member>
+        <member name="M:LinqToEdmx.Edmx.GetItems``1">
+            <summary>
+            Gets all items of type <typeparamref name="T"/> from the data model.
+            </summary>
+            <typeparam name="T">The type of items to return.</typeparam>
+            <returns>
+            A sequence that contains all items of type <typeparamref name="T"/> from the data model.
+            </returns>
+        </member>
+        <member name="M:LinqToEdmx.Edmx.Load(System.String)">
+            <summary>
+            Loads metadata and mapping information from the given path.
+            </summary>
+            <param name="path">
+            A pipe-delimited list of directories, files, and resource locations in which to look for metadata and mapping information.
+            Blank spaces on each side of the pipe separator are ignored.
+            </param>
+            <returns>An <see cref="T:LinqToEdmx.Edmx"/> instance loaded with metadata from the <paramref name="path"/>.</returns>
+            <remarks>
+            The path to the workspace metadata follows the same rules as paths for embedded resources in the Entity Data Model connection string. 
+            See <see cref="!:http://msdn.microsoft.com/en-us/library/cc716756(VS.100).aspx">Connection Strings (Entity Framework)</see> for more information.
+            </remarks>
+        </member>
+        <member name="M:LinqToEdmx.Edmx.Load(LinqToEdmx.Edmx,System.String)">
+            <summary>
+            Loads metadata and mapping information from the given path into an <see cref="T:LinqToEdmx.Edmx"/> instance.
+            </summary>
+            <param name="edmx">The <see cref="T:LinqToEdmx.Edmx"/> instance in which to load metadata from the given path.</param>
+            <param name="splitPath">An non-delimited, i.e. split, path from which to load metadata.</param>
+            <returns>An edmx instance loaded with metadata from the given <paramref name="splitPath"/>.</returns>
+        </member>
+        <member name="M:LinqToEdmx.Edmx.BuildEmptyEdmx">
+            <summary>
+            Builds an empty <see cref="T:LinqToEdmx.Edmx"/> instance in which to load metadata content.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="P:LinqToEdmx.Edmx.Designers">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            <para>
+            Setter: Appends
+            </para>
+            <para>
+            Regular expression: (((Designer?)?, (Runtime? | DataServices?))|((Runtime? | DataServices?), (Designer?)?))
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Edmx.Runtimes">
+            <summary>
+            <para>
+            Occurrence: optional, choice
+            </para>
+            <para>
+            Setter: Appends
+            </para>
+            <para>
+            Regular expression: (((Designer?)?, (Runtime? | DataServices?))|((Runtime? | DataServices?), (Designer?)?))
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Edmx.DataServices">
+            <summary>
+            <para>
+            Occurrence: optional, choice
+            </para>
+            <para>
+            Setter: Appends
+            </para>
+            <para>
+            Regular expression: (((Designer?)?, (Runtime? | DataServices?))|((Runtime? | DataServices?), (Designer?)?))
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Edmx.Version">
+            <summary>
+            <para>
+            Occurrence: required
+            </para>
+            </summary>
+        </member>
+        <member name="T:LinqToEdmx.Edmx.MetadataFileExtensions">
+            <summary>
+            Specifies the set of file name extensions for files that contain Entity Data Model metadata.
+            </summary>
+        </member>
+        <member name="T:LinqToEdmx.Edmx.MetadataFileType">
+            <summary>
+            Specifies the types of files that contain Entity Data Model metadata.
+            </summary>
+        </member>
+        <member name="T:CodeSmith.SchemaHelper.ConceptualEntity">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.ConceptualEntity.#ctor(LinqToEdmx.Model.Conceptual.EntityType,System.String)">
+            <summary>
+            Constructor that passes in the entity that this class will represent.
+            </summary>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.ConceptualEntity.Initialize">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.ConceptualEntity.LoadProperties">
+            <summary>
+            Override to populate the properties from the implemented entity.
+            </summary>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.ConceptualEntity.LoadAssociations">
+            <summary>
+            Override to populate the associations from the implemented entity.
+            </summary>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.ConceptualEntity.LoadKeys">
+            <summary>
+            Override to populate the keys from the implemented entity.
+            </summary>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.ConceptualEntity.LoadExtendedProperties">
+            <summary>
+            Load the extended properties for the entity.
+            </summary>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.ConceptualEntity.AddSearchCriteria">
+            <summary>
+            Load the Search Criteria for the entity
+            </summary>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.ConceptualEntity.AddPrimaryKeySearchCriteria">
+            <summary>
+            Add PrimaryKeys to the SearchCriteria
+            </summary>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.ConceptualEntity.AddForeignKeySearchCriteria">
+            <summary>
+            Add ForeignKeys to the SearchCriteria collection
+            </summary>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.ConceptualEntity.AddIndexSearchCriteria">
+            <summary>
+            Add all the indexes to the Search Criteria
+            </summary>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.ConceptualEntity.AddToSearchCriteria(CodeSmith.SchemaHelper.SearchCriteria)">
+            <summary>
+            Add a SearchCriteria to the mapping collection
+            </summary>
+            <param name="searchCriteria"></param>
+            <returns></returns>
+        </member>
+        <member name="T:LinqToEdmx.Model.Storage.Function">
+            <summary>
+            <para>
+            Regular expression: (Documentation?, CommandText?, Parameter*, any)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Storage.Function.Documentation">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            <para>
+            Regular expression: (Documentation?, CommandText?, Parameter*, any)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Storage.Function.CommandText">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            <para>
+            Regular expression: (Documentation?, CommandText?, Parameter*, any)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Storage.Function.Parameters">
+            <summary>
+            <para>
+            Occurrence: optional, repeating
+            </para>
+            <para>
+            Regular expression: (Documentation?, CommandText?, Parameter*, any)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Storage.Function.Any">
+            <summary>
+            <para>
+            Regular expression: (Documentation?, CommandText?, Parameter*, any)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Storage.Function.Name">
+            <summary>
+            <para>
+            Occurrence: required
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Storage.Function.ReturnType">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Storage.Function.Aggregate">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Storage.Function.BuiltIn">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Storage.Function.StoreFunctionName">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Storage.Function.NiladicFunction">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Storage.Function.IsComposable">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Storage.Function.ParameterTypeSemantics">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Storage.Function.Schema">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Storage.Function.Schema1">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Storage.Function.Name1">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="T:LinqToEdmx.Model.Storage.EntityTypeStore">
+            <summary>
+            <para>
+            Regular expression: (Documentation?, Key?, (Property*)*, any)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Storage.EntityTypeStore.Documentation">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            <para>
+            Regular expression: (Documentation?, Key?, (Property*)*, any)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Storage.EntityTypeStore.Key">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            <para>
+            Regular expression: (Documentation?, Key?, (Property*)*, any)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Storage.EntityTypeStore.Properties">
+            <summary>
+            <para>
+            Occurrence: optional, repeating, choice
+            </para>
+            <para>
+            Setter: Appends
+            </para>
+            <para>
+            Regular expression: (Documentation?, Key?, (Property*)*, any)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Storage.EntityTypeStore.Any">
+            <summary>
+            <para>
+            Regular expression: (Documentation?, Key?, (Property*)*, any)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Storage.EntityTypeStore.Name">
+            <summary>
+            <para>
+            Occurrence: required
+            </para>
+            </summary>
+        </member>
+        <member name="T:LinqToEdmx.Map.FunctionMappingComplexProperty">
+            <summary>
+            <para>
+            Regular expression: ((ScalarProperty? | ComplexProperty?)+)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Map.FunctionMappingComplexProperty.ScalarProperties">
+            <summary>
+            <para>
+            Occurrence: optional, choice
+            </para>
+            <para>
+            Setter: Appends
+            </para>
+            <para>
+            Regular expression: ((ScalarProperty? | ComplexProperty?)+)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Map.FunctionMappingComplexProperty.ComplexProperties">
+            <summary>
+            <para>
+            Occurrence: optional, choice
+            </para>
+            <para>
+            Setter: Appends
+            </para>
+            <para>
+            Regular expression: ((ScalarProperty? | ComplexProperty?)+)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Map.FunctionMappingComplexProperty.Name">
+            <summary>
+            <para>
+            Occurrence: required
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Map.FunctionMappingComplexProperty.TypeName">
+            <summary>
+            <para>
+            Occurrence: required
+            </para>
+            </summary>
+        </member>
+        <member name="T:LinqToEdmx.Model.Storage.ReferentialConstraintRoleElement">
+            <summary>
+            <para>
+            Regular expression: (Documentation?, PropertyRef+, any)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Storage.ReferentialConstraintRoleElement.Documentation">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            <para>
+            Regular expression: (Documentation?, PropertyRef+, any)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Storage.ReferentialConstraintRoleElement.PropertyRefs">
+            <summary>
+            <para>
+            Occurrence: required, repeating
+            </para>
+            <para>
+            Regular expression: (Documentation?, PropertyRef+, any)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Storage.ReferentialConstraintRoleElement.Any">
+            <summary>
+            <para>
+            Regular expression: (Documentation?, PropertyRef+, any)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Storage.ReferentialConstraintRoleElement.Role">
+            <summary>
+            <para>
+            Occurrence: required
+            </para>
+            </summary>
+        </member>
+        <member name="T:LinqToEdmx.Model.Conceptual.FunctionParameter">
+            <summary>
+            <para>
+            Regular expression: ((CollectionType? | ReferenceType? | RowType?)?, any)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.FunctionParameter.CollectionType">
+            <summary>
+            <para>
+            Occurrence: optional, choice
+            </para>
+            <para>
+            Setter: Appends
+            </para>
+            <para>
+            Regular expression: ((CollectionType? | ReferenceType? | RowType?)?, any)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.FunctionParameter.ReferenceType">
+            <summary>
+            <para>
+            Occurrence: optional, choice
+            </para>
+            <para>
+            Setter: Appends
+            </para>
+            <para>
+            Regular expression: ((CollectionType? | ReferenceType? | RowType?)?, any)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.FunctionParameter.RowType">
+            <summary>
+            <para>
+            Occurrence: optional, choice
+            </para>
+            <para>
+            Setter: Appends
+            </para>
+            <para>
+            Regular expression: ((CollectionType? | ReferenceType? | RowType?)?, any)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.FunctionParameter.Any">
+            <summary>
+            <para>
+            Regular expression: ((CollectionType? | ReferenceType? | RowType?)?, any)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.FunctionParameter.Name">
+            <summary>
+            <para>
+            Occurrence: required
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.FunctionParameter.Type">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.FunctionParameter.Nullable">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.FunctionParameter.DefaultValue">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.FunctionParameter.MaxLength">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.FunctionParameter.FixedLength">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.FunctionParameter.Precision">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.FunctionParameter.Scale">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.FunctionParameter.Unicode">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.FunctionParameter.Collation">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="T:LinqToEdmx.Model.Conceptual.FunctionImportParameter">
+            <summary>
+            <para>
+            Regular expression: ((Documentation?, any)?)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.FunctionImportParameter.Documentation">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            <para>
+            Setter: Appends
+            </para>
+            <para>
+            Regular expression: ((Documentation?, any)?)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.FunctionImportParameter.Any">
+            <summary>
+            <para>
+            Regular expression: ((Documentation?, any)?)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.FunctionImportParameter.Name">
+            <summary>
+            <para>
+            Occurrence: required
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.FunctionImportParameter.Type">
+            <summary>
+            <para>
+            Occurrence: required
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.FunctionImportParameter.Mode">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.FunctionImportParameter.MaxLength">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.FunctionImportParameter.Precision">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.FunctionImportParameter.Scale">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="T:LinqToEdmx.Model.Conceptual.TCollectionType">
+            <summary>
+            <para>
+            Regular expression: ((CollectionType? | ReferenceType? | RowType? | TypeRef?)?, any)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.TCollectionType.CollectionType">
+            <summary>
+            <para>
+            Occurrence: optional, choice
+            </para>
+            <para>
+            Setter: Appends
+            </para>
+            <para>
+            Regular expression: ((CollectionType? | ReferenceType? | RowType? | TypeRef?)?, any)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.TCollectionType.ReferenceType">
+            <summary>
+            <para>
+            Occurrence: optional, choice
+            </para>
+            <para>
+            Setter: Appends
+            </para>
+            <para>
+            Regular expression: ((CollectionType? | ReferenceType? | RowType? | TypeRef?)?, any)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.TCollectionType.RowType">
+            <summary>
+            <para>
+            Occurrence: optional, choice
+            </para>
+            <para>
+            Setter: Appends
+            </para>
+            <para>
+            Regular expression: ((CollectionType? | ReferenceType? | RowType? | TypeRef?)?, any)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.TCollectionType.TypeRef">
+            <summary>
+            <para>
+            Occurrence: optional, choice
+            </para>
+            <para>
+            Setter: Appends
+            </para>
+            <para>
+            Regular expression: ((CollectionType? | ReferenceType? | RowType? | TypeRef?)?, any)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.TCollectionType.Any">
+            <summary>
+            <para>
+            Regular expression: ((CollectionType? | ReferenceType? | RowType? | TypeRef?)?, any)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.TCollectionType.ElementType">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.TCollectionType.Nullable">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.TCollectionType.DefaultValue">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.TCollectionType.MaxLength">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.TCollectionType.FixedLength">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.TCollectionType.Precision">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.TCollectionType.Scale">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.TCollectionType.Unicode">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.TCollectionType.Collation">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="T:LinqToEdmx.Designer.DesignerInfoPropertySet">
+            <summary>
+            <para>
+            Regular expression: (DesignerProperty*)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Designer.DesignerInfoPropertySet.DesignerProperties">
+            <summary>
+            <para>
+            Occurrence: optional, repeating
+            </para>
+            <para>
+            Regular expression: (DesignerProperty*)
+            </para>
+            </summary>
+        </member>
+        <member name="T:LinqToEdmx.Designer.ConceptualModels">
+            <summary>
+            <para>
+            Regular expression: (Schema?)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Designer.ConceptualModels.ConceptualSchema">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            <para>
+            Regular expression: (Schema?)
+            </para>
+            </summary>
+        </member>
+        <member name="T:CodeSmith.SchemaHelper.ComplexEntity">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.ComplexEntity.#ctor(LinqToEdmx.Model.Conceptual.ComplexType,System.String)">
+            <summary>
+            Constructor that passes in the entity that this class will represent.
+            </summary>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.ComplexEntity.Initialize">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.ComplexEntity.LoadProperties">
+            <summary>
+            Override to populate the properties from the implemented entity.
+            </summary>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.ComplexEntity.LoadAssociations">
+            <summary>
+            Override to populate the associations from the implemented entity.
+            </summary>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.ComplexEntity.LoadKeys">
+            <summary>
+            Override to populate the keys from the implemented entity.
+            </summary>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.ComplexEntity.LoadExtendedProperties">
+            <summary>
+            Load the extended properties for the entity.
+            </summary>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.ComplexEntity.AddSearchCriteria">
+            <summary>
+            Load the Search Criteria for the entity
+            </summary>
+        </member>
+        <member name="T:LinqToEdmx.Model.Conceptual.EntityContainer">
+            <summary>
+            <para>
+            Regular expression: (Documentation?, (FunctionImport | EntitySet | AssociationSet)*, any)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.EntityContainer.Documentation">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            <para>
+            Regular expression: (Documentation?, (FunctionImport | EntitySet | AssociationSet)*, any)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.EntityContainer.FunctionImports">
+            <summary>
+            <para>
+            Occurrence: required, choice
+            </para>
+            <para>
+            Setter: Appends
+            </para>
+            <para>
+            Regular expression: (Documentation?, (FunctionImport | EntitySet | AssociationSet)*, any)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.EntityContainer.EntitySets">
+            <summary>
+            <para>
+            Occurrence: required, choice
+            </para>
+            <para>
+            Setter: Appends
+            </para>
+            <para>
+            Regular expression: (Documentation?, (FunctionImport | EntitySet | AssociationSet)*, any)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.EntityContainer.AssociationSets">
+            <summary>
+            <para>
+            Occurrence: required, choice
+            </para>
+            <para>
+            Setter: Appends
+            </para>
+            <para>
+            Regular expression: (Documentation?, (FunctionImport | EntitySet | AssociationSet)*, any)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.EntityContainer.Any">
+            <summary>
+            <para>
+            Regular expression: (Documentation?, (FunctionImport | EntitySet | AssociationSet)*, any)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.EntityContainer.Name">
+            <summary>
+            <para>
+            Occurrence: required
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.EntityContainer.Extends">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.EntityContainer.TypeAccess">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.EntityContainer.LazyLoadingEnabled">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="T:LinqToEdmx.Model.Conceptual.EntityContainer.AssociationSetLocalType">
+            <summary>
+            <para>
+            Regular expression: (Documentation?, End*, any)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.EntityContainer.AssociationSetLocalType.Documentation">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            <para>
+            Regular expression: (Documentation?, End*, any)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.EntityContainer.AssociationSetLocalType.Ends">
+            <summary>
+            <para>
+            Occurrence: optional, repeating
+            </para>
+            <para>
+            Regular expression: (Documentation?, End*, any)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.EntityContainer.AssociationSetLocalType.Any">
+            <summary>
+            <para>
+            Regular expression: (Documentation?, End*, any)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.EntityContainer.AssociationSetLocalType.Name">
+            <summary>
+            <para>
+            Occurrence: required
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.EntityContainer.AssociationSetLocalType.Association">
+            <summary>
+            <para>
+            Occurrence: required
+            </para>
+            </summary>
+        </member>
+        <member name="T:LinqToEdmx.Model.Conceptual.EntityContainer.AssociationSetLocalType.EndLocalType">
+            <summary>
+            <para>
+            Regular expression: ((Documentation?, any)?)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.EntityContainer.AssociationSetLocalType.EndLocalType.Documentation">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            <para>
+            Setter: Appends
+            </para>
+            <para>
+            Regular expression: ((Documentation?, any)?)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.EntityContainer.AssociationSetLocalType.EndLocalType.Any">
+            <summary>
+            <para>
+            Regular expression: ((Documentation?, any)?)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.EntityContainer.AssociationSetLocalType.EndLocalType.Role">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.EntityContainer.AssociationSetLocalType.EndLocalType.EntitySet">
+            <summary>
+            <para>
+            Occurrence: required
+            </para>
+            </summary>
+        </member>
+        <member name="T:LinqToEdmx.Model.Conceptual.EntityContainer.EntitySetLocalType">
+            <summary>
+            <para>
+            Regular expression: ((Documentation?, any)?)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.EntityContainer.EntitySetLocalType.Documentation">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            <para>
+            Setter: Appends
+            </para>
+            <para>
+            Regular expression: ((Documentation?, any)?)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.EntityContainer.EntitySetLocalType.Any">
+            <summary>
+            <para>
+            Regular expression: ((Documentation?, any)?)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.EntityContainer.EntitySetLocalType.Name">
+            <summary>
+            <para>
+            Occurrence: required
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.EntityContainer.EntitySetLocalType.EntityType">
+            <summary>
+            <para>
+            Occurrence: required
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.EntityContainer.EntitySetLocalType.GetterAccess">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="T:LinqToEdmx.Model.Conceptual.EntityContainer.FunctionImportLocalType">
+            <summary>
+            <para>
+            Regular expression: (Documentation?, Parameter*, any)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.EntityContainer.FunctionImportLocalType.Documentation">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            <para>
+            Regular expression: (Documentation?, Parameter*, any)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.EntityContainer.FunctionImportLocalType.Parameters">
+            <summary>
+            <para>
+            Occurrence: optional, repeating
+            </para>
+            <para>
+            Regular expression: (Documentation?, Parameter*, any)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.EntityContainer.FunctionImportLocalType.Any">
+            <summary>
+            <para>
+            Regular expression: (Documentation?, Parameter*, any)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.EntityContainer.FunctionImportLocalType.Name">
+            <summary>
+            <para>
+            Occurrence: required
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.EntityContainer.FunctionImportLocalType.ReturnType">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.EntityContainer.FunctionImportLocalType.EntitySet">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.EntityContainer.FunctionImportLocalType.MethodAccess">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="T:LinqToEdmx.Model.Conceptual.AssociationEnd">
+            <summary>
+            <para>
+            Regular expression: (Documentation?, (OnDelete?)*, any)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.AssociationEnd.Documentation">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            <para>
+            Regular expression: (Documentation?, (OnDelete?)*, any)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.AssociationEnd.OnDelete">
+            <summary>
+            <para>
+            Occurrence: optional, choice
+            </para>
+            <para>
+            Setter: Appends
+            </para>
+            <para>
+            Regular expression: (Documentation?, (OnDelete?)*, any)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.AssociationEnd.Any">
+            <summary>
+            <para>
+            Regular expression: (Documentation?, (OnDelete?)*, any)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.AssociationEnd.Type">
+            <summary>
+            <para>
+            Occurrence: required
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.AssociationEnd.Role">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.AssociationEnd.Multiplicity">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="T:LinqToEdmx.Designer.Runtime">
+            <summary>
+            <para>
+            Regular expression: (StorageModels?, ConceptualModels?, Mappings?)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Designer.Runtime.StorageModels">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            <para>
+            Regular expression: (StorageModels?, ConceptualModels?, Mappings?)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Designer.Runtime.ConceptualModels">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            <para>
+            Regular expression: (StorageModels?, ConceptualModels?, Mappings?)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Designer.Runtime.Mappings">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            <para>
+            Regular expression: (StorageModels?, ConceptualModels?, Mappings?)
+            </para>
+            </summary>
+        </member>
+        <member name="T:LinqToEdmx.Model.Storage.Constraint">
+            <summary>
+            <para>
+            Regular expression: (Documentation?, Principal, Dependent, any)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Storage.Constraint.Documentation">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            <para>
+            Regular expression: (Documentation?, Principal, Dependent, any)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Storage.Constraint.Principal">
+            <summary>
+            <para>
+            Occurrence: required
+            </para>
+            <para>
+            Regular expression: (Documentation?, Principal, Dependent, any)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Storage.Constraint.Dependent">
+            <summary>
+            <para>
+            Occurrence: required
+            </para>
+            <para>
+            Regular expression: (Documentation?, Principal, Dependent, any)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Storage.Constraint.Any">
+            <summary>
+            <para>
+            Regular expression: (Documentation?, Principal, Dependent, any)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Map.FunctionMappingScalarProperty.ParameterName">
+            <summary>
+            <para>
+            Occurrence: required
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Map.FunctionMappingScalarProperty.Name">
+            <summary>
+            <para>
+            Occurrence: required
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Map.FunctionMappingScalarProperty.Version">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="T:LinqToEdmx.Map.FunctionMappingEndProperty">
+            <summary>
+            <para>
+            Regular expression: (ScalarProperty*)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Map.FunctionMappingEndProperty.ScalarProperties">
+            <summary>
+            <para>
+            Occurrence: optional, repeating
+            </para>
+            <para>
+            Regular expression: (ScalarProperty*)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Map.FunctionMappingEndProperty.Name">
+            <summary>
+            <para>
+            Occurrence: required
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Map.Condition.Value">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Map.Condition.Name">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Map.Condition.ColumnName">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Map.Condition.IsNull">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="T:LinqToEdmx.Designer.StorageModels">
+            <summary>
+            <para>
+            Regular expression: (Schema?)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Designer.StorageModels.StorageSchema">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            <para>
+            Regular expression: (Schema?)
+            </para>
+            </summary>
+        </member>
+        <member name="T:LinqToEdmx.Model.Storage.EntityProperty">
+            <summary>
+            <para>
+            Regular expression: ((Documentation?, any)?)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Storage.EntityProperty.Documentation">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            <para>
+            Setter: Appends
+            </para>
+            <para>
+            Regular expression: ((Documentation?, any)?)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Storage.EntityProperty.Any">
+            <summary>
+            <para>
+            Regular expression: ((Documentation?, any)?)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Storage.EntityProperty.Name">
+            <summary>
+            <para>
+            Occurrence: required
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Storage.EntityProperty.Type">
+            <summary>
+            <para>
+            Occurrence: required
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Storage.EntityProperty.Nullable">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Storage.EntityProperty.DefaultValue">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Storage.EntityProperty.MaxLength">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Storage.EntityProperty.FixedLength">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Storage.EntityProperty.Precision">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Storage.EntityProperty.Scale">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Storage.EntityProperty.Unicode">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Storage.EntityProperty.Collation">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Storage.EntityProperty.StoreGeneratedPattern">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="T:LinqToEdmx.Model.Conceptual.RowType">
+            <summary>
+            <para>
+            Regular expression: (Property? | any)+
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.RowType.Properties">
+            <summary>
+            <para>
+            Occurrence: optional, choice
+            </para>
+            <para>
+            Regular expression: (Property? | any)+
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.RowType.Any">
+            <summary>
+            <para>
+            Regular expression: (Property? | any)+
+            </para>
+            </summary>
+        </member>
+        <member name="T:LinqToEdmx.Map.TMapping">
+            <summary>
+            <para>
+            Regular expression: (Alias*, EntityContainerMapping)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Map.TMapping.Aliases">
+            <summary>
+            <para>
+            Occurrence: optional, repeating
+            </para>
+            <para>
+            Regular expression: (Alias*, EntityContainerMapping)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Map.TMapping.EntityContainerMapping">
+            <summary>
+            <para>
+            Occurrence: required
+            </para>
+            <para>
+            Regular expression: (Alias*, EntityContainerMapping)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Map.TMapping.Space">
+            <summary>
+            <para>
+            Occurrence: required
+            </para>
+            </summary>
+        </member>
+        <member name="T:LinqToEdmx.Map.FunctionMappingAssociationEnd">
+            <summary>
+            <para>
+            Regular expression: (ScalarProperty*)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Map.FunctionMappingAssociationEnd.ScalarProperties">
+            <summary>
+            <para>
+            Occurrence: optional, repeating
+            </para>
+            <para>
+            Regular expression: (ScalarProperty*)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Map.FunctionMappingAssociationEnd.AssociationSet">
+            <summary>
+            <para>
+            Occurrence: required
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Map.FunctionMappingAssociationEnd.From">
+            <summary>
+            <para>
+            Occurrence: required
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Map.FunctionMappingAssociationEnd.To">
+            <summary>
+            <para>
+            Occurrence: required
+            </para>
+            </summary>
+        </member>
+        <member name="T:LinqToEdmx.Map.EntityTypeModificationFunctionMapping">
+            <summary>
+            <para>
+            Regular expression: (DeleteFunction?, InsertFunction?, UpdateFunction?)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Map.EntityTypeModificationFunctionMapping.DeleteFunction">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            <para>
+            Regular expression: (DeleteFunction?, InsertFunction?, UpdateFunction?)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Map.EntityTypeModificationFunctionMapping.InsertFunction">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            <para>
+            Regular expression: (DeleteFunction?, InsertFunction?, UpdateFunction?)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Map.EntityTypeModificationFunctionMapping.UpdateFunction">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            <para>
+            Regular expression: (DeleteFunction?, InsertFunction?, UpdateFunction?)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Designer.EntityTypeShape.EntityType">
+            <summary>
+            <para>
+            Occurrence: required
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Designer.EntityTypeShape.PointX">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Designer.EntityTypeShape.PointY">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Designer.EntityTypeShape.Width">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Designer.EntityTypeShape.Height">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Designer.EntityTypeShape.IsExpanded">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Designer.DesignerProperty.Name">
+            <summary>
+            <para>
+            Occurrence: required
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Designer.DesignerProperty.Value">
+            <summary>
+            <para>
+            Occurrence: required
+            </para>
+            </summary>
+        </member>
+        <member name="T:LinqToEdmx.Model.Storage.Text">
+            <summary>
+            <para>
+            Regular expression: (any)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Storage.Text.Any">
+            <summary>
+            <para>
+            Regular expression: (any)
+            </para>
+            </summary>
+        </member>
+        <member name="T:LinqToEdmx.Model.Conceptual.EntityType">
+            <summary>
+            <para>
+            Regular expression: (Documentation?, Key?, (Property* | NavigationProperty*)*, any)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.EntityType.Documentation">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            <para>
+            Regular expression: (Documentation?, Key?, (Property* | NavigationProperty*)*, any)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.EntityType.Key">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            <para>
+            Regular expression: (Documentation?, Key?, (Property* | NavigationProperty*)*, any)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.EntityType.Properties">
+            <summary>
+            <para>
+            Occurrence: optional, repeating, choice
+            </para>
+            <para>
+            Setter: Appends
+            </para>
+            <para>
+            Regular expression: (Documentation?, Key?, (Property* | NavigationProperty*)*, any)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.EntityType.NavigationProperties">
+            <summary>
+            <para>
+            Occurrence: optional, repeating, choice
+            </para>
+            <para>
+            Setter: Appends
+            </para>
+            <para>
+            Regular expression: (Documentation?, Key?, (Property* | NavigationProperty*)*, any)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.EntityType.Any">
+            <summary>
+            <para>
+            Regular expression: (Documentation?, Key?, (Property* | NavigationProperty*)*, any)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.EntityType.Name">
+            <summary>
+            <para>
+            Occurrence: required
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.EntityType.BaseType">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.EntityType.IsAbstract">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.EntityType.TypeAccess">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="T:LinqToEdmx.Map.AssociationSetModificationFunction">
+            <summary>
+            <para>
+            Regular expression: ((EndProperty)+)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Map.AssociationSetModificationFunction.EndProperties">
+            <summary>
+            <para>
+            Occurrence: required, choice
+            </para>
+            <para>
+            Setter: Appends
+            </para>
+            <para>
+            Regular expression: ((EndProperty)+)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Map.AssociationSetModificationFunction.FunctionName">
+            <summary>
+            <para>
+            Occurrence: required
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Map.AssociationSetModificationFunction.RowsAffectedParameter">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="T:LinqToEdmx.Designer.DataServices">
+            <summary>
+            <para>
+            Regular expression: (Schema*)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Designer.DataServices.Schemas">
+            <summary>
+            <para>
+            Occurrence: optional, repeating
+            </para>
+            <para>
+            Regular expression: (Schema*)
+            </para>
+            </summary>
+        </member>
+        <member name="T:LinqToEdmx.Model.Storage.Parameter">
+            <summary>
+            <para>
+            Regular expression: (Documentation?, any)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Storage.Parameter.Documentation">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            <para>
+            Regular expression: (Documentation?, any)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Storage.Parameter.Any">
+            <summary>
+            <para>
+            Regular expression: (Documentation?, any)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Storage.Parameter.Name">
+            <summary>
+            <para>
+            Occurrence: required
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Storage.Parameter.Type">
+            <summary>
+            <para>
+            Occurrence: required
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Storage.Parameter.Mode">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Storage.Parameter.MaxLength">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Storage.Parameter.Precision">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Storage.Parameter.Scale">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="T:LinqToEdmx.Model.Conceptual.TypeRef">
+            <summary>
+            <para>
+            Regular expression: ((Documentation?, any)?)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.TypeRef.Documentation">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            <para>
+            Setter: Appends
+            </para>
+            <para>
+            Regular expression: ((Documentation?, any)?)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.TypeRef.Any">
+            <summary>
+            <para>
+            Regular expression: ((Documentation?, any)?)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.TypeRef.Type">
+            <summary>
+            <para>
+            Occurrence: required
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.TypeRef.Nullable">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.TypeRef.DefaultValue">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.TypeRef.MaxLength">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.TypeRef.FixedLength">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.TypeRef.Precision">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.TypeRef.Scale">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.TypeRef.Unicode">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.TypeRef.Collation">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="T:LinqToEdmx.Model.Conceptual.EntityKeyElement">
+            <summary>
+            <para>
+            Regular expression: (PropertyRef+, any)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.EntityKeyElement.PropertyRefs">
+            <summary>
+            <para>
+            Occurrence: required, repeating
+            </para>
+            <para>
+            Regular expression: (PropertyRef+, any)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.EntityKeyElement.Any">
+            <summary>
+            <para>
+            Regular expression: (PropertyRef+, any)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Map.QueryView.TypeName">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Map.Mapping.Aliases">
+            <summary>
+            <para>
+            Occurrence: optional, repeating
+            </para>
+            <para>
+            Regular expression: (Alias*, EntityContainerMapping)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Map.Mapping.EntityContainerMapping">
+            <summary>
+            <para>
+            Occurrence: required
+            </para>
+            <para>
+            Regular expression: (Alias*, EntityContainerMapping)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Map.Mapping.Space">
+            <summary>
+            <para>
+            Occurrence: required
+            </para>
+            </summary>
+        </member>
+        <member name="T:LinqToEdmx.Map.FunctionImportMappingResultMapping">
+            <summary>
+            <para>
+            Regular expression: (EntityTypeMapping* | ComplexTypeMapping*)
+            </para>
+            </summary>
+        </member>
+        <member name="M:LinqToEdmx.Map.FunctionImportMappingResultMapping.#ctor">
+            <summary>
+            <para>
+            Regular expression: (EntityTypeMapping* | ComplexTypeMapping*)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Map.FunctionImportMappingResultMapping.EntityTypeMappings">
+            <summary>
+            <para>
+            Occurrence: optional, repeating, choice
+            </para>
+            <para>
+            Regular expression: (EntityTypeMapping* | ComplexTypeMapping*)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Map.FunctionImportMappingResultMapping.ComplexTypeMappings">
+            <summary>
+            <para>
+            Occurrence: optional, repeating, choice
+            </para>
+            <para>
+            Regular expression: (EntityTypeMapping* | ComplexTypeMapping*)
+            </para>
+            </summary>
+        </member>
+        <member name="T:LinqToEdmx.Map.FunctionImportMapping">
+            <summary>
+            <para>
+            Regular expression: (ResultMapping?)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Map.FunctionImportMapping.ResultMapping">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            <para>
+            Regular expression: (ResultMapping?)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Map.FunctionImportMapping.FunctionName">
+            <summary>
+            <para>
+            Occurrence: required
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Map.FunctionImportMapping.FunctionImportName">
+            <summary>
+            <para>
+            Occurrence: required
+            </para>
+            </summary>
+        </member>
+        <member name="T:LinqToEdmx.Map.ComplexProperty">
+            <summary>
+            <para>
+            Regular expression: ((ScalarProperty | ComplexProperty | ComplexTypeMapping | Condition)+)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Map.ComplexProperty.ScalarProperties">
+            <summary>
+            <para>
+            Occurrence: required, choice
+            </para>
+            <para>
+            Setter: Appends
+            </para>
+            <para>
+            Regular expression: ((ScalarProperty | ComplexProperty | ComplexTypeMapping | Condition)+)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Map.ComplexProperty.ComplexProperties">
+            <summary>
+            <para>
+            Occurrence: required, choice
+            </para>
+            <para>
+            Setter: Appends
+            </para>
+            <para>
+            Regular expression: ((ScalarProperty | ComplexProperty | ComplexTypeMapping | Condition)+)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Map.ComplexProperty.ComplexTypeMappings">
+            <summary>
+            <para>
+            Occurrence: required, choice
+            </para>
+            <para>
+            Setter: Appends
+            </para>
+            <para>
+            Regular expression: ((ScalarProperty | ComplexProperty | ComplexTypeMapping | Condition)+)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Map.ComplexProperty.Conditions">
+            <summary>
+            <para>
+            Occurrence: required, choice
+            </para>
+            <para>
+            Setter: Appends
+            </para>
+            <para>
+            Regular expression: ((ScalarProperty | ComplexProperty | ComplexTypeMapping | Condition)+)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Map.ComplexProperty.Name">
+            <summary>
+            <para>
+            Occurrence: required
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Map.ComplexProperty.TypeName">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Map.ComplexProperty.IsPartial">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="T:LinqToEdmx.Designer.InheritanceConnector">
+            <summary>
+            <para>
+            Regular expression: (ConnectorPoint*)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Designer.InheritanceConnector.ConnectorPoints">
+            <summary>
+            <para>
+            Occurrence: optional, repeating
+            </para>
+            <para>
+            Regular expression: (ConnectorPoint*)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Designer.InheritanceConnector.EntityType">
+            <summary>
+            <para>
+            Occurrence: required
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Designer.InheritanceConnector.ManuallyRouted">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="T:LinqToEdmx.Model.Storage.EntityContainer">
+            <summary>
+            <para>
+            Regular expression: (Documentation?, (EntitySet | AssociationSet)*, any)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Storage.EntityContainer.Documentation">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            <para>
+            Regular expression: (Documentation?, (EntitySet | AssociationSet)*, any)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Storage.EntityContainer.EntitySets">
+            <summary>
+            <para>
+            Occurrence: required, choice
+            </para>
+            <para>
+            Setter: Appends
+            </para>
+            <para>
+            Regular expression: (Documentation?, (EntitySet | AssociationSet)*, any)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Storage.EntityContainer.AssociationSets">
+            <summary>
+            <para>
+            Occurrence: required, choice
+            </para>
+            <para>
+            Setter: Appends
+            </para>
+            <para>
+            Regular expression: (Documentation?, (EntitySet | AssociationSet)*, any)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Storage.EntityContainer.Any">
+            <summary>
+            <para>
+            Regular expression: (Documentation?, (EntitySet | AssociationSet)*, any)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Storage.EntityContainer.Name">
+            <summary>
+            <para>
+            Occurrence: required
+            </para>
+            </summary>
+        </member>
+        <member name="T:LinqToEdmx.Model.Storage.EntityContainer.AssociationSetLocalType">
+            <summary>
+            <para>
+            Regular expression: (Documentation?, End*, any)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Storage.EntityContainer.AssociationSetLocalType.Documentation">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            <para>
+            Regular expression: (Documentation?, End*, any)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Storage.EntityContainer.AssociationSetLocalType.Ends">
+            <summary>
+            <para>
+            Occurrence: optional, repeating
+            </para>
+            <para>
+            Regular expression: (Documentation?, End*, any)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Storage.EntityContainer.AssociationSetLocalType.Any">
+            <summary>
+            <para>
+            Regular expression: (Documentation?, End*, any)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Storage.EntityContainer.AssociationSetLocalType.Name">
+            <summary>
+            <para>
+            Occurrence: required
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Storage.EntityContainer.AssociationSetLocalType.Association">
+            <summary>
+            <para>
+            Occurrence: required
+            </para>
+            </summary>
+        </member>
+        <member name="T:LinqToEdmx.Model.Storage.EntityContainer.AssociationSetLocalType.EndLocalType">
+            <summary>
+            <para>
+            Regular expression: ((Documentation?, any)?)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Storage.EntityContainer.AssociationSetLocalType.EndLocalType.Documentation">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            <para>
+            Setter: Appends
+            </para>
+            <para>
+            Regular expression: ((Documentation?, any)?)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Storage.EntityContainer.AssociationSetLocalType.EndLocalType.Any">
+            <summary>
+            <para>
+            Regular expression: ((Documentation?, any)?)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Storage.EntityContainer.AssociationSetLocalType.EndLocalType.Role">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Storage.EntityContainer.AssociationSetLocalType.EndLocalType.EntitySet">
+            <summary>
+            <para>
+            Occurrence: required
+            </para>
+            </summary>
+        </member>
+        <member name="T:LinqToEdmx.Model.Storage.EntityContainer.EntitySetLocalType">
+            <summary>
+            <para>
+            Regular expression: (Documentation?, DefiningQuery?, any)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Storage.EntityContainer.EntitySetLocalType.Documentation">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            <para>
+            Regular expression: (Documentation?, DefiningQuery?, any)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Storage.EntityContainer.EntitySetLocalType.DefiningQuery">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            <para>
+            Regular expression: (Documentation?, DefiningQuery?, any)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Storage.EntityContainer.EntitySetLocalType.Any">
+            <summary>
+            <para>
+            Regular expression: (Documentation?, DefiningQuery?, any)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Storage.EntityContainer.EntitySetLocalType.Name">
+            <summary>
+            <para>
+            Occurrence: required
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Storage.EntityContainer.EntitySetLocalType.EntityType">
+            <summary>
+            <para>
+            Occurrence: required
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Storage.EntityContainer.EntitySetLocalType.Schema">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Storage.EntityContainer.EntitySetLocalType.Table">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Storage.EntityContainer.EntitySetLocalType.Type">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Storage.EntityContainer.EntitySetLocalType.Schema1">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Storage.EntityContainer.EntitySetLocalType.Name1">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="T:LinqToEdmx.Map.MappingFragment">
+            <summary>
+            <para>
+            Regular expression: ((ComplexProperty? | ScalarProperty? | Condition?)+)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Map.MappingFragment.ComplexProperties">
+            <summary>
+            <para>
+            Occurrence: optional, choice
+            </para>
+            <para>
+            Setter: Appends
+            </para>
+            <para>
+            Regular expression: ((ComplexProperty? | ScalarProperty? | Condition?)+)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Map.MappingFragment.ScalarProperties">
+            <summary>
+            <para>
+            Occurrence: optional, choice
+            </para>
+            <para>
+            Setter: Appends
+            </para>
+            <para>
+            Regular expression: ((ComplexProperty? | ScalarProperty? | Condition?)+)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Map.MappingFragment.Conditions">
+            <summary>
+            <para>
+            Occurrence: optional, choice
+            </para>
+            <para>
+            Setter: Appends
+            </para>
+            <para>
+            Regular expression: ((ComplexProperty? | ScalarProperty? | Condition?)+)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Map.MappingFragment.StoreEntitySet">
+            <summary>
+            <para>
+            Occurrence: required
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Map.MappingFragment.MakeColumnsDistinct">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Map.Alias.Key">
+            <summary>
+            <para>
+            Occurrence: required
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Map.Alias.Value">
+            <summary>
+            <para>
+            Occurrence: required
+            </para>
+            </summary>
+        </member>
+        <member name="T:LinqToEdmx.Designer.Diagrams">
+            <summary>
+            <para>
+            Regular expression: (Diagram*)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Designer.Diagrams.Diagram">
+            <summary>
+            <para>
+            Occurrence: optional, repeating
+            </para>
+            <para>
+            Regular expression: (Diagram*)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Designer.ConnectorPoint.PointX">
+            <summary>
+            <para>
+            Occurrence: required
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Designer.ConnectorPoint.PointY">
+            <summary>
+            <para>
+            Occurrence: required
+            </para>
+            </summary>
+        </member>
+        <member name="M:Generator.Microsoft.Frameworks.EdmxGenerator.RemoveDuplicateConceptualEntityTypeKeysAndProperties(LinqToEdmx.Model.Conceptual.EntityType)">
+            <summary>
+            Validates the properties on an Entity.
+            </summary>
+            <param name="entity"></param>
+        </member>
+        <member name="M:Generator.Microsoft.Frameworks.EdmxGenerator.ValidateConceptualEntityAssociations(LinqToEdmx.Model.Conceptual.EntityType)">
+            <summary>
+            Validates an EntityType's Associations.
+            </summary>
+            <param name="entity"></param>
+        </member>
+        <member name="M:Generator.Microsoft.Frameworks.EdmxGenerator.CreateDesigner">
+            <summary>
+            2.2: Create Designer.
+            </summary>
+        </member>
+        <member name="M:Generator.Microsoft.Frameworks.EdmxGenerator.MergeMappingModel(System.Collections.Generic.IEnumerable{CodeSmith.SchemaHelper.IEntity})">
+            <summary>
+            2.0: Sync and create the mapping models.
+            </summary>
+            <param name="entities">All of the entities needing to be merged.</param>
+        </member>
+        <member name="M:Generator.Microsoft.Frameworks.EdmxGenerator.CreateMappingEntity(CodeSmith.SchemaHelper.IEntity)">
+            <summary>
+            2.1: Update all of the Mapping Entities so we can guarantee and verify that our Mapping Associations End's exist.
+            
+            <EntitySetMapping Name="Account">
+             <EntityTypeMapping TypeName="PetShopModel.Account">
+              <MappingFragment StoreEntitySet="Account">
+                <ScalarProperty Name="AccountId" ColumnName="AccountId" />
+              </MappingFragment>
+             </EntityTypeMapping>
+            </EntitySetMapping>
+            
+            </summary>
+            <param name="entity">The Entity.</param>
+        </member>
+        <member name="M:Generator.Microsoft.Frameworks.EdmxGenerator.CreateMappingAssociations(CodeSmith.SchemaHelper.TableEntity)">
+             <summary>
+             2.3: Update the Mapping Associations and check the end points.
+             
+            <AssociationSetMapping Name="aspnet_UsersInRoles" TypeName="PetShopModel.aspnet_UsersInRoles" StoreEntitySet="aspnet_UsersInRoles">
+              <EndProperty Name="aspnet_Roles">
+                <ScalarProperty Name="RoleId" ColumnName="RoleId" />
+              </EndProperty>
+              <EndProperty Name="aspnet_Users">
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+              </EndProperty>
+            </AssociationSetMapping>
+             
+             </summary>
+             <param name="entity">The Entity</param>
+        </member>
+        <member name="M:Generator.Microsoft.Frameworks.EdmxGenerator.MergeScalarProperties(LinqToEdmx.Map.MappingFragment,CodeSmith.SchemaHelper.IEntity)">
+            <summary>
+            Merges and creates a list of all of the Properties. <ScalarProperty Name="LineNum" ColumnName="LineNum" />
+            </summary>
+            <param name="mappingFragment">The MappingFragment.</param>
+            <param name="entity">The Entity.</param>
+        </member>
+        <member name="M:Generator.Microsoft.Frameworks.EdmxGenerator.MergeScalarProperties(LinqToEdmx.Map.EndProperty,CodeSmith.SchemaHelper.Association)">
+            <summary>
+            Merges and creates a list of all of the Properties. <ScalarProperty Name="LineNum" ColumnName="LineNum" />
+            </summary>
+            <param name="endProperty">The EndProperty.</param>
+            <param name="association">The association.</param>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.FunctionParameter.#ctor(LinqToEdmx.Model.Conceptual.FunctionImportParameter,CodeSmith.SchemaHelper.IEntity)">
+            <summary>
+            Constructor that passes in the entity that this class will represent.
+            </summary>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.FunctionParameter.Initialize">
+            <summary>
+            Loads the Property Settings.
+            This method is called from the base classes constructor.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.FunctionParameter.ParameterDirection">
+            <summary>
+            The direction of the Parameter of the command
+            </summary>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.ConceptualProperty.#ctor(LinqToEdmx.Model.Conceptual.EntityProperty,CodeSmith.SchemaHelper.IEntity)">
+            <summary>
+            Constructor that passes in the entity that this class will represent.
+            </summary>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.ConceptualProperty.Initialize">
+            <summary>
+            Loads the Property Settings.
+            This method is called from the base classes constructor.
+            </summary>
+        </member>
+        <member name="T:LinqToEdmx.Model.Conceptual.Using">
+            <summary>
+            <para>
+            Regular expression: ((Documentation?, any)?)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.Using.Documentation">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            <para>
+            Setter: Appends
+            </para>
+            <para>
+            Regular expression: ((Documentation?, any)?)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.Using.Any">
+            <summary>
+            <para>
+            Regular expression: ((Documentation?, any)?)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.Using.Namespace">
+            <summary>
+            <para>
+            Occurrence: required
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.Using.Alias">
+            <summary>
+            <para>
+            Occurrence: required
+            </para>
+            </summary>
+        </member>
+        <member name="T:LinqToEdmx.Model.Conceptual.Text">
+            <summary>
+            <para>
+            Regular expression: (any)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.Text.Any">
+            <summary>
+            <para>
+            Regular expression: (any)
+            </para>
+            </summary>
+        </member>
+        <member name="T:LinqToEdmx.Model.Conceptual.ReferentialConstraintRoleElement">
+            <summary>
+            <para>
+            Regular expression: (PropertyRef+, any)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.ReferentialConstraintRoleElement.PropertyRefs">
+            <summary>
+            <para>
+            Occurrence: required, repeating
+            </para>
+            <para>
+            Regular expression: (PropertyRef+, any)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.ReferentialConstraintRoleElement.Any">
+            <summary>
+            <para>
+            Regular expression: (PropertyRef+, any)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.ReferentialConstraintRoleElement.Role">
+            <summary>
+            <para>
+            Occurrence: required
+            </para>
+            </summary>
+        </member>
+        <member name="T:LinqToEdmx.Model.Conceptual.OnAction">
+            <summary>
+            <para>
+            Regular expression: ((Documentation?, any)?)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.OnAction.Documentation">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            <para>
+            Setter: Appends
+            </para>
+            <para>
+            Regular expression: ((Documentation?, any)?)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.OnAction.Any">
+            <summary>
+            <para>
+            Regular expression: ((Documentation?, any)?)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.OnAction.Action">
+            <summary>
+            <para>
+            Occurrence: required
+            </para>
+            </summary>
+        </member>
+        <member name="T:LinqToEdmx.Model.Conceptual.Constraint">
+            <summary>
+            <para>
+            Regular expression: (Documentation?, Principal, Dependent, any)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.Constraint.Documentation">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            <para>
+            Regular expression: (Documentation?, Principal, Dependent, any)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.Constraint.Principal">
+            <summary>
+            <para>
+            Occurrence: required
+            </para>
+            <para>
+            Regular expression: (Documentation?, Principal, Dependent, any)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.Constraint.Dependent">
+            <summary>
+            <para>
+            Occurrence: required
+            </para>
+            <para>
+            Regular expression: (Documentation?, Principal, Dependent, any)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.Constraint.Any">
+            <summary>
+            <para>
+            Regular expression: (Documentation?, Principal, Dependent, any)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.ConceptualSchema.Usings">
+            <summary>
+            <para>
+            Occurrence: optional, repeating, choice
+            </para>
+            <para>
+            Setter: Appends
+            </para>
+            <para>
+            Regular expression: ((@Using* | Association* | ComplexType* | EntityType* | Function* | EntityContainer)*, any)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.ConceptualSchema.Associations">
+            <summary>
+            <para>
+            Occurrence: optional, repeating, choice
+            </para>
+            <para>
+            Setter: Appends
+            </para>
+            <para>
+            Regular expression: ((@Using* | Association* | ComplexType* | EntityType* | Function* | EntityContainer)*, any)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.ConceptualSchema.ComplexTypes">
+            <summary>
+            <para>
+            Occurrence: optional, repeating, choice
+            </para>
+            <para>
+            Setter: Appends
+            </para>
+            <para>
+            Regular expression: ((@Using* | Association* | ComplexType* | EntityType* | Function* | EntityContainer)*, any)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.ConceptualSchema.EntityTypes">
+            <summary>
+            <para>
+            Occurrence: optional, repeating, choice
+            </para>
+            <para>
+            Setter: Appends
+            </para>
+            <para>
+            Regular expression: ((@Using* | Association* | ComplexType* | EntityType* | Function* | EntityContainer)*, any)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.ConceptualSchema.Functions">
+            <summary>
+            <para>
+            Occurrence: optional, repeating, choice
+            </para>
+            <para>
+            Setter: Appends
+            </para>
+            <para>
+            Regular expression: ((@Using* | Association* | ComplexType* | EntityType* | Function* | EntityContainer)*, any)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.ConceptualSchema.EntityContainers">
+            <summary>
+            <para>
+            Occurrence: required, choice
+            </para>
+            <para>
+            Setter: Appends
+            </para>
+            <para>
+            Regular expression: ((@Using* | Association* | ComplexType* | EntityType* | Function* | EntityContainer)*, any)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.ConceptualSchema.Any">
+            <summary>
+            <para>
+            Regular expression: ((@Using* | Association* | ComplexType* | EntityType* | Function* | EntityContainer)*, any)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.ConceptualSchema.Namespace">
+            <summary>
+            <para>
+            Occurrence: required
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.ConceptualSchema.Alias">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="T:LinqToEdmx.Map.EntityTypeModificationFunctionWithResult">
+            <summary>
+            <para>
+            Regular expression: ((ScalarProperty? | AssociationEnd? | ComplexProperty?)+, ResultBinding*)
+            </para>
+            </summary>
+        </member>
+        <member name="T:LinqToEdmx.Map.EntityTypeModificationFunction">
+            <summary>
+            <para>
+            Regular expression: ((ScalarProperty? | AssociationEnd? | ComplexProperty?)+)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Map.EntityTypeModificationFunction.ScalarProperties">
+            <summary>
+            <para>
+            Occurrence: optional, choice
+            </para>
+            <para>
+            Setter: Appends
+            </para>
+            <para>
+            Regular expression: ((ScalarProperty? | AssociationEnd? | ComplexProperty?)+)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Map.EntityTypeModificationFunction.AssociationEnds">
+            <summary>
+            <para>
+            Occurrence: optional, choice
+            </para>
+            <para>
+            Setter: Appends
+            </para>
+            <para>
+            Regular expression: ((ScalarProperty? | AssociationEnd? | ComplexProperty?)+)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Map.EntityTypeModificationFunction.ComplexProperties">
+            <summary>
+            <para>
+            Occurrence: optional, choice
+            </para>
+            <para>
+            Setter: Appends
+            </para>
+            <para>
+            Regular expression: ((ScalarProperty? | AssociationEnd? | ComplexProperty?)+)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Map.EntityTypeModificationFunction.FunctionName">
+            <summary>
+            <para>
+            Occurrence: required
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Map.EntityTypeModificationFunction.RowsAffectedParameter">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Map.EntityTypeModificationFunctionWithResult.ResultBindings">
+            <summary>
+            <para>
+            Occurrence: optional, repeating
+            </para>
+            <para>
+            Regular expression: ((ScalarProperty? | AssociationEnd? | ComplexProperty?)+, ResultBinding*)
+            </para>
+            </summary>
+        </member>
+        <member name="M:LinqToEdmx.Common.EnumerableExtensions.Concat``1(``0,System.Collections.Generic.IEnumerable{``0})">
+            <summary>
+            Returns a sequence with <paramref name="head"/> as its first element and <paramref name="tail"/> as its subsequent elements.
+            </summary>
+            <typeparam name="TSource">The type of elements in the sequence.</typeparam>
+            <param name="head">The element that will be first in the sequence.</param>
+            <param name="tail">The elements that will be subsequent to the head element.</param>
+        </member>
+        <member name="M:LinqToEdmx.Common.EnumerableExtensions.Concat``1(``0,``0)">
+            <summary>
+            Returns a sequence with <paramref name="first"/> as its first element and <paramref name="second"/> as the second element.
+            </summary>
+            <typeparam name="TSource">The type of elements in the sequence.</typeparam>
+            <param name="first">The element that will be first in the sequence.</param>
+            <param name="second">The elements that will be second in the sequence.</param>
+        </member>
+        <member name="M:LinqToEdmx.Common.EnumerableExtensions.Concat``1(System.Collections.Generic.IEnumerable{``0},``0)">
+            <summary>
+            Returns a sequence with <paramref name="first"/> as its first elements and <paramref name="second"/> as the last element.
+            </summary>
+            <typeparam name="TSource">The type of elements in the sequence.</typeparam>
+            <param name="first">The first.</param>
+            <param name="second">The second.</param>
+            <returns></returns>
+        </member>
+        <member name="M:LinqToEdmx.Common.EnumerableExtensions.AsEnumerable``1(``0)">
+            <summary>
+            Returns a sequence with <paramref name="item"/> as its only item.
+            </summary>
+            <typeparam name="TElement">The type of the element.</typeparam>
+            <param name="item">The item to return in a sequence.</param>
+        </member>
+        <member name="M:LinqToEdmx.Common.EnumerableExtensions.Contains``1(System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.IEnumerable{``0})">
+            <summary>
+            Determines whether the second sequence is a subset of the first sequence.
+            </summary>
+            <typeparam name="TSource">The type of the source.</typeparam>
+            <param name="first">The first sequence.</param>
+            <param name="second">The second.</param>
+            <returns>
+            	<c>true</c> if all elements in the <paramref name="second"/> sequence exist in the <paramref name="first"/> sequence; otherwise, <c>false</c>.
+            </returns>
+        </member>
+        <member name="M:LinqToEdmx.Common.EnumerableExtensions.ContainsKeys``2(System.Collections.Generic.IDictionary{``0,``1},System.Collections.Generic.IEnumerable{``0})">
+            <summary>
+            Determines whether the map contains all of the specified keys.
+            </summary>
+            <typeparam name="TKey">The type of the key.</typeparam>
+            <typeparam name="TValue">The type of the value.</typeparam>
+            <param name="map">The map.</param>
+            <param name="keys">The keys.</param>
+            <returns>
+            	<c>true</c> if all elements in the <paramref name="keys"/> sequence exist in the <paramref name="map"/>; otherwise, <c>false</c>.
+            </returns>
+        </member>
+        <member name="M:LinqToEdmx.Common.EnumerableExtensions.AggregateUntil``2(System.Collections.Generic.IEnumerable{``0},``1,System.Func{``1,``0,``1},System.Func{``1,System.Boolean})">
+            <summary>
+            Returns the result of applying an accumulator function over a sequence until the specified condition is true, 
+            or the final accumulator value if no accumulator value satisfied the condition. 
+            The specified seed value is used as the initial accumulator value.
+            </summary>
+            <typeparam name="TSource">The type of the elements of <paramref name="source"/>.</typeparam>
+            <typeparam name="TAccumulate">The type of the accumulator value.</typeparam>
+            <param name="source">An <see cref="T:System.Collections.Generic.IEnumerable`1"/> to aggregate over.</param>
+            <param name="seed">The initial accumulator value.</param>
+            <param name="func">An accumulator function to be invoked on each element.</param>
+            <param name="predicate">A function to test each accumulator value for a condition.</param>
+            <returns>The final accumulator value that satisfied the condition or the final accumulator value if no accumulator value satisfied the condition.</returns>
+        </member>
+        <member name="T:LinqToEdmx.Model.Storage.EntityKeyElement">
+            <summary>
+            <para>
+            Regular expression: (PropertyRef+, any)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Storage.EntityKeyElement.PropertyRefs">
+            <summary>
+            <para>
+            Occurrence: required, repeating
+            </para>
+            <para>
+            Regular expression: (PropertyRef+, any)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Storage.EntityKeyElement.Any">
+            <summary>
+            <para>
+            Regular expression: (PropertyRef+, any)
+            </para>
+            </summary>
+        </member>
+        <member name="T:LinqToEdmx.Model.Conceptual.PropertyRef">
+            <summary>
+            <para>
+            Regular expression: (any)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.PropertyRef.Any">
+            <summary>
+            <para>
+            Regular expression: (any)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.PropertyRef.Name">
+            <summary>
+            <para>
+            Occurrence: required
+            </para>
+            </summary>
+        </member>
+        <member name="T:LinqToEdmx.Model.Conceptual.FunctionReturnType">
+            <summary>
+            <para>
+            Regular expression: ((CollectionType? | ReferenceType? | RowType?)?, any)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.FunctionReturnType.CollectionType">
+            <summary>
+            <para>
+            Occurrence: optional, choice
+            </para>
+            <para>
+            Setter: Appends
+            </para>
+            <para>
+            Regular expression: ((CollectionType? | ReferenceType? | RowType?)?, any)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.FunctionReturnType.ReferenceType">
+            <summary>
+            <para>
+            Occurrence: optional, choice
+            </para>
+            <para>
+            Setter: Appends
+            </para>
+            <para>
+            Regular expression: ((CollectionType? | ReferenceType? | RowType?)?, any)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.FunctionReturnType.RowType">
+            <summary>
+            <para>
+            Occurrence: optional, choice
+            </para>
+            <para>
+            Setter: Appends
+            </para>
+            <para>
+            Regular expression: ((CollectionType? | ReferenceType? | RowType?)?, any)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.FunctionReturnType.Any">
+            <summary>
+            <para>
+            Regular expression: ((CollectionType? | ReferenceType? | RowType?)?, any)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.FunctionReturnType.Type">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.FunctionReturnType.Nullable">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.FunctionReturnType.DefaultValue">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.FunctionReturnType.MaxLength">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.FunctionReturnType.FixedLength">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.FunctionReturnType.Precision">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.FunctionReturnType.Scale">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.FunctionReturnType.Unicode">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.FunctionReturnType.Collation">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="T:LinqToEdmx.Model.Conceptual.Association">
+            <summary>
+            <para>
+            Regular expression: (Documentation?, End+, ReferentialConstraint?, any)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.Association.Documentation">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            <para>
+            Regular expression: (Documentation?, End+, ReferentialConstraint?, any)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.Association.Ends">
+            <summary>
+            <para>
+            Occurrence: required, repeating
+            </para>
+            <para>
+            Regular expression: (Documentation?, End+, ReferentialConstraint?, any)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.Association.ReferentialConstraint">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            <para>
+            Regular expression: (Documentation?, End+, ReferentialConstraint?, any)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.Association.Any">
+            <summary>
+            <para>
+            Regular expression: (Documentation?, End+, ReferentialConstraint?, any)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.Association.Name">
+            <summary>
+            <para>
+            Occurrence: required
+            </para>
+            </summary>
+        </member>
+        <member name="T:LinqToEdmx.Map.AssociationSetMapping">
+            <summary>
+            <para>
+            Regular expression: (QueryView?, EndProperty*, Condition*, ModificationFunctionMapping?)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Map.AssociationSetMapping.QueryView">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            <para>
+            Regular expression: (QueryView?, EndProperty*, Condition*, ModificationFunctionMapping?)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Map.AssociationSetMapping.EndProperties">
+            <summary>
+            <para>
+            Occurrence: optional, repeating
+            </para>
+            <para>
+            Regular expression: (QueryView?, EndProperty*, Condition*, ModificationFunctionMapping?)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Map.AssociationSetMapping.Conditions">
+            <summary>
+            <para>
+            Occurrence: optional, repeating
+            </para>
+            <para>
+            Regular expression: (QueryView?, EndProperty*, Condition*, ModificationFunctionMapping?)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Map.AssociationSetMapping.ModificationFunctionMapping">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            <para>
+            Regular expression: (QueryView?, EndProperty*, Condition*, ModificationFunctionMapping?)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Map.AssociationSetMapping.Name">
+            <summary>
+            <para>
+            Occurrence: required
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Map.AssociationSetMapping.TypeName">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Map.AssociationSetMapping.StoreEntitySet">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="T:CodeSmith.SchemaHelper.FunctionEntity">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.FunctionEntity.#ctor(LinqToEdmx.Model.Conceptual.EntityContainer.FunctionImportLocalType,System.String)">
+            <summary>
+            Constructor that passes in the entity that this class will represent.
+            </summary>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.FunctionEntity.Initialize">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.FunctionEntity.LoadProperties">
+            <summary>
+            Override to populate the properties from the implemented entity.
+            </summary>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.FunctionEntity.LoadAssociations">
+            <summary>
+            Override to populate the associations from the implemented entity.
+            </summary>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.FunctionEntity.LoadKeys">
+            <summary>
+            Override to populate the keys from the implemented entity.
+            </summary>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.FunctionEntity.LoadExtendedProperties">
+            <summary>
+            Load the extended properties for the entity.
+            </summary>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.FunctionEntity.AddSearchCriteria">
+            <summary>
+            Load the Search Criteria for the entity
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.FunctionEntity.AssociatedEntity">
+            <summary>
+            The associated Entity for this command. This is usually a Table or a View.
+            This comes from the name of the Custom command.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.FunctionEntity.IsAssociated">
+            <summary>
+            Is this Command associated to an Entity
+            </summary>
+        </member>
+        <member name="T:LinqToEdmx.Model.Storage.AssociationEnd">
+            <summary>
+            <para>
+            Regular expression: (Documentation?, (OnDelete?)*, any)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Storage.AssociationEnd.Documentation">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            <para>
+            Regular expression: (Documentation?, (OnDelete?)*, any)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Storage.AssociationEnd.OnDelete">
+            <summary>
+            <para>
+            Occurrence: optional, choice
+            </para>
+            <para>
+            Setter: Appends
+            </para>
+            <para>
+            Regular expression: (Documentation?, (OnDelete?)*, any)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Storage.AssociationEnd.Any">
+            <summary>
+            <para>
+            Regular expression: (Documentation?, (OnDelete?)*, any)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Storage.AssociationEnd.Type">
+            <summary>
+            <para>
+            Occurrence: required
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Storage.AssociationEnd.Role">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Storage.AssociationEnd.Multiplicity">
+            <summary>
+            <para>
+            Occurrence: required
+            </para>
+            </summary>
+        </member>
+        <member name="T:LinqToEdmx.Model.Conceptual.TSchema">
+            <summary>
+            <para>
+            Regular expression: ((@Using* | Association* | ComplexType* | EntityType* | Function* | EntityContainer)*, any)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.TSchema.Usings">
+            <summary>
+            <para>
+            Occurrence: optional, repeating, choice
+            </para>
+            <para>
+            Setter: Appends
+            </para>
+            <para>
+            Regular expression: ((@Using* | Association* | ComplexType* | EntityType* | Function* | EntityContainer)*, any)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.TSchema.Associations">
+            <summary>
+            <para>
+            Occurrence: optional, repeating, choice
+            </para>
+            <para>
+            Setter: Appends
+            </para>
+            <para>
+            Regular expression: ((@Using* | Association* | ComplexType* | EntityType* | Function* | EntityContainer)*, any)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.TSchema.ComplexTypes">
+            <summary>
+            <para>
+            Occurrence: optional, repeating, choice
+            </para>
+            <para>
+            Setter: Appends
+            </para>
+            <para>
+            Regular expression: ((@Using* | Association* | ComplexType* | EntityType* | Function* | EntityContainer)*, any)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.TSchema.EntityTypes">
+            <summary>
+            <para>
+            Occurrence: optional, repeating, choice
+            </para>
+            <para>
+            Setter: Appends
+            </para>
+            <para>
+            Regular expression: ((@Using* | Association* | ComplexType* | EntityType* | Function* | EntityContainer)*, any)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.TSchema.Functions">
+            <summary>
+            <para>
+            Occurrence: optional, repeating, choice
+            </para>
+            <para>
+            Setter: Appends
+            </para>
+            <para>
+            Regular expression: ((@Using* | Association* | ComplexType* | EntityType* | Function* | EntityContainer)*, any)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.TSchema.EntityContainers">
+            <summary>
+            <para>
+            Occurrence: required, choice
+            </para>
+            <para>
+            Setter: Appends
+            </para>
+            <para>
+            Regular expression: ((@Using* | Association* | ComplexType* | EntityType* | Function* | EntityContainer)*, any)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.TSchema.Any">
+            <summary>
+            <para>
+            Regular expression: ((@Using* | Association* | ComplexType* | EntityType* | Function* | EntityContainer)*, any)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.TSchema.Namespace">
+            <summary>
+            <para>
+            Occurrence: required
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.TSchema.Alias">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="T:LinqToEdmx.Model.Conceptual.Documentation">
+            <summary>
+            <para>
+            The Documentation element is used to provide documentation of comments on the contents of the XML file.  It is valid under Schema, Type, Index and Relationship elements.
+            </para>
+            <para>
+            Regular expression: (Summary?, LongDescription?)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.Documentation.Summary">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            <para>
+            Regular expression: (Summary?, LongDescription?)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.Documentation.LongDescription">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            <para>
+            Regular expression: (Summary?, LongDescription?)
+            </para>
+            </summary>
+        </member>
+        <member name="T:LinqToEdmx.Model.Conceptual.ComplexType">
+            <summary>
+            <para>
+            Regular expression: (Documentation?, Property*, any)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.ComplexType.Documentation">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            <para>
+            Regular expression: (Documentation?, Property*, any)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.ComplexType.Properties">
+            <summary>
+            <para>
+            Occurrence: optional, repeating
+            </para>
+            <para>
+            Regular expression: (Documentation?, Property*, any)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.ComplexType.Any">
+            <summary>
+            <para>
+            Regular expression: (Documentation?, Property*, any)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.ComplexType.Name">
+            <summary>
+            <para>
+            Occurrence: required
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.ComplexType.TypeAccess">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="T:LinqToEdmx.Map.EndProperty">
+            <summary>
+            <para>
+            Regular expression: (ScalarProperty+)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Map.EndProperty.ScalarProperties">
+            <summary>
+            <para>
+            Occurrence: required, repeating
+            </para>
+            <para>
+            Regular expression: (ScalarProperty+)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Map.EndProperty.Name">
+            <summary>
+            <para>
+            Occurrence: required
+            </para>
+            </summary>
+        </member>
+        <member name="T:LinqToEdmx.Designer.Diagram">
+            <summary>
+            <para>
+            Regular expression: ((EntityTypeShape? | AssociationConnector? | InheritanceConnector?)*)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Designer.Diagram.EntityTypeShapes">
+            <summary>
+            <para>
+            Occurrence: optional, choice
+            </para>
+            <para>
+            Setter: Appends
+            </para>
+            <para>
+            Regular expression: ((EntityTypeShape? | AssociationConnector? | InheritanceConnector?)*)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Designer.Diagram.AssociationConnectors">
+            <summary>
+            <para>
+            Occurrence: optional, choice
+            </para>
+            <para>
+            Setter: Appends
+            </para>
+            <para>
+            Regular expression: ((EntityTypeShape? | AssociationConnector? | InheritanceConnector?)*)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Designer.Diagram.InheritanceConnectors">
+            <summary>
+            <para>
+            Occurrence: optional, choice
+            </para>
+            <para>
+            Setter: Appends
+            </para>
+            <para>
+            Regular expression: ((EntityTypeShape? | AssociationConnector? | InheritanceConnector?)*)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Designer.Diagram.Name">
+            <summary>
+            <para>
+            Occurrence: required
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Designer.Diagram.ZoomLevel">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Designer.Diagram.ShowGrid">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Designer.Diagram.SnapToGrid">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Designer.Diagram.DisplayType">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="T:LinqToEdmx.Model.Storage.TSchema">
+            <summary>
+            <para>
+            Regular expression: ((Association* | EntityType* | EntityContainer | Function*)*, any)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Storage.TSchema.Associations">
+            <summary>
+            <para>
+            Occurrence: optional, repeating, choice
+            </para>
+            <para>
+            Setter: Appends
+            </para>
+            <para>
+            Regular expression: ((Association* | EntityType* | EntityContainer | Function*)*, any)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Storage.TSchema.EntityTypes">
+            <summary>
+            <para>
+            Occurrence: optional, repeating, choice
+            </para>
+            <para>
+            Setter: Appends
+            </para>
+            <para>
+            Regular expression: ((Association* | EntityType* | EntityContainer | Function*)*, any)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Storage.TSchema.EntityContainers">
+            <summary>
+            <para>
+            Occurrence: required, choice
+            </para>
+            <para>
+            Setter: Appends
+            </para>
+            <para>
+            Regular expression: ((Association* | EntityType* | EntityContainer | Function*)*, any)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Storage.TSchema.Functions">
+            <summary>
+            <para>
+            Occurrence: optional, repeating, choice
+            </para>
+            <para>
+            Setter: Appends
+            </para>
+            <para>
+            Regular expression: ((Association* | EntityType* | EntityContainer | Function*)*, any)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Storage.TSchema.Any">
+            <summary>
+            <para>
+            Regular expression: ((Association* | EntityType* | EntityContainer | Function*)*, any)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Storage.TSchema.Namespace">
+            <summary>
+            <para>
+            Occurrence: required
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Storage.TSchema.Alias">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Storage.TSchema.Provider">
+            <summary>
+            <para>
+            Occurrence: required
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Storage.TSchema.ProviderManifestToken">
+            <summary>
+            <para>
+            Occurrence: required
+            </para>
+            </summary>
+        </member>
+        <member name="T:LinqToEdmx.Model.Conceptual.XmlOrText">
+            <summary>
+            <para>
+            This type allows pretty much any content
+            </para>
+            <para>
+            Regular expression: (any)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.XmlOrText.Any">
+            <summary>
+            <para>
+            Regular expression: (any)
+            </para>
+            </summary>
+        </member>
+        <member name="T:LinqToEdmx.Model.Conceptual.ReferenceType">
+            <summary>
+            <para>
+            Regular expression: ((Documentation?, any)?)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.ReferenceType.Documentation">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            <para>
+            Setter: Appends
+            </para>
+            <para>
+            Regular expression: ((Documentation?, any)?)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.ReferenceType.Any">
+            <summary>
+            <para>
+            Regular expression: ((Documentation?, any)?)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.ReferenceType.Type">
+            <summary>
+            <para>
+            Occurrence: required
+            </para>
+            </summary>
+        </member>
+        <member name="T:LinqToEdmx.Model.Conceptual.Property">
+            <summary>
+            <para>
+            Regular expression: ((CollectionType? | ReferenceType? | RowType?)?, any)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.Property.CollectionType">
+            <summary>
+            <para>
+            Occurrence: optional, choice
+            </para>
+            <para>
+            Setter: Appends
+            </para>
+            <para>
+            Regular expression: ((CollectionType? | ReferenceType? | RowType?)?, any)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.Property.ReferenceType">
+            <summary>
+            <para>
+            Occurrence: optional, choice
+            </para>
+            <para>
+            Setter: Appends
+            </para>
+            <para>
+            Regular expression: ((CollectionType? | ReferenceType? | RowType?)?, any)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.Property.RowType">
+            <summary>
+            <para>
+            Occurrence: optional, choice
+            </para>
+            <para>
+            Setter: Appends
+            </para>
+            <para>
+            Regular expression: ((CollectionType? | ReferenceType? | RowType?)?, any)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.Property.Any">
+            <summary>
+            <para>
+            Regular expression: ((CollectionType? | ReferenceType? | RowType?)?, any)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.Property.Name">
+            <summary>
+            <para>
+            Occurrence: required
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.Property.Type">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.Property.Nullable">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.Property.DefaultValue">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.Property.MaxLength">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.Property.FixedLength">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.Property.Precision">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.Property.Scale">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.Property.Unicode">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.Property.Collation">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="T:LinqToEdmx.Map.EntityContainerMapping">
+            <summary>
+            <para>
+            Regular expression: ((EntitySetMapping? | AssociationSetMapping? | FunctionImportMapping?)+)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Map.EntityContainerMapping.EntitySetMappings">
+            <summary>
+            <para>
+            Occurrence: optional, choice
+            </para>
+            <para>
+            Setter: Appends
+            </para>
+            <para>
+            Regular expression: ((EntitySetMapping? | AssociationSetMapping? | FunctionImportMapping?)+)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Map.EntityContainerMapping.AssociationSetMappings">
+            <summary>
+            <para>
+            Occurrence: optional, choice
+            </para>
+            <para>
+            Setter: Appends
+            </para>
+            <para>
+            Regular expression: ((EntitySetMapping? | AssociationSetMapping? | FunctionImportMapping?)+)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Map.EntityContainerMapping.FunctionImportMappings">
+            <summary>
+            <para>
+            Occurrence: optional, choice
+            </para>
+            <para>
+            Setter: Appends
+            </para>
+            <para>
+            Regular expression: ((EntitySetMapping? | AssociationSetMapping? | FunctionImportMapping?)+)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Map.EntityContainerMapping.CdmEntityContainer">
+            <summary>
+            <para>
+            Occurrence: required
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Map.EntityContainerMapping.StorageEntityContainer">
+            <summary>
+            <para>
+            Occurrence: required
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Map.EntityContainerMapping.GenerateUpdateViews">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="T:LinqToEdmx.Designer.Designer">
+            <summary>
+            <para>
+            Regular expression: (Connection?, Options?, Diagrams?, any)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Designer.Designer.Connection">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            <para>
+            Regular expression: (Connection?, Options?, Diagrams?, any)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Designer.Designer.Options">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            <para>
+            Regular expression: (Connection?, Options?, Diagrams?, any)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Designer.Designer.Diagrams">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            <para>
+            Regular expression: (Connection?, Options?, Diagrams?, any)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Designer.Designer.Any">
+            <summary>
+            <para>
+            Regular expression: (Connection?, Options?, Diagrams?, any)
+            </para>
+            </summary>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.ComplexProperty.#ctor(LinqToEdmx.Model.Conceptual.ComplexTypeProperty,CodeSmith.SchemaHelper.IEntity)">
+            <summary>
+            Constructor that passes in the entity that this class will represent.
+            </summary>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.ComplexProperty.Initialize">
+            <summary>
+            Loads the Property Settings.
+            This method is called from the base classes constructor.
+            </summary>
+        </member>
+        <member name="T:LinqToEdmx.Model.Storage.OnAction">
+            <summary>
+            <para>
+            Regular expression: ((Documentation?, any)?)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Storage.OnAction.Documentation">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            <para>
+            Setter: Appends
+            </para>
+            <para>
+            Regular expression: ((Documentation?, any)?)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Storage.OnAction.Any">
+            <summary>
+            <para>
+            Regular expression: ((Documentation?, any)?)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Storage.OnAction.Action">
+            <summary>
+            <para>
+            Occurrence: required
+            </para>
+            </summary>
+        </member>
+        <member name="T:LinqToEdmx.Model.Storage.Documentation">
+            <summary>
+            <para>
+            The Documentation element is used to provide documentation of comments on the contents of the XML file. It is valid under Schema, Type, Index and Relationship elements.
+                 
+            </para>
+            <para>
+            Regular expression: (Summary?, LongDescription?)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Storage.Documentation.Summary">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            <para>
+            Regular expression: (Summary?, LongDescription?)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Storage.Documentation.LongDescription">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            <para>
+            Regular expression: (Summary?, LongDescription?)
+            </para>
+            </summary>
+        </member>
+        <member name="T:LinqToEdmx.Model.Conceptual.EntityProperty">
+            <summary>
+            <para>
+            Regular expression: ((Documentation?, any)?)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.EntityProperty.Documentation">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            <para>
+            Setter: Appends
+            </para>
+            <para>
+            Regular expression: ((Documentation?, any)?)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.EntityProperty.Any">
+            <summary>
+            <para>
+            Regular expression: ((Documentation?, any)?)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.EntityProperty.Name">
+            <summary>
+            <para>
+            Occurrence: required
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.EntityProperty.Type">
+            <summary>
+            <para>
+            Occurrence: required
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.EntityProperty.Nullable">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.EntityProperty.DefaultValue">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.EntityProperty.MaxLength">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.EntityProperty.FixedLength">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.EntityProperty.Precision">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.EntityProperty.Scale">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.EntityProperty.Unicode">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.EntityProperty.Collation">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.EntityProperty.ConcurrencyMode">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.EntityProperty.SetterAccess">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.EntityProperty.GetterAccess">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.EntityProperty.StoreGeneratedPattern">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Storage.StorageSchema.Associations">
+            <summary>
+            <para>
+            Occurrence: optional, repeating, choice
+            </para>
+            <para>
+            Setter: Appends
+            </para>
+            <para>
+            Regular expression: ((Association* | EntityType* | EntityContainer | Function*)*, any)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Storage.StorageSchema.EntityTypeStores">
+            <summary>
+            <para>
+            Occurrence: optional, repeating, choice
+            </para>
+            <para>
+            Setter: Appends
+            </para>
+            <para>
+            Regular expression: ((Association* | EntityType* | EntityContainer | Function*)*, any)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Storage.StorageSchema.EntityContainers">
+            <summary>
+            <para>
+            Occurrence: required, choice
+            </para>
+            <para>
+            Setter: Appends
+            </para>
+            <para>
+            Regular expression: ((Association* | EntityType* | EntityContainer | Function*)*, any)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Storage.StorageSchema.Functions">
+            <summary>
+            <para>
+            Occurrence: optional, repeating, choice
+            </para>
+            <para>
+            Setter: Appends
+            </para>
+            <para>
+            Regular expression: ((Association* | EntityType* | EntityContainer | Function*)*, any)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Storage.StorageSchema.Any">
+            <summary>
+            <para>
+            Regular expression: ((Association* | EntityType* | EntityContainer | Function*)*, any)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Storage.StorageSchema.Namespace">
+            <summary>
+            <para>
+            Occurrence: required
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Storage.StorageSchema.Alias">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Storage.StorageSchema.Provider">
+            <summary>
+            <para>
+            Occurrence: required
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Storage.StorageSchema.ProviderManifestToken">
+            <summary>
+            <para>
+            Occurrence: required
+            </para>
+            </summary>
+        </member>
+        <member name="T:LinqToEdmx.Model.Conceptual.ComplexTypeProperty">
+            <summary>
+            <para>
+            Regular expression: ((Documentation?, any)?)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.ComplexTypeProperty.Documentation">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            <para>
+            Setter: Appends
+            </para>
+            <para>
+            Regular expression: ((Documentation?, any)?)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.ComplexTypeProperty.Any">
+            <summary>
+            <para>
+            Regular expression: ((Documentation?, any)?)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.ComplexTypeProperty.Name">
+            <summary>
+            <para>
+            Occurrence: required
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.ComplexTypeProperty.Type">
+            <summary>
+            <para>
+            Occurrence: required
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.ComplexTypeProperty.Nullable">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.ComplexTypeProperty.DefaultValue">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.ComplexTypeProperty.MaxLength">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.ComplexTypeProperty.FixedLength">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.ComplexTypeProperty.Precision">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.ComplexTypeProperty.Scale">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.ComplexTypeProperty.Unicode">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.ComplexTypeProperty.Collation">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.ComplexTypeProperty.ConcurrencyMode">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.ComplexTypeProperty.SetterAccess">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.ComplexTypeProperty.GetterAccess">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="T:LinqToEdmx.Map.EntityTypeMapping">
+            <summary>
+            <para>
+            Regular expression: (MappingFragment*, ModificationFunctionMapping?)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Map.EntityTypeMapping.MappingFragments">
+            <summary>
+            <para>
+            Occurrence: optional, repeating
+            </para>
+            <para>
+            Regular expression: (MappingFragment*, ModificationFunctionMapping?)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Map.EntityTypeMapping.ModificationFunctionMapping">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            <para>
+            Regular expression: (MappingFragment*, ModificationFunctionMapping?)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Map.EntityTypeMapping.TypeName">
+            <summary>
+            <para>
+            Occurrence: required
+            </para>
+            </summary>
+        </member>
+        <member name="T:LinqToEdmx.Designer.Mappings">
+            <summary>
+            <para>
+            Regular expression: (Mapping?)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Designer.Mappings.Mapping">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            <para>
+            Regular expression: (Mapping?)
+            </para>
+            </summary>
+        </member>
+        <member name="T:LinqToEdmx.Designer.Connection">
+            <summary>
+            <para>
+            Regular expression: (DesignerInfoPropertySet?)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Designer.Connection.DesignerInfoPropertySet">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            <para>
+            Regular expression: (DesignerInfoPropertySet?)
+            </para>
+            </summary>
+        </member>
+        <member name="T:LinqToEdmx.Designer.AssociationConnector">
+            <summary>
+            <para>
+            Regular expression: (ConnectorPoint*)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Designer.AssociationConnector.ConnectorPoints">
+            <summary>
+            <para>
+            Occurrence: optional, repeating
+            </para>
+            <para>
+            Regular expression: (ConnectorPoint*)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Designer.AssociationConnector.Association">
+            <summary>
+            <para>
+            Occurrence: required
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Designer.AssociationConnector.ManuallyRouted">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="T:LinqToEdmx.Model.Conceptual.NavigationProperty">
+            <summary>
+            <para>
+            Regular expression: ((Documentation?, any)?)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.NavigationProperty.Documentation">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            <para>
+            Setter: Appends
+            </para>
+            <para>
+            Regular expression: ((Documentation?, any)?)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.NavigationProperty.Any">
+            <summary>
+            <para>
+            Regular expression: ((Documentation?, any)?)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.NavigationProperty.Name">
+            <summary>
+            <para>
+            Occurrence: required
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.NavigationProperty.Relationship">
+            <summary>
+            <para>
+            Occurrence: required
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.NavigationProperty.ToRole">
+            <summary>
+            <para>
+            Occurrence: required
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.NavigationProperty.FromRole">
+            <summary>
+            <para>
+            Occurrence: required
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.NavigationProperty.GetterAccess">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.NavigationProperty.SetterAccess">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="T:LinqToEdmx.Model.Conceptual.Function">
+            <summary>
+            <para>
+            Regular expression: (Documentation?, (Parameter* | DefiningExpression? | ReturnType? | any)*)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.Function.Documentation">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            <para>
+            Regular expression: (Documentation?, (Parameter* | DefiningExpression? | ReturnType? | any)*)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.Function.Parameters">
+            <summary>
+            <para>
+            Occurrence: optional, repeating, choice
+            </para>
+            <para>
+            Setter: Appends
+            </para>
+            <para>
+            Regular expression: (Documentation?, (Parameter* | DefiningExpression? | ReturnType? | any)*)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.Function.DefiningExpression">
+            <summary>
+            <para>
+            Occurrence: optional, choice
+            </para>
+            <para>
+            Setter: Appends
+            </para>
+            <para>
+            Regular expression: (Documentation?, (Parameter* | DefiningExpression? | ReturnType? | any)*)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.Function.ReturnTypes">
+            <summary>
+            <para>
+            Occurrence: optional, choice
+            </para>
+            <para>
+            Setter: Appends
+            </para>
+            <para>
+            Regular expression: (Documentation?, (Parameter* | DefiningExpression? | ReturnType? | any)*)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.Function.Any">
+            <summary>
+            <para>
+            Regular expression: (Documentation?, (Parameter* | DefiningExpression? | ReturnType? | any)*)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.Function.Name">
+            <summary>
+            <para>
+            Occurrence: required
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.Function.ReturnType1">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.Function.Nullable">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.Function.DefaultValue">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.Function.MaxLength">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.Function.FixedLength">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.Function.Precision">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.Function.Scale">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.Function.Unicode">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Conceptual.Function.Collation">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Map.ResultBinding.ColumnName">
+            <summary>
+            <para>
+            Occurrence: required
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Map.ResultBinding.Name">
+            <summary>
+            <para>
+            Occurrence: required
+            </para>
+            </summary>
+        </member>
+        <member name="T:LinqToEdmx.Map.FunctionImportEntityTypeMapping">
+            <summary>
+            <para>
+            Regular expression: (ScalarProperty* | Condition*)+
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Map.FunctionImportEntityTypeMapping.ScalarProperties">
+            <summary>
+            <para>
+            Occurrence: optional, repeating, choice
+            </para>
+            <para>
+            Regular expression: (ScalarProperty* | Condition*)+
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Map.FunctionImportEntityTypeMapping.Conditions">
+            <summary>
+            <para>
+            Occurrence: optional, repeating, choice
+            </para>
+            <para>
+            Regular expression: (ScalarProperty* | Condition*)+
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Map.FunctionImportEntityTypeMapping.TypeName">
+            <summary>
+            <para>
+            Occurrence: required
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Map.FunctionImportCondition.Value">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Map.FunctionImportCondition.ColumnName">
+            <summary>
+            <para>
+            Occurrence: required
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Map.FunctionImportCondition.IsNull">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="T:LinqToEdmx.Designer.TEdmx">
+            <summary>
+            <para>
+            Regular expression: (((Designer?)?, (Runtime? | DataServices?))|((Runtime? | DataServices?), (Designer?)?))
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Designer.TEdmx.Designers">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            <para>
+            Setter: Appends
+            </para>
+            <para>
+            Regular expression: (((Designer?)?, (Runtime? | DataServices?))|((Runtime? | DataServices?), (Designer?)?))
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Designer.TEdmx.Runtimes">
+            <summary>
+            <para>
+            Occurrence: optional, choice
+            </para>
+            <para>
+            Setter: Appends
+            </para>
+            <para>
+            Regular expression: (((Designer?)?, (Runtime? | DataServices?))|((Runtime? | DataServices?), (Designer?)?))
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Designer.TEdmx.DataServices">
+            <summary>
+            <para>
+            Occurrence: optional, choice
+            </para>
+            <para>
+            Setter: Appends
+            </para>
+            <para>
+            Regular expression: (((Designer?)?, (Runtime? | DataServices?))|((Runtime? | DataServices?), (Designer?)?))
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Designer.TEdmx.Version">
+            <summary>
+            <para>
+            Occurrence: required
+            </para>
+            </summary>
+        </member>
+        <member name="T:LinqToEdmx.Designer.Options">
+            <summary>
+            <para>
+            Regular expression: (DesignerInfoPropertySet?)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Designer.Options.DesignerInfoPropertySet">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            <para>
+            Regular expression: (DesignerInfoPropertySet?)
+            </para>
+            </summary>
+        </member>
+        <member name="P:Generator.Microsoft.Frameworks.Utility.SystemTypeMapper.EfConceptualTypeToSystemType">
+            <summary>
+            Returns the EntityFramework ConceptualType to SystemType MapCollection.
+            </summary>
+            <returns>Returns the correct SystemTypeEscape MapCollection.</returns>
+        </member>
+        <member name="T:LinqToEdmx.Model.Storage.PropertyRef">
+            <summary>
+            <para>
+            Regular expression: ((Documentation?, any)?)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Storage.PropertyRef.Documentation">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            <para>
+            Setter: Appends
+            </para>
+            <para>
+            Regular expression: ((Documentation?, any)?)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Storage.PropertyRef.Any">
+            <summary>
+            <para>
+            Regular expression: ((Documentation?, any)?)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Model.Storage.PropertyRef.Name">
+            <summary>
+            <para>
+            Occurrence: required
+            </para>
+            </summary>
+        </member>
+        <member name="T:LinqToEdmx.Map.FunctionImportComplexTypeMapping">
+            <summary>
+            <para>
+            Regular expression: (ScalarProperty*)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Map.FunctionImportComplexTypeMapping.ScalarProperties">
+            <summary>
+            <para>
+            Occurrence: optional, repeating
+            </para>
+            <para>
+            Regular expression: (ScalarProperty*)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Map.FunctionImportComplexTypeMapping.TypeName">
+            <summary>
+            <para>
+            Occurrence: required
+            </para>
+            </summary>
+        </member>
+        <member name="T:LinqToEdmx.Map.EntitySetMapping">
+            <summary>
+            <para>
+            Regular expression: ((QueryView*, EntityTypeMapping*)|MappingFragment* | ((ComplexProperty? | ScalarProperty? | Condition?)+))
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Map.EntitySetMapping.QueryViews">
+            <summary>
+            <para>
+            Occurrence: optional, repeating
+            </para>
+            <para>
+            Setter: Appends
+            </para>
+            <para>
+            Regular expression: ((QueryView*, EntityTypeMapping*)|MappingFragment* | ((ComplexProperty? | ScalarProperty? | Condition?)+))
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Map.EntitySetMapping.EntityTypeMappings">
+            <summary>
+            <para>
+            Occurrence: optional, repeating
+            </para>
+            <para>
+            Setter: Appends
+            </para>
+            <para>
+            Regular expression: ((QueryView*, EntityTypeMapping*)|MappingFragment* | ((ComplexProperty? | ScalarProperty? | Condition?)+))
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Map.EntitySetMapping.MappingFragments">
+            <summary>
+            <para>
+            Occurrence: optional, repeating, choice
+            </para>
+            <para>
+            Regular expression: ((QueryView*, EntityTypeMapping*)|MappingFragment* | ((ComplexProperty? | ScalarProperty? | Condition?)+))
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Map.EntitySetMapping.ComplexProperties">
+            <summary>
+            <para>
+            Occurrence: optional, choice
+            </para>
+            <para>
+            Setter: Appends
+            </para>
+            <para>
+            Regular expression: ((QueryView*, EntityTypeMapping*)|MappingFragment* | ((ComplexProperty? | ScalarProperty? | Condition?)+))
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Map.EntitySetMapping.ScalarProperties">
+            <summary>
+            <para>
+            Occurrence: optional, choice
+            </para>
+            <para>
+            Setter: Appends
+            </para>
+            <para>
+            Regular expression: ((QueryView*, EntityTypeMapping*)|MappingFragment* | ((ComplexProperty? | ScalarProperty? | Condition?)+))
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Map.EntitySetMapping.Conditions">
+            <summary>
+            <para>
+            Occurrence: optional, choice
+            </para>
+            <para>
+            Setter: Appends
+            </para>
+            <para>
+            Regular expression: ((QueryView*, EntityTypeMapping*)|MappingFragment* | ((ComplexProperty? | ScalarProperty? | Condition?)+))
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Map.EntitySetMapping.Name">
+            <summary>
+            <para>
+            Occurrence: required
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Map.EntitySetMapping.TypeName">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Map.EntitySetMapping.StoreEntitySet">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Map.EntitySetMapping.MakeColumnsDistinct">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="T:LinqToEdmx.Map.ComplexTypeMapping">
+            <summary>
+            <para>
+            Regular expression: ((ScalarProperty | ComplexProperty | Condition)+)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Map.ComplexTypeMapping.ScalarProperties">
+            <summary>
+            <para>
+            Occurrence: required, choice
+            </para>
+            <para>
+            Setter: Appends
+            </para>
+            <para>
+            Regular expression: ((ScalarProperty | ComplexProperty | Condition)+)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Map.ComplexTypeMapping.ComplexProperties">
+            <summary>
+            <para>
+            Occurrence: required, choice
+            </para>
+            <para>
+            Setter: Appends
+            </para>
+            <para>
+            Regular expression: ((ScalarProperty | ComplexProperty | Condition)+)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Map.ComplexTypeMapping.Conditions">
+            <summary>
+            <para>
+            Occurrence: required, choice
+            </para>
+            <para>
+            Setter: Appends
+            </para>
+            <para>
+            Regular expression: ((ScalarProperty | ComplexProperty | Condition)+)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Map.ComplexTypeMapping.TypeName">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Map.ComplexTypeMapping.IsPartial">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            </summary>
+        </member>
+        <member name="T:LinqToEdmx.Map.AssociationSetModificationFunctionMapping">
+            <summary>
+            <para>
+            Regular expression: (DeleteFunction?, InsertFunction?)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Map.AssociationSetModificationFunctionMapping.DeleteFunction">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            <para>
+            Regular expression: (DeleteFunction?, InsertFunction?)
+            </para>
+            </summary>
+        </member>
+        <member name="P:LinqToEdmx.Map.AssociationSetModificationFunctionMapping.InsertFunction">
+            <summary>
+            <para>
+            Occurrence: optional
+            </para>
+            <para>
+            Regular expression: (DeleteFunction?, InsertFunction?)
+            </para>
+            </summary>
+        </member>
+    </members>
+</doc>

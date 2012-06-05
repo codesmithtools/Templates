@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Generator.QuickStart</name>
+    </assembly>
+    <members>
+        <member name="M:Generator.QuickStart.Base.BaseTemplate.Generate">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Generator.QuickStart.Base.MasterTemplate.Initialize">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Generator.QuickStart.EntityCodeTemplate.OnEntityChanged">
+            <summary>
+            
+            </summary>
+        </member>
+    </members>
+</doc>
