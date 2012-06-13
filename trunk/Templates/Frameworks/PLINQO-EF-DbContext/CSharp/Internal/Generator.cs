@@ -376,6 +376,7 @@ namespace SchemaMapper
             string relationshipName = tableKeySchema.Name;
             relationshipName = _namer.UniqueRelationshipName(relationshipName);
 
+            bool isCascadeDelete = IsCascadeDelete(tableKeySchema);            
             bool foreignMembersRequired;
             bool primaryMembersRequired;
 
@@ -397,6 +398,7 @@ namespace SchemaMapper
             foreignRelationship.ThisProperties = new List<string>(foreignMembers);
             foreignRelationship.OtherEntity = primaryName;
             foreignRelationship.OtherProperties = new List<string>(primaryMembers);
+            foreignRelationship.CascadeDelete = isCascadeDelete;
 
             string prefix = GetMemberPrefix(foreignRelationship, primaryName, foreignName);
 
@@ -420,6 +422,7 @@ namespace SchemaMapper
             primaryRelationship.ThisProperties = new List<string>(primaryMembers);
             primaryRelationship.OtherEntity = foreignName;
             primaryRelationship.OtherProperties = new List<string>(foreignMembers);
+            primaryRelationship.CascadeDelete = isCascadeDelete;
 
             bool isOneToOne = IsOneToOne(tableKeySchema, foreignRelationship);
 
@@ -706,6 +709,26 @@ namespace SchemaMapper
         #endregion
 
         #region Column Flag Helpers
+        private static bool IsCascadeDelete(SchemaObjectBase column)
+        {
+            bool cascadeDelete = false;
+            string value;
+            try
+            {
+                if (column.ExtendedProperties.Contains(ExtendedPropertyNames.CascadeDelete))
+                {
+                    value = column.ExtendedProperties[ExtendedPropertyNames.CascadeDelete].Value.ToString();
+                    bool.TryParse(value, out cascadeDelete);
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("Error: " + ex.Message);
+            }
+
+            return cascadeDelete;
+        }
+
         private static bool IsRowVersion(DataObjectBase column)
         {
             bool isTimeStamp = column.NativeType.Equals(
