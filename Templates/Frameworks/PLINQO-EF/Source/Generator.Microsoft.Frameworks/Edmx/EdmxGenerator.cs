@@ -197,9 +197,24 @@ namespace Generator.Microsoft.Frameworks
                 case DbType.String:
                 case DbType.StringFixedLength:
                     {
-                        if (property.NativeType.ToLower() == "timestamp")
+                        // Custom Fixes for MySQL... http://www.tutorialspoint.com/mysql/mysql-data-types.htm
+                        if (String.Equals(property.NativeType, "BLOB", StringComparison.OrdinalIgnoreCase) ||
+                            String.Equals(property.NativeType, "TINYBLOB", StringComparison.OrdinalIgnoreCase) ||
+                            String.Equals(property.NativeType, "TINYTEXT", StringComparison.OrdinalIgnoreCase) ||
+                            String.Equals(property.NativeType, "MEDIUMBLOB", StringComparison.OrdinalIgnoreCase) ||
+                            String.Equals(property.NativeType, "MEDIUMTEXT", StringComparison.OrdinalIgnoreCase) ||
+                            String.Equals(property.NativeType, "LONGBLOB", StringComparison.OrdinalIgnoreCase) ||
+                            String.Equals(property.NativeType, "LONGTEXT", StringComparison.OrdinalIgnoreCase) ||
+                            String.Equals(property.NativeType, "ENUM", StringComparison.OrdinalIgnoreCase) ||
+                            String.Equals(property.NativeType, "SET", StringComparison.OrdinalIgnoreCase))
+                            return null;
+
+                        if (String.Equals(property.NativeType, "timestamp", StringComparison.OrdinalIgnoreCase))
                             return "8";
-                        if (property.NativeType.ToLower() == "text" || property.NativeType.ToLower() == "ntext" || property.NativeType.ToLower() == "image" || property.NativeType.ToLower() == "xml")
+                        if (String.Equals(property.NativeType, "text", StringComparison.OrdinalIgnoreCase) ||
+                            String.Equals(property.NativeType, "ntext", StringComparison.OrdinalIgnoreCase) ||
+                            String.Equals(property.NativeType, "image", StringComparison.OrdinalIgnoreCase) ||
+                            String.Equals(property.NativeType, "xml", StringComparison.OrdinalIgnoreCase))
                             return "Max";
 
                         if (property.Size > 0)
