@@ -59,11 +59,6 @@ namespace <%= ContextNamespace %>
     public partial class <%= EntityContext.ClassName.ToSafeName() %>
         : System.Data.Entity.DbContext<%= InterfaceMode ? ", I" + EntityContext.ClassName.ToSafeName() : string.Empty %>
     {
-        static <%= EntityContext.ClassName.ToSafeName() %>()
-        {
-            System.Data.Entity.Database.SetInitializer<<%= EntityContext.ClassName.ToSafeName() %>>(null);
-        }
-
         public <%= EntityContext.ClassName.ToSafeName() %>()
             :base("Name=<%= EntityContext.ClassName.ToSafeName() %>")
         { }

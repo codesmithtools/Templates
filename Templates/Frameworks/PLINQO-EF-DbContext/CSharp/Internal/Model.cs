@@ -234,7 +234,7 @@ namespace SchemaMapper
         public Cardinality OtherCardinality { get; set; }
         public List<string> OtherProperties { get; set; }
 
-        public bool? DeleteOnNull { get; set; }
+        public bool? CascadeDelete { get; set; }
         public bool IsForeignKey { get; set; }
         public bool IsMapped { get; set; }
 

@@ -1,4 +1,4 @@
-<%@ Template Language="C#" TargetLanguage="C#" Debug="True" Encoding="UTF-8" %>
+﻿<%@ Template Language="C#" TargetLanguage="C#" Debug="True" Encoding="UTF-8" %>
 
 <%@ Assembly Src="Model.cs" %>
 <%@ Assembly Src="Extensions.cs" %>
@@ -231,6 +231,12 @@ public string RelationshipExpression(Relationship relationship)
         sb.Append(")");
     }
 
+    sb.AppendLine();
+    sb.Append(' ', 4 * 4);
+    sb.Append(".WillCascadeOnDelete(");
+    sb.Append(relationship.CascadeDelete == true ? "true" : "false");
+    sb.Append(")");
+    
     sb.AppendLine(";");
 
     return sb.ToString();
