@@ -65,7 +65,6 @@ namespace CodeSmith.SchemaHelper
                 ExtendedProperties.Add(EdmxConstants.ComplexPropertyExtendedProperty, true);
             }
             
-            DefaultValue = PropertySource.DefaultValue;
             Scale = PropertySource.Scale ?? 0;
             Precision = PropertySource.Precision ?? 0;
             FixedLength = PropertySource.FixedLength ?? false;
@@ -90,6 +89,10 @@ namespace CodeSmith.SchemaHelper
             #region EDMX Specific Properties
 
             #endregion
+        }
+        
+        protected override string LoadDefaultValue() {
+            return PropertySource.DefaultValue;
         }
 
         #endregion
