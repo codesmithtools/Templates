@@ -192,7 +192,11 @@ namespace <%= EntityNamespace %>
 
         [BrowsableAttribute(false)]
         [DataMemberAttribute()]
-        public EntityReference<<%= association.ForeignEntity.Name %>> <%= association.Name %>Reference
+<% string propertyName = String.Concat(association.Name, "Reference");
+   if(String.Equals(Entity.Name, propertyName, StringComparison.OrdinalIgnoreCase))
+       propertyName = String.Concat(association.Name, CodeSmith.SchemaHelper.Configuration.Instance.SingularMemberSuffix, "Reference");
+%>
+        public EntityReference<<%= association.ForeignEntity.Name %>> <%= propertyName %>
         {
             get
             {
