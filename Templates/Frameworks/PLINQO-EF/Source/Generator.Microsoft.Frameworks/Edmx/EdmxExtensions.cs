@@ -64,7 +64,7 @@ namespace Generator.Microsoft.Frameworks
             if (types == null || String.IsNullOrEmpty(name)) return false;
 
             name = String.IsNullOrEmpty(conceptualNamespace) ? name : name.Replace(String.Concat(conceptualNamespace, "."), "");
-            return types.Count(c => c.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase)) > 0;
+            return types.Count(c => c.Name.Equals(name, StringComparison.OrdinalIgnoreCase)) > 0;
         }
 
         public static ComplexType Find(this IEnumerable<ComplexType> types, string name, string conceptualNamespace = "")
@@ -72,7 +72,7 @@ namespace Generator.Microsoft.Frameworks
             if (types == null || String.IsNullOrEmpty(name)) return null;
 
             name = String.IsNullOrEmpty(conceptualNamespace) ? name : name.Replace(String.Concat(conceptualNamespace, "."), "");
-            return types.Where(c => c.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault();
+            return types.Where(c => c.Name.Equals(name, StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
         }
 
         public static bool IsUsed(this ComplexType type)
@@ -99,14 +99,14 @@ namespace Generator.Microsoft.Frameworks
             if (functions == null || String.IsNullOrEmpty(name)) return false;
 
             name = String.IsNullOrEmpty(storageNamespace) ? name : name.Replace(String.Concat(storageNamespace, "."), "");
-            return functions.Count(f => f.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase)) > 0;
+            return functions.Count(f => f.Name.Equals(name, StringComparison.OrdinalIgnoreCase)) > 0;
         }
 
         public static bool Exists(this IEnumerable<EntityContainer.FunctionImportLocalType> functions, string name)
         {
             if (functions == null || String.IsNullOrEmpty(name)) return false;
 
-            return functions.Count(f => f.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase)) > 0;
+            return functions.Count(f => f.Name.Equals(name, StringComparison.OrdinalIgnoreCase)) > 0;
         }
 
         #endregion

@@ -52,7 +52,7 @@ namespace Generator.Microsoft.Frameworks
             _fileName = System.IO.Path.GetFullPath(_fileName);
             if (!System.IO.File.Exists(_fileName)) return false;
 
-            if (!System.IO.Path.HasExtension(_fileName) || !EdmxExtension.Equals(System.IO.Path.GetExtension(_fileName), StringComparison.InvariantCultureIgnoreCase))
+            if (!System.IO.Path.HasExtension(_fileName) || !EdmxExtension.Equals(System.IO.Path.GetExtension(_fileName), StringComparison.OrdinalIgnoreCase))
                 return false;
 
             Edmx edmx = null;

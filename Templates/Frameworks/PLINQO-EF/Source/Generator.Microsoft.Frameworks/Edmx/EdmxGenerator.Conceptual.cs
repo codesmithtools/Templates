@@ -89,7 +89,7 @@ namespace Generator.Microsoft.Frameworks
             }
 
             //<NavigationProperty Name="Products" Relationship="PetShopModel1.FK__Product__Categor__0CBAE877" FromRole="Category" ToRole="Product" />
-            var entityType = ConceptualSchema.EntityTypes.FirstOrDefault(e => ResolveEntityMappedName(entity.EntityKey(), entity.Name).Equals(e.Name, StringComparison.InvariantCultureIgnoreCase));
+            var entityType = ConceptualSchema.EntityTypes.FirstOrDefault(e => ResolveEntityMappedName(entity.EntityKey(), entity.Name).Equals(e.Name, StringComparison.OrdinalIgnoreCase));
             if (!entity.IsParentManyToMany() && entityType != null)
             {
                 // Add new Associations.
@@ -134,9 +134,9 @@ namespace Generator.Microsoft.Frameworks
 
             bool exists = true;
             var function = ConceptualSchemaEntityContainer.FunctionImports.Where(f =>
-                entity.Name.Equals(f.Name, StringComparison.InvariantCultureIgnoreCase) ||
-                entity.EntityKeyName.Equals(f.Name, StringComparison.InvariantCultureIgnoreCase) ||
-                (!String.IsNullOrEmpty(f.EntitySet) && entity.EntityKeyName.Equals(f.EntitySet, StringComparison.InvariantCultureIgnoreCase))).FirstOrDefault();
+                entity.Name.Equals(f.Name, StringComparison.OrdinalIgnoreCase) ||
+                entity.EntityKeyName.Equals(f.Name, StringComparison.OrdinalIgnoreCase) ||
+                (!String.IsNullOrEmpty(f.EntitySet) && entity.EntityKeyName.Equals(f.EntitySet, StringComparison.OrdinalIgnoreCase))).FirstOrDefault();
 
             if (function == null)
             {
@@ -205,7 +205,7 @@ namespace Generator.Microsoft.Frameworks
                 #region Remove extra properties values.
 
                 var properties = from property in function.Parameters
-                                 where !(from prop in entity.SearchCriteria[0].Properties select prop.KeyName).Contains(property.Name) || property.Name.Equals("RETURN_VALUE", StringComparison.InvariantCultureIgnoreCase)
+                                 where !(from prop in entity.SearchCriteria[0].Properties select prop.KeyName).Contains(property.Name) || property.Name.Equals("RETURN_VALUE", StringComparison.OrdinalIgnoreCase)
                                  select property;
 
                 // Remove all of the key properties that don't exist in the table entity.
@@ -218,9 +218,9 @@ namespace Generator.Microsoft.Frameworks
 
                 foreach (CommandParameter property in entity.SearchCriteria[0].Properties)
                 {
-                    if (property.KeyName.Equals("RETURN_VALUE", StringComparison.InvariantCultureIgnoreCase)) continue;
+                    if (property.KeyName.Equals("RETURN_VALUE", StringComparison.OrdinalIgnoreCase)) continue;
 
-                    var parameter = function.Parameters.Where(p => property.KeyName.Equals(p.Name, StringComparison.InvariantCultureIgnoreCase) || property.Name.Equals(p.Name, StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault();
+                    var parameter = function.Parameters.Where(p => property.KeyName.Equals(p.Name, StringComparison.OrdinalIgnoreCase) || property.Name.Equals(p.Name, StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
                     if (parameter == null)
                     {
                         parameter = new FunctionImportParameter() { Name = property.KeyName };
@@ -317,7 +317,7 @@ namespace Generator.Microsoft.Frameworks
             var associationSetsToRemove = new List<EntityContainer.AssociationSetLocalType>();
             foreach (var a in ConceptualSchemaEntityContainer.AssociationSets)
             {
-               var isEndPointValid = a.Ends.Count(e => ConceptualSchemaEntityContainer.EntitySets.Count(es => es.EntityType.Equals(String.Concat(ConceptualSchema.Namespace, ".", e.EntitySet), StringComparison.InvariantCultureIgnoreCase)) > 0) == 2;
+               var isEndPointValid = a.Ends.Count(e => ConceptualSchemaEntityContainer.EntitySets.Count(es => es.EntityType.Equals(String.Concat(ConceptualSchema.Namespace, ".", e.EntitySet), StringComparison.OrdinalIgnoreCase)) > 0) == 2;
                 if (processed.Contains(a.Name) || !isEndPointValid)
                     associationSetsToRemove.Add(a);
                 else
@@ -334,7 +334,7 @@ namespace Generator.Microsoft.Frameworks
             var associationsToRemove = new List<LinqToEdmx.Model.Conceptual.Association>();
             foreach (var a in ConceptualSchema.Associations)
             {
-                var associationSetExists = ConceptualSchemaEntityContainer.AssociationSets.Count(e => ResolveAssociationMappedName(e.Name).Equals(a.Name, StringComparison.InvariantCultureIgnoreCase)) > 0;
+                var associationSetExists = ConceptualSchemaEntityContainer.AssociationSets.Count(e => ResolveAssociationMappedName(e.Name).Equals(a.Name, StringComparison.OrdinalIgnoreCase)) > 0;
                 if (processed.Contains(a.Name) || !associationSetExists)
                     associationsToRemove.Add(a);
                 else
@@ -358,8 +358,8 @@ namespace Generator.Microsoft.Frameworks
                 RemoveDuplicateConceptualEntityTypeKeysAndProperties(entity);
 
                 var isEntitySetDefined = ConceptualSchemaEntityContainer.EntitySets.Count(e =>
-                    e.EntityType.Equals(String.Concat(ConceptualSchema.Namespace, ".", entity.Name), StringComparison.InvariantCultureIgnoreCase) ||
-                    (!String.IsNullOrEmpty(entity.BaseType) && e.EntityType.Equals(entity.BaseType, StringComparison.InvariantCultureIgnoreCase))) > 0;
+                    e.EntityType.Equals(String.Concat(ConceptualSchema.Namespace, ".", entity.Name), StringComparison.OrdinalIgnoreCase) ||
+                    (!String.IsNullOrEmpty(entity.BaseType) && e.EntityType.Equals(entity.BaseType, StringComparison.OrdinalIgnoreCase))) > 0;
 
                 if (_conceptualEntitiesToRemove.Contains(entity.Name) || processed.Contains(entity.Name) || !isEntitySetDefined || entity.Key == null || entity.Key.PropertyRefs.Count == 0)
                     entitiesToRemove.Add(entity);
@@ -377,8 +377,8 @@ namespace Generator.Microsoft.Frameworks
             var entitySetsToRemove = new List<EntityContainer.EntitySetLocalType>();
             foreach (var e in ConceptualSchemaEntityContainer.EntitySets)
             {
-                var isEntityTypeDefined = ConceptualSchema.EntityTypes.Count(et => et.Name.Equals(e.Name, StringComparison.InvariantCultureIgnoreCase)) > 0; 
-                //var isEntityDefinedInMappingLayer = MappingEntityContainer.EntitySetMappings.Count(es => es.EntityTypeMappings.Count(et => et.TypeName.Equals(String.Concat(ConceptualSchema.Namespace, ".", ResolveEntityMappedName(e.Name)), StringComparison.InvariantCultureIgnoreCase)) > 0) > 0;
+                var isEntityTypeDefined = ConceptualSchema.EntityTypes.Count(et => et.Name.Equals(e.Name, StringComparison.OrdinalIgnoreCase)) > 0; 
+                //var isEntityDefinedInMappingLayer = MappingEntityContainer.EntitySetMappings.Count(es => es.EntityTypeMappings.Count(et => et.TypeName.Equals(String.Concat(ConceptualSchema.Namespace, ".", ResolveEntityMappedName(e.Name)), StringComparison.OrdinalIgnoreCase)) > 0) > 0;
                 if (processed.Contains(e.Name) || !isEntityTypeDefined)// || !isEntityDefinedInMappingLayer)
                     entitySetsToRemove.Add(e);
                 else
@@ -419,28 +419,36 @@ namespace Generator.Microsoft.Frameworks
             }
         }
 
+        private ConceptualSchema _conceptualSchema;
         private ConceptualSchema ConceptualSchema
         {
             get
             {
+                if (_conceptualSchema != null)
+                    return _conceptualSchema;
+
                 if (RunTime.ConceptualModels.Untyped.IsEmpty || RunTime.ConceptualModels.ConceptualSchema == null)
                 {
                     RunTime.ConceptualModels.ConceptualSchema = new ConceptualSchema
                     {
-
                         Namespace = _settings.ContextNamespace,
                         Alias = "Self"
                     };
                 }
 
-                return RunTime.ConceptualModels.ConceptualSchema;
+                _conceptualSchema = RunTime.ConceptualModels.ConceptualSchema;
+                return _conceptualSchema;
             }
         }
 
+        private EntityContainer _conceptualSchemaEntityContainer;
         private EntityContainer ConceptualSchemaEntityContainer
         {
             get
             {
+                if (_conceptualSchemaEntityContainer != null)
+                    return _conceptualSchemaEntityContainer;
+
                 if (ConceptualSchema.EntityContainers.Count == 0)
                 {
                     ConceptualSchema.EntityContainers.Add(new EntityContainer
@@ -449,7 +457,8 @@ namespace Generator.Microsoft.Frameworks
                     });
                 }
 
-                return ConceptualSchema.EntityContainers.First();
+                _conceptualSchemaEntityContainer = ConceptualSchema.EntityContainers.First();
+                return _conceptualSchemaEntityContainer;
             }
         }
 
@@ -461,10 +470,10 @@ namespace Generator.Microsoft.Frameworks
 
             //<EntitySet Name="Categories" EntityType="PetShopModel1.Category" />
             var entitySet = ConceptualSchemaEntityContainer.EntitySets.Where(e =>
-                                                                             e.EntityType.Equals(String.Concat(ConceptualSchema.Namespace, ".", ResolveEntityMappedName(entity.EntityKey(), entity.Name)), StringComparison.InvariantCultureIgnoreCase) ||
-                                                                             e.EntityType.Equals(String.Concat(ConceptualSchema.Namespace, ".", entity.EntityKeyName), StringComparison.InvariantCultureIgnoreCase) ||
-                                                                             entity.EntityKeyName.Equals(e.Name, StringComparison.InvariantCultureIgnoreCase) ||
-                                                                             ResolveEntityMappedName(entity.EntityKey(), entity.Name).Equals(e.Name, StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault();
+                                                                             e.EntityType.Equals(String.Concat(ConceptualSchema.Namespace, ".", ResolveEntityMappedName(entity.EntityKey(), entity.Name)), StringComparison.OrdinalIgnoreCase) ||
+                                                                             e.EntityType.Equals(String.Concat(ConceptualSchema.Namespace, ".", entity.EntityKeyName), StringComparison.OrdinalIgnoreCase) ||
+                                                                             entity.EntityKeyName.Equals(e.Name, StringComparison.OrdinalIgnoreCase) ||
+                                                                             ResolveEntityMappedName(entity.EntityKey(), entity.Name).Equals(e.Name, StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
 
             isNewView = entitySet == null && entity is ViewEntity;
             if (entitySet == null)
@@ -488,9 +497,9 @@ namespace Generator.Microsoft.Frameworks
         {
             //<EntityType Name="Category">
             var entityType = ConceptualSchema.EntityTypes.Where(e =>
-                                                                previousName.Equals(e.Name, StringComparison.InvariantCultureIgnoreCase) ||
-                                                                ResolveEntityMappedName(entity.EntityKey(), entity.Name).Equals(e.Name, StringComparison.InvariantCultureIgnoreCase) ||
-                                                                entitySetName.Equals(e.Name, StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault();
+                                                                previousName.Equals(e.Name, StringComparison.OrdinalIgnoreCase) ||
+                                                                ResolveEntityMappedName(entity.EntityKey(), entity.Name).Equals(e.Name, StringComparison.OrdinalIgnoreCase) ||
+                                                                entitySetName.Equals(e.Name, StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
 
             isNewEntityType = false;
             if (entityType == null)
@@ -594,7 +603,7 @@ namespace Generator.Microsoft.Frameworks
             foreach (ISchemaProperty property in entity.Properties)
             {
                 var propertyName = ResolveEntityPropertyMappedName(entity.Name, property.KeyName, property.Name);
-                var entityProperty = entityType.Properties.Where(p => propertyName.Equals(p.Name, StringComparison.InvariantCultureIgnoreCase) || property.KeyName.Equals(p.Name, StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault();
+                var entityProperty = entityType.Properties.Where(p => propertyName.Equals(p.Name, StringComparison.OrdinalIgnoreCase) || property.KeyName.Equals(p.Name, StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
                 if (entityProperty == null)
                 {
                     if (ExcludeProperty(property) || !isNewEntityType && !_newStorageEntityProperties.Contains(String.Format("{0}-{1}", entity.Name, property.Name)))
@@ -730,7 +739,7 @@ namespace Generator.Microsoft.Frameworks
             foreach (ISchemaProperty property in entity.Properties)
             {
                 var propertyName = ResolveEntityPropertyMappedName(entity.Name, property.KeyName, property.Name);
-                var entityProperty = type.Properties.Where(p => propertyName.Equals(p.Name, StringComparison.InvariantCultureIgnoreCase) || property.KeyName.Equals(p.Name, StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault();
+                var entityProperty = type.Properties.Where(p => propertyName.Equals(p.Name, StringComparison.OrdinalIgnoreCase) || property.KeyName.Equals(p.Name, StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
                 if (entityProperty == null)
                 {
                     if (ExcludeProperty(property) && !_newStorageEntityProperties.Contains(String.Format("{0}-{1}", entity.Name, property.Name)))
@@ -771,7 +780,7 @@ namespace Generator.Microsoft.Frameworks
             //  <End Role="Category" EntitySet="Categories" />
             //  <End Role="Product" EntitySet="Products" />
             //</AssociationSet
-            var associationSet = ConceptualSchemaEntityContainer.AssociationSets.Where(e => e.Name.Equals(key, StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault();
+            var associationSet = ConceptualSchemaEntityContainer.AssociationSets.Where(e => e.Name.Equals(key, StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
             if (associationSet == null)
             {
                 associationSet = new EntityContainer.AssociationSetLocalType
@@ -1047,17 +1056,17 @@ namespace Generator.Microsoft.Frameworks
             if (association == null) 
                 return false;
 
-            var fromRoleEnd = association.Ends.Where(e => e.Role.Equals(nav.FromRole, StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault();
-            var toRoleEnd = association.Ends.Where(e => e.Role.Equals(nav.ToRole, StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault();
+            var fromRoleEnd = association.Ends.Where(e => e.Role.Equals(nav.FromRole, StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
+            var toRoleEnd = association.Ends.Where(e => e.Role.Equals(nav.ToRole, StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
             if (fromRoleEnd == null || toRoleEnd == null)
                 return false;
 
-            var isValidFromRoleEntity = ConceptualSchema.EntityTypes.Count(es => fromRoleEnd.Type.Replace(String.Concat(ConceptualSchema.Namespace, "."), "").Equals(es.Name, StringComparison.InvariantCultureIgnoreCase)) > 0;
-            var isValidToRoleEntity = ConceptualSchema.EntityTypes.Count(es => toRoleEnd.Type.Replace(String.Concat(ConceptualSchema.Namespace, "."), "").Equals(es.Name, StringComparison.InvariantCultureIgnoreCase)) > 0;
+            var isValidFromRoleEntity = ConceptualSchema.EntityTypes.Count(es => fromRoleEnd.Type.Replace(String.Concat(ConceptualSchema.Namespace, "."), "").Equals(es.Name, StringComparison.OrdinalIgnoreCase)) > 0;
+            var isValidToRoleEntity = ConceptualSchema.EntityTypes.Count(es => toRoleEnd.Type.Replace(String.Concat(ConceptualSchema.Namespace, "."), "").Equals(es.Name, StringComparison.OrdinalIgnoreCase)) > 0;
             if (!isValidFromRoleEntity || !isValidToRoleEntity)
                 return false;
 
-            if (nav.FromRole.Equals(fromRoleEnd.Role, StringComparison.InvariantCultureIgnoreCase) && nav.ToRole.Equals(toRoleEnd.Role, StringComparison.InvariantCultureIgnoreCase))
+            if (nav.FromRole.Equals(fromRoleEnd.Role, StringComparison.OrdinalIgnoreCase) && nav.ToRole.Equals(toRoleEnd.Role, StringComparison.OrdinalIgnoreCase))
                 return true;
 
             return false;

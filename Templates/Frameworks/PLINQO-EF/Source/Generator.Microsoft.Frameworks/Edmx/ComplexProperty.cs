@@ -95,7 +95,7 @@ namespace CodeSmith.SchemaHelper
             PropertyType? type = null;
 
             // Concurrency
-            if (!String.IsNullOrEmpty(PropertySource.ConcurrencyMode) && PropertySource.ConcurrencyMode.Equals(EdmxConstants.ConcurrencyModeFixed, StringComparison.InvariantCultureIgnoreCase))
+            if (!String.IsNullOrEmpty(PropertySource.ConcurrencyMode) && PropertySource.ConcurrencyMode.Equals(EdmxConstants.ConcurrencyModeFixed, StringComparison.OrdinalIgnoreCase))
             {
                 type = PropertyType.Concurrency;
             }
