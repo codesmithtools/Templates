@@ -99,9 +99,9 @@ namespace Generator.Microsoft.Frameworks
             #region Validate the Function exists
 
             var function = StorageSchema.Functions.Where(f =>
-                (entity.EntityKeyName.Equals(f.Name, StringComparison.InvariantCultureIgnoreCase) && entity.SchemaName.Equals(f.Schema, StringComparison.InvariantCultureIgnoreCase)) ||
-                (entity.EntityKeyName.Equals(f.Name1, StringComparison.InvariantCultureIgnoreCase) && entity.SchemaName.Equals(f.Schema1, StringComparison.InvariantCultureIgnoreCase)) ||
-                 entity.EntityKeyName.Equals(f.Name1, StringComparison.InvariantCultureIgnoreCase) || entity.EntityKeyName.Equals(f.Name, StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault();
+                (entity.EntityKeyName.Equals(f.Name, StringComparison.OrdinalIgnoreCase) && entity.SchemaName.Equals(f.Schema, StringComparison.OrdinalIgnoreCase)) ||
+                (entity.EntityKeyName.Equals(f.Name1, StringComparison.OrdinalIgnoreCase) && entity.SchemaName.Equals(f.Schema1, StringComparison.OrdinalIgnoreCase)) ||
+                 entity.EntityKeyName.Equals(f.Name1, StringComparison.OrdinalIgnoreCase) || entity.EntityKeyName.Equals(f.Name, StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
             
             if (function == null)
             {
@@ -138,7 +138,7 @@ namespace Generator.Microsoft.Frameworks
                 #region Remove extra properties values.
 
                 var properties = from property in function.Parameters
-                                 where !(from prop in entity.SearchCriteria[0].Properties select prop.KeyName).Contains(property.Name) || property.Name.Equals("RETURN_VALUE", StringComparison.InvariantCultureIgnoreCase)
+                                 where !(from prop in entity.SearchCriteria[0].Properties select prop.KeyName).Contains(property.Name) || property.Name.Equals("RETURN_VALUE", StringComparison.OrdinalIgnoreCase)
                                  select property;
 
                 // Remove all of the key properties that don't exist in the table entity.
@@ -151,9 +151,9 @@ namespace Generator.Microsoft.Frameworks
 
                 foreach (CommandParameter property in entity.SearchCriteria[0].Properties)
                 {
-                    if (property.KeyName.Equals("RETURN_VALUE", StringComparison.InvariantCultureIgnoreCase)) continue;
+                    if (property.KeyName.Equals("RETURN_VALUE", StringComparison.OrdinalIgnoreCase)) continue;
 
-                    var parameter = function.Parameters.Where(p => property.KeyName.Equals(p.Name, StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault();
+                    var parameter = function.Parameters.Where(p => property.KeyName.Equals(p.Name, StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
                     if (parameter == null)
                     {
                         parameter = new Parameter() { Name = property.KeyName };
@@ -216,7 +216,7 @@ namespace Generator.Microsoft.Frameworks
             {
                 RemoveDuplicateStorageEntityTypeKeysAndProperties(entity);
 
-                var isEntitySetDefined = StorageSchemaEntityContainer.EntitySets.Count(e => entity.Name.Equals(e.Name, StringComparison.InvariantCultureIgnoreCase)) > 0;
+                var isEntitySetDefined = StorageSchemaEntityContainer.EntitySets.Count(e => entity.Name.Equals(e.Name, StringComparison.OrdinalIgnoreCase)) > 0;
                 if (processed.Contains(entity.Name) || !isEntitySetDefined || !_storageEntitys.Contains(entity.Name) || entity.Key == null || entity.Key.PropertyRefs.Count == 0)
                 {
                     if (_storageEntitys.Contains(entity.Name))
@@ -240,7 +240,7 @@ namespace Generator.Microsoft.Frameworks
             foreach (var e in StorageSchemaEntityContainer.EntitySets)
             {
                 var isTableOrView = _storageEntitys.Contains(e.Name) && !String.IsNullOrEmpty(e.Type);
-                var isEntityDefined = String.IsNullOrEmpty(e.Type) && StorageSchema.EntityTypeStores.Count(et => et.Name.Equals(e.Name, StringComparison.InvariantCultureIgnoreCase)) > 0;
+                var isEntityDefined = String.IsNullOrEmpty(e.Type) && StorageSchema.EntityTypeStores.Count(et => et.Name.Equals(e.Name, StringComparison.OrdinalIgnoreCase)) > 0;
                 if (processed.Contains(e.Name) || (!isTableOrView && !isEntityDefined))
                     entitySetsToRemove.Add(e);
                 else
@@ -262,7 +262,7 @@ namespace Generator.Microsoft.Frameworks
             var associationSetsToRemove = new List<EntityContainer.AssociationSetLocalType>();
             foreach (var a in StorageSchemaEntityContainer.AssociationSets)
             {
-                var isEndPointValid = a.Ends.Count(e => StorageSchemaEntityContainer.EntitySets.Count(es => es.Name.Equals(e.EntitySet, StringComparison.InvariantCultureIgnoreCase)) > 0) == 2;
+                var isEndPointValid = a.Ends.Count(e => StorageSchemaEntityContainer.EntitySets.Count(es => es.Name.Equals(e.EntitySet, StringComparison.OrdinalIgnoreCase)) > 0) == 2;
                 if (processed.Contains(a.Name) || !isEndPointValid || !_storageAssociations.Contains(a.Name))
                     associationSetsToRemove.Add(a);
                 else
@@ -279,7 +279,7 @@ namespace Generator.Microsoft.Frameworks
             var associationsToRemove = new List<LinqToEdmx.Model.Storage.Association>();
             foreach (var a in StorageSchema.Associations)
             {
-                var associationSetExists = StorageSchemaEntityContainer.AssociationSets.Count(e => e.Name.Equals(a.Name, StringComparison.InvariantCultureIgnoreCase)) > 0;
+                var associationSetExists = StorageSchemaEntityContainer.AssociationSets.Count(e => e.Name.Equals(a.Name, StringComparison.OrdinalIgnoreCase)) > 0;
                 if (processed.Contains(a.Name) || !associationSetExists || !_storageAssociations.Contains(a.Name))
                     associationsToRemove.Add(a);
                 else
@@ -294,10 +294,14 @@ namespace Generator.Microsoft.Frameworks
             processed.Clear();
         }
 
+        private StorageSchema _storageSchema;
         private StorageSchema StorageSchema
         {
             get
             {
+                if (_storageSchema != null)
+                    return _storageSchema;
+
                 if (RunTime.StorageModels.Untyped.IsEmpty || RunTime.StorageModels.StorageSchema == null)
                 {
                     RunTime.StorageModels.StorageSchema = new StorageSchema
@@ -309,14 +313,19 @@ namespace Generator.Microsoft.Frameworks
                     };
                 }
 
-                return RunTime.StorageModels.StorageSchema;
+                _storageSchema = RunTime.StorageModels.StorageSchema;
+                return _storageSchema;
             }
         }
 
+        private EntityContainer _storageSchemaEntityContainer;
         private EntityContainer StorageSchemaEntityContainer
         {
             get
             {
+                if (_storageSchemaEntityContainer != null)
+                    return _storageSchemaEntityContainer;
+
                 if (StorageSchema.EntityContainers.Count == 0)
                 {
                     StorageSchema.EntityContainers.Add(new EntityContainer()
@@ -325,7 +334,9 @@ namespace Generator.Microsoft.Frameworks
                     });
                 }
 
-                return StorageSchema.EntityContainers.First();
+                _storageSchemaEntityContainer = StorageSchema.EntityContainers.First();
+
+                return _storageSchemaEntityContainer;
             }
         }
 
@@ -336,9 +347,9 @@ namespace Generator.Microsoft.Frameworks
             //<EntitySet Name="Category" EntityType="PetShopModel1.Store.Category" store:Type="Tables" Schema="dbo" />
             //<EntitySet Name="vw_aspnet_Applications" EntityType="PetShopModel1.Store.vw_aspnet_Applications" store:Type="Views" store:Schema="dbo" store:Name="vw_aspnet_Applications">
             var entitySet = StorageSchemaEntityContainer.EntitySets.Where(e =>
-                                                                          (entity.EntityKeyName.Equals(e.Name, StringComparison.InvariantCultureIgnoreCase) && entity.SchemaName.Equals(e.Schema, StringComparison.InvariantCultureIgnoreCase)) ||
-                                                                          (entity.EntityKeyName.Equals(e.Name1, StringComparison.InvariantCultureIgnoreCase) && entity.SchemaName.Equals(e.Schema1, StringComparison.InvariantCultureIgnoreCase)) ||
-                                                                          entity.EntityKeyName.Equals(e.Name1, StringComparison.InvariantCultureIgnoreCase) || entity.EntityKeyName.Equals(e.Name, StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault();
+                                                                          (entity.EntityKeyName.Equals(e.Name, StringComparison.OrdinalIgnoreCase) && entity.SchemaName.Equals(e.Schema, StringComparison.OrdinalIgnoreCase)) ||
+                                                                          (entity.EntityKeyName.Equals(e.Name1, StringComparison.OrdinalIgnoreCase) && entity.SchemaName.Equals(e.Schema1, StringComparison.OrdinalIgnoreCase)) ||
+                                                                          entity.EntityKeyName.Equals(e.Name1, StringComparison.OrdinalIgnoreCase) || entity.EntityKeyName.Equals(e.Name, StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
 
             isNewView = entitySet == null && entity is ViewEntity;
             if (entitySet == null)
@@ -359,7 +370,7 @@ namespace Generator.Microsoft.Frameworks
             if (entity is ViewEntity)
             {
                 entitySet.Type = EdmxConstants.StorageSchemaGenerationTypeAttributeValueViews;
-                entitySet.DefiningQuery = ((ViewEntity)entity).SourceText.Remove(0, ((ViewEntity)entity).SourceText.IndexOf("SELECT", StringComparison.InvariantCultureIgnoreCase));
+                entitySet.DefiningQuery = ((ViewEntity)entity).SourceText.Remove(0, ((ViewEntity)entity).SourceText.IndexOf("SELECT", StringComparison.OrdinalIgnoreCase));
             }
             else
                 entitySet.Table = entity.EntityKeyName;
@@ -372,7 +383,7 @@ namespace Generator.Microsoft.Frameworks
 
         private EntityTypeStore CreateStorageEntityType(ISchemaEntity entity, string name, ref bool isNewView)
         {
-            EntityTypeStore entityType = StorageSchema.EntityTypeStores.Where(e => ResolveStorageEntityName(entity.EntityKeyName).Equals(e.Name, StringComparison.InvariantCultureIgnoreCase) || name.Equals(e.Name, StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault();
+            EntityTypeStore entityType = StorageSchema.EntityTypeStores.Where(e => ResolveStorageEntityName(entity.EntityKeyName).Equals(e.Name, StringComparison.OrdinalIgnoreCase) || name.Equals(e.Name, StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
             if (entityType == null)
             {
                 entityType = new EntityTypeStore()
@@ -467,7 +478,7 @@ namespace Generator.Microsoft.Frameworks
             //<Property Name="CategoryId" Type="varchar" Nullable="false" MaxLength="10"  />
             foreach (ISchemaProperty property in entity.Properties)
             {
-                var entityProperty = entityType.Properties.Where(p => property.KeyName.Equals(p.Name, StringComparison.InvariantCultureIgnoreCase) || property.KeyName.Equals(p.Name, StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault();
+                var entityProperty = entityType.Properties.Where(p => property.KeyName.Equals(p.Name, StringComparison.OrdinalIgnoreCase) || property.KeyName.Equals(p.Name, StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
                 if (entityProperty == null)
                 {
                     if (ExcludeProperty(property))
@@ -509,7 +520,7 @@ namespace Generator.Microsoft.Frameworks
                     entityProperty.DefaultValue = null;
                 }
 
-                entityProperty.MaxLength = !String.IsNullOrEmpty(GetMaxLength(property)) && !GetMaxLength(property).Equals("Max", StringComparison.InvariantCultureIgnoreCase) && !GetNativeType(property).Equals("timestamp", StringComparison.InvariantCultureIgnoreCase) ? GetMaxLength(property) : null;
+                entityProperty.MaxLength = !String.IsNullOrEmpty(GetMaxLength(property)) && !GetMaxLength(property).Equals("Max", StringComparison.OrdinalIgnoreCase) && !GetNativeType(property).Equals("timestamp", StringComparison.OrdinalIgnoreCase) ? GetMaxLength(property) : null;
 
                 entityProperty.StoreGeneratedPattern = property.IsIdentity ? EdmxConstants.StoreGeneratedPatternIdentity : property.IsComputed ? EdmxConstants.StoreGeneratedPatternComputed : null;
             }
@@ -528,7 +539,7 @@ namespace Generator.Microsoft.Frameworks
             //    <End Role="Category" EntitySet="Category" />
             //    <End Role="Product" EntitySet="Product" />
             //</AssociationSet>
-            var associationSet = StorageSchemaEntityContainer.AssociationSets.Where(e => e.Name.Equals(association.AssociationKeyName, StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault();
+            var associationSet = StorageSchemaEntityContainer.AssociationSets.Where(e => e.Name.Equals(association.AssociationKeyName, StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
             if (associationSet == null)
             {
                 associationSet = new EntityContainer.AssociationSetLocalType

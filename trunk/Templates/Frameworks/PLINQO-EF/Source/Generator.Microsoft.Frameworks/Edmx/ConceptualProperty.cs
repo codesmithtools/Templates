@@ -103,12 +103,12 @@ namespace CodeSmith.SchemaHelper
         {
             PropertyType? type = null;
 
-            var isPrimaryKey = Entity.HasKey && Entity.Key.Properties.Count(p => p.Name.Equals(Name, StringComparison.InvariantCultureIgnoreCase)) > 0;
+            var isPrimaryKey = Entity.HasKey && Entity.Key.Properties.Count(p => p.Name.Equals(Name, StringComparison.OrdinalIgnoreCase)) > 0;
             if (isPrimaryKey) 
                 type = PropertyType.Key;
 
             // Concurrency
-            if (!String.IsNullOrEmpty(PropertySource.ConcurrencyMode) && PropertySource.ConcurrencyMode.Equals(EdmxConstants.ConcurrencyModeFixed, StringComparison.InvariantCultureIgnoreCase))
+            if (!String.IsNullOrEmpty(PropertySource.ConcurrencyMode) && PropertySource.ConcurrencyMode.Equals(EdmxConstants.ConcurrencyModeFixed, StringComparison.OrdinalIgnoreCase))
             {
                 if (!type.HasValue)
                     type = PropertyType.Concurrency;

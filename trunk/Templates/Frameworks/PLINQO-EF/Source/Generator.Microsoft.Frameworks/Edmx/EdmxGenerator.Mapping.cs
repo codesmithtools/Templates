@@ -86,14 +86,14 @@ namespace Generator.Microsoft.Frameworks
             #region Validate that an EntitySet Exists in the MappingStorageContainer.
 
             var entitySet = MappingEntityContainer.EntitySetMappings.Where(e => 
-                entity.Name.Equals(e.Name, StringComparison.InvariantCultureIgnoreCase) || // Safe Name.
-                entity.EntityKeyName.Equals(e.Name, StringComparison.InvariantCultureIgnoreCase) || // Database Name.
+                entity.Name.Equals(e.Name, StringComparison.OrdinalIgnoreCase) || // Safe Name.
+                entity.EntityKeyName.Equals(e.Name, StringComparison.OrdinalIgnoreCase) || // Database Name.
                 (e.EntityTypeMappings.Count > 0 &&
-                    e.EntityTypeMappings.Count(et => et.TypeName.Equals(String.Concat(ConceptualSchema.Namespace, ".", entity.Name), StringComparison.InvariantCultureIgnoreCase)) > 0 ||
-                    e.EntityTypeMappings.Count(et => et.TypeName.Equals(String.Concat(ConceptualSchema.Namespace, ".", entity.EntityKeyName), StringComparison.InvariantCultureIgnoreCase)) > 0 ||
-                    e.EntityTypeMappings.Count(et => et.TypeName.Equals(String.Format("IsTypeOf({0}.{1})", ConceptualSchema.Namespace, entity.Name), StringComparison.InvariantCultureIgnoreCase)) > 0 ||
-                    e.EntityTypeMappings.Count(et => et.TypeName.Equals(String.Format("IsTypeOf({0}.{1})", ConceptualSchema.Namespace, entity.EntityKeyName), StringComparison.InvariantCultureIgnoreCase)) > 0 ||
-                    e.EntityTypeMappings.Count(et => et.MappingFragments.Count > 0 && et.MappingFragments.Count(mf => mf.StoreEntitySet.Equals(entity.EntityKeyName, StringComparison.InvariantCultureIgnoreCase)) > 0) > 0)
+                    e.EntityTypeMappings.Count(et => et.TypeName.Equals(String.Concat(ConceptualSchema.Namespace, ".", entity.Name), StringComparison.OrdinalIgnoreCase)) > 0 ||
+                    e.EntityTypeMappings.Count(et => et.TypeName.Equals(String.Concat(ConceptualSchema.Namespace, ".", entity.EntityKeyName), StringComparison.OrdinalIgnoreCase)) > 0 ||
+                    e.EntityTypeMappings.Count(et => et.TypeName.Equals(String.Format("IsTypeOf({0}.{1})", ConceptualSchema.Namespace, entity.Name), StringComparison.OrdinalIgnoreCase)) > 0 ||
+                    e.EntityTypeMappings.Count(et => et.TypeName.Equals(String.Format("IsTypeOf({0}.{1})", ConceptualSchema.Namespace, entity.EntityKeyName), StringComparison.OrdinalIgnoreCase)) > 0 ||
+                    e.EntityTypeMappings.Count(et => et.MappingFragments.Count > 0 && et.MappingFragments.Count(mf => mf.StoreEntitySet.Equals(entity.EntityKeyName, StringComparison.OrdinalIgnoreCase)) > 0) > 0)
                     ).FirstOrDefault();
 
             //NOTE: We could also possibly look up the table name by looking at the StorageModel's EntitySet Tables Property.
@@ -121,7 +121,7 @@ namespace Generator.Microsoft.Frameworks
             else if (!String.IsNullOrEmpty(mapping.TypeName))
             {
                 entityName = mapping.TypeName.Replace("IsTypeOf(", "").Replace(String.Format("{0}.", ConceptualSchema.Namespace), "").Replace(")", "");
-                entityName = entityName.Equals(entity.Name, StringComparison.InvariantCultureIgnoreCase)
+                entityName = entityName.Equals(entity.Name, StringComparison.OrdinalIgnoreCase)
                                  ? entity.Name
                                  : entityName;
             }
@@ -187,7 +187,7 @@ namespace Generator.Microsoft.Frameworks
                     continue;
 
                 var typeName = association.Entity.EntityKeyName;
-                var associationSetMapping = MappingEntityContainer.AssociationSetMappings.Where(e => e.Name.Equals(association.Entity.EntityKeyName, StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault();
+                var associationSetMapping = MappingEntityContainer.AssociationSetMappings.Where(e => e.Name.Equals(association.Entity.EntityKeyName, StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
                 if (associationSetMapping == null)
                 {
                     associationSetMapping = new AssociationSetMapping
@@ -201,7 +201,7 @@ namespace Generator.Microsoft.Frameworks
                 else if (!String.IsNullOrEmpty(associationSetMapping.TypeName))
                 {
                     typeName = associationSetMapping.TypeName.Replace(String.Format("{0}.", ConceptualSchema.Namespace), "");
-                    typeName = typeName.Equals(association.Entity.EntityKeyName, StringComparison.InvariantCultureIgnoreCase)
+                    typeName = typeName.Equals(association.Entity.EntityKeyName, StringComparison.OrdinalIgnoreCase)
                                      ? association.Entity.EntityKeyName : typeName;
                 }
 
@@ -260,8 +260,8 @@ namespace Generator.Microsoft.Frameworks
                 foreach (var entityTypeMapping in m.EntityTypeMappings)
                 {
                     var name = entityTypeMapping.TypeName.Replace("IsTypeOf(", "").Replace(")", "");
-                    var isConceptualEntityDefined = ConceptualSchemaEntityContainer.EntitySets.Count(es => es.EntityType.Equals(name, StringComparison.InvariantCultureIgnoreCase)) > 0;
-                    var isStorageEntityDefined = entityTypeMapping.MappingFragments.Count > 0 && StorageSchemaEntityContainer.EntitySets.Count(es => es.Name.Equals(entityTypeMapping.MappingFragments[0].StoreEntitySet, StringComparison.InvariantCultureIgnoreCase)) > 0;
+                    var isConceptualEntityDefined = ConceptualSchemaEntityContainer.EntitySets.Count(es => es.EntityType.Equals(name, StringComparison.OrdinalIgnoreCase)) > 0;
+                    var isStorageEntityDefined = entityTypeMapping.MappingFragments.Count > 0 && StorageSchemaEntityContainer.EntitySets.Count(es => es.Name.Equals(entityTypeMapping.MappingFragments[0].StoreEntitySet, StringComparison.OrdinalIgnoreCase)) > 0;
                     var hasFunctionMapping = entityTypeMapping.ModificationFunctionMapping != null;
                     if (!hasFunctionMapping && (processed.Contains(name) || !isConceptualEntityDefined || !isStorageEntityDefined))
                         entityTypeMappingsToRemove.Add(entityTypeMapping);
@@ -301,8 +301,8 @@ namespace Generator.Microsoft.Frameworks
             var associationSetMappingsToRemove = new List<AssociationSetMapping>();
             foreach (var a in MappingEntityContainer.AssociationSetMappings)
             {
-                var isValidConceptualAssociation = ConceptualSchemaEntityContainer.AssociationSets.Count(es => a.TypeName.Equals(es.Association, StringComparison.InvariantCultureIgnoreCase)) > 0;
-                var isValidStorageAssociation = StorageSchemaEntityContainer.EntitySets.Count(es => a.StoreEntitySet.Equals(es.Name, StringComparison.InvariantCultureIgnoreCase) && !String.IsNullOrEmpty(es.Table)) > 0;
+                var isValidConceptualAssociation = ConceptualSchemaEntityContainer.AssociationSets.Count(es => a.TypeName.Equals(es.Association, StringComparison.OrdinalIgnoreCase)) > 0;
+                var isValidStorageAssociation = StorageSchemaEntityContainer.EntitySets.Count(es => a.StoreEntitySet.Equals(es.Name, StringComparison.OrdinalIgnoreCase) && !String.IsNullOrEmpty(es.Table)) > 0;
                 if (processed.Contains(a.Name) || (!isValidConceptualAssociation || !_conceptualAssociations.Contains(a.Name) || !isValidStorageAssociation))
                     associationSetMappingsToRemove.Add(a);
                 else
@@ -364,7 +364,7 @@ namespace Generator.Microsoft.Frameworks
 
         private void CreateFunctionMappingEntity(CommandEntity entity)
         {
-            if (entity.IsFunction || _mappingEntitys.Contains(entity.Name) || !Configuration.Instance.IncludeFunctions)
+            if (!Configuration.Instance.IncludeFunctions || entity.IsFunction || _mappingEntitys.Contains(entity.Name))
             {
                 Debug.WriteLine(String.Format("Already Processed Mapping Model Entity {0}", entity.Name), MappingCategory);
                 return;
@@ -374,13 +374,13 @@ namespace Generator.Microsoft.Frameworks
             #region Validate that an EntitySet Exists in the MappingStorageContainer.
 
             var importMapping = MappingEntityContainer.FunctionImportMappings.Where(e =>
-                entity.Name.Equals(e.FunctionImportName, StringComparison.InvariantCultureIgnoreCase) || // Safe Name.
-                entity.EntityKeyName.Equals(e.FunctionImportName, StringComparison.InvariantCultureIgnoreCase) || // Database Name.
+                entity.Name.Equals(e.FunctionImportName, StringComparison.OrdinalIgnoreCase) || // Safe Name.
+                entity.EntityKeyName.Equals(e.FunctionImportName, StringComparison.OrdinalIgnoreCase) || // Database Name.
                 (e.ResultMapping != null && e.ResultMapping.ComplexTypeMappings.Count > 0 &&
-                    (e.ResultMapping.ComplexTypeMappings.Count(et => et.TypeName.Equals(String.Concat(ConceptualSchema.Namespace, ".", entity.Name), StringComparison.InvariantCultureIgnoreCase)) > 0 ||
-                    e.ResultMapping.ComplexTypeMappings.Count(et => et.TypeName.Equals(String.Concat(ConceptualSchema.Namespace, ".", entity.Name, "Result"), StringComparison.InvariantCultureIgnoreCase)) > 0 ||
-                    e.ResultMapping.ComplexTypeMappings.Count(et => et.TypeName.Equals(String.Concat(ConceptualSchema.Namespace, ".", entity.EntityKeyName), StringComparison.InvariantCultureIgnoreCase)) > 0 ||
-                    e.ResultMapping.ComplexTypeMappings.Count(et => et.TypeName.Equals(String.Concat(ConceptualSchema.Namespace, ".", entity.EntityKeyName, "Result"), StringComparison.InvariantCultureIgnoreCase)) > 0))).FirstOrDefault();
+                    (e.ResultMapping.ComplexTypeMappings.Count(et => et.TypeName.Equals(String.Concat(ConceptualSchema.Namespace, ".", entity.Name), StringComparison.OrdinalIgnoreCase)) > 0 ||
+                    e.ResultMapping.ComplexTypeMappings.Count(et => et.TypeName.Equals(String.Concat(ConceptualSchema.Namespace, ".", entity.Name, "Result"), StringComparison.OrdinalIgnoreCase)) > 0 ||
+                    e.ResultMapping.ComplexTypeMappings.Count(et => et.TypeName.Equals(String.Concat(ConceptualSchema.Namespace, ".", entity.EntityKeyName), StringComparison.OrdinalIgnoreCase)) > 0 ||
+                    e.ResultMapping.ComplexTypeMappings.Count(et => et.TypeName.Equals(String.Concat(ConceptualSchema.Namespace, ".", entity.EntityKeyName, "Result"), StringComparison.OrdinalIgnoreCase)) > 0))).FirstOrDefault();
 
             //NOTE: We could also possibly look up the table name by looking at the StorageModel's EntitySet Tables Property.
 
@@ -440,7 +440,7 @@ namespace Generator.Microsoft.Frameworks
             else if (!String.IsNullOrEmpty(mapping.TypeName))
             {
                 entityName = mapping.TypeName.Replace("IsTypeOf(", "").Replace(String.Format("{0}.", ConceptualSchema.Namespace), "").Replace(")", "");
-                entityName = entityName.Equals(entity.Name, StringComparison.InvariantCultureIgnoreCase) ? entity.Name : entityName;
+                entityName = entityName.Equals(entity.Name, StringComparison.OrdinalIgnoreCase) ? entity.Name : entityName;
             }
 
             // Check for inheritance.
@@ -478,10 +478,10 @@ namespace Generator.Microsoft.Frameworks
             else if (!String.IsNullOrEmpty(mapping.TypeName))
             {
                 entityName = mapping.TypeName.Replace("IsTypeOf(", "").Replace(String.Format("{0}.", ConceptualSchema.Namespace), "").Replace(")", "");
-                entityName = entityName.Equals(entity.Name, StringComparison.InvariantCultureIgnoreCase) ? entity.Name : entityName;
+                entityName = entityName.Equals(entity.Name, StringComparison.OrdinalIgnoreCase) ? entity.Name : entityName;
             }
 
-            if(ConceptualSchema.ComplexTypes.Count(c => c.Name.Equals(entityName, StringComparison.InvariantCultureIgnoreCase)) == 0)
+            if(ConceptualSchema.ComplexTypes.Count(c => c.Name.Equals(entityName, StringComparison.OrdinalIgnoreCase)) == 0)
                 entityName = String.Concat(entity.Name, "Result");
 
             // Check for inheritance.
@@ -507,20 +507,20 @@ namespace Generator.Microsoft.Frameworks
         /// <param name="entity">The Entity.</param>
         private void MergeScalarProperties(MappingFragment mappingFragment, IEntity entity)
         {
-            foreach (var property in mappingFragment.ScalarProperties.Where(p => entity.Properties.Count(prop => prop.KeyName.Equals(p.ColumnName, StringComparison.InvariantCultureIgnoreCase)) == 0))
+            foreach (var property in mappingFragment.ScalarProperties.Where(p => entity.Properties.Count(prop => prop.KeyName.Equals(p.ColumnName, StringComparison.OrdinalIgnoreCase)) == 0))
                 _mappingDroppedEntityPropertyNames[String.Format(PROPERTY_KEY, entity.EntityKeyName, property.ColumnName)] = property.Name;
         
             var properties = new List<ScalarProperty>();
             foreach (var property in entity.Properties)
             {
-                var prop = mappingFragment.ScalarProperties.Where(p => p.ColumnName.Equals(property.KeyName, StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault();
+                var prop = mappingFragment.ScalarProperties.Where(p => p.ColumnName.Equals(property.KeyName, StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
                 
                 ScalarProperty complexProperty = null;
                 if(mappingFragment.ComplexProperties != null && mappingFragment.ComplexProperties.Count > 0)
                 {
                     foreach (ComplexProperty complexProp in mappingFragment.ComplexProperties)
                     {
-                        complexProperty = complexProp.ScalarProperties.Where(p => p.ColumnName.Equals(property.KeyName, StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault();
+                        complexProperty = complexProp.ScalarProperties.Where(p => p.ColumnName.Equals(property.KeyName, StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
                         if (complexProperty != null) break;
                     }
                 }
@@ -530,7 +530,7 @@ namespace Generator.Microsoft.Frameworks
                     // The property doesn't exist so lets create it.
                     prop = new ScalarProperty() { Name = property.Name };
                 }
-                else if (!property.Name.Equals(prop.Name, StringComparison.InvariantCultureIgnoreCase)) // Column matches that in the database.. If the names are different, it wins.
+                else if (!property.Name.Equals(prop.Name, StringComparison.OrdinalIgnoreCase)) // Column matches that in the database.. If the names are different, it wins.
                 {
                     // The propertyName has been updated.
                     // TODO: Is there a better way to find out if they renamed the Property?
@@ -563,19 +563,19 @@ namespace Generator.Microsoft.Frameworks
 
         private void MergeScalarProperties(FunctionImportEntityTypeMapping mappingFragment, CommandEntity entity)
         {
-            foreach (var property in mappingFragment.ScalarProperties.Where(p => entity.Properties.Count(prop => prop.KeyName.Equals(p.ColumnName, StringComparison.InvariantCultureIgnoreCase)) == 0))
+            foreach (var property in mappingFragment.ScalarProperties.Where(p => entity.Properties.Count(prop => prop.KeyName.Equals(p.ColumnName, StringComparison.OrdinalIgnoreCase)) == 0))
                 _mappingDroppedEntityPropertyNames[String.Format(PROPERTY_KEY, entity.EntityKeyName, property.ColumnName)] = property.Name;
 
             var properties = new List<ScalarProperty>();
             foreach (var property in entity.Properties)
             {
-                var prop = mappingFragment.ScalarProperties.Where(p => p.ColumnName.Equals(property.KeyName, StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault();
+                var prop = mappingFragment.ScalarProperties.Where(p => p.ColumnName.Equals(property.KeyName, StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
                 if (prop == null)
                 {
                     // The property doesn't exist so lets create it.
                     prop = new ScalarProperty() { Name = property.Name };
                 }
-                else if (!property.Name.Equals(prop.Name, StringComparison.InvariantCultureIgnoreCase)) // Column matches that in the database.. If the names are different, it wins.
+                else if (!property.Name.Equals(prop.Name, StringComparison.OrdinalIgnoreCase)) // Column matches that in the database.. If the names are different, it wins.
                 {
                     // The propertyName has been updated.
                     // TODO: Is there a better way to find out if they renamed the Property?
@@ -588,7 +588,7 @@ namespace Generator.Microsoft.Frameworks
                 }
 
                 prop.ColumnName = property.KeyName;
-                if (!ExcludeProperty(property as ISchemaProperty) && properties.Count(p => p.Name.Equals(prop.Name, StringComparison.InvariantCultureIgnoreCase)) == 0)
+                if (!ExcludeProperty(property as ISchemaProperty) && properties.Count(p => p.Name.Equals(prop.Name, StringComparison.OrdinalIgnoreCase)) == 0)
                 {
                     properties.Add(prop);
                     _mappingEntityPropertyNames[String.Format("{0}-{1}", entity.Name, property.KeyName)] = prop.Name;
@@ -600,19 +600,19 @@ namespace Generator.Microsoft.Frameworks
 
         private void MergeScalarProperties(FunctionImportComplexTypeMapping mappingFragment, CommandEntity entity)
         {
-            foreach (var property in mappingFragment.ScalarProperties.Where(p => entity.Properties.Count(prop => prop.KeyName.Equals(p.ColumnName, StringComparison.InvariantCultureIgnoreCase)) == 0))
+            foreach (var property in mappingFragment.ScalarProperties.Where(p => entity.Properties.Count(prop => prop.KeyName.Equals(p.ColumnName, StringComparison.OrdinalIgnoreCase)) == 0))
                 _mappingDroppedEntityPropertyNames[String.Format(PROPERTY_KEY, entity.EntityKeyName, property.ColumnName)] = property.Name;
 
             var properties = new List<ScalarProperty>();
             foreach (var property in entity.Properties)
             {
-                var prop = mappingFragment.ScalarProperties.Where(p => p.ColumnName.Equals(property.KeyName, StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault();
+                var prop = mappingFragment.ScalarProperties.Where(p => p.ColumnName.Equals(property.KeyName, StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
                 if (prop == null)
                 {
                     // The property doesn't exist so lets create it.
                     prop = new ScalarProperty() { Name = property.Name };
                 }
-                else if (!property.Name.Equals(prop.Name, StringComparison.InvariantCultureIgnoreCase)) // Column matches that in the database.. If the names are different, it wins.
+                else if (!property.Name.Equals(prop.Name, StringComparison.OrdinalIgnoreCase)) // Column matches that in the database.. If the names are different, it wins.
                 {
                     // The propertyName has been updated.
                     // TODO: Is there a better way to find out if they renamed the Property?
@@ -625,7 +625,7 @@ namespace Generator.Microsoft.Frameworks
                 }
 
                 prop.ColumnName = property.KeyName;
-                if (!ExcludeProperty(property as ISchemaProperty) && properties.Count(p => p.Name.Equals(prop.Name, StringComparison.InvariantCultureIgnoreCase)) == 0)
+                if (!ExcludeProperty(property as ISchemaProperty) && properties.Count(p => p.Name.Equals(prop.Name, StringComparison.OrdinalIgnoreCase)) == 0)
                 {
                     properties.Add(prop);
                     _mappingEntityPropertyNames[String.Format("{0}-{1}", entity.Name, property.KeyName)] = prop.Name;
@@ -649,13 +649,13 @@ namespace Generator.Microsoft.Frameworks
                 var associationProperty = !association.Entity.Name.Equals(property.Property.Entity.Name) ? property.Property : property.ForeignProperty;
                 var columnProperty = association.Entity.Name.Equals(property.Property.Entity.Name) ? property.Property : property.ForeignProperty;
 
-                var prop = endProperty.ScalarProperties.Where(p => p.ColumnName.Equals(columnProperty.KeyName, StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault();
+                var prop = endProperty.ScalarProperties.Where(p => p.ColumnName.Equals(columnProperty.KeyName, StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
                 if (prop == null)
                 {
                     // The property doesn't exist so lets create it.
                     prop = new ScalarProperty() { Name = associationProperty.Name };
                 }
-                else if (!associationProperty.Name.Equals(prop.Name, StringComparison.InvariantCultureIgnoreCase)) // Column matches that in the database.. If the names are different, it wins.
+                else if (!associationProperty.Name.Equals(prop.Name, StringComparison.OrdinalIgnoreCase)) // Column matches that in the database.. If the names are different, it wins.
                 {
                     // The propertyName has been updated.
                     // TODO: Is there a better way to find out if they renamed the Property?
@@ -712,7 +712,7 @@ namespace Generator.Microsoft.Frameworks
         {
             foreach (var mapping in MappingEntityContainer.EntitySetMappings)
             {
-                if (mapping.EntityTypeMappings.Any(entityTypeMapping => entityTypeMapping.MappingFragments.Any(mappingFragment => mappingFragment.StoreEntitySet.Equals(storageName, StringComparison.InvariantCultureIgnoreCase))))
+                if (mapping.EntityTypeMappings.Any(entityTypeMapping => entityTypeMapping.MappingFragments.Any(mappingFragment => mappingFragment.StoreEntitySet.Equals(storageName, StringComparison.OrdinalIgnoreCase))))
                 {
                     return mapping.Name;
                 }
@@ -723,10 +723,14 @@ namespace Generator.Microsoft.Frameworks
 
         #endregion
 
+        private Mapping _mapping;
         private Mapping Mapping
         {
             get
             {
+                if (_mapping != null)
+                    return _mapping;
+
                 if (RunTime.Mappings.Untyped.IsEmpty || RunTime.Mappings.Mapping == null)
                 {
                     RunTime.Mappings = new Mappings()
@@ -738,18 +742,22 @@ namespace Generator.Microsoft.Frameworks
                     };
                 }
 
-                return RunTime.Mappings.Mapping;
+                _mapping = RunTime.Mappings.Mapping;
+                return _mapping;
             }
         }
 
         //<EntityContainerMapping StorageEntityContainer="PetShopModel1StoreContainer" CdmEntityContainer="PetShopEntities1">
+        private EntityContainerMapping _entityContainerMapping;
         private EntityContainerMapping MappingEntityContainer
         {
             get
             {
+                if (_entityContainerMapping != null)
+                    return _entityContainerMapping;
+
                 if (Mapping.EntityContainerMapping == null)
                 {
-
                     Mapping.EntityContainerMapping = new EntityContainerMapping()
                     {
                         CdmEntityContainer = ConceptualSchemaEntityContainer.Name,
@@ -757,7 +765,8 @@ namespace Generator.Microsoft.Frameworks
                     };
                 }
 
-                return Mapping.EntityContainerMapping;
+                _entityContainerMapping = Mapping.EntityContainerMapping;
+                return _entityContainerMapping;
             }
         }
     }

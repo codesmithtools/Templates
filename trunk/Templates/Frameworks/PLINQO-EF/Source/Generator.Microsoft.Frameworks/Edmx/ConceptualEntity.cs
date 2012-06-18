@@ -101,7 +101,8 @@ namespace CodeSmith.SchemaHelper
         /// </summary>
         protected override void LoadAssociations()
         {
-            if (_associations == null || !_associations.Any() || _associationSets == null || !_associationSets.Any()) return;
+            if (_associations == null || _associationSets == null || !_associations.Any() || !_associationSets.Any()) 
+                return;
             
             //<AssociationSet Name="FK__Item__Supplier__1273C1CD" Association="PetShop.Data.FK__Item__Supplier__1273C1CD">
             //
@@ -138,11 +139,11 @@ namespace CodeSmith.SchemaHelper
                 // This sucks but is there a better way to try and detect user defined association's principal role?
                 var principalRoleName = rel.Association.ReferentialConstraint != null
                                             ? rel.Association.ReferentialConstraint.Principal.Role
-                                            : rel.Association.Name.EndsWith(rel.NavigationProperty.FromRole, StringComparison.InvariantCultureIgnoreCase)
+                                            : rel.Association.Name.EndsWith(rel.NavigationProperty.FromRole, StringComparison.OrdinalIgnoreCase)
                                                   ? rel.NavigationProperty.ToRole
                                                   : rel.NavigationProperty.FromRole;
 
-                var principalRole = rel.Association.Ends.FirstOrDefault(e => e.Role.Equals(principalRoleName, StringComparison.InvariantCultureIgnoreCase));
+                var principalRole = rel.Association.Ends.FirstOrDefault(e => e.Role.Equals(principalRoleName, StringComparison.OrdinalIgnoreCase));
                 var dependentRole = rel.Association.Ends.FirstOrDefault(e => e != principalRole);
                 if(principalRole == null || dependentRole == null) 
                     continue;
@@ -240,8 +241,8 @@ namespace CodeSmith.SchemaHelper
             
             foreach (IEntity entity in EntityStore.Instance.EntityCollection.Values)
             {
-                if ((entity is ConceptualEntity) == false || Name.Equals(entity.Name, StringComparison.InvariantCultureIgnoreCase) ||
-                    String.IsNullOrEmpty(((ConceptualEntity)entity).BaseType) || !Name.Equals(((ConceptualEntity)entity).BaseType, StringComparison.InvariantCultureIgnoreCase))
+                if ((entity is ConceptualEntity) == false || Name.Equals(entity.Name, StringComparison.OrdinalIgnoreCase) ||
+                    String.IsNullOrEmpty(((ConceptualEntity)entity).BaseType) || !Name.Equals(((ConceptualEntity)entity).BaseType, StringComparison.OrdinalIgnoreCase))
                     continue;
 
                 if (!DerivedEntities.Contains(entity))

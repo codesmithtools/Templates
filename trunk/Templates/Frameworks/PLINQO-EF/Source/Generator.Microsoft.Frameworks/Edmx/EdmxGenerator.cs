@@ -241,7 +241,7 @@ namespace Generator.Microsoft.Frameworks
             {
                 foreach (CommandParameter property in entity.SearchCriteria[0].Properties)
                 {
-                    if (property.Name.Equals("ReturnValue", StringComparison.InvariantCultureIgnoreCase)) continue;
+                    if (property.Name.Equals("ReturnValue", StringComparison.OrdinalIgnoreCase)) continue;
 
                     if (ExcludeProperty(property))
                         return false;
@@ -255,10 +255,10 @@ namespace Generator.Microsoft.Frameworks
         {
             if (property == null) return true;
 
-            if (property.NativeType.Equals("sql_variant", StringComparison.InvariantCultureIgnoreCase) ||
-                property.NativeType.Equals("geography", StringComparison.InvariantCultureIgnoreCase) ||
-                property.NativeType.Equals("geometry", StringComparison.InvariantCultureIgnoreCase) ||
-                property.NativeType.Equals("hierarchyid", StringComparison.InvariantCultureIgnoreCase))
+            if (property.NativeType.Equals("sql_variant", StringComparison.OrdinalIgnoreCase) ||
+                property.NativeType.Equals("geography", StringComparison.OrdinalIgnoreCase) ||
+                property.NativeType.Equals("geometry", StringComparison.OrdinalIgnoreCase) ||
+                property.NativeType.Equals("hierarchyid", StringComparison.OrdinalIgnoreCase))
             {
                 Trace.WriteLine(String.Format("Skipping Property '{0}.{1}' because the type '{2}' is not supported.", property.Entity.Name, property.Name, property.NativeType));
                 return true;
@@ -300,26 +300,31 @@ namespace Generator.Microsoft.Frameworks
 
         #endregion
 
+        private Runtime _runtime;
         private Runtime RunTime
         {
             get
             {
-                if (_edmx.Runtimes.Count == 0)
-                {
-                    if (String.IsNullOrEmpty(_edmx.Version) || (!_edmx.Version.Equals("1.0") && !_edmx.Version.Equals("2.0")))
-                    {
+                if (_runtime != null)
+                    return _runtime;
+
+                if (_edmx.Runtimes.Count == 0) {
+                    if (String.IsNullOrEmpty(_edmx.Version) || (!_edmx.Version.Equals("1.0") && !_edmx.Version.Equals("2.0"))) {
                         _edmx.Version = "2.0";
                     }
 
                     _edmx.Runtimes.Add(new Runtime());
                 }
 
-                var runtime = _edmx.Runtimes.First();
-                if (runtime.StorageModels == null) runtime.StorageModels = new StorageModels();
-                if (runtime.ConceptualModels == null) runtime.ConceptualModels = new ConceptualModels();
-                if (runtime.Mappings == null) runtime.Mappings = new Mappings();
+                _runtime = _edmx.Runtimes.First();
+                if (_runtime.StorageModels == null) 
+                    _runtime.StorageModels = new StorageModels();
+                if (_runtime.ConceptualModels == null)
+                    _runtime.ConceptualModels = new ConceptualModels();
+                if (_runtime.Mappings == null) 
+                    _runtime.Mappings = new Mappings();
 
-                return runtime;
+                return _runtime;
             }
         }
     }
