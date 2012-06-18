@@ -34,21 +34,18 @@ namespace CodeSmith.SchemaHelper.NHibernate
                     length = lengthInt;
             }
 
-            KeyName = name;
+            KeyName = _safeName = column;
             Name = name;
+
             GetterAccess = "public";
             SetterAccess = "public";
-            _safeName = column;
 
             var notnull = PropertySource.Attribute(NHibernateUtilities.NotNull);
             if (notnull == null)
                 IsNullable = false;
-            else
-            {
+            else {
                 bool notnullValue;
-                IsNullable = Boolean.TryParse(notnull.Value, out notnullValue)
-                    ? !notnullValue
-                    : false;
+                IsNullable = Boolean.TryParse(notnull.Value, out notnullValue) && !notnullValue;
             }
 
             SystemType = IsNullable
@@ -64,8 +61,7 @@ namespace CodeSmith.SchemaHelper.NHibernate
             var customAttributes = PropertySource
                 .Attributes()
                 .Where(a => !DefaultAttributes.Contains(a.Name.ToString()));
-            foreach (var customAttribute in customAttributes)
-            {
+            foreach (var customAttribute in customAttributes) {
                 // Special case, always preserve length from DB.
                 if (customAttribute.Name.ToString() == "length")
                     continue;

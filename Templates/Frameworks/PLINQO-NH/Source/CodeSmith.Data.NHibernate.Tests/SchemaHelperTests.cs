@@ -11,7 +11,7 @@ namespace Plinqo.NHibernate.Tests
         [Test]
         public void NHibernateProviderTest()
         {
-            var provider = new NHibernateProvider(@"D:\Documents\CodeSmith Generator\Templates\PLINQO NH\Tracker\Tracker.Data\Maps\");
+            var provider = new NHibernateProvider(@"A:\CodeSmith\CodeSmith.googlecode.framework.samples\PLINQO-NH\CSharp\Tracker\Data\Maps\");
             
             var manager = new EntityManager(provider);
 
