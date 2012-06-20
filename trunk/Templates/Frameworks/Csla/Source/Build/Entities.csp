@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<codeSmith xmlns="http://www.codesmithtools.com/schema/csp.xsd">
+  <propertySets>
+    <propertySet template="Entities.cst" output="Entities.cst">
+      <property name="BusinessProjectName">%projectname%</property>
+      <property name="SolutionName">%solutionname%</property>
+      <property name="Location">.\</property>
+      <property name="FrameworkVersion">%version%</property>
+    </propertySet>
+  </propertySets>
+</codeSmith>
