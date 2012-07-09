@@ -1,0 +1,300 @@
+﻿<%@ CodeTemplate Language="C#" TargetLanguage="JavaScript" Inherits="EntityCodeTemplate" CompilerVersion="v3.5" Encoding="UTF-8" %>
+<%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\Common" %>
+<%@ Assembly Name="Generator.QuickStart" Path="..\..\Common" %>
+<%@ Assembly Name="Generator.Microsoft.Frameworks" Path="..\..\Common" %>
+
+<%@ Import Namespace="System.Collections.Generic" %>
+<%@ Import Namespace="System.Text" %>
+<%@ Import Namespace="System.Text.RegularExpressions" %>
+<%@ Import Namespace="CodeSmith.SchemaHelper" %>
+<%@ Import Namespace="Generator.QuickStart" %>
+<%@ Import Namespace="Generator.Microsoft.Frameworks" %>
+
+<%@ Property Category="4. JavaScript" Name="PageSize" Type="System.Int32" Default="5" Optional="False" %>
+
+$(document).ready(function () {
+    var crudServiceBaseUrl = "http://localhost:1867/api",
+<% foreach(var association in Entity.Associations.Where(a => !a.IsParentEntity)) { %>
+        <%= association.ForeignEntity.VariableName %>DataSource = new kendo.data.DataSource({
+            severFiltering: true,
+            transport: {
+                read: {
+                    url: crudServiceBaseUrl + "/<%= association.ForeignEntity.VariableName %>",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                },
+                parameterMap: kendo.data.transports.odata.parameterMap
+            }
+        }),
+<% } %>
+        dataSource = new kendo.data.DataSource({
+            transport: {
+                read: {
+                    url: crudServiceBaseUrl + "/<%= Entity.VariableName %>",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                },
+<% if(Entity.HasKey) { %>
+                update: {
+                    url: crudServiceBaseUrl + "/<%= Entity.VariableName %>",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    type: "PUT"
+                },
+                destroy: {
+                    url: function (o) {
+                        return crudServiceBaseUrl + "/<%= Entity.VariableName %>/" + <%= GetParameters(Entity.Key.Properties, "o.", " + ") %>;
+                    },
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    type: "DELETE"
+                },
+                create: {
+                    url: crudServiceBaseUrl + "/<%= Entity.VariableName %>",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    type: "POST"
+                },
+<% } %>
+                parameterMap: kendo.data.transports.odata.parameterMap
+            },
+            schema: {
+                model: {
+<% if(Entity.HasKey) { %>
+                    id: "<%= Entity.GetProperties(PropertyType.Key).FirstOrDefault() %>",
+<% } %>
+                    fields: {
+<% foreach(var property in Entity.Properties.AsIndexedEnumerable()) { %>
+                        <%= property.Value.Name %>: {
+                            type: "<%= GetJavaScriptType(property.Value) %>"<%if (property.Value.IsNullable || (property.Value.IsType(PropertyType.Key) && !property.Value.IsType(PropertyType.Identity))) { %>,
+                            validation: { required: true }<% } %><%if (property.Value.IsType(PropertyType.Key)) { %>,
+                            editable: false<% } %>
+                        }<% if(!property.IsLast) { %>,<% } %>
+<% } %>
+                    }
+                }
+            },
+            pageSize: <%= PageSize %>,
+        });
+
+    var grid = $("#grid").kendoGrid({
+        dataSource: dataSource,
+        detailInit: detailInit,
+        filterable: true,
+        sortable: true,
+        pageable: true,
+        navigatable: true,
+        columns: [
+<% foreach(var property in Entity.Properties) {
+    if(IsIgnoreType(property)) continue; %>
+            {
+                field: "<%= property.Name %>",
+                title: "<%= property.FriendlyName() %>"<%if (property.IsType(PropertyType.Key)) { %>,
+                filterable: false<% } %><%if (HasDropDown(property)) { %>,
+                editor: <%= GetDropDownName(property) %>DropDownEditor<% } %>
+            },
+<% } %>
+            {
+                command: ["edit", "destroy"]
+            }],
+<% if(Entity.Associations.FirstOrDefault(a => !a.IsParentEntity) != null) { %>
+        toolbar: kendo.template($("#template").html()),
+<% } %>
+        editable: "inline"
+    });
+<% var toolbarFilterAssociation = Entity.Associations.FirstOrDefault(a => !a.IsParentEntity);
+if (toolbarFilterAssociation != null && toolbarFilterAssociation.ForeignEntity.Properties.Count >= 2) { %>
+
+    $("#toolbarFilter").kendoDropDownList({
+        dataValueField: "<%= GetDataValueField(toolbarFilterAssociation.ForeignEntity) %>",
+        dataTextField: "<%= GetDataTextField(toolbarFilterAssociation.ForeignEntity) %>",
+        autoBind: false,
+        optionLabel: "All",
+        dataSource: <%= toolbarFilterAssociation.ForeignEntity.VariableName %>DataSource,
+        change: function () {
+            var value = this.value();
+            if (value) {
+                grid.data("kendoGrid").dataSource.filter({ field: "<%= toolbarFilterAssociation.Properties[0].Property.Name %>", operator: "eq", value: value });
+            } else {
+                grid.data("kendoGrid").dataSource.filter({});
+            }
+        }
+    });
+<% } %>
+<% foreach(var association in Entity.Associations.Where(a => !a.IsParentEntity)) { %>
+<% if(association.ForeignEntity.Properties.Count < 2) continue; %>    
+
+    function <%= association.ForeignEntity.VariableName %>DropDownEditor(container, options) {
+        $('<input data-text-field="<%= GetDataTextField(association.ForeignEntity) %>" data-value-field="<%= GetDataValueField(association.ForeignEntity) %>" data-bind="value:' + options.field + '"/>')
+            .appendTo(container)
+            .kendoDropDownList({
+                autoBind: false,
+                dataSource: <%= association.ForeignEntity.VariableName %>DataSource
+            });
+    }
+<% } %>
+    
+    function detailInit(e) {
+<% foreach(var association in Entity.Associations) { %>
+        $("<div/>").appendTo(e.detailCell).kendoGrid({
+            dataSource: {
+                transport: {
+                    read: {
+                        url: crudServiceBaseUrl + "/<%= association.ForeignEntity.VariableName %>",
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                    },
+                    parameterMap: kendo.data.transports.odata.parameterMap
+                },
+                schema: {
+                    model: {
+<% if(association.ForeignEntity.HasKey) { %>
+                        id: "<%= association.ForeignEntity.GetProperties(PropertyType.Key).FirstOrDefault() %>",
+<% } %>
+                        fields: {
+<% foreach(var property in association.ForeignEntity.Properties.AsIndexedEnumerable()) { %>
+                            <%= property.Value.Name %>: {
+                                type: "<%= GetJavaScriptType(property.Value) %>"<%if (property.Value.IsNullable || (property.Value.IsType(PropertyType.Key) && !property.Value.IsType(PropertyType.Identity))) { %>,
+                                validation: { required: true }<% } %><%if (property.Value.IsType(PropertyType.Key) || property.Value.IsType(PropertyType.Foreign)) { %>,
+                                editable: false<% } %>
+                            }<% if(!property.IsLast) { %>,<% } %>
+<% } %>
+                        }
+                    }
+                },
+                pageSize: <%= PageSize %>,
+                filter: { field: "<%= association.Properties[0].ForeignProperty.Name %>", operator: "eq", value: e.data.<%= association.Properties[0].Property.Name %> }
+            },
+            scrollable: false,
+            sortable: true,
+            pageable: true,
+            filtering: true,
+            columns: [
+<% foreach(var property in association.ForeignEntity.Properties) {
+    if(IsIgnoreType(property)) continue; %>
+                {
+                    field: "<%= property.Name %>",
+                    <% if(property.IsType(PropertyType.Key)) { %>template: "<a href='/api/<%= association.ForeignEntity.VariableName %>/${ <%= property.Name %> }'>${ <%= property.Name %> }</a>"<% } else { %>title: "<%= property.FriendlyName() %>"<% } %><%if (property.IsType(PropertyType.Key)) { %>,
+                    filterable: false<% } %><%if (HasDropDown(property)) { %>,
+                    editor: <%= GetDropDownName(property) %>DropDownEditor<% } %>
+                },
+<% } %>
+                { command: [ "edit", "destroy"] }
+            ],
+            editable: "inline"
+        });
+<% } %>
+    }
+});
+
+<script runat="template">
+
+    public bool IsIgnoreType(IProperty property)
+    {
+        if (property.SystemType.Contains("XmlType"))
+            return true;
+
+        if (property.SystemType.Contains("Byte[]"))
+            return true;
+
+        if ((property.PropertyType & PropertyType.Concurrency) == PropertyType.Concurrency || property.BaseSystemType == "System.Byte[]")
+            return true;
+
+        return false;
+    }
+    
+    public string GetDataValueField(IEntity entity)
+    {
+        if(entity.HasKey)
+            foreach(var key in entity.Key.Properties)
+                if(!IsIgnoreType(key))
+                    return key.Name;
+        
+        foreach(var p in entity.Properties)
+            if(!IsIgnoreType(p))
+                    return p.Name;
+        
+        return entity.Properties.FirstOrDefault().Name;
+    }
+    
+    public string GetDataTextField(IEntity entity)
+    {
+        string valueField = GetDataValueField(entity);
+        foreach(var p in entity.Properties)
+            if(!IsIgnoreType(p) 
+                && !p.IsType(PropertyType.Key) 
+                && !p.IsType(PropertyType.Foreign)
+                && String.Equals(GetJavaScriptType(p), "String", StringComparison.OrdinalIgnoreCase) 
+                && !String.Equals(p.Name, valueField, StringComparison.OrdinalIgnoreCase))
+                    return p.Name;
+        
+        return entity.Properties.FirstOrDefault().Name;
+    }
+    
+    public bool HasDropDown(IProperty property)
+    {
+        foreach(var a in Entity.Associations.Where(a => !a.IsParentEntity)) {
+            if(a.ForeignEntity.Properties.Count < 2) 
+                continue;
+            
+            foreach(var p in a.Properties){
+                if(p.Property == property || p.ForeignProperty == property)
+                    return true;
+            }
+        }
+        
+        return false;
+    }
+    
+    public string GetDropDownName(IProperty property)
+    {
+        foreach(var a in Entity.Associations){
+            foreach(var p in a.Properties){
+                if(p.Property == property || p.ForeignProperty == property)
+                    return a.ForeignEntity.VariableName;
+            }
+        }
+        
+        return null;
+    }
+    
+    /// <summary>
+    /// Returns {Number|String|Boolean|Date}. The default is string.
+    /// </summary>
+    /// <param name="property"></param>
+    /// <returns></returns>
+    public string GetJavaScriptType(IProperty property)
+    {
+        if (property.SystemType.Contains("Boolean"))
+            return "Boolean";
+        
+        if (property.SystemType.Contains("Date"))
+            return "Date";
+
+        if (property.SystemType.Contains("Byte")
+            || property.SystemType.Contains("Decimal")
+            || property.SystemType.Contains("Double")
+            || property.SystemType.Contains("Single")
+            || property.SystemType.Contains("Int"))
+            return "Number";
+        
+        return "String";
+    }
+    
+    public string GetParameters(List<IProperty> properties, string prefix = "", string seperator = ", ")
+    {
+        StringBuilder args = new StringBuilder();
+        foreach(IProperty property in properties)
+        {
+            if (args.Length > 0)
+                args.Append(seperator);
+
+            if(String.IsNullOrEmpty(prefix))
+                 args.Append(property.VariableName);
+            else
+                args.AppendFormat("{0}{1}", prefix, property.Name);
+        }
+
+        return args.ToString();
+    }
+</script>

@@ -1,0 +1,140 @@
+﻿<%-- Author: Blake Niemyjski --%>
+<%@ CodeTemplate Language="C#" TargetLanguage="C#" OutputType="None" CompilerVersion="v3.5" Encoding="UTF-8" %>
+
+<%@ Assembly Name="CodeSmith.CustomProperties" %>
+<%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\Common" %>
+<%@ Assembly Name="Generator.QuickStart" Path="..\Common" %>
+<%@ Assembly Name="Generator.Microsoft.Frameworks" Path="..\Common" %>
+<%@ Assembly Name="Xml.Schema.Linq" Path="..\Common" %>
+<%@ Assembly Name="SchemaExplorer" %>
+
+<%@ Import Namespace="System.IO" %>
+<%@ Import Namespace="System.Collections.Generic" %>
+<%@ Import Namespace="CodeSmith.CustomProperties" %>
+<%@ Import Namespace="CodeSmith.SchemaHelper" %>
+<%@ Import Namespace="Generator.QuickStart" %>
+<%@ Import Namespace="Generator.Microsoft.Frameworks" %>
+<%@ Import Namespace="SchemaExplorer" %>
+
+<%@ Register Name="APIController" Template="Internal\APIController.Editable.cst" %>
+<%@ Register Name="APIControllerGenerated" Template="Internal\APIController.Generated.cst" %>
+<%@ Register Name="ViewController" Template="Internal\View.Controller.cst" %>
+<%@ Register Name="ViewKendo" Template="Internal\View.Kendo.cst" %>
+<%@ Register Name="ViewRazor" Template="Internal\View.Razor.cst" %>
+<%@ Property Name="BaseDirectory" Type="System.String" Category="2. Class" Default=".\" Optional="False" Description="The path to the current project" Editor="System.Windows.Forms.Design.FileNameEditor, System.Design" %>
+<%@ Property Name="ControllerNamespace" Type="System.String" Category="2. Class" Default="" Optional="True" Description="The namespace for the interfaces.  Leave blank to not generate them." %>
+<%@ Property Name="ControllerDirectory" Type="System.String" Category="2. Class" Default=".\Controllers" Optional="True" Description="The folder to save the generated entity files." Editor="System.Windows.Forms.Design.FolderNameEditor, System.Design" %>
+<%@ Property Name="ScriptDirectory" Type="System.String" Category="2. Class" Default=".\Scripts\Generated" Optional="True" Description="The folder to save the generated entity files." Editor="System.Windows.Forms.Design.FolderNameEditor, System.Design" %>
+<%@ Property Name="ViewDirectory" Type="System.String" Category="2. Class" Default=".\Views" Optional="True" Description="The folder to save the generated entity files." Editor="System.Windows.Forms.Design.FolderNameEditor, System.Design" %>
+<%@ Property Name="EdmxFile" Type="System.String" Category="4. Mapping" Optional="False" Description="The full path to the edmx file." Editor="System.Windows.Forms.Design.FileNameEditor, System.Design" %>
+<% 
+Generate(); 
+RegisterReferences();
+%>
+
+<script runat="template">
+
+public void Generate()
+{
+    if(String.IsNullOrEmpty(EdmxFile) || !System.IO.File.Exists(EdmxFile))
+    {
+        Response.WriteLine("The Edmx File does not exist, the entities will not be generated.");
+        return;
+    }
+
+    ControllerDirectory = String.IsNullOrEmpty(ControllerDirectory) ? BaseDirectory : ControllerDirectory;
+    if (!Directory.Exists(this.ControllerDirectory))
+        Directory.CreateDirectory(this.ControllerDirectory);
+
+    ScriptDirectory = String.IsNullOrEmpty(ScriptDirectory) ? BaseDirectory : ScriptDirectory;
+    if (!Directory.Exists(this.ScriptDirectory))
+        Directory.CreateDirectory(this.ScriptDirectory);
+    
+    ViewDirectory = String.IsNullOrEmpty(ViewDirectory) ? BaseDirectory : ViewDirectory;
+    if (!Directory.Exists(this.ViewDirectory))
+        Directory.CreateDirectory(this.ViewDirectory);
+    
+    EdmxEntityProvider entityProvider = new EdmxEntityProvider(EdmxFile);
+    EntityManager entityManager = new EntityManager((IEntityProvider)entityProvider);
+
+    CreateControllers(entityManager.Entities, entityProvider.EntityNamespace, entityProvider.ContextNamespace, entityProvider.DataContextName, entityProvider.LazyLoadingEnabled);
+    CreateViewContent(entityManager.Entities, entityProvider.EntityNamespace);
+}
+
+private void CreateViewContent(IEnumerable<IEntity> entities, string entityNamespace)
+{
+    var viewTemplate = this.Create<ViewRazor>();
+    var javascriptTemplate = this.Create<ViewKendo>();
+
+    foreach (var entity in entities)
+    {
+        if((entity is ConceptualEntity) == false) 
+            continue;
+        
+        var fileName = String.Format("{0}\\{1}\\Index.cshtml", ViewDirectory, StringUtil.ToPlural(entity.Name));
+        this.CopyPropertiesTo(viewTemplate);
+        viewTemplate.Entity = entity;
+        viewTemplate.EntityNamespace = entityNamespace;
+        
+        Response.WriteLine(fileName);
+        viewTemplate.RenderToFile(fileName, true);
+
+        fileName = String.Format("{0}\\{1}.js", ScriptDirectory, StringUtil.ToPlural(entity.Name));
+        this.CopyPropertiesTo(javascriptTemplate);
+        javascriptTemplate.Entity = entity;
+        javascriptTemplate.EntityNamespace = entityNamespace;
+        
+        Response.WriteLine(fileName);
+        javascriptTemplate.RenderToFile(fileName, true);
+    }
+}
+
+private void CreateControllers(IEnumerable<IEntity> entities, string entityNamespace, string contextNamespace, string dataContextName, bool lazyLoadingEnabled)
+{
+    var controllerTemplate = this.Create<APIController>();
+    var controllerGeneratedTemplate = this.Create<APIControllerGenerated>();
+    var viewControllerTemplate = this.Create<ViewController>();
+
+    foreach (var entity in entities)
+    {
+        if((entity is ConceptualEntity) == false) 
+            continue;
+        
+        var parentFileName = String.Format("{0}\\{1}Controller.cs", ControllerDirectory, entity.Name);
+        var fileName = String.Format("{0}\\{1}Controller.generated.cs", ControllerDirectory, entity.Name);
+
+		// TODO: Add Smart Regeneration Support via NRefactory.
+		if(!File.Exists(parentFileName))
+		{
+            this.CopyPropertiesTo(controllerTemplate);
+            controllerTemplate.Entity = entity;
+            controllerTemplate.EntityNamespace = entityNamespace;
+            Response.WriteLine(parentFileName);
+            controllerTemplate.RenderToFile(parentFileName, true);
+		}
+
+        this.CopyPropertiesTo(controllerGeneratedTemplate);
+        controllerGeneratedTemplate.DataContextName = dataContextName;
+        controllerGeneratedTemplate.Entity = entity;
+        controllerGeneratedTemplate.EntityNamespace = entityNamespace;
+        controllerGeneratedTemplate.ContextNamespace = contextNamespace;
+        controllerGeneratedTemplate.LazyLoadingEnabled = lazyLoadingEnabled;
+
+        Response.WriteLine(fileName);
+        controllerGeneratedTemplate.RenderToFile(fileName, parentFileName, true);
+
+        fileName = String.Format("{0}\\{1}Controller.cs", ControllerDirectory, StringUtil.ToPlural(entity.Name));
+        this.CopyPropertiesTo(viewControllerTemplate);
+        viewControllerTemplate.Entity = entity;
+        viewControllerTemplate.EntityNamespace = entityNamespace;
+        
+        Response.WriteLine(fileName);
+        viewControllerTemplate.RenderToFile(fileName, parentFileName, true);
+    }
+}
+
+public void RegisterReferences()
+{
+    RegisterReference("System");
+}
+</script>
