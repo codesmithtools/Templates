@@ -1,0 +1,19 @@
+﻿<%@ CodeTemplate Language="C#" TargetLanguage="C#" Inherits="EntityCodeTemplate" CompilerVersion="v3.5" Encoding="UTF-8"  %>
+<%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\Common" %>
+<%@ Assembly Name="Generator.QuickStart" Path="..\..\Common" %>
+<%@ Assembly Name="Generator.Microsoft.Frameworks" Path="..\..\Common" %>
+
+<%@ Import Namespace="System.Collections.Generic" %>
+<%@ Import Namespace="CodeSmith.SchemaHelper" %>
+<%@ Import Namespace="Generator.QuickStart" %>
+<%@ Import Namespace="Generator.Microsoft.Frameworks" %>
+<%@ Property Name="ControllerNamespace" Type="System.String" Category="2. Class" Default="" Optional="True" Description="The namespace for the interfaces.  Leave blank to not generate them." %>
+using System;
+
+namespace <%= String.IsNullOrEmpty(ControllerNamespace) ? String.Concat(EntityNamespace, ".Controllers") : ControllerNamespace %>
+{
+    public partial class <%= Entity.Name %>Controller
+    {
+        // Place custom code here.
+    }
+}

@@ -1,0 +1,54 @@
+﻿<%@ CodeTemplate Language="C#" TargetLanguage="JavaScript" Inherits="EntityCodeTemplate" CompilerVersion="v3.5" Encoding="UTF-8" %>
+<%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\Common" %>
+<%@ Assembly Name="Generator.QuickStart" Path="..\..\Common" %>
+<%@ Assembly Name="Generator.Microsoft.Frameworks" Path="..\..\Common" %>
+
+<%@ Import Namespace="System.Collections.Generic" %>
+<%@ Import Namespace="System.Text" %>
+<%@ Import Namespace="System.Text.RegularExpressions" %>
+<%@ Import Namespace="CodeSmith.SchemaHelper" %>
+<%@ Import Namespace="Generator.QuickStart" %>
+<%@ Import Namespace="Generator.Microsoft.Frameworks" %>
+@{
+    ViewBag.Title = "<%= StringUtil.ToPlural(Entity.Name) %>";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2><%= StringUtil.ToPlural(Entity.Name) %></h2>
+<div id="grid"></div>
+<% var assoication = Entity.Associations.FirstOrDefault(a => !a.IsParentEntity);
+   if(assoication != null && assoication.ForeignEntity.Properties.Count >= 2) { %>
+<script type="text/x-kendo-template" id="template">
+    <div class="toolbar">
+        <label class="toolbarFilter-label" for="toolbarFilter">Show <%= StringUtil.ToPlural(Entity.Name) %> by <%= assoication.ForeignEntity.Name %>:</label>
+        <input type="search" id="toolbarFilter" style="width: 230px"></input>
+    </div>
+</script>
+
+<style scoped="scoped">
+    #grid .k-toolbar
+    {
+        min-height: 27px;
+    }
+    
+    .toolbarFilter-label
+    {
+        vertical-align: middle;
+        padding-right: .5em;
+    }
+
+    #toolbarFilter
+    {
+        vertical-align: middle;
+    }
+
+    .toolbar {
+        float: right;
+        margin-right: .8em;
+    }
+</style>
+<% } %>
+
+@section Scripts {
+    @Scripts.Render("~/Scripts/Generated/<%= StringUtil.ToPlural(Entity.Name) %>.js")
+}
