@@ -171,7 +171,8 @@ namespace <%= BaseNamespace %>
                 
             case "PostgreSQLSchemaProvider":
                 return "NHibernate.Dialect.PostgreSQLDialect";
-                
+            
+            case "DB2zOSSchemaProvider":
             case "ISeriesSchemaProvider":
                 return "NHibernate.Dialect.DB2Dialect";
                 
@@ -196,7 +197,8 @@ namespace <%= BaseNamespace %>
                 
             case "PostgreSQLSchemaProvider":
                 return "NHibernate.Driver.NpgsqlDriver";
-                
+
+            case "DB2zOSSchemaProvider":
             case "ISeriesSchemaProvider":
                 return "NHibernate.Driver.DB2Driver";
                 
