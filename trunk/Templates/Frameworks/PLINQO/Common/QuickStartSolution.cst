@@ -1,4 +1,4 @@
-<%@ CodeTemplate Language="C#" TargetLanguage="Text" Src="" Encoding="UTF-8" Inherits="" Debug="True" Description="Template description here." CompilerVersion="v3.5" %>
+﻿<%@ CodeTemplate Language="C#" TargetLanguage="Text" Src="" Encoding="UTF-8" Inherits="" Debug="True" Description="Template description here." CompilerVersion="v3.5" %>
 <%@ Assembly Name="QuickStartUtils" %>
 <%@ Import Namespace="System.Collections.Generic" %>
 <%@ Import Namespace="QuickStartUtils" %>
@@ -12,6 +12,8 @@
 <%@ Property Name="Location" Type="System.String" 
     Default="" Optional="True" Category="1.Project" 
     Description="This is the path to the Solution location." %>
+
+
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 <% foreach(SolutionItem solutionItem in SolutionItems) { 
