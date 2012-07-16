@@ -48,7 +48,7 @@ namespace <%= SourceEntity.Namespace %>
         #region Static Constructor
         
         /// <summary>
-        /// Initializes the <see cref="Account"/> class.
+        /// Initializes the <see cref="<%= SourceEntity.Name %>"/> class.
         /// </summary>
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         static <%= SourceEntity.Name %>()
@@ -60,7 +60,7 @@ namespace <%= SourceEntity.Namespace %>
 
         #region Default Constructor
         /// <summary>
-        /// Initializes a new instance of the <see cref="Account"/> class.
+        /// Initializes a new instance of the <see cref="<%= SourceEntity.Name %>"/> class.
         /// </summary>
         [System.Diagnostics.DebuggerNonUserCode]
         <%= GeneratedCodeAttribute %>
@@ -183,10 +183,10 @@ namespace <%= SourceEntity.Namespace %>
         #region Serialization
         
         /// <summary>
-        /// Deserializes an instance of <see cref="Account"/> from XML.
+        /// Deserializes an instance of <see cref="<%= SourceEntity.Name %>"/> from XML.
         /// </summary>
-        /// <param name="xml">The XML string representing a <see cref="Account"/> instance.</param>
-        /// <returns>An instance of <see cref="Account"/> that is deserialized from the XML String.</returns>
+        /// <param name="xml">The XML string representing a <see cref="<%= SourceEntity.Name %>"/> instance.</param>
+        /// <returns>An instance of <see cref="<%= SourceEntity.Name %>"/> that is deserialized from the XML String.</returns>
         <%= GeneratedCodeAttribute %>
         public static <%= SourceEntity.Name %> FromXml(string xml)
         {
@@ -200,10 +200,10 @@ namespace <%= SourceEntity.Namespace %>
         }
 
         /// <summary>
-        /// Deserializes an instance of <see cref="Account"/> from a byte array.
+        /// Deserializes an instance of <see cref="<%= SourceEntity.Name %>"/> from a byte array.
         /// </summary>
-        /// <param name="buffer">The byte array representing a <see cref="Account"/> instance.</param>
-        /// <returns>An instance of <see cref="Account"/> that is deserialized from the byte array.</returns>
+        /// <param name="buffer">The byte array representing a <see cref="<%= SourceEntity.Name %>"/> instance.</param>
+        /// <returns>An instance of <see cref="<%= SourceEntity.Name %>"/> that is deserialized from the byte array.</returns>
         <%= GeneratedCodeAttribute %>
         public static <%= SourceEntity.Name %> FromBinary(byte[] buffer)
         {
