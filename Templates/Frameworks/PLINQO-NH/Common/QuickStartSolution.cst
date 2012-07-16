@@ -8,6 +8,8 @@
 <%@ Import Namespace="CodeSmith.SchemaHelper" %>
 <%@ Import Namespace="Generator.QuickStart" %>
 <%@ Import Namespace="System.Collections.Generic" %>
+
+
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 <% foreach(SolutionItem solutionItem in SolutionItems) { 
