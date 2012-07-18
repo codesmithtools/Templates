@@ -1,0 +1,85 @@
+﻿<%@ CodeTemplate Language="C#" TargetLanguage="JavaScript" Inherits="EntityCodeTemplate" CompilerVersion="v3.5" Encoding="UTF-8" %>
+<%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\..\Common" %>
+<%@ Assembly Name="Generator.QuickStart" Path="..\..\..\Common" %>
+<%@ Assembly Name="Generator.Microsoft.Frameworks" Path="..\..\..\Common" %>
+<%@ Import Namespace="System.Collections.Generic" %>
+<%@ Import Namespace="System.Text" %>
+<%@ Import Namespace="System.Text.RegularExpressions" %>
+<%@ Import Namespace="CodeSmith.SchemaHelper" %>
+<%@ Import Namespace="Generator.QuickStart" %>
+<%@ Import Namespace="Generator.Microsoft.Frameworks" %>
+    function <%= Entity.VariableName %>DropDownEditor(container, options) {
+        $('<input data-text-field="<%= GetDataTextField() %>" data-value-field="<%= GetDataValueField() %>" data-bind="value:' + options.field + '"/>')
+            .appendTo(container)
+            .kendoDropDownList({
+                dataSource: <%= Entity.VariableName %>DataSource
+            });
+    }
+<script runat="template">
+
+    public string GetDataValueField()
+    {
+        if(Entity.HasKey)
+            foreach(var key in Entity.Key.Properties)
+                if(!IsIgnoreType(key))
+                    return key.Name;
+        
+        foreach(var p in Entity.Properties)
+            if(!IsIgnoreType(p))
+                    return p.Name;
+        
+        return Entity.Properties.FirstOrDefault().Name;
+    }
+    
+    public string GetDataTextField()
+    {
+        string valueField = GetDataValueField();
+        foreach(var p in Entity.Properties)
+            if(!IsIgnoreType(p) 
+                && !p.IsType(PropertyType.Key) 
+                && !p.IsType(PropertyType.Foreign)
+                && String.Equals(GetJavaScriptType(p), "String", StringComparison.OrdinalIgnoreCase) 
+                && !String.Equals(p.Name, valueField, StringComparison.OrdinalIgnoreCase))
+                    return p.Name;
+        
+        return Entity.Properties.FirstOrDefault().Name;
+    }
+
+    public bool IsIgnoreType(IProperty property)
+    {
+        if (property.SystemType.Contains("XmlType"))
+            return true;
+
+        if (property.SystemType.Contains("Byte[]"))
+            return true;
+
+        if ((property.PropertyType & PropertyType.Concurrency) == PropertyType.Concurrency || property.BaseSystemType == "System.Byte[]")
+            return true;
+
+        return false;
+    }
+
+    /// <summary>
+    /// Returns {Number|String|Boolean|Date}. The default is string.
+    /// </summary>
+    /// <param name="property"></param>
+    /// <returns></returns>
+    public string GetJavaScriptType(IProperty property)
+    {
+        if (property.SystemType.Contains("Boolean"))
+      return "boolean";
+        
+        if (property.SystemType.Contains("Date"))
+      return "date";
+
+        if (property.SystemType.Contains("Byte")
+      || property.SystemType.Contains("Decimal")
+      || property.SystemType.Contains("Double")
+      || property.SystemType.Contains("Single")
+      || property.SystemType.Contains("Int"))
+      return "number";
+        
+        return "string";
+    }
+
+</script>

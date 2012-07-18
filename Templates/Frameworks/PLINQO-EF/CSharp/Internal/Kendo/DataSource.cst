@@ -1,0 +1,131 @@
+﻿<%@ CodeTemplate Language="C#" TargetLanguage="JavaScript" Inherits="EntityCodeTemplate" CompilerVersion="v3.5" Encoding="UTF-8" %>
+<%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\..\Common" %>
+<%@ Assembly Name="Generator.QuickStart" Path="..\..\..\Common" %>
+<%@ Assembly Name="Generator.Microsoft.Frameworks" Path="..\..\..\Common" %>
+<%@ Import Namespace="System.Collections.Generic" %>
+<%@ Import Namespace="System.Text" %>
+<%@ Import Namespace="System.Text.RegularExpressions" %>
+<%@ Import Namespace="CodeSmith.SchemaHelper" %>
+<%@ Import Namespace="Generator.QuickStart" %>
+<%@ Import Namespace="Generator.Microsoft.Frameworks" %>
+<%@ Property Name="ServiceBaseUrl" Type="System.String" Optional="True" %>
+<%@ Property Name="IncludeCreate" Type="System.Boolean" Default="True" %>
+<%@ Property Name="IncludeUpdate" Type="System.Boolean" Default="True" %>
+<%@ Property Name="IncludeDelete" Type="System.Boolean" Default="True" %>
+<%@ Property Name="PageSize" Type="System.Int32" Default="5" %>
+<%@ Property Name="IncludePaging" Type="System.Boolean" Default="True" %>
+<%@ Property Name="IncludeFiltering" Type="System.Boolean" Default="True" %>
+<%@ Property Name="Filter" Type="System.String" Optional="True" %>
+<%@ Property Name="IncludeSorting" Type="System.Boolean" Default="True" %>
+<%@ Property Name="IncludeParameterMap" Type="System.Boolean" Default="True" %>
+<%@ Property Name="IncludeModel" Type="System.Boolean" Default="True" %>
+<%@ Property Name="IncludeValidation" Type="System.Boolean" Default="True" %>
+<%@ Property Name="IsEmbeddedDataSource" Type="System.Boolean" Default="False" %>
+<% if(!IsEmbeddedDataSource) { %>
+<% if(!String.IsNullOrEmpty(ServiceBaseUrl)) { %>var crudServiceBaseUrl = "<%= ServiceBaseUrl %>";<% } %>
+var <%= Entity.VariableName %>DataSource = new kendo.data.DataSource({<% } else { %>{<% } %>
+    type: "json",
+    transport: {
+        read: {
+            url: crudServiceBaseUrl + "/<%= Entity.VariableName %>"
+        }<% if(IncludeCreate) { %>,
+        create: {
+            url: crudServiceBaseUrl + "/<%= Entity.VariableName %>",
+            type: "POST"
+        }<% } if(IncludeUpdate) { %>,
+        update: {
+            url: crudServiceBaseUrl + "/<%= Entity.VariableName %>",
+            type: "PUT"
+        }<% } if(IncludeDelete) { %>,
+        destroy: {
+            url: function (o) {
+                return crudServiceBaseUrl + "/<%= Entity.VariableName %><% if(Entity.HasKey) { %>/" + <%= GetParameters(Entity.Key.Properties, "o.", " + ") %><% } else { %>"<% } %>;
+            },
+            type: "DELETE"
+        }<% } if(IncludeParameterMap) { %>,
+        parameterMap: kendo.data.transports.odata.parameterMap<% } %>
+    },
+    schema: {
+        data: function (result) {
+            return result.Data || result;
+        },
+        total: function (result) {
+            return result.TotalCount || 1;
+        }<% if(IncludeModel) { %>,
+        model: {
+<% if(Entity.HasKey) { %>
+            id: "<%= Entity.GetProperties(PropertyType.Key).FirstOrDefault() %>",
+<% } %>
+            fields: {
+<% foreach(var property in Entity.Properties.AsIndexedEnumerable()) { %>
+                <%= property.Value.Name %>: {
+                    type: "<%= GetJavaScriptType(property.Value) %>"<%if (IncludeValidation && (property.Value.IsNullable || (property.Value.IsType(PropertyType.Key) && !property.Value.IsType(PropertyType.Identity)))) { %>,
+                    validation: { required: true }<% } %><%if (IncludeUpdate && property.Value.IsType(PropertyType.Key)) { %>,
+                    editable: false<% } %>
+                }<% if(!property.IsLast) { %>,<% } %>
+<% } %>
+            }
+        }<% } %>
+    }<%if(!String.IsNullOrEmpty(Filter)) { %>,
+    filter: { <%= Filter %> }<% } if(IncludeFiltering) { %>,
+    serverFiltering: true<% } if(IncludeSorting) { %>,
+    serverSorting: true<% } if(IncludePaging) { %>,
+    serverPaging: true,
+    pageSize: <%= PageSize %><% } %>
+}<% if(!IsEmbeddedDataSource) { %>);<% } %>
+<script runat="template">
+
+    public bool IsIgnoreType(IProperty property)
+    {
+        if (property.SystemType.Contains("XmlType"))
+      return true;
+
+        if (property.SystemType.Contains("Byte[]"))
+      return true;
+
+        if ((property.PropertyType & PropertyType.Concurrency) == PropertyType.Concurrency || property.BaseSystemType == "System.Byte[]")
+      return true;
+
+        return false;
+    }
+
+    /// <summary>
+    /// Returns {Number|String|Boolean|Date}. The default is string.
+    /// </summary>
+    /// <param name="property"></param>
+    /// <returns></returns>
+    public string GetJavaScriptType(IProperty property)
+    {
+        if (property.SystemType.Contains("Boolean"))
+      return "boolean";
+        
+        if (property.SystemType.Contains("Date"))
+      return "date";
+
+        if (property.SystemType.Contains("Byte")
+      || property.SystemType.Contains("Decimal")
+      || property.SystemType.Contains("Double")
+      || property.SystemType.Contains("Single")
+      || property.SystemType.Contains("Int"))
+      return "number";
+        
+        return "string";
+    }
+    
+    public string GetParameters(List<IProperty> properties, string prefix = "", string seperator = ", ")
+    {
+        StringBuilder args = new StringBuilder();
+        foreach(IProperty property in properties)
+        {
+      if (args.Length > 0)
+          args.Append(seperator);
+
+      if(String.IsNullOrEmpty(prefix))
+           args.Append(property.VariableName);
+      else
+          args.AppendFormat("{0}{1}", prefix, property.Name);
+        }
+
+        return args.ToString();
+    }
+</script>
