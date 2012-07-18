@@ -33,49 +33,52 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using Codesmith.Data;
 using CodeSmith.Data.Linq;
 using CodeSmith.Data.Linq.Dynamic;
 using <%= String.IsNullOrEmpty(QueryNamespace) ? EntityNamespace : QueryNamespace %>;
 
 namespace <%= String.IsNullOrEmpty(ControllerNamespace) ? String.Concat(EntityNamespace, ".Controllers") : ControllerNamespace %>
 {
+    [KendoPagingAndFiltering]
     public partial class <%= Entity.Name %>Controller : ApiController
     {
+        private <%= ContextNamespace %>.<%= DataContextName %> _context = new <%= ContextNamespace %>.<%= DataContextName %>();
+
+        #region Get
+
 <% if(Entity.HasKey) { %>
         public <%= EntityNamespace %>.<%= Entity.Name %> <%= UniqueMethodPrefix %><%= MethodKeySuffix %>(<%= GetParameters(Entity.Key.Properties) %>)
         {
-            using(var context = new <%= ContextNamespace %>.<%= DataContextName %>())
-            {
-                return context.<%= Entity.Name %>.<%= UniqueMethodPrefix %><%= MethodKeySuffix %>(<%= GetArguments(Entity.Key.Properties) %>);
-            }
+            var <%= Entity.VariableName %> = _context.<%= Entity.Name %>.<%= UniqueMethodPrefix %><%= MethodKeySuffix %>(<%= GetArguments(Entity.Key.Properties) %>);
+            if (<%= Entity.VariableName %> == null)
+                throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.NotFound));
+
+            return <%= Entity.VariableName %>;
         }
 
 <% } %>
 <% foreach (IProperty property in Entity.Properties) {
-    if ((property.PropertyType & PropertyType.Index) == PropertyType.Index && !property.IsType(PropertyType.Key)) { %>
+    if (property.IsType(PropertyType.Index) && !property.IsType(PropertyType.Key)) { %>
         public <%= EntityNamespace %>.<%= Entity.Name %> <%= UniqueMethodPrefix %><%= property.Name %>(<%= GetParameters(new List<IProperty>() { property }) %>)
         {
-            using(var context = new <%= ContextNamespace %>.<%= DataContextName %>())
-            {
-                return context.<%= Entity.Name %>.<%= UniqueMethodPrefix %><%= property.Name %>(<%= property.VariableName %>);
-            }
+            var <%= Entity.VariableName %> = _context.<%= Entity.Name %>.<%= UniqueMethodPrefix %><%= property.Name %>(<%= property.VariableName %>);
+                throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.NotFound));
+
+            return <%= Entity.VariableName %>;
         }
 
 <% } } %>
-        #region "Get By <%= StringUtil.ToPlural(Entity.Name) %>"
-        
-        public IQueryable<<%= EntityNamespace %>.<%= Entity.Name %>> GetAll<%= StringUtil.ToPlural(Entity.Name) %>()
+        public IQueryable<<%= EntityNamespace %>.<%= Entity.Name %>> GetAll()
         {
-            var context = new <%= ContextNamespace %>.<%= DataContextName %>();
-            return context.<%= Entity.Name %>.AsQueryable();
+            return _context.<%= Entity.Name %>.AsQueryable();
         }
 <% foreach(IProperty property in Entity.Properties) { %>
-   <% if (IsIgnoreType(property)) { continue; } %>
-        
-        public IQueryable<<%= EntityNamespace %>.<%= Entity.Name %>> Get<%= StringUtil.ToPlural(Entity.Name) %><%= MethodPrefix %><%= property.Name %>(<%= GetParameters(new List<IProperty>() { property }) %>)
+   <% if (IsIgnoreType(property) || property.IsType(PropertyType.Key) || property.IsType(PropertyType.Index)) { continue; } %>
+
+        public IQueryable<<%= EntityNamespace %>.<%= Entity.Name %>> Get<%= MethodPrefix %><%= property.Name %>(<%= GetParameters(new List<IProperty>() { property }) %>)
         {
-            var context = new <%= ContextNamespace %>.<%= DataContextName %>();
-            return context.<%= Entity.Name %>.<%= MethodPrefix %><%= property.Name %>(<%= property.VariableName %>).AsQueryable();
+            return _context.<%= Entity.Name %>.<%= MethodPrefix %><%= property.Name %>(<%= property.VariableName %>).AsQueryable();
         }
 <% } %>
 
@@ -84,53 +87,46 @@ namespace <%= String.IsNullOrEmpty(ControllerNamespace) ? String.Concat(EntityNa
 
         public HttpResponseMessage Post(<%= EntityNamespace %>.<%= Entity.Name %> value)
         {
-           if(!ModelState.IsValid)
-                throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.PartialContent));
-                
-            using (var context = new <%= ContextNamespace %>.<%= DataContextName %>())
-            {
-                context.<%= Entity.Name %>.AddObject(value);
-                context.SaveChanges();
-            }
-            
-            var response = Request.CreateResponse<<%= EntityNamespace %>.<%= Entity.Name %>>(HttpStatusCode.Created, value);
+            if (!ModelState.IsValid)
+                throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.BadRequest));
 
-            string uri = Url.Link("DefaultApi", new { <%= GetObjectInitializers(Entity.Key.Properties) %> });
-            response.Headers.Location = new Uri(uri);
+            _context.<%= Entity.Name %>.AddObject(value);
+            _context.SaveChanges();
+
+            var response = Request.CreateResponse<<%= EntityNamespace %>.<%= Entity.Name %>>(HttpStatusCode.Created, value);
+            response.Headers.Location = new Uri( Url.Link("DefaultApi", new { <%= GetObjectInitializers(Entity.Key.Properties) %> }));
+
             return response;
         }
-        
-        public void Put(<%= EntityNamespace %>.<%= Entity.Name %> value)
+
+        public HttpResponseMessage Put(<%= EntityNamespace %>.<%= Entity.Name %> value)
         {
-           if(!ModelState.IsValid)
-                throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.PartialContent));
+            if (!ModelState.IsValid)
+                throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.BadRequest));
 
-            using (var context = new <%= ContextNamespace %>.<%= DataContextName %>())
-            {
-                var item = context.<%= Entity.Name %>.<%= UniqueMethodPrefix %><%= MethodKeySuffix %>(<%= GetArguments(Entity.Key.Properties, "value.") %>);
-                if (item == null)
-                    throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.NotFound));
+            var <%= Entity.VariableName %> = _context.<%= Entity.Name %>.<%= UniqueMethodPrefix %><%= MethodKeySuffix %>(<%= GetArguments(Entity.Key.Properties, "value.") %>);
+            if (<%= Entity.VariableName %> == null)
+                throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.NotFound));
 
-                context.ApplyCurrentValues(item.EntityKey.EntitySetName, value);
-                context.SaveChanges();
+            _context.<%= Entity.Name %>.Attach(value);
+            _context.ObjectStateManager.ChangeObjectState(value, System.Data.EntityState.Modified);
 
-                context.SaveChanges();
-            }
+            //_context.ApplyCurrentValues(<%= Entity.VariableName %>.EntityKey.EntitySetName, value);
+            _context.SaveChanges();
+
+            return new HttpResponseMessage(HttpStatusCode.OK);
         }
 
         public HttpResponseMessage Delete(<%= GetParameters(Entity.Key.Properties) %>)
         {
-            using (var context = new <%= ContextNamespace %>.<%= DataContextName %>())
-            {
-                var item = context.<%= Entity.Name %>.<%= UniqueMethodPrefix %><%= MethodKeySuffix %>(<%= GetArguments(Entity.Key.Properties) %>);
-                if (item == null)
-                    return new HttpResponseMessage(HttpStatusCode.NoContent);
+            var <%= Entity.VariableName %> = _context.<%= Entity.Name %>.<%= UniqueMethodPrefix %><%= MethodKeySuffix %>(<%= GetArguments(Entity.Key.Properties) %>);
+            if (<%= Entity.VariableName %> == null)
+                return new HttpResponseMessage(HttpStatusCode.NotFound);
 
-                context.<%= Entity.Name %>.DeleteObject(item);
-                context.SaveChanges();
-            }
+            _context.<%= Entity.Name %>.DeleteObject(<%= Entity.VariableName %>);
+            _context.SaveChanges();
             
-            return new HttpResponseMessage(HttpStatusCode.NoContent);
+            return new HttpResponseMessage(HttpStatusCode.OK);
         }
 <% } %>
     }

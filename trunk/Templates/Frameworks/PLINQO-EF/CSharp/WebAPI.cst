@@ -21,6 +21,7 @@
 <%@ Register Name="ViewController" Template="Internal\View.Controller.cst" %>
 <%@ Register Name="ViewKendo" Template="Internal\View.Kendo.cst" %>
 <%@ Register Name="ViewRazor" Template="Internal\View.Razor.cst" %>
+<%@ Property Name="ServiceBaseUrl" Type="System.String" Category="1. Client" Default="http://localhost/api" %>
 <%@ Property Name="BaseDirectory" Type="System.String" Category="2. Class" Default=".\" Optional="False" Description="The path to the current project" Editor="System.Windows.Forms.Design.FileNameEditor, System.Design" %>
 <%@ Property Name="ControllerNamespace" Type="System.String" Category="2. Class" Default="" Optional="True" Description="The namespace for the interfaces.  Leave blank to not generate them." %>
 <%@ Property Name="ControllerDirectory" Type="System.String" Category="2. Class" Default=".\Controllers" Optional="True" Description="The folder to save the generated entity files." Editor="System.Windows.Forms.Design.FolderNameEditor, System.Design" %>
@@ -83,6 +84,7 @@ private void CreateViewContent(IEnumerable<IEntity> entities, string entityNames
         this.CopyPropertiesTo(javascriptTemplate);
         javascriptTemplate.Entity = entity;
         javascriptTemplate.EntityNamespace = entityNamespace;
+        javascriptTemplate.ServiceBaseUrl = ServiceBaseUrl;
         
         Response.WriteLine(fileName);
         javascriptTemplate.RenderToFile(fileName, true);
