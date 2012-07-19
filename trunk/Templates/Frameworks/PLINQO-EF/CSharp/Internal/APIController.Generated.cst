@@ -108,10 +108,7 @@ namespace <%= String.IsNullOrEmpty(ControllerNamespace) ? String.Concat(EntityNa
             if (<%= Entity.VariableName %> == null)
                 throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.NotFound));
 
-            _context.<%= Entity.Name %>.Attach(value);
-            _context.ObjectStateManager.ChangeObjectState(value, System.Data.EntityState.Modified);
-
-            //_context.ApplyCurrentValues(<%= Entity.VariableName %>.EntityKey.EntitySetName, value);
+            _context.ApplyCurrentValues(<%= Entity.VariableName %>.EntityKey.EntitySetName, value);
             _context.SaveChanges();
 
             return new HttpResponseMessage(HttpStatusCode.OK);
