@@ -27,23 +27,31 @@ var <%= Entity.VariableName %>DataSource = new kendo.data.DataSource({<% } else 
     type: "json",
     transport: {
         read: {
-            url: crudServiceBaseUrl + "/<%= Entity.VariableName %>"
+            url: crudServiceBaseUrl + "/<%= Entity.VariableName %>",
+            dataType: "json"
         }<% if(IncludeCreate) { %>,
         create: {
             url: crudServiceBaseUrl + "/<%= Entity.VariableName %>",
+            dataType: "json",
+            contentType: "application/json",
             type: "POST"
         }<% } if(IncludeUpdate) { %>,
         update: {
             url: crudServiceBaseUrl + "/<%= Entity.VariableName %>",
+            dataType: "json",
+            contentType: "application/json",
             type: "PUT"
         }<% } if(IncludeDelete) { %>,
         destroy: {
             url: function (o) {
                 return crudServiceBaseUrl + "/<%= Entity.VariableName %><% if(Entity.HasKey) { %>/" + <%= GetParameters(Entity.Key.Properties, "o.", " + ") %><% } else { %>"<% } %>;
             },
+            dataType: "json",
             type: "DELETE"
         }<% } if(IncludeParameterMap) { %>,
-        parameterMap: kendo.data.transports.odata.parameterMap<% } %>
+        parameterMap: function(data, operation) {
+            return JSON.stringify(data);
+        }<% } %>
     },
     schema: {
         data: function (result) {
@@ -69,7 +77,8 @@ var <%= Entity.VariableName %>DataSource = new kendo.data.DataSource({<% } else 
     }<%if(!String.IsNullOrEmpty(Filter)) { %>,
     filter: { <%= Filter %> }<% } if(IncludeFiltering) { %>,
     serverFiltering: true<% } if(IncludeSorting) { %>,
-    serverSorting: true<% } if(IncludePaging) { %>,
+    serverSorting: true,
+    allowUnsort: true<% } if(IncludePaging) { %>,
     serverPaging: true,
     pageSize: <%= PageSize %><% } %>
 }<% if(!IsEmbeddedDataSource) { %>);<% } %>

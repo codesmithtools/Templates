@@ -17,7 +17,7 @@
 $(document).ready(function () {
     var crudServiceBaseUrl = "<%= ServiceBaseUrl %>";
 <% foreach(var association in Entity.Associations) { %>
-<%= RenderDataSource(association.ForeignEntity, false, false, false, false, false, false, false, false, false) %>
+<%= RenderDataSource(association.ForeignEntity, false, false, false, false, false, false, false, true, false) %>
 <% } %>
 <%= RenderDataSource(Entity, Entity.HasKey, Entity.HasKey, Entity.HasKey, true, true, true, true, true, true) %>
 <%= RenderGrid(Entity, Entity.HasKey, Entity.HasKey, Entity.HasKey, true, true, true, true, true, true, includeDetails) %>
