@@ -2,22 +2,28 @@
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\Common" %>
 <%@ Assembly Name="Generator.QuickStart" Path="..\..\Common" %>
 <%@ Assembly Name="Generator.Microsoft.Frameworks" Path="..\..\Common" %>
-
 <%@ Import Namespace="System.Collections.Generic" %>
 <%@ Import Namespace="System.Text" %>
 <%@ Import Namespace="System.Text.RegularExpressions" %>
 <%@ Import Namespace="CodeSmith.SchemaHelper" %>
 <%@ Import Namespace="Generator.QuickStart" %>
 <%@ Import Namespace="Generator.Microsoft.Frameworks" %>
+<%@ Property Name="Entities" Type="System.Collections.Generic.IEnumerable<IEntity>" %>
 @{
     ViewBag.Title = "<%= StringUtil.ToPlural(Entity.Name) %>";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2><%= StringUtil.ToPlural(Entity.Name) %></h2>
+<h2> Navigate to: 
+    <select onchange="window.location = this.value;">
+<% foreach (var entity in Entities) { %>
+        <option value="/<%= StringUtil.ToPlural(entity.Name) %>/"<% if(entity == Entity) { %> selected="selected"<% } %>><%= StringUtil.ToPlural(entity.Name) %></option>
+<% } %>
+    </select>
+</h2>
 <div id="grid"></div>
-<% var assoication = Entity.Associations.FirstOrDefault(a => !a.IsParentEntity);
-   if(assoication != null && assoication.ForeignEntity.Properties.Count >= 2) { %>
+<% var assoication = Entity.Associations.FirstOrDefault(a => a.ForeignEntity.Properties.Count >= 2);
+   if(assoication != null) { %>
 <script type="text/x-kendo-template" id="template">
     <div class="toolbar">
         <label class="toolbarFilter-label" for="toolbarFilter">Show <%= StringUtil.ToPlural(Entity.Name) %> by <%= assoication.ForeignEntity.Name %>:</label>

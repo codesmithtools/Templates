@@ -76,7 +76,8 @@ private void CreateViewContent(IEnumerable<IEntity> entities, string entityNames
         this.CopyPropertiesTo(viewTemplate);
         viewTemplate.Entity = entity;
         viewTemplate.EntityNamespace = entityNamespace;
-        
+        viewTemplate.Entities = entities;
+
         Response.WriteLine(fileName);
         viewTemplate.RenderToFile(fileName, true);
 
