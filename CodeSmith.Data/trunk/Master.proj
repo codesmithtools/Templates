@@ -74,17 +74,17 @@
   </Target>
 
   <ItemGroup>
-    <CommitFiles Include="Build\v3.5\CodeSmith.Data.dll" />
-    <CommitFiles Include="Build\v3.5\CodeSmith.Data.xml" />
-    <CommitFiles Include="Build\v4.0\CodeSmith.Data.dll" />
-    <CommitFiles Include="Build\v4.0\CodeSmith.Data.xml" />
-    <CommitFiles Include="Build\CodeSmith.Data.chm" />
+    <CommitFiles Include="Common\v3.5\CodeSmith.Data.dll" />
+    <CommitFiles Include="Common\v3.5\CodeSmith.Data.xml" />
+    <CommitFiles Include="Common\v4.0\CodeSmith.Data.dll" />
+    <CommitFiles Include="Common\v4.0\CodeSmith.Data.xml" />
+    <CommitFiles Include="Common\CodeSmith.Data.chm" />
   </ItemGroup>
 
   <Target Name="Documentation" DependsOnTargets="Version;Compile">
     <MSBuild Projects="Source\Help\CodeSmith.Data.shfbproj" />
 
-    <Copy SourceFiles="Source\Help\Help\CodeSmith.Data.chm" DestinationFolder="Build"/>
+    <Copy SourceFiles="Source\Help\Help\CodeSmith.Data.chm" DestinationFolder="Common"/>
   </Target>
 
   <Target Name="Zip" DependsOnTargets="Documentation">
