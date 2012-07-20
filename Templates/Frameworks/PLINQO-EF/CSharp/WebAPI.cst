@@ -72,7 +72,7 @@ private void CreateViewContent(IEnumerable<IEntity> entities, string entityNames
         if((entity is ConceptualEntity) == false) 
             continue;
         
-        var fileName = String.Format("{0}\\{1}\\Index.cshtml", ViewDirectory, StringUtil.ToPlural(entity.Name));
+        var fileName = String.Format("{0}\\Admin\\{1}.cshtml", ViewDirectory, StringUtil.ToPlural(entity.Name));
         this.CopyPropertiesTo(viewTemplate);
         viewTemplate.Entity = entity;
         viewTemplate.EntityNamespace = entityNamespace;
@@ -96,7 +96,6 @@ private void CreateControllers(IEnumerable<IEntity> entities, string entityNames
 {
     var controllerTemplate = this.Create<APIController>();
     var controllerGeneratedTemplate = this.Create<APIControllerGenerated>();
-    var viewControllerTemplate = this.Create<ViewController>();
 
     foreach (var entity in entities)
     {
@@ -125,15 +124,17 @@ private void CreateControllers(IEnumerable<IEntity> entities, string entityNames
 
         Response.WriteLine(fileName);
         controllerGeneratedTemplate.RenderToFile(fileName, parentFileName, true);
-
-        fileName = String.Format("{0}\\{1}Controller.cs", ControllerDirectory, StringUtil.ToPlural(entity.Name));
-        this.CopyPropertiesTo(viewControllerTemplate);
-        viewControllerTemplate.Entity = entity;
-        viewControllerTemplate.EntityNamespace = entityNamespace;
-        
-        Response.WriteLine(fileName);
-        viewControllerTemplate.RenderToFile(fileName, parentFileName, true);
     }
+
+    var viewControllerTemplate = this.Create<ViewController>();
+    string adminController = String.Format("{0}\\AdminController.cs", ControllerDirectory);
+    this.CopyPropertiesTo(viewControllerTemplate);
+    viewControllerTemplate.Entity = entities.FirstOrDefault();
+    viewControllerTemplate.Entities = entities;
+    viewControllerTemplate.EntityNamespace = entityNamespace;
+    
+    Response.WriteLine(adminController);
+    viewControllerTemplate.RenderToFile(adminController, true);
 }
 
 public void RegisterReferences()
