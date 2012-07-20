@@ -72,6 +72,8 @@
   </Target>
 
   <ItemGroup>
+    <CommitFiles Include="Common\CodeSmith.Data.EntityFramework.dll" />
+    <CommitFiles Include="Common\CodeSmith.Data.EntityFramework.xml" />
     <CommitFiles Include="Common\Generator.Microsoft.Frameworks.dll" />
   </ItemGroup>
 
