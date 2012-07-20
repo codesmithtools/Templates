@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>CodeSmith.Data.EntityFramework</name>
+    </assembly>
+    <members>
+        <member name="T:CodeSmith.Data.Web.Http.PagingAndFiltering">
+            <summary>
+            http://blog.longle.net/2012/04/13/teleriks-html5-kendo-ui-grid-with-server-side-paging-sorting-filtering-with-mvc3-ef4-dynamic-linq/
+            </summary>
+        </member>
+    </members>
+</doc>
