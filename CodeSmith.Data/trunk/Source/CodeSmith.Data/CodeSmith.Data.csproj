@@ -15,22 +15,22 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\Common\$(TargetFrameworkVersion)\</OutputPath>
+    <OutputPath>..\..\Build\$(TargetFrameworkVersion)\</OutputPath>
     <DefineConstants>TRACE;DEBUG;v40</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>..\..\Common\$(TargetFrameworkVersion)\CodeSmith.Data.XML</DocumentationFile>
+    <DocumentationFile>..\..\Build\$(TargetFrameworkVersion)\CodeSmith.Data.XML</DocumentationFile>
     <NoWarn>1591</NoWarn>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\..\Common\$(TargetFrameworkVersion)\</OutputPath>
+    <OutputPath>..\..\Build\$(TargetFrameworkVersion)\</OutputPath>
     <DefineConstants>TRACE;v40</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>..\..\Common\$(TargetFrameworkVersion)\CodeSmith.Data.XML</DocumentationFile>
+    <DocumentationFile>..\..\Build\$(TargetFrameworkVersion)\CodeSmith.Data.XML</DocumentationFile>
     <NoWarn>1591</NoWarn>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>

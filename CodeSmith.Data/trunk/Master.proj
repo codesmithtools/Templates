@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Zip" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\MSBuildCommunityTasks\MSBuild.Community.Tasks.Targets"/>
+
+  <PropertyGroup>
+    <Major>5</Major>
+    <Minor>1</Minor>
+    <Build>0</Build>
+    <Revision>0</Revision>
+
+    <BindMinor>0</BindMinor>
+    <BindBuild>0</BindBuild>
+    <BindRevision>0</BindRevision>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <BuildConfiguration>Release</BuildConfiguration>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <SvnExclude Include="**\.svn\**" />
+
+    <DefaultExclude Include="@(SvnExclude)" />
+    <DefaultExclude Include="**\obj\**" />
+    <DefaultExclude Include="**\bin\**" />
+    <DefaultExclude Include="**\Sample\**" />
+    <DefaultExclude Include="**\Libraries\**" />
+    <DefaultExclude Include="**\Help\**" />
+    <DefaultExclude Include="**\Patch\**" />
+    <DefaultExclude Include="**\_ReSharper*\**" />
+    <DefaultExclude Include="*.proj" />
+    <DefaultExclude Include="*.dbml" />
+    <DefaultExclude Include="*.zip" />
+    <DefaultExclude Include="**\*.user" />
+    <DefaultExclude Include="**\*.resharper" />
+    <DefaultExclude Include="**\*.cache" />
+    <DefaultExclude Include="*.teamcity.*" />
+
+    <ZipFiles Include="**\*.*" Exclude="@(DefaultExclude)" />
+  </ItemGroup>
+
+  <Target Name="Version">
+    <SvnVersion LocalPath="$(MSBuildProjectDirectory)">
+      <Output TaskParameter="Revision" PropertyName="Revision" />
+    </SvnVersion>
+
+    <Message Text="Revision: $(Revision)"/>
+    
+    <Time>
+      <Output TaskParameter="Month" PropertyName="Month" />
+      <Output TaskParameter="Day" PropertyName="Day" />
+      <Output TaskParameter="Year" PropertyName="Year" />
+    </Time>
+
+    <AssemblyInfo CodeLanguage="CS"
+      OutputFile="$(MSBuildProjectDirectory)\Source\GlobalAssemblyInfo.cs"
+      AssemblyCompany="CodeSmith Tools, LLC"
+      AssemblyProduct="CodeSmith.Data"
+      AssemblyCopyright="Copyright (c) 2002-$(Year) CodeSmith Tools, LLC.  All rights reserved."
+      AssemblyConfiguration="$(BuildConfiguration)"
+      AssemblyVersion="$(Major).$(BindMinor).$(BindBuild).$(BindRevision)"
+      AssemblyFileVersion="$(Major).$(Minor).$(Build).$(Revision)"
+      AssemblyInformationalVersion="$(Major).$(Minor).$(Build).$(Revision)"
+      GenerateClass="true" />
+
+  </Target>
+
+  <Target Name="Compile" DependsOnTargets="Libaries">
+    <MSBuild Projects="Source\CodeSmith.Data.sln"
+             Properties="Configuration=$(BuildConfiguration);DefineConstants=v40" />
+    
+    <MSBuild Projects="Source\CodeSmith.Data\CodeSmith.Data.csproj"
+             Properties="Configuration=$(BuildConfiguration);TargetFrameworkVersion=v3.5;DefineConstants=TRACE" />
+  </Target>
+
+  <ItemGroup>
+    <CommitFiles Include="Build\v3.5\CodeSmith.Data.dll" />
+    <CommitFiles Include="Build\v3.5\CodeSmith.Data.xml" />
+    <CommitFiles Include="Build\v4.0\CodeSmith.Data.dll" />
+    <CommitFiles Include="Build\v4.0\CodeSmith.Data.xml" />
+    <CommitFiles Include="Build\CodeSmith.Data.chm" />
+  </ItemGroup>
+
+  <Target Name="Documentation" DependsOnTargets="Version;Compile">
+    <MSBuild Projects="Source\Help\CodeSmith.Data.shfbproj" />
+
+    <Copy SourceFiles="Source\Help\Help\CodeSmith.Data.chm" DestinationFolder="Build"/>
+  </Target>
+
+  <Target Name="Zip" DependsOnTargets="Documentation">
+    <Zip Files="@(ZipFiles)" ZipFileName="CodeSmith.Data-r$(Revision).zip" />
+  </Target>
+
+  <Target Name="Commit" DependsOnTargets="Compile">
+    <RegistryRead KeyName="HKEY_LOCAL_MACHINE\SOFTWARE\BuildServer" ValueName="GoogleUser">
+      <Output TaskParameter="Value" PropertyName="GoogleUser" />
+    </RegistryRead>
+    <RegistryRead KeyName="HKEY_LOCAL_MACHINE\SOFTWARE\BuildServer" ValueName="GooglePassword">
+      <Output TaskParameter="Value" PropertyName="GooglePassword" />
+    </RegistryRead>
+
+    <SvnCommit
+      Targets="@(CommitFiles)"
+      Message="Auto commit from MSBuild."
+      Username="$(GoogleUser)"
+      Password="$(GooglePassword)" />
+
+  </Target>
+</Project>
