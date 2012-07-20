@@ -49,7 +49,7 @@ var <%= Entity.VariableName %>DataSource = new kendo.data.DataSource({<% } else 
             dataType: "json",
             type: "DELETE"
         }<% } if(IncludeParameterMap) { %>,
-        parameterMap: function(data, operation) {
+        parameterMap: function(data) {
             return JSON.stringify(data);
         }<% } %>
     },

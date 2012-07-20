@@ -20,7 +20,7 @@ $(document).ready(function () {
 <%= RenderDataSource(association.ForeignEntity, false, false, false, false, false, false, false, true, false) %>
 <% } %>
 <%= RenderDataSource(Entity, Entity.HasKey, Entity.HasKey, Entity.HasKey, true, true, true, true, true, true) %>
-<%= RenderGrid(Entity, Entity.HasKey, Entity.HasKey, Entity.HasKey, true, true, true, true, true, true, includeDetails) %>
+<%= RenderGrid(Entity, Entity.HasKey, Entity.HasKey, Entity.HasKey, true, true, true, true, true, Entity.Associations.FirstOrDefault(a => a.ForeignEntity.Properties.Count >= 2) != null, includeDetails) %>
 <% if(includeDetails){ %>
     function <%= Entity.VariableName %>Details(e) {
 <%  foreach(var association in Entity.Associations) { %>
@@ -104,7 +104,7 @@ if (toolbarFilterAssociation != null) { %>
         template.IncludeSorting = includeSorting;
         template.IncludeNavigation = includeNavigation;
         template.IncludeTitle = includeTitle;
-        template.IncludeToolbar = false;
+        template.IncludeToolbar = assocation.ForeignEntity.Properties.Count >= 2;
         template.IncludeDetails = false;
         template.IsDetailedGrid = true;
         template.Association = assocation;
