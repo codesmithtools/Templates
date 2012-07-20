@@ -106,4 +106,7 @@
       Password="$(GooglePassword)" />
 
   </Target>
+  
+  <Target Name="Nightly" DependsOnTargets="Zip;Commit">
+  </Target>
 </Project>
