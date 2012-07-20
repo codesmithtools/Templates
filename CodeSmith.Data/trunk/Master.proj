@@ -65,7 +65,7 @@
 
   </Target>
 
-  <Target Name="Compile" DependsOnTargets="Libaries">
+  <Target Name="Compile">
     <MSBuild Projects="Source\CodeSmith.Data.sln"
              Properties="Configuration=$(BuildConfiguration);DefineConstants=v40" />
     
