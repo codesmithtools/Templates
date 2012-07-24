@@ -12,6 +12,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{8270C2
 		.nuget\nuget.exe = .nuget\nuget.exe
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeSmith.Data", "CodeSmith.Data\CodeSmith.Data.csproj", "{389DE9AF-2491-4C91-A3A3-FB15FFD8515B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -20,6 +22,12 @@ Global
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{389DE9AF-2491-4C91-A3A3-FB15FFD8515B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{389DE9AF-2491-4C91-A3A3-FB15FFD8515B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{389DE9AF-2491-4C91-A3A3-FB15FFD8515B}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{389DE9AF-2491-4C91-A3A3-FB15FFD8515B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{389DE9AF-2491-4C91-A3A3-FB15FFD8515B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{389DE9AF-2491-4C91-A3A3-FB15FFD8515B}.Release|x86.ActiveCfg = Release|Any CPU
 		{3C898093-D813-4476-8228-A565A17F4AA4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{3C898093-D813-4476-8228-A565A17F4AA4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3C898093-D813-4476-8228-A565A17F4AA4}.Debug|x86.ActiveCfg = Debug|Any CPU

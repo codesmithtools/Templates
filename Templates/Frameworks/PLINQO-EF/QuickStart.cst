@@ -24,14 +24,25 @@ Description: Used to Quick Start Visual Studio Projects
 <%@ Property Name="DataContextName" Type="System.String"  Default="" Optional="True" Category="3.Data Project" Description="Name Space for the Data Project." %>
 <%@ Property Name="CopyTemplatesToFolder" Type="System.Boolean"  Default="False" Optional="False" Category="3.Data Project" Description="Include a copy of the LinqToSql Templates in the project directory" %>
 
-<%@ Property Name="IncludeWebProject" Type="System.Boolean" Default="True" Optional="False" Category="4.Web Project" Description="Include the DynamicData WebProject" %>
+<%@ Property Name="ProjectType" Type="WebProjectType" Default="DynamicData" Optional="False" Category="4.Web Project" Description="Type of Web Project to include." %>
 <%@ Property Name="IncludeDataServices" Type="System.Boolean" Default="True" Optional="False" Category="4.Web Project" Description="Include DataServices in Web Project" %>
 <%@ Property Name="InterfaceProjectName" Type="System.String" Default="" Optional="False" Category="4.Web Project" Description="Name Space for the Web Project." %>
 
 <% CreateQuickStart(); %>
 The <%= SolutionName %> Solution has been created at <%= Location %>.
 
+<% if(ProjectType == WebProjectType.WebAPI) { %>
+The generated solution contains one or more projects that require MVC4 (http://www.asp.net/mvc/mvc4) and NuGet.
+<% } %>
+
 <script runat="template">
+
+    public enum WebProjectType
+    {
+        None = 0,
+        DynamicData = 1,
+        WebAPI = 2
+    }
 
     public void CreateQuickStart()
     {
@@ -52,18 +63,26 @@ The <%= SolutionName %> Solution has been created at <%= Location %>.
 
         List<SolutionItem> solutionItems = new List<SolutionItem>();
         ProjectBuilderSettings pbs = CreateProjectBuilderSettings();
-
-        // Create Data Project
-        DataProjectCreator dataProjectCreator = new DataProjectCreator(pbs);
-        dataProjectCreator.CspFileName = "Entities.csp";
-        dataProjectCreator.CreateProject(this.DataProjectName);
-        solutionItems.Add(dataProjectCreator.SolutionItem);
-
-        if(IncludeWebProject)
+        
+        if(ProjectType == WebProjectType.WebAPI)
         {
-            WebSiteCreator websiteCreator = new WebSiteCreator(pbs, true);
-            websiteCreator.CreateProject(this.InterfaceProjectName, DataContextName, BuildEFConnectionString(), "System.Data.EntityClient", dataProjectCreator.SolutionItem);
-            solutionItems.Add(websiteCreator.SolutionItem);
+            WebAPIProjectCreator webAPICreator = new WebAPIProjectCreator(pbs);
+            webAPICreator.CspFileName = "WebAPIEntities.csp";
+            webAPICreator.CreateProject(this.InterfaceProjectName, DataContextName, BuildEFConnectionString(), null);
+            solutionItems.Add(webAPICreator.SolutionItem);
+        } else { 
+            // Create Data Project
+            DataProjectCreator dataProjectCreator = new DataProjectCreator(pbs);
+            dataProjectCreator.CspFileName = "Entities.csp";
+            dataProjectCreator.CreateProject(this.DataProjectName);
+            solutionItems.Add(dataProjectCreator.SolutionItem);
+
+            if(ProjectType == WebProjectType.DynamicData)
+            {
+                WebSiteCreator websiteCreator = new WebSiteCreator(pbs, true);
+                websiteCreator.CreateProject(this.InterfaceProjectName, DataContextName, BuildEFConnectionString(), dataProjectCreator.SolutionItem);
+                solutionItems.Add(websiteCreator.SolutionItem);
+            }
         }
 
         // Create Solution
@@ -97,9 +116,8 @@ The <%= SolutionName %> Solution has been created at <%= Location %>.
 
     private ProjectBuilderSettings CreateProjectBuilderSettings()
     {
-        ProjectBuilderSettings settings = new ProjectBuilderSettings()
+        ProjectBuilderSettings settings = new ProjectBuilderSettings(SourceDatabase)
         {
-            SourceDatabase = this.SourceDatabase,
             FrameworkVersion = FrameworkVersion.v40,
             ZipFileRoot = @"Common",
             Language = Language.CSharp,
@@ -113,13 +131,13 @@ The <%= SolutionName %> Solution has been created at <%= Location %>.
             InterfaceProjectName = this.InterfaceProjectName,
             IncludeTestProject = false,
             ProjectType = ProjectTypeEnum.DynamicDataWebSite,
+            ConnectionStringProviderNameAttribute = "System.Data.EntityClient",
             TestProjectName = String.Empty,
             WorkingDirectory = this.CopyTemplatesToFolder
                 ? Path.Combine(Location, @"Templates\")
                 : this.CodeTemplateInfo.DirectoryName
         };
         
-        settings.SetConnetionProvider(this.SourceDatabase.Provider);
         return settings;
     }
     private string CreateSolution(List<SolutionItem> solutionItems)
@@ -165,6 +183,6 @@ The <%= SolutionName %> Solution has been created at <%= Location %>.
     
     private string BuildEFConnectionString()
     {
-        return "metadata=res://*/$databaseName$.csdl|res://*/$databaseName$.ssdl|res://*/$databaseName$.msl;provider=System.Data.SqlClient;provider connection string=&quot;App=EntityFramework;{0}&quot;";
+        return "metadata=res://*/$databaseName$.csdl|res://*/$databaseName$.ssdl|res://*/$databaseName$.msl;provider=$connectionStringProvider$;provider connection string=&quot;App=EntityFramework;{0}&quot;";
     }
 </script>
