@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<codeSmith xmlns="http://www.codesmithtools.com/schema/csp.xsd">
+  <variables>
+    <add key="$databaseName$ConnectionString" value="$connectionString$" />
+  </variables>
+  <defaultProperties>
+    <property name="EdmxFile">$databaseName$.edmx</property>
+    <property name="BaseDirectory">.\</property>
+  </defaultProperties>
+  <propertySets>
+    <propertySet name="EDMX" template="$template.path$$language$\edmx.cst">
+      <property name="IncludeViews">$includeViews$</property>
+      <property name="IncludeFunctions">$includeFunctions$</property>
+      <property name="IgnoreList">
+        <stringList>
+          <string>^dbo.sysdiagrams$</string>
+          <string>^dbo.sp_</string>
+          <string>^dbo.aspnet</string>
+        </stringList>
+      </property>
+      <property name="IncludeList">
+        <sringList>
+          <string></string>
+        </sringList>
+      </property>
+      <property name="CleanExpression">
+        <stringList>
+          <string>^(sp|tbl|udf|vw)_</string>
+        </stringList>
+      </property>
+      <property name="SourceDatabase">
+        <connectionString>$($databaseName$ConnectionString)</connectionString>
+        <providerType>$databaseProvider$</providerType>
+      </property>
+      <property name="EntityNamespace">$entityNamespace$</property>
+      <property name="ContextNamespace">$entityNamespace$</property>
+      <property name="DataContextName">$datacontext$</property>
+    </propertySet>
+    <propertySet name="Entities" template="$template.path$$language$\Entities.cst">
+      <property name="OutputDirectory">.\Entities</property>
+    </propertySet>
+    <propertySet name="Queries" template="$template.path$$language$\Queries.cst">
+      <property name="QueryDirectory">.\Queries</property>
+      <property name="MethodPrefix">By</property>
+      <property name="UniqueMethodPrefix">GetBy</property>
+      <property name="MethodKeySuffix">Key</property>
+    </propertySet>
+    <propertySet name="WebAPI" template="$template.path$$language$\WebAPI.cst">
+	  <property name="ServiceBaseUrl">http://localhost:1867/api</property>
+      <property name="ControllerDirectory">.\Controllers</property>
+      <property name="ScriptDirectory">.\Scripts\Generated</property>
+      <property name="ViewDirectory">.\Views</property>
+    </propertySet>
+  </propertySets>
+</codeSmith>

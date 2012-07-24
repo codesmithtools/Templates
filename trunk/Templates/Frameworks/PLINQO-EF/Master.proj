@@ -32,9 +32,9 @@
     </Time>
 
     <AssemblyInfo CodeLanguage="CS"
-      OutputFile="$(MSBuildProjectDirectory)\Source\Generator.Microsoft.Frameworks\Properties\AssemblyInfo.cs"
+      OutputFile="$(MSBuildProjectDirectory)\Source\GlobalAssemblyInfo.cs"
       AssemblyCompany="CodeSmith Tools, LLC"
-      AssemblyProduct="Entity Framework"
+      AssemblyProduct="PLINQO for Entity Framework"
       AssemblyCopyright="Copyright (c) 2002-$(Year) CodeSmith Tools, LLC.  All rights reserved."
       AssemblyConfiguration="$(BuildConfiguration)"
       AssemblyVersion="$(Major).$(BindMinor).$(BindBuild).$(BindRevision)"
@@ -72,8 +72,10 @@
   </Target>
 
   <ItemGroup>
-    <CommitFiles Include="Common\CodeSmith.Data.EntityFramework.dll" />
-    <CommitFiles Include="Common\CodeSmith.Data.EntityFramework.xml" />
+    <CommitFiles Include="Common\v4.0\CodeSmith.Data.dll" />
+    <CommitFiles Include="Common\v4.0\CodeSmith.Data.xml" />
+    <CommitFiles Include="Common\v4.0\CodeSmith.Data.EntityFramework.dll" />
+    <CommitFiles Include="Common\v4.0\CodeSmith.Data.EntityFramework.xml" />
     <CommitFiles Include="Common\Generator.Microsoft.Frameworks.dll" />
   </ItemGroup>
 
