@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>CodeSmith.Generator.EntityFramework</id>
+    <version>1.3.0.2823</version>
+    <authors>Blake Niemyjski</authors>
+    <owners>CodeSmith Tools, LLC.</owners>
+    <title>CodeSmith Generator Entity Framework templates</title>
+    <description>Entity Framework templates for CodeSmith Generator</description>
+    <projectUrl>http://www.codesmithtools.com/product/frameworks#plinqoef</projectUrl>
+    <iconUrl>http://www.codesmithtools.com/lib/images/codesmithtools.ico</iconUrl>
+    <requireLicenseAcceptance>true</requireLicenseAcceptance>
+    <licenseUrl>http://docs.codesmithtools.com/display/Generator/Software+Licenses</licenseUrl>
+    <language>en-US</language>
+    <tags>CodeSmith Generator EntityFramework Template</tags>
+    <dependencies>
+      <dependency id="EntityFramework" version="[4.3.1, 6.0)" />
+    </dependencies>
+    <frameworkAssemblies>
+      <frameworkAssembly assemblyName="System.Configuration" />
+    </frameworkAssemblies>
+  </metadata>
+  <files>
+    <file src="..\..\Common\*.dll" target="tools\Common\" />
+    <file src="..\..\Common\*.csmap" target="tools\Common\" />
+	<file src="..\..\Common\v4.0\*.dll" target="tools\Common\v4.0\" />
+	<file src="..\..\Common\v4.0\*.xml" target="tools\Common\v4.0\" />
+    <file src="..\..\CSharp\*.cst" target="tools\CSharp\" />
+    <file src="..\..\CSharp\Internal\*.cst" target="tools\CSharp\Internal\" />
+    <file src="install.ps1" target="tools\install.ps1" />
+    <file src="Entities.csp" target="content\" />
+    <file src="..\..\readme.url" target="content\" />
+  </files>
+</package>
