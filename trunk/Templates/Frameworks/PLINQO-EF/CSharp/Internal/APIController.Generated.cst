@@ -40,7 +40,7 @@ using <%= String.IsNullOrEmpty(QueryNamespace) ? EntityNamespace : QueryNamespac
 
 namespace <%= String.IsNullOrEmpty(ControllerNamespace) ? String.Concat(EntityNamespace, ".Controllers") : ControllerNamespace %>
 {
-    [KendoPagingAndFiltering]
+    [CodeSmith.Data.Web.Http.PagingAndFiltering]
     public partial class <%= Entity.Name %>Controller : ApiController
     {
         private <%= ContextNamespace %>.<%= DataContextName %> _context = new <%= ContextNamespace %>.<%= DataContextName %>();
