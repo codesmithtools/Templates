@@ -33,7 +33,6 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
-using Codesmith.Data;
 using CodeSmith.Data.Linq;
 using CodeSmith.Data.Linq.Dynamic;
 using <%= String.IsNullOrEmpty(QueryNamespace) ? EntityNamespace : QueryNamespace %>;
