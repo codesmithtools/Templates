@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<codeSmith xmlns="http://www.codesmithtools.com/schema/csp.xsd">
+  <propertySets>
+    <propertySet name="WebAPI" template="$template.path$$language$\WebAPI.cst">
+	  <property name="EdmxFile">$DataProjectDirectory$\$databaseName$.edmx</property>
+      <property name="BaseDirectory">.\</property>
+	  <property name="ServiceBaseUrl">http://localhost:1867/api</property>
+      <property name="ControllerDirectory">.\Controllers</property>
+      <property name="ScriptDirectory">.\Scripts\Generated</property>
+      <property name="ViewDirectory">.\Views</property>
+    </propertySet>
+  </propertySets>
+</codeSmith>

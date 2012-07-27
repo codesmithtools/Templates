@@ -140,6 +140,7 @@ private void CreateControllers(IEnumerable<IEntity> entities, string entityNames
 public void RegisterReferences()
 {
     RegisterReference("System");
+    RegisterReference(Path.Combine(CodeTemplateInfo.DirectoryName,"..\\Common\\v4.0\\CodeSmith.Data.dll"));
     RegisterReference(Path.Combine(CodeTemplateInfo.DirectoryName,"..\\Common\\v4.0\\CodeSmith.Data.EntityFramework.dll"));
 }
 </script>
