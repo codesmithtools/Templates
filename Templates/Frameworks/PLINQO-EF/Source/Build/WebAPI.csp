@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <codeSmith xmlns="http://www.codesmithtools.com/schema/csp.xsd">
   <defaultProperties>
-    <property name="EdmxFile">%solutionname%.edmx</property>
+    <property name="EdmxFile">%EdmxFileName%</property>
     <property name="BaseDirectory">.\</property>
   </defaultProperties>
   <propertySets>

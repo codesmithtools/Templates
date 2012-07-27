@@ -29,13 +29,29 @@ public static class GeneratorHelper {
 
         var content = File.ReadAllText(filePath);
 
-		if(!String.Equals(version, "v35") && !String.Equals(version, "v40"))
-			version = "v40";
+        if(!String.Equals(version, "v35") && !String.Equals(version, "v40"))
+            version = "v40";
 
         content = content.Replace("%projectname%", projectName)
-        			.Replace("%solutionname%", solutionName)
-        			.Replace("%version%", version);
+                    .Replace("%solutionname%", solutionName)
+                    .Replace("%version%", version);
         
+        if(content.Contains("%EdmxFileName%")){
+            DirectoryInfo projectDirectory = new DirectoryInfo(Path.GetDirectoryName(filePath));
+            if (projectDirectory.Parent != null) {
+                projectDirectory = projectDirectory.Parent;
+            }
+
+            if(projectDirectory != null) {
+                FileInfo[] files = projectDirectory.GetFiles("*.edmx", SearchOption.AllDirectories);
+                if (files.Length > 0) {
+                    content = content.Replace("%EdmxFileName%", RelativePathTo(Path.GetDirectoryName(filePath), files[0].FullName));
+        }
+            }
+
+            content = content.Replace("%EdmxFileName%", String.Format("{0}.edmx", solutionName));
+        }
+
         File.WriteAllText(filePath, content);
     }
 
