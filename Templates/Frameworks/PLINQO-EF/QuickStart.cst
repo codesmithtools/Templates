@@ -63,26 +63,24 @@ The generated solution contains one or more projects that require MVC4 (http://w
 
         List<SolutionItem> solutionItems = new List<SolutionItem>();
         ProjectBuilderSettings pbs = CreateProjectBuilderSettings();
-        
+
+        // Create Data Project
+        DataProjectCreator dataProjectCreator = new DataProjectCreator(pbs);
+        dataProjectCreator.CspFileName = "Entities.csp";
+        dataProjectCreator.CreateProject(this.DataProjectName);
+        solutionItems.Add(dataProjectCreator.SolutionItem);
+
         if(ProjectType == WebProjectType.WebAPI)
         {
             WebAPIProjectCreator webAPICreator = new WebAPIProjectCreator(pbs);
-            webAPICreator.CspFileName = "WebAPIEntities.csp";
-            webAPICreator.CreateProject(this.InterfaceProjectName, DataContextName, BuildEFConnectionString(), null);
+            webAPICreator.CspFileName = "WebAPI.csp";
+            webAPICreator.CreateProject(this.InterfaceProjectName, DataContextName, BuildEFConnectionString(), dataProjectCreator.SolutionItem);
             solutionItems.Add(webAPICreator.SolutionItem);
-        } else { 
-            // Create Data Project
-            DataProjectCreator dataProjectCreator = new DataProjectCreator(pbs);
-            dataProjectCreator.CspFileName = "Entities.csp";
-            dataProjectCreator.CreateProject(this.DataProjectName);
-            solutionItems.Add(dataProjectCreator.SolutionItem);
-
-            if(ProjectType == WebProjectType.DynamicData)
-            {
-                WebSiteCreator websiteCreator = new WebSiteCreator(pbs, true);
-                websiteCreator.CreateProject(this.InterfaceProjectName, DataContextName, BuildEFConnectionString(), dataProjectCreator.SolutionItem);
-                solutionItems.Add(websiteCreator.SolutionItem);
-            }
+        } else if(ProjectType == WebProjectType.DynamicData)
+        {
+            WebSiteCreator websiteCreator = new WebSiteCreator(pbs, true);
+            websiteCreator.CreateProject(this.InterfaceProjectName, DataContextName, BuildEFConnectionString(), dataProjectCreator.SolutionItem);
+            solutionItems.Add(websiteCreator.SolutionItem);
         }
 
         // Create Solution
