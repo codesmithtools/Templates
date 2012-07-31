@@ -275,7 +275,7 @@ namespace Generator.CSLA.CodeTemplates
                     continue;
 
                 //Many-To-One
-                foreach (var childEntity in entity.Associations.Where(a => a.AssociationType == AssociationType.ManyToOne || a.AssociationType == AssociationType.ManyToZeroOrOne))
+                foreach (var childEntity in GetChildAssociations(entity.Associations))
                 {
                     foreach (AssociationProperty property in childEntity.Properties)
                     {
@@ -284,7 +284,7 @@ namespace Generator.CSLA.CodeTemplates
                 }
 
                 //One-To-Many & Many-To-Many
-                foreach (var childList in entity.Associations.Where(a => a.AssociationType == AssociationType.OneToMany || a.AssociationType == AssociationType.ManyToMany))
+                foreach (var childList in GetChildListAssociations(entity.Associations))
                 {
                     foreach (AssociationProperty property in childList.Properties)
                     {
@@ -312,7 +312,7 @@ namespace Generator.CSLA.CodeTemplates
                     continue;
 
                 //Many-To-One
-                foreach (var childEntity in entity.Associations.Where(a => a.AssociationType == AssociationType.ManyToOne || a.AssociationType == AssociationType.ManyToZeroOrOne))
+                foreach (var childEntity in GetChildAssociations(entity.Associations))
                 {
                     foreach (AssociationProperty property in childEntity.Properties)
                     {
@@ -321,7 +321,7 @@ namespace Generator.CSLA.CodeTemplates
                 }
 
                 //One-To-Many & Many-To-Many
-                foreach (var childList in entity.Associations.Where(a => a.AssociationType == AssociationType.OneToMany || a.AssociationType == AssociationType.ManyToMany))
+                foreach (var childList in GetChildListAssociations(entity.Associations))
                 {
                     foreach (AssociationProperty property in childList.Properties)
                     {
@@ -350,7 +350,7 @@ namespace Generator.CSLA.CodeTemplates
                     continue;
 
                 //Many-To-One
-                foreach (var childEntity in entity.Associations.Where(a => a.AssociationType == AssociationType.ManyToOne || a.AssociationType == AssociationType.ManyToZeroOrOne))
+                foreach (var childEntity in GetChildAssociations(entity.Associations))
                 {
                     foreach (AssociationProperty property in childEntity.Properties)
                     {
@@ -359,7 +359,7 @@ namespace Generator.CSLA.CodeTemplates
                 }
 
                 //One-To-Many & Many-To-Many
-                foreach (var childList in entity.Associations.Where(a => a.AssociationType == AssociationType.OneToMany || a.AssociationType == AssociationType.ManyToMany))
+                foreach (var childList in GetChildListAssociations(entity.Associations))
                 {
                     foreach (AssociationProperty property in childList.Properties)
                     {
@@ -388,7 +388,7 @@ namespace Generator.CSLA.CodeTemplates
                     continue;
 
                 //Many-To-One
-                foreach (var childEntity in entity.Associations.Where(a => a.AssociationType == AssociationType.ManyToOne || a.AssociationType == AssociationType.ManyToZeroOrOne))
+                foreach (var childEntity in GetChildAssociations(entity.Associations))
                 {
                     foreach (AssociationProperty property in childEntity.Properties)
                     {
@@ -397,7 +397,7 @@ namespace Generator.CSLA.CodeTemplates
                 }
 
                 //One-To-Many & Many-To-Many
-                foreach (var childList in entity.Associations.Where(a => a.AssociationType == AssociationType.OneToMany || a.AssociationType == AssociationType.ManyToMany))
+                foreach (var childList in GetChildListAssociations(entity.Associations))
                 {
                     foreach (AssociationProperty property in childList.Properties)
                     {
@@ -426,7 +426,7 @@ namespace Generator.CSLA.CodeTemplates
                     continue;
 
                 //Many-To-One
-                foreach (var childEntity in entity.Associations.Where(a => a.AssociationType == AssociationType.ManyToOne || a.AssociationType == AssociationType.ManyToZeroOrOne))
+                foreach (var childEntity in GetChildAssociations(entity.Associations))
                 {
                     foreach (AssociationProperty property in childEntity.Properties)
                     {
@@ -435,7 +435,7 @@ namespace Generator.CSLA.CodeTemplates
                 }
 
                 //One-To-Many & Many-To-Many
-                foreach (var childList in entity.Associations.Where(a => a.AssociationType == AssociationType.OneToMany || a.AssociationType == AssociationType.ManyToMany))
+                foreach (var childList in GetChildListAssociations(entity.Associations))
                 {
                     foreach (AssociationProperty property in childList.Properties)
                     {
@@ -464,7 +464,7 @@ namespace Generator.CSLA.CodeTemplates
                     continue;
 
                 //Many-To-One
-                foreach (var childEntity in entity.Associations.Where(a => a.AssociationType == AssociationType.ManyToOne || a.AssociationType == AssociationType.ManyToZeroOrOne))
+                foreach (var childEntity in GetChildAssociations(entity.Associations))
                 {
                     foreach (AssociationProperty property in childEntity.Properties)
                     {
@@ -473,7 +473,7 @@ namespace Generator.CSLA.CodeTemplates
                 }
 
                 //One-To-Many & Many-To-Many
-                foreach (var childList in entity.Associations.Where(a => a.AssociationType == AssociationType.OneToMany || a.AssociationType == AssociationType.ManyToMany))
+                foreach (var childList in GetChildListAssociations(entity.Associations))
                 {
                     foreach (AssociationProperty property in childList.Properties)
                     {
@@ -482,6 +482,15 @@ namespace Generator.CSLA.CodeTemplates
                 }
             }
         }
+
+        private IEnumerable<IAssociation> GetChildAssociations(IEnumerable<IAssociation> associations) {
+            return associations.Where(a => a.AssociationType == AssociationType.ManyToOne || a.AssociationType == AssociationType.ManyToZeroOrOne);
+        }
+
+        private IEnumerable<IAssociation> GetChildListAssociations(IEnumerable<IAssociation> associations) {
+            return associations.Where(a => a.AssociationType == AssociationType.OneToMany || a.AssociationType == AssociationType.ZeroOrOneToMany || a.AssociationType == AssociationType.ManyToMany);
+        }
+
 
         private void OnDynamicRootListChanged()
         {
@@ -722,7 +731,7 @@ namespace Generator.CSLA.CodeTemplates
             var entities = new Dictionary<string, IEntity>();
             foreach (var entity in list)
             {
-                foreach (var associationProperty in entity.Associations.Where(a => a.AssociationType == AssociationType.ManyToOne || a.AssociationType == AssociationType.ManyToZeroOrOne))
+                foreach (var associationProperty in GetChildAssociations(entity.Associations))
                 {
                     foreach (AssociationProperty property in associationProperty.Properties)
                     {
@@ -733,7 +742,7 @@ namespace Generator.CSLA.CodeTemplates
                     }
                 }
 
-                foreach (var associationProperty in entity.Associations.Where(a => a.AssociationType == AssociationType.OneToZeroOrOne))
+                foreach (var associationProperty in entity.Associations.Where(a => a.AssociationType == AssociationType.OneToOne || a.AssociationType == AssociationType.OneToZeroOrOne))
                 {
                     foreach (AssociationProperty property in associationProperty.Properties)
                     {
@@ -753,7 +762,7 @@ namespace Generator.CSLA.CodeTemplates
             var entities = new Dictionary<string, IEntity>();
             foreach (var entity in list)
             {
-                foreach (var associationProperty in entity.Associations.Where(a => a.AssociationType == AssociationType.OneToMany || a.AssociationType == AssociationType.ManyToOne))
+                foreach (var associationProperty in entity.Associations.Where(a => a.AssociationType == AssociationType.OneToMany || a.AssociationType == AssociationType.ZeroOrOneToMany || a.AssociationType == AssociationType.ManyToOne || a.AssociationType == AssociationType.ManyToZeroOrOne))
                 {
                     foreach (AssociationProperty property in associationProperty.Properties)
                     {
@@ -773,7 +782,7 @@ namespace Generator.CSLA.CodeTemplates
             var entities = new Dictionary<string, IEntity>();
             foreach (var entity in list)
             {
-                if (entity.Associations.Count(a => a.AssociationType == AssociationType.ManyToOne) == 0)
+                if (entity.Associations.Count(a => a.AssociationType == AssociationType.ManyToOne || a.AssociationType == AssociationType.ManyToZeroOrOne) == 0)
                 {
                     if (!entities.ContainsKey(entity.EntityKeyName))
                     {
