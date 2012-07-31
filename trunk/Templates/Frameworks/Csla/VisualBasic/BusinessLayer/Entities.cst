@@ -188,7 +188,7 @@ Public Overrides Sub Generate()
     
     If DataAccessImplementation = DataAccessMethod.ParameterizedSQL OrElse DataAccessImplementation = DataAccessMethod.StoredProcedures OrElse DataAccessImplementation = DataAccessMethod.ObjectFactoryParameterizedSQL OrElse DataAccessImplementation = DataAccessMethod.ObjectFactoryStoredProcedures Then
         Dim ADOHelper As ADOHelperTemplate = Me.Create(Of ADOHelperTemplate)()
-        Me.CopyPropertiesTo(ADOHelper)
+        Me.CopyPropertiesTo(ADOHelper, True)
         ADOHelper.RenderToFile(System.IO.Path.Combine(Me.Location, "Utility\ADOHelper.vb"), strategy)
     End If
     
@@ -197,7 +197,7 @@ Public Overrides Sub Generate()
     
     If DataAccessImplementation = DataAccessMethod.ObjectFactoryNone OrElse DataAccessImplementation = DataAccessMethod.ObjectFactoryParameterizedSQL OrElse DataAccessImplementation = DataAccessMethod.ObjectFactoryStoredProcedures Then
         Dim factoryNames As FactoryNamesTemplate = Me.Create(Of FactoryNamesTemplate)()
-        Me.CopyPropertiesTo(factoryNames)
+        Me.CopyPropertiesTo(factoryNames, True)
     
         factoryNames.RenderToFile(System.IO.Path.Combine(Me.Location, "Factory\FactoryNames.vb"), strategy)
     End If
@@ -205,12 +205,12 @@ Public Overrides Sub Generate()
     ' ExistsCommandTemplate
     
     Dim ExistsCommand As ExistsCommandTemplate = Me.Create(Of ExistsCommandTemplate)()
-    Me.CopyPropertiesTo(ExistsCommand)
+    Me.CopyPropertiesTo(ExistsCommand, True)
     ExistsCommand.RenderToFile(System.IO.Path.Combine(Me.Location, "Commands\ExistsCommand.vb"), True)
     
     ' AsyncChildLoaderTemplate
     Dim AsyncChildLoader As AsyncChildLoaderTemplate = Me.Create(Of AsyncChildLoaderTemplate)()
-    Me.CopyPropertiesTo(AsyncChildLoader)
+    Me.CopyPropertiesTo(AsyncChildLoader, True)
     AsyncChildLoader.RenderToFile(System.IO.Path.Combine(Me.Location, "Utility\AsyncChildLoader.vb"), True)
 End Sub
 

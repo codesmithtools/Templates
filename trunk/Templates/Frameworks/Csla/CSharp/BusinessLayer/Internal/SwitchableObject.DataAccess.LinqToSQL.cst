@@ -153,7 +153,7 @@ namespace <%= BusinessProjectName %>
         /// <returns></returns>
         private void Child_Insert()
         {
-<% RenderHelper(new ChildInsert(), false); %>
+<% RenderHelper(new ChildInsert(), true); %>
         }
 <% var associations = Entity.Associations.Where(a => a.AssociationType == AssociationType.ManyToOne || a.AssociationType == AssociationType.ManyToZeroOrOne).GroupBy(a => a.TypeName).Select(a => a.FirstOrDefault()).ToList();
 if (associations.Count() > 0) {
@@ -182,7 +182,7 @@ if (associations.Count() > 1) { int index = 0; foreach(IAssociation association 
         /// <returns></returns>
         private void Child_Update()
         {
-<% RenderHelper(new ChildUpdate(), false); %>
+<% RenderHelper(new ChildUpdate(), true); %>
         }
 <% if (associations.Count() > 0) {%>
 <% if (associations.Count() > 1) { int index = 0; foreach(IAssociation association in associations) { %>

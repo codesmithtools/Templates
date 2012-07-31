@@ -240,7 +240,7 @@ public override void Generate()
     if(DataAccessImplementation == DataAccessMethod.ParameterizedSQL || DataAccessImplementation == DataAccessMethod.StoredProcedures || DataAccessImplementation == DataAccessMethod.ObjectFactoryParameterizedSQL || DataAccessImplementation == DataAccessMethod.ObjectFactoryStoredProcedures)
     {
         ADOHelperTemplate ADOHelper = this.Create<ADOHelperTemplate>();
-        this.CopyPropertiesTo(ADOHelper);
+        this.CopyPropertiesTo(ADOHelper, true);
         ADOHelper.RenderToFile(System.IO.Path.Combine(this.Location, "Utility\\ADOHelper.cs"), strategy);
     }
 
@@ -251,7 +251,7 @@ public override void Generate()
     if(DataAccessImplementation == DataAccessMethod.LinqToSQL )
     {
         LinqToSQLHelperTemplate LinqToSQLHelper = this.Create<LinqToSQLHelperTemplate>();
-        this.CopyPropertiesTo(LinqToSQLHelper);
+        this.CopyPropertiesTo(LinqToSQLHelper, true);
         LinqToSQLHelper.RenderToFile(System.IO.Path.Combine(this.Location, "Utility\\LinqToSQLHelper.cs"), strategy);
     }
 
@@ -262,7 +262,7 @@ public override void Generate()
     if(DataAccessImplementation == DataAccessMethod.ObjectFactoryNone || DataAccessImplementation == DataAccessMethod.ObjectFactoryParameterizedSQL || DataAccessImplementation == DataAccessMethod.ObjectFactoryStoredProcedures)
     {
         FactoryNamesTemplate factoryNames = this.Create<FactoryNamesTemplate>();
-        this.CopyPropertiesTo(factoryNames);
+        this.CopyPropertiesTo(factoryNames, true);
         factoryNames.RenderToFile(System.IO.Path.Combine(this.Location, "Factory\\FactoryNames.cs"), strategy);
     }
 
@@ -270,14 +270,14 @@ public override void Generate()
 
     #region ExistsCommandTemplate
     ExistsCommandTemplate ExistsCommand = this.Create<ExistsCommandTemplate>();
-    this.CopyPropertiesTo(ExistsCommand);
+    this.CopyPropertiesTo(ExistsCommand, true);
     ExistsCommand.RenderToFile(System.IO.Path.Combine(this.Location, "Commands\\ExistsCommand.cs"), true);
     #endregion
 
     #region AsyncChildLoaderTemplate
 
     AsyncChildLoaderTemplate AsyncChildLoader = this.Create<AsyncChildLoaderTemplate>();
-    this.CopyPropertiesTo(AsyncChildLoader);
+    this.CopyPropertiesTo(AsyncChildLoader, true);
     AsyncChildLoader.RenderToFile(System.IO.Path.Combine(this.Location, "Utility\\AsyncChildLoader.cs"), true);
    
     #endregion

@@ -137,7 +137,7 @@ public void RenderObjectFactoryTemplates(IEntity entity, bool IsReadOnly, bool I
         objectFactoryDataAccessParameterized.RenderToFile(fileName, parentFileName, true);
         
         ADOHelperTemplate ADOHelper = this.Create<ADOHelperTemplate>();
-        this.CopyPropertiesTo(ADOHelper);
+        this.CopyPropertiesTo(ADOHelper, true);
         ADOHelper.RenderToFile(System.IO.Path.Combine(this.Location, "Utility\\ADOHelper.cs"), strategy);
     }
     else if(DataAccessImplementation == DataAccessMethod.ObjectFactoryStoredProcedures)
@@ -153,7 +153,7 @@ public void RenderObjectFactoryTemplates(IEntity entity, bool IsReadOnly, bool I
         
         //SqlStoredProcedures
         SqlStoredProcedures sqlStoredProcedures = this.Create<SqlStoredProcedures>();
-        this.CopyPropertiesTo(sqlStoredProcedures);
+        this.CopyPropertiesTo(sqlStoredProcedures, true);
         sqlStoredProcedures.Entity = entity;
         
         fileName = System.IO.Path.Combine(Location, String.Format("Entities\\{0}.StoredProcedures.sql", objectFactory.BusinessClassName));
@@ -161,7 +161,7 @@ public void RenderObjectFactoryTemplates(IEntity entity, bool IsReadOnly, bool I
         
         //ADOHelperTemplate
         ADOHelperTemplate ADOHelper = this.Create<ADOHelperTemplate>();
-        this.CopyPropertiesTo(ADOHelper);
+        this.CopyPropertiesTo(ADOHelper, true);
         ADOHelper.RenderToFile(System.IO.Path.Combine(this.Location, "Utility\\ADOHelper.cs"), strategy);
     }
 
@@ -215,7 +215,7 @@ public void RenderObjectFactoryListTemplates(IEntity entity, bool IsReadOnly, bo
         objectFactoryDataAccessParameterized.RenderToFile(fileName, parentFileName, true);
         
         ADOHelperTemplate ADOHelper = this.Create<ADOHelperTemplate>();
-        this.CopyPropertiesTo(ADOHelper);
+        this.CopyPropertiesTo(ADOHelper, true);
         
         ADOHelper.RenderToFile(System.IO.Path.Combine(this.Location, "Utility\\ADOHelper.cs"), strategy);
     }
@@ -232,7 +232,7 @@ public void RenderObjectFactoryListTemplates(IEntity entity, bool IsReadOnly, bo
         
         //SqlStoredProcedures
         SqlStoredProcedures sqlStoredProcedures = this.Create<SqlStoredProcedures>();
-        this.CopyPropertiesTo(sqlStoredProcedures);
+        this.CopyPropertiesTo(sqlStoredProcedures, true);
         sqlStoredProcedures.Entity = entity;
         
         fileName = System.IO.Path.Combine(Location, String.Format("Collections\\{0}.StoredProcedures.sql", objectFactory.BusinessClassName));
@@ -240,7 +240,7 @@ public void RenderObjectFactoryListTemplates(IEntity entity, bool IsReadOnly, bo
         
         //ADOHelperTemplate
         ADOHelperTemplate ADOHelper = this.Create<ADOHelperTemplate>();
-        this.CopyPropertiesTo(ADOHelper);
+        this.CopyPropertiesTo(ADOHelper, true);
         ADOHelper.RenderToFile(System.IO.Path.Combine(this.Location, "Utility\\ADOHelper.cs"), strategy);
     }
 
