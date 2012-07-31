@@ -24,7 +24,7 @@ public override void Generate()
     string parentFileName = System.IO.Path.Combine(this.Location, "Default.aspx");
     
     SourceViewTemplate sourceView = this.Create<SourceViewTemplate>();
-    this.CopyPropertiesTo(sourceView);
+    this.CopyPropertiesTo(sourceView, true);
     
     if (!System.IO.File.Exists(parentFileName))
     {
@@ -36,7 +36,7 @@ public override void Generate()
     string fileName = System.IO.Path.Combine(Location, "Default.aspx.cs");
     
     CodeBehindTemplate codeBehind = this.Create<CodeBehindTemplate>();
-    this.CopyPropertiesTo(codeBehind);
+    this.CopyPropertiesTo(codeBehind, true);
     
     if (!System.IO.File.Exists(fileName))
     {
@@ -50,7 +50,7 @@ public override void Generate()
     fileName = System.IO.Path.Combine(Location, "Default.aspx.designer.cs");
     
     DesignerTemplate designer = this.Create<DesignerTemplate>();
-    this.CopyPropertiesTo(designer);
+    this.CopyPropertiesTo(designer, true);
     
     if (!System.IO.File.Exists(fileName))
     {
