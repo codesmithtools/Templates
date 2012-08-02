@@ -70,7 +70,7 @@ namespace SchemaMapper
 
             bool isMatch = IgnoreExpressions.Any(regex => Regex.IsMatch(name, regex));
 
-            return isMatch && !InclusionMode;
+            return InclusionMode ? !isMatch : isMatch;
         }
 
         public string CleanName(string name)
@@ -358,7 +358,12 @@ namespace SchemaMapper
             {
                 if (Settings.IsIgnored(tableKey.ForeignKeyTable.FullName)
                     || Settings.IsIgnored(tableKey.PrimaryKeyTable.FullName))
+                {
+                    Debug.WriteLine("Skipping relationship '{0}' because table '{1}' or '{2}' is ignored.", 
+                        tableKey.FullName, tableKey.ForeignKeyTable.FullName, tableKey.PrimaryKeyTable.FullName);
+
                     continue;
+                }
 
                 CreateRelationship(entityContext, entity, tableKey);
             }
@@ -376,7 +381,7 @@ namespace SchemaMapper
             string relationshipName = tableKeySchema.Name;
             relationshipName = _namer.UniqueRelationshipName(relationshipName);
 
-            bool isCascadeDelete = IsCascadeDelete(tableKeySchema);            
+            bool isCascadeDelete = IsCascadeDelete(tableKeySchema);
             bool foreignMembersRequired;
             bool primaryMembersRequired;
 
@@ -531,7 +536,7 @@ namespace SchemaMapper
                     method.IsKey = true;
                     method.SourceName = tableSchema.PrimaryKey.FullName;
 
-                    if (!entity.Methods.Any(m=> m.NameSuffix == method.NameSuffix))
+                    if (!entity.Methods.Any(m => m.NameSuffix == method.NameSuffix))
                         entity.Methods.Add(method);
                 }
             }
@@ -550,7 +555,7 @@ namespace SchemaMapper
             {
                 columns.Add(column);
 
-                Method method = GetMethodFromColumns(entity, columns);                
+                Method method = GetMethodFromColumns(entity, columns);
                 if (method != null && !entity.Methods.Any(m => m.NameSuffix == method.NameSuffix))
                     entity.Methods.Add(method);
 
@@ -677,7 +682,7 @@ namespace SchemaMapper
                 return true;
 
             // check all non fkey columns to make sure db gen'd
-            return tableSchema.NonForeignKeyColumns.All(c => 
+            return tableSchema.NonForeignKeyColumns.All(c =>
                 IsDbGenerated(c) || HasDefaultValue(c));
         }
 
@@ -791,7 +796,7 @@ namespace SchemaMapper
             {
                 if (!column.ExtendedProperties.Contains(ExtendedPropertyNames.DefaultValue))
                     return false;
-                
+
                 string value = column.ExtendedProperties[ExtendedPropertyNames.DefaultValue].Value.ToString();
                 return !string.IsNullOrEmpty(value);
             }

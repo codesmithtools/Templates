@@ -18,6 +18,7 @@ namespace SchemaMapper
 
     public class EntityBase
     {
+        [XmlIgnore]
         public bool IsProcessed { get; set; }
     }
     #endregion
