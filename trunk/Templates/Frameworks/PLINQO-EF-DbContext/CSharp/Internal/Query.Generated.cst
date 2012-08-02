@@ -56,6 +56,10 @@ namespace <%= QueryNamespace %>
         /// </summary>
         public static <%= safeName %> <%= UniqueMethodPrefix %><%= MethodKeySuffix %>(this System.Linq.IQueryable<<%= safeName %>> queryable, <%= GetParameters(method) %>)
         {
+            var dbSet = queryable as System.Data.Entity.IDbSet<<%= safeName %>>;
+            if (dbSet != null)
+                return dbSet.Find(<%= GetParametersNames(method) %>);
+                
             return queryable.FirstOrDefault(<%= GetLamba(method, 4) %>);
         }
 <%
