@@ -74,12 +74,12 @@ The generated solution contains one or more projects that require MVC4 (http://w
         {
             WebAPIProjectCreator webAPICreator = new WebAPIProjectCreator(pbs);
             webAPICreator.CspFileName = "WebAPI.csp";
-            webAPICreator.CreateProject(this.InterfaceProjectName, DataContextName, BuildEFConnectionString(), dataProjectCreator.SolutionItem);
+            webAPICreator.CreateProject(this.InterfaceProjectName, null, BuildEFConnectionString(), dataProjectCreator.SolutionItem);
             solutionItems.Add(webAPICreator.SolutionItem);
         } else if(ProjectType == WebProjectType.DynamicData)
         {
             WebSiteCreator websiteCreator = new WebSiteCreator(pbs, true);
-            websiteCreator.CreateProject(this.InterfaceProjectName, DataContextName, BuildEFConnectionString(), dataProjectCreator.SolutionItem);
+            websiteCreator.CreateProject(this.InterfaceProjectName, null, BuildEFConnectionString(), dataProjectCreator.SolutionItem);
             solutionItems.Add(websiteCreator.SolutionItem);
         }
 
