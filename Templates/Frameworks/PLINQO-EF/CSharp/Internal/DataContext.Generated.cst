@@ -45,7 +45,7 @@ namespace <%= ContextNamespace %>
         #region Constructors
 
         /// <summary>
-        /// Initializes a new <%= DataContextName %> object using the connection string found in the '<%= DataContextName %>' section of the application configuration file.
+        /// Initializes a new <%= DataContextName %> object using the connection string '<%= DataContextName %>' found in the connection string section of the application configuration file.
         /// </summary>
         public <%= DataContextName %>() : base("name=<%= DataContextName %>", "<%= DataContextName %>")
         {
