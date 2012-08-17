@@ -5,7 +5,7 @@
   <PropertyGroup>
     <Major>5</Major>
     <Minor>0</Minor>
-    <Build>4</Build>
+    <Build>5</Build>
     <Revision>0</Revision>
 
     <BindMinor>0</BindMinor>
