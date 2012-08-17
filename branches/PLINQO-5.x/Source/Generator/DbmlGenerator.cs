@@ -539,7 +539,7 @@ namespace LinqToSqlShared.Generator
             {
                 if (!table.Type.Columns.Contains(member.Name))
                     throw new InvalidOperationException(string.Format(
-                        "Could not find column {0} for assoication {1}.",
+                        "Could not find column {0} for association {1}.",
                         member.Name,
                         name));
 
