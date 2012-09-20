@@ -1,4 +1,4 @@
-<%@ CodeTemplate Language="VB" TargetLanguage="VB" Debug="True" Encoding="UTF-8"
+﻿<%@ CodeTemplate Language="VB" TargetLanguage="VB" Debug="True" Encoding="UTF-8"
     Description="Linq to Sql Entity Class." CompilerVersion="v3.5" %>
 
 <%@ Assembly Name="Dbml" Path="..\..\Common" %>
@@ -88,10 +88,12 @@ Namespace <%= Database.EntityNamespace %>
     ''' Class representing data for the <%= Database.Name %> database.
 <% End If %>
     ''' </summary>
-<% If (IncludeXmlSerialization) Then%>
+<% If (IncludeXmlSerialization) Then %>
     <System.Serializable()> _
 <% End If %>
+<% If Not String.IsNullOrEmpty(TableName) Then %>
     <%= GetClassAttributes() %>
+<% End If %>
 <% If (IncludeDataContract) Then%>
     <System.Runtime.Serialization.DataContract(IsReference:=True)> _
 <% End If %>
