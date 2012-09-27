@@ -23,7 +23,7 @@ Imports CodeSmith.Data.Rules
 Imports CodeSmith.Data.Rules.Validation
 
 Namespace <%= ClassNamespace %>
-     Partial <%= Naming.GetModifier(Table.Type.AccessModifier, Table.Type.Modifier) %> Class <%= ClassName %>
+     Partial <%= Naming.GetVisualBasicModifier(Table.Type.AccessModifier, Table.Type.Modifier) %> Class <%= ClassName %>
         #Region "Query"
         ' A private class for lazy loading static compiled queries.
         Private Partial Class Query

@@ -83,7 +83,7 @@ Namespace <%= ManagerNamespace %>
     ''' <summary>
     ''' The manager class for <%= EntityManager.EntityName %>.
     ''' </summary>
-    Partial <%= StringUtil.ToPascalCase(Naming.GetModifier(Table.Type.AccessModifier, Table.Type.Modifier)) %> Class <%= EntityManager.ManagerName %>
+    Partial <%= Naming.GetVisualBasicModifier(Table.Type.AccessModifier, Table.Type.Modifier) %> Class <%= EntityManager.ManagerName %>
         Inherits CodeSmith.Data.EntityManagerBase(Of <%= DataManager.DataManagerName %>, <%= safeName %>)
 
         ''' <summary>

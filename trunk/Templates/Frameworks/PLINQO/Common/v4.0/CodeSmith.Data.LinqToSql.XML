@@ -4,15 +4,91 @@
         <name>CodeSmith.Data.LinqToSql</name>
     </assembly>
     <members>
-        <member name="M:CodeSmith.Data.Linq.UtilityExtensions.Include``2(System.Linq.IQueryable{``0},System.Linq.Expressions.Expression{System.Func{``0,``1}})">
+        <member name="T:CodeSmith.Data.Linq.DataContextBase">
             <summary>
-            Specifies the related objects to include in the query results.
+            A base class for DataContext that includes future query support.
             </summary>
-            <typeparam name="T">The type of the data in the data source.</typeparam>
-            <typeparam name="TInclude">The type of the include.</typeparam>
-            <param name="query">The query to be materialized.</param>
-            <param name="includeExpression">The expression of related objects to return in the query results.</param>
-            <returns>The result of the query.</returns>
+        </member>
+        <member name="M:CodeSmith.Data.Linq.DataContextBase.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:CodeSmith.Data.Linq.DataContextBase"/> class.
+            </summary>
+            <param name="fileOrServerOrConnection">The file or server or connection.</param>
+        </member>
+        <member name="M:CodeSmith.Data.Linq.DataContextBase.#ctor(System.String,System.Data.Linq.Mapping.MappingSource)">
+            <summary>
+            Initializes a new instance of the <see cref="T:CodeSmith.Data.Linq.DataContextBase"/> class.
+            </summary>
+            <param name="fileOrServerOrConnection">The file or server or connection.</param>
+            <param name="mapping">The mapping.</param>
+        </member>
+        <member name="M:CodeSmith.Data.Linq.DataContextBase.#ctor(System.Data.IDbConnection)">
+            <summary>
+            Initializes a new instance of the <see cref="T:CodeSmith.Data.Linq.DataContextBase"/> class.
+            </summary>
+            <param name="connection">The connection.</param>
+        </member>
+        <member name="M:CodeSmith.Data.Linq.DataContextBase.#ctor(System.Data.IDbConnection,System.Data.Linq.Mapping.MappingSource)">
+            <summary>
+            Initializes a new instance of the <see cref="T:CodeSmith.Data.Linq.DataContextBase"/> class.
+            </summary>
+            <param name="connection">The connection.</param>
+            <param name="mapping">The mapping.</param>
+        </member>
+        <member name="M:CodeSmith.Data.Linq.DataContextBase.BeginTransaction">
+            <summary>
+            Starts a database transaction.
+            </summary>
+            <param name="dataContext">The data context.</param>
+            <returns>An object representing the new transaction.</returns>
+        </member>
+        <member name="M:CodeSmith.Data.Linq.DataContextBase.BeginTransaction(System.Data.IsolationLevel)">
+            <summary>
+            Starts a database transaction with the specified isolation level. 
+            </summary>
+            <param name="dataContext">The data context.</param>
+            <param name="isolationLevel">The isolation level for the transaction.</param>
+            <returns>An object representing the new transaction.</returns>
+        </member>
+        <member name="M:CodeSmith.Data.Linq.DataContextBase.ExecuteFutureQueries">
+            <summary>
+            Executes the future queries.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.Data.Linq.DataContextBase.CodeSmith#Data#Future#IFutureContext#FutureQueries">
+            <summary>
+            Gets the readonly future queries list.
+            </summary>
+            <value>The future queries.</value>
+        </member>
+        <member name="T:CodeSmith.Data.LinqToSql.CacheSettingsExtensions">
+            <summary>
+            Cache Settings Extension Methods.
+            </summary>
+        </member>
+        <member name="M:CodeSmith.Data.LinqToSql.CacheSettingsExtensions.AddCacheDependency``1(CodeSmith.Data.Caching.CacheSettings,System.Linq.IQueryable{``0},System.Data.Linq.ITable[])">
+            <summary>
+            Adds a Cache Dependency.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="settings"></param>
+            <param name="queryable"></param>
+            <param name="sqlCacheDependencyTables"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CodeSmith.Data.LinqToSql.CacheSettingsExtensions.AddCacheDependency(CodeSmith.Data.Caching.CacheSettings,System.String,System.Data.Linq.ITable[])">
+            <summary>
+            Adds a Cache Dependency.
+            </summary>
+            <param name="settings"></param>
+            <param name="databaseName"></param>
+            <param name="sqlCacheDependencyTables"></param>
+            <returns></returns>
+        </member>
+        <member name="T:CodeSmith.Data.Linq.DataContextExtensions">
+            <summary>
+            http://www.aneyfamily.com/terryandann/post/2008/04/LINQ-to-SQL-Batch-UpdatesDeletes-Fix-for-Could-not-translate-expression.aspx
+            </summary>
         </member>
         <member name="M:CodeSmith.Data.Linq.DataContextExtensions.ExecuteCommand(System.Data.Linq.DataContext,System.Data.Common.DbCommand)">
             <summary>
@@ -98,32 +174,6 @@
             <param name="src">The <see cref="T:System.Data.Common.DbParameter"/> to clone.</param>
             <returns>Returns a clone (via copying all properties) of an existing <see cref="T:System.Data.Common.DbParameter"/>.</returns>
         </member>
-        <member name="M:CodeSmith.Data.Linq.FutureCacheExtensions.FutureCache``1(System.Linq.IQueryable{``0},System.String,System.String[])">
-            <summary>
-            Provides for defering the execution of the <paramref name="source"/> query to a batch of future queries.
-            </summary>
-            <typeparam name="T">The type of the elements of <paramref name="source"/>.</typeparam>
-            <param name="source">An <see cref="T:System.Linq.IQueryable`1"/> to add to the batch of future queries.</param>
-            <param name="profileName">Name of the cache profile to use.</param>
-            <param name="sqlCacheDependencyTableNames">The table names for which to add SQL Cache Dependencies</param>
-            <returns>
-            An <see cref="T:System.Collections.Generic.IEnumerable`1"/> that contains elements from the input sequence.
-            </returns>
-            <seealso cref="T:CodeSmith.Data.Linq.FutureQuery`1"/>
-        </member>
-        <member name="M:CodeSmith.Data.Linq.FutureCacheExtensions.FutureCache``1(System.Linq.IQueryable{``0},System.Int32,System.String[])">
-            <summary>
-            Provides for defering the execution of the <paramref name="source"/> query to a batch of future queries.
-            </summary>
-            <typeparam name="T">The type of the elements of <paramref name="source"/>.</typeparam>
-            <param name="source">An <see cref="T:System.Linq.IQueryable`1"/> to add to the batch of future queries.</param>
-            <param name="duration">The amount of time, in seconds, that a cache entry is to remain in the output cache.</param>
-            <param name="sqlCacheDependencyTableNames">The table names for which to add SQL Cache Dependencies</param>
-            <returns>
-            An <see cref="T:System.Collections.Generic.IEnumerable`1"/> that contains elements from the input sequence.
-            </returns>
-            <seealso cref="T:CodeSmith.Data.Linq.FutureQuery`1"/>
-        </member>
         <member name="M:CodeSmith.Data.Linq.TableExtensions.Delete``1(System.Data.Linq.Table{``0},System.Linq.IQueryable{``0})">
             <summary>
             Immediately deletes all entities from the collection with a single delete command.
@@ -170,113 +220,99 @@
             <param name="evaluator">A Lambda expression returning a <typeparamref name="TEntity"/> that defines the update assignments to be performed on each item in <paramref name="filter"/>.</param>
             <returns>The number of rows updated in the database.</returns>
         </member>
-        <member name="T:CodeSmith.Data.Linq.ILinqToSqlFutureQuery">
+        <member name="T:CodeSmith.Data.Linq.FromCacheExtensions">
             <summary>
-            Interface for defering the future execution of a batch of queries.
+            Extension methods for FromCache
             </summary>
         </member>
-        <member name="M:CodeSmith.Data.Linq.ILinqToSqlFutureQuery.GetCommand(System.Data.Linq.DataContext)">
+        <member name="M:CodeSmith.Data.Linq.FromCacheExtensions.FromCache``1(System.Linq.IQueryable{``0},System.Int32,System.String[])">
             <summary>
-            Gets the data command for this query.
+            Returns the result of the query; if possible from the cache, otherwise
+            the query is materialized and the result cached before being returned.
             </summary>
-            <param name="dataContext">The data context to get the command from.</param>
-            <returns>The requested command object.</returns>
+            <typeparam name="T">The type of the data in the data source.</typeparam>
+            <param name="query">The query to be materialized.</param>
+            <param name="duration">The amount of time, in seconds, that a cache entry is to remain in the output cache.</param>
+            <param name="sqlCacheDependencyTableNames">The table names for which to add SQL Cache Dependencies</param>
+            <returns>The result of the query.</returns>
         </member>
-        <member name="M:CodeSmith.Data.Linq.ILinqToSqlFutureQuery.SetResult(System.Data.Linq.IMultipleResults)">
+        <member name="M:CodeSmith.Data.Linq.FromCacheExtensions.FromCache(System.Linq.IQueryable,System.Int32,System.String[])">
             <summary>
-            Sets the underling value after the query has been executed.
+            Returns the result of the query; if possible from the cache, otherwise
+            the query is materialized and the result cached before being returned.
             </summary>
-            <param name="result">The <see cref="T:System.Data.Linq.IMultipleResults"/> to get the result from.</param>
+            <param name="query">The query to be materialized.</param>
+            <param name="duration">The amount of time, in seconds, that a cache entry is to remain in the output cache.</param>
+            <param name="sqlCacheDependencyTableNames">The table names for which to add SQL Cache Dependencies</param>
+            <returns>The result of the query.</returns>
         </member>
-        <member name="T:CodeSmith.Data.Linq.FutureQueryBase`1">
+        <member name="M:CodeSmith.Data.Linq.FromCacheExtensions.FromCache``1(System.Linq.IQueryable{``0},System.Int32,System.Data.Linq.ITable[])">
             <summary>
-            Base class for future queries.
+            Returns the result of the query; if possible from the cache, otherwise
+            the query is materialized and the result cached before being returned.
             </summary>
-            <typeparam name="T">The type for the future query.</typeparam>
+            <typeparam name="T">The type of the data in the data source.</typeparam>
+            <param name="query">The query to be materialized.</param>
+            <param name="duration">The amount of time, in seconds, that a cache entry is to remain in the output cache.</param>
+            <param name="sqlCacheDependencyTables">The tables for which to add SQL Cache Dependencies</param>
+            <returns>The result of the query.</returns>
         </member>
-        <member name="M:CodeSmith.Data.Linq.FutureQueryBase`1.#ctor(System.Linq.IQueryable,System.Action)">
+        <member name="M:CodeSmith.Data.Linq.FromCacheExtensions.FromCache(System.Linq.IQueryable,System.Int32,System.Data.Linq.ITable[])">
             <summary>
-            Initializes a new instance of the <see cref="T:CodeSmith.Data.Linq.FutureQuery`1"/> class.
+            Returns the result of the query; if possible from the cache, otherwise
+            the query is materialized and the result cached before being returned.
             </summary>
-            <param name="query">The query source to use when materializing.</param>
-            <param name="loadAction">The action to execute when the query is accessed.</param>
+            <param name="query">The query to be materialized.</param>
+            <param name="duration">The amount of time, in seconds, that a cache entry is to remain in the output cache.</param>
+            <param name="sqlCacheDependencyTables">The tables for which to add SQL Cache Dependencies</param>
+            <returns>The result of the query.</returns>
         </member>
-        <member name="M:CodeSmith.Data.Linq.FutureQueryBase`1.#ctor(System.Linq.IQueryable,System.Action,CodeSmith.Data.Caching.CacheSettings)">
+        <member name="M:CodeSmith.Data.Linq.FromCacheExtensions.FromCache``1(System.Linq.IQueryable{``0},System.String,System.Data.Linq.ITable[])">
             <summary>
-            Initializes a new instance of the <see cref="T:CodeSmith.Data.Linq.FutureQuery`1"/> class.
+            Returns the result of the query; if possible from the cache, otherwise
+            the query is materialized and the result cached before being returned.
             </summary>
-            <param name="query">The query source to use when materializing.</param>
-            <param name="loadAction">The action to execute when the query is accessed.</param>
-            <param name="cacheSettings">The cache settings.</param>
+            <typeparam name="T">The type of the data in the data source.</typeparam>
+            <param name="query">The query to be materialized.</param>
+            <param name="profileName">Name of the cache profile to use.</param>
+            <param name="sqlCacheDependencyTables">The tables for which to add SQL Cache Dependencies</param>
+            <returns>The result of the query.</returns>
         </member>
-        <member name="M:CodeSmith.Data.Linq.FutureQueryBase`1.CheckCache">
+        <member name="M:CodeSmith.Data.Linq.FromCacheExtensions.FromCache(System.Linq.IQueryable,System.String,System.Data.Linq.ITable[])">
             <summary>
-            Checks the cache for the results.
+            Returns the result of the query; if possible from the cache, otherwise
+            the query is materialized and the result cached before being returned.
             </summary>
+            <param name="query">The query to be materialized.</param>
+            <param name="profileName">Name of the cache profile to use.</param>
+            <param name="sqlCacheDependencyTables">The tables for which to add SQL Cache Dependencies</param>
+            <returns>The result of the query.</returns>
         </member>
-        <member name="M:CodeSmith.Data.Linq.FutureQueryBase`1.GetKey">
+        <member name="M:CodeSmith.Data.Linq.FromCacheExtensions.FromCache``1(System.Linq.IQueryable{``0},System.String,System.String[])">
             <summary>
-            Gets the key used when caching the results.
+            Returns the result of the query; if possible from the cache, otherwise
+            the query is materialized and the result cached before being returned.
             </summary>
-            <returns></returns>
+            <typeparam name="T">The type of the data in the data source.</typeparam>
+            <param name="query">The query to be materialized.</param>
+            <param name="profileName">Name of the cache profile to use.</param>
+            <param name="sqlCacheDependencyTableNames">The table names for which to add SQL Cache Dependencies</param>
+            <returns>The result of the query.</returns>
         </member>
-        <member name="M:CodeSmith.Data.Linq.FutureQueryBase`1.GetResult">
+        <member name="M:CodeSmith.Data.Linq.FromCacheExtensions.FromCache(System.Linq.IQueryable,System.String,System.String[])">
             <summary>
-            Gets the result by invoking the <see cref="P:CodeSmith.Data.Linq.FutureQueryBase`1.LoadAction"/> if not already loaded.
+            Returns the result of the query; if possible from the cache, otherwise
+            the query is materialized and the result cached before being returned.
             </summary>
-            <returns>
-            An <see cref="T:System.Collections.Generic.IEnumerable`1"/> that can be used to iterate through the collection.
-            </returns>
+            <param name="query">The query to be materialized.</param>
+            <param name="profileName">Name of the cache profile to use.</param>
+            <param name="sqlCacheDependencyTableNames">The table names for which to add SQL Cache Dependencies</param>
+            <returns>The result of the query.</returns>
         </member>
-        <member name="M:CodeSmith.Data.Linq.FutureQueryBase`1.CodeSmith#Data#Linq#ILinqToSqlFutureQuery#GetCommand(System.Data.Linq.DataContext)">
+        <member name="T:CodeSmith.Data.Linq.FromCacheFirstOrDefaultExtensions">
             <summary>
-            Gets the data command for this query.
+            Extension Methods for Future Cache FirstOrDefault.
             </summary>
-            <param name="dataContext">The data context to get the command from.</param>
-            <returns>The requested command object.</returns>
-        </member>
-        <member name="M:CodeSmith.Data.Linq.FutureQueryBase`1.GetCommand(System.Data.Linq.DataContext)">
-            <summary>
-            Gets the data command for this query.
-            </summary>
-            <param name="dataContext">The data context to get the command from.</param>
-            <returns>The requested command object.</returns>
-        </member>
-        <member name="M:CodeSmith.Data.Linq.FutureQueryBase`1.CodeSmith#Data#Linq#ILinqToSqlFutureQuery#SetResult(System.Data.Linq.IMultipleResults)">
-            <summary>
-            Sets the underling value after the query has been executed.
-            </summary>
-            <param name="result">The <see cref="T:System.Data.Linq.IMultipleResults"/> to get the result from.</param>
-        </member>
-        <member name="M:CodeSmith.Data.Linq.FutureQueryBase`1.SetResult(System.Data.Linq.IMultipleResults)">
-            <summary>
-            Sets the underling value after the query has been executed.
-            </summary>
-            <param name="result">The <see cref="T:System.Data.Linq.IMultipleResults"/> to get the result from.</param>
-        </member>
-        <member name="P:CodeSmith.Data.Linq.FutureQueryBase`1.LoadAction">
-            <summary>
-            Gets the action to execute when the query is accessed.
-            </summary>
-            <value>The load action.</value>
-        </member>
-        <member name="P:CodeSmith.Data.Linq.FutureQueryBase`1.IsLoaded">
-            <summary>
-            Gets a value indicating whether this instance is loaded.
-            </summary>
-            <value><c>true</c> if this instance is loaded; otherwise, <c>false</c>.</value>
-        </member>
-        <member name="P:CodeSmith.Data.Linq.FutureQueryBase`1.Exception">
-            <summary>
-            Gets or sets the query execute exception. 
-            </summary>
-            <value>The query execute exception.</value>      
-        </member>
-        <member name="P:CodeSmith.Data.Linq.FutureQueryBase`1.CodeSmith#Data#Future#IFutureQuery#Query">
-            <summary>
-            Gets the query source to use when materializing.
-            </summary>
-            <value>The query source to use when materializing.</value>
         </member>
         <member name="M:CodeSmith.Data.Linq.FromCacheFirstOrDefaultExtensions.FromCacheFirstOrDefault``1(System.Linq.IQueryable{``0},System.Int32,System.Data.Linq.ITable[])">
             <summary>
@@ -370,6 +406,11 @@
             <param name="sqlCacheDependencyTableNames">The table names for which to add SQL Cache Dependencies</param>
             <returns>The first or default result of the query.</returns>
         </member>
+        <member name="T:CodeSmith.Data.Linq.FutureCacheCountExtensions">
+            <summary>
+            Extension Methods for Future Cache Count.
+            </summary>
+        </member>
         <member name="M:CodeSmith.Data.Linq.FutureCacheCountExtensions.FutureCacheCount``1(System.Linq.IQueryable{``0},System.String,System.String[])">
             <summary>
             Provides for defering the execution of the <paramref name="source"/> query to a batch of future queries.
@@ -395,6 +436,95 @@
             An instance of <see cref="T:CodeSmith.Data.Linq.FutureCount"/> that contains the result of the query.
             </returns>
             <seealso cref="T:CodeSmith.Data.Linq.FutureCount"/>
+        </member>
+        <member name="T:CodeSmith.Data.Linq.FutureCacheExtensions">
+            <summary>
+            Extension Methods for Future Cache.
+            </summary>
+        </member>
+        <member name="M:CodeSmith.Data.Linq.FutureCacheExtensions.FutureCache``1(System.Linq.IQueryable{``0},System.String,System.String[])">
+            <summary>
+            Provides for defering the execution of the <paramref name="source"/> query to a batch of future queries.
+            </summary>
+            <typeparam name="T">The type of the elements of <paramref name="source"/>.</typeparam>
+            <param name="source">An <see cref="T:System.Linq.IQueryable`1"/> to add to the batch of future queries.</param>
+            <param name="profileName">Name of the cache profile to use.</param>
+            <param name="sqlCacheDependencyTableNames">The table names for which to add SQL Cache Dependencies</param>
+            <returns>
+            An <see cref="T:System.Collections.Generic.IEnumerable`1"/> that contains elements from the input sequence.
+            </returns>
+            <seealso cref="T:CodeSmith.Data.Linq.FutureQuery`1"/>
+        </member>
+        <member name="M:CodeSmith.Data.Linq.FutureCacheExtensions.FutureCache``1(System.Linq.IQueryable{``0},System.Int32,System.String[])">
+            <summary>
+            Provides for defering the execution of the <paramref name="source"/> query to a batch of future queries.
+            </summary>
+            <typeparam name="T">The type of the elements of <paramref name="source"/>.</typeparam>
+            <param name="source">An <see cref="T:System.Linq.IQueryable`1"/> to add to the batch of future queries.</param>
+            <param name="duration">The amount of time, in seconds, that a cache entry is to remain in the output cache.</param>
+            <param name="sqlCacheDependencyTableNames">The table names for which to add SQL Cache Dependencies</param>
+            <returns>
+            An <see cref="T:System.Collections.Generic.IEnumerable`1"/> that contains elements from the input sequence.
+            </returns>
+            <seealso cref="T:CodeSmith.Data.Linq.FutureQuery`1"/>
+        </member>
+        <member name="T:CodeSmith.Data.Linq.FutureCacheFirstOrDefaultExtensions">
+            <summary>
+            Extension Methods for Future Cache FirstOrDefault.
+            </summary>
+        </member>
+        <member name="M:CodeSmith.Data.Linq.FutureCacheFirstOrDefaultExtensions.FutureCacheFirstOrDefault``1(System.Linq.IQueryable{``0},System.String,System.String[])">
+            <summary>
+            Provides for defering the execution of the <paramref name="source"/> query to a batch of future queries.
+            </summary>
+            <typeparam name="T">The type of the elements of <paramref name="source"/>.</typeparam>
+            <param name="source">An <see cref="T:System.Linq.IQueryable`1"/> to add to the batch of future queries.</param>
+            <param name="profileName">Name of the cache profile to use.</param>
+            <param name="sqlCacheDependencyTableNames">The table names for which to add SQL Cache Dependencies</param>
+            <returns>
+            An instance of <see cref="T:CodeSmith.Data.Linq.FutureValue`1"/> that contains the result of the query.
+            </returns>
+            <seealso cref="T:CodeSmith.Data.Linq.FutureValue`1"/>
+        </member>
+        <member name="M:CodeSmith.Data.Linq.FutureCacheFirstOrDefaultExtensions.FutureCacheFirstOrDefault``1(System.Linq.IQueryable{``0},System.Int32,System.String[])">
+            <summary>
+            Provides for defering the execution of the <paramref name="source"/> query to a batch of future queries.
+            </summary>
+            <typeparam name="T">The type of the elements of <paramref name="source"/>.</typeparam>
+            <param name="source">An <see cref="T:System.Linq.IQueryable`1"/> to add to the batch of future queries.</param>
+            <param name="duration">The amount of time, in seconds, that a cache entry is to remain in the output cache.</param>
+            <param name="sqlCacheDependencyTableNames">The table names for which to add SQL Cache Dependencies</param>
+            <returns>
+            An instance of <see cref="T:CodeSmith.Data.Linq.FutureValue`1"/> that contains the result of the query.
+            </returns>
+            <seealso cref="T:CodeSmith.Data.Linq.FutureValue`1"/>
+        </member>
+        <member name="T:CodeSmith.Data.Linq.UtilityExtensions">
+            <summary>
+            Extension Methods.
+            </summary>
+        </member>
+        <member name="M:CodeSmith.Data.Linq.UtilityExtensions.Include``2(System.Linq.IQueryable{``0},System.Linq.Expressions.Expression{System.Func{``0,``1}})">
+            <summary>
+            Specifies the related objects to include in the query results.
+            </summary>
+            <typeparam name="T">The type of the data in the data source.</typeparam>
+            <typeparam name="TInclude">The type of the include.</typeparam>
+            <param name="query">The query to be materialized.</param>
+            <param name="includeExpression">The expression of related objects to return in the query results.</param>
+            <returns>The result of the query.</returns>
+        </member>
+        <member name="T:CodeSmith.Data.LinqToSql.LinqToSqlDataContextProvider">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:CodeSmith.Data.LinqToSql.LinqToSqlDataContextProvider.GetFutureContext(System.Linq.IQueryable)">
+            <summary>
+            Gets the Future Context.
+            </summary>
+            <param name="query"></param>
+            <returns></returns>
         </member>
         <member name="T:CodeSmith.Data.Linq.FutureCount">
             <summary>
@@ -434,6 +564,114 @@
             ]]>
             </code>
             </example>
+        </member>
+        <member name="T:CodeSmith.Data.Linq.FutureQueryBase`1">
+            <summary>
+            Base class for future queries.
+            </summary>
+            <typeparam name="T">The type for the future query.</typeparam>
+        </member>
+        <member name="T:CodeSmith.Data.Linq.ILinqToSqlFutureQuery">
+            <summary>
+            Interface for defering the future execution of a batch of queries.
+            </summary>
+        </member>
+        <member name="M:CodeSmith.Data.Linq.ILinqToSqlFutureQuery.GetCommand(System.Data.Linq.DataContext)">
+            <summary>
+            Gets the data command for this query.
+            </summary>
+            <param name="dataContext">The data context to get the command from.</param>
+            <returns>The requested command object.</returns>
+        </member>
+        <member name="M:CodeSmith.Data.Linq.ILinqToSqlFutureQuery.SetResult(System.Data.Linq.IMultipleResults)">
+            <summary>
+            Sets the underling value after the query has been executed.
+            </summary>
+            <param name="result">The <see cref="T:System.Data.Linq.IMultipleResults"/> to get the result from.</param>
+        </member>
+        <member name="M:CodeSmith.Data.Linq.FutureQueryBase`1.#ctor(System.Linq.IQueryable,System.Action)">
+            <summary>
+            Initializes a new instance of the <see cref="T:CodeSmith.Data.Linq.FutureQuery`1"/> class.
+            </summary>
+            <param name="query">The query source to use when materializing.</param>
+            <param name="loadAction">The action to execute when the query is accessed.</param>
+        </member>
+        <member name="M:CodeSmith.Data.Linq.FutureQueryBase`1.#ctor(System.Linq.IQueryable,System.Action,CodeSmith.Data.Caching.CacheSettings)">
+            <summary>
+            Initializes a new instance of the <see cref="T:CodeSmith.Data.Linq.FutureQuery`1"/> class.
+            </summary>
+            <param name="query">The query source to use when materializing.</param>
+            <param name="loadAction">The action to execute when the query is accessed.</param>
+            <param name="cacheSettings">The cache settings.</param>
+        </member>
+        <member name="M:CodeSmith.Data.Linq.FutureQueryBase`1.CheckCache">
+            <summary>
+            Checks the cache for the results.
+            </summary>
+        </member>
+        <member name="M:CodeSmith.Data.Linq.FutureQueryBase`1.GetKey">
+            <summary>
+            Gets the key used when caching the results.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CodeSmith.Data.Linq.FutureQueryBase`1.GetResult">
+            <summary>
+            Gets the result by invoking the <see cref="P:CodeSmith.Data.Linq.FutureQueryBase`1.LoadAction"/> if not already loaded.
+            </summary>
+            <returns>
+            An <see cref="T:System.Collections.Generic.IEnumerable`1"/> that can be used to iterate through the collection.
+            </returns>
+        </member>
+        <member name="M:CodeSmith.Data.Linq.FutureQueryBase`1.CodeSmith#Data#Linq#ILinqToSqlFutureQuery#GetCommand(System.Data.Linq.DataContext)">
+            <summary>
+            Gets the data command for this query.
+            </summary>
+            <param name="dataContext">The data context to get the command from.</param>
+            <returns>The requested command object.</returns>
+        </member>
+        <member name="M:CodeSmith.Data.Linq.FutureQueryBase`1.GetCommand(System.Data.Linq.DataContext)">
+            <summary>
+            Gets the data command for this query.
+            </summary>
+            <param name="dataContext">The data context to get the command from.</param>
+            <returns>The requested command object.</returns>
+        </member>
+        <member name="M:CodeSmith.Data.Linq.FutureQueryBase`1.CodeSmith#Data#Linq#ILinqToSqlFutureQuery#SetResult(System.Data.Linq.IMultipleResults)">
+            <summary>
+            Sets the underling value after the query has been executed.
+            </summary>
+            <param name="result">The <see cref="T:System.Data.Linq.IMultipleResults"/> to get the result from.</param>
+        </member>
+        <member name="M:CodeSmith.Data.Linq.FutureQueryBase`1.SetResult(System.Data.Linq.IMultipleResults)">
+            <summary>
+            Sets the underling value after the query has been executed.
+            </summary>
+            <param name="result">The <see cref="T:System.Data.Linq.IMultipleResults"/> to get the result from.</param>
+        </member>
+        <member name="P:CodeSmith.Data.Linq.FutureQueryBase`1.LoadAction">
+            <summary>
+            Gets the action to execute when the query is accessed.
+            </summary>
+            <value>The load action.</value>
+        </member>
+        <member name="P:CodeSmith.Data.Linq.FutureQueryBase`1.IsLoaded">
+            <summary>
+            Gets a value indicating whether this instance is loaded.
+            </summary>
+            <value><c>true</c> if this instance is loaded; otherwise, <c>false</c>.</value>
+        </member>
+        <member name="P:CodeSmith.Data.Linq.FutureQueryBase`1.Exception">
+            <summary>
+            Gets or sets the query execute exception. 
+            </summary>
+            <value>The query execute exception.</value>      
+        </member>
+        <member name="P:CodeSmith.Data.Linq.FutureQueryBase`1.CodeSmith#Data#Future#IFutureQuery#Query">
+            <summary>
+            Gets the query source to use when materializing.
+            </summary>
+            <value>The query source to use when materializing.</value>
         </member>
         <member name="M:CodeSmith.Data.Linq.FutureValue`1.#ctor(System.Linq.IQueryable,System.Action)">
             <summary>
@@ -511,32 +749,6 @@
             <param name="dataContext">The data context to get the command from.</param>
             <returns>The requested command object.</returns>
         </member>
-        <member name="M:CodeSmith.Data.Linq.FutureCacheFirstOrDefaultExtensions.FutureCacheFirstOrDefault``1(System.Linq.IQueryable{``0},System.String,System.String[])">
-            <summary>
-            Provides for defering the execution of the <paramref name="source"/> query to a batch of future queries.
-            </summary>
-            <typeparam name="T">The type of the elements of <paramref name="source"/>.</typeparam>
-            <param name="source">An <see cref="T:System.Linq.IQueryable`1"/> to add to the batch of future queries.</param>
-            <param name="profileName">Name of the cache profile to use.</param>
-            <param name="sqlCacheDependencyTableNames">The table names for which to add SQL Cache Dependencies</param>
-            <returns>
-            An instance of <see cref="T:CodeSmith.Data.Linq.FutureValue`1"/> that contains the result of the query.
-            </returns>
-            <seealso cref="T:CodeSmith.Data.Linq.FutureValue`1"/>
-        </member>
-        <member name="M:CodeSmith.Data.Linq.FutureCacheFirstOrDefaultExtensions.FutureCacheFirstOrDefault``1(System.Linq.IQueryable{``0},System.Int32,System.String[])">
-            <summary>
-            Provides for defering the execution of the <paramref name="source"/> query to a batch of future queries.
-            </summary>
-            <typeparam name="T">The type of the elements of <paramref name="source"/>.</typeparam>
-            <param name="source">An <see cref="T:System.Linq.IQueryable`1"/> to add to the batch of future queries.</param>
-            <param name="duration">The amount of time, in seconds, that a cache entry is to remain in the output cache.</param>
-            <param name="sqlCacheDependencyTableNames">The table names for which to add SQL Cache Dependencies</param>
-            <returns>
-            An instance of <see cref="T:CodeSmith.Data.Linq.FutureValue`1"/> that contains the result of the query.
-            </returns>
-            <seealso cref="T:CodeSmith.Data.Linq.FutureValue`1"/>
-        </member>
         <member name="T:CodeSmith.Data.Linq.FutureQuery`1">
             <summary>
             Provides for defering the execution to a batch of queries.
@@ -585,147 +797,6 @@
             <returns>
             An <see cref="T:System.Collections.IEnumerator"/> object that can be used to iterate through the collection.
             </returns>
-        </member>
-        <member name="M:CodeSmith.Data.Linq.FromCacheExtensions.FromCache``1(System.Linq.IQueryable{``0},System.Int32,System.String[])">
-            <summary>
-            Returns the result of the query; if possible from the cache, otherwise
-            the query is materialized and the result cached before being returned.
-            </summary>
-            <typeparam name="T">The type of the data in the data source.</typeparam>
-            <param name="query">The query to be materialized.</param>
-            <param name="duration">The amount of time, in seconds, that a cache entry is to remain in the output cache.</param>
-            <param name="sqlCacheDependencyTableNames">The table names for which to add SQL Cache Dependencies</param>
-            <returns>The result of the query.</returns>
-        </member>
-        <member name="M:CodeSmith.Data.Linq.FromCacheExtensions.FromCache(System.Linq.IQueryable,System.Int32,System.String[])">
-            <summary>
-            Returns the result of the query; if possible from the cache, otherwise
-            the query is materialized and the result cached before being returned.
-            </summary>
-            <param name="query">The query to be materialized.</param>
-            <param name="duration">The amount of time, in seconds, that a cache entry is to remain in the output cache.</param>
-            <param name="sqlCacheDependencyTableNames">The table names for which to add SQL Cache Dependencies</param>
-            <returns>The result of the query.</returns>
-        </member>
-        <member name="M:CodeSmith.Data.Linq.FromCacheExtensions.FromCache``1(System.Linq.IQueryable{``0},System.Int32,System.Data.Linq.ITable[])">
-            <summary>
-            Returns the result of the query; if possible from the cache, otherwise
-            the query is materialized and the result cached before being returned.
-            </summary>
-            <typeparam name="T">The type of the data in the data source.</typeparam>
-            <param name="query">The query to be materialized.</param>
-            <param name="duration">The amount of time, in seconds, that a cache entry is to remain in the output cache.</param>
-            <param name="sqlCacheDependencyTables">The tables for which to add SQL Cache Dependencies</param>
-            <returns>The result of the query.</returns>
-        </member>
-        <member name="M:CodeSmith.Data.Linq.FromCacheExtensions.FromCache(System.Linq.IQueryable,System.Int32,System.Data.Linq.ITable[])">
-            <summary>
-            Returns the result of the query; if possible from the cache, otherwise
-            the query is materialized and the result cached before being returned.
-            </summary>
-            <param name="query">The query to be materialized.</param>
-            <param name="duration">The amount of time, in seconds, that a cache entry is to remain in the output cache.</param>
-            <param name="sqlCacheDependencyTables">The tables for which to add SQL Cache Dependencies</param>
-            <returns>The result of the query.</returns>
-        </member>
-        <member name="M:CodeSmith.Data.Linq.FromCacheExtensions.FromCache``1(System.Linq.IQueryable{``0},System.String,System.Data.Linq.ITable[])">
-            <summary>
-            Returns the result of the query; if possible from the cache, otherwise
-            the query is materialized and the result cached before being returned.
-            </summary>
-            <typeparam name="T">The type of the data in the data source.</typeparam>
-            <param name="query">The query to be materialized.</param>
-            <param name="profileName">Name of the cache profile to use.</param>
-            <param name="sqlCacheDependencyTables">The tables for which to add SQL Cache Dependencies</param>
-            <returns>The result of the query.</returns>
-        </member>
-        <member name="M:CodeSmith.Data.Linq.FromCacheExtensions.FromCache(System.Linq.IQueryable,System.String,System.Data.Linq.ITable[])">
-            <summary>
-            Returns the result of the query; if possible from the cache, otherwise
-            the query is materialized and the result cached before being returned.
-            </summary>
-            <param name="query">The query to be materialized.</param>
-            <param name="profileName">Name of the cache profile to use.</param>
-            <param name="sqlCacheDependencyTables">The tables for which to add SQL Cache Dependencies</param>
-            <returns>The result of the query.</returns>
-        </member>
-        <member name="M:CodeSmith.Data.Linq.FromCacheExtensions.FromCache``1(System.Linq.IQueryable{``0},System.String,System.String[])">
-            <summary>
-            Returns the result of the query; if possible from the cache, otherwise
-            the query is materialized and the result cached before being returned.
-            </summary>
-            <typeparam name="T">The type of the data in the data source.</typeparam>
-            <param name="query">The query to be materialized.</param>
-            <param name="profileName">Name of the cache profile to use.</param>
-            <param name="sqlCacheDependencyTableNames">The table names for which to add SQL Cache Dependencies</param>
-            <returns>The result of the query.</returns>
-        </member>
-        <member name="M:CodeSmith.Data.Linq.FromCacheExtensions.FromCache(System.Linq.IQueryable,System.String,System.String[])">
-            <summary>
-            Returns the result of the query; if possible from the cache, otherwise
-            the query is materialized and the result cached before being returned.
-            </summary>
-            <param name="query">The query to be materialized.</param>
-            <param name="profileName">Name of the cache profile to use.</param>
-            <param name="sqlCacheDependencyTableNames">The table names for which to add SQL Cache Dependencies</param>
-            <returns>The result of the query.</returns>
-        </member>
-        <member name="T:CodeSmith.Data.Linq.DataContextBase">
-            <summary>
-            A base class for DataContext that includes future query support.
-            </summary>
-        </member>
-        <member name="M:CodeSmith.Data.Linq.DataContextBase.#ctor(System.String)">
-            <summary>
-            Initializes a new instance of the <see cref="T:CodeSmith.Data.Linq.DataContextBase"/> class.
-            </summary>
-            <param name="fileOrServerOrConnection">The file or server or connection.</param>
-        </member>
-        <member name="M:CodeSmith.Data.Linq.DataContextBase.#ctor(System.String,System.Data.Linq.Mapping.MappingSource)">
-            <summary>
-            Initializes a new instance of the <see cref="T:CodeSmith.Data.Linq.DataContextBase"/> class.
-            </summary>
-            <param name="fileOrServerOrConnection">The file or server or connection.</param>
-            <param name="mapping">The mapping.</param>
-        </member>
-        <member name="M:CodeSmith.Data.Linq.DataContextBase.#ctor(System.Data.IDbConnection)">
-            <summary>
-            Initializes a new instance of the <see cref="T:CodeSmith.Data.Linq.DataContextBase"/> class.
-            </summary>
-            <param name="connection">The connection.</param>
-        </member>
-        <member name="M:CodeSmith.Data.Linq.DataContextBase.#ctor(System.Data.IDbConnection,System.Data.Linq.Mapping.MappingSource)">
-            <summary>
-            Initializes a new instance of the <see cref="T:CodeSmith.Data.Linq.DataContextBase"/> class.
-            </summary>
-            <param name="connection">The connection.</param>
-            <param name="mapping">The mapping.</param>
-        </member>
-        <member name="M:CodeSmith.Data.Linq.DataContextBase.BeginTransaction">
-            <summary>
-            Starts a database transaction.
-            </summary>
-            <param name="dataContext">The data context.</param>
-            <returns>An object representing the new transaction.</returns>
-        </member>
-        <member name="M:CodeSmith.Data.Linq.DataContextBase.BeginTransaction(System.Data.IsolationLevel)">
-            <summary>
-            Starts a database transaction with the specified isolation level. 
-            </summary>
-            <param name="dataContext">The data context.</param>
-            <param name="isolationLevel">The isolation level for the transaction.</param>
-            <returns>An object representing the new transaction.</returns>
-        </member>
-        <member name="M:CodeSmith.Data.Linq.DataContextBase.ExecuteFutureQueries">
-            <summary>
-            Executes the future queries.
-            </summary>
-        </member>
-        <member name="P:CodeSmith.Data.Linq.DataContextBase.CodeSmith#Data#Future#IFutureContext#FutureQueries">
-            <summary>
-            Gets the readonly future queries list.
-            </summary>
-            <value>The future queries.</value>
         </member>
     </members>
 </doc>

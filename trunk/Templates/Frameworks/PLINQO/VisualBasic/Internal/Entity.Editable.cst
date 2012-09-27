@@ -58,7 +58,7 @@ Imports CodeSmith.Data.Rules
 
 Namespace <%= Database.EntityNamespace %>
     
-    <%= StringUtil.ToPascalCase(Naming.GetModifier(Type.AccessModifier, Type.Modifier)) %> Partial Class <%= VBKeywordEscape(Type.Name) %>
+    <%= Naming.GetVisualBasicModifier(Type.AccessModifier, Type.Modifier) %> Partial Class <%= VBKeywordEscape(Type.Name) %>
         
         ' Place custom code here.
         

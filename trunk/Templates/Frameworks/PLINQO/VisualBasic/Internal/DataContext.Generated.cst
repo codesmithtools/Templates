@@ -1,4 +1,4 @@
-<%@ CodeTemplate Language="VB" TargetLanguage="VB" Debug="False" Encoding="UTF-8"
+﻿<%@ CodeTemplate Language="VB" TargetLanguage="VB" Debug="False" Encoding="UTF-8"
     Description="Linq to Sql DataContext Class." CompilerVersion="v3.5" %>
 
 <%@ Assembly Name="Dbml" Path="..\..\Common" %>
@@ -54,7 +54,7 @@ Namespace <%= Database.ContextNamespace %>
     ''' <summary>
     ''' The <see cref="System.Data.Linq.DataContext"/>  class for the <%= Database.Name %> database.
     ''' </summary>
-    Partial <%= StringUtil.ToPascalCase(Naming.GetModifier(Database.AccessModifier)) %> Class <%= Database.Class %>
+    Partial <%= Naming.GetVisualBasicModifier(Database.AccessModifier) %> Class <%= Database.Class %>
         Inherits CodeSmith.Data.Linq.DataContextBase
 <% If (IncludeIUpdatable) Then %>
         Implements System.Data.Services.IUpdatable
@@ -117,7 +117,7 @@ Namespace <%= Database.ContextNamespace %>
         ''' </summary>
         <System.Diagnostics.DebuggerNonUserCode()> _
         <%= GeneratedCodeAttribute %>
-        <%= StringUtil.ToPascalCase(Naming.GetModifier(Database.AccessModifier)) %> Sub New()
+        <%= Naming.GetVisualBasicModifier(Database.AccessModifier) %> Sub New()
             MyBase.New(ConnectionString, MappingCache)
             OnCreated()
         End Sub
@@ -129,7 +129,7 @@ Namespace <%= Database.ContextNamespace %>
         ''' <param name="connection">The connection string.</param>
         <System.Diagnostics.DebuggerNonUserCode()> _
         <%= GeneratedCodeAttribute %>
-        <%= StringUtil.ToPascalCase(Naming.GetModifier(Database.AccessModifier)) %> Sub New(ByVal connection As String)
+        <%= Naming.GetVisualBasicModifier(Database.AccessModifier) %> Sub New(ByVal connection As String)
             MyBase.New(connection, MappingCache)
             OnCreated()
         End Sub
@@ -140,7 +140,7 @@ Namespace <%= Database.ContextNamespace %>
         ''' <param name="connection">The database connection.</param>
         <System.Diagnostics.DebuggerNonUserCode()> _
         <%= GeneratedCodeAttribute %>
-        <%= StringUtil.ToPascalCase(Naming.GetModifier(Database.AccessModifier)) %> Sub New(ByVal connection As System.Data.IDbConnection)
+        <%= Naming.GetVisualBasicModifier(Database.AccessModifier) %> Sub New(ByVal connection As System.Data.IDbConnection)
             MyBase.New(connection, MappingCache)
             OnCreated()
         End Sub
@@ -152,7 +152,7 @@ Namespace <%= Database.ContextNamespace %>
         ''' <param name="mappingSource">The mapping source.</param>
         <System.Diagnostics.DebuggerNonUserCode()> _
         <%= GeneratedCodeAttribute %>
-        <%= StringUtil.ToPascalCase(Naming.GetModifier(Database.AccessModifier)) %> Sub New(ByVal connection As String, ByVal mappingSource As System.Data.Linq.Mapping.MappingSource)
+        <%= Naming.GetVisualBasicModifier(Database.AccessModifier) %> Sub New(ByVal connection As String, ByVal mappingSource As System.Data.Linq.Mapping.MappingSource)
             MyBase.New(connection, mappingSource)
             OnCreated()
         End Sub
@@ -164,7 +164,7 @@ Namespace <%= Database.ContextNamespace %>
         ''' <param name="mappingSource">The mapping source.</param>
         <System.Diagnostics.DebuggerNonUserCode()> _
         <%= GeneratedCodeAttribute %>
-        <%= StringUtil.ToPascalCase(Naming.GetModifier(Database.AccessModifier)) %> Sub New(ByVal connection As System.Data.IDbConnection, ByVal mappingSource As System.Data.Linq.Mapping.MappingSource)
+        <%= Naming.GetVisualBasicModifier(Database.AccessModifier) %> Sub New(ByVal connection As System.Data.IDbConnection, ByVal mappingSource As System.Data.Linq.Mapping.MappingSource)
             MyBase.New(connection, mappingSource)
             OnCreated()
         End Sub
@@ -174,7 +174,7 @@ Namespace <%= Database.ContextNamespace %>
 <% For Each table As Table In Database.Tables  %>
         ''' <summary>Represents the <%= table.Name %> table in the underlying database.</summary>
         <%= GeneratedCodeAttribute %>
-        <%= StringUtil.ToPascalCase(Naming.GetModifier(table.AccessModifier, table.Modifier)) %> ReadOnly Property <%= VBKeywordEscape(GetName(table)) %> As System.Data.Linq.Table(Of <%= Database.EntityNamespace %>.<%= table.Type.Name %>)
+        <%= Naming.GetVisualBasicModifier(table.AccessModifier, table.Modifier) %> ReadOnly Property <%= VBKeywordEscape(GetName(table)) %> As System.Data.Linq.Table(Of <%= Database.EntityNamespace %>.<%= table.Type.Name %>)
             Get
                 Return GetTable(Of <%= Database.EntityNamespace %>.<%= table.Type.Name %>)()
             End Get
@@ -189,7 +189,7 @@ Namespace <%= Database.ContextNamespace %>
         ''' <returns></returns>
         <%= CreateAttribute(f) %>
         <%= GeneratedCodeAttribute %>
-        <%= StringUtil.ToPascalCase(Naming.GetModifier(f.AccessModifier, f.Modifier)) %> Function <%= f.Method %>(<%= GetArguments(f) %>) As <%= GetReturnType(f, True) %>
+        <%= Naming.GetVisualBasicModifier(f.AccessModifier, f.Modifier) %> Function <%= f.Method %>(<%= GetArguments(f) %>) As <%= GetReturnType(f, True) %>
             Dim methodInfo = DirectCast(System.Reflection.MethodInfo.GetCurrentMethod(), System.Reflection.MethodInfo)
 <% If (IsTableFunction(f)) Then %>
             Dim result = Me.CreateMethodCallQuery(Of <%= GetResultName(f) %>)(Me, methodInfo<%= GetArgumentNames(f) %>)

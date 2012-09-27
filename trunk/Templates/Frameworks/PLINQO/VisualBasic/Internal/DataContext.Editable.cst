@@ -14,7 +14,7 @@ Imports System.Collections.Generic
 Imports System.Text
 
 Namespace <%= Database.ContextNamespace %>
-    <%= StringUtil.ToPascalCase(Naming.GetModifier(Database.AccessModifier)) %> Partial Class <%= Database.Class %>
+    <%= Naming.GetVisualBasicModifier(Database.AccessModifier) %> Partial Class <%= Database.Class %>
         #Region "Extensibility Method Definitions"
         'TODO: Uncomment and implement partial method
         'partial void OnCreated()

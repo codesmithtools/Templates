@@ -128,7 +128,7 @@ Namespace <%= Database.EntityNamespace %>
 <% If (sb.Length > 0) Then %>
     <System.Diagnostics.DebuggerDisplay("<%= sb.ToString() %>")> _
 <% End If %>
-    Partial <%= Naming.GetModifier(Type.AccessModifier, Type.Modifier) %> Class <%= VBKeywordEscape(Type.Name) %>
+    Partial <%= Naming.GetVisualBasicModifier(Type.AccessModifier, Type.Modifier) %> Class <%= VBKeywordEscape(Type.Name) %>
 <% If Not (String.IsNullOrEmpty(EntityBase)) Then %>
         Inherits <%= EntityBase %>
     <% If IncludeDataContract Then %>
@@ -253,7 +253,7 @@ For Each c As Column in Type.Columns
         <System.Runtime.Serialization.DataMember(Order:=<%= DataMemberCount %>)> _
 <% End If %>
         <%= GeneratedCodeAttribute %>
-        <%= StringUtil.ToPascalCase(Naming.GetModifier(c.AccessModifier, c.Modifier)) %> Property <%=VBKeywordEscape(c.Member) %>() As <%= dataType %>
+        <%= Naming.GetVisualBasicModifier(c.AccessModifier, c.Modifier) %> Property <%=VBKeywordEscape(c.Member) %>() As <%= dataType %>
             Get
                 Return <%= storageGet %>
             End Get
@@ -298,7 +298,7 @@ For Each c As Column in Type.Columns
         <System.Runtime.Serialization.DataMember(Order:=<%=DataMemberCount%>, EmitDefaultValue:=False)> _
 <% End If %>
         <%= GeneratedCodeAttribute %>
-        <%= StringUtil.ToPascalCase(Naming.GetModifier(a.AccessModifier, a.Modifier)) %> Property <%= VBKeywordEscape(a.Member) %>() As <%= VBKeywordEscape(a.Type) %>
+        <%= Naming.GetVisualBasicModifier(a.AccessModifier, a.Modifier) %> Property <%= VBKeywordEscape(a.Member) %>() As <%= VBKeywordEscape(a.Type) %>
             Get
 <% If (IncludeDataContract) Then %>
                 If (serializing AndAlso Not <%=a.Storage%>.HasLoadedOrAssignedValue) Then
@@ -392,7 +392,7 @@ Next %>
         <System.Runtime.Serialization.DataMember(Order:=<%= DataMemberCount %>, EmitDefaultValue:=False)> _
 <% End If %>
         <%= GeneratedCodeAttribute %>
-        <%= Naming.GetModifier(a.AccessModifier, a.Modifier) %> Property <%= VBKeywordEscape(a.Member) %>() As System.Data.Linq.EntitySet(Of <%= VBKeywordEscape(a.Type) %>)
+        <%= Naming.GetVisualBasicModifier(a.AccessModifier, a.Modifier) %> Property <%= VBKeywordEscape(a.Member) %>() As System.Data.Linq.EntitySet(Of <%= VBKeywordEscape(a.Type) %>)
             Get
 <%If IncludeDataContract Then%>
                 If (serializing AndAlso Not <%=a.Storage%>.HasLoadedOrAssignedValues) Then
