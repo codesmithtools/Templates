@@ -35,7 +35,7 @@ Namespace <%= Database.ContextNamespace %>
     ''' <summary>
     ''' The DataContext manager class for the <%= Database.Name %> database.
     ''' </summary>
-    Partial <%= StringUtil.ToPascalCase(Naming.GetModifier(Database.AccessModifier)) %> Class <%= Database.Class %>
+    Partial <%= Naming.GetVisualBasicModifier(Database.AccessModifier) %> Class <%= Database.Class %>
 
         Private _manager As <%= ManagerNamespace %>.<%= DataManager.DataManagerName %> = Nothing
 

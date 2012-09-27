@@ -59,7 +59,7 @@ Namespace <%= ManagerNamespace %>
         ''' <summary>
         ''' Gets the manager for <%= VBKeywordEscape(m.PropertyName) %>.
         ''' </summary>
-        <%= StringUtil.ToPascalCase(Naming.GetModifier(table.AccessModifier, table.Modifier)) %> ReadOnly Property <%= VBKeywordEscape(m.PropertyName) %> As <%= m.ManagerName %>
+        <%= Naming.GetVisualBasicModifier(table.AccessModifier, table.Modifier) %> ReadOnly Property <%= VBKeywordEscape(m.PropertyName) %> As <%= m.ManagerName %>
             Get
         If (<%= m.FieldName %> Is Nothing) Then
                     <%= m.FieldName %> = New <%= m.ManagerName %>(Me)
