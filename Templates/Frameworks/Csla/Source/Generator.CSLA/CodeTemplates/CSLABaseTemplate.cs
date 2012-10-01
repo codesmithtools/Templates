@@ -32,6 +32,7 @@ namespace Generator.CSLA.CodeTemplates
             ResolveTargetLanguage();
 
             // Preserve Backwards Compat.
+            Configuration.Instance.IncludeManyToManyAssociations = false;
             Configuration.Instance.SearchCriteriaProperty.MethodKeySuffix = String.Empty;
             Configuration.Instance.NamingProperty.ColumnNaming = ColumnNaming.Preserve;
             Configuration.Instance.NamingProperty.AssociationTypeNameSuffix = AssociationSuffix.Singular;
