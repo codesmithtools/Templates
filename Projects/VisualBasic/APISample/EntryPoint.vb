@@ -4,29 +4,23 @@ Imports SchemaExplorer
 
 Module EntryPoint
     Sub Main()
-        Dim compiler As CodeTemplateCompiler
-        compiler = New CodeTemplateCompiler ("..\\..\\StoredProcedures.cst")
-        compiler.Compile()
-        If compiler.Errors.Count = 0 Then
-            Dim template As CodeTemplate
-            template = compiler.CreateInstance()
+        Dim path As String = IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..\..\StoredProcedures.cst")
+        Dim engine As New TemplateEngine(New DefaultEngineHost(IO.Path.GetDirectoryName(path)))
 
-            Dim database As DatabaseSchema
-            database = _
-                New DatabaseSchema(New SqlSchemaProvider(), "Server=(local);Database=PetShop;Integrated Security=True;")
-            Dim table As TableSchema
-            table = database.Tables ("Inventory")
+        Dim result As CompileTemplateResult = engine.Compile(path)
+        If result.Errors.Count = 0 Then
+            Dim database As New DatabaseSchema(New SqlSchemaProvider(), "Server=(local);Database=PetShop;Integrated Security=True;")
+            Dim table As TableSchema = database.Tables("Inventory")
 
-            template.SetProperty ("SourceTable", table)
-            template.SetProperty ("IncludeDrop", False)
-            template.SetProperty ("InsertPrefix", "Insert")
+            Dim template As CodeTemplate = result.CreateTemplateInstance()
+            template.SetProperty("SourceTable", table)
+            template.SetProperty("IncludeDrop", False)
+            template.SetProperty("InsertPrefix", "Insert")
 
-            template.Render (Console.Out)
+            template.Render(Console.Out)
         Else
-            Dim i As Integer
-            For i = 0 To compiler.Errors.Count
-                Console.Error.WriteLine (compiler.Errors (i).ToString())
-                Console.Read()
+            For Each e As Object In result.Errors
+                Console.Error.WriteLine(e.ToString())
             Next
         End If
 
