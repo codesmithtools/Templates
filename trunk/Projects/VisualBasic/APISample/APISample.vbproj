@@ -59,6 +59,7 @@
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="ActiproSoftware.Text.Wpf" />
     <Reference Include="CodeSmith.Core" />
     <Reference Include="CodeSmith.Engine">
       <Name>CodeSmith.Engine</Name>
@@ -69,20 +70,9 @@
     <Reference Include="SchemaExplorer.SqlSchemaProvider">
       <Name>SchemaExplorer.SqlSchemaProvider</Name>
     </Reference>
-    <Reference Include="CodeSmith.BaseTemplates">
-      <Name>CodeSmith.BaseTemplates</Name>
-    </Reference>
     <Reference Include="System" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Deployment" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Core">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
-    <Reference Include="System.Xml.Linq">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
-    <Reference Include="System.Data.DataSetExtensions">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
   </ItemGroup>
