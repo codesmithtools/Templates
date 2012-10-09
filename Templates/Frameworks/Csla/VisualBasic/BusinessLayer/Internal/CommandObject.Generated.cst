@@ -25,7 +25,7 @@ Imports Csla
 Namespace <%= BusinessProjectName %>
     <Serializable()> _
     Public Partial Class <%= BusinessClassName %>
-        Inherits CommandBase<% If(IsLatestCSLA) Then %>(Of <%= BusinessClassName %>)<% End If %>
+        Inherits CommandBase<% If(IsCSLA43 OrElse IsCSLA45) Then %>(Of <%= BusinessClassName %>)<% End If %>
 
         Private Sub New()
             ' Require use of factory methods

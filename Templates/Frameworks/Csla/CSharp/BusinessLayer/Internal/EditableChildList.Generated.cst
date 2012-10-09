@@ -23,6 +23,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+<% if(IsCSLA45) { %>
+using System.Threading.Tasks;
+<% } %>
 
 using Csla;
 <% if(IncludeSilverlightSupport) { %>
@@ -101,6 +104,32 @@ namespace <%= BusinessProjectName %>
 
         #region Asynchronous Factory Methods
 
+<% if(IsCSLA45) { %>
+        internal static async Task<<%= BusinessClassName %><%= Entity.GenericProperty %>> NewListAsync()
+        {
+            return await DataPortal.CreateAsync<<%= BusinessClassName %><%= Entity.GenericProperty %>>();
+        }
+<% foreach(SearchCriteria sc in Entity.SearchCriteria) { %>
+
+        internal static async Task<AsyncChildLoader<<%= BusinessClassName %><%= Entity.GenericProperty %>>> <%= sc.MethodName %>Async(<% if(sc.Properties.Count > 0) { %><%= sc.Properties.BuildParametersVariables() %><% } %>)
+        {
+            var criteria = new <%= CriteriaClassName %><%= Entity.GenericProperty %>{<%= sc.Properties.BuildObjectInitializer() %>};
+            <%= sc.Properties.BuildNullableObjectInitializer()%>
+            
+            return await DataPortal.FetchAsync<AsyncChildLoader<<%= BusinessClassName %><%= Entity.GenericProperty %>>>(criteria);
+        }
+<% } %>
+
+        internal static async Task<AsyncChildLoader<<%= BusinessClassName %><%= Entity.GenericProperty %>>> GetByCriteriaAsync(<%= CriteriaClassName %><%= Entity.GenericProperty %> criteria)
+        {  
+            return await DataPortal.FetchAsync<AsyncChildLoader<<%= BusinessClassName %><%= Entity.GenericProperty %>>>(criteria);
+        }
+
+        internal static async Task<AsyncChildLoader<<%= BusinessClassName %><%= Entity.GenericProperty %>>> GetAllAsync()
+        {
+            return await DataPortal.FetchAsync<AsyncChildLoader<<%= BusinessClassName %><%= Entity.GenericProperty %>>>(new <%= CriteriaClassName %><%= Entity.GenericProperty %>());
+        }
+<% } else { %>
         internal static void NewListAsync(EventHandler<DataPortalResult<<%= BusinessClassName %><%= Entity.GenericProperty %>>> handler)
         {
             var dp = new DataPortal<<%= BusinessClassName %><%= Entity.GenericProperty %>>();
@@ -128,6 +157,7 @@ namespace <%= BusinessProjectName %>
         {
             DataPortal.BeginFetch<AsyncChildLoader<<%= BusinessClassName %><%= Entity.GenericProperty %>>>(new <%= CriteriaClassName %><%= Entity.GenericProperty %>(),handler);
         }
+<% } %>
 
         #endregion
 
@@ -136,7 +166,7 @@ namespace <%= BusinessProjectName %>
 <% if(IncludeSilverlightSupport) { %>
 #if !SILVERLIGHT
 <% } %>
-        protected override <% if(IsLatestCSLA) { %><%= ChildBusinessClassName %><%= Entity.GenericProperty %><% } else { %>object<% } %> AddNewCore()
+        protected override <% if(IsCSLA43 || IsCSLA45) { %><%= ChildBusinessClassName %><%= Entity.GenericProperty %><% } else { %>object<% } %> AddNewCore()
         {
 <% RenderHelper(new AddNewCore()); %>
         }
@@ -149,17 +179,43 @@ namespace <%= BusinessProjectName %>
 #endif
 <% } %>
 
+<% if(IsCSLA45) { %>
+        protected async Task<<%= ChildBusinessClassName %><%= Entity.GenericProperty %>> AddNewCoreAsync()
+        {
+            return await <%= BusinessProjectName %>.<%= ChildBusinessClassName %><%= Entity.GenericProperty %>.New<%= ChildBusinessClassName %><% if(IsSwitchableObject()){ %>Child<% }%>Async().ContinueWith(t => 
+            {
+                 <%= ChildBusinessClassName %> item = t.Result;
+                
+                bool cancel = false;
+                OnAddNewCore(ref item, ref cancel);
+                if (!cancel)
+                {
+                    // Check to see if someone set the item to null in the OnAddNewCore.
+                    if(item != null)
+                        Add(item);
+                }
+                
+                return item;
+            });
+        }
+<% } else { %>
         protected void AddNewCoreAsync(EventHandler<DataPortalResult<<%= ChildBusinessClassName %><%= Entity.GenericProperty %>>> handler)
         {
             <%= BusinessProjectName %>.<%= ChildBusinessClassName %><%= Entity.GenericProperty %>.New<%= ChildBusinessClassName %><% if(IsSwitchableObject()){ %>Child<% }%>Async((o, e) =>
             {
-                if(e.Error == null)
+                bool cancel = false;
+                OnAddNewCore(ref e.Object, ref cancel);
+                if (!cancel)
                 {
-                    Add(e.Object);
-                    handler.Invoke(this, new DataPortalResult<<%= ChildBusinessClassName %><%= Entity.GenericProperty %>>(e.Object, null, null));
+                    if(e.Error == null)
+                    {
+                        Add(e.Object);
+                        handler.Invoke(this, new DataPortalResult<<%= ChildBusinessClassName %><%= Entity.GenericProperty %>>(e.Object, null, null));
+                    }
                 }
             });
         }
+<% } %>
         
         #endregion
 

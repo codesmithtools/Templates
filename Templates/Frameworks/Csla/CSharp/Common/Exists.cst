@@ -25,6 +25,15 @@
 #endif
 <% } %>
 
+<% if(IsCSLA45) { %>
+        /// <summary>
+        /// Determines if a record exists in the <%= Entity.EntityKeyName %> table in the database for the specified criteria. 
+        /// </summary>
+        public static async Task<bool> ExistsAsync(<%= CriteriaClassName %><%= Entity.GenericProperty %> criteria)
+        {
+            return await <%= BusinessProjectName %>.ExistsCommand.ExecuteAsync(criteria);
+        }
+<% } else { %>
         /// <summary>
         /// Determines if a record exists in the <%= Entity.EntityKeyName %> table in the database for the specified criteria. 
         /// </summary>
@@ -32,6 +41,7 @@
         {
             <%= BusinessProjectName %>.ExistsCommand.ExecuteAsync(criteria, handler);
         }
+<% } %>
 
         #endregion
 

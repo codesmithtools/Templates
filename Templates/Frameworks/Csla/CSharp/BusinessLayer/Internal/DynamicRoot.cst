@@ -26,7 +26,6 @@ namespace <%= BusinessProjectName %>
     {
 <%/*  Documentation code handled in the ValidationRules.cst template  */
    RenderHelper(new ValidationRules()); %>
-
 <%/*  Documentation code handled in the AuthorizationRules.cst template  */
    RenderHelper(new AuthorizationRules()); %>
     }

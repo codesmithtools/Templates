@@ -4,6 +4,11 @@
         <name>Generator.CSLA</name>
     </assembly>
     <members>
+        <member name="T:Generator.CSLA.CodeTemplates.SchemaExplorerEntitiesCodeTemplate">
+            <summary>
+            
+            </summary>
+        </member>
         <member name="T:Generator.CSLA.EntitiesCodeTemplate">
             <summary>
             This template will be used in the Entities.cst and other related templates.

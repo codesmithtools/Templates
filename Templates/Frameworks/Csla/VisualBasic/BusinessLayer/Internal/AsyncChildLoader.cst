@@ -47,7 +47,7 @@ Namespace <%= BusinessProjectName %>
         End Sub
 <% If(IncludeSilverlightSupport) Then %>
 #Else
-        Protected <% If Not IsLatestCSLA Then %>Overrides <% End If %>Sub DataPortal_Fetch(ByVal criteria As Object)
+        Protected <% If Not IsCSLA43 OrElse IsCSLA45 Then %>Overrides <% End If %>Sub DataPortal_Fetch(ByVal criteria As Object)
             Child = DataPortal.FetchChild(Of T)(criteria)
         End Sub
 #End If

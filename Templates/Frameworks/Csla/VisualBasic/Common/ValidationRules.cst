@@ -18,14 +18,14 @@
     <%     For Each prop As IProperty In Entity.GetProperties(PropertyType.NoConcurrency) %>
     <% If (prop.SystemType = "System.String" ) Then  %>
     <% If Not prop.IsNullable Then %>
-    <% If(IsLatestCSLA) Then %>
+    <% If(IsCSLA43 OrElse IsCSLA45) Then %>
             BusinessRules.AddRule(New Global.Csla.Rules.CommonRules.Required(<%= prop.PrivateMemberVariableName %>Property))
     <% Else %>
             ValidationRules.AddRule(AddressOf Global.Csla.Validation.CommonRules.StringRequired, <%= prop.PrivateMemberVariableName %>Property)
     <%  End If
     End If
         If Not prop.ExcludeBusinessSizeRule() Then %>
-    <% If(IsLatestCSLA) Then %>
+    <% If(IsCSLA43 OrElse IsCSLA45) Then %>
             BusinessRules.AddRule(New Global.Csla.Rules.CommonRules.MaxLength(<%= prop.PrivateMemberVariableName %>Property, <%= prop.Size %>))
     <% Else %>
             ValidationRules.AddRule(AddressOf Global.Csla.Validation.CommonRules.StringMaxLength, New Global.Csla.Validation.CommonRules.MaxLengthRuleArgs(<%= prop.PrivateMemberVariableName %>Property, <%= prop.Size %>))

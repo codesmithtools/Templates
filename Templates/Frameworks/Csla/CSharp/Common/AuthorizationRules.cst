@@ -14,7 +14,7 @@
         /// Allows the specification of CSLA based authorization rules.  Specifies what roles can 
         /// perform which operations for a given business object
         /// </summary>
-<% if(IsLatestCSLA) { %>
+<% if(IsCSLA43 || IsCSLA45) { %>
         public static void AddObjectAuthorizationRules()
         {
             //Csla.Rules.BusinessRules.AddRule(typeof(<%= BusinessClassName %>), new Csla.Rules.CommonRules.IsInRole(Csla.Rules.AuthorizationActions.CreateObject, "SomeRole"));
