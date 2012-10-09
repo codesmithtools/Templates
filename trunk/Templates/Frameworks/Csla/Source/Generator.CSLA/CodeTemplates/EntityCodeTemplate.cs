@@ -379,17 +379,9 @@ namespace Generator.CSLA
         [Category("3. Business Project")]
         [Description("If enabled Silverlight support will be added to the project..")]
         [DefaultValue(false)]
-        public bool IncludeSilverlightSupport
-        {
-            get
-            {
-                return _silverlightSupport;
-            }
-            set
-            {
-                if (!IsLatestCSLA)
-                    Console.WriteLine("In order to include Silverlight support you must target CSLA 4.0.");
-
+        public bool IncludeSilverlightSupport {
+            get { return _silverlightSupport; }
+            set {
                 _silverlightSupport = value;
                 Configuration.Instance.IncludeSilverlightSupport = value;
             }

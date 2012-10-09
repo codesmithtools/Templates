@@ -1355,6 +1355,11 @@
             Returns a list of all One to Zero or one keys.
             </summary>
         </member>
+        <member name="T:CodeSmith.SchemaHelper.FrameworkVersion">
+            <summary>
+            The .NET Framework Version.
+            </summary>
+        </member>
         <member name="F:CodeSmith.SchemaHelper.FrameworkVersion.v35">
             <summary>
             .NET 3.5
@@ -1363,6 +1368,11 @@
         <member name="F:CodeSmith.SchemaHelper.FrameworkVersion.v40">
             <summary>
             .NET 4.0
+            </summary>
+        </member>
+        <member name="F:CodeSmith.SchemaHelper.FrameworkVersion.v45">
+            <summary>
+            .NET 4.5
             </summary>
         </member>
         <member name="F:CodeSmith.SchemaHelper.Language.CSharp">

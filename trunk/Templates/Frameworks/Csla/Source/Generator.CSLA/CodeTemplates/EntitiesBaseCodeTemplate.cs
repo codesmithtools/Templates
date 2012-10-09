@@ -4,15 +4,12 @@ using CodeSmith.Engine;
 using CodeSmith.SchemaHelper;
 using Configuration = CodeSmith.SchemaHelper.Configuration;
 
-namespace Generator.CSLA.CodeTemplates
-{
-    public class EntitiesBaseCodeTemplate : CSLABaseTemplate
-    {
+namespace Generator.CSLA.CodeTemplates {
+    public class EntitiesBaseCodeTemplate : CSLABaseTemplate {
         private string _solutionName;
         private DataAccessMethod _dataAccessImplementation;
 
-        public EntitiesBaseCodeTemplate()
-        {
+        public EntitiesBaseCodeTemplate() {
             DataAccessImplementation = DataAccessMethod.ParameterizedSQL;
             UseLazyLoading = true;
         }
@@ -20,7 +17,8 @@ namespace Generator.CSLA.CodeTemplates
         #region 2. Solution
 
         [Editor(typeof(System.Windows.Forms.Design.FolderNameEditor), typeof(System.Drawing.Design.UITypeEditor))]
-        [Optional, NotChecked]
+        [Optional]
+        [NotChecked]
         [Category("2. Solution")]
         [Description("The path to the Solution location.")]
         [DefaultValue("")]
@@ -29,13 +27,10 @@ namespace Generator.CSLA.CodeTemplates
         [Category("2. Solution")]
         [Description("Name of the project to be generated.")]
         [DefaultValue("")]
-        public string SolutionName
-        {
+        public string SolutionName {
             get { return _solutionName; }
-            set
-            {
-                if (value != null)
-                {
+            set {
+                if (value != null) {
                     _solutionName = value;
                     OnSolutionNameChanged();
                 }
@@ -44,18 +39,8 @@ namespace Generator.CSLA.CodeTemplates
 
         [Optional]
         [Category("2. Solution")]
-        [Description("The .NET Framework Version. If you use v40 then CSLA 4.0 will be used. If you use v35 then CSLA 3.8 will be used.")]
-        public FrameworkVersion FrameworkVersion
-        {
-            get
-            {
-                return Configuration.Instance.FrameworkVersion;
-            }
-            set
-            {
-                Configuration.Instance.FrameworkVersion = value;
-            }
-        }
+        [Description("The .NET Framework Version. If you use v45 then CSLA 4.5 will be used. If you use v40 then CSLA 4.0 will be used. If you use v35 then CSLA 3.8 will be used.")]
+        public FrameworkVersion FrameworkVersion { get { return Configuration.Instance.FrameworkVersion; } set { Configuration.Instance.FrameworkVersion = value; } }
 
         #endregion
 
@@ -73,20 +58,7 @@ namespace Generator.CSLA.CodeTemplates
         [Category("3. Business Project")]
         [Description("If enabled Silverlight support will be added to the project..")]
         [DefaultValue(false)]
-        public bool IncludeSilverlightSupport
-        {
-            get
-            {
-                return Configuration.Instance.IncludeSilverlightSupport;
-            }
-            set
-            {
-                if (!IsLatestCSLA)
-                    Console.WriteLine("In order to include Silverlight support you must target CSLA 4.0.");
-
-                Configuration.Instance.IncludeSilverlightSupport = value;
-            }
-        }
+        public bool IncludeSilverlightSupport { get { return Configuration.Instance.IncludeSilverlightSupport; } set { Configuration.Instance.IncludeSilverlightSupport = value; } }
 
         #endregion
 
@@ -94,15 +66,14 @@ namespace Generator.CSLA.CodeTemplates
 
         [Category("4. Data Project")]
         [Description("Changes how the Business Data Access Methods and Data Access Layer are implemented.")]
-        public DataAccessMethod DataAccessImplementation
-        {
+        public DataAccessMethod DataAccessImplementation {
             get { return _dataAccessImplementation; }
-            set
-            {
+            set {
                 _dataAccessImplementation = value;
                 OnDataAccessImplementationChanged();
             }
         }
+
         [Category("4. Data Project")]
         [Description("The Name Space for the Data Project.")]
         public string DataProjectName { get; set; }
@@ -110,11 +81,7 @@ namespace Generator.CSLA.CodeTemplates
         [Category("4. Data Project")]
         [Description("The value all sql parameters should be prefixed with.")]
         [DefaultValue("@p_")]
-        public string ParameterPrefix
-        {
-            get { return Configuration.Instance.ParameterPrefix; }
-            set { Configuration.Instance.ParameterPrefix = value; }
-        }
+        public string ParameterPrefix { get { return Configuration.Instance.ParameterPrefix; } set { Configuration.Instance.ParameterPrefix = value; } }
 
         [Category("4. Data Project")]
         [Description("Changes how the business layer and data acces layer is implemented.")]
@@ -133,7 +100,7 @@ namespace Generator.CSLA.CodeTemplates
         [Category("4. Data Project")]
         [Description("Isolation level to use in the generated procedures.")]
         [DefaultValue(0)] //ReadCommitted
-        public TransactionIsolationLevelEnum IsolationLevel { get; set; }
+            public TransactionIsolationLevelEnum IsolationLevel { get; set; }
 
         #endregion
 
@@ -146,6 +113,7 @@ namespace Generator.CSLA.CodeTemplates
         #endregion
 
         #region 7. LinqToSQL Data Access Layer
+
         [Category("7. LinqToSQL Data Access Layer")]
         [Description("The data acces layer namespace to be used.  This should match with the data context used by LinqToSQL.")]
         [DefaultValue(false)]
@@ -160,35 +128,26 @@ namespace Generator.CSLA.CodeTemplates
 
         #endregion
 
-        public virtual void Generate()
-        {
-        }
+        public virtual void Generate() {}
 
-        public virtual void OnSolutionNameChanged()
-        {
-            if (String.IsNullOrEmpty(SolutionName))
-            {
+        public virtual void OnSolutionNameChanged() {
+            if (String.IsNullOrEmpty(SolutionName)) {
                 return;
             }
 
-            if (String.IsNullOrEmpty(BusinessProjectName))
-            {
+            if (String.IsNullOrEmpty(BusinessProjectName)) {
                 BusinessProjectName = String.Format("{0}.Business", SolutionName);
             }
 
-            if (String.IsNullOrEmpty(DataProjectName))
-            {
+            if (String.IsNullOrEmpty(DataProjectName)) {
                 DataProjectName = String.Format("{0}.Data", SolutionName);
             }
 
-            if (String.IsNullOrEmpty(InterfaceProjectName))
-            {
+            if (String.IsNullOrEmpty(InterfaceProjectName)) {
                 InterfaceProjectName = String.Format("{0}.UI", SolutionName);
             }
         }
 
-        public virtual void OnDataAccessImplementationChanged()
-        {
-        }
+        public virtual void OnDataAccessImplementationChanged() {}
     }
 }

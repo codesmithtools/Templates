@@ -44,7 +44,7 @@ Namespace <%= BusinessProjectName %>
     <Csla.Server.ObjectFactory(FactoryNames.<%= Entity.Name %>ListFactoryName)> _
     <% End If %>
     Public Partial Class <%= BusinessClassName %><%= Entity.GenericProperty %>
-        Inherits <% If(IsLatestCSLA) Then %>DynamicListBase<% Else %>EditableRootListBase<% End If %>(Of <%= ChildBusinessClassName %><%= Entity.GenericProperty %>)
+        Inherits <% If(IsCSLA43 OrElse IsCSLA45) Then %>DynamicListBase<% Else %>EditableRootListBase<% End If %>(Of <%= ChildBusinessClassName %><%= Entity.GenericProperty %>)
     
 #Region "Constructor(s)"
 
@@ -130,7 +130,7 @@ Namespace <%= BusinessProjectName %>
 #If Not SILVERLIGHT Then
 <% End If %>
 
-        Protected Overrides Function AddNewCore() As <% if(IsLatestCSLA) Then %><%= ChildBusinessClassName %><%= Entity.GenericProperty %><% Else %>Object<% End If %>
+        Protected Overrides Function AddNewCore() As <% if(IsCSLA43 OrElse IsCSLA45) Then %><%= ChildBusinessClassName %><%= Entity.GenericProperty %><% Else %>Object<% End If %>
     <% RenderHelper(new AddNewCore()) %>
         End Function
 

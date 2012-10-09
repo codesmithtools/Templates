@@ -4,6 +4,8 @@
 <%@ Assembly Name="CodeSmith.SchemaHelper.Extensions" Path="..\..\Common" %>
 <%@ Assembly Name="Generator.CSLA" Path="..\..\Common" %>
 <%@ Import Namespace="CodeSmith.SchemaHelper" %>
+
+
         #region Business Rules
     
         /// <summary>
@@ -13,7 +15,7 @@
         protected bool AddBusinessValidationRules()
         {
             // TODO: add validation rules
-<% if(IsLatestCSLA) { %>
+<% if(IsCSLA43 || IsCSLA45) { %>
             //BusinessRules.AddRule(new Csla.Rules.CommonRules.Required(MyProperty));
 <% } else { %>
             //ValidationRules.AddRule(RuleMethod, "");

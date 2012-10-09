@@ -22,7 +22,7 @@ using Csla;
 namespace <%= BusinessProjectName %>
 {
     [Serializable]
-    public partial class <%= BusinessClassName %> : CommandBase<%if(IsLatestCSLA){ %><<%= BusinessClassName %>><% } %>
+    public partial class <%= BusinessClassName %> : CommandBase<%if(IsCSLA43 || IsCSLA45){ %><<%= BusinessClassName %>><% } %>
     {
         private <%= BusinessClassName %>()
         { /* Require use of factory methods */ }

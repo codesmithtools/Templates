@@ -12,7 +12,7 @@
         ''' <Returns>Return true to override the generated rules If false generated rules will be run.</Returns>
         Protected Function AddBusinessValidationRules() As Boolean
             ' TODO: add validation rules
-<% If(IsLatestCSLA) Then %>
+<% If(IsCSLA43 OrElse IsCSLA45) Then %>
             'BusinessRules.AddRule(New Global.Csla.Rules.CommonRules.Required(MyProperty))
 <% Else %>
             'ValidationRules.AddRule(RuleMethod, "")

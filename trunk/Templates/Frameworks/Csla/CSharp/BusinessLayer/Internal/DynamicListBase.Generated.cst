@@ -23,6 +23,9 @@
 //------------------------------------------------------------------------------
 using System;
 using System.Linq;
+<% if(IsCSLA45) { %>
+using System.Threading.Tasks;
+<% } %>
 
 using Csla;
 <% if(IncludeSilverlightSupport) { %>
@@ -41,7 +44,7 @@ namespace <%= BusinessProjectName %>
 <% if(DataAccessImplementation == DataAccessMethod.ObjectFactoryNone || DataAccessImplementation == DataAccessMethod.ObjectFactoryParameterizedSQL || DataAccessImplementation == DataAccessMethod.ObjectFactoryStoredProcedures){ %>
     [Csla.Server.ObjectFactory(FactoryNames.<%= Entity.Name %>ListFactoryName)]
 <% } %>
-    public partial class <%= BusinessClassName %><%= Entity.GenericProperty %> : <% if(IsLatestCSLA) { %>DynamicListBase<% } else { %>EditableRootListBase<% } %><<%= ChildBusinessClassName %><%= Entity.GenericProperty %>>
+    public partial class <%= BusinessClassName %><%= Entity.GenericProperty %> : <% if(IsCSLA43 || IsCSLA45) { %>DynamicListBase<% } else { %>EditableRootListBase<% } %><<%= ChildBusinessClassName %><%= Entity.GenericProperty %>>
     {
         #region Constructor(s)
         
@@ -89,6 +92,33 @@ namespace <%= BusinessProjectName %>
 
         #region Asynchronous Factory Methods
 
+<% if(IsCSLA45) { %>
+        public static async Task<<%= BusinessClassName %><%= Entity.GenericProperty %>> NewListAsync()
+        {
+            return await DataPortal.CreateAsync<<%= BusinessClassName %><%= Entity.GenericProperty %>>();
+        }
+
+<% foreach(SearchCriteria sc in Entity.SearchCriteria) { %>
+
+        public static async Task<<%= BusinessClassName %><%= Entity.GenericProperty %>> <%= sc.MethodName %>Async(<% if(sc.Properties.Count > 0) { %><%= sc.Properties.BuildParametersVariables() %><% } %>)
+        {
+            var criteria = new <%= CriteriaClassName %><%= Entity.GenericProperty %>{<%= sc.Properties.BuildObjectInitializer() %>};
+            <%= sc.Properties.BuildNullableObjectInitializer()%>
+            
+            return await DataPortal.FetchAsync<<%= BusinessClassName %><%= Entity.GenericProperty %>>(criteria);
+        }
+<% } %>
+
+        public static async Task<<%= BusinessClassName %><%= Entity.GenericProperty %>> GetByCriteriaAsync(<%= CriteriaClassName %><%= Entity.GenericProperty %> criteria)
+        {  
+            return await DataPortal.FetchAsync<<%= BusinessClassName %><%= Entity.GenericProperty %>>(criteria);
+        }
+
+        public static async Task<<%= BusinessClassName %><%= Entity.GenericProperty %>> GetAllAsync()
+        {
+            return await DataPortal.FetchAsync<<%= BusinessClassName %><%= Entity.GenericProperty %>>(new <%= CriteriaClassName %><%= Entity.GenericProperty %>());
+        }
+<% } else { %>
         public static void NewListAsync(EventHandler<DataPortalResult<<%= BusinessClassName %><%= Entity.GenericProperty %>>> handler)
         {
             var dp = new DataPortal<<%= BusinessClassName %><%= Entity.GenericProperty %>>();
@@ -121,7 +151,8 @@ namespace <%= BusinessProjectName %>
             dp.FetchCompleted += handler;
             dp.BeginFetch(new <%= CriteriaClassName %><%= Entity.GenericProperty %>());
         }
-        
+<% } %>
+
         #endregion
 
         #region Method Overrides
@@ -129,7 +160,7 @@ namespace <%= BusinessProjectName %>
 #if !SILVERLIGHT
 <% } %>
 
-        protected override <% if(IsLatestCSLA) { %><%= ChildBusinessClassName %><%= Entity.GenericProperty %><% } else { %>object<% } %> AddNewCore()
+        protected override <% if(IsCSLA43 || IsCSLA45) { %><%= ChildBusinessClassName %><%= Entity.GenericProperty %><% } else { %>object<% } %> AddNewCore()
         {
 <% RenderHelper(new AddNewCore()); %>
         }

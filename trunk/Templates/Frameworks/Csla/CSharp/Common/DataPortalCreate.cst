@@ -16,7 +16,7 @@ if(property.SystemType == "System.Guid") { if(UseMemberVariables) { %>
             LoadProperty(<%= property.PrivateMemberVariableName %>Property, Guid.NewGuid());
 <% } } } %>
 
-<% if(IsLatestCSLA) { %>
+<% if(IsCSLA43 || IsCSLA45) { %>
             BusinessRules.CheckRules();
 <% } else { %>
             ValidationRules.CheckRules();

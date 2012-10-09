@@ -5,6 +5,7 @@
 <%@ Assembly Name="Generator.CSLA" Path="..\..\Common" %>
 <%@ Import Namespace="CodeSmith.SchemaHelper" %>
 
+
         #region Exists Command
 
 <% if(IncludeSilverlightSupport) { %>
@@ -22,7 +23,15 @@
 <% if(IncludeSilverlightSupport) { %>
 #endif
 <% } %>
-
+<% if(IsCSLA45) { %>
+        /// <summary>
+        /// Determines if a record exists in the <%=ChildBusinessClassName%><%= Entity.GenericProperty %> in the database for the specified criteria. 
+        /// </summary>
+        public static async Task<bool> ExistsAsync(<%= CriteriaClassName %><%= Entity.GenericProperty %> criteria)
+        {
+            return await <%= BusinessProjectName %>.ExistsCommand.ExecuteAsync(criteria);
+        }
+<% } else { %>
         /// <summary>
         /// Determines if a record exists in the <%=ChildBusinessClassName%><%= Entity.GenericProperty %> in the database for the specified criteria. 
         /// </summary>
@@ -30,5 +39,6 @@
         {
             <%= BusinessProjectName %>.<%= ChildBusinessClassName %>.ExistsAsync(criteria,handler);
         }
+<% } %>
 
         #endregion

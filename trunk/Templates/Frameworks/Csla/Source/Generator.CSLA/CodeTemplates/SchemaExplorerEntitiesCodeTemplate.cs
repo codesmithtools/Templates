@@ -10,6 +10,9 @@ using Configuration = CodeSmith.SchemaHelper.Configuration;
 
 namespace Generator.CSLA.CodeTemplates
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class SchemaExplorerEntitiesCodeTemplate : SchemaHelperEntitiesCodeTemplate
     {
         private List<IEntity> _entities = new List<IEntity>();
@@ -366,7 +369,8 @@ namespace Generator.CSLA.CodeTemplates
             base.OnPropertiesLoaded();
         }
 
-        public bool ShouldPopulateDefaultEntities
+        [Browsable(false)]
+        private bool ShouldPopulateDefaultEntities
         {
             get
             {

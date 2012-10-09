@@ -14,7 +14,7 @@
         ''' Allows the specification of CSLA based authorization rules.  Specifies what roles can 
         ''' perform which operations for a given business object
         ''' </summary>
-    <% If(IsLatestCSLA) Then %>
+    <% If(IsCSLA43 OrElse IsCSLA45) Then %>
         Protected Shared Sub AddObjectAuthorizationRules()
             'Csla.Rules.BusinessRules.AddRule(GetType(<%= BusinessClassName %>), New Global.Csla.Rules.CommonRules.IsInRole(Csla.Rules.AuthorizationActions.CreateObject, "SomeRole"))
             'Csla.Rules.BusinessRules.AddRule(GetType(<%= BusinessClassName %>), New Global.Csla.Rules.CommonRules.IsInRole(Csla.Rules.AuthorizationActions.EditObject, "SomeRole"))

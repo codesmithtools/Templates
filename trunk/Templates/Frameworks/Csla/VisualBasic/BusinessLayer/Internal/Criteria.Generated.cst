@@ -43,7 +43,7 @@ Imports Csla.Serialization.Mobile
 Namespace <%= BusinessProjectName %>
     <Serializable(), ClassInterface(ClassInterfaceType.None)> _
     Public Partial Class <%= BusinessClassName %><%= Entity.GenericProperty %>
-        Inherits CriteriaBase<% If (IsLatestCSLA) Then %>(Of <%= BusinessClassName %><%= Entity.GenericProperty %>)<% End If %>
+        Inherits CriteriaBase<% If (IsCSLA43 OrElse IsCSLA45) Then %>(Of <%= BusinessClassName %><%= Entity.GenericProperty %>)<% End If %>
         Implements IGeneratedCriteria
     
 #Region "Private Read-Only Properties"
@@ -55,12 +55,12 @@ Namespace <%= BusinessProjectName %>
 #Region "Constructors"
     
         Public Sub New()
-        <% If Not(IsLatestCSLA) Then %>MyBase.New(GetType(<%= BusinessProjectName %>.<%= ChildBusinessClassName %><%= Entity.GenericProperty %>))<% End If %>
+        <% If Not(IsCSLA43 OrElse IsCSLA45) Then %>MyBase.New(GetType(<%= BusinessProjectName %>.<%= ChildBusinessClassName %><%= Entity.GenericProperty %>))<% End If %>
         End Sub
 <% If(Entity.HasKey) Then %>
 
         Public Sub New(<%= Entity.GetProperties(PropertyType.Key).BuildParametersVariables() %>) 
-            <% If Not(IsLatestCSLA) Then %>MyBase.New(GetType(<%= BusinessProjectName %>.<%= ChildBusinessClassName %><%= Entity.GenericProperty %>))<% End If %>
+            <% If Not(IsCSLA43 OrElse IsCSLA45) Then %>MyBase.New(GetType(<%= BusinessProjectName %>.<%= ChildBusinessClassName %><%= Entity.GenericProperty %>))<% End If %>
             
     <% For Each prop As IProperty In Entity.GetProperties(PropertyType.Key) %>
             Me.<%= prop.Name %> = <%= prop.VariableName %>

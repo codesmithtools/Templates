@@ -38,7 +38,7 @@ Imports Csla.Data
 Imports System.Data.SqlClient
 <% End If %>
 
-<% If(IsLatestCSLA) Then %>
+<% If(IsCSLA43 OrElse IsCSLA45) Then %>
 Imports Csla.Rules
 <% Else %>
 Imports Csla.Validation

@@ -1,20 +1,20 @@
 ﻿<%@ CodeTemplate Language="C#" TargetLanguage="Text" %>
 <%@ Property Name="SolutionItems" Type="List<Generator.QuickStart.SolutionItem>" Optional="False" Category="1.Project" Description="" %>
 <%@ Property Name="Language" Type="CodeSmith.SchemaHelper.Language" Default="CSharp" Optional="False" Category="1.Project" Description="Language the project will be in." %>
-<%@ Property Name="IsLatestCSLA" Type="System.Boolean" Optional="False" Category="1.Project" Description="" %>
+<%@ Property Name="FrameworkVersion" Type="CodeSmith.SchemaHelper.FrameworkVersion" Optional="False" Category="2. Solution" Description="" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper" %>
 <%@ Assembly Name="Generator.QuickStart" %>
 <%@ Import Namespace="CodeSmith.SchemaHelper" %>
 <%@ Import Namespace="System.Collections.Generic" %>
 
 
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+Microsoft Visual Studio Solution File, Format Version <% if(FrameworkVersion == FrameworkVersion.v45) { %>12<% } else { %>11<% } %>.00
+# Visual Studio <% if(FrameworkVersion == FrameworkVersion.v45) { %>2012<% } else { %>2010<% } %>
 <% foreach(var solutionItem in SolutionItems) { 
     if(solutionItem.Website) { %>
 Project("{<%= solutionItem.LanguageGuidString %>}") = "<%= solutionItem.Name %>", "<%= solutionItem.Name %>\", "{<%= solutionItem.GuidString %>}"
     ProjectSection(WebsiteProperties) = preProject
-        TargetFramework = "<% if(IsLatestCSLA) { %>4.0<% } else { %>3.5<% } %>"
+        TargetFramework = "<% if(FrameworkVersion == FrameworkVersion.v45) { %>4.5<% } else if(FrameworkVersion == FrameworkVersion.v40) { %>4.0<% } else { %>3.5<% } %>"
         <% foreach(var item in solutionItem.ProjectReferences) { %>
         ProjectReferences = "{<%=item.Guid.ToString()%>}|<%=item.Name%>.dll;"
         <% } %>
