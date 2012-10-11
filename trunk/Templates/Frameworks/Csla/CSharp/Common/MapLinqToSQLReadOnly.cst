@@ -24,16 +24,16 @@
         { %>
 <%             if( property.IsNullable && property.SystemType != "System.String" && property.SystemType != "System.Byte[]") 
             {%>
-            <%= property.PrivateMemberVariableName %> = dto.IsDBNull("<%= property.KeyName %>") ? (<%= property.SystemType %>)null : <%if(!property.HasByteArrayColumn()) { %>dto.<%= property.KeyName %>;<% } else { %>LinqToSQLHelper.GetByteArray(dto.<%= property.KeyName %>);<% } %>
+            <%= property.PrivateMemberVariableName %> = dto.IsDBNull("<%= property.KeyName %>") ? (<%= property.SystemType %>)null : <%if(!property.HasByteArrayColumn()) { %>dto.<%= property.KeyName %>;<% } else { %>LinqToSQLHelper.GetByteArray(dto.<%= property.Name %>);<% } %>
 <%             } 
             else 
             {%>
-            <%= property.PrivateMemberVariableName %> = <%if(!property.HasByteArrayColumn()) { %>dto.<%= property.KeyName %>;<% } else { %>LinqToSQLHelper.GetByteArray(dto.<%= property.KeyName %>);<% } %>
+            <%= property.PrivateMemberVariableName %> = <%if(!property.HasByteArrayColumn()) { %>dto.<%= property.KeyName %>;<% } else { %>LinqToSQLHelper.GetByteArray(dto.<%= property.Name %>);<% } %>
 <%             } 
         } 
         else 
         { %>
-            LoadProperty(<%= property.PrivateMemberVariableName %>Property, <%if(!property.HasByteArrayColumn()) { %>dto.<%= property.KeyName %>);<% } else { %>LinqToSQLHelper.GetByteArray(dto.<%= property.KeyName %>));<% } %>
+            LoadProperty(<%= property.PrivateMemberVariableName %>Property, <%if(!property.HasByteArrayColumn()) { %>dto.<%= property.KeyName %>);<% } else { %>LinqToSQLHelper.GetByteArray(dto.<%= property.Name %>));<% } %>
 <%         }
     } %>
 

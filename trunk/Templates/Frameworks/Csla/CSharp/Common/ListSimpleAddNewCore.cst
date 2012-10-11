@@ -7,7 +7,7 @@
 <%@ Import Namespace="CodeSmith.SchemaHelper" %>
 
 <% if(!RenderOptionalContent) { %>  
-            <%= ChildBusinessClassName %> item = <%= BusinessProjectName %>.<%= ChildBusinessClassName %>.New<%= ChildBusinessClassName %><% if(IsSwitchableObject()){ %>Child<% }%>();
+            <%= ChildBusinessClassName %> item = <%= BusinessProjectName %>.<%= ChildBusinessClassName %><%= Entity.GenericProperty %>.New<%= ChildBusinessClassName %><% if(IsSwitchableObject()){ %>Child<% }%>();
 
             bool cancel = false;
             OnAddNewCore(ref item, ref cancel);
@@ -15,7 +15,7 @@
             {
                 // Check to see if someone set the item to null in the OnAddNewCore.
                 if(item == null)
-                    item = <%= BusinessProjectName %>.<%= ChildBusinessClassName %>.New<%= ChildBusinessClassName %><% if(IsSwitchableObject()){ %>Child<% }%>();
+                    item = <%= BusinessProjectName %>.<%= ChildBusinessClassName %><%= Entity.GenericProperty %>.New<%= ChildBusinessClassName %><% if(IsSwitchableObject()){ %>Child<% }%>();
 
                 Add(item);
             }
@@ -23,9 +23,9 @@
             return item;
 <% } else { %>
 <% if(IsCSLA45) { %>
-            return await <%= BusinessProjectName %>.<%= ChildBusinessClassName %>.New<%= ChildBusinessClassName %><% if(IsSwitchableObject()){ %>Child<% }%>Async().ContinueWith(t => 
+            return await <%= BusinessProjectName %>.<%= ChildBusinessClassName %><%= Entity.GenericProperty %>.New<%= ChildBusinessClassName %><% if(IsSwitchableObject()){ %>Child<% }%>Async().ContinueWith(t => 
                 {
-                     <%= ChildBusinessClassName %> item = t.Result;
+                     <%= ChildBusinessClassName %><%= Entity.GenericProperty %> item = t.Result;
                     
                     bool cancel = false;
                     OnAddNewCore(ref item, ref cancel);
@@ -39,9 +39,9 @@
                     return item;
                 });
 <% } else { %>
-            <%= BusinessProjectName %>.<%= ChildBusinessClassName %>.New<%= ChildBusinessClassName %><% if(IsSwitchableObject()){ %>Child<% }%>Async((o, e) =>
+            <%= BusinessProjectName %>.<%= ChildBusinessClassName %><%= Entity.GenericProperty %>.New<%= ChildBusinessClassName %><% if(IsSwitchableObject()){ %>Child<% }%>Async((o, e) =>
                 {
-                    <%= ChildBusinessClassName %> item = e.Object;
+                    <%= ChildBusinessClassName %><%= Entity.GenericProperty %> item = e.Object;
                     
                     bool cancel = false;
                     OnAddNewCore(ref item, ref cancel);

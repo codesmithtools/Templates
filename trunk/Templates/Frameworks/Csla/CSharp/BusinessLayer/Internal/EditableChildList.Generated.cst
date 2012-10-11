@@ -184,7 +184,7 @@ namespace <%= BusinessProjectName %>
         {
             return await <%= BusinessProjectName %>.<%= ChildBusinessClassName %><%= Entity.GenericProperty %>.New<%= ChildBusinessClassName %><% if(IsSwitchableObject()){ %>Child<% }%>Async().ContinueWith(t => 
             {
-                 <%= ChildBusinessClassName %> item = t.Result;
+                 <%= ChildBusinessClassName %><%= Entity.GenericProperty %> item = t.Result;
                 
                 bool cancel = false;
                 OnAddNewCore(ref item, ref cancel);
@@ -203,14 +203,16 @@ namespace <%= BusinessProjectName %>
         {
             <%= BusinessProjectName %>.<%= ChildBusinessClassName %><%= Entity.GenericProperty %>.New<%= ChildBusinessClassName %><% if(IsSwitchableObject()){ %>Child<% }%>Async((o, e) =>
             {
+                <%= ChildBusinessClassName %><%= Entity.GenericProperty %> item = e.Object;
+            
                 bool cancel = false;
-                OnAddNewCore(ref e.Object, ref cancel);
+                OnAddNewCore(ref item, ref cancel);
                 if (!cancel)
                 {
                     if(e.Error == null)
                     {
-                        Add(e.Object);
-                        handler.Invoke(this, new DataPortalResult<<%= ChildBusinessClassName %><%= Entity.GenericProperty %>>(e.Object, null, null));
+                        Add(item);
+                        handler.Invoke(this, new DataPortalResult<<%= ChildBusinessClassName %><%= Entity.GenericProperty %>>(item, null, null));
                     }
                 }
             });
