@@ -110,7 +110,7 @@ public override void Generate()
 private string CreateSolution(List<Generator.QuickStart.SolutionItem> solutionItems)
 {
     var quickStartSolution = this.Create<QuickStartSolution>();
-    quickStartSolution.IsLatestCSLA = this.FrameworkVersion == FrameworkVersion.v40;
+    quickStartSolution.FrameworkVersion = FrameworkVersion;
     quickStartSolution.SolutionItems = solutionItems;
 
     string filePathAboslute = Path.Combine(this.Location, String.Concat(SolutionName, ".sln"));
