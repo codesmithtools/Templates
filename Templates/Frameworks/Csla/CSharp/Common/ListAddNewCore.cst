@@ -45,7 +45,7 @@
 <% if(IsCSLA45) { %>
             return await <%= BusinessProjectName %>.<%= ChildBusinessClassName %>.New<%= ChildBusinessClassName %><% if(IsSwitchableObject()){ %>Child<% }%>Async().ContinueWith(t => 
                 {
-                     <%= ChildBusinessClassName %> item = t.Result;
+                     <%= ChildBusinessClassName %><%= Entity.GenericProperty %> item = t.Result;
 
                     bool cancel = false;
                     OnAddNewCore(ref item, ref cancel);
@@ -80,7 +80,7 @@
 <% } else { %>
             <%= BusinessProjectName %>.<%= ChildBusinessClassName %>.New<%= ChildBusinessClassName %><% if(IsSwitchableObject()){ %>Child<% }%>Async((o, e) =>
                 {
-                    <%= ChildBusinessClassName %> item = e.Object;
+                    <%= ChildBusinessClassName %><%= Entity.GenericProperty %> item = e.Object;
 
                     bool cancel = false;
                     OnAddNewCore(ref item, ref cancel);
