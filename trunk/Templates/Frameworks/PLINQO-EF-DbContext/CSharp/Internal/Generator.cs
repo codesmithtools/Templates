@@ -93,7 +93,7 @@ namespace SchemaMapper
             if (RelationshipNaming == RelationshipNaming.ListSuffix)
                 return name + "List";
 
-            return StringUtil.ToPlural(name);
+            return StringUtil.ToPascalCase(StringUtil.ToPlural(name));
         }
 
         public string ContextName(string name)
@@ -104,7 +104,7 @@ namespace SchemaMapper
             if (ContextNaming == ContextNaming.TableSuffix)
                 return name + "Table";
 
-            return StringUtil.ToPlural(name);
+            return StringUtil.ToPascalCase(StringUtil.ToPlural(name));
         }
 
         public string EntityName(string name)
@@ -114,7 +114,7 @@ namespace SchemaMapper
             else if (TableNaming != TableNaming.Singular && EntityNaming == EntityNaming.Singular)
                 name = StringUtil.ToSingular(name);
 
-            return name;
+            return StringUtil.ToPascalCase(name);
         }
     }
 
