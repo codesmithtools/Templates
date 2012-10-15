@@ -72,7 +72,7 @@ private void CreateViewContent(IEnumerable<IEntity> entities, string entityNames
         if((entity is ConceptualEntity) == false) 
             continue;
         
-        var fileName = String.Format("{0}\\Admin\\{1}.cshtml", ViewDirectory, StringUtil.ToPlural(entity.Name));
+        var fileName = String.Format("{0}\\Admin\\{1}.cshtml", ViewDirectory, StringUtil.ToPascalCase(StringUtil.ToPlural(entity.Name)));
         this.CopyPropertiesTo(viewTemplate);
         viewTemplate.Entity = entity;
         viewTemplate.EntityNamespace = entityNamespace;
@@ -81,7 +81,7 @@ private void CreateViewContent(IEnumerable<IEntity> entities, string entityNames
         Response.WriteLine(fileName);
         viewTemplate.RenderToFile(fileName, true);
 
-        fileName = String.Format("{0}\\{1}.js", ScriptDirectory, StringUtil.ToPlural(entity.Name));
+        fileName = String.Format("{0}\\{1}.js", ScriptDirectory, StringUtil.ToPascalCase(StringUtil.ToPlural(entity.Name)));
         this.CopyPropertiesTo(javascriptTemplate);
         javascriptTemplate.Entity = entity;
         javascriptTemplate.EntityNamespace = entityNamespace;

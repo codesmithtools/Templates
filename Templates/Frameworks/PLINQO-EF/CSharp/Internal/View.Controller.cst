@@ -31,11 +31,11 @@ namespace <%= String.IsNullOrEmpty(ControllerNamespace) ? String.Concat(EntityNa
     {
         public ActionResult Index()
         {
-            return View(<% if(Entities.Count() > 0) {%>"<%= StringUtil.ToPlural(Entities.FirstOrDefault().Name) %>"<% } %>);
+            return View(<% if(Entities.Count() > 0) {%>"<%= StringUtil.ToPascalCase(StringUtil.ToPlural(Entities.FirstOrDefault().Name)) %>"<% } %>);
         }
 <% foreach(var entity in Entities) { %>
 
-        public ActionResult <%= StringUtil.ToPlural(entity.Name) %>()
+        public ActionResult <%= StringUtil.ToPascalCase(StringUtil.ToPlural(entity.Name)) %>()
         {
             return View();
         }

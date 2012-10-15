@@ -748,7 +748,7 @@ Public  Function ApplyAssociationSuffix(associationName As String) As String
     If AssociationNamingSuffix = AssociationNamingEnum.ListSuffix Then
         Return associationName + "List"
     Else
-        Return StringUtil.ToPlural(associationName)
+        Return StringUtil.ToPascalCase(StringUtil.ToPlural(associationName))
     End If
 End Function
 

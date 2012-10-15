@@ -741,7 +741,7 @@ foreach(Column column in Type.Columns) {
     {
         return AssociationNamingSuffix == AssociationNamingEnum.ListSuffix ?
                 associationName + "List" :
-                StringUtil.ToPlural(associationName);
+                StringUtil.ToPascalCase(StringUtil.ToPlural(associationName));
     }
 
     private static readonly Regex _sizeRegex = new Regex(@"(?<Size>\d+)", RegexOptions.Compiled);

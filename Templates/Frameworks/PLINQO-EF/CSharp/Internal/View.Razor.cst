@@ -10,14 +10,14 @@
 <%@ Import Namespace="Generator.Microsoft.Frameworks" %>
 <%@ Property Name="Entities" Type="System.Collections.Generic.IEnumerable<IEntity>" %>
 @{
-    ViewBag.Title = "<%= StringUtil.ToPlural(Entity.Name) %>";
+    ViewBag.Title = "<%= StringUtil.ToPascalCase(StringUtil.ToPlural(Entity.Name)) %>";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <h2> Navigate to: 
     <select onchange="window.location = this.value;">
 <% foreach (var entity in Entities) { %>
-        <option value="/admin/<%= StringUtil.ToPlural(entity.Name) %>"<% if(entity == Entity) { %> selected="selected"<% } %>><%= StringUtil.ToPlural(entity.Name) %></option>
+        <option value="/admin/<%= StringUtil.ToPascalCase(StringUtil.ToPlural(entity.Name)) %>"<% if(entity == Entity) { %> selected="selected"<% } %>><%= StringUtil.ToPascalCase(StringUtil.ToPlural(entity.Name)) %></option>
 <% } %>
     </select>
 </h2>
@@ -26,7 +26,7 @@
    if(assoication != null) { %>
 <script type="text/x-kendo-template" id="template">
     <div class="toolbar">
-        <label class="toolbarFilter-label" for="toolbarFilter">Show <%= StringUtil.ToPlural(Entity.Name) %> by <%= assoication.ForeignEntity.Name %>:</label>
+        <label class="toolbarFilter-label" for="toolbarFilter">Show <%= StringUtil.ToPascalCase(StringUtil.ToPlural(Entity.Name)) %> by <%= assoication.ForeignEntity.Name %>:</label>
         <input type="search" id="toolbarFilter" style="width: 230px"></input>
     </div>
 </script>
@@ -56,5 +56,5 @@
 <% } %>
 
 @section Scripts {
-    @Scripts.Render("~/Scripts/Generated/<%= StringUtil.ToPlural(Entity.Name) %>.js")
+    @Scripts.Render("~/Scripts/Generated/<%= StringUtil.ToPascalCase(StringUtil.ToPlural(Entity.Name)) %>.js")
 }

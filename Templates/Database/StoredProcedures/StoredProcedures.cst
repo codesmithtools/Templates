@@ -1104,7 +1104,7 @@ public string GetEntityName(bool plural)
 		entityName = StringUtil.ToSingular(entityName);
 	}
 	
-	return entityName;
+	return StringUtil.ToPascalCase(entityName);
 }
 
 public string GetBySuffix(IList<ColumnSchema> columns)
