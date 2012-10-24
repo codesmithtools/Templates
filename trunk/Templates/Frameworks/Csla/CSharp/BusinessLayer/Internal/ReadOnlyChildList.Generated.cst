@@ -101,18 +101,18 @@ namespace <%= BusinessProjectName %>
             var criteria = new <%= CriteriaClassName %><%= Entity.GenericProperty %>{<%= sc.Properties.BuildObjectInitializer() %>};
             <%= sc.Properties.BuildNullableObjectInitializer()%>
             
-            return await DataPortal.FetchAsync<<%= BusinessClassName %><%= Entity.GenericProperty %>>(criteria);
+            return await DataPortal.FetchAsync<AsyncChildLoader<<%= BusinessClassName %><%= Entity.GenericProperty %>>>(criteria).ContinueWith(t => t.Result.Child);
         }
 <% } %>
 
         internal static async Task<<%= BusinessClassName %><%= Entity.GenericProperty %>> GetByCriteriaAsync(<%= CriteriaClassName %><%= Entity.GenericProperty %> criteria)
         {  
-            return await DataPortal.FetchAsync<<%= BusinessClassName %><%= Entity.GenericProperty %>>(criteria);
+            return await DataPortal.FetchAsync<AsyncChildLoader<<%= BusinessClassName %><%= Entity.GenericProperty %>>>(criteria).ContinueWith(t => t.Result.Child);
         }
 
         internal static async Task<<%= BusinessClassName %><%= Entity.GenericProperty %>> GetAllAsync()
         {
-            return await DataPortal.FetchAsync<AsyncChildLoader<<%= BusinessClassName %><%= Entity.GenericProperty %>>>(new <%= CriteriaClassName %><%= Entity.GenericProperty %>());
+            return await DataPortal.FetchAsync<AsyncChildLoader<<%= BusinessClassName %><%= Entity.GenericProperty %>>>(new <%= CriteriaClassName %><%= Entity.GenericProperty %>()).ContinueWith(t => t.Result.Child);
         }
 <% } else { %>
 <% foreach(SearchCriteria sc in Entity.SearchCriteria) { %>
