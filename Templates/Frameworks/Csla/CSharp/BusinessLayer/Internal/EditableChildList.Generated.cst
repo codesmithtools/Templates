@@ -111,23 +111,23 @@ namespace <%= BusinessProjectName %>
         }
 <% foreach(SearchCriteria sc in Entity.SearchCriteria) { %>
 
-        internal static async Task<AsyncChildLoader<<%= BusinessClassName %><%= Entity.GenericProperty %>>> <%= sc.MethodName %>Async(<% if(sc.Properties.Count > 0) { %><%= sc.Properties.BuildParametersVariables() %><% } %>)
+        internal static async Task<<%= BusinessClassName %><%= Entity.GenericProperty %>> <%= sc.MethodName %>Async(<% if(sc.Properties.Count > 0) { %><%= sc.Properties.BuildParametersVariables() %><% } %>)
         {
             var criteria = new <%= CriteriaClassName %><%= Entity.GenericProperty %>{<%= sc.Properties.BuildObjectInitializer() %>};
             <%= sc.Properties.BuildNullableObjectInitializer()%>
             
-            return await DataPortal.FetchAsync<AsyncChildLoader<<%= BusinessClassName %><%= Entity.GenericProperty %>>>(criteria);
+            return await DataPortal.FetchAsync<AsyncChildLoader<<%= BusinessClassName %><%= Entity.GenericProperty %>>>(criteria).ContinueWith(t => t.Result.Child);
         }
 <% } %>
 
-        internal static async Task<AsyncChildLoader<<%= BusinessClassName %><%= Entity.GenericProperty %>>> GetByCriteriaAsync(<%= CriteriaClassName %><%= Entity.GenericProperty %> criteria)
+        internal static async Task<<%= BusinessClassName %><%= Entity.GenericProperty %>> GetByCriteriaAsync(<%= CriteriaClassName %><%= Entity.GenericProperty %> criteria)
         {  
-            return await DataPortal.FetchAsync<AsyncChildLoader<<%= BusinessClassName %><%= Entity.GenericProperty %>>>(criteria);
+            return await DataPortal.FetchAsync<AsyncChildLoader<<%= BusinessClassName %><%= Entity.GenericProperty %>>>(criteria).ContinueWith(t => t.Result.Child);
         }
 
-        internal static async Task<AsyncChildLoader<<%= BusinessClassName %><%= Entity.GenericProperty %>>> GetAllAsync()
+        internal static async Task<<%= BusinessClassName %><%= Entity.GenericProperty %>> GetAllAsync()
         {
-            return await DataPortal.FetchAsync<AsyncChildLoader<<%= BusinessClassName %><%= Entity.GenericProperty %>>>(new <%= CriteriaClassName %><%= Entity.GenericProperty %>());
+            return await DataPortal.FetchAsync<AsyncChildLoader<<%= BusinessClassName %><%= Entity.GenericProperty %>>>(new <%= CriteriaClassName %><%= Entity.GenericProperty %>()).ContinueWith(t => t.Result.Child);
         }
 <% } else { %>
         internal static void NewListAsync(EventHandler<DataPortalResult<<%= BusinessClassName %><%= Entity.GenericProperty %>>> handler)

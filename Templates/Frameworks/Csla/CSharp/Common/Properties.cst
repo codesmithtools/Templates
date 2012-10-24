@@ -98,6 +98,8 @@ if (UseMemberVariables){ %>
                     {
                         var criteria = new <%= BusinessProjectName %>.<%= association.TypeName %>Criteria<%= association.GenericProperty %> {<%= association.BuildObjectInitializer(true) %>};
                         <%= association.BuildNullableObjectInitializer(true)%>
+<% if(IncludeSilverlightSupport) { %>
+#if SILVERLIGHT
 <% if(IsCSLA45) { %>
                         //MarkBusy();
 <% if(!BusinessObjectExists(association) && IsReadOnlyBusinessObject( association, "Info")) { %>
@@ -149,8 +151,6 @@ if (UseMemberVariables){ %>
                         }
 <% } %>
 <% } else { %>
-<% if(IncludeSilverlightSupport) { %>
-#if SILVERLIGHT
                         //MarkBusy();
 <% if(!BusinessObjectExists(association) && IsReadOnlyBusinessObject( association, "Info")) { %>
                         if(<%= association.BuildNullCheckStatement(true, false, false, false, true) %>)
@@ -207,7 +207,7 @@ if (UseMemberVariables){ %>
                                     });
                             });
                         }
-<% } %>
+<% } } %>
 #else
 <% } %>
 <% if(!BusinessObjectExists(association) && IsReadOnlyBusinessObject( association, "Info")) { %>
@@ -221,7 +221,7 @@ if (UseMemberVariables){ %>
 <% } %>
 <% if(IncludeSilverlightSupport) { %>
 #endif
-<% } } %>
+<% } %>
                     }
 <% } %>
                 }
@@ -266,6 +266,8 @@ if(!result.Equals("(true)", StringComparison.CurrentCultureIgnoreCase) && !resul
                     {
                         var criteria = new <%= BusinessProjectName %>.<%= association.TypeName %>Criteria<%= association.GenericProperty %> {<%= association.BuildObjectInitializer(true) %>};
                         <%= association.BuildNullableObjectInitializer(true)%>
+<% if(IncludeSilverlightSupport) { %>
+#if SILVERLIGHT
 <% if(IsCSLA45) { %>
                         //MarkBusy();
                         <%= BusinessProjectName %>.<%= associationClassName %><%= association.GenericProperty %>.ExistsAsync(criteria).ContinueWith(t =>
@@ -274,7 +276,7 @@ if(!result.Equals("(true)", StringComparison.CurrentCultureIgnoreCase) && !resul
                             {
                                 <%= BusinessProjectName %>.<%= associationClassName %><%= association.GenericProperty %>.<%= association.SearchCriteria.AssociatedMethodName%>Async(<%= association.SearchCriteria.Properties.BuildPropertyVariableArguments() %>).ContinueWith(i =>
                                 {
-                                    this.LoadProperty(<%= association.PrivateMemberVariableName %>Property, i.Result<% if(IsChildBusinessObject(association)) { %>.Child<% } %>);
+                                    this.LoadProperty(<%= association.PrivateMemberVariableName %>Property, i.Result);
 
                                     //MarkIdle();
                                     OnPropertyChanged(<%= association.PrivateMemberVariableName %>Property);
@@ -282,8 +284,6 @@ if(!result.Equals("(true)", StringComparison.CurrentCultureIgnoreCase) && !resul
                             }
                         });
 <% } else { %>
-<% if(IncludeSilverlightSupport) { %>
-#if SILVERLIGHT
                         //MarkBusy();
                         <%= BusinessProjectName %>.<%= associationClassName %><%= association.GenericProperty %>.ExistsAsync(criteria, (o,e) =>
                         {
@@ -302,11 +302,12 @@ if(!result.Equals("(true)", StringComparison.CurrentCultureIgnoreCase) && !resul
                                     OnPropertyChanged(<%= association.PrivateMemberVariableName %>Property);
                                 });
                         });
+<% } %>
 #else
 <% } %>
                         if(<%= BusinessProjectName %>.<%= associationClassName %><%= association.GenericProperty %>.Exists(criteria))
                             LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= BusinessProjectName %>.<%= associationClassName %><%= association.GenericProperty %>.<%= association.SearchCriteria.AssociatedMethodName%>(<%= association.SearchCriteria.Properties.BuildPropertyVariableArguments() %>));
-<% } if(!IsCSLA45 && IncludeSilverlightSupport) { %>
+<% if(IncludeSilverlightSupport) { %>
 #endif
 <% } %>
                     }
@@ -346,6 +347,8 @@ if(!result.Equals("(true)", StringComparison.CurrentCultureIgnoreCase) && !resul
 <% if(UseLazyLoading) { %>
                     if(!FieldManager.FieldExists(<%= association.PrivateMemberVariableName %>Property))
                     {
+<% if(IncludeSilverlightSupport) { %>
+#if SILVERLIGHT
 <% if(IsCSLA45) { %>
                         //MarkBusy();
 <% if(IsNameValueListBusinessObject(association, "NameValueList")) { %>
@@ -396,7 +399,7 @@ if(!result.Equals("(true)", StringComparison.CurrentCultureIgnoreCase) && !resul
                                 {
                                     <%= BusinessProjectName %>.<%= associationClassName %>List<%= association.GenericProperty %>.<%= association.SearchCriteria.AssociatedMethodName%>Async(<%= association.SearchCriteria.Properties.BuildPropertyVariableArguments() %>).ContinueWith(i =>
                                     {
-                                        this.LoadProperty(<%= association.PrivateMemberVariableName %>Property, i.Result<% if(IsChildBusinessObject(association,"List")) { %>.Child<% } %>);
+                                        this.LoadProperty(<%= association.PrivateMemberVariableName %>Property, i.Result);
 
                                         //MarkIdle();
                                         OnPropertyChanged(<%= association.PrivateMemberVariableName %>Property);
@@ -406,8 +409,6 @@ if(!result.Equals("(true)", StringComparison.CurrentCultureIgnoreCase) && !resul
                         }
 <% } } %>
 <% } else { %>
-<% if(IncludeSilverlightSupport) { %>
-#if SILVERLIGHT
                         //MarkBusy();
 <% if(IsNameValueListBusinessObject(association, "NameValueList")) { %>
                         <%= BusinessProjectName %>.<%= association.TypeName %>List<%= association.GenericProperty %>.GetAllAsync((o, e) =>
@@ -477,7 +478,7 @@ if(!result.Equals("(true)", StringComparison.CurrentCultureIgnoreCase) && !resul
                                 });
                             });
                         }
-<% } } %>
+<% } } } %>
 #else
 <% } %>
 <% if(IsNameValueListBusinessObject(association, "NameValueList")) { %>
@@ -497,7 +498,7 @@ if(!result.Equals("(true)", StringComparison.CurrentCultureIgnoreCase) && !resul
 <% } } %>
 <% if(IncludeSilverlightSupport) { %>
 #endif
-<% } } %>
+<% } %>
                     }
 <% } %>
                 }
