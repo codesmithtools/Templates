@@ -155,7 +155,7 @@
       <property name="AutoExecuteStoredProcedures">False</property>
       <property name="IsolationLevel">ReadCommitted</property>
       <property name="NameValueList" />
-      <property name="FrameworkVersion">v40</property>
+      <property name="FrameworkVersion">v45</property>
       <property name="IncludeSilverlightSupport">False</property>
       <property name="CommandObject" />
       <property name="DynamicListBase" />

@@ -54,7 +54,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Csla">
-      <HintPath>..\..\..\..\Templates\Common\Csla\4.3\Client\Csla.dll</HintPath>
+      <HintPath>..\..\..\..\packages\CSLA-Core.4.5.4-RC1\lib\net40\Csla.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CompilerServices.AsyncTargetingPack.Net4">
+      <HintPath>..\..\..\..\packages\Microsoft.CompilerServices.AsyncTargetingPack.1.0.0\lib\net40\Microsoft.CompilerServices.AsyncTargetingPack.Net4.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
@@ -138,6 +141,13 @@
     </Compile>
     <Compile Include="Collections\ProfileList.Generated.cs">
       <DependentUpon>ProfileList.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Collections\SupplierList.cs" />
+    <Compile Include="Collections\SupplierList.DataAccess.cs">
+      <DependentUpon>SupplierList.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Collections\SupplierList.Generated.cs">
+      <DependentUpon>SupplierList.cs</DependentUpon>
     </Compile>
     <Compile Include="Commands\ExistsCommand.cs" />
     <Compile Include="CreditCard.cs" />
@@ -273,6 +283,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Entities.csp" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">

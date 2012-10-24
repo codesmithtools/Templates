@@ -7,9 +7,12 @@
     mc:Ignorable="d"
     d:DesignHeight="300" d:DesignWidth="400">
     <UserControl.Resources>
-        <this:MainPageModel x:Key="MainModel" />
+        <ResourceDictionary>
+            <this:MainWindowPresenter x:Key="Presenter"/>
+        </ResourceDictionary>
     </UserControl.Resources>
-    <Grid x:Name="LayoutRoot" Background="White" DataContext="{Binding Source={StaticResource MainModel}}">
-        <ContentControl Content="{Binding Path=CurrentControl}" />
+
+    <Grid DataContext="{StaticResource Presenter}" Background="White">
+        <ContentControl Content="{Binding MainContent}" />
     </Grid>
 </UserControl>

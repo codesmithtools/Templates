@@ -11,6 +11,8 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Csla;
 
 #endregion
@@ -74,32 +76,27 @@ namespace PetShop.Business
 
         #region Custom Factory Methods
 
-#if !SILVERLIGHT
-
-        internal static CartList GetCart(int uniqueID, bool isShoppingCart)
+        internal static CartList GetCart(int uniqueId, bool isShoppingCart)
         {
             CartList list = null;
 
             try
             {
-                list = DataPortal.FetchChild<CartList>(new CartCriteria { UniqueID = uniqueID, IsShoppingCart = isShoppingCart });
+                list = DataPortal.FetchChild<CartList>(new CartCriteria {UniqueID = uniqueId, IsShoppingCart = isShoppingCart});
             }
             catch (Exception)
             {
-                list = CartList.NewList();
+                list = CartList.NewListAsync().Result;
             }
 
             return list;
         }
 
-#else
-
-        internal static void GetCartAsync(int uniqueID, bool isShoppingCart, EventHandler<Csla.DataPortalResult<CartList>> handler)
+        internal static async Task<AsyncChildLoader<CartList>> GetCartAsync(int uniqueId, bool isShoppingCart)
         {
-            DataPortal.BeginFetch<CartList>(new CartCriteria { UniqueID = uniqueID, IsShoppingCart = isShoppingCart }, (o, e) => handler(null, e));
+            return await DataPortal.FetchAsync<AsyncChildLoader<CartList>>(new CartCriteria { UniqueID = uniqueId, IsShoppingCart = isShoppingCart });
         }
 
-#endif
         #endregion
 
         #region Properties
@@ -109,14 +106,7 @@ namespace PetShop.Business
         /// </summary>
         public decimal Total
         {
-            get
-            {
-                decimal total = 0;
-                foreach (Cart cart in this)
-                    total += cart.Price*cart.Quantity;
-
-                return total;
-            }
+            get { return this.Sum(cart => cart.Price * cart.Quantity); }
         }
 
         #endregion
@@ -147,21 +137,21 @@ namespace PetShop.Business
         /// When ItemId to be added has already existed, this method will update the quantity instead.
         /// </summary>
         /// <param name="itemId">Item to add</param>
-        /// <param name="uniqueID">Cart's Unique ID</param>
+        /// <param name="uniqueId">Cart's Unique ID</param>
         /// <param name="isShoppingCart">Cart is a shopping cart.</param>
-        public void Add(string itemId, int uniqueID, bool isShoppingCart)
+        public async Task Add(string itemId, int uniqueId, bool isShoppingCart)
         {
-            Add(itemId, uniqueID, isShoppingCart, 1);
+            await Add(itemId, uniqueId, isShoppingCart, 1);
         }
         /// <summary>
         /// Add an item to the cart.
         /// When ItemId to be added has already existed, this method will update the quantity instead.
         /// </summary>
         /// <param name="itemId">Item to add</param>
-        /// <param name="uniqueID">Cart's Unique ID</param>
+        /// <param name="uniqueId">Cart's Unique ID</param>
         /// <param name="isShoppingCart">Cart is a shopping cart.</param>
-        /// <param name="quantity">Item Quanitity</param>
-        public void Add(string itemId, int uniqueID, bool isShoppingCart, int quantity)
+        /// <param name="quantity">Item Quantity</param>
+        public async Task Add(string itemId, int uniqueId, bool isShoppingCart, int quantity)
         {
             int index = 0;
             bool found = false;
@@ -181,11 +171,11 @@ namespace PetShop.Business
                 Items[index].Quantity += quantity;
             else
             {
-#if !SILVERLIGHT
-                Item item = Item.GetByItemId(itemId);
-                Product product = Product.GetByProductId(item.ProductId);
-                Cart cart = Cart.NewCart();
-                cart.UniqueID = uniqueID;
+                Item item = await Item.GetByItemIdAsync(itemId);
+                Product product = await Product.GetByProductIdAsync(item.ProductId);
+                Cart cart = await Cart.NewCartAsync();
+                
+                cart.UniqueID = uniqueId;
                 cart.ItemId = itemId;
                 cart.Name = item.Name;
                 cart.ProductId = item.ProductId;
@@ -196,37 +186,6 @@ namespace PetShop.Business
                 cart.Quantity = quantity;
 
                 Add(cart);
-#else
-                Item.GetByItemIdAsync(itemId, (o, e) =>
-                {
-                    if (e.Error == null) return;
-
-                    Item item = e.Object;
-                    Product.GetByProductIdAsync(item.ProductId, (o1, e1) =>
-                        {
-                            Product product = e1.Object;
-
-                            Cart.NewCartAsync((o2, e2) =>
-                                {
-                                    Cart cart = e2.Object;
-
-                                    cart.UniqueID = uniqueID;
-                                    cart.ItemId = itemId;
-                                    cart.Name = item.Name;
-                                    cart.ProductId = item.ProductId;
-                                    cart.IsShoppingCart = isShoppingCart;
-                                    cart.Price = item.ListPrice ?? item.UnitCost ?? 0;
-                                    cart.Type = product.Name;
-                                    cart.CategoryId = product.CategoryId;
-                                    cart.Quantity = quantity;
-
-                                    Add(cart);
-                                });
-
-                        });
-                });
-
-#endif
             }
         }
 
@@ -251,38 +210,20 @@ namespace PetShop.Business
         /// <summary>
         /// Method to convert all cart items to order line items
         /// </summary>
-        public void SaveOrderLineItems(int orderId)
+        public async Task SaveOrderLineItems(int orderId)
         {
             int lineNum = 0;
 
             foreach (Cart item in this)
             {
-#if !SILVERLIGHT
-                LineItem lineItem = LineItem.NewLineItem();
+                LineItem lineItem = await LineItem.NewLineItemAsync();
                 lineItem.OrderId = orderId;
                 lineItem.ItemId = item.ItemId;
                 lineItem.LineNum = ++lineNum;
                 lineItem.Quantity = item.Quantity;
                 lineItem.UnitPrice = item.Price;
 
-                lineItem = lineItem.Save();
-
-#else
-                LineItem.NewLineItemAsync((o, e) =>
-                    {
-                        if (e.Error == null) return;
-
-                        LineItem lineItem = e.Object;
-                        lineItem.OrderId = orderId;
-                        lineItem.ItemId = item.ItemId;
-                        lineItem.LineNum = ++lineNum;
-                        lineItem.Quantity = item.Quantity;
-                        lineItem.UnitPrice = item.Price;
-
-                        lineItem.BeginSave();
-                    });
-                
-#endif
+                lineItem = await lineItem.SaveAsync();
             }
         }
 

@@ -56,7 +56,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Csla">
-      <HintPath>..\..\..\..\..\Templates\Common\Csla\4.3\Client\Csla.dll</HintPath>
+      <HintPath>..\..\..\..\..\packages\CSLA-Core.4.5.4-RC1\lib\net40\Csla.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CompilerServices.AsyncTargetingPack.Net4">
+      <HintPath>..\..\..\..\..\packages\Microsoft.CompilerServices.AsyncTargetingPack.1.0.0\lib\net40\Microsoft.CompilerServices.AsyncTargetingPack.Net4.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
@@ -109,6 +112,10 @@
     <Compile Include="Collections\ProfileListFactory.DataAccess.cs">
       <DependentUpon>ProfileListFactory.cs</DependentUpon>
     </Compile>
+    <Compile Include="Collections\SupplierListFactory.cs" />
+    <Compile Include="Collections\SupplierListFactory.DataAccess.cs">
+      <DependentUpon>SupplierListFactory.cs</DependentUpon>
+    </Compile>
     <Compile Include="Entities\AccountFactory.cs" />
     <Compile Include="Entities\AccountFactory.DataAccess.cs">
       <DependentUpon>AccountFactory.cs</DependentUpon>
@@ -158,6 +165,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="DataAccess.csp" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\PetShop.Tests.ObjF.ParameterizedSQL\PetShop.Tests.ObjF.ParameterizedSQL.csproj">

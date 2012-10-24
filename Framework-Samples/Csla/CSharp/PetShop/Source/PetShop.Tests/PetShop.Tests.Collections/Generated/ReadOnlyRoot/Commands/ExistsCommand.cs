@@ -10,7 +10,7 @@
 using System;
 
 using System.Data.SqlClient;
-
+using System.Threading.Tasks;
 using Csla;
 using Csla.Data;
 
@@ -55,7 +55,7 @@ namespace PetShop.Tests.Collections.ReadOnlyRoot
 
         #region Factory Methods 
 
-        public static bool Execute<T>(T criteria) where T : PetShop.Tests.Collections.ReadOnlyRoot.IGeneratedCriteria
+        public static bool Execute<T>(T criteria) where T : IGeneratedCriteria
         {
             if (!CanExecuteCommand())
                 throw new System.Security.SecurityException("Not authorized to execute command");
@@ -68,7 +68,7 @@ namespace PetShop.Tests.Collections.ReadOnlyRoot
             return cmd.Result;
         }
 
-        public static void ExecuteAsync<T>(T criteria, EventHandler<DataPortalResult<ExistsCommand>> handler) where T : PetShop.Tests.Collections.ReadOnlyRoot.IGeneratedCriteria
+        public static async Task<bool> ExecuteAsync<T>(T criteria) where T : IGeneratedCriteria
         {
             if (!CanExecuteCommand())
                 throw new System.Security.SecurityException("Not authorized to execute command");
@@ -76,9 +76,8 @@ namespace PetShop.Tests.Collections.ReadOnlyRoot
             var cmd = new ExistsCommand();
             cmd.BeforeServer(criteria);
 
-            var dp = new DataPortal<ExistsCommand>();
-            dp.ExecuteCompleted += handler;
-            dp.BeginExecute(cmd);
+            var result = await DataPortal.ExecuteAsync(cmd);
+            return result.Result;
         }
 
         #endregion

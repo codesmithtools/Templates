@@ -35,7 +35,7 @@
         </stringList>
       </property>
       <property name="Location">.\DynamicRoot\</property>
-      <property name="FrameworkVersion">v40</property>
+      <property name="FrameworkVersion">v45</property>
       <property name="BusinessClassName">Category</property>
       <property name="CriteriaClassName">CategoryCriteria</property>
       <property name="IncludeSilverlightSupport">False</property>
@@ -72,7 +72,7 @@
         </stringList>
       </property>
       <property name="Location">.\DynamicRoot\</property>
-      <property name="FrameworkVersion">v40</property>
+      <property name="FrameworkVersion">v45</property>
       <property name="BusinessClassName">CategoryList</property>
       <property name="CriteriaClassName">CategoryCriteria</property>
       <property name="IncludeSilverlightSupport">False</property>
@@ -109,7 +109,7 @@
         </stringList>
       </property>
       <property name="Location">.\DynamicRoot\</property>
-      <property name="FrameworkVersion">v40</property>
+      <property name="FrameworkVersion">v45</property>
       <property name="BusinessClassName">CategoryCriteria</property>
       <property name="CriteriaClassName">CategoryCriteria</property>
       <property name="IncludeSilverlightSupport">False</property>
@@ -146,7 +146,7 @@
         </stringList>
       </property>
       <property name="Location">.\EditableChild\</property>
-      <property name="FrameworkVersion">v40</property>
+      <property name="FrameworkVersion">v45</property>
       <property name="BusinessClassName">Category</property>
       <property name="CriteriaClassName">CategoryCriteria</property>
       <property name="UseDeferredDeletion">False</property>
@@ -182,7 +182,7 @@
           <name>Category</name>
         </table>
       </property>
-      <property name="FrameworkVersion">v40</property>
+      <property name="FrameworkVersion">v45</property>
       <property name="BusinessClassName">CategoryList</property>
       <property name="IncludeSilverlightSupport">False</property>
       <property name="CriteriaClassName">CategoryCriteria</property>
@@ -218,7 +218,7 @@
         </stringList>
       </property>
       <property name="Location">.\EditableChild\</property>
-      <property name="FrameworkVersion">v40</property>
+      <property name="FrameworkVersion">v45</property>
       <property name="BusinessClassName">CategoryCriteria</property>
       <property name="CriteriaClassName">CategoryCriteria</property>
       <property name="IncludeSilverlightSupport">False</property>
@@ -256,7 +256,7 @@
         </stringList>
       </property>
       <property name="Location">.\EditableRoot\</property>
-      <property name="FrameworkVersion">v40</property>
+      <property name="FrameworkVersion">v45</property>
       <property name="BusinessClassName">Category</property>
       <property name="CriteriaClassName">CategoryCriteria</property>
       <property name="IncludeSilverlightSupport">False</property>
@@ -292,7 +292,7 @@
     </stringList>
       </property>
       <property name="Location">.\EditableRoot\</property>
-      <property name="FrameworkVersion">v40</property>
+      <property name="FrameworkVersion">v45</property>
       <property name="BusinessClassName">CategoryList</property>
       <property name="CriteriaClassName">CategoryCriteria</property>
       <property name="UseDeferredDeletion">False</property>
@@ -330,7 +330,7 @@
         </stringList>
       </property>
       <property name="Location">.\EditableRoot\</property>
-      <property name="FrameworkVersion">v40</property>
+      <property name="FrameworkVersion">v45</property>
       <property name="BusinessClassName">CategoryCriteria</property>
       <property name="CriteriaClassName">CategoryCriteria</property>
       <property name="IncludeSilverlightSupport">False</property>
@@ -368,7 +368,7 @@
         </stringList>
       </property>
       <property name="Location">.\ReadOnlyChild\</property>
-      <property name="FrameworkVersion">v40</property>
+      <property name="FrameworkVersion">v45</property>
       <property name="BusinessClassName">CategoryInfo</property>
       <property name="CriteriaClassName">CategoryCriteria</property>
       <property name="IncludeSilverlightSupport">False</property>
@@ -403,7 +403,7 @@
         </stringList>
       </property>
       <property name="Location">.\ReadOnlyChild\</property>
-      <property name="FrameworkVersion">v40</property>
+      <property name="FrameworkVersion">v45</property>
       <property name="BusinessClassName">CategoryInfoList</property>
       <property name="CriteriaClassName">CategoryCriteria</property>
       <property name="UseDeferredDeletion">False</property>
@@ -441,7 +441,7 @@
         </stringList>
       </property>
       <property name="Location">.\ReadOnlyChild\</property>
-      <property name="FrameworkVersion">v40</property>
+      <property name="FrameworkVersion">v45</property>
       <property name="BusinessClassName">CategoryCriteria</property>
       <property name="CriteriaClassName">CategoryCriteria</property>
       <property name="IncludeSilverlightSupport">False</property>
@@ -477,7 +477,7 @@
         </stringList>
       </property>
       <property name="Location">.\ReadOnlyRoot\</property>
-      <property name="FrameworkVersion">v40</property>
+      <property name="FrameworkVersion">v45</property>
       <property name="BusinessClassName">CategoryInfo</property>
       <property name="CriteriaClassName">CategoryCriteria</property>
       <property name="UseDeferredDeletion">False</property>
@@ -514,7 +514,7 @@
         </stringList>
       </property>
       <property name="Location">.\ReadOnlyRoot\</property>
-      <property name="FrameworkVersion">v40</property>
+      <property name="FrameworkVersion">v45</property>
       <property name="BusinessClassName">CategoryInfoList</property>
       <property name="CriteriaClassName">CategoryCriteria</property>
       <property name="UseDeferredDeletion">False</property>
@@ -551,7 +551,7 @@
         </stringList>
       </property>
       <property name="Location">.\ReadOnlyRoot\</property>
-      <property name="FrameworkVersion">v40</property>
+      <property name="FrameworkVersion">v45</property>
       <property name="BusinessClassName">CategoryCriteria</property>
       <property name="CriteriaClassName">CategoryCriteria</property>
       <property name="IncludeSilverlightSupport">False</property>

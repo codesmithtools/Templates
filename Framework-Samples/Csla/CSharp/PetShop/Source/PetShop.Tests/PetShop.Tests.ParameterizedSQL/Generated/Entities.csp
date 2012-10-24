@@ -124,7 +124,7 @@
       <property name="InterfaceProjectName">PetShop.UI</property>
       <property name="NameValueList" />
       <property name="DynamicListBase" />
-      <property name="FrameworkVersion">v40</property>
+      <property name="FrameworkVersion">v45</property>
       <property name="IncludeSilverlightSupport">False</property>
       <property name="ProcedurePrefix">CSLA_</property>
       <property name="AutoExecuteStoredProcedures">True</property>

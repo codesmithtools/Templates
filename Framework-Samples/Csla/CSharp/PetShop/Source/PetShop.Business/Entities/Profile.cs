@@ -117,33 +117,27 @@ namespace PetShop.Business
                     MarkBusy();
                     
                     if(IsNew)
-                        PetShop.Business.CartList.NewListAsync((o, e) =>
-                            {
-                                if (e.Error != null)
-                                    throw e.Error; 
+                        CartList.NewListAsync().ContinueWith(c =>
+                        {
+                            LoadProperty(_shoppingCart, c.Result);
 
-                                this.LoadProperty(_shoppingCart, e.Object);
-
-                                MarkIdle();
-                                OnPropertyChanged(_shoppingCart);
-                            });
+                            MarkIdle();
+                            OnPropertyChanged(_shoppingCart);
+                        });
                     else
-                        PetShop.Business.CartList.GetCartAsync(UniqueID, true, (o, e) =>
-                            {
-                                if (e.Error != null)
-                                    throw e.Error; 
+                        CartList.GetCartAsync(UniqueID, false).ContinueWith(c =>
+                        {
+                            LoadProperty(_shoppingCart, c.Result);
 
-                                this.LoadProperty(_shoppingCart, e.Object);
-
-                                MarkIdle();
-                                OnPropertyChanged(_shoppingCart);
-                            });
+                            MarkIdle();
+                            OnPropertyChanged(_shoppingCart);
+                        });
 #else
                     if (IsNew)
-                        LoadProperty(_shoppingCart, PetShop.Business.CartList.NewList());
+                        LoadProperty(_shoppingCart, CartList.NewList());
                     else
 
-                        LoadProperty(_shoppingCart, PetShop.Business.CartList.GetCart(UniqueID, true));
+                        LoadProperty(_shoppingCart, CartList.GetCart(UniqueID, true));
 #endif
                 }
 
@@ -162,33 +156,27 @@ namespace PetShop.Business
                     MarkBusy();
                     
                     if(IsNew)
-                        PetShop.Business.CartList.NewListAsync((o, e) =>
-                            {
-                                if (e.Error != null)
-                                    throw e.Error; 
+                        CartList.NewListAsync().ContinueWith(c =>
+                        {
+                            LoadProperty(_wishList, c.Result);
 
-                                this.LoadProperty(_wishList, e.Object);
-
-                                MarkIdle();
-                                OnPropertyChanged(_wishList);
-                            });
+                            MarkIdle();
+                            OnPropertyChanged(_wishList);
+                        });
                     else
-                        PetShop.Business.CartList.GetCartAsync(UniqueID, false, (o, e) =>
-                            {
-                                if (e.Error != null)
-                                    throw e.Error; 
+                        CartList.GetCartAsync(UniqueID, false).ContinueWith(c =>
+                        {
+                            LoadProperty(_wishList, c.Result);
 
-                                this.LoadProperty(_wishList, e.Object);
-
-                                MarkIdle();
-                                OnPropertyChanged(_wishList);
-                            });
+                            MarkIdle();
+                            OnPropertyChanged(_wishList);
+                        });
 #else
                     if (IsNew)
-                        LoadProperty(_wishList, PetShop.Business.CartList.NewList());
+                        LoadProperty(_wishList, CartList.NewList());
                     else
 
-                        LoadProperty(_wishList, PetShop.Business.CartList.GetCart(UniqueID, false));
+                        LoadProperty(_wishList, CartList.GetCart(UniqueID, false));
 #endif
                 }
 

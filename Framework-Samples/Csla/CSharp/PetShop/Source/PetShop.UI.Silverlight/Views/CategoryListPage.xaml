@@ -5,27 +5,23 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:this="clr-namespace:PetShop.UI.Silverlight"
     xmlns:csla="clr-namespace:Csla.Xaml;assembly=Csla.Xaml"
-    mc:Ignorable="d"
+    xmlns:ViewModels="clr-namespace:PetShop.UI.Silverlight.ViewModels" mc:Ignorable="d"
     d:DesignHeight="300" d:DesignWidth="400">
     <UserControl.Resources>
-        <this:CategoryListViewModel x:Key="CategoryListModel" />
-        <this:CategoryViewModel x:Key="CategoryDetailModel" Model="{Binding SelectedData, Source={StaticResource CategoryListModel}}"/>
+        <CollectionViewSource x:Key="categoryListViewModelViewSource" d:DesignSource="{d:DesignInstance ViewModels:CategoryListViewModel, CreateList=True}" />
+        <this:CategoryViewModel x:Key="CategoryDetailModel" Model="{Binding SelectedData}"/>
         <DataTemplate x:Key="DataList">
             <TextBlock Text="{Binding Name}"/>
         </DataTemplate>
     </UserControl.Resources>
-    <Grid x:Name="LayoutRoot" Background="White">
+    <Grid x:Name="LayoutRoot" Background="White" DataContext="{Binding Source={StaticResource categoryListViewModelViewSource}}">
         <StackPanel>
-        	<StackPanel DataContext="{Binding Source={StaticResource CategoryListModel}}">
-                <!--<sdk:Label Margin="10,10,0,0" FontSize="16">Filter by the following ID:</sdk:Label>
-                <TextBox x:Name="txtFilter" Width="150" Margin="5" DataContext="{Binding Model.Filter, Mode=TwoWay}" />
-                <Button Content="Refresh List" x:Name="RefreshButton" Tag="{Binding Text, ElementName=txtFilter}"  />
-                <csla:TriggerAction x:Name="ProcessRefresh" TargetControl="{Binding ElementName=RefreshButton}" TriggerEvent="Click" MethodName="LoadByID" />-->
-        		<ListBox ItemsSource="{Binding Model}"
+        	<StackPanel>
+                <ListBox ItemsSource="{Binding Model}"
         			ItemTemplate="{StaticResource DataList}"
         			SelectionMode="Multiple"
         			x:Name="DataListBox"
-        			csla:InvokeMethod.Target="{Binding Source={StaticResource CategoryListModel}}"
+        			csla:InvokeMethod.Target="{Binding Source={StaticResource categoryListViewModelViewSource}}"
         			csla:InvokeMethod.TriggerEvent="SelectionChanged"
         			csla:InvokeMethod.MethodName="ShowItem"
         			csla:InvokeMethod.MethodParameter="{Binding SelectedItem, RelativeSource={RelativeSource Self}}" />

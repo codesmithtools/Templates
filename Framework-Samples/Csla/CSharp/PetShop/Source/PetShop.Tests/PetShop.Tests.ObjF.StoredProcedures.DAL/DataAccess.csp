@@ -148,7 +148,7 @@
       <property name="ProcedurePrefix">CSLA_</property>
       <property name="AutoExecuteStoredProcedures">True</property>
       <property name="IsolationLevel">ReadCommitted</property>
-      <property name="FrameworkVersion">v40</property>
+      <property name="FrameworkVersion">v45</property>
       <property name="IncludeSilverlightSupport">False</property>
       <property name="DynamicListBase" />
       <property name="UseMemberVariables">False</property>

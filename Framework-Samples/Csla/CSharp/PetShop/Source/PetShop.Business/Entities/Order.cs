@@ -174,12 +174,9 @@ namespace PetShop.Business
 #if SILVERLIGHT
                     MarkBusy();
                     
-                    PetShop.Business.LineItemList.GetByOrderIdAsync(OrderId, (o, e) =>
+                    LineItemList.GetByOrderIdAsync(OrderId).ContinueWith(t =>
                         {
-                            if (e.Error != null)
-                                throw e.Error; 
-
-                            this.LoadProperty(_itemsProperty, e.Object);
+                            LoadProperty(_itemsProperty, t.Result);
 
                             MarkIdle();
                             OnPropertyChanged(_itemsProperty);
