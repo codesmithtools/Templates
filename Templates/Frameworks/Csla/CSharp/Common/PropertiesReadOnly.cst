@@ -166,12 +166,12 @@ if(!result.Equals("(true)", StringComparison.CurrentCultureIgnoreCase) && !resul
                             if (!t.Result)
                             {
                                 <%= BusinessProjectName %>.<%= associationClassName %><%= association.GenericProperty %>.<%= association.SearchCriteria.AssociatedMethodName%>Async(<%= association.SearchCriteria.Properties.BuildPropertyVariableArguments() %>).ContinueWith(i =>
-                                    {
-                                        this.LoadProperty(<%= association.PrivateMemberVariableName %>Property, i.Result<% if(IsChildBusinessObject(association)) { %>.Child<% } %>);
-    
-                                        //MarkIdle();
-                                        OnPropertyChanged(<%= association.PrivateMemberVariableName %>Property);
-                                    });
+                                {
+                                    this.LoadProperty(<%= association.PrivateMemberVariableName %>Property, i.Result<% if(IsChildBusinessObject(association)) { %>.Child<% } %>);
+
+                                    //MarkIdle();
+                                    OnPropertyChanged(<%= association.PrivateMemberVariableName %>Property);
+                                });
                             }
                         });
 <% } else { %>
@@ -185,21 +185,21 @@ if(!result.Equals("(true)", StringComparison.CurrentCultureIgnoreCase) && !resul
                                 
                             if(e.Object.Result)
                                 <%= BusinessProjectName %>.<%= associationClassName %><%= association.GenericProperty %>.<%= association.SearchCriteria.AssociatedMethodName%>Async(<%= association.SearchCriteria.Properties.BuildPropertyVariableArguments() %>, (o1, e1) =>
-                                    {
-                                        if (e1.Error != null)
-                                            throw e1.Error; 
-    
-                                        this.LoadProperty(<%= association.PrivateMemberVariableName %>Property, e1.Object<% if(IsChildBusinessObject(association)) { %>.Child<% } %>);
-    
-                                        //MarkIdle();
-                                        OnPropertyChanged(<%= association.PrivateMemberVariableName %>Property);
-                                    });
+                                {
+                                    if (e1.Error != null)
+                                        throw e1.Error; 
+
+                                    this.LoadProperty(<%= association.PrivateMemberVariableName %>Property, e1.Object<% if(IsChildBusinessObject(association)) { %>.Child<% } %>);
+
+                                    //MarkIdle();
+                                    OnPropertyChanged(<%= association.PrivateMemberVariableName %>Property);
+                                });
                         });
 #else
-<% } } %>
+<% } %>
                         if(<%= BusinessProjectName %>.<%= associationClassName %><%= association.GenericProperty %>.Exists(criteria))
                             LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= BusinessProjectName %>.<%= associationClassName %><%= association.GenericProperty %>.<%= association.SearchCriteria.AssociatedMethodName%>(<%= association.SearchCriteria.Properties.BuildPropertyVariableArguments() %>));
-<% if(!IsCSLA45 && IncludeSilverlightSupport) { %>
+<% } if(!IsCSLA45 && IncludeSilverlightSupport) { %>
 #endif
 <% } %>
                     }
@@ -243,12 +243,12 @@ if(!result.Equals("(true)", StringComparison.CurrentCultureIgnoreCase) && !resul
                         //MarkBusy();
 <% if(IsNameValueListBusinessObject(association, "NameValueList")) { %>
                         <%= BusinessProjectName %>.<%= association.TypeName %>List<%= association.GenericProperty %>.GetAllAsync().ContinueWith(i =>
-                                {
-                                    this.LoadProperty(<%= association.PrivateMemberVariableName %>Property, i.Result);
-    
-                                    //MarkIdle();
-                                    OnPropertyChanged(<%= association.PrivateMemberVariableName %>Property);
-                                });
+                        {
+                            this.LoadProperty(<%= association.PrivateMemberVariableName %>Property, i.Result);
+
+                            //MarkIdle();
+                            OnPropertyChanged(<%= association.PrivateMemberVariableName %>Property);
+                        });
 <% } else { %>
                         var criteria = new <%= BusinessProjectName %>.<%= association.TypeName %>Criteria<%= association.GenericProperty %> {<%= association.BuildObjectInitializer(true) %>};
                         <%= association.BuildNullableObjectInitializer(true)%>
@@ -274,15 +274,15 @@ if(!result.Equals("(true)", StringComparison.CurrentCultureIgnoreCase) && !resul
                         //MarkBusy();
 <% if(IsNameValueListBusinessObject(association, "NameValueList")) { %>
                         <%= BusinessProjectName %>.<%= association.TypeName %>List<%= association.GenericProperty %>.GetAllAsync((o, e) =>
-                                {
-                                    if (e.Error != null)
-                                        throw e.Error; 
-    
-                                    this.LoadProperty(<%= association.PrivateMemberVariableName %>Property, e.Object);
-    
-                                    //MarkIdle();
-                                    OnPropertyChanged(<%= association.PrivateMemberVariableName %>Property);
-                                });
+                        {
+                            if (e.Error != null)
+                                throw e.Error; 
+
+                            this.LoadProperty(<%= association.PrivateMemberVariableName %>Property, e.Object);
+
+                            //MarkIdle();
+                            OnPropertyChanged(<%= association.PrivateMemberVariableName %>Property);
+                        });
 <% } else { %>
                         var criteria = new <%= BusinessProjectName %>.<%= association.TypeName %>Criteria<%= association.GenericProperty %> {<%= association.BuildObjectInitializer(true) %>};
                         <%= association.BuildNullableObjectInitializer(true)%>
