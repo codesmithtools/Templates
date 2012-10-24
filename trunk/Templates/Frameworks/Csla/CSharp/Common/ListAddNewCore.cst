@@ -43,72 +43,70 @@
             return item;
 <% } else { %>
 <% if(IsCSLA45) { %>
-            return await <%= BusinessProjectName %>.<%= ChildBusinessClassName %>.New<%= ChildBusinessClassName %><% if(IsSwitchableObject()){ %>Child<% }%>Async().ContinueWith(t => 
-                {
-                     <%= ChildBusinessClassName %><%= Entity.GenericProperty %> item = t.Result;
+            <%= BusinessProjectName %>.<%= ChildBusinessClassName %>.New<%= ChildBusinessClassName %><% if(IsSwitchableObject()){ %>Child<% }%>Async().ContinueWith(t => 
+            {
+                <%= ChildBusinessClassName %><%= Entity.GenericProperty %> item = t.Result;
 
-                    bool cancel = false;
-                    OnAddNewCore(ref item, ref cancel);
-                    if (!cancel)
-                    {
-                        // Check to see if someone set the item to null in the OnAddNewCore.
-                        if(item == null)
-                            return;
+                bool cancel = false;
+                OnAddNewCore(ref item, ref cancel);
+                if (!cancel)
+                {
+                    // Check to see if someone set the item to null in the OnAddNewCore.
+                    if(item == null)
+                        return;
 <%  var list = new System.Collections.Generic.List<string>(); 
-            bool isObjectFactory = DataAccessImplementation == DataAccessMethod.ObjectFactoryNone || DataAccessImplementation == DataAccessMethod.ObjectFactoryParameterizedSQL || DataAccessImplementation == DataAccessMethod.ObjectFactoryStoredProcedures;
-            foreach(IProperty property in Entity.Properties) { if(property.IsType(PropertyType.Foreign) && !property.IsType(PropertyType.Identity)) {
-                string className = property.ResolveAssociationPropertyClassName();
-                if(String.IsNullOrEmpty(className)) continue;
-        
-                string variableName = property.ResolveAssociationPropertyVariable();
-                string variableWithChildProperty = property.ResolveAssociationPropertyVariableWithChildProperty(); %>
-                        // Pass the parent value down to the child.
-        <% if(!list.Contains(className)) { list.Add(className); %>
-                        <%if(isObjectFactory){%>//<%}%><%= className %> <%= variableName %> = this.Parent as <%= className %>;
-        <%} else { %>
-                        <%if(isObjectFactory){%>//<%}%><%= variableName %> = this.Parent as <%= className %>;
-        <% } %>
-                        <%if(isObjectFactory){%>//<%}%>if(<%= variableName %> != null)
-                        <%if(isObjectFactory){%>//<%}%>    item.<%= property.Name %> = <%= variableWithChildProperty %>;
-        
-        <% } } %>
-                        Add(item);
-                    }
-                    
-                    return item;
-                });
+        bool isObjectFactory = DataAccessImplementation == DataAccessMethod.ObjectFactoryNone || DataAccessImplementation == DataAccessMethod.ObjectFactoryParameterizedSQL || DataAccessImplementation == DataAccessMethod.ObjectFactoryStoredProcedures;
+        foreach(IProperty property in Entity.Properties) { if(property.IsType(PropertyType.Foreign) && !property.IsType(PropertyType.Identity)) {
+            string className = property.ResolveAssociationPropertyClassName();
+            if(String.IsNullOrEmpty(className)) continue;
+    
+            string variableName = property.ResolveAssociationPropertyVariable();
+            string variableWithChildProperty = property.ResolveAssociationPropertyVariableWithChildProperty(); %>
+                    // Pass the parent value down to the child.
+    <% if(!list.Contains(className)) { list.Add(className); %>
+                    <%if(isObjectFactory){%>//<%}%><%= className %> <%= variableName %> = this.Parent as <%= className %>;
+    <%} else { %>
+                    <%if(isObjectFactory){%>//<%}%><%= variableName %> = this.Parent as <%= className %>;
+    <% } %>
+                    <%if(isObjectFactory){%>//<%}%>if(<%= variableName %> != null)
+                    <%if(isObjectFactory){%>//<%}%>    item.<%= property.Name %> = <%= variableWithChildProperty %>;
+    
+    <% } } %>
+                    Add(item);
+                }
+            });
 <% } else { %>
             <%= BusinessProjectName %>.<%= ChildBusinessClassName %>.New<%= ChildBusinessClassName %><% if(IsSwitchableObject()){ %>Child<% }%>Async((o, e) =>
-                {
-                    <%= ChildBusinessClassName %><%= Entity.GenericProperty %> item = e.Object;
+            {
+                <%= ChildBusinessClassName %><%= Entity.GenericProperty %> item = e.Object;
 
-                    bool cancel = false;
-                    OnAddNewCore(ref item, ref cancel);
-                    if (!cancel)
-                    {
-                        // Check to see if someone set the item to null in the OnAddNewCore.
-                        if(item == null)
-                            return;
+                bool cancel = false;
+                OnAddNewCore(ref item, ref cancel);
+                if (!cancel)
+                {
+                    // Check to see if someone set the item to null in the OnAddNewCore.
+                    if(item == null)
+                        return;
 <%  var list = new System.Collections.Generic.List<string>(); 
-            bool isObjectFactory = DataAccessImplementation == DataAccessMethod.ObjectFactoryNone || DataAccessImplementation == DataAccessMethod.ObjectFactoryParameterizedSQL || DataAccessImplementation == DataAccessMethod.ObjectFactoryStoredProcedures;
-            foreach(IProperty property in Entity.Properties) { if(property.IsType(PropertyType.Foreign) && !property.IsType(PropertyType.Identity)) {
-                string className = property.ResolveAssociationPropertyClassName();
-                if(String.IsNullOrEmpty(className)) continue;
-        
-                string variableName = property.ResolveAssociationPropertyVariable();
-                string variableWithChildProperty = property.ResolveAssociationPropertyVariableWithChildProperty(); %>
-                        // Pass the parent value down to the child.
-        <% if(!list.Contains(className)) { list.Add(className); %>
-                        <%if(isObjectFactory){%>//<%}%><%= className %> <%= variableName %> = this.Parent as <%= className %>;
-        <%} else { %>
-                        <%if(isObjectFactory){%>//<%}%><%= variableName %> = this.Parent as <%= className %>;
-        <% } %>
-                        <%if(isObjectFactory){%>//<%}%>if(<%= variableName %> != null)
-                        <%if(isObjectFactory){%>//<%}%>    item.<%= property.Name %> = <%= variableWithChildProperty %>;
-        
-        <% } } %>
-                        Add(item);
-                    }
-                });
+        bool isObjectFactory = DataAccessImplementation == DataAccessMethod.ObjectFactoryNone || DataAccessImplementation == DataAccessMethod.ObjectFactoryParameterizedSQL || DataAccessImplementation == DataAccessMethod.ObjectFactoryStoredProcedures;
+        foreach(IProperty property in Entity.Properties) { if(property.IsType(PropertyType.Foreign) && !property.IsType(PropertyType.Identity)) {
+            string className = property.ResolveAssociationPropertyClassName();
+            if(String.IsNullOrEmpty(className)) continue;
+    
+            string variableName = property.ResolveAssociationPropertyVariable();
+            string variableWithChildProperty = property.ResolveAssociationPropertyVariableWithChildProperty(); %>
+                    // Pass the parent value down to the child.
+    <% if(!list.Contains(className)) { list.Add(className); %>
+                    <%if(isObjectFactory){%>//<%}%><%= className %> <%= variableName %> = this.Parent as <%= className %>;
+    <%} else { %>
+                    <%if(isObjectFactory){%>//<%}%><%= variableName %> = this.Parent as <%= className %>;
+    <% } %>
+                    <%if(isObjectFactory){%>//<%}%>if(<%= variableName %> != null)
+                    <%if(isObjectFactory){%>//<%}%>    item.<%= property.Name %> = <%= variableWithChildProperty %>;
+    
+    <% } } %>
+                    Add(item);
+                }
+            });
 <% } %>
 <% } %>
