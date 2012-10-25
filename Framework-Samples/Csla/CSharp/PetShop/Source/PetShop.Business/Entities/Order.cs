@@ -171,7 +171,7 @@ namespace PetShop.Business
             {
                 if (!FieldManager.FieldExists(_itemsProperty))
                 {
-#if SILVERLIGHT
+#if SILVERLIGHT || NETFX_CORE
                     MarkBusy();
                     
                     LineItemList.GetByOrderIdAsync(OrderId).ContinueWith(t =>

@@ -102,6 +102,9 @@
     <!-- A reference to the entire .Net Framework and Windows SDK are automatically included -->
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\PetShop.Business\Address.cs">
+      <Link>Address.cs</Link>
+    </Compile>
     <Compile Include="..\PetShop.Business\Collections\AccountList.cs">
       <Link>Collections\AccountList.cs</Link>
     </Compile>
@@ -164,6 +167,9 @@
     </Compile>
     <Compile Include="..\PetShop.Business\Commands\ExistsCommand.cs">
       <Link>Commands\ExistsCommand.cs</Link>
+    </Compile>
+    <Compile Include="..\PetShop.Business\CreditCard.cs">
+      <Link>CreditCard.cs</Link>
     </Compile>
     <Compile Include="..\PetShop.Business\Criteria\AccountCriteria.cs">
       <Link>Criteria\AccountCriteria.cs</Link>
@@ -299,9 +305,6 @@
     </Compile>
     <Compile Include="..\PetShop.Business\Entities\Supplier.Generated.cs">
       <Link>Entities\Supplier.Generated.cs</Link>
-    </Compile>
-    <Compile Include="..\PetShop.Business\Utility\ADOHelper.cs">
-      <Link>Utility\ADOHelper.cs</Link>
     </Compile>
     <Compile Include="..\PetShop.Business\Utility\AsyncChildLoader.cs">
       <Link>Utility\AsyncChildLoader.cs</Link>

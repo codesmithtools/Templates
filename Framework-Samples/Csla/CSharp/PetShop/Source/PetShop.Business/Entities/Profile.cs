@@ -113,7 +113,7 @@ namespace PetShop.Business
             {
                 if (!FieldManager.FieldExists(_shoppingCart))
                 {
-#if SILVERLIGHT
+#if SILVERLIGHT || NETFX_CORE
                     MarkBusy();
                     
                     if(IsNew)
@@ -152,7 +152,7 @@ namespace PetShop.Business
             {
                 if (!FieldManager.FieldExists(_wishList))
                 {
-#if SILVERLIGHT
+#if SILVERLIGHT || NETFX_CORE
                     MarkBusy();
                     
                     if(IsNew)

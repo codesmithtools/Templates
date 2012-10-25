@@ -14,7 +14,7 @@ using System.Linq;
 using System.Threading.Tasks;
 
 using Csla;
-#if SILVERLIGHT
+#if SILVERLIGHT || NETFX_CORE
 using Csla.Serialization;
 #else
 using Csla.Data;
@@ -36,7 +36,7 @@ namespace PetShop.Business
         #endregion
 
         #region Synchronous Factory Methods 
-#if !SILVERLIGHT
+#if !SILVERLIGHT && !NETFX_CORE
 
         /// <summary>
         /// Creates a new object of type <see cref="OrderStatusList"/>. 
@@ -124,7 +124,7 @@ namespace PetShop.Business
 
         #region Method Overrides
         
-#if !SILVERLIGHT
+#if !SILVERLIGHT && !NETFX_CORE
         protected override OrderStatus AddNewCore()
         {
             OrderStatus item = PetShop.Business.OrderStatus.NewOrderStatus();
@@ -196,7 +196,7 @@ namespace PetShop.Business
 
         #region DataPortal partial methods
 
-#if !SILVERLIGHT
+#if !SILVERLIGHT && !NETFX_CORE
         /// <summary>
         /// CodeSmith generated stub method that is called when creating the child <see cref="OrderStatus"/> object. 
         /// </summary>
@@ -255,7 +255,7 @@ namespace PetShop.Business
 
         #region Exists Command
 
-#if !SILVERLIGHT
+#if !SILVERLIGHT && !NETFX_CORE
         /// <summary>
         /// Determines if a record exists in the OrderStatus in the database for the specified criteria. 
         /// </summary>

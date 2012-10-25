@@ -122,6 +122,10 @@
         <owner>dbo</owner>
         <name>OrderStatus</name>
       </table>
+      <table>
+        <owner>dbo</owner>
+        <name>Supplier</name>
+      </table>
     </tableList>
       </property>
       <property name="ReadOnlyList" />
@@ -164,6 +168,10 @@
       <property name="IncludeFunctions">False</property>
       <property name="CommandObject" />
       <property name="IncludeAssociations">True</property>
+      <property name="IncludeExpressions">
+        <stringList />
+      </property>
+      <property name="IncludeWinRTSupport">True</property>
     </propertySet>
   </propertySets>
 </codeSmith>

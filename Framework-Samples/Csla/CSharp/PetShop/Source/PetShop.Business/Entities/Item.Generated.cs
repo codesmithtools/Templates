@@ -12,7 +12,7 @@ using System;
 using System.Threading.Tasks;
 
 using Csla;
-#if SILVERLIGHT
+#if SILVERLIGHT || NETFX_CORE
 using Csla.Serialization;
 #else
 using Csla.Data;
@@ -61,7 +61,7 @@ namespace PetShop.Business
         #region Properties
 
         private static readonly PropertyInfo<System.String> _itemIdProperty = RegisterProperty<System.String>(p => p.ItemId, "Item Id");
-#if !SILVERLIGHT
+#if !SILVERLIGHT && !NETFX_CORE
         [System.ComponentModel.DataObjectField(true, false)]
 #endif
         public System.String ItemId
@@ -144,7 +144,7 @@ namespace PetShop.Business
                     {
                         var criteria = new PetShop.Business.ProductCriteria {ProductId = ProductId};
                         
-#if SILVERLIGHT
+#if SILVERLIGHT || NETFX_CORE
                         //MarkBusy();
                         PetShop.Business.Product.ExistsAsync(criteria).ContinueWith(t =>
                         {
@@ -188,7 +188,7 @@ namespace PetShop.Business
                     {
                         var criteria = new PetShop.Business.SupplierCriteria {};
                         if(Supplier.HasValue) criteria.SuppId = Supplier.Value;
-#if SILVERLIGHT
+#if SILVERLIGHT || NETFX_CORE
                         //MarkBusy();
                         PetShop.Business.Supplier.ExistsAsync(criteria).ContinueWith(t =>
                         {
@@ -218,7 +218,7 @@ namespace PetShop.Business
         #endregion
 
         #region Synchronous Root Factory Methods 
-#if !SILVERLIGHT
+#if !SILVERLIGHT && !NETFX_CORE
 
         /// <summary>
         /// Creates a new object of type <see cref="Item"/>. 
@@ -342,7 +342,7 @@ namespace PetShop.Business
         #endregion
 
         #region Synchronous Child Factory Methods 
-#if !SILVERLIGHT
+#if !SILVERLIGHT && !NETFX_CORE
 
         /// <summary>
         /// Creates a new object of type <see cref="Item"/>. 
@@ -459,7 +459,7 @@ namespace PetShop.Business
 
         #region DataPortal partial methods
 
-#if !SILVERLIGHT
+#if !SILVERLIGHT && !NETFX_CORE
         /// <summary>
         /// CodeSmith generated stub method that is called when creating the <see cref="Item"/> object. 
         /// </summary>
@@ -552,7 +552,7 @@ namespace PetShop.Business
 
         #region ChildPortal partial methods
 
-#if !SILVERLIGHT
+#if !SILVERLIGHT && !NETFX_CORE
 
         /// <summary>
         /// CodeSmith generated stub method that is called when creating the child <see cref="Item"/> object. 
@@ -638,7 +638,7 @@ namespace PetShop.Business
 
 
         #region Exists Command
-#if !SILVERLIGHT
+#if !SILVERLIGHT && !NETFX_CORE
 
         /// <summary>
         /// Determines if a record exists in the Item table in the database for the specified criteria. 

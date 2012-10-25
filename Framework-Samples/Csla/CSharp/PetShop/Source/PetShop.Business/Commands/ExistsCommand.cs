@@ -11,7 +11,7 @@ using System;
 using System.Threading.Tasks;
 
 
-#if SILVERLIGHT
+#if SILVERLIGHT || NETFX_CORE
 
 using Csla;
 using Csla.Core;
@@ -69,7 +69,7 @@ namespace PetShop.Business
         #endregion
 
         #region Factory Methods 
-#if !SILVERLIGHT
+#if !SILVERLIGHT && !NETFX_CORE
 
         public static bool Execute<T>(T criteria) where T : PetShop.Business.IGeneratedCriteria
         {
@@ -99,7 +99,7 @@ namespace PetShop.Business
 
         #endregion
 
-#if !SILVERLIGHT
+#if !SILVERLIGHT && !NETFX_CORE
 
         #region Data Access
 

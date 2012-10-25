@@ -12,7 +12,7 @@ using System;
 using System.Threading.Tasks;
 
 using Csla;
-#if SILVERLIGHT
+#if SILVERLIGHT || NETFX_CORE
 using Csla.Serialization;
 #else
 using Csla.Data;
@@ -64,7 +64,7 @@ namespace PetShop.Business
         #region Properties
 
         private static readonly PropertyInfo<System.Int32> _cartIdProperty = RegisterProperty<System.Int32>(p => p.CartId, "Cart Id");
-#if !SILVERLIGHT
+#if !SILVERLIGHT && !NETFX_CORE
         [System.ComponentModel.DataObjectField(true, true)]
 #endif
         public System.Int32 CartId
@@ -151,7 +151,7 @@ namespace PetShop.Business
                     {
                         var criteria = new PetShop.Business.ProfileCriteria {UniqueID = UniqueID};
                         
-#if SILVERLIGHT
+#if SILVERLIGHT || NETFX_CORE
                         //MarkBusy();
                         PetShop.Business.Profile.ExistsAsync(criteria).ContinueWith(t =>
                         {
@@ -181,7 +181,7 @@ namespace PetShop.Business
         #endregion
 
         #region Synchronous Factory Methods 
-#if !SILVERLIGHT
+#if !SILVERLIGHT && !NETFX_CORE
 
         /// <summary>
         /// Creates a new object of type <see cref="Cart"/>. 
@@ -275,7 +275,7 @@ namespace PetShop.Business
 
         #region ChildPortal partial methods
 
-#if !SILVERLIGHT
+#if !SILVERLIGHT && !NETFX_CORE
         /// <summary>
         /// CodeSmith generated stub method that is called when creating the child <see cref="Cart"/> object. 
         /// </summary>
@@ -406,7 +406,7 @@ namespace PetShop.Business
         #endregion
 
         #region Exists Command
-#if !SILVERLIGHT
+#if !SILVERLIGHT && !NETFX_CORE
 
         /// <summary>
         /// Determines if a record exists in the Cart table in the database for the specified criteria. 

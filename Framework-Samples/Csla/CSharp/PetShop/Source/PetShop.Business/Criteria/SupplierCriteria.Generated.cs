@@ -12,11 +12,11 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using Csla.Core;
-#if SILVERLIGHT
+#if SILVERLIGHT || NETFX_CORE
 using Csla.Serialization;
 #endif
 using Csla.Serialization.Mobile;
-#if !SILVERLIGHT
+#if !SILVERLIGHT && !NETFX_CORE
 using System.Data.SqlClient;
 #endif
 

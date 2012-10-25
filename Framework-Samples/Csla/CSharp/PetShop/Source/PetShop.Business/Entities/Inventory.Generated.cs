@@ -12,7 +12,7 @@ using System;
 using System.Threading.Tasks;
 
 using Csla;
-#if SILVERLIGHT
+#if SILVERLIGHT || NETFX_CORE
 using Csla.Serialization;
 #else
 using Csla.Data;
@@ -54,7 +54,7 @@ namespace PetShop.Business
         #region Properties
 
         private static readonly PropertyInfo<System.String> _itemIdProperty = RegisterProperty<System.String>(p => p.ItemId, "Item Id");
-#if !SILVERLIGHT
+#if !SILVERLIGHT && !NETFX_CORE
         [System.ComponentModel.DataObjectField(true, false)]
 #endif
         public System.String ItemId
@@ -84,7 +84,7 @@ namespace PetShop.Business
         #endregion
 
         #region Synchronous Factory Methods 
-#if !SILVERLIGHT
+#if !SILVERLIGHT && !NETFX_CORE
 
         /// <summary>
         /// Creates a new object of type <see cref="Inventory"/>. 
@@ -151,7 +151,7 @@ namespace PetShop.Business
 
         #region DataPortal partial methods
 
-#if !SILVERLIGHT
+#if !SILVERLIGHT && !NETFX_CORE
         /// <summary>
         /// CodeSmith generated stub method that is called when creating the <see cref="Inventory"/> object. 
         /// </summary>
@@ -243,7 +243,7 @@ namespace PetShop.Business
         #endregion
 
         #region Exists Command
-#if !SILVERLIGHT
+#if !SILVERLIGHT && !NETFX_CORE
 
         /// <summary>
         /// Determines if a record exists in the Inventory table in the database for the specified criteria. 

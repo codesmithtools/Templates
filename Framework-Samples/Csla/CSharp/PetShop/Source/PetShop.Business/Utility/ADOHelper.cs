@@ -74,7 +74,7 @@ namespace PetShop.Business
             return String.Format("WHERE {0}", columnNames.Remove(columnNames.Length - 5, 5));
         }
 
-#if !SILVERLIGHT
+#if !SILVERLIGHT && !NETFX_CORE
         /// <summary>
         /// Returns the Bytes stored in a binary column.
         /// </summary>

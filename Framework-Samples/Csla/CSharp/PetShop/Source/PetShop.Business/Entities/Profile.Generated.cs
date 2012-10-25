@@ -12,7 +12,7 @@ using System;
 using System.Threading.Tasks;
 
 using Csla;
-#if SILVERLIGHT
+#if SILVERLIGHT || NETFX_CORE
 using Csla.Serialization;
 #else
 using Csla.Data;
@@ -58,7 +58,7 @@ namespace PetShop.Business
         #region Properties
 
         private static readonly PropertyInfo<System.Int32> _uniqueIDProperty = RegisterProperty<System.Int32>(p => p.UniqueID, "Unique I D");
-#if !SILVERLIGHT
+#if !SILVERLIGHT && !NETFX_CORE
         [System.ComponentModel.DataObjectField(true, true)]
 #endif
         public System.Int32 UniqueID
@@ -115,7 +115,7 @@ namespace PetShop.Business
                 {
                     if(!FieldManager.FieldExists(_accountsProperty))
                     {
-#if SILVERLIGHT
+#if SILVERLIGHT || NETFX_CORE
                         //MarkBusy();
                         var criteria = new PetShop.Business.AccountCriteria {UniqueID = UniqueID};
                         
@@ -175,7 +175,7 @@ namespace PetShop.Business
                 {
                     if(!FieldManager.FieldExists(_cartsProperty))
                     {
-#if SILVERLIGHT
+#if SILVERLIGHT || NETFX_CORE
                         //MarkBusy();
                         var criteria = new PetShop.Business.CartCriteria {UniqueID = UniqueID};
                         
@@ -226,7 +226,7 @@ namespace PetShop.Business
         #endregion
 
         #region Synchronous Root Factory Methods 
-#if !SILVERLIGHT
+#if !SILVERLIGHT && !NETFX_CORE
 
         /// <summary>
         /// Creates a new object of type <see cref="Profile"/>. 
@@ -306,7 +306,7 @@ namespace PetShop.Business
         #endregion
 
         #region Synchronous Child Factory Methods 
-#if !SILVERLIGHT
+#if !SILVERLIGHT && !NETFX_CORE
 
         /// <summary>
         /// Creates a new object of type <see cref="Profile"/>. 
@@ -379,7 +379,7 @@ namespace PetShop.Business
 
         #region DataPortal partial methods
 
-#if !SILVERLIGHT
+#if !SILVERLIGHT && !NETFX_CORE
         /// <summary>
         /// CodeSmith generated stub method that is called when creating the <see cref="Profile"/> object. 
         /// </summary>
@@ -472,7 +472,7 @@ namespace PetShop.Business
 
         #region ChildPortal partial methods
 
-#if !SILVERLIGHT
+#if !SILVERLIGHT && !NETFX_CORE
 
         /// <summary>
         /// CodeSmith generated stub method that is called when creating the child <see cref="Profile"/> object. 
@@ -548,7 +548,7 @@ namespace PetShop.Business
 
 
         #region Exists Command
-#if !SILVERLIGHT
+#if !SILVERLIGHT && !NETFX_CORE
 
         /// <summary>
         /// Determines if a record exists in the Profiles table in the database for the specified criteria. 

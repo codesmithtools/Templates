@@ -27,7 +27,7 @@ namespace PetShop.Business
             private set { LoadProperty(ChildProperty, value); }
         }
 
-#if !SILVERLIGHT
+#if !SILVERLIGHT && !NETFX_CORE
 
         protected void DataPortal_Fetch(object criteria)
         {

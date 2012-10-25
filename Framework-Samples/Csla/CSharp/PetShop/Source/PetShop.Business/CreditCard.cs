@@ -5,7 +5,7 @@ namespace PetShop.Business
     /// <summary>
     /// Business entity used to model credit card information.
     /// </summary>
-#if !SILVERLIGHT
+#if !SILVERLIGHT && !NETFX_CORE
     [Serializable]
 #endif
     public class CreditCard

@@ -12,7 +12,7 @@ using System;
 using System.Threading.Tasks;
 
 using Csla;
-#if SILVERLIGHT
+#if SILVERLIGHT || NETFX_CORE
 using Csla.Serialization;
 #else
 using Csla.Data;
@@ -58,7 +58,7 @@ namespace PetShop.Business
         #region Properties
 
         private static readonly PropertyInfo<System.String> _categoryIdProperty = RegisterProperty<System.String>(p => p.CategoryId, "Category Id");
-#if !SILVERLIGHT
+#if !SILVERLIGHT && !NETFX_CORE
         [System.ComponentModel.DataObjectField(true, false)]
 #endif
         public System.String CategoryId
@@ -104,7 +104,7 @@ namespace PetShop.Business
                 {
                     if(!FieldManager.FieldExists(_productsProperty))
                     {
-#if SILVERLIGHT
+#if SILVERLIGHT || NETFX_CORE
                         //MarkBusy();
                         var criteria = new PetShop.Business.ProductCriteria {CategoryId = CategoryId};
                         
@@ -155,7 +155,7 @@ namespace PetShop.Business
         #endregion
 
         #region Synchronous Root Factory Methods 
-#if !SILVERLIGHT
+#if !SILVERLIGHT && !NETFX_CORE
 
         /// <summary>
         /// Creates a new object of type <see cref="Category"/>. 
@@ -213,7 +213,7 @@ namespace PetShop.Business
         #endregion
 
         #region Synchronous Child Factory Methods 
-#if !SILVERLIGHT
+#if !SILVERLIGHT && !NETFX_CORE
 
         /// <summary>
         /// Creates a new object of type <see cref="Category"/>. 
@@ -264,7 +264,7 @@ namespace PetShop.Business
 
         #region DataPortal partial methods
 
-#if !SILVERLIGHT
+#if !SILVERLIGHT && !NETFX_CORE
         /// <summary>
         /// CodeSmith generated stub method that is called when creating the <see cref="Category"/> object. 
         /// </summary>
@@ -357,7 +357,7 @@ namespace PetShop.Business
 
         #region ChildPortal partial methods
 
-#if !SILVERLIGHT
+#if !SILVERLIGHT && !NETFX_CORE
 
         /// <summary>
         /// CodeSmith generated stub method that is called when creating the child <see cref="Category"/> object. 
@@ -433,7 +433,7 @@ namespace PetShop.Business
 
 
         #region Exists Command
-#if !SILVERLIGHT
+#if !SILVERLIGHT && !NETFX_CORE
 
         /// <summary>
         /// Determines if a record exists in the Category table in the database for the specified criteria. 
