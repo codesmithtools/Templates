@@ -66,11 +66,13 @@
     <Reference Include="Bxf">
       <HintPath>..\..\..\..\packages\BXF.1.0.0.0\lib\SL4.0\Bxf.dll</HintPath>
     </Reference>
-    <Reference Include="Csla">
-      <HintPath>..\..\..\..\packages\CSLA-Core.4.5.4-RC1\lib\sl50\Csla.dll</HintPath>
+    <Reference Include="Csla, Version=4.5.10.0, Culture=neutral, PublicKeyToken=93be5fdc093e4c30, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\packages\CSLA-Core.4.5.10\lib\sl50\Csla.dll</HintPath>
     </Reference>
-    <Reference Include="Csla.Xaml">
-      <HintPath>..\..\..\..\packages\CSLA-Silverlight.4.5.4-RC1\lib\sl50\Csla.Xaml.dll</HintPath>
+    <Reference Include="Csla.Xaml, Version=4.5.10.0, Culture=neutral, PublicKeyToken=93be5fdc093e4c30, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\packages\CSLA-Silverlight.4.5.10\lib\sl50\Csla.Xaml.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CompilerServices.AsyncTargetingPack.Silverlight5">
       <HintPath>..\..\..\..\packages\Microsoft.CompilerServices.AsyncTargetingPack.1.0.0\lib\sl50\Microsoft.CompilerServices.AsyncTargetingPack.Silverlight5.dll</HintPath>

@@ -45,13 +45,13 @@
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Csla, Version=4.5.4.0, Culture=neutral, PublicKeyToken=93be5fdc093e4c30, processorArchitecture=MSIL">
+    <Reference Include="Csla, Version=4.5.10.0, Culture=neutral, PublicKeyToken=93be5fdc093e4c30, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\packages\CSLA-Core.4.5.4-RC1\lib\net40\Csla.dll</HintPath>
+      <HintPath>..\..\..\..\packages\CSLA-Core.4.5.10\lib\net40\Csla.dll</HintPath>
     </Reference>
-    <Reference Include="Csla.Web, Version=4.5.4.0, Culture=neutral, PublicKeyToken=93be5fdc093e4c30, processorArchitecture=MSIL">
+    <Reference Include="Csla.Web, Version=4.5.10.0, Culture=neutral, PublicKeyToken=93be5fdc093e4c30, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\packages\CSLA-ASP.NET.4.5.4-RC1\lib\net40\Csla.Web.dll</HintPath>
+      <HintPath>..\..\..\..\packages\CSLA-ASP.NET.4.5.10\lib\net40\Csla.Web.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CompilerServices.AsyncTargetingPack.Net4, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
