@@ -7,8 +7,8 @@
 
         #region DataPortal partial methods
 
-<% if(IncludeSilverlightSupport) { %>
-#if !SILVERLIGHT
+<% if(IncludeSilverlightSupport || IncludeWinRTSupport) { %>
+#if <%= RenderSharedCompilerDirectiveDirective(true) %>
 <% } %>
         /// <summary>
         /// CodeSmith generated stub method that is called when creating the child <see cref="<%=ChildBusinessClassName%><%= Entity.GenericProperty %>"/> object. 
@@ -61,7 +61,7 @@
         /// CodeSmith generated stub method that is called after the <see cref="<%=ChildBusinessClassName%><%= Entity.GenericProperty %>"/> object has been updated. 
         /// </summary>
         partial void OnUpdated();
-<% if(IncludeSilverlightSupport) { %>
+<% if(IncludeSilverlightSupport || IncludeWinRTSupport) { %>
 #endif
 <% } %>
         partial void OnAddNewCore(ref <%= ChildBusinessClassName %><%= Entity.GenericProperty %> item, ref bool cancel);

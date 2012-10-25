@@ -30,8 +30,8 @@ using <%=LinqToSQLContextNamespace%>;
 using DAL=<%=LinqToSQLContextNamespace%>;
 <% }%>
 
-<% if(IncludeSilverlightSupport) { %>
-#if SILVERLIGHT
+<% if(IncludeSilverlightSupport || IncludeWinRTSupport) { %>
+#if <%= RenderSharedCompilerDirectiveDirective() %>
 using Csla.Serialization;
 #else
 using Csla.Data;
@@ -64,8 +64,8 @@ namespace <%= BusinessProjectName %>
    RenderHelper(new Properties()); %>
 
         #region Synchronous Factory Methods 
-<% if(IncludeSilverlightSupport) { %>
-#if !SILVERLIGHT
+<% if(IncludeSilverlightSupport || IncludeWinRTSupport) { %>
+#if <%= RenderSharedCompilerDirectiveDirective(true) %>
 <% } %>
 
         /// <summary>
@@ -108,7 +108,7 @@ namespace <%= BusinessProjectName %>
         }
 <% } %>
 
-<% if(IncludeSilverlightSupport) { %>
+<% if(IncludeSilverlightSupport || IncludeWinRTSupport) { %>
 #endif
 <% } %>
         #endregion

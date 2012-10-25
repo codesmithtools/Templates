@@ -10,8 +10,8 @@
 
         #region ChildPortal partial methods
 
-<% if(IncludeSilverlightSupport) { %>
-#if !SILVERLIGHT
+<% if(IncludeSilverlightSupport || IncludeWinRTSupport) { %>
+#if <%= RenderSharedCompilerDirectiveDirective(true) %>
 <% } %>
         /// <summary>
         /// CodeSmith generated stub method that is called when creating the child <see cref="<%=ChildBusinessClassName%><%= Entity.GenericProperty %>"/> object. 
@@ -150,7 +150,7 @@
         /// CodeSmith generated stub method that is called after the child <see cref="<%=ChildBusinessClassName%><%= Entity.GenericProperty %>"/> object with the specified criteria has been deleted. 
         /// </summary>
         partial void OnDeleted();
-<% if(IncludeSilverlightSupport) { %>
+<% if(IncludeSilverlightSupport || IncludeWinRTSupport) { %>
 #endif
 <% } %>
         partial void OnChildLoading(Csla.Core.IPropertyInfo childProperty, ref bool cancel);

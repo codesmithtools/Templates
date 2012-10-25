@@ -23,8 +23,8 @@ using System.Threading.Tasks;
 <% } %>
 
 using Csla;
-<% if(IncludeSilverlightSupport) { %>
-#if SILVERLIGHT
+<% if(IncludeSilverlightSupport || IncludeWinRTSupport) { %>
+#if <%= RenderSharedCompilerDirectiveDirective() %>
 using Csla.Serialization;
 #endif
 <% } %>
@@ -49,8 +49,8 @@ namespace <%= BusinessProjectName %>
 <% RenderHelper(new Constructor()); %>
         
         #region Synchronous Factory Methods
-<% if(IncludeSilverlightSupport) { %>
-#if !SILVERLIGHT
+<% if(IncludeSilverlightSupport || IncludeWinRTSupport) { %>
+#if <%= RenderSharedCompilerDirectiveDirective(true) %>
 <% } %>
 
         public static <%= BusinessClassName %> GetAll()
@@ -60,7 +60,7 @@ namespace <%= BusinessProjectName %>
                 
             return _list;
         }
-<% if(IncludeSilverlightSupport) { %>
+<% if(IncludeSilverlightSupport || IncludeWinRTSupport) { %>
 #endif
 <% } %>
         #endregion

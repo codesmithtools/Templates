@@ -23,18 +23,18 @@ using System.Runtime.InteropServices;
 using <%=LinqToSQLContextNamespace%>;
 using DAL=<%=LinqToSQLContextNamespace%>;
 <% } %>
-<% if(IncludeSilverlightSupport) { %>
+<% if(IncludeSilverlightSupport || IncludeWinRTSupport) { %>
 using Csla.Core;
-#if SILVERLIGHT
+#if <%= RenderSharedCompilerDirectiveDirective() %>
 using Csla.Serialization;
 #endif
 using Csla.Serialization.Mobile;
 <% } %>
-<% if(IncludeSilverlightSupport) { %>
-#if !SILVERLIGHT
+<% if(IncludeSilverlightSupport || IncludeWinRTSupport) { %>
+#if <%= RenderSharedCompilerDirectiveDirective(true) %>
 <% } %>
 using System.Data.SqlClient;
-<% if(IncludeSilverlightSupport) { %>
+<% if(IncludeSilverlightSupport || IncludeWinRTSupport) { %>
 #endif
 <% } %>
 
@@ -164,7 +164,7 @@ foreach(var property in Entity.GetProperties(PropertyType.NoConcurrency)){ if(pr
         
         #endregion
         
-<% if(IncludeSilverlightSupport) { %>
+<% if(IncludeSilverlightSupport || IncludeWinRTSupport) { %>
         #region Serialization
         
         protected override void OnGetState(SerializationInfo info, StateMode mode)

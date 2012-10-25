@@ -32,15 +32,21 @@ namespace CodeSmith.SchemaHelper
 
         public static string BuildDataObjectField(this IProperty property)
         {
-            return property.BuildDataObjectField(false);
+            return property.BuildDataObjectField(false, false);
         }
 
-        public static string BuildDataObjectField(this IProperty property, bool isSilverlight)
+        public static string BuildDataObjectField(this IProperty property, bool isSilverlight, bool isWinRT = false)
         {
             if (property.IsType(PropertyType.Key))
             {
+                if(isSilverlight && isWinRT)
+                    return String.Format("{1}#if !SILVERLIGHT && !NETFX_CORE{1}        [System.ComponentModel.DataObjectField(true, {0})]{1}#endif", property.IsType(PropertyType.Identity).ToString().ToLower(), Environment.NewLine);
+
                 if(isSilverlight)
                     return String.Format("{1}#if !SILVERLIGHT{1}        [System.ComponentModel.DataObjectField(true, {0})]{1}#endif", property.IsType(PropertyType.Identity).ToString().ToLower(), Environment.NewLine);
+
+                if(isWinRT)
+                    return String.Format("{1}#if !NETFX_CORE{1}        [System.ComponentModel.DataObjectField(true, {0})]{1}#endif", property.IsType(PropertyType.Identity).ToString().ToLower(), Environment.NewLine);
 
                 return String.Format("{1}        [System.ComponentModel.DataObjectField(true, {0})]", property.IsType(PropertyType.Identity).ToString().ToLower(), Environment.NewLine);
             }

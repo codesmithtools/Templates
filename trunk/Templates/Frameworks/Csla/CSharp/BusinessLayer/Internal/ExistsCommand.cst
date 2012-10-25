@@ -24,9 +24,9 @@ using DAL=<%=LinqToSQLContextNamespace%>;
 using System.Linq;
 using CodeSmith.Data.Linq.Dynamic;
 <% } %>
-<% if(IncludeSilverlightSupport) { %>
+<% if(IncludeSilverlightSupport || IncludeWinRTSupport) { %>
 
-#if SILVERLIGHT
+#if <%= RenderSharedCompilerDirectiveDirective() %>
 
 using Csla;
 using Csla.Core;
@@ -90,8 +90,8 @@ namespace <%= BusinessProjectName %>
         #endregion
 
         #region Factory Methods 
-<% if(IncludeSilverlightSupport) { %>
-#if !SILVERLIGHT
+<% if(IncludeSilverlightSupport || IncludeWinRTSupport) { %>
+#if <%= RenderSharedCompilerDirectiveDirective(true) %>
 <% } %>
 
         public static bool Execute<T>(T criteria) where T : <%= BusinessProjectName %>.IGeneratedCriteria
@@ -106,7 +106,7 @@ namespace <%= BusinessProjectName %>
 
             return cmd.Result;
         }
-<% if(IncludeSilverlightSupport) { %>
+<% if(IncludeSilverlightSupport || IncludeWinRTSupport) { %>
 #endif
 <% } %>
 
@@ -139,8 +139,8 @@ namespace <%= BusinessProjectName %>
 
         #endregion
 
-<% if(IncludeSilverlightSupport) { %>
-#if !SILVERLIGHT
+<% if(IncludeSilverlightSupport || IncludeWinRTSupport) { %>
+#if <%= RenderSharedCompilerDirectiveDirective(true) %>
 <% } %>
 
         #region Data Access
@@ -171,7 +171,7 @@ namespace <%= BusinessProjectName %>
 
         #endregion
 
-<% if(IncludeSilverlightSupport) { %>
+<% if(IncludeSilverlightSupport || IncludeWinRTSupport) { %>
         #region Serialization
 
         protected override void OnGetState(SerializationInfo info, StateMode mode)

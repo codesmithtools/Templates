@@ -28,8 +28,8 @@ using System.Threading.Tasks;
 <% } %>
 
 using Csla;
-<% if(IncludeSilverlightSupport) { %>
-#if SILVERLIGHT
+<% if(IncludeSilverlightSupport || IncludeWinRTSupport) { %>
+#if <%= RenderSharedCompilerDirectiveDirective() %>
 using Csla.Serialization;
 #else
 using Csla.Data;
@@ -57,8 +57,8 @@ namespace <%= BusinessProjectName %>
         #endregion
 
         #region Synchronous Factory Methods 
-<% if(IncludeSilverlightSupport) { %>
-#if !SILVERLIGHT
+<% if(IncludeSilverlightSupport || IncludeWinRTSupport) { %>
+#if <%= RenderSharedCompilerDirectiveDirective(true) %>
 <% } %>
 
         /// <summary>
@@ -97,7 +97,7 @@ namespace <%= BusinessProjectName %>
             return DataPortal.Fetch<% if(DataAccessImplementation != DataAccessMethod.ObjectFactoryNone && DataAccessImplementation != DataAccessMethod.ObjectFactoryParameterizedSQL && DataAccessImplementation != DataAccessMethod.ObjectFactoryStoredProcedures){ %>Child<% } %><<%= BusinessClassName %><%= Entity.GenericProperty %>>(new <%= CriteriaClassName %><%= Entity.GenericProperty %>());
         }
 
-<% if(IncludeSilverlightSupport) { %>
+<% if(IncludeSilverlightSupport || IncludeWinRTSupport) { %>
 #endif
 <% } %>
         #endregion
@@ -163,14 +163,14 @@ namespace <%= BusinessProjectName %>
 
         #region Method Overrides
         
-<% if(IncludeSilverlightSupport) { %>
-#if !SILVERLIGHT
+<% if(IncludeSilverlightSupport || IncludeWinRTSupport) { %>
+#if <%= RenderSharedCompilerDirectiveDirective(true) %>
 <% } %>
         protected override <% if(IsCSLA43 || IsCSLA45) { %><%= ChildBusinessClassName %><%= Entity.GenericProperty %><% } else { %>object<% } %> AddNewCore()
         {
 <% RenderHelper(new AddNewCore()); %>
         }
-<% if(IncludeSilverlightSupport) { %>
+<% if(IncludeSilverlightSupport || IncludeWinRTSupport) { %>
 #else
         protected override void AddNewCore()
         {
