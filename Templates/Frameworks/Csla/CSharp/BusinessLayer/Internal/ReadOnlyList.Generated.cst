@@ -31,8 +31,8 @@ using Csla;
 using <%=LinqToSQLContextNamespace%>;
 using DAL=<%=LinqToSQLContextNamespace%>;
 <% }%>
-<% if(IncludeSilverlightSupport) { %>
-#if SILVERLIGHT
+<% if(IncludeSilverlightSupport || IncludeWinRTSupport) { %>
+#if <%= RenderSharedCompilerDirectiveDirective() %>
 using Csla.Serialization;
 #else
 using Csla.Data;
@@ -52,8 +52,8 @@ namespace <%= BusinessProjectName %>
 <% RenderHelper(new Constructor()); %>
     
         #region Synchronous Factory Methods
-<% if(IncludeSilverlightSupport) { %>
-#if !SILVERLIGHT
+<% if(IncludeSilverlightSupport || IncludeWinRTSupport) { %>
+#if <%= RenderSharedCompilerDirectiveDirective(true) %>
 <% } %>   
 <% foreach(SearchCriteria sc in Entity.SearchCriteria) { %>
 
@@ -85,7 +85,7 @@ namespace <%= BusinessProjectName %>
             return DataPortal.Fetch<<%= BusinessClassName %><%= Entity.GenericProperty %>>(new <%= CriteriaClassName %><%= Entity.GenericProperty %>());
         }
 
-<% if(IncludeSilverlightSupport) { %>
+<% if(IncludeSilverlightSupport || IncludeWinRTSupport) { %>
 #endif
 <% } %>
         #endregion

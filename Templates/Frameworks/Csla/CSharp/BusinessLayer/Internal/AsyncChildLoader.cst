@@ -1,5 +1,5 @@
 ﻿<%-- Author: Greg Runyon --%>
-<%@ CodeTemplate Language="C#" TargetLanguage="C#" Inherits="Generator.CSLA.EntitiesCodeTemplate" Description="Needed for Silverlight support." %>
+<%@ CodeTemplate Language="C#" TargetLanguage="C#" Inherits="Generator.CSLA.EntitiesCodeTemplate" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\..\Common" %>
 <%@ Assembly Name="Generator.CSLA" Path="..\..\..\Common" %>
 <%@ Import Namespace="CodeSmith.SchemaHelper" %>
@@ -33,15 +33,15 @@ namespace <%= BusinessProjectName %>
             private set { LoadProperty(ChildProperty, value); }
         }
 
-<% if(IncludeSilverlightSupport) { %>
-#if !SILVERLIGHT
+<% if(IncludeSilverlightSupport || IncludeWinRTSupport) { %>
+#if <%= RenderSharedCompilerDirectiveDirective(true) %>
 <% } %>
 
         protected void DataPortal_Fetch(object criteria)
         {
             Child = DataPortal.FetchChild<T>(criteria);
         }
-<% if(IncludeSilverlightSupport) { %>
+<% if(IncludeSilverlightSupport || IncludeWinRTSupport) { %>
 #else
 
         protected <% if (IsCSLA38) {%>override <% } %>void DataPortal_Fetch(object criteria)

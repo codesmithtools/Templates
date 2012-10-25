@@ -7,8 +7,8 @@
 
 
         #region Exists Command
-<% if(IncludeSilverlightSupport) { %>
-#if !SILVERLIGHT
+<% if(IncludeSilverlightSupport || IncludeWinRTSupport) { %>
+#if <%= RenderSharedCompilerDirectiveDirective(true) %>
 <% } %>
 
         /// <summary>
@@ -20,7 +20,7 @@
         {
             return <%= BusinessProjectName %>.ExistsCommand.Execute(criteria);
         }
-<% if(IncludeSilverlightSupport) { %>
+<% if(IncludeSilverlightSupport || IncludeWinRTSupport) { %>
 
 #endif
 <% } %>

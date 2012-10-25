@@ -7,8 +7,8 @@
 <%@ Import Namespace="System.Linq" %>
         #region Authorization Rules
 
-<% if(IncludeSilverlightSupport) { %>
-#if !SILVERLIGHT
+<% if(IncludeSilverlightSupport || IncludeWinRTSupport) { %>
+#if <%= RenderSharedCompilerDirectiveDirective(true) %>
 <% } %>
         /// <summary>
         /// Allows the specification of CSLA based authorization rules for a collection list.  Specifies what roles can 
@@ -46,7 +46,7 @@
 
 <% } } %>
         }
-<% if(IncludeSilverlightSupport) { %>
+<% if(IncludeSilverlightSupport || IncludeWinRTSupport) { %>
 #endif
 <% } %>
         #endregion

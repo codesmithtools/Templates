@@ -56,9 +56,14 @@ namespace Generator.CSLA.CodeTemplates {
         public bool UseMemberVariables { get; set; }
 
         [Category("3. Business Project")]
-        [Description("If enabled Silverlight support will be added to the project..")]
+        [Description("If enabled Silverlight support will be added to the project.")]
         [DefaultValue(false)]
         public bool IncludeSilverlightSupport { get { return Configuration.Instance.IncludeSilverlightSupport; } set { Configuration.Instance.IncludeSilverlightSupport = value; } }
+
+        [Category("3. Business Project")]
+        [Description("If enabled WinRT support will be added to the project.")]
+        [DefaultValue(false)]
+        public bool IncludeWinRTSupport { get { return Configuration.Instance.IncludeWinRTSupport; } set { Configuration.Instance.IncludeWinRTSupport = value; } }
 
         #endregion
 
@@ -149,5 +154,24 @@ namespace Generator.CSLA.CodeTemplates {
         }
 
         public virtual void OnDataAccessImplementationChanged() {}
+
+        public string RenderSharedCompilerDirectiveDirective(bool negate = false)
+        {
+            var op = Configuration.Instance.TargetLanguage == Language.VB ? "OrElse" : "||";
+
+            string negateOperator = String.Empty;
+            if (negate) {
+                op = Configuration.Instance.TargetLanguage == Language.VB ? "AndAlso" : "&&";
+                negateOperator = Configuration.Instance.TargetLanguage == Language.VB ? "Not " : "!";
+            }
+
+            if (IncludeSilverlightSupport && IncludeWinRTSupport)
+                return String.Format("{0}SILVERLIGHT {1} {0}NETFX_CORE", negateOperator, op);
+
+            if (IncludeSilverlightSupport)
+                return String.Format("{0}SILVERLIGHT", negateOperator);
+
+            return String.Format("{0}NETFX_CORE", negateOperator);
+        }
     }
 }
