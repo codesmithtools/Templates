@@ -395,6 +395,17 @@
             
             </summary>
         </member>
+        <member name="P:CodeSmith.SchemaHelper.Configuration.IncludeManyToManyEntity">
+            <summary>
+            When true, the intermediary table will added to the EntityManager's Entities List.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.Configuration.IncludeManyToManyAssociations">
+            <summary>
+            Controls whether Many to Many associations will be created. 
+            When set to false, ManyToMany associations will be treated as 1-0/* and */1-0.
+            </summary>
+        </member>
         <member name="P:CodeSmith.SchemaHelper.Configuration.CustomProcedureNameFormat">
             <summary>
             The format needed for the custom procedures.
@@ -1344,6 +1355,11 @@
             Returns a list of all One to Zero or one keys.
             </summary>
         </member>
+        <member name="T:CodeSmith.SchemaHelper.FrameworkVersion">
+            <summary>
+            The .NET Framework Version.
+            </summary>
+        </member>
         <member name="F:CodeSmith.SchemaHelper.FrameworkVersion.v35">
             <summary>
             .NET 3.5
@@ -1352,6 +1368,11 @@
         <member name="F:CodeSmith.SchemaHelper.FrameworkVersion.v40">
             <summary>
             .NET 4.0
+            </summary>
+        </member>
+        <member name="F:CodeSmith.SchemaHelper.FrameworkVersion.v45">
+            <summary>
+            .NET 4.5
             </summary>
         </member>
         <member name="F:CodeSmith.SchemaHelper.Language.CSharp">
