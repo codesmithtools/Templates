@@ -67,7 +67,8 @@
 
     public string BuildFilter()
     {
-        if(Association == null)
+        // TODO: Add support for many-to-many filters. The EDMX conceptual model doesn't specify a conceptual entity for the intermediary table, thus the edmx file can't build up the properties collection without looking at the storage model or AssociationMappings.
+        if(Association == null || Association.Properties.Count == 0)
             return null;
 
         return String.Format("field: \"{0}\", operator: \"eq\", value: e.data.{1}", Association.Properties[0].ForeignProperty.Name, Association.Properties[0].Property.Name);
@@ -90,11 +91,10 @@
     public bool HasDropDown(IProperty property)
     {
         var entity = Association != null ? Association.Entity : Entity;
-        foreach(var a in entity.Associations.Where(a => a.ForeignEntity.Properties.Count >= 2)) {
+        foreach(var a in entity.Associations.Where(a => a.ForeignEntity.Properties.Count >= 2 && a.Properties.Count > 0)) {
             foreach(var p in a.Properties){
-        if(p.Property == property)
-        return true;
-        
+                if(p.Property == property)
+                    return true;
             }
         }
         
@@ -106,8 +106,8 @@
         var entity = Association != null ? Association.Entity : Entity;
         foreach(var a in entity.Associations){
             foreach(var p in a.Properties){
-        if(p.Property == property || p.ForeignProperty == property)
-        return a.ForeignEntity.VariableName;
+                if(p.Property == property || p.ForeignProperty == property)
+                    return a.ForeignEntity.VariableName;
             }
         }
 

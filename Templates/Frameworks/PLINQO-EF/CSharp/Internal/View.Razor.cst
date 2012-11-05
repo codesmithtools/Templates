@@ -22,7 +22,7 @@
     </select>
 </h2>
 <div id="grid"></div>
-<% var assoication = Entity.Associations.FirstOrDefault(a => a.ForeignEntity.Properties.Count >= 2);
+<% var assoication = Entity.Associations.FirstOrDefault(a => a.ForeignEntity.Properties.Count >= 2 && a.Properties.Count > 0);
    if(assoication != null) { %>
 <script type="text/x-kendo-template" id="template">
     <div class="toolbar">

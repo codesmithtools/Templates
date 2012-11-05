@@ -37,7 +37,7 @@ using CodeSmith.Data.Linq;
 using CodeSmith.Data.Linq.Dynamic;
 using <%= String.IsNullOrEmpty(QueryNamespace) ? EntityNamespace : QueryNamespace %>;
 
-namespace <%= String.IsNullOrEmpty(ControllerNamespace) ? String.Concat(EntityNamespace, ".Controllers") : ControllerNamespace %>
+namespace <%= String.IsNullOrEmpty(ControllerNamespace) ? String.Concat(EntityNamespace, ".Controllers.API") : ControllerNamespace %>
 {
     [CodeSmith.Data.Web.Http.PagingAndFiltering]
     public partial class <%= Entity.Name %>Controller : ApiController
@@ -62,6 +62,7 @@ namespace <%= String.IsNullOrEmpty(ControllerNamespace) ? String.Concat(EntityNa
         public <%= EntityNamespace %>.<%= Entity.Name %> <%= UniqueMethodPrefix %><%= property.Name %>(<%= GetParameters(new List<IProperty>() { property }) %>)
         {
             var <%= Entity.VariableName %> = _context.<%= Entity.Name %>.<%= UniqueMethodPrefix %><%= property.Name %>(<%= property.VariableName %>);
+            if (<%= Entity.VariableName %> == null)
                 throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.NotFound));
 
             return <%= Entity.VariableName %>;

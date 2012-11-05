@@ -1,5 +1,5 @@
 ﻿<%-- Author: Blake Niemyjski --%>
-<%@ CodeTemplate Language="C#" TargetLanguage="C#" OutputType="None" CompilerVersion="v3.5" Encoding="UTF-8" %>
+<%@ CodeTemplate Language="C#" TargetLanguage="C#" OutputType="None" Debug="True" Encoding="UTF-8" %>
 
 <%@ Assembly Name="CodeSmith.CustomProperties" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\Common" %>
@@ -23,10 +23,12 @@
 <%@ Register Name="ViewRazor" Template="Internal\View.Razor.cst" %>
 <%@ Property Name="ServiceBaseUrl" Type="System.String" Category="1. Client" Default="http://localhost/api" %>
 <%@ Property Name="BaseDirectory" Type="System.String" Category="2. Class" Default=".\" Optional="False" Description="The path to the current project" Editor="System.Windows.Forms.Design.FileNameEditor, System.Design" %>
-<%@ Property Name="ControllerNamespace" Type="System.String" Category="2. Class" Default="" Optional="True" Description="The namespace for the interfaces.  Leave blank to not generate them." %>
-<%@ Property Name="ControllerDirectory" Type="System.String" Category="2. Class" Default=".\Controllers" Optional="True" Description="The folder to save the generated entity files." Editor="System.Windows.Forms.Design.FolderNameEditor, System.Design" %>
-<%@ Property Name="ScriptDirectory" Type="System.String" Category="2. Class" Default=".\Scripts\Generated" Optional="True" Description="The folder to save the generated entity files." Editor="System.Windows.Forms.Design.FolderNameEditor, System.Design" %>
-<%@ Property Name="ViewDirectory" Type="System.String" Category="2. Class" Default=".\Views" Optional="True" Description="The folder to save the generated entity files." Editor="System.Windows.Forms.Design.FolderNameEditor, System.Design" %>
+<%@ Property Name="ControllerNamespace" Type="System.String" Category="2. Class" Default="" Optional="True" Description="The namespace for the controllers." %>
+<%@ Property Name="APIControllerNamespace" Type="System.String" Category="2. Class" Default="" Optional="True" Description="The namespace for the API Controllers." %>
+<%@ Property Name="ControllerDirectory" Type="System.String" Category="2. Class" Default=".\Controllers" Optional="True" Description="The folder to save the generated controllers." Editor="System.Windows.Forms.Design.FolderNameEditor, System.Design" %>
+<%@ Property Name="APIControllerDirectory" Type="System.String" Category="2. Class" Optional="True" Description="The folder to save the generated web api controllers." Editor="System.Windows.Forms.Design.FolderNameEditor, System.Design" %>
+<%@ Property Name="ScriptDirectory" Type="System.String" Category="2. Class" Default=".\Scripts\Generated" Optional="True" Description="The folder to save the generated script files." Editor="System.Windows.Forms.Design.FolderNameEditor, System.Design" %>
+<%@ Property Name="ViewDirectory" Type="System.String" Category="2. Class" Default=".\Views" Optional="True" Description="The folder to save the generated script files." Editor="System.Windows.Forms.Design.FolderNameEditor, System.Design" %>
 <%@ Property Name="EdmxFile" Type="System.String" Category="4. Mapping" Optional="False" Description="The full path to the edmx file." Editor="System.Windows.Forms.Design.FileNameEditor, System.Design" %>
 <% 
 Generate(); 
@@ -47,14 +49,18 @@ public void Generate()
     if (!Directory.Exists(this.ControllerDirectory))
         Directory.CreateDirectory(this.ControllerDirectory);
 
+    APIControllerDirectory = String.IsNullOrEmpty(APIControllerDirectory) ? ControllerDirectory : APIControllerDirectory;
+    if (!Directory.Exists(this.APIControllerDirectory))
+        Directory.CreateDirectory(this.APIControllerDirectory);
+
     ScriptDirectory = String.IsNullOrEmpty(ScriptDirectory) ? BaseDirectory : ScriptDirectory;
     if (!Directory.Exists(this.ScriptDirectory))
         Directory.CreateDirectory(this.ScriptDirectory);
-    
+
     ViewDirectory = String.IsNullOrEmpty(ViewDirectory) ? BaseDirectory : ViewDirectory;
     if (!Directory.Exists(this.ViewDirectory))
         Directory.CreateDirectory(this.ViewDirectory);
-    
+
     EdmxEntityProvider entityProvider = new EdmxEntityProvider(EdmxFile);
     EntityManager entityManager = new EntityManager((IEntityProvider)entityProvider);
 
@@ -102,8 +108,8 @@ private void CreateControllers(IEnumerable<IEntity> entities, string entityNames
         if((entity is ConceptualEntity) == false) 
             continue;
         
-        var parentFileName = String.Format("{0}\\{1}Controller.cs", ControllerDirectory, entity.Name);
-        var fileName = String.Format("{0}\\{1}Controller.generated.cs", ControllerDirectory, entity.Name);
+        var parentFileName = String.Format("{0}\\{1}Controller.cs", APIControllerDirectory, entity.Name);
+        var fileName = String.Format("{0}\\{1}Controller.generated.cs", APIControllerDirectory, entity.Name);
 
 		// TODO: Add Smart Regeneration Support via NRefactory.
 		if(!File.Exists(parentFileName))
@@ -111,6 +117,7 @@ private void CreateControllers(IEnumerable<IEntity> entities, string entityNames
             this.CopyPropertiesTo(controllerTemplate);
             controllerTemplate.Entity = entity;
             controllerTemplate.EntityNamespace = entityNamespace;
+            controllerTemplate.ControllerNamespace = APIControllerNamespace;
             Response.WriteLine(parentFileName);
             controllerTemplate.RenderToFile(parentFileName, true);
 		}
@@ -120,6 +127,7 @@ private void CreateControllers(IEnumerable<IEntity> entities, string entityNames
         controllerGeneratedTemplate.Entity = entity;
         controllerGeneratedTemplate.EntityNamespace = entityNamespace;
         controllerGeneratedTemplate.ContextNamespace = contextNamespace;
+        controllerGeneratedTemplate.ControllerNamespace = APIControllerNamespace;
         controllerGeneratedTemplate.LazyLoadingEnabled = lazyLoadingEnabled;
 
         Response.WriteLine(fileName);
@@ -140,7 +148,7 @@ private void CreateControllers(IEnumerable<IEntity> entities, string entityNames
 public void RegisterReferences()
 {
     RegisterReference("System");
-    RegisterReference(Path.Combine(CodeTemplateInfo.DirectoryName,"..\\Common\\v4.0\\CodeSmith.Data.dll"));
-    RegisterReference(Path.Combine(CodeTemplateInfo.DirectoryName,"..\\Common\\v4.0\\CodeSmith.Data.EntityFramework.dll"));
+    RegisterReference(Path.Combine(CodeTemplateInfo.DirectoryName, "..\\Common\\v4.0\\CodeSmith.Data.dll"));
+    RegisterReference(Path.Combine(CodeTemplateInfo.DirectoryName, "..\\Common\\v4.0\\CodeSmith.Data.EntityFramework.dll"));
 }
 </script>
