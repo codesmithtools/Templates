@@ -20,7 +20,7 @@ $(document).ready(function () {
 <%= RenderDataSource(association.ForeignEntity, false, false, false, false, false, false, false, true, false) %>
 <% } %>
 <%= RenderDataSource(Entity, Entity.HasKey, Entity.HasKey, Entity.HasKey, true, true, true, true, true, true) %>
-<%= RenderGrid(Entity, Entity.HasKey, Entity.HasKey, Entity.HasKey, true, true, true, true, true, Entity.Associations.FirstOrDefault(a => a.ForeignEntity.Properties.Count >= 2) != null, includeDetails) %>
+<%= RenderGrid(Entity, Entity.HasKey, Entity.HasKey, Entity.HasKey, true, true, true, true, true, Entity.Associations.FirstOrDefault(a => a.ForeignEntity.Properties.Count >= 2 && a.Properties.Count > 0) != null, includeDetails) %>
 <% if(includeDetails){ %>
     function <%= Entity.VariableName %>Details(e) {
 <%  foreach(var association in Entity.Associations) { %>
@@ -29,11 +29,11 @@ $(document).ready(function () {
     }
 
 <% } %>
-<% foreach(var association in Entity.Associations.Where(a => a.ForeignEntity.Properties.Count >= 2)) { %>
+<% foreach(var association in Entity.Associations.Where(a => a.ForeignEntity.Properties.Count >= 2 && a.Properties.Count > 0)) { %>
 <%= RenderDropDownEditor(association.ForeignEntity) %>
 <% } %>
-<% var toolbarFilterAssociation = Entity.Associations.FirstOrDefault(a => a.ForeignEntity.Properties.Count >= 2);
-if (toolbarFilterAssociation != null) { %>
+<% var toolbarFilterAssociation = Entity.Associations.FirstOrDefault(a => a.ForeignEntity.Properties.Count >= 2 && a.Properties.Count > 0); // TODO: Add support for many-to-many filters. The EDMX conceptual model doesn't specify a conceptual entity for the intermediary table, thus the edmx file can't build up the properties collection without looking at the storage model or AssociationMappings.
+   if (toolbarFilterAssociation != null) { %>
     $("#toolbarFilter").kendoDropDownList({
         dataValueField: "<%= GetDataValueField(toolbarFilterAssociation.ForeignEntity) %>",
         dataTextField: "<%= GetDataTextField(toolbarFilterAssociation.ForeignEntity) %>",
@@ -104,7 +104,7 @@ if (toolbarFilterAssociation != null) { %>
         template.IncludeSorting = includeSorting;
         template.IncludeNavigation = includeNavigation;
         template.IncludeTitle = includeTitle;
-        template.IncludeToolbar = assocation.ForeignEntity.Properties.Count >= 2;
+        template.IncludeToolbar = assocation.ForeignEntity.Properties.Count >= 2 && assocation.Properties.Count > 0;
         template.IncludeDetails = false;
         template.IsDetailedGrid = true;
         template.Association = assocation;
