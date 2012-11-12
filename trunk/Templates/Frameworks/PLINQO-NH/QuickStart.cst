@@ -58,7 +58,7 @@ The <%= SolutionName %> Solution has been created at <%= Location %>.
         if(IncludeWebProject)
         {
             MVCProjectCreator webProjectCreator = new MVCProjectCreator(pbs);
-            webProjectCreator.CreateProject(this.WebProjectName, pbs.DatabaseName, null, null, dataProjectCreator.SolutionItem);
+            webProjectCreator.CreateProject(this.WebProjectName, pbs.DatabaseName, null, dataProjectCreator.SolutionItem);
             solutionItems.Add(webProjectCreator.SolutionItem);
         }
 
@@ -92,13 +92,12 @@ The <%= SolutionName %> Solution has been created at <%= Location %>.
 
     private ProjectBuilderSettings CreateProjectBuilderSettings()
     {
-        ProjectBuilderSettings settings = new ProjectBuilderSettings()
+        ProjectBuilderSettings settings = new ProjectBuilderSettings(SourceDatabase)
         {
             IncludeViews = true,
             IncludeFunctions = !this.SourceDatabase.Provider.Name.Contains("MySQL"),
             EnsureMultipleResultSets = false,
             ZipFileRoot = @"Common",
-            SourceDatabase = this.SourceDatabase,
             FrameworkVersion = FrameworkVersion.v40,
             Language = Language.CSharp,
             Location = this.Location,
@@ -117,7 +116,7 @@ The <%= SolutionName %> Solution has been created at <%= Location %>.
                 ? Path.Combine(Location, @"Templates\")
                 : this.CodeTemplateInfo.DirectoryName
         };
-        settings.SetConnetionProvider(this.SourceDatabase.Provider);
+
         return settings;
     }
     private string CreateSolution(List<SolutionItem> solutionItems)
