@@ -43,7 +43,7 @@
             return item;
 <% } else { %>
 <% if(IsCSLA45) { %>
-            <%= BusinessProjectName %>.<%= ChildBusinessClassName %>.New<%= ChildBusinessClassName %><% if(IsSwitchableObject()){ %>Child<% }%>Async().ContinueWith(t => 
+            var task = <%= BusinessProjectName %>.<%= ChildBusinessClassName %>.New<%= ChildBusinessClassName %><% if(IsSwitchableObject()){ %>Child<% }%>Async().ContinueWith(t => 
             {
                 <%= ChildBusinessClassName %><%= Entity.GenericProperty %> item = t.Result;
 
@@ -75,6 +75,8 @@
                     Add(item);
                 }
             });
+
+            task.Wait();
 <% } else { %>
             <%= BusinessProjectName %>.<%= ChildBusinessClassName %>.New<%= ChildBusinessClassName %><% if(IsSwitchableObject()){ %>Child<% }%>Async((o, e) =>
             {
