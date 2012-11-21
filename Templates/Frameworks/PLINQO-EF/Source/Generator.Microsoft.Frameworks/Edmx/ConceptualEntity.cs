@@ -153,6 +153,8 @@ namespace CodeSmith.SchemaHelper
                 if (principalEntity == null || dependentEntity == null) 
                     continue;
 
+                // TODO: Many To Many Associations will have no properties defined (E.G., Association.Properties) because there is no intermediary entity defined in the conceptual model.
+
                 IAssociation association;
                 AssociationType type;
                 if (String.Equals(rel.NavigationProperty.FromRole, principalRole.Role))
