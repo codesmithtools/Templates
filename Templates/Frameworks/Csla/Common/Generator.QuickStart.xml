@@ -4,6 +4,13 @@
         <name>Generator.QuickStart</name>
     </assembly>
     <members>
+        <member name="M:Generator.QuickStart.QuickStartUtils.EnsureMultipleResultSets(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="connectionString"></param>
+            <returns></returns>
+        </member>
         <member name="M:Generator.QuickStart.Base.BaseTemplate.Generate">
             <summary>
             
