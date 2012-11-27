@@ -300,7 +300,7 @@ namespace <%= QueryNamespace %>
         public static IQueryable<<%= safeName %>> <%= MethodPrefix %><%= column.Member %>(this IQueryable<<%= safeName %>> queryable, IEnumerable<<%= columnType %>> values)
         {
 <% if (column.CanBeNull == true) { %>
-            // creating dynmic expression to support nulls
+            // creating dynamic expression to support nulls
             var expression = DynamicExpression.BuildExpression<<%= safeName %>, bool>("<%= column.Member %>", values);
             return queryable.Where(expression);
 <% } else { %>

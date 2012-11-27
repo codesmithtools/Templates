@@ -160,7 +160,7 @@ Namespace <%= QueryNamespace %>
         <%= GeneratedCodeAttribute %>
         <System.Runtime.CompilerServices.Extension()> _
         Public Function <%= VBKeywordEscape(functionName) %>(ByVal queryable As IQueryable(Of <%= safeName %>), ByVal <%= paramName %> As <%= columnType %>) As IQueryable(Of <%= safeName %>)
-<% If (c.CanBeNull.HasValue AndAlso c.CanBeNull.Value) Then %>
+<% If ((c.CanBeNull.HasValue AndAlso c.CanBeNull.Value) OrElse c.Type = "System.Xml.Linq.XElement") Then %>
             Return queryable.Where(Function(<%= myAlias %>) Object.Equals(<%= myAlias %>.<%= c.Member %>, <%= paramName %>))
 <% Else %>
             Return queryable.Where(Function(<%= myAlias %>)<%= myAlias %>.<%= c.Member %> = <%= paramName %>)
@@ -192,7 +192,7 @@ Namespace <%= QueryNamespace %>
                     Return queryable.Where(Function(<%= myAlias %>) <%= myAlias %>.<%= c.Member %>.EndsWith(<%= paramName %>))
                 Case ContainmentOperator.NotContains
                     Return queryable.Where(Function(<%= myAlias %>) <%= myAlias %>.<%= c.Member %>.Contains(<%= paramName %>) = False)
-<% If (c.CanBeNull.HasValue AndAlso c.CanBeNull.Value) Then %>
+<% If ((c.CanBeNull.HasValue AndAlso c.CanBeNull.Value) OrElse c.Type = "System.Xml.Linq.XElement") Then %>
                 Case ContainmentOperator.NotEquals
                     Return queryable.Where(Function(<%= myAlias %>) Object.Equals(<%= myAlias %>.<%= c.Member %>, <%= paramName %>) = False)
                 Case Else
@@ -237,7 +237,7 @@ Namespace <%= QueryNamespace %>
                 Case ComparisonOperator.LessThanOrEquals
                     Return queryable.Where(Function(<%= myAlias %>) <%= myAlias %>.<%= c.Member %> <= <%= paramName %>)
 <% End If 'type guid %>
-<% If (c.CanBeNull.HasValue AndAlso c.CanBeNull.Value) Then %>
+<% If ((c.CanBeNull.HasValue AndAlso c.CanBeNull.Value) OrElse c.Type = "System.Xml.Linq.XElement") Then %>
                 Case ComparisonOperator.NotEquals
                     Return queryable.Where(Function(<%= myAlias %>) Object.Equals(<%= myAlias %>.<%= c.Member %>, <%= paramName %>) = False)
                 Case Else
@@ -290,7 +290,7 @@ Namespace <%= QueryNamespace %>
 	<System.Runtime.CompilerServices.Extension()> _
         Public Function <%= VBKeywordEscape(functionName) %>(ByVal queryable As IQueryable(Of <%= safeName %>), ByVal values As IEnumerable(Of <%= columnType %>)) As IQueryable(Of <%= safeName %>)
 <% If (c.CanBeNull.HasValue AndAlso c.CanBeNull.Value) Then %>
-                ' creating dynmic expression to support nulls
+                ' creating dynamic expression to support nulls
                 Dim expression = DynamicExpression.BuildExpression(Of <%= safeName %>, Boolean)("<%= c.Member %>", values)
                 Return queryable.Where(expression)
 <% Else %>
