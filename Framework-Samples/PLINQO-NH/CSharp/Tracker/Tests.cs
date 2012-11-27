@@ -232,6 +232,21 @@ namespace Tracker
         }
 
         [Test]
+        public void ThreadSafeGetNamedQueryTest()
+        {
+            using (var db = new TrackerDataContext()) {
+                var t1 = System.Threading.Tasks.Task.Factory.StartNew(() => db.GetUsersWithRoles());
+                var t2 = System.Threading.Tasks.Task.Factory.StartNew(() => db.GetUsersWithRoles());
+                var t3 = System.Threading.Tasks.Task.Factory.StartNew(() => db.GetUsersWithRoles());
+                var users = db.GetUsersWithRoles();
+
+                System.Threading.Tasks.Task.WaitAll(t1, t2, t3);
+
+                Assert.Greater(users.Count, 0);
+            }
+        }
+
+        [Test]
         public void Views()
         {
             using (var db = new TrackerDataContext())
