@@ -150,14 +150,16 @@ public void RenderObjectFactoryTemplates(IEntity entity, bool IsReadOnly, bool I
         objectFactoryDataAccessStoredProcedures.IsChildBusinessObject = IsChild;
     
         objectFactoryDataAccessStoredProcedures.RenderToFile(fileName, parentFileName, true);
-        
-        //SqlStoredProcedures
-        SqlStoredProcedures sqlStoredProcedures = this.Create<SqlStoredProcedures>();
-        this.CopyPropertiesTo(sqlStoredProcedures, true);
-        sqlStoredProcedures.Entity = entity;
-        
-        fileName = System.IO.Path.Combine(Location, String.Format("Entities\\{0}.StoredProcedures.sql", objectFactory.BusinessClassName));
-        sqlStoredProcedures.RenderToFile(fileName, parentFileName, true);
+
+        if(!entity.IsCommand()) {
+            //SqlStoredProcedures
+            SqlStoredProcedures sqlStoredProcedures = this.Create<SqlStoredProcedures>();
+            this.CopyPropertiesTo(sqlStoredProcedures, true);
+            sqlStoredProcedures.Entity = entity;
+            
+            fileName = System.IO.Path.Combine(Location, String.Format("Entities\\{0}.StoredProcedures.sql", objectFactory.BusinessClassName));
+            sqlStoredProcedures.RenderToFile(fileName, parentFileName, true);
+        }
         
         //ADOHelperTemplate
         ADOHelperTemplate ADOHelper = this.Create<ADOHelperTemplate>();

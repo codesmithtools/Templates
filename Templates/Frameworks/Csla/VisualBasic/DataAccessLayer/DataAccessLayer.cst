@@ -126,13 +126,15 @@ Public Sub RenderObjectFactoryTemplates(entity As IEntity, IsReadOnly As Boolean
 
         objectFactoryDataAccessStoredProcedures.RenderToFile(fileName, parentFileName, True)
 
-        'SqlStoredProcedures
-        Dim sqlStoredProcedures As SqlStoredProcedures = Me.Create(Of SqlStoredProcedures)()
-        Me.CopyPropertiesTo(sqlStoredProcedures, True)
-        sqlStoredProcedures.Entity = entity
+        If Not (entity.IsCommand()) Then
+            'SqlStoredProcedures
+            Dim sqlStoredProcedures As SqlStoredProcedures = Me.Create(Of SqlStoredProcedures)()
+            Me.CopyPropertiesTo(sqlStoredProcedures, True)
+            sqlStoredProcedures.Entity = entity
 
-        fileName = System.IO.Path.Combine(Location, String.Format("Entities\{0}.StoredProcedures.sql", objectFactory.BusinessClassName))
-        sqlStoredProcedures.RenderToFile(fileName, parentFileName, True)
+            fileName = System.IO.Path.Combine(Location, String.Format("Entities\{0}.StoredProcedures.sql", objectFactory.BusinessClassName))
+            sqlStoredProcedures.RenderToFile(fileName, parentFileName, True)
+        End If
 
         'ADOHelperTemplate
         Dim ADOHelper As ADOHelperTemplate = Me.Create(Of ADOHelperTemplate)()
