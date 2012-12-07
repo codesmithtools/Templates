@@ -142,9 +142,8 @@ private string AlreadyExistsMessage
 
 public Generator.QuickStart.ProjectBuilderSettings CreateProjectBuilderSettings()
 {
-    return new Generator.QuickStart.ProjectBuilderSettings()
+    return new Generator.QuickStart.ProjectBuilderSettings(this.SourceDatabase)
     {
-            SourceDatabase = this.SourceDatabase,
             Location = this.Location,
             SolutionName = this.SolutionName,
             Language = this.Language, 
