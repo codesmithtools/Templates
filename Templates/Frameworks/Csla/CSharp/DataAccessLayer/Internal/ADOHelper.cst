@@ -22,7 +22,7 @@ using System.Linq;
 using Csla;
 using Csla.Data;
 
-namespace <%= BusinessProjectName %>
+namespace <%= DataProjectName %>
 {
     public static class ADOHelper
     {
