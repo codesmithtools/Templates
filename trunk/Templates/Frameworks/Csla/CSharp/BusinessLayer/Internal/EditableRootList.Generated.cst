@@ -64,9 +64,9 @@ namespace <%= BusinessProjectName %>
         }
 <% if(IncludeSilverlightSupport || IncludeWinRTSupport) { %>
 #else
-        protected override void AddNewCore()
+        protected<% if(IsCSLA45) { %> async<% } %> void AddNewCore()
         {
-<% RenderHelper(new AddNewCore(), IncludeSilverlightSupport); %>
+<% RenderHelper(new AddNewCore(), IncludeSilverlightSupport || IncludeWinRTSupport); %>
         }
 #endif
 <% } %>
