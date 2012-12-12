@@ -23,21 +23,16 @@
             return item;
 <% } else { %>
 <% if(IsCSLA45) { %>
-            var task = <%= BusinessProjectName %>.<%= ChildBusinessClassName %><%= Entity.GenericProperty %>.New<%= ChildBusinessClassName %><% if(IsSwitchableObject()){ %>Child<% }%>Async().ContinueWith(t => 
+            <%= ChildBusinessClassName %><%= Entity.GenericProperty %> item = await <%= BusinessProjectName %>.<%= ChildBusinessClassName %><%= Entity.GenericProperty %>.New<%= ChildBusinessClassName %><% if(IsSwitchableObject()){ %>Child<% }%>Async(); 
+            
+            bool cancel = false;
+            OnAddNewCore(ref item, ref cancel);
+            if (!cancel)
             {
-                 <%= ChildBusinessClassName %><%= Entity.GenericProperty %> item = t.Result;
-                
-                bool cancel = false;
-                OnAddNewCore(ref item, ref cancel);
-                if (!cancel)
-                {
-                    // Check to see if someone set the item to null in the OnAddNewCore.
-                    if(item != null)
-                        Add(item);
-                }
-            });
-
-            task.Wait();
+                // Check to see if someone set the item to null in the OnAddNewCore.
+                if(item != null)
+                    Add(item);
+            }
 <% } else { %>
             <%= BusinessProjectName %>.<%= ChildBusinessClassName %><%= Entity.GenericProperty %>.New<%= ChildBusinessClassName %><% if(IsSwitchableObject()){ %>Child<% }%>Async((o, e) =>
             {
