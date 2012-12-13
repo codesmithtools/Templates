@@ -1,0 +1,16 @@
+﻿<%@ CodeTemplate Language="C#" TargetLanguage="HTML" Description="Generates HTML markup for a boostrap tabs." %>
+<%@ Property Name="TabNames" Type="System.Collections.Generic.List<String>" %>
+
+<ul class="nav nav-tabs">
+  <% foreach (var tab in TabNames.AsIndexedEnumerable()) { %>
+  <li<% if (tab.IsFirst) {%> class="active"<% } %>><a href="#<%= tab.Value.ToLower().Replace(" ", "") %>"></a></li>
+  <% } %>
+</ul>
+
+<div class="tab-content">
+<% foreach (var tab in TabNames.AsIndexedEnumerable()) { %>
+    <div class="tab-pane<% if (tab.IsFirst) {%> active<% } %>" id="<%= tab.Value.ToLower().Replace(" ", "") %>">
+      <p><%= tab.Value %> Content.</p>
+    </div>
+<% } %>
+</div>
