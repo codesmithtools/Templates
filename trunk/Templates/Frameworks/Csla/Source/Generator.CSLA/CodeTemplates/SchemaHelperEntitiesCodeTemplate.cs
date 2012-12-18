@@ -236,14 +236,14 @@ namespace Generator.CSLA.CodeTemplates
             }
 
             //EditableChild
-            foreach (var entity in GetChildEntities(entities).Values)
+            foreach (var entity in GetChildEntities(entities).Values.Where(e => e is TableEntity || e.ExtendedProperties.ContainsKey(Constants.EditableChild)))
             {
                 if (!EditableChildEntities.Contains(entity))
                     EditableChildEntities.Add(entity);
             }
 
             //EditableChild
-            foreach (var entity in GetExcludedEntities(entities))
+            foreach (var entity in GetExcludedEntities(entities).Where(e => e is TableEntity || e.ExtendedProperties.ContainsKey(Constants.EditableChild)))
             {
                 if (!EditableChildEntities.Contains(entity))
                     EditableChildEntities.Add(entity);
@@ -766,7 +766,7 @@ namespace Generator.CSLA.CodeTemplates
                 {
                     foreach (AssociationProperty property in associationProperty.Properties)
                     {
-                        if (!entities.ContainsKey(property.Property.Entity.EntityKeyName))
+                        if (!entities.ContainsKey(property.Property.Entity.EntityKeyName) && (property.Property.Entity is TableEntity || property.Property.Entity.ExtendedProperties.ContainsKey(Constants.EditableChildList)))
                         {
                             entities.Add(property.Property.Entity.EntityKeyName, property.Property.Entity);
                         }
@@ -780,7 +780,7 @@ namespace Generator.CSLA.CodeTemplates
         private IEnumerable<IEntity> GetRootEntities(IEnumerable<IEntity> list)
         {
             var entities = new Dictionary<string, IEntity>();
-            foreach (var entity in list)
+            foreach (var entity in list.Where(e => e is TableEntity || e.ExtendedProperties.ContainsKey(Constants.EditableRoot)))
             {
                 if (entity.Associations.Count(a => a.AssociationType == AssociationType.ManyToOne || a.AssociationType == AssociationType.ManyToZeroOrOne) == 0)
                 {
