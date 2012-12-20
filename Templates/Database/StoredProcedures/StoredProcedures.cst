@@ -1,4 +1,4 @@
-<%------------------------------------------------------------------------------------------
+﻿<%------------------------------------------------------------------------------------------
 * Author: Eric J. Smith 
 * Description: This template will generate standard CRUD stored procedures for a given 
 *   database table.
@@ -94,6 +94,7 @@ if (IncludeDropStatements)
 		_droppedProcedureNames.Add(GetSelectByProcedureName(SourceTable.PrimaryKey.MemberColumns));
 	}
 	if (IncludeSelectDynamic) GenerateDropStatement(GetSelectDynamicProcedureName());
+    if (IncludeSelectPaged) GenerateDropStatement(GetSelectPagedProcedureName());
 	if (IncludeSelectAll) GenerateDropStatement(GetSelectAllProcedureName());
 	
 	if (IncludeSelectByForeignKey)
