@@ -118,7 +118,6 @@ namespace Tracker.Tests.CacheTests
         public void GetOrSet()
         {
             string key = "GetOrSet";
-            string groupName = "testgroup";
             
             int i = CacheManager.Get<int>(key);
             Assert.AreEqual(0, i);

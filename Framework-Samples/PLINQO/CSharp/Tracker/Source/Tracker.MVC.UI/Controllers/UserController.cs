@@ -320,7 +320,6 @@ namespace PLINQO.Mvc.UI.Controllers
         [AcceptVerbs(HttpVerbs.Get)]
         public ActionResult Avatar(int id)
         {
-            User user = null;
             using (var db = new TrackerDataContext())
             {
                 var userAvatar = (from u in db.User

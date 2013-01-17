@@ -1,10 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Data.Linq;
-using System.Web;
 using System.Web.Mvc;
-using PLINQO.Mvc.UI.Controllers;
 using PLINQO.Mvc.UI.Models;
 using Tracker.Core.Data;
 
@@ -14,7 +9,7 @@ namespace PLINQO.Mvc.UI.Binder
     {
         #region IModelBinder Members
 
-        public object BindModel(ControllerContext controllerContext, ModelBindingContext bindingContext)
+        public override object BindModel(ControllerContext controllerContext, ModelBindingContext bindingContext)
         {
             var taskViewData = new TaskViewData();
             int? id = null;
