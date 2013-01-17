@@ -15,6 +15,9 @@ namespace CodeSmith.Data.NHibernate
     {
         #region Session Repository
 
+        private static object _sessionMapLock = new object();
+
+        [ThreadStatic]
         private static Dictionary<ISession, NHibernateDataContext> _sessionMap;
 
         private static Dictionary<ISession, NHibernateDataContext> SessionMap
@@ -28,6 +31,9 @@ namespace CodeSmith.Data.NHibernate
             }
         }
 
+        private static object _statelessSessionMapLock = new object();
+
+        [ThreadStatic]
         private static Dictionary<IStatelessSession, NHibernateDataContext> _statelessSessionMap;
 
         private static Dictionary<IStatelessSession, NHibernateDataContext> StatelessSessionMap
@@ -366,13 +372,15 @@ namespace CodeSmith.Data.NHibernate
             {
                 get
                 {
-                    if (!HasSession)
+                    lock (_sessionMapLock)
                     {
-                        var session = _dataContext.CreateSession();
-                        SessionMap.Add(session, _dataContext);
-                        _stateSession = new StatefulSession(session);
+                        if (!HasSession)
+                        {
+                            var session = _dataContext.CreateSession();
+                            SessionMap.Add(session, _dataContext);
+                            _stateSession = new StatefulSession(session);
+                        }
                     }
-
                     return _stateSession;
                 }
             }
@@ -391,13 +399,15 @@ namespace CodeSmith.Data.NHibernate
             {
                 get
                 {
-                    if (!HasStatelessSession)
+                    lock (_statelessSessionMapLock)
                     {
-                        var session = _dataContext.CreateStatelessSession();
-                        StatelessSessionMap.Add(session, _dataContext);
-                        _statelessStateSession = new StatelessSession(session);
+                        if (!HasStatelessSession)
+                        {
+                            var session = _dataContext.CreateStatelessSession();
+                            StatelessSessionMap.Add(session, _dataContext);
+                            _statelessStateSession = new StatelessSession(session);
+                        }
                     }
-
                     return _statelessStateSession;
                 }
             }
