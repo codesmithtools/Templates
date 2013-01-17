@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Transactions;
 using CodeSmith.Data.Linq;
 using NHibernate;
 using NHibernate.Linq;
@@ -234,16 +235,81 @@ namespace Tracker
         [Test]
         public void ThreadSafeGetNamedQueryTest()
         {
-            using (var db = new TrackerDataContext()) {
-                var t1 = System.Threading.Tasks.Task.Factory.StartNew(() => db.GetUsersWithRoles());
-                var t2 = System.Threading.Tasks.Task.Factory.StartNew(() => db.GetUsersWithRoles());
-                var t3 = System.Threading.Tasks.Task.Factory.StartNew(() => db.GetUsersWithRoles());
-                var users = db.GetUsersWithRoles();
+            for (int tries = 0; tries < 10; tries++)
+            {
+                using (var db = new TrackerDataContext())
+                {
+                    var t1 = System.Threading.Tasks.Task.Factory.StartNew(() => db.GetUsersWithRoles());
+                    var t2 = System.Threading.Tasks.Task.Factory.StartNew(() => db.GetUsersWithRoles());
+                    var t3 = System.Threading.Tasks.Task.Factory.StartNew(() => db.GetUsersWithRoles());
+                    var users = db.GetUsersWithRoles();
 
-                System.Threading.Tasks.Task.WaitAll(t1, t2, t3);
+                    System.Threading.Tasks.Task.WaitAll(t1, t2, t3);
 
-                Assert.Greater(users.Count, 0);
+                    Assert.Greater(users.Count, 0);
+                }
             }
+        }
+
+        [Test]
+        public void ThreadSafeGetSessionMultiContextTest()
+        {
+            Action action = () =>
+                {
+                    using (var db = new TrackerDataContext())
+                    {
+                        var session = db.Advanced.DefaultSession; // may cause exception
+                        //var users = db.GetUsersWithRoles(); // this implicitly requires a DefaultSession
+                        //Assert.Greater(users.Count, 0);
+                    }
+                };
+            for (int tries = 0; tries < 1000; tries++)
+            {
+                var t1 = System.Threading.Tasks.Task.Factory.StartNew(action);
+                var t2 = System.Threading.Tasks.Task.Factory.StartNew(action);
+                System.Threading.Tasks.Task.WaitAll(t1, t2);
+            }
+        }
+
+                [Test]
+        public void TransactionScopeTest1()
+        {
+          using (var scope = new TransactionScope(TransactionScopeOption.Required, TimeSpan.FromMinutes(10)))
+          {
+            using (var db = new TrackerDataContext())
+            {
+              var users = db.GetUsersWithRoles();
+            }
+            scope.Complete();
+          }
+        }
+
+        [Test]
+        public void TransactionScopeTest2()
+        {
+          using (var scope = new TransactionScope(TransactionScopeOption.Required, TimeSpan.FromMinutes(10)))
+          {
+            using (var db = new TrackerDataContext())
+            {
+              var users = db.GetUsersWithRoles();
+            }
+            // no scope.Complete - rollback transaction
+          }
+        }
+
+        [Test]
+        public void TransactionScopeTest3()
+        {
+          using (var scope = new TransactionScope(TransactionScopeOption.Required, TimeSpan.FromMinutes(10)))
+          {
+            using (var db = new TrackerDataContext())
+            {
+              db.BeginTransaction();
+              var users = db.GetUsersWithRoles();
+              db.CommitTransaction();
+            }
+            scope.Complete();
+          }
         }
 
         [Test]
