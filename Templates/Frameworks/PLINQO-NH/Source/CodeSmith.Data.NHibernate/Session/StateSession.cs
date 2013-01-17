@@ -4,7 +4,7 @@ using NHibernate;
 namespace CodeSmith.Data.NHibernate
 {
     public abstract class StateSession<T> : IStateSession<T>
-        where T : IDisposable
+        where T : class, IDisposable
     {
         #region Abstract Members
 
@@ -51,12 +51,7 @@ namespace CodeSmith.Data.NHibernate
                 RollbackTransaction();
 
             if (Session != null)
-            {
-                if (IsOpen)
-                    Close();
-
                 Session.Dispose();
-            }
 
             if (!finalizing)
                 GC.SuppressFinalize(this);
