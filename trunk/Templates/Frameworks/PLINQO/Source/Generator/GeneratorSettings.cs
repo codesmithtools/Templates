@@ -110,6 +110,14 @@ namespace LinqToSqlShared.Generator
             return !IsRegexMatch(name, IncludeExpressions) || IsRegexMatch(name, IgnoreExpressions);
         }
 
+
+        public bool IsUnsupportedDbType(IColumnSchema column)
+        {
+            return column.NativeType.Equals("geography", System.StringComparison.OrdinalIgnoreCase)
+                   || column.NativeType.Equals("geometry", System.StringComparison.OrdinalIgnoreCase)
+                   || column.NativeType.Equals("hierarchyid", System.StringComparison.OrdinalIgnoreCase);
+        }
+
         public bool IsEnum(TableSchema table)
         {
             // NOTE: These were reordered on 4/25/2011 by Blake. I profiled this code and noticed that the IsRegexMatch and IsIgnored is an expensive call.
