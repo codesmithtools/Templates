@@ -365,6 +365,16 @@ namespace LinqToSqlShared.Generator
             if (Settings.IsIgnored(tableKeySchema.PrimaryKeyTable.FullName))
             {
                 Debug.WriteLine("Skipping Association because one of the tables is skipped: " + tableKeySchema.Name);
+                Trace.WriteLine("Skipping Association because one of the tables is skipped: " + tableKeySchema.Name);
+                return;
+            }
+
+            // skip unsupported type
+            if (tableKeySchema.ForeignKeyMemberColumns.Any(c => Settings.IsUnsupportedDbType(c))
+                || tableKeySchema.PrimaryKeyMemberColumns.Any(c => Settings.IsUnsupportedDbType(c)))
+            {
+                Debug.WriteLine("Skipping Association because one of the associated columns is an unsupported db type: " + tableKeySchema.Name);
+                Trace.WriteLine("Skipping Association because one of the associated columns is an unsupported db type: " + tableKeySchema.Name);
                 return;
             }
 
@@ -878,12 +888,10 @@ namespace LinqToSqlShared.Generator
             foreach (ColumnSchema columnSchema in tableSchema.Columns)
             {
                 // skip unsupported type
-                if (columnSchema.NativeType.Equals("geography", StringComparison.OrdinalIgnoreCase)
-                    || columnSchema.NativeType.Equals("geometry", StringComparison.OrdinalIgnoreCase)
-                    || columnSchema.NativeType.Equals("hierarchyid", StringComparison.OrdinalIgnoreCase))
+                if (Settings.IsUnsupportedDbType(columnSchema))
                 {
-                    Debug.WriteLine(string.Format("Skipping column '{0}' because it has an unsupported db type '{1}'.",
-                                                  columnSchema.Name, columnSchema.NativeType));
+                    Debug.WriteLine(string.Format("Skipping column '{0}' because it has an unsupported db type '{1}'.", columnSchema.Name, columnSchema.NativeType));
+                    Trace.WriteLine(string.Format("Skipping column '{0}' because it has an unsupported db type '{1}'.", columnSchema.Name, columnSchema.NativeType));
                     continue;
                 }
 
