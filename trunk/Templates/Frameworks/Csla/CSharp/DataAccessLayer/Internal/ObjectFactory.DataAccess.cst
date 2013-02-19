@@ -26,19 +26,19 @@ using <%= BusinessProjectName %>;
 
 namespace <%= DataProjectName %>
 {
-    public partial class <%= Entity.Name %>Factory : ObjectFactory
+    public partial class <%= BusinessClassName %>Factory : ObjectFactory
     {
 <% if(!IsReadOnlyBusinessObject) { %>
         #region Create
 
         /// <summary>
-        /// Creates new <%= Entity.Name %> with default values.
+        /// Creates new <%= BusinessClassName %> with default values.
         /// </summary>
-        /// <returns>new <%= Entity.Name %>.</returns>
+        /// <returns>new <%= BusinessClassName %>.</returns>
         [RunLocal]
-        public <%= Entity.Name %> Create()
+        public <%= BusinessClassName %> Create()
         {
-            var item = (<%= Entity.Name %>)Activator.CreateInstance(typeof(<%= Entity.Name %>), true);
+            var item = (<%= BusinessClassName %>)Activator.CreateInstance(typeof(<%= BusinessClassName %>), true);
 
             bool cancel = false;
             OnCreating(ref cancel);
@@ -61,13 +61,13 @@ namespace <%= DataProjectName %>
         }
 
         /// <summary>
-        /// Creates new <%= Entity.Name %> with default values.
+        /// Creates new <%= BusinessClassName %> with default values.
         /// </summary>
-        /// <returns>new <%= Entity.Name %>.</returns>
+        /// <returns>new <%= BusinessClassName %>.</returns>
         [RunLocal]
-        private <%= Entity.Name %> Create(<%= Entity.Name %>Criteria criteria)
+        private <%= BusinessClassName %> Create(<%= CriteriaClassName %><%= Entity.GenericProperty %> criteria)
         {
-            var item = (<%= Entity.Name %>)Activator.CreateInstance(typeof(<%= Entity.Name %>), true);
+            var item = (<%= BusinessClassName %>)Activator.CreateInstance(typeof(<%= BusinessClassName %>), true);
 
             bool cancel = false;
             OnCreating(ref cancel);
@@ -97,17 +97,17 @@ namespace <%= DataProjectName %>
         #region Fetch
 
         /// <summary>
-        /// Fetch <%= Entity.Name %>.
+        /// Fetch <%= BusinessClassName %>.
         /// </summary>
         /// <param name="criteria">The criteria.</param>
         /// <returns></returns>
-        public <%= Entity.Name %> Fetch(<%= Entity.Name %>Criteria criteria)
+        public <%= BusinessClassName %> Fetch(<%= CriteriaClassName %><%= Entity.GenericProperty %> criteria)
         {
             bool cancel = false;
             OnFetching(criteria, ref cancel);
             if (cancel) return null;
 
-            <%= Entity.Name %> item;
+            <%= BusinessClassName %> item;
 
             // Do Fetch
 
@@ -125,12 +125,12 @@ namespace <%= DataProjectName %>
         #region Update
 
         [Transactional(TransactionalTypes.TransactionScope)]
-        public <%= Entity.Name %> Update(<%= Entity.Name %> item)
+        public <%= BusinessClassName %> Update(<%= BusinessClassName %> item)
         {
             return Update(item, false);
         }
 
-        public <%= Entity.Name %> Update(<%= Entity.Name %> item, bool stopProccessingChildren)
+        public <%= BusinessClassName %> Update(<%= BusinessClassName %> item, bool stopProccessingChildren)
         {
             if(item.IsDeleted)
             {
@@ -154,7 +154,7 @@ namespace <%= DataProjectName %>
         #region Delete
 
         [Transactional(TransactionTypes.TransactionScope)]
-        public void Delete(<%= Entity.Name %>Criteria criteria)
+        public void Delete(<%= CriteriaClassName %><%= Entity.GenericProperty %> criteria)
         {
             // Delete data here.
         }

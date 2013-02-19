@@ -37,9 +37,9 @@ namespace <%= BusinessProjectName %>
 <% } foreach(IEntity entity in EditableRootEntities){ %>
         public const string <%= entity.Name %>FactoryName = "<%= DataProjectName %>.<%= entity.Name %>Factory, <%= DataProjectName %>";
 <% } foreach(IEntity entity in ReadOnlyChildEntities){ %>
-        public const string <%= entity.Name %>InfoFactoryName = "<%= DataProjectName %>.<%= entity.Name %>Factory, <%= DataProjectName %>";
+        public const string <%= entity.Name %>InfoFactoryName = "<%= DataProjectName %>.<%= entity.Name %>InfoFactory, <%= DataProjectName %>";
 <% } foreach(IEntity entity in ReadOnlyRootEntities){ %>
-        public const string <%= entity.Name %>InfoFactoryName = "<%= DataProjectName %>.<%= entity.Name %>Factory, <%= DataProjectName %>";
+        public const string <%= entity.Name %>InfoFactoryName = "<%= DataProjectName %>.<%= entity.Name %>InfoFactory, <%= DataProjectName %>";
 <% } foreach(IEntity entity in SwitchableObjectEntities){ %>
         public const string <%= entity.Name %>FactoryName = "<%= DataProjectName %>.<%= entity.Name %>Factory, <%= DataProjectName %>";
 <% }%> 
@@ -53,9 +53,9 @@ namespace <%= BusinessProjectName %>
 <% } foreach(IEntity entity in EditableChildListEntities){ %>
         public const string <%= entity.Name %>ListFactoryName = "<%= DataProjectName %>.<%= entity.Name %>ListFactory, <%= DataProjectName %>";
 <% } foreach(IEntity entity in ReadOnlyListEntities){ %>
-        public const string <%= entity.Name %>InfoListFactoryName = "<%= DataProjectName %>.<%= entity.Name %>ListFactory, <%= DataProjectName %>";
+        public const string <%= entity.Name %>InfoListFactoryName = "<%= DataProjectName %>.<%= entity.Name %>InfoListFactory, <%= DataProjectName %>";
 <% } foreach(IEntity entity in ReadOnlyChildListEntities){ %>
-        public const string <%= entity.Name %>InfoListFactoryName = "<%= DataProjectName %>.<%= entity.Name %>ListFactory, <%= DataProjectName %>";
+        public const string <%= entity.Name %>InfoListFactoryName = "<%= DataProjectName %>.<%= entity.Name %>InfoListFactory, <%= DataProjectName %>";
 <% } %>
     }
 }

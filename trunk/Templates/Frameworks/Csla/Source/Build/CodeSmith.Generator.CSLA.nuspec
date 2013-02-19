@@ -14,7 +14,7 @@
     <language>en-US</language>
     <tags>CodeSmith Generator CSLA Template</tags>
     <dependencies>
-      <dependency id="CSLA-Core" version="[4.3.12, 4.4)" />
+      <dependency id="CSLA-Core" version="[4.3.12, 5.0)" />
     </dependencies>
     <frameworkAssemblies>
       <frameworkAssembly assemblyName="System.Configuration" />
