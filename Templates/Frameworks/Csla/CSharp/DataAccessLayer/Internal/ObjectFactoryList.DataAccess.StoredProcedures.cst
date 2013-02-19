@@ -29,19 +29,19 @@ using <%= BusinessProjectName %>;
 
 namespace <%= DataProjectName %>
 {
-    public partial class <%= Entity.Name %>ListFactory : ObjectFactory
+    public partial class <%= BusinessClassName %>ListFactory : ObjectFactory
     {
 <% if(!IsReadOnlyBusinessObject) { %>
         #region Create
 
         /// <summary>
-        /// Creates new <%= Entity.Name %>List with default values.
+        /// Creates new <%= BusinessClassName %>List with default values.
         /// </summary>
-        /// <returns>new <%= Entity.Name %>List.</returns>
+        /// <returns>new <%= BusinessClassName %>List.</returns>
         [RunLocal]
-        public <%= Entity.Name %>List Create()
+        public <%= BusinessClassName %>List Create()
         {
-            var item = (<%= Entity.Name %>List)Activator.CreateInstance(typeof(<%= Entity.Name %>List), true);
+            var item = (<%= BusinessClassName %>List)Activator.CreateInstance(typeof(<%= BusinessClassName %>List), true);
 
             bool cancel = false;
             OnCreating(ref cancel);
@@ -64,13 +64,13 @@ namespace <%= DataProjectName %>
         #region Fetch
 
         /// <summary>
-        /// Fetch <%= Entity.Name %>List.
+        /// Fetch <%= BusinessClassName %>List.
         /// </summary>
         /// <param name="criteria">The criteria.</param>
         /// <returns></returns>
-        public <%= Entity.Name %>List Fetch(<%= Entity.Name %>Criteria criteria)
+        public <%= BusinessClassName %>List Fetch(<%= CriteriaClassName %><%= Entity.GenericProperty %> criteria)
         {
-            <%= Entity.Name %>List item = (<%= Entity.Name %>List)Activator.CreateInstance(typeof(<%= Entity.Name %>List), true);
+            <%= BusinessClassName %>List item = (<%= BusinessClassName %>List)Activator.CreateInstance(typeof(<%= BusinessClassName %>List), true);
 
             bool cancel = false;
             OnFetching(criteria, ref cancel);

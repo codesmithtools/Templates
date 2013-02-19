@@ -102,25 +102,23 @@ public void RenderObjectFactoryTemplates(IEntity entity, bool IsReadOnly, bool I
     objectFactory.Entity = entity;
     
     if(IsReadOnly)
-        objectFactory.BusinessClassName = entity.Name + "InfoFactory";
-    else
-        objectFactory.BusinessClassName = entity.Name + "Factory";
+        objectFactory.BusinessClassName = entity.Name + "Info";
     
     objectFactory.IsReadOnlyBusinessObject = IsReadOnly;
     objectFactory.IsChildBusinessObject = IsChild;
 
-    string parentFileName = System.IO.Path.Combine(this.Location, String.Format("Entities\\{0}.cs", objectFactory.BusinessClassName));
-    if (!System.IO.File.Exists(parentFileName))
-    {
+    string parentFileName = System.IO.Path.Combine(this.Location, String.Format("Entities\\{0}Factory.cs", objectFactory.BusinessClassName));
+    if (!System.IO.File.Exists(parentFileName)) {
         objectFactory.RenderToFile(parentFileName, false);
     }
 
-    var fileName = System.IO.Path.Combine(Location, String.Format("Entities\\{0}.DataAccess.cs", objectFactory.BusinessClassName));
+    var fileName = System.IO.Path.Combine(Location, String.Format("Entities\\{0}Factory.DataAccess.cs", objectFactory.BusinessClassName));
     if(DataAccessImplementation == DataAccessMethod.ObjectFactoryNone)
     {
         ObjectFactoryDataAccess objectFactoryDataAccess = this.Create<ObjectFactoryDataAccess>();
         this.CopyPropertiesTo(objectFactoryDataAccess, true);
         objectFactoryDataAccess.Entity = entity;
+        objectFactoryDataAccess.BusinessClassName = objectFactoryDataAccess.ChildBusinessClassName = objectFactory.BusinessClassName;
         objectFactoryDataAccess.IsReadOnlyBusinessObject = IsReadOnly;
         objectFactoryDataAccess.IsChildBusinessObject = IsChild;
     
@@ -131,6 +129,7 @@ public void RenderObjectFactoryTemplates(IEntity entity, bool IsReadOnly, bool I
         ObjectFactoryDataAccessParameterized objectFactoryDataAccessParameterized = this.Create<ObjectFactoryDataAccessParameterized>();
         this.CopyPropertiesTo(objectFactoryDataAccessParameterized, true);
         objectFactoryDataAccessParameterized.Entity = entity;
+        objectFactoryDataAccessParameterized.BusinessClassName = objectFactoryDataAccessParameterized.ChildBusinessClassName = objectFactory.BusinessClassName;
         objectFactoryDataAccessParameterized.IsReadOnlyBusinessObject = IsReadOnly;
         objectFactoryDataAccessParameterized.IsChildBusinessObject = IsChild;
     
@@ -146,6 +145,7 @@ public void RenderObjectFactoryTemplates(IEntity entity, bool IsReadOnly, bool I
         ObjectFactoryDataAccessStoredProcedures objectFactoryDataAccessStoredProcedures = this.Create<ObjectFactoryDataAccessStoredProcedures>();
         this.CopyPropertiesTo(objectFactoryDataAccessStoredProcedures, true);
         objectFactoryDataAccessStoredProcedures.Entity = entity;
+        objectFactoryDataAccessStoredProcedures.BusinessClassName = objectFactoryDataAccessStoredProcedures.ChildBusinessClassName = objectFactory.BusinessClassName;
         objectFactoryDataAccessStoredProcedures.IsReadOnlyBusinessObject = IsReadOnly;
         objectFactoryDataAccessStoredProcedures.IsChildBusinessObject = IsChild;
     
@@ -157,7 +157,7 @@ public void RenderObjectFactoryTemplates(IEntity entity, bool IsReadOnly, bool I
             this.CopyPropertiesTo(sqlStoredProcedures, true);
             sqlStoredProcedures.Entity = entity;
             
-            fileName = System.IO.Path.Combine(Location, String.Format("Entities\\{0}.StoredProcedures.sql", objectFactory.BusinessClassName));
+            fileName = System.IO.Path.Combine(Location, String.Format("Entities\\{0}Factory.StoredProcedures.sql", objectFactory.BusinessClassName));
             sqlStoredProcedures.RenderToFile(fileName, parentFileName, true);
         }
         
@@ -182,25 +182,24 @@ public void RenderObjectFactoryListTemplates(IEntity entity, bool IsReadOnly, bo
     objectFactory.Entity = entity;
 
     if(IsReadOnly)
-        objectFactory.BusinessClassName = entity.Name + "InfoListFactory";
-    else
-        objectFactory.BusinessClassName = entity.Name + "ListFactory";
+        objectFactory.BusinessClassName = entity.Name + "Info";
 
     objectFactory.IsReadOnlyBusinessObject = IsReadOnly;
     objectFactory.IsChildBusinessObject = IsChild;
     
-    string parentFileName = System.IO.Path.Combine(this.Location, String.Format("Collections\\{0}.cs", objectFactory.BusinessClassName));
+    string parentFileName = System.IO.Path.Combine(this.Location, String.Format("Collections\\{0}ListFactory.cs", objectFactory.BusinessClassName));
     if (!System.IO.File.Exists(parentFileName))
     {
         objectFactory.RenderToFile(parentFileName, false);
     }
 
-    var fileName = System.IO.Path.Combine(Location, String.Format("Collections\\{0}.DataAccess.cs", objectFactory.BusinessClassName));
+    var fileName = System.IO.Path.Combine(Location, String.Format("Collections\\{0}ListFactory.DataAccess.cs", objectFactory.BusinessClassName));
     if(DataAccessImplementation == DataAccessMethod.ObjectFactoryNone)
     {
         ObjectFactoryListDataAccess objectFactoryDataAccess = this.Create<ObjectFactoryListDataAccess>();
         this.CopyPropertiesTo(objectFactoryDataAccess, true);
         objectFactoryDataAccess.Entity = entity;
+        objectFactoryDataAccess.BusinessClassName = objectFactoryDataAccess.ChildBusinessClassName = objectFactory.BusinessClassName;
         objectFactoryDataAccess.IsReadOnlyBusinessObject = IsReadOnly;
         objectFactoryDataAccess.IsChildBusinessObject = IsChild;
     
@@ -211,6 +210,7 @@ public void RenderObjectFactoryListTemplates(IEntity entity, bool IsReadOnly, bo
         ObjectFactoryListDataAccessParameterized objectFactoryDataAccessParameterized = this.Create<ObjectFactoryListDataAccessParameterized>();
         this.CopyPropertiesTo(objectFactoryDataAccessParameterized, true);
         objectFactoryDataAccessParameterized.Entity = entity;
+        objectFactoryDataAccessParameterized.BusinessClassName = objectFactoryDataAccessParameterized.ChildBusinessClassName = objectFactory.BusinessClassName;
         objectFactoryDataAccessParameterized.IsReadOnlyBusinessObject = IsReadOnly;
         objectFactoryDataAccessParameterized.IsChildBusinessObject = IsChild;
     
@@ -227,6 +227,7 @@ public void RenderObjectFactoryListTemplates(IEntity entity, bool IsReadOnly, bo
         ObjectFactoryListDataAccessStoredProcedures objectFactoryDataAccessStoredProcedures = this.Create<ObjectFactoryListDataAccessStoredProcedures>();
         this.CopyPropertiesTo(objectFactoryDataAccessStoredProcedures, true);
         objectFactoryDataAccessStoredProcedures.Entity = entity;
+        objectFactoryDataAccessStoredProcedures.BusinessClassName = objectFactoryDataAccessStoredProcedures.ChildBusinessClassName = objectFactory.BusinessClassName;
         objectFactoryDataAccessStoredProcedures.IsReadOnlyBusinessObject = IsReadOnly;
         objectFactoryDataAccessStoredProcedures.IsChildBusinessObject = IsChild;
     
@@ -237,7 +238,7 @@ public void RenderObjectFactoryListTemplates(IEntity entity, bool IsReadOnly, bo
         this.CopyPropertiesTo(sqlStoredProcedures, true);
         sqlStoredProcedures.Entity = entity;
         
-        fileName = System.IO.Path.Combine(Location, String.Format("Collections\\{0}.StoredProcedures.sql", objectFactory.BusinessClassName));
+        fileName = System.IO.Path.Combine(Location, String.Format("Collections\\{0}ListFactory.StoredProcedures.sql", objectFactory.BusinessClassName));
         sqlStoredProcedures.RenderToFile(fileName, parentFileName, true);
         
         //ADOHelperTemplate

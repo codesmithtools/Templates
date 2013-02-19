@@ -30,19 +30,19 @@ using <%= BusinessProjectName %>;
 
 namespace <%= DataProjectName %>
 {
-    public partial class <%= Entity.Name %>Factory : ObjectFactory
+    public partial class <%= BusinessClassName %>Factory : ObjectFactory
     {
 <% if(!IsReadOnlyBusinessObject) { %>
         #region Create
 
         /// <summary>
-        /// Creates new <%= Entity.Name %> with default values.
+        /// Creates new <%= BusinessClassName %> with default values.
         /// </summary>
-        /// <returns>new <%= Entity.Name %>.</returns>
+        /// <returns>new <%= BusinessClassName %>.</returns>
         [RunLocal]
-        public <%= Entity.Name %> Create()
+        public <%= BusinessClassName %> Create()
         {
-            var item = (<%= Entity.Name %>)Activator.CreateInstance(typeof(<%= Entity.Name %>), true);
+            var item = (<%= BusinessClassName %>)Activator.CreateInstance(typeof(<%= BusinessClassName %>), true);
 
             bool cancel = false;
             OnCreating(ref cancel);
@@ -72,13 +72,13 @@ if(property.Property.SystemType == "System.String" && !property.Property.IsType(
         }
 
         /// <summary>
-        /// Creates new <%= Entity.Name %> with default values.
+        /// Creates new <%= BusinessClassName %> with default values.
         /// </summary>
-        /// <returns>new <%= Entity.Name %>.</returns>
+        /// <returns>new <%= BusinessClassName %>.</returns>
         [RunLocal]
-        private <%= Entity.Name %> Create(<%= Entity.Name %>Criteria criteria)
+        private <%= BusinessClassName %> Create(<%= CriteriaClassName %><%= Entity.GenericProperty %> criteria)
         {
-            var item = (<%= Entity.Name %>)Activator.CreateInstance(typeof(<%= Entity.Name %>), true);
+            var item = (<%= BusinessClassName %>)Activator.CreateInstance(typeof(<%= BusinessClassName %>), true);
 
             bool cancel = false;
             OnCreating(ref cancel);
@@ -109,17 +109,17 @@ if(property.Property.SystemType == "System.String" && !property.Property.IsType(
         #region Fetch
 
         /// <summary>
-        /// Fetch <%= Entity.Name %>.
+        /// Fetch <%= BusinessClassName %>.
         /// </summary>
         /// <param name="criteria">The criteria.</param>
         /// <returns></returns>
-        public <%= Entity.Name %> Fetch(<%= Entity.Name %>Criteria criteria)
+        public <%= BusinessClassName %> Fetch(<%= CriteriaClassName %><%= Entity.GenericProperty %> criteria)
         {
             bool cancel = false;
             OnFetching(criteria, ref cancel);
             if (cancel) return null;
 
-            <%= Entity.Name %> item;
+            <%= BusinessClassName %> item;
             using (var connection = new SqlConnection(ADOHelper.ConnectionString))
             {
                 connection.Open();
@@ -151,7 +151,7 @@ if(property.Property.SystemType == "System.String" && !property.Property.IsType(
 <% if(!IsReadOnlyBusinessObject) { %>
         #region Insert
 
-        private void DoInsert(ref <%= Entity.Name %> item, bool stopProccessingChildren)
+        private void DoInsert(ref <%= BusinessClassName %> item, bool stopProccessingChildren)
         {
             // Don't update if the item isn't dirty.
             if (!item.IsDirty) return;
@@ -217,12 +217,12 @@ if(property.Property.SystemType == "System.String" && !property.Property.IsType(
         #region Update
 
         [Transactional(TransactionalTypes.TransactionScope)]
-        public <%= Entity.Name %> Update(<%= Entity.Name %> item)
+        public <%= BusinessClassName %> Update(<%= BusinessClassName %> item)
         {
             return Update(item, false);
         }
 
-        public <%= Entity.Name %> Update(<%= Entity.Name %> item, bool stopProccessingChildren)
+        public <%= BusinessClassName %> Update(<%= BusinessClassName %> item, bool stopProccessingChildren)
         {
             if(item.IsDeleted)
             {
@@ -241,7 +241,7 @@ if(property.Property.SystemType == "System.String" && !property.Property.IsType(
             return item;
         }
 
-        private void DoUpdate(ref <%= Entity.Name %> item, bool stopProccessingChildren)
+        private void DoUpdate(ref <%= BusinessClassName %> item, bool stopProccessingChildren)
         {
             bool cancel = false;
             OnUpdating(ref cancel);
@@ -254,7 +254,7 @@ if(property.Property.SystemType == "System.String" && !property.Property.IsType(
                 if(<%= Entity.GetProperties(PropertyType.Key).BuildIdentityKeyEqualityStatements("item.")%>)
                 {
                     // Insert new child.
-                    var temp = (<%= Entity.Name %>)Activator.CreateInstance(typeof(<%= Entity.Name %>), true);
+                    var temp = (<%= BusinessClassName %>)Activator.CreateInstance(typeof(<%= BusinessClassName %>), true);
 <% foreach(var property in Entity.GetProperties(PropertyType.NoConcurrency)) { %>
                     temp.<%= property.Name %> = item.<%= property.Name %>;
 <% } %>
@@ -367,13 +367,13 @@ if(property.Property.SystemType == "System.String" && !property.Property.IsType(
         #region Delete
 
         [Transactional(TransactionalTypes.TransactionScope)]
-        public void Delete(<%= Entity.Name %>Criteria criteria)
+        public void Delete(<%= CriteriaClassName %><%= Entity.GenericProperty %> criteria)
         {
             //Note: this call to delete is for immediate deletion and doesn't keep track of any entity state.
             DoDelete(criteria);
         }
 
-        protected void DoDelete(ref <%= Entity.Name %> item)
+        protected void DoDelete(ref <%= BusinessClassName %> item)
         {
             // If we're not dirty then don't update the database.
             if (!item.IsDirty) return;
@@ -396,7 +396,7 @@ if(property.Property.SystemType == "System.String" && !property.Property.IsType(
         /// This call to delete is for immediate deletion and doesn't keep track of any entity state.
         /// </summary>
         /// <param name="criteria">The Criteria.</param>
-        private void DoDelete(<%= Entity.Name %>Criteria criteria)
+        private void DoDelete(<%= CriteriaClassName %><%= Entity.GenericProperty %> criteria)
         {
             bool cancel = false;
             OnDeleting(criteria, ref cancel);
@@ -425,9 +425,9 @@ if(property.Property.SystemType == "System.String" && !property.Property.IsType(
 
         #region Helper Methods
 
-        public <%= Entity.Name %> Map(SafeDataReader reader)
+        public <%= BusinessClassName %> Map(SafeDataReader reader)
         {
-            var item = (<%= Entity.Name %>)Activator.CreateInstance(typeof(<%= Entity.Name %>), true);
+            var item = (<%= BusinessClassName %>)Activator.CreateInstance(typeof(<%= BusinessClassName %>), true);
             using (BypassPropertyChecks(item))
             {
 <% if(Entity.ConcurrencyProperty != null) { %>
@@ -436,11 +436,11 @@ if(property.Property.SystemType == "System.String" && !property.Property.IsType(
 foreach(IProperty property in Entity.GetProperties(PropertyType.NoConcurrency)) { %>
 <% if( property.IsNullable && property.SystemType != "System.String" && property.SystemType != "System.Byte[]") {%>
                 item.<%= property.Name %> = reader.IsDBNull("<%= property.KeyName %>") ? (<%= property.SystemType %>)null : <%if(!property.HasByteArrayColumn()) { %>reader.<%= property.GetReaderMethod() %>("<%= property.KeyName %>");<% } else { %>ADOHelper.GetBytes(reader, "<%= property.KeyName %>");<% } %>
-<%  if(!property.IsType(PropertyType.Identity) && property.IsType(PropertyType.Key)) { %>
+<%  if(!property.IsType(PropertyType.Identity) && property.IsType(PropertyType.Key) && !IsReadOnlyBusinessObject) { %>
                 item.Original<%= property.Name %> = reader.IsDBNull("<%= property.KeyName %>") ? (<%= property.SystemType %>)null : <%if(!property.HasByteArrayColumn()) { %>reader.<%= property.GetReaderMethod() %>("<%= property.KeyName %>");<% } else { %>ADOHelper.GetBytes(reader, "<%= property.KeyName %>");<% } %>
 <% } } else {%>
                 item.<%= property.Name %> = <%if(!property.HasByteArrayColumn()) { %>reader.<%= property.GetReaderMethod() %>("<%= property.KeyName %>");<% } else { %>ADOHelper.GetBytes(reader, "<%= property.KeyName %>");<% } %>
-<%if (property.IsType(PropertyType.Key) && !property.IsType(PropertyType.Identity)) { %>
+<%if (property.IsType(PropertyType.Key) && !property.IsType(PropertyType.Identity)  && !IsReadOnlyBusinessObject) { %>
                 item.Original<%= property.Name %> = <%if(!property.HasByteArrayColumn()) { %>reader.<%= property.GetReaderMethod() %>("<%= property.KeyName %>");<% } else { %>ADOHelper.GetBytes(reader, "<%= property.KeyName %>");<% } %>
 <% } } }%>
             }
@@ -452,11 +452,12 @@ foreach(IProperty property in Entity.GetProperties(PropertyType.NoConcurrency)) 
 
             return item;
         }
+<% if (!IsReadOnlyBusinessObject) { %>
 
 <%-- One-To-Zero-Or-One --%>
 <% foreach(IAssociation association in Entity.Associations.Where(a => a.AssociationType == AssociationType.OneToZeroOrOne || a.AssociationType == AssociationType.OneToOne)) { %>
         //Associations.Where(a => a.AssociationType == AssociationType.OneToZeroOrOne || a.AssociationType == AssociationType.OneToOne)
-        private static void Update_<%= association.Name %>_<%= association.Name %>_<%= StringUtil.ToPascalCase(association.AssociationKeyName) %>(ref <%= Entity.Name %> item)
+        private static void Update_<%= association.Name %>_<%= association.Name %>_<%= StringUtil.ToPascalCase(association.AssociationKeyName) %>(ref <%= BusinessClassName %> item)
         {
 <%= association.SearchCriteria.BuildUpdateStatements("item." + association.Name) %>
 
@@ -466,7 +467,7 @@ foreach(IProperty property in Entity.GetProperties(PropertyType.NoConcurrency)) 
 <%-- Many-To-One --%>
 <% foreach(IAssociation association in Entity.Associations.Where(a => a.AssociationType == AssociationType.ManyToOne || a.AssociationType == AssociationType.ManyToZeroOrOne)) { %>
         //Associations.Where(a => a.AssociationType == AssociationType.ManyToOne || a.AssociationType == AssociationType.ManyToZeroOrOne)
-        private static void Update_<%= association.Name %>_<%= association.Name %>_<%= StringUtil.ToPascalCase(association.AssociationKeyName) %>(ref <%= Entity.Name %> item)
+        private static void Update_<%= association.Name %>_<%= association.Name %>_<%= StringUtil.ToPascalCase(association.AssociationKeyName) %>(ref <%= BusinessClassName %> item)
         {
 <%= association.SearchCriteria.BuildUpdateStatements("item." + association.Name) %>
 
@@ -476,7 +477,7 @@ foreach(IProperty property in Entity.GetProperties(PropertyType.NoConcurrency)) 
 <%-- One-To-Many & Many-To-Many --%>
 <% foreach(IAssociation association in Entity.Associations.Where(a => a.AssociationType == AssociationType.OneToMany  || a.AssociationType == AssociationType.ZeroOrOneToMany  || a.AssociationType == AssociationType.ManyToMany)) { %>
         //Where(a => a.AssociationType == AssociationType.OneToMany  || a.AssociationType == AssociationType.ZeroOrOneToMany  || a.AssociationType == AssociationType.ManyToMany)
-        private static void Update_<%= association.Name %>_<%= association.Name %>_<%= StringUtil.ToPascalCase(association.AssociationKeyName) %>(ref <%= Entity.Name %> item)
+        private static void Update_<%= association.Name %>_<%= association.Name %>_<%= StringUtil.ToPascalCase(association.AssociationKeyName) %>(ref <%= BusinessClassName %> item)
         {
             foreach(<%= association.TypeName %> itemToUpdate in item.<%= association.Name %>)
             {
@@ -485,7 +486,7 @@ foreach(IProperty property in Entity.GetProperties(PropertyType.NoConcurrency)) 
                 new <%= association.TypeName %>Factory().Update(itemToUpdate, true);
             }
         }
-<% } %>
+<% } } %>
 
         #endregion
 
