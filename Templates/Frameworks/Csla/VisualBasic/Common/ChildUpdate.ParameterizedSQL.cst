@@ -108,5 +108,5 @@
     
             OnChildUpdated()
 <% Else %>
-            Throw New  NotSupportedException("This business object cannot be updated.")
+            Throw New NotSupportedException("This business object cannot be updated.")
 <% End If %>
