@@ -33,9 +33,10 @@ namespace Generator.CSLA
         #region Private Member(s)
 
         private IEntity _entity;
-        private List<string> _ignoreExpressions;
-        private List<string> _cleanExpressions;
+        private StringCollection _ignoreExpressions = new StringCollection();
+        private StringCollection _cleanExpressions = new StringCollection();
         private bool _silverlightSupport;
+        private bool _winRTSupport;
 
         private string _criteriaClassName = String.Empty;
         private string _childBusinessClassName = String.Empty;
@@ -49,9 +50,6 @@ namespace Generator.CSLA
         {
             DataAccessImplementation = DataAccessMethod.ParameterizedSQL;
             UseLazyLoading = true;
-
-            CleanExpressions = new List<string>();
-            IgnoreExpressions = new List<string>();
         }
 
         #endregion
@@ -156,7 +154,7 @@ namespace Generator.CSLA
         [Description("List of regular expressions to clean table, view and column names.")]
         [Optional]
         [DefaultValue("^(sp|tbl|udf|vw)_")]
-        public List<string> CleanExpressions
+        public StringCollection CleanExpressions
         {
             get
             {
@@ -164,8 +162,11 @@ namespace Generator.CSLA
             }
             set
             {
+                if(value == null || String.Equals(_cleanExpressions.ToString(), value.ToString()))
+                    return;
+
                 Configuration.Instance.CleanExpressions = new List<Regex>();
-                _cleanExpressions = value ?? new List<string>();
+                _cleanExpressions = value ?? new StringCollection();
                 foreach (string clean in _cleanExpressions)
                 {
                     if (!String.IsNullOrEmpty(clean))
@@ -174,8 +175,12 @@ namespace Generator.CSLA
                     }
                 }
 
-                //if (SourceTable != null)
-                //    Entity = new TableEntity(SourceTable);
+                if (SourceTable != null)
+                    SourceTable = SourceTable;
+                else if (SourceView != null)
+                    SourceView = SourceView;
+                else if (SourceCommand != null)
+                    SourceCommand = SourceCommand;
             }
         }
 
@@ -185,14 +190,22 @@ namespace Generator.CSLA
         public bool IncludeAssociations
         {
             get { return Configuration.Instance.IncludeAssociations; }
-            set { Configuration.Instance.IncludeAssociations = value; }
+            set
+            {
+                if (Configuration.Instance.IncludeAssociations == value)
+                    return;
+
+                Configuration.Instance.IncludeAssociations = value;
+                if (SourceTable != null)
+                    SourceTable = SourceTable;
+            }
         }
 
         [Category("1. DataSource")]
         [Description("List of regular expressions to ignore tables when generating.")]
         [Optional]
         [DefaultValue("sysdiagrams$")]
-        public List<string> IgnoreExpressions
+        public StringCollection IgnoreExpressions
         {
             get
             {
@@ -200,8 +213,11 @@ namespace Generator.CSLA
             }
             set
             {
+                if (value == null || String.Equals(_ignoreExpressions.ToString(), value.ToString()))
+                    return;
+
                 Configuration.Instance.IgnoreExpressions = new List<Regex>();
-                _ignoreExpressions = value ?? new List<string>();
+                _ignoreExpressions = value ?? new StringCollection();
 
                 foreach (string ignore in _ignoreExpressions) {
                     if (!String.IsNullOrEmpty(ignore)) {
@@ -209,8 +225,12 @@ namespace Generator.CSLA
                     }
                 }
 
-                //if (SourceTable != null)
-                //    Entity = new TableEntity(SourceTable);
+                if (SourceTable != null)
+                    SourceTable = SourceTable;
+                else if (SourceView != null)
+                    SourceView = SourceView;
+                else if (SourceCommand != null)
+                    SourceCommand = SourceCommand;
             }
         }
 
@@ -366,67 +386,6 @@ namespace Generator.CSLA
             return expression ? String.Concat(className, suffix.Trim()) : className;
         }
 
-
-        #region SED CUSTOM CODE
-
-        [Category("3. Business Project")]
-        [DefaultValue("")]
-        [Optional]
-        [Description("Applies an attribute to an interface. (works on interfaces only)")]
-        public string Attribute { get; set; }
-
-        [Category("3. Business Project")]
-        [DefaultValue("core")]
-        [Description("The name of the base class to inherit from.")]
-        public string InheritsFrom { get; set; }
-
-        [Category("3. Business Project")]
-        [DefaultValue("")]
-        [Optional]
-        [Description("The name of the interface to implement.")]
-        public string Implement { get; set; }
-
-        [Category("3. Business Project")]
-        [Description("The name of the interface for the business class.")]
-        [DefaultValue("Interfaces")]
-        public string BusinessProjectInterfaceName { get; set; }
-
-        [Category("3. Business Project")]
-        [Description("The name of the interface for the business class.")]
-        public string BusinessProjectInterfaceNamespace
-        {
-            get
-            {
-
-                if (BusinessProjectName.Contains("."))
-                    return BusinessProjectName.Substring(0, BusinessProjectName.LastIndexOf('.')) + ".Interfaces";
-                else
-                    return "Interfaces";
-            }
-        }
-
-        [Category("3. Business Project")]
-        [Description("The name of the interface for the business class.")]
-        [DefaultValue(false)]
-        public bool IncludeEditableRootFactoryMethods { get; set; }
-
-        [Category("3. Business Project")]
-        [Description("The name of the interface for the business class.")]
-        [DefaultValue(false)]
-        public bool IncludeEditableListFactoryMethods { get; set; }
-
-        [Category("3. Business Project")]
-        [Description("The name of the interface for the business class.")]
-        [DefaultValue(false)]
-        public bool IncludeReadOnlyRootFactoryMethods { get; set; }
-
-        [Category("3. Business Project")]
-        [Description("The name of the interface for the business class.")]
-        [DefaultValue(false)]
-        public bool IncludeReadOnlyListFactoryMethods { get; set; }
-
-        #endregion
-
         [Category("3. Business Project")]
         [Description("Uses private property backing variables for properties.")]
         [DefaultValue(false)]
@@ -438,13 +397,24 @@ namespace Generator.CSLA
         public bool UseDeferredDeletion { get; set; }
 
         [Category("3. Business Project")]
-        [Description("If enabled Silverlight support will be added to the project..")]
+        [Description("If enabled Silverlight support will be added to the project.")]
         [DefaultValue(false)]
         public bool IncludeSilverlightSupport {
             get { return _silverlightSupport; }
             set {
                 _silverlightSupport = value;
                 Configuration.Instance.IncludeSilverlightSupport = value;
+            }
+        }
+
+        [Category("3. Business Project")]
+        [Description("If enabled WinRT support will be added to the project.")]
+        [DefaultValue(false)]
+        public bool IncludeWinRTSupport {
+            get { return _winRTSupport; }
+            set {
+                _winRTSupport = value;
+                Configuration.Instance.IncludeWinRTSupport = value;
             }
         }
 
@@ -831,14 +801,6 @@ namespace Generator.CSLA
             return String.Format("{0}{1}_Select", ProcedurePrefix, Entity.Name);
         }
 
-
-        #region SED CUSTOM CODE
-
-        public virtual string GetNotificationTriggerName()
-        {
-            return String.Format("{0}[{1}{2}]", GetTableOwner(), "tr", Entity.Name + "_IU_Notification");
-        }
-        #endregion
         #endregion
 
         #region Render Helpers
@@ -917,6 +879,25 @@ namespace Generator.CSLA
             else
                 template.RenderToFile(filePath, dependentUpon, true);
         }
+
+        public string RenderSharedCompilerDirectiveDirective(bool negate = false) {
+            var op = Configuration.Instance.TargetLanguage == Language.VB ? "OrElse" : "||";
+
+            string negateOperator = String.Empty;
+            if (negate) {
+                op = Configuration.Instance.TargetLanguage == Language.VB ? "AndAlso" : "&&";
+                negateOperator = Configuration.Instance.TargetLanguage == Language.VB ? "Not " : "!";
+            }
+
+            if (IncludeSilverlightSupport && IncludeWinRTSupport)
+                return String.Format("{0}SILVERLIGHT {1} {0}NETFX_CORE", negateOperator, op);
+
+            if (IncludeSilverlightSupport)
+                return String.Format("{0}SILVERLIGHT", negateOperator);
+
+            return String.Format("{0}NETFX_CORE", negateOperator);
+        }
+
         #endregion
     }
 }
