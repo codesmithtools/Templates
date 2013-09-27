@@ -76,13 +76,13 @@ namespace <%= String.IsNullOrEmpty(QueryNamespace)? BaseNamespace : QueryNamespa
             )
         {
             return queryable
+        <% if(Entity.Key.Properties.Count > 0) { %>
+                .Where(<%= GetLamba(Entity.Key.Properties, 5) %>)
+        <% } %>
         <% if(Entity.Key.Associations.Count > 0) { %>
             <% foreach(IAssociation association in Entity.Key.Associations) { %>
                 .Where(<%= GetLamba(association, 5, true) %>)
             <% } %>
-        <% } %>
-        <% if(Entity.Key.Properties.Count > 0) { %>
-                .Where(<%= GetLamba(Entity.Key.Properties, 5) %>)
         <% } %>
                 .FirstOrDefault();
         }
@@ -337,9 +337,9 @@ namespace <%= String.IsNullOrEmpty(QueryNamespace)? BaseNamespace : QueryNamespa
                     throw new ArgumentException("Parameter 'comparisonOperator' must be ComparisonOperator.Equals or ComparisonOperator.NotEquals to support Association type.", "comparisonOperator");
             }
         }
-            
-            <% List<IProperty> properties = association.ForeignEntity.Key.Properties; %>
-            <% if (properties.Any(p => IsIgnoreType(p))) { continue; } %>
+
+        <% List<IProperty> properties = association.ForeignEntity.Key.Properties; %>
+        <% if (properties.Count == 0 || properties.Any(p => IsIgnoreType(p))) { continue; } %>
         /// <summary>
         /// Gets a query for <see cref="<%= Entity.Namespace %>.<%= Entity.Name %> by <%= association.ForeignEntity.Name %>'s primary key."/>.
         /// </summary>
@@ -383,6 +383,7 @@ namespace <%= String.IsNullOrEmpty(QueryNamespace)? BaseNamespace : QueryNamespa
         #endregion
     }
 }
+
 #pragma warning restore 1591
 
 <script runat="template">
@@ -506,7 +507,7 @@ namespace <%= String.IsNullOrEmpty(QueryNamespace)? BaseNamespace : QueryNamespa
         return GetLamba(properties, tabCount, true);
     }
 
-    public string GetLamba(List<IProperty> properties, int tabCount, bool equals)
+    public string GetLamba(List<IProperty> properties, int tabCount, bool @equals)
     {
         List<LambaValue> values = properties
             .Select(p => new LambaValue
@@ -517,10 +518,10 @@ namespace <%= String.IsNullOrEmpty(QueryNamespace)? BaseNamespace : QueryNamespa
             })
             .ToList();
                 
-        return GetLamba(values, tabCount, equals);
+        return GetLamba(values, tabCount, @equals);
     }
     
-    public string GetLamba(IAssociation association, int tabCount, bool equals)
+    public string GetLamba(IAssociation association, int tabCount, bool @equals)
     {
         List<LambaValue> values = association.ForeignEntity.Key.Properties
             .Select(p => new LambaValue
@@ -531,10 +532,10 @@ namespace <%= String.IsNullOrEmpty(QueryNamespace)? BaseNamespace : QueryNamespa
             })
             .ToList();
         
-        return GetLamba(values, tabCount, equals);
+        return GetLamba(values, tabCount, @equals);
     }
     
-    public string GetLamba(IEnumerable<LambaValue> values, int tabCount, bool equals)
+    public string GetLamba(IEnumerable<LambaValue> values, int tabCount, bool @equals)
     {
         StringBuilder lamba = new StringBuilder();
         string alias = GetAlias();
@@ -553,9 +554,9 @@ namespace <%= String.IsNullOrEmpty(QueryNamespace)? BaseNamespace : QueryNamespa
             }
 
             if (value.IsNullable == true)
-                lamba.AppendFormat("{3}object.Equals({0}.{1}, {2})", alias, value.Property, value.Variable, equals ? String.Empty : "!");
+                lamba.AppendFormat("{3}object.Equals({0}.{1}, {2})", alias, value.Property, value.Variable, @equals ? String.Empty : "!");
             else
-                lamba.AppendFormat("{0}.{1} {3} {2}", alias, value.Property, value.Variable, equals ? "==" : "!=");
+                lamba.AppendFormat("{0}.{1} {3} {2}", alias, value.Property, value.Variable, @equals ? "==" : "!=");
         }
 
         return lamba.ToString();

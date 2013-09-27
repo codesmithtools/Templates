@@ -139,9 +139,9 @@ namespace CodeSmith.SchemaHelper.NHibernate
                 Key.Properties.Add(property);
             }
 
-            var foriegnKeys = compositeKey.Descendants("key-many-to-one", XmlNamespace);
-            foreach (var foriegnKey in foriegnKeys) {
-                var association = NHibernateAssociation.FromElement(this, foriegnKey, foriegnKey, AssociationType.ManyToOne, XmlNamespace);
+            var foreignKeys = compositeKey.Descendants("key-many-to-one", XmlNamespace);
+            foreach (var foreignKey in foreignKeys) {
+                var association = NHibernateAssociation.FromElement(this, foreignKey, foreignKey, AssociationType.ManyToOne, XmlNamespace);
                 if (association != null) {
                     if(!AssociationMap.ContainsKey(association.Name))
                         AssociationMap.Add(association.Name, association);
