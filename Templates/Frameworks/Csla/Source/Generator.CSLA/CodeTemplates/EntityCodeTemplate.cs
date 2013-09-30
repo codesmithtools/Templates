@@ -26,12 +26,8 @@ using SchemaExplorer;
 
 using Configuration=CodeSmith.SchemaHelper.Configuration;
 
-namespace Generator.CSLA
-{
-    public class EntityCodeTemplate : CSLABaseTemplate
-    {
-        #region Private Member(s)
-
+namespace Generator.CSLA {
+    public class EntityCodeTemplate : CSLABaseTemplate {
         private IEntity _entity;
         private StringCollection _ignoreExpressions = new StringCollection();
         private StringCollection _cleanExpressions = new StringCollection();
@@ -40,21 +36,28 @@ namespace Generator.CSLA
 
         private string _criteriaClassName = String.Empty;
         private string _childBusinessClassName = String.Empty;
-        
 
-        #endregion
-
-        #region Constructor(s)
-
-        public EntityCodeTemplate()
-        {
+        public EntityCodeTemplate() {
             DataAccessImplementation = DataAccessMethod.ParameterizedSQL;
             UseLazyLoading = true;
         }
 
-        #endregion
 
         #region Public Properties
+
+
+        #region 0. Naming
+
+        protected override void RefreshDataSource() {
+            if (SourceTable != null)
+                SourceTable = SourceTable;
+            else if (SourceView != null)
+                SourceView = SourceView;
+            else if (SourceCommand != null)
+                SourceCommand = SourceCommand;
+        }
+
+        #endregion
 
         #region 1. DataSource
 
@@ -63,20 +66,18 @@ namespace Generator.CSLA
         /// </summary>
         [Optional]
         [Category("1. DataSource")]
-        public TableSchema SourceTable
-        {
-            get
-            {
+        public TableSchema SourceTable {
+            get {
                 if (Entity is TableEntity)
                     return ((TableEntity)Entity).EntitySource as TableSchema;
 
                 return null;
             }
-            set
-            {
-                if (value != null)
-                {
-                    var provider = new SchemaExplorerEntityProvider(new TableSchemaCollection {value}, null, null);
+            set {
+                if (value != null) {
+                    var provider = new SchemaExplorerEntityProvider(new TableSchemaCollection {
+                        value
+                    }, null, null);
                     IEntity entity = new EntityManager(provider).Entities.FirstOrDefault(e => e.SchemaName == value.Owner && e.EntityKeyName == value.Name);
                     Entity = entity ?? new TableEntity(value);
                 }
@@ -88,20 +89,18 @@ namespace Generator.CSLA
         /// </summary>
         [Optional]
         [Category("1. DataSource")]
-        public ViewSchema SourceView
-        {
-            get
-            {
+        public ViewSchema SourceView {
+            get {
                 if (Entity is ViewEntity)
                     return ((ViewEntity)Entity).EntitySource as ViewSchema;
 
                 return null;
             }
-            set
-            {
-                if (value != null)
-                {
-                    var provider = new SchemaExplorerEntityProvider(null, new ViewSchemaCollection { value }, null);
+            set {
+                if (value != null) {
+                    var provider = new SchemaExplorerEntityProvider(null, new ViewSchemaCollection {
+                        value
+                    }, null);
                     IEntity entity = new EntityManager(provider).Entities.FirstOrDefault(e => e.SchemaName == value.Owner && e.EntityKeyName == value.Name);
                     Entity = entity ?? new ViewEntity(value);
                 }
@@ -113,20 +112,18 @@ namespace Generator.CSLA
         /// </summary>
         [Optional]
         [Category("1. DataSource")]
-        public CommandSchema SourceCommand
-        {
-            get
-            {
+        public CommandSchema SourceCommand {
+            get {
                 if (Entity is CommandEntity)
                     return ((CommandEntity)Entity).EntitySource as CommandSchema;
 
                 return null;
             }
-            set
-            {
-                if (value != null)
-                {
-                    var provider = new SchemaExplorerEntityProvider(null, null, new CommandSchemaCollection { value });
+            set {
+                if (value != null) {
+                    var provider = new SchemaExplorerEntityProvider(null, null, new CommandSchemaCollection {
+                        value
+                    });
                     IEntity entity = new EntityManager(provider).Entities.FirstOrDefault(e => e.SchemaName == value.Owner && e.EntityKeyName == value.Name);
                     Entity = entity ?? new CommandEntity(value);
                 }
@@ -137,100 +134,13 @@ namespace Generator.CSLA
         /// The Generic Entity Object that gets generated.
         /// </summary>
         [Browsable(false)]
-        public IEntity Entity
-        {
+        public IEntity Entity {
             get { return _entity; }
-            set
-            {
-                if (value != null && _entity != value)
-                {
+            set {
+                if (value != null && _entity != value) {
                     _entity = value;
                     OnEntityChanged();
                 }
-            }
-        }
-
-        [Category("1. DataSource")]
-        [Description("List of regular expressions to clean table, view and column names.")]
-        [Optional]
-        [DefaultValue("^(sp|tbl|udf|vw)_")]
-        public StringCollection CleanExpressions
-        {
-            get
-            {
-                return _cleanExpressions;
-            }
-            set
-            {
-                if(value == null || String.Equals(_cleanExpressions.ToString(), value.ToString()))
-                    return;
-
-                Configuration.Instance.CleanExpressions = new List<Regex>();
-                _cleanExpressions = value ?? new StringCollection();
-                foreach (string clean in _cleanExpressions)
-                {
-                    if (!String.IsNullOrEmpty(clean))
-                    {
-                        Configuration.Instance.CleanExpressions.Add(new Regex(clean, RegexOptions.IgnoreCase));
-                    }
-                }
-
-                if (SourceTable != null)
-                    SourceTable = SourceTable;
-                else if (SourceView != null)
-                    SourceView = SourceView;
-                else if (SourceCommand != null)
-                    SourceCommand = SourceCommand;
-            }
-        }
-
-        [Optional]
-        [Category("1. DataSource")]
-        [Description("Includes Entity associations if set to true.")]
-        public bool IncludeAssociations
-        {
-            get { return Configuration.Instance.IncludeAssociations; }
-            set
-            {
-                if (Configuration.Instance.IncludeAssociations == value)
-                    return;
-
-                Configuration.Instance.IncludeAssociations = value;
-                if (SourceTable != null)
-                    SourceTable = SourceTable;
-            }
-        }
-
-        [Category("1. DataSource")]
-        [Description("List of regular expressions to ignore tables when generating.")]
-        [Optional]
-        [DefaultValue("sysdiagrams$")]
-        public StringCollection IgnoreExpressions
-        {
-            get
-            {
-                return _ignoreExpressions;
-            }
-            set
-            {
-                if (value == null || String.Equals(_ignoreExpressions.ToString(), value.ToString()))
-                    return;
-
-                Configuration.Instance.IgnoreExpressions = new List<Regex>();
-                _ignoreExpressions = value ?? new StringCollection();
-
-                foreach (string ignore in _ignoreExpressions) {
-                    if (!String.IsNullOrEmpty(ignore)) {
-                        Configuration.Instance.IgnoreExpressions.Add(new Regex(ignore, RegexOptions.IgnoreCase));
-                    }
-                }
-
-                if (SourceTable != null)
-                    SourceTable = SourceTable;
-                else if (SourceView != null)
-                    SourceView = SourceView;
-                else if (SourceCommand != null)
-                    SourceCommand = SourceCommand;
             }
         }
 
@@ -239,7 +149,8 @@ namespace Generator.CSLA
         #region 2. Solution
 
         [Editor(typeof(System.Windows.Forms.Design.FolderNameEditor), typeof(System.Drawing.Design.UITypeEditor))]
-        [Optional, NotChecked]
+        [Optional]
+        [NotChecked]
         [Category("2. Solution")]
         [Description("The path to the Solution location.")]
         [DefaultValue(".\\")]
@@ -259,35 +170,29 @@ namespace Generator.CSLA
 
         [Category("3. Business Project")]
         [Description("The name of the child business class.")]
-        public string ChildBusinessClassName
-        {
-            get
-            {
+        public string ChildBusinessClassName {
+            get {
                 if (String.IsNullOrEmpty(_childBusinessClassName))
                     _childBusinessClassName = ResolveChildBusinessClassName();
 
                 return _childBusinessClassName;
             }
-            set
-            {
+            set {
                 _childBusinessClassName = value;
             }
         }
 
         [Category("3. Business Project")]
         [Description("The name of the criteria business class.")]
-        public string CriteriaClassName
-        {
-            get
-            {
-                if(String.IsNullOrEmpty(_criteriaClassName))
+        public string CriteriaClassName {
+            get {
+                if (String.IsNullOrEmpty(_criteriaClassName))
                     _criteriaClassName = ResolveTargetClassName(ChildBusinessClassName, "Criteria");
 
                 return _criteriaClassName;
             }
-            set
-            {
-                if (!String.IsNullOrEmpty(value) && value.EndsWith("Criteria", StringComparison.InvariantCultureIgnoreCase)) 
+            set {
+                if (!String.IsNullOrEmpty(value) && value.EndsWith("Criteria", StringComparison.InvariantCultureIgnoreCase))
                     _criteriaClassName = value;
             }
         }
@@ -296,8 +201,7 @@ namespace Generator.CSLA
         /// Attempts to resolve the best canidate for the child class name.
         /// </summary>
         /// <returns></returns>
-        private string ResolveChildBusinessClassName()
-        {
+        private string ResolveChildBusinessClassName() {
             if (String.IsNullOrEmpty(BusinessClassName))
                 return BusinessClassName;
 
@@ -333,8 +237,7 @@ namespace Generator.CSLA
         /// <param name="suffix"></param>
         /// <returns></returns>
         [Browsable(false)]
-        public string ResolveTargetClassName(string className, string suffix)
-        {
+        public string ResolveTargetClassName(string className, string suffix) {
             return ResolveTargetClassName(className, suffix, true);
         }
 
@@ -346,32 +249,27 @@ namespace Generator.CSLA
         /// <param name="expression"></param>
         /// <returns></returns>
         [Browsable(false)]
-        public string ResolveTargetClassName(string className, string suffix, bool expression)
-        {
+        public string ResolveTargetClassName(string className, string suffix, bool expression) {
             // We will use these eventually..
             //bool isReadOnly;
             bool searchingForCriteriaObject = suffix.Equals("criteria", StringComparison.InvariantCultureIgnoreCase);
-         
-            if(String.IsNullOrEmpty(className))
+
+            if (String.IsNullOrEmpty(className))
                 className = Entity != null ? Entity.Name : String.Empty;
 
-            if (Entity != null)
-            {
+            if (Entity != null) {
                 var temp = className.Replace(Entity.Name, String.Empty);
-                if (temp.Equals("criteria", StringComparison.InvariantCultureIgnoreCase) ||
-                    temp.Equals("list", StringComparison.InvariantCultureIgnoreCase))
-                {
+                if (temp.Equals("criteria", StringComparison.InvariantCultureIgnoreCase) || temp.Equals("list", StringComparison.InvariantCultureIgnoreCase)) {
                     className = Entity.Name;
                 }
 
                 // Try to detect if we are generating a read only object..
-                if (temp.Equals("info", StringComparison.InvariantCultureIgnoreCase) || temp.Equals("infolist", StringComparison.InvariantCultureIgnoreCase))
-                {
+                if (temp.Equals("info", StringComparison.InvariantCultureIgnoreCase) || temp.Equals("infolist", StringComparison.InvariantCultureIgnoreCase)) {
                     if (searchingForCriteriaObject && expression)
                         return String.Concat(Entity.Name, suffix.Trim());
 
                     // Try to detect double endings.
-                    if (suffix.Equals("info", StringComparison.InvariantCultureIgnoreCase)) 
+                    if (suffix.Equals("info", StringComparison.InvariantCultureIgnoreCase))
                         return String.Format("{0}Info", Entity.Name);
 
                     //isReadOnly = true;
@@ -419,7 +317,7 @@ namespace Generator.CSLA
         }
 
         #endregion
-        
+
         #region 4. Data Project
 
         [Category("4. Data Project")]
@@ -429,14 +327,11 @@ namespace Generator.CSLA
         [Category("4. Data Project")]
         [Description("The value all sql parameters should be prefixed with.")]
         [DefaultValue("@p_")]
-        public string ParameterPrefix
-        {
-            get
-            {
+        public string ParameterPrefix {
+            get {
                 return Configuration.Instance.ParameterPrefix;
             }
-            set
-            {
+            set {
                 Configuration.Instance.ParameterPrefix = value;
             }
         }
@@ -463,7 +358,7 @@ namespace Generator.CSLA
         #endregion
 
         #region 7. LinqToSQL Data Access Layer
- 
+
         [Category("7. LinqToSQL Data Access Layer")]
         [Description("LinqToSQL context name space.")]
         [DefaultValue(false)]
@@ -492,15 +387,14 @@ namespace Generator.CSLA
         /// <summary>
         /// This method fires anytime a datasource changes.
         /// </summary>
-        public virtual void OnEntityChanged()
-        {
-            if (OnEntityChanging()) return;
+        public virtual void OnEntityChanged() {
+            if (OnEntityChanging())
+                return;
 
             if (String.IsNullOrEmpty(BusinessClassName))
                 BusinessClassName = Entity.Name;
 
-            if (String.IsNullOrEmpty(CriteriaClassName) ||
-                CriteriaClassName.Equals("Criteria", StringComparison.InvariantCultureIgnoreCase))
+            if (String.IsNullOrEmpty(CriteriaClassName) || CriteriaClassName.Equals("Criteria", StringComparison.InvariantCultureIgnoreCase))
                 CriteriaClassName = String.Concat(Entity.Name, "Criteria");
 
             if (String.IsNullOrEmpty(BusinessProjectName))
@@ -513,17 +407,13 @@ namespace Generator.CSLA
                 ProcedurePrefix = "CSLA_";
         }
 
-        public virtual string GetTableOwner()
-        {
+        public virtual string GetTableOwner() {
             return GetTableOwner(true);
         }
 
-        public virtual string GetTableOwner(bool includeDot)
-        {
+        public virtual string GetTableOwner(bool includeDot) {
             if (Entity != null && !String.IsNullOrEmpty(Entity.SchemaName) && Entity.SchemaName.Length > 0)
-                return includeDot
-                           ? String.Format("[{0}].", Entity.SchemaName)
-                           : String.Format("[{0}]", Entity.SchemaName);
+                return includeDot ? String.Format("[{0}].", Entity.SchemaName) : String.Format("[{0}]", Entity.SchemaName);
 
             return String.Empty;
         }
@@ -533,8 +423,7 @@ namespace Generator.CSLA
         /// I only created this becuase I didn't want to duplicated a lot of code across templates or new up a new entity twice..
         /// </summary>
         /// <returns></returns>
-        public virtual bool OnEntityChanging()
-        {
+        public virtual bool OnEntityChanging() {
             return false;
         }
 
@@ -542,14 +431,13 @@ namespace Generator.CSLA
 
         #region Public Method(s)
 
-        public bool IsReadOnlyBusinessObject(string suffix)
-        {
+        public bool IsReadOnlyBusinessObject(string suffix) {
             string key = String.Format("{0}{1}", Entity.EntityKeyName, suffix);
-            if (ContextData.Get(key) == null) return false;
+            if (ContextData.Get(key) == null)
+                return false;
 
             var value = ContextData[key];
-            switch (value)
-            {
+            switch (value) {
                 case Constants.ReadOnlyChild:
                 case Constants.ReadOnlyRoot:
                 case Constants.ReadOnlyChildList:
@@ -560,18 +448,16 @@ namespace Generator.CSLA
             return false;
         }
 
-        public bool IsReadOnlyBusinessObject(IAssociation association, string suffix)
-        {
+        public bool IsReadOnlyBusinessObject(IAssociation association, string suffix) {
             if (association.Properties.Count <= 0)
                 return false;
 
             string key = String.Format("{0}{1}", association.ForeignEntity.EntityKeyName, suffix);
-            if (ContextData.Get(key) == null) 
+            if (ContextData.Get(key) == null)
                 return false;
 
             var value = ContextData[key];
-            switch (value)
-            {
+            switch (value) {
                 case Constants.ReadOnlyChild:
                 case Constants.ReadOnlyRoot:
                 case Constants.ReadOnlyChildList:
@@ -582,15 +468,13 @@ namespace Generator.CSLA
             return false;
         }
 
-        public bool IsChildBusinessObject(string suffix)
-        {
+        public bool IsChildBusinessObject(string suffix) {
             string key = String.Format("{0}{1}", Entity.EntityKeyName, suffix);
-            if (ContextData.Get(key) == null) 
+            if (ContextData.Get(key) == null)
                 return false;
 
             var value = ContextData[key];
-            switch (value)
-            {
+            switch (value) {
                 case Constants.EditableChild:
                 case Constants.ReadOnlyChild:
                 case Constants.EditableChildList:
@@ -601,23 +485,20 @@ namespace Generator.CSLA
             return false;
         }
 
-        public bool IsChildBusinessObject(IAssociation association)
-        {
-            return IsChildBusinessObject(association, String.Empty); 
+        public bool IsChildBusinessObject(IAssociation association) {
+            return IsChildBusinessObject(association, String.Empty);
         }
 
-        public bool IsChildBusinessObject(IAssociation association, string suffix)
-        {
+        public bool IsChildBusinessObject(IAssociation association, string suffix) {
             if (association.Properties.Count <= 0)
                 return false;
 
             string key = String.Format("{0}{1}", association.ForeignEntity.EntityKeyName, suffix);
-            if (ContextData.Get(key) == null) 
+            if (ContextData.Get(key) == null)
                 return false;
 
             var value = ContextData[key];
-            switch (value)
-            {
+            switch (value) {
                 case Constants.EditableChild:
                 case Constants.ReadOnlyChild:
                 case Constants.EditableChildList:
@@ -628,19 +509,17 @@ namespace Generator.CSLA
             return false;
         }
 
-        public bool IsSwitchableObject()
-        {
+        public bool IsSwitchableObject() {
             return IsSwitchableObject(String.Empty);
         }
 
-        public bool IsSwitchableObject(string suffix)
-        {
+        public bool IsSwitchableObject(string suffix) {
             string key = String.Format("{0}{1}", Entity.EntityKeyName, suffix);
-            if (ContextData.Get(key) == null) return false;
+            if (ContextData.Get(key) == null)
+                return false;
 
             var value = ContextData[key];
-            switch (value)
-            {
+            switch (value) {
                 case Constants.SwitchableObject:
                     return true;
             }
@@ -648,23 +527,20 @@ namespace Generator.CSLA
             return false;
         }
 
-        public bool IsSwitchableObject(IAssociation association)
-        {
+        public bool IsSwitchableObject(IAssociation association) {
             return IsSwitchableObject(association, String.Empty);
         }
 
-        public bool IsSwitchableObject(IAssociation association, string suffix)
-        {
+        public bool IsSwitchableObject(IAssociation association, string suffix) {
             if (association.Properties.Count <= 0)
                 return false;
 
             string key = String.Format("{0}{1}", association.ForeignEntity.EntityKeyName, suffix);
-            if (ContextData.Get(key) == null) 
+            if (ContextData.Get(key) == null)
                 return false;
 
             var value = ContextData[key];
-            switch (value)
-            {
+            switch (value) {
                 case Constants.SwitchableObject:
                     return true;
             }
@@ -672,23 +548,20 @@ namespace Generator.CSLA
             return false;
         }
 
-        public bool IsNameValueListBusinessObject(IAssociation association)
-        {
+        public bool IsNameValueListBusinessObject(IAssociation association) {
             return IsNameValueListBusinessObject(association, String.Empty);
         }
 
-        public bool IsNameValueListBusinessObject(IAssociation association, string suffix)
-        {
+        public bool IsNameValueListBusinessObject(IAssociation association, string suffix) {
             if (association.Properties.Count <= 0)
                 return false;
 
             string key = String.Format("{0}{1}", association.ForeignEntity.EntityKeyName, suffix);
-            if (ContextData.Get(key) == null) 
+            if (ContextData.Get(key) == null)
                 return false;
 
             var value = ContextData[key];
-            switch (value)
-            {
+            switch (value) {
                 case Constants.NameValueList:
                     return true;
             }
@@ -702,9 +575,8 @@ namespace Generator.CSLA
         /// <param name="suffix">The Suffix</param>
         /// <param name="length"></param>
         /// <returns></returns>
-        public bool BusinessClassNameExists(string suffix, int length)
-        {
-            if(!BusinessClassName.EndsWith(suffix, true, CultureInfo.InvariantCulture))
+        public bool BusinessClassNameExists(string suffix, int length) {
+            if (!BusinessClassName.EndsWith(suffix, true, CultureInfo.InvariantCulture))
                 return false;
 
             if (Entity.Name == BusinessClassName.Substring(0, BusinessClassName.Length - length))
@@ -718,8 +590,7 @@ namespace Generator.CSLA
         /// </summary>
         /// <param name="suffix"></param>
         /// <returns></returns>
-        public bool BusinessObjectExists(string suffix)
-        {
+        public bool BusinessObjectExists(string suffix) {
             if (Entity == null)
                 return false;
 
@@ -733,8 +604,7 @@ namespace Generator.CSLA
         /// </summary>
         /// <param name="association"></param>
         /// <returns></returns>
-        public bool BusinessObjectExists(IAssociation association)
-        {
+        public bool BusinessObjectExists(IAssociation association) {
             return BusinessObjectExists(association, String.Empty);
         }
 
@@ -744,8 +614,7 @@ namespace Generator.CSLA
         /// <param name="association"></param>
         /// <param name="suffix"></param>
         /// <returns></returns>
-        public bool BusinessObjectExists(IAssociation association, string suffix)
-        {
+        public bool BusinessObjectExists(IAssociation association, string suffix) {
             if (association.Properties.Count <= 0)
                 return false;
 
@@ -758,46 +627,38 @@ namespace Generator.CSLA
 
         #region Procedure Naming
 
-        public virtual string GetInsertStoredProcedureName()
-        {
+        public virtual string GetInsertStoredProcedureName() {
             return String.Format("{0}[{1}{2}_Insert]", GetTableOwner(), ProcedurePrefix, Entity.Name);
         }
 
-        public virtual string GetInsertStoredProcedureShortName()
-        {
+        public virtual string GetInsertStoredProcedureShortName() {
             return String.Format("{0}{1}_Insert", ProcedurePrefix, Entity.Name);
         }
 
-        public virtual string GetUpdateStoredProcedureName()
-        {
+        public virtual string GetUpdateStoredProcedureName() {
             return String.Format("{0}[{1}{2}_Update]", GetTableOwner(), ProcedurePrefix, Entity.Name);
         }
 
-        public virtual string GetUpdateStoredProcedureShortName()
-        {
+        public virtual string GetUpdateStoredProcedureShortName() {
             return String.Format("{0}{1}_Update", ProcedurePrefix, Entity.Name);
         }
 
-        public virtual string GetDeleteStoredProcedureName()
-        {
+        public virtual string GetDeleteStoredProcedureName() {
             return String.Format("{0}[{1}{2}_Delete]", GetTableOwner(), ProcedurePrefix, Entity.Name);
         }
 
-        public virtual string GetDeleteStoredProcedureShortName()
-        {
+        public virtual string GetDeleteStoredProcedureShortName() {
             return String.Format("{0}{1}_Delete", ProcedurePrefix, Entity.Name);
         }
 
-        public virtual string GetSelectStoredProcedureName()
-        {
+        public virtual string GetSelectStoredProcedureName() {
             if (Entity is CommandEntity)
                 return String.Format("[{0}].[{01}]", Entity.SchemaName, Entity.EntityKeyName);
 
             return String.Format("{0}[{1}{2}_Select]", GetTableOwner(), ProcedurePrefix, Entity.Name);
         }
 
-        public virtual string GetSelectStoredProcedureShortName()
-        {
+        public virtual string GetSelectStoredProcedureShortName() {
             return String.Format("{0}{1}_Select", ProcedurePrefix, Entity.Name);
         }
 
@@ -805,63 +666,52 @@ namespace Generator.CSLA
 
         #region Render Helpers
 
-        public void RenderToFileHelper<T>(string filePath, IMergeStrategy strategy) where T : EntityCodeTemplate, new()
-        {
+        public void RenderToFileHelper<T>(string filePath, IMergeStrategy strategy) where T : EntityCodeTemplate, new() {
             var template = this.Create<T>();
             CopyPropertiesTo(template, true, PropertyIgnoreList);
-            
+
             template.RenderToFile(filePath, strategy);
         }
 
-        public void RenderToFileHelper<T>(string filePath) where T : EntityCodeTemplate, new()
-        {
+        public void RenderToFileHelper<T>(string filePath) where T : EntityCodeTemplate, new() {
             RenderToFileHelper<T>(filePath, true);
         }
 
-        public void RenderToFileHelper<T>(string filePath, bool overwrite) where T : EntityCodeTemplate, new()
-        {
+        public void RenderToFileHelper<T>(string filePath, bool overwrite) where T : EntityCodeTemplate, new() {
             var template = this.Create<T>();
             CopyPropertiesTo(template, true, PropertyIgnoreList);
 
-            if (!overwrite)
-            {
+            if (!overwrite) {
                 if (!File.Exists(filePath))
                     template.RenderToFile(filePath, false);
-            }
-            else
+            } else
                 template.RenderToFile(filePath, true);
         }
 
-        public void RenderToFileHelper<T>(string filePath, string dependentUpon) where T : EntityCodeTemplate, new()
-        {
+        public void RenderToFileHelper<T>(string filePath, string dependentUpon) where T : EntityCodeTemplate, new() {
             RenderToFileHelper<T>(filePath, dependentUpon, true);
         }
 
-        public void RenderToFileHelper<T>(string filePath, string dependentUpon, bool overwrite) where T : EntityCodeTemplate, new()
-        {
+        public void RenderToFileHelper<T>(string filePath, string dependentUpon, bool overwrite) where T : EntityCodeTemplate, new() {
             var template = this.Create<T>();
             CopyPropertiesTo(template, true, PropertyIgnoreList);
 
-            if (!overwrite)
-            {
+            if (!overwrite) {
                 if (!File.Exists(filePath))
                     template.RenderToFile(filePath, dependentUpon, false);
-            }
-            else
+            } else
                 template.RenderToFile(filePath, dependentUpon, true);
         }
 
-        public void RenderProceduresToFileHelper<T>(string filePath, string dependentUpon, bool overwrite) where T : DataCodeTemplate, new()
-        {
+        public void RenderProceduresToFileHelper<T>(string filePath, string dependentUpon, bool overwrite) where T : DataCodeTemplate, new() {
             RenderProceduresToFileHelper<T>(filePath, dependentUpon, overwrite, false, false);
         }
 
-        public void RenderProceduresToFileHelper<T>(string filePath, string dependentUpon, bool overwrite, bool readOnly, bool collection) where T : DataCodeTemplate, new()
-        {
+        public void RenderProceduresToFileHelper<T>(string filePath, string dependentUpon, bool overwrite, bool readOnly, bool collection) where T : DataCodeTemplate, new() {
             if (!Entity.HasKey)
                 return;
 
-            if(Entity is CommandEntity || Entity is ViewEntity)
+            if (Entity is CommandEntity || Entity is ViewEntity)
                 return;
 
             var template = this.Create<T>();
@@ -871,12 +721,10 @@ namespace Generator.CSLA
             template.SetProperty("IncludeUpdate", Entity.CanUpdate && !readOnly && !collection);
             template.SetProperty("IncludeDelete", Entity.CanDelete && !readOnly && !collection);
 
-            if (!overwrite)
-            {
+            if (!overwrite) {
                 if (!File.Exists(filePath))
                     template.RenderToFile(filePath, dependentUpon, false);
-            }
-            else
+            } else
                 template.RenderToFile(filePath, dependentUpon, true);
         }
 
