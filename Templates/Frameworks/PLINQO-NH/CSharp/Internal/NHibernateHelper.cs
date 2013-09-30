@@ -11,6 +11,12 @@ using CodeSmith.SchemaHelper.NHibernate;
 
 public class NHibernateHelper : CodeTemplate
 {
+    public NHibernateHelper() : base()  {
+        CodeSmith.SchemaHelper.Configuration.Instance.NamingProperty.PropertyNaming = CodeSmith.SchemaHelper.PropertyNaming.NormalizeRemovePrefix;
+        CodeSmith.SchemaHelper.Configuration.Instance.NamingProperty.AssociationNaming = CodeSmith.SchemaHelper.AssociationNaming.List;
+        CodeSmith.SchemaHelper.Configuration.Instance.NamingProperty.AssociationTypeNameSuffix = CodeSmith.SchemaHelper.AssociationNaming.List;
+    }
+
     #region Master Helpers
     
     public OutputFile GetOutputFile(string fileName, string dependentUpon, params object[] metaData)
