@@ -149,31 +149,9 @@
             The Setter Access of the Association.
             </summary>
         </member>
-        <member name="M:CodeSmith.SchemaHelper.AssociationBase`1.AppendNameSuffix(System.Int32)">
-            <summary>
-            Appends a suffix to the name.
-            </summary>
-            <param name="suffix">The suffix.</param>
-        </member>
-        <member name="M:CodeSmith.SchemaHelper.AssociationBase`1.CodeSmith#SchemaHelper#IAssociation#MakeUnique">
-            <summary>
-            Expands an associations name into the full name with column properties.
-            </summary>
-        </member>
-        <member name="M:CodeSmith.SchemaHelper.AssociationBase`1.Initialize">
-            <summary>
-            Do any Post constructor initialization here.
-            By default, this does nothing.
-            </summary>
-        </member>
         <member name="M:CodeSmith.SchemaHelper.AssociationBase`1.LoadProperties">
             <summary>
             Override to populate the properties from the implemented association.
-            </summary>
-        </member>
-        <member name="M:CodeSmith.SchemaHelper.AssociationBase`1.LoadExtendedProperties">
-            <summary>
-            Override to populate the extended properties from the implemented association.
             </summary>
         </member>
         <member name="M:CodeSmith.SchemaHelper.AssociationBase`1.GetGenericProperty">
@@ -182,11 +160,33 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="M:CodeSmith.SchemaHelper.AssociationBase`1.LoadExtendedProperties">
+            <summary>
+            Override to populate the extended properties from the implemented association.
+            </summary>
+        </member>
         <member name="M:CodeSmith.SchemaHelper.AssociationBase`1.GetDescription">
             <summary>
             Returns the description for this association.  This must be implemented by the inheriting class.
             </summary>
             <returns></returns>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.AssociationBase`1.Initialize">
+            <summary>
+            Do any Post constructor initialization here.
+            By default, this does nothing.
+            </summary>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.AssociationBase`1.CodeSmith#SchemaHelper#IAssociation#MakeUnique">
+            <summary>
+            Expands an associations name into the full name with column properties.
+            </summary>
+        </member>
+        <member name="M:CodeSmith.SchemaHelper.AssociationBase`1.AppendNameSuffix(System.Int32)">
+            <summary>
+            Appends a suffix to the name.
+            </summary>
+            <param name="suffix">The suffix.</param>
         </member>
         <member name="M:CodeSmith.SchemaHelper.AssociationBase`1.ValidateAssocationNames(CodeSmith.SchemaHelper.IEntity)">
             <summary>
@@ -194,14 +194,14 @@
             </summary>
             <param name="entity"></param>
         </member>
-        <member name="P:CodeSmith.SchemaHelper.AssociationBase`1.AssociationSource">
-            <summary>
-            This is the source where the Association is populated from (E.G. EDMX Node, ITableKeySchema...);
-            </summary>
-        </member>
         <member name="P:CodeSmith.SchemaHelper.AssociationBase`1.AssociationKeyName">
             <summary>
             This is the name of the IAssociation from the DataSource.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.AssociationBase`1.AssociationSource">
+            <summary>
+            This is the source where the Association is populated from (E.G. EDMX Node, ITableKeySchema...);
             </summary>
         </member>
         <member name="P:CodeSmith.SchemaHelper.AssociationBase`1.AssociationKey">
@@ -303,6 +303,11 @@
         <member name="P:CodeSmith.SchemaHelper.AssociationBase`1.ExtendedProperties">
             <summary>
             Returns a list of Extended properties.
+            </summary>
+        </member>
+        <member name="T:Generator.Microsoft.Frameworks.Enums.SerializationMode">
+            <summary>
+            Serialization Mode
             </summary>
         </member>
         <member name="T:CodeSmith.SchemaHelper.PropertyExtensions">
@@ -1315,9 +1320,34 @@
             
             </summary>
         </member>
-        <member name="T:CodeSmith.SchemaHelper.AssociationSuffix">
+        <member name="T:CodeSmith.SchemaHelper.AssociationNaming">
             <summary>
-            Controls the naming for Associations.
+            Controls the naming for associations.
+            </summary>
+        </member>
+        <member name="F:CodeSmith.SchemaHelper.AssociationNaming.Preserve">
+            <summary>
+            Preserve the associations name.
+            </summary>
+        </member>
+        <member name="F:CodeSmith.SchemaHelper.AssociationNaming.Singular">
+            <summary>
+            Singularize the association name.
+            </summary>
+        </member>
+        <member name="F:CodeSmith.SchemaHelper.AssociationNaming.Plural">
+            <summary>
+            Pluralize the association name.
+            </summary>
+        </member>
+        <member name="F:CodeSmith.SchemaHelper.AssociationNaming.List">
+            <summary>
+            Append "List" to the association name.
+            </summary>
+        </member>
+        <member name="F:CodeSmith.SchemaHelper.AssociationNaming.SingularList">
+            <summary>
+            Singularize the association name and append "List".
             </summary>
         </member>
         <member name="F:CodeSmith.SchemaHelper.AssociationType.ManyToOne">
@@ -1353,6 +1383,46 @@
         <member name="F:CodeSmith.SchemaHelper.AssociationType.OneToOne">
             <summary>
             Returns a list of all One to Zero or one keys.
+            </summary>
+        </member>
+        <member name="T:CodeSmith.SchemaHelper.PropertyNaming">
+            <summary>
+            Controls the naming of properties.
+            </summary>
+        </member>
+        <member name="F:CodeSmith.SchemaHelper.PropertyNaming.Preserve">
+            <summary>
+            Preserve the property name.
+            </summary>
+        </member>
+        <member name="F:CodeSmith.SchemaHelper.PropertyNaming.Normalize">
+            <summary>
+            Normalizes the property name.
+            </summary>
+        </member>
+        <member name="F:CodeSmith.SchemaHelper.PropertyNaming.NormalizeRemovePrefix">
+            <summary>
+            Normalizes the property name and removes the entity name prefix from the property name if present.
+            </summary>
+        </member>
+        <member name="T:CodeSmith.SchemaHelper.EntityNaming">
+            <summary>
+            Controls how entities are named.
+            </summary>
+        </member>
+        <member name="F:CodeSmith.SchemaHelper.EntityNaming.Preserve">
+            <summary>
+            Preserve the entity name.
+            </summary>
+        </member>
+        <member name="F:CodeSmith.SchemaHelper.EntityNaming.Singular">
+            <summary>
+            Singularize the entity name.
+            </summary>
+        </member>
+        <member name="F:CodeSmith.SchemaHelper.EntityNaming.Plural">
+            <summary>
+            Pluralize the entity name.
             </summary>
         </member>
         <member name="T:CodeSmith.SchemaHelper.FrameworkVersion">
@@ -2117,95 +2187,42 @@
             
             </summary>
         </member>
-        <member name="M:CodeSmith.SchemaHelper.Util.NamingConventions.PropertyName(System.String)">
-            <summary>
-            
-            </summary>
-            <param name="value"></param>
-            <returns></returns>
-        </member>
-        <member name="M:CodeSmith.SchemaHelper.Util.NamingConventions.PropertyName(System.String,System.Boolean)">
+        <member name="M:CodeSmith.SchemaHelper.Util.NamingConventions.PrivateMemberVariableName(System.String,System.Boolean,System.Boolean)">
             <summary>
             
             </summary>
             <param name="value"></param>
             <param name="useKeywordRenameAlias"></param>
+            <param name="preserveNaming"></param>
             <returns></returns>
         </member>
-        <member name="M:CodeSmith.SchemaHelper.Util.NamingConventions.PropertyName(System.String,System.String)">
-            <summary>
-            
-            </summary>
-            <param name="value"></param>
-            <param name="suffix"></param>
-            <returns></returns>
-        </member>
-        <member name="M:CodeSmith.SchemaHelper.Util.NamingConventions.PropertyName(System.String,System.String,System.Boolean,System.Boolean)">
-            <summary>
-            
-            </summary>
-            <param name="value"></param>
-            <param name="suffix"></param>
-            <param name="useKeywordRenameAlias"></param>
-            <param name="useCleanExpression"></param>
-            <returns></returns>
-        </member>
-        <member name="M:CodeSmith.SchemaHelper.Util.NamingConventions.PrivateMemberVariableName(System.String)">
-            <summary>
-            
-            </summary>
-            <param name="value"></param>
-            <returns></returns>
-        </member>
-        <member name="M:CodeSmith.SchemaHelper.Util.NamingConventions.PrivateMemberVariableName(System.String,System.Boolean)">
+        <member name="M:CodeSmith.SchemaHelper.Util.NamingConventions.VariableName(System.String,System.Boolean,System.Boolean)">
             <summary>
             
             </summary>
             <param name="value"></param>
             <param name="useKeywordRenameAlias"></param>
+            <param name="preserveNaming"></param>
             <returns></returns>
         </member>
-        <member name="M:CodeSmith.SchemaHelper.Util.NamingConventions.PrivateMemberVariableName(System.String,System.String)">
-            <summary>
-            
-            </summary>
-            <param name="value"></param>
-            <param name="suffix"></param>
-            <returns></returns>
-        </member>
-        <member name="M:CodeSmith.SchemaHelper.Util.NamingConventions.PrivateMemberVariableName(System.String,System.String,System.Boolean)">
-            <summary>
-            
-            </summary>
-            <param name="value"></param>
-            <param name="suffix"></param>
-            <param name="useKeywordRenameAlias"></param>
-            <returns></returns>
-        </member>
-        <member name="M:CodeSmith.SchemaHelper.Util.NamingConventions.VariableName(System.String)">
-            <summary>
-            
-            </summary>
-            <param name="value"></param>
-            <returns></returns>
-        </member>
-        <member name="M:CodeSmith.SchemaHelper.Util.NamingConventions.VariableName(System.String,System.Boolean)">
+        <member name="M:CodeSmith.SchemaHelper.Util.NamingConventions.PropertyName(System.String,System.Boolean,System.Boolean)">
             <summary>
             
             </summary>
             <param name="value"></param>
             <param name="useKeywordRenameAlias"></param>
+            <param name="preserveNaming"></param>
             <returns></returns>
         </member>
         <member name="M:CodeSmith.SchemaHelper.Util.NamingConventions.ValidateName(CodeSmith.SchemaHelper.IProperty)">
             <summary>
-            Validates the name is not the same name as the Property.
+            Validates the entity name is not the same name as the Property.
             </summary>
             <returns></returns>
         </member>
         <member name="M:CodeSmith.SchemaHelper.Util.NamingConventions.ValidateName(CodeSmith.SchemaHelper.IEntity)">
             <summary>
-            Validates the name is not the same name as the Entity.
+            Validates the entity name.
             </summary>
             <returns>Returns properly formatted class name based off the name of the table.</returns>
         </member>
