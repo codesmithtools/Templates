@@ -8,18 +8,15 @@ using CodeSmith.SchemaHelper;
 using SchemaExplorer;
 using Configuration = CodeSmith.SchemaHelper.Configuration;
 
-namespace Generator.CSLA.CodeTemplates
-{
+namespace Generator.CSLA.CodeTemplates {
     /// <summary>
     /// 
     /// </summary>
-    public class SchemaExplorerEntitiesCodeTemplate : SchemaHelperEntitiesCodeTemplate
-    {
+    public class SchemaExplorerEntitiesCodeTemplate : SchemaHelperEntitiesCodeTemplate {
         private List<IEntity> _entities = new List<IEntity>();
         private DatabaseSchema _database;
 
-        public SchemaExplorerEntitiesCodeTemplate()
-        {
+        public SchemaExplorerEntitiesCodeTemplate() {
             CleanExpressions = new StringCollection();
             IgnoreExpressions = new StringCollection();
             IncludeExpressions = new StringCollection();
@@ -27,16 +24,12 @@ namespace Generator.CSLA.CodeTemplates
 
         [Category("1. DataSource")]
         [Description("Source Database")]
-        public DatabaseSchema SourceDatabase
-        {
+        public DatabaseSchema SourceDatabase {
             get { return _database; }
-            set
-            {
-                if (value != null && (_database == null || (_database != null && value.Name != _database.Name && value.ConnectionString != _database.ConnectionString)))
-                {
+            set {
+                if (value != null && (_database == null || (_database != null && value.Name != _database.Name && value.ConnectionString != _database.ConnectionString))) {
                     _database = value;
-                    if (!_database.DeepLoad)
-                    {
+                    if (!_database.DeepLoad) {
                         _database.DeepLoad = true;
                         _database.Refresh();
                     }
@@ -46,48 +39,38 @@ namespace Generator.CSLA.CodeTemplates
             }
         }
 
+        /// <summary>
+        /// Include views that have an extended property declaring it's business type
+        /// </summary>
         [Optional]
         [Category("1. DataSource")]
-        [Description("Includes Entity associations if set to true.")]
-        public bool IncludeAssociations
-        {
-            get { return Configuration.Instance.IncludeAssociations; }
-            set { Configuration.Instance.IncludeAssociations = value; }
-        }
-
-        [Category("1. DataSource")]
-        [Description("List of regular expressions to clean table, view and column names.")]
-        [Optional]
-        [DefaultValue("^(sp|tbl|udf|vw)_")]
-        public StringCollection CleanExpressions { get; set; }
-
-        [Category("1. DataSource")]
-        [Description("List of regular expressions to ignore tables when generating.")]
-        [Optional]
-        [DefaultValue("sysdiagrams$")]
-        public StringCollection IgnoreExpressions { get; set; }
-
-        [Category("1. DataSource")]
-        [Description("List of regular expressions to include tables and views when generating mapping.")]
-        [Optional]
-        public StringCollection IncludeExpressions { get; set; }
-
-        [Optional]
-        [Category("1. DataSource")]
-        [Description("Include views that have an extended property declaring it's business type")]
-        public bool IncludeViews
-        {
+        [Description("Include views that have an extended property declaring it's business type.")]
+        public bool IncludeViews {
             get { return Configuration.Instance.IncludeViews; }
-            set { Configuration.Instance.IncludeViews = value; }
+            set {
+                if (Configuration.Instance.IncludeViews == value)
+                    return;
+
+                Configuration.Instance.IncludeViews = value;
+                RefreshDataSource();
+            }
         }
 
+        /// <summary>
+        /// Include stored procedures that have an extended property declaring it's business type
+        /// </summary>
         [Optional]
         [Category("1. DataSource")]
-        [Description("Include stored procedures that have an extended property declaring it's business type")]
-        public bool IncludeFunctions
-        {
+        [Description("Include stored procedures that have an extended property declaring it's business type.")]
+        public bool IncludeFunctions {
             get { return Configuration.Instance.IncludeFunctions; }
-            set { Configuration.Instance.IncludeFunctions = value; }
+            set {
+                if (Configuration.Instance.IncludeFunctions == value)
+                    return;
+
+                Configuration.Instance.IncludeFunctions = value;
+                RefreshDataSource();
+            }
         }
 
         #region Business Object Selections
@@ -95,13 +78,10 @@ namespace Generator.CSLA.CodeTemplates
         [Category("6a. Entities")]
         [Description("CommandObject")]
         [Optional]
-        public TableSchemaCollection CommandObject
-        {
+        public TableSchemaCollection CommandObject {
             get { return CommandObjectEntities.ToCollection(); }
-            set
-            {
-                if (value != null)
-                {
+            set {
+                if (value != null) {
                     EnsureEntitiesExists(value);
                     CommandObjectEntities = new EntityManager(new CSLAEntityProvider(_entities, value)).Entities;
                 }
@@ -111,13 +91,10 @@ namespace Generator.CSLA.CodeTemplates
         [Category("6a. Entities")]
         [Description("DynamicRoot")]
         [Optional]
-        public TableSchemaCollection DynamicRoot
-        {
+        public TableSchemaCollection DynamicRoot {
             get { return DynamicRootEntities.ToCollection(); }
-            set
-            {
-                if (value != null)
-                {
+            set {
+                if (value != null) {
                     EnsureEntitiesExists(value);
                     DynamicRootEntities = new EntityManager(new CSLAEntityProvider(_entities, value, Constants.DynamicRoot)).Entities;
                 }
@@ -127,13 +104,10 @@ namespace Generator.CSLA.CodeTemplates
         [Category("6a. Entities")]
         [Description("EditableChild")]
         [Optional]
-        public TableSchemaCollection EditableChild
-        {
+        public TableSchemaCollection EditableChild {
             get { return EditableChildEntities.ToCollection(); }
-            set
-            {
-                if (value != null)
-                {
+            set {
+                if (value != null) {
                     EnsureEntitiesExists(value);
                     EditableChildEntities = new EntityManager(new CSLAEntityProvider(_entities, value, Constants.EditableChild)).Entities;
                 }
@@ -143,13 +117,10 @@ namespace Generator.CSLA.CodeTemplates
         [Category("6a. Entities")]
         [Description("EditableRoot")]
         [Optional]
-        public TableSchemaCollection EditableRoot
-        {
+        public TableSchemaCollection EditableRoot {
             get { return EditableRootEntities.ToCollection(); }
-            set
-            {
-                if (value != null)
-                {
+            set {
+                if (value != null) {
                     EnsureEntitiesExists(value);
                     EditableRootEntities = new EntityManager(new CSLAEntityProvider(_entities, value, Constants.EditableRoot)).Entities;
                 }
@@ -159,13 +130,10 @@ namespace Generator.CSLA.CodeTemplates
         [Category("6a. Entities")]
         [Description("ReadOnlyChild")]
         [Optional]
-        public TableSchemaCollection ReadOnlyChild
-        {
+        public TableSchemaCollection ReadOnlyChild {
             get { return ReadOnlyChildEntities.ToCollection(); }
-            set
-            {
-                if (value != null)
-                {
+            set {
+                if (value != null) {
                     EnsureEntitiesExists(value);
                     ReadOnlyChildEntities = new EntityManager(new CSLAEntityProvider(_entities, value, Constants.ReadOnlyChild)).Entities;
                 }
@@ -175,13 +143,10 @@ namespace Generator.CSLA.CodeTemplates
         [Category("6a. Entities")]
         [Description("ReadOnlyRoot")]
         [Optional]
-        public TableSchemaCollection ReadOnlyRoot
-        {
+        public TableSchemaCollection ReadOnlyRoot {
             get { return ReadOnlyRootEntities.ToCollection(); }
-            set
-            {
-                if (value != null)
-                {
+            set {
+                if (value != null) {
                     EnsureEntitiesExists(value);
                     ReadOnlyRootEntities = new EntityManager(new CSLAEntityProvider(_entities, value, Constants.ReadOnlyRoot)).Entities;
                 }
@@ -191,13 +156,10 @@ namespace Generator.CSLA.CodeTemplates
         [Category("6a. Entities")]
         [Description("SwitchableObject")]
         [Optional]
-        public TableSchemaCollection SwitchableObject
-        {
+        public TableSchemaCollection SwitchableObject {
             get { return SwitchableObjectEntities.ToCollection(); }
-            set
-            {
-                if (value != null)
-                {
+            set {
+                if (value != null) {
                     EnsureEntitiesExists(value);
                     SwitchableObjectEntities = new EntityManager(new CSLAEntityProvider(_entities, value, Constants.SwitchableObject)).Entities;
                 }
@@ -207,13 +169,10 @@ namespace Generator.CSLA.CodeTemplates
         [Category("6b. List Entities")]
         [Description("DynamicListBase")]
         [Optional]
-        public TableSchemaCollection DynamicListBase
-        {
+        public TableSchemaCollection DynamicListBase {
             get { return this.DynamicListBaseEntities.ToCollection(); }
-            set
-            {
-                if (value != null)
-                {
+            set {
+                if (value != null) {
                     EnsureEntitiesExists(value);
                     this.DynamicListBaseEntities = new EntityManager(new CSLAEntityProvider(_entities, value, Constants.DynamicListBase)).Entities;
                 }
@@ -223,13 +182,10 @@ namespace Generator.CSLA.CodeTemplates
         [Category("6b. List Entities")]
         [Description("DynamicRootList")]
         [Optional]
-        public TableSchemaCollection DynamicRootList
-        {
+        public TableSchemaCollection DynamicRootList {
             get { return DynamicRootListEntities.ToCollection(); }
-            set
-            {
-                if (value != null)
-                {
+            set {
+                if (value != null) {
                     EnsureEntitiesExists(value);
                     DynamicRootListEntities = new EntityManager(new CSLAEntityProvider(_entities, value, Constants.DynamicRootList)).Entities;
                 }
@@ -239,13 +195,10 @@ namespace Generator.CSLA.CodeTemplates
         [Category("6b. List Entities")]
         [Description("EditableRootList")]
         [Optional]
-        public TableSchemaCollection EditableRootList
-        {
+        public TableSchemaCollection EditableRootList {
             get { return EditableRootListEntities.ToCollection(); }
-            set
-            {
-                if (value != null)
-                {
+            set {
+                if (value != null) {
                     EnsureEntitiesExists(value);
                     EditableRootListEntities = new EntityManager(new CSLAEntityProvider(_entities, value, Constants.EditableRootList)).Entities;
                 }
@@ -255,13 +208,10 @@ namespace Generator.CSLA.CodeTemplates
         [Category("6b. List Entities")]
         [Description("EditableChildList")]
         [Optional]
-        public TableSchemaCollection EditableChildList
-        {
+        public TableSchemaCollection EditableChildList {
             get { return EditableChildListEntities.ToCollection(); }
-            set
-            {
-                if (value != null)
-                {
+            set {
+                if (value != null) {
                     EnsureEntitiesExists(value);
                     EditableChildListEntities = new EntityManager(new CSLAEntityProvider(_entities, value, Constants.EditableChildList)).Entities;
                 }
@@ -271,13 +221,10 @@ namespace Generator.CSLA.CodeTemplates
         [Category("6b. List Entities")]
         [Description("ReadOnlyList")]
         [Optional]
-        public TableSchemaCollection ReadOnlyList
-        {
+        public TableSchemaCollection ReadOnlyList {
             get { return ReadOnlyListEntities.ToCollection(); }
-            set
-            {
-                if (value != null)
-                {
+            set {
+                if (value != null) {
                     EnsureEntitiesExists(value);
                     ReadOnlyListEntities = new EntityManager(new CSLAEntityProvider(_entities, value, Constants.ReadOnlyList)).Entities;
                 }
@@ -287,13 +234,10 @@ namespace Generator.CSLA.CodeTemplates
         [Category("6b. List Entities")]
         [Description("ReadOnlyChildList")]
         [Optional]
-        public TableSchemaCollection ReadOnlyChildList
-        {
+        public TableSchemaCollection ReadOnlyChildList {
             get { return ReadOnlyChildListEntities.ToCollection(); }
-            set
-            {
-                if (value != null)
-                {
+            set {
+                if (value != null) {
                     EnsureEntitiesExists(value);
                     ReadOnlyChildListEntities = new EntityManager(new CSLAEntityProvider(_entities, value, Constants.ReadOnlyChildList)).Entities;
                 }
@@ -303,13 +247,10 @@ namespace Generator.CSLA.CodeTemplates
         [Category("6b. List Entities")]
         [Description("NameValueList")]
         [Optional]
-        public TableSchemaCollection NameValueList
-        {
+        public TableSchemaCollection NameValueList {
             get { return NameValueListEntities.ToCollection(); }
-            set
-            {
-                if (value != null)
-                {
+            set {
+                if (value != null) {
                     EnsureEntitiesExists(value);
                     NameValueListEntities = new EntityManager(new CSLAEntityProvider(_entities, value, Constants.NameValueList)).Entities;
                 }
@@ -319,8 +260,8 @@ namespace Generator.CSLA.CodeTemplates
         #endregion
 
         private bool _restoringPropertyValues = true;
-        private void EnsureEntitiesExists(TableSchemaCollection value)
-        {
+
+        private void EnsureEntitiesExists(TableSchemaCollection value) {
             // If entities exist then return.
             if (_entities != null && _entities.Count > 0)
                 return;
@@ -335,31 +276,24 @@ namespace Generator.CSLA.CodeTemplates
             _restoringPropertyValues = previousValue;
         }
 
-        public virtual void OnDatabaseChanged()
-        {
-            using (TemplateContext.SetContext(this))
-            {
-                if (!UpdateEntities()) 
+        public virtual void OnDatabaseChanged() {
+            using (TemplateContext.SetContext(this)) {
+                if (!UpdateEntities())
                     return;
 
                 if (State == TemplateState.RestoringProperties)
                     return;
 
-                if (!_restoringPropertyValues && ShouldPopulateDefaultEntities)
-                {
+                if (!_restoringPropertyValues && ShouldPopulateDefaultEntities) {
                     PopulateDefaultEntities(_entities);
-                }
-                else
-                {
+                } else {
                     Refresh();
                 }
             }
         }
 
-        protected override void OnPropertiesLoaded()
-        {
-            if (TemplateContext.Current == null && UpdateEntities())
-            {
+        protected override void OnPropertiesLoaded() {
+            if (TemplateContext.Current == null && UpdateEntities()) {
                 if (ShouldPopulateDefaultEntities)
                     PopulateDefaultEntities(_entities);
                 else
@@ -370,27 +304,13 @@ namespace Generator.CSLA.CodeTemplates
         }
 
         [Browsable(false)]
-        private bool ShouldPopulateDefaultEntities
-        {
-            get
-            {
-                return DynamicRoot.Count == 0 &&
-                       EditableChild.Count == 0 &&
-                       EditableRoot.Count == 0 &&
-                       ReadOnlyChild.Count == 0 &&
-                       ReadOnlyRoot.Count == 0 &&
-                       SwitchableObject.Count == 0 &&
-                       DynamicListBase.Count == 0 &&
-                       DynamicRootList.Count == 0 &&
-                       EditableRootList.Count == 0 &&
-                       EditableChildList.Count == 0 &&
-                       ReadOnlyList.Count == 0 &&
-                       ReadOnlyChildList.Count == 0;
+        private bool ShouldPopulateDefaultEntities {
+            get {
+                return DynamicRoot.Count == 0 && EditableChild.Count == 0 && EditableRoot.Count == 0 && ReadOnlyChild.Count == 0 && ReadOnlyRoot.Count == 0 && SwitchableObject.Count == 0 && DynamicListBase.Count == 0 && DynamicRootList.Count == 0 && EditableRootList.Count == 0 && EditableChildList.Count == 0 && ReadOnlyList.Count == 0 && ReadOnlyChildList.Count == 0;
             }
         }
 
-        private bool UpdateEntities()
-        {
+        private bool UpdateEntities() {
             if (SourceDatabase == null)
                 return false;
 
@@ -398,34 +318,27 @@ namespace Generator.CSLA.CodeTemplates
                 CleanExpressions.Add("^(sp|tbl|udf|vw)_");
 
             Configuration.Instance.CleanExpressions.Clear();
-            foreach (string clean in CleanExpressions)
-            {
-                if (!String.IsNullOrEmpty(clean))
-                {
+            foreach (string clean in CleanExpressions) {
+                if (!String.IsNullOrEmpty(clean)) {
                     Configuration.Instance.CleanExpressions.Add(new Regex(clean, RegexOptions.IgnoreCase));
                 }
             }
 
-            if (IgnoreExpressions.Count == 0)
-            {
+            if (IgnoreExpressions.Count == 0) {
                 IgnoreExpressions.Add("sysdiagrams$");
                 IgnoreExpressions.Add("^dbo.aspnet");
             }
 
             Configuration.Instance.IgnoreExpressions.Clear();
-            foreach (string ignore in IgnoreExpressions)
-            {
-                if (!String.IsNullOrEmpty(ignore))
-                {
+            foreach (string ignore in IgnoreExpressions) {
+                if (!String.IsNullOrEmpty(ignore)) {
                     Configuration.Instance.IgnoreExpressions.Add(new Regex(ignore, RegexOptions.IgnoreCase));
                 }
             }
 
             Configuration.Instance.IncludeExpressions.Clear();
-            foreach (string include in IncludeExpressions)
-            {
-                if (!String.IsNullOrEmpty(include))
-                {
+            foreach (string include in IncludeExpressions) {
+                if (!String.IsNullOrEmpty(include)) {
                     Configuration.Instance.IncludeExpressions.Add(new Regex(include, RegexOptions.IgnoreCase));
                 }
             }
@@ -439,8 +352,7 @@ namespace Generator.CSLA.CodeTemplates
             return true;
         }
 
-        private void Refresh()
-        {
+        private void Refresh() {
             DynamicRoot = DynamicRoot;
             EditableChild = EditableChild;
             EditableRoot = EditableRoot;

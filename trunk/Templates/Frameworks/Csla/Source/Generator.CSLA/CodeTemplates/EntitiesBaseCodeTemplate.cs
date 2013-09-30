@@ -105,7 +105,7 @@ namespace Generator.CSLA.CodeTemplates {
         [Category("4. Data Project")]
         [Description("Isolation level to use in the generated procedures.")]
         [DefaultValue(0)] //ReadCommitted
-            public TransactionIsolationLevelEnum IsolationLevel { get; set; }
+        public TransactionIsolationLevelEnum IsolationLevel { get; set; }
 
         #endregion
 
@@ -155,8 +155,7 @@ namespace Generator.CSLA.CodeTemplates {
 
         public virtual void OnDataAccessImplementationChanged() {}
 
-        public string RenderSharedCompilerDirectiveDirective(bool negate = false)
-        {
+        public string RenderSharedCompilerDirectiveDirective(bool negate = false) {
             var op = Configuration.Instance.TargetLanguage == Language.VB ? "OrElse" : "||";
 
             string negateOperator = String.Empty;

@@ -4,9 +4,54 @@
         <name>Generator.CSLA</name>
     </assembly>
     <members>
+        <member name="T:Generator.CSLA.CodeTemplates.CSLABaseTemplate">
+            <summary>
+            The base class for all of the CSLA templates.
+            </summary>
+        </member>
+        <member name="M:Generator.CSLA.CodeTemplates.CSLABaseTemplate.RefreshDataSource">
+            <summary>
+            Refreshes the  data source. This method is called any time a configuration property is changed.
+            </summary>
+        </member>
+        <member name="P:Generator.CSLA.CodeTemplates.CSLABaseTemplate.CleanExpressions">
+            <summary>
+            List of regular expressions to clean table, view and column names.
+            </summary>
+        </member>
+        <member name="P:Generator.CSLA.CodeTemplates.CSLABaseTemplate.IgnoreExpressions">
+            <summary>
+            List of regular expressions to ignore tables when generating.
+            </summary>
+        </member>
+        <member name="P:Generator.CSLA.CodeTemplates.CSLABaseTemplate.IncludeExpressions">
+            <summary>
+            List of regular expressions to include tables and views when generating mapping.
+            </summary>
+        </member>
+        <member name="P:Generator.CSLA.CodeTemplates.CSLABaseTemplate.NamingConventions">
+            <summary>
+            Controls the naming conventions.
+            </summary>
+        </member>
+        <member name="P:Generator.CSLA.CodeTemplates.CSLABaseTemplate.IncludeAssociations">
+            <summary>
+            Includes Entity associations if set to true.
+            </summary>
+        </member>
         <member name="T:Generator.CSLA.CodeTemplates.SchemaExplorerEntitiesCodeTemplate">
             <summary>
             
+            </summary>
+        </member>
+        <member name="P:Generator.CSLA.CodeTemplates.SchemaExplorerEntitiesCodeTemplate.IncludeViews">
+            <summary>
+            Include views that have an extended property declaring it's business type
+            </summary>
+        </member>
+        <member name="P:Generator.CSLA.CodeTemplates.SchemaExplorerEntitiesCodeTemplate.IncludeFunctions">
+            <summary>
+            Include stored procedures that have an extended property declaring it's business type
             </summary>
         </member>
         <member name="T:Generator.CSLA.EntitiesCodeTemplate">

@@ -18,7 +18,7 @@ namespace CodeSmith.SchemaHelper
         public static string BuildUpdateChildrenParametersVariables(this IEntity entity, bool includeConnectionParameter)
         {
             var parameters = "Me";
-            var thisKey = String.Format(", {0}", Util.NamingConventions.VariableName(entity.Name));
+            var thisKey = String.Format(", {0}", Util.NamingConventions.VariableName(entity.Name, preserveNaming: Configuration.Instance.NamingProperty.EntityNaming == EntityNaming.Preserve));
             bool isFirst = true;
 
             // AssociatedOneToMany, contains properties that need to be passed into child entity update/insert.
@@ -31,7 +31,7 @@ namespace CodeSmith.SchemaHelper
                 foreach (var childAssociation in GetRelatedEntity(association.Properties[0]).Associations.Where(a => a.AssociationType == AssociationType.OneToMany))
                 {
                     // see if we already passed in the param.
-                    var childParameter = String.Format(", {0}", Util.NamingConventions.VariableName(childAssociation.Properties[0].Property.Name));
+                    var childParameter = String.Format(", {0}", Util.NamingConventions.VariableName(childAssociation.Properties[0].Property.Name, preserveNaming: Configuration.Instance.NamingProperty.PropertyNaming == PropertyNaming.Preserve));
                     if (!(isFirst && thisKey.Equals(childParameter)))
                     {
                         // look it up or append null..
