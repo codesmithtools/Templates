@@ -20,12 +20,12 @@
 <%  foreach(IProperty property in Entity.GetProperties(PropertyType.NoConcurrency)){ 
 if (UseMemberVariables){ %>
         private static readonly PropertyInfo<<%= property.SystemType %>> <%= property.PrivateMemberVariableName %>Property = RegisterProperty<<%= property.SystemType %>>(p => p.<%= property.Name %>, "<%= property.FriendlyName() %>"<% if(property.IsNullable) { %>, (<%= property.SystemType %>)null<% } %><%if (IsCSLA43 || IsCSLA45) { %>, RelationshipTypes.PrivateField<% }%>);
-        private <%= property.SystemType %> <%= property.PrivateMemberVariableName %> = <%= property.PrivateMemberVariableName %>Property.DefaultValue;<%= property.BuildDataObjectField(IncludeSilverlightSupport, IncludeWinRTSupport) %>
+        private <%= property.SystemType %> <%= property.PrivateMemberVariableName %> = <%= property.PrivateMemberVariableName %>Property.DefaultValue;
 <% if(property.HasDescription) { %>
+
         /// <summary>
         /// <%= property.Description %>
-        /// </summary>
-<% } %>
+        /// </summary><% } %><%= property.BuildDataObjectField(IncludeSilverlightSupport, IncludeWinRTSupport) %>
         public <%= property.SystemType %> <%= property.Name %>
         {
             get { return GetProperty(<%= property.PrivateMemberVariableName %>Property, <%= property.PrivateMemberVariableName %>); }
@@ -45,12 +45,12 @@ if (UseMemberVariables){ %>
         }
 
 <% } } else { %>
-        private static readonly PropertyInfo<<%= property.SystemType %>> <%= property.PrivateMemberVariableName %>Property = RegisterProperty<<%= property.SystemType %>>(p => p.<%= property.Name %>, "<%= property.FriendlyName() %>"<% if(property.IsNullable) { %>, (<%= property.SystemType %>)null<% } %>);<%= property.BuildDataObjectField(IncludeSilverlightSupport, IncludeWinRTSupport) %>
+        private static readonly PropertyInfo<<%= property.SystemType %>> <%= property.PrivateMemberVariableName %>Property = RegisterProperty<<%= property.SystemType %>>(p => p.<%= property.Name %>, "<%= property.FriendlyName() %>"<% if(property.IsNullable) { %>, (<%= property.SystemType %>)null<% } %>);
 <% if(property.HasDescription) { %>
+
         /// <summary>
         /// <%= property.Description %>
-        /// </summary>
-<% } %>
+        /// </summary><% } %><%= property.BuildDataObjectField(IncludeSilverlightSupport, IncludeWinRTSupport) %>
         public <%= property.SystemType %> <%= property.Name %>
         {
             get { return GetProperty(<%= property.PrivateMemberVariableName %>Property); }
