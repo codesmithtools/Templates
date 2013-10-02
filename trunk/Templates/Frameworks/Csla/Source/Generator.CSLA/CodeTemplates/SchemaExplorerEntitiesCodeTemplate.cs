@@ -310,20 +310,11 @@ namespace Generator.CSLA.CodeTemplates {
             if (SourceDatabase == null)
                 return false;
 
-            if (CleanExpressions.Count == 0)
-                CleanExpressions.Add("^(sp|tbl|udf|vw)_");
-
             Configuration.Instance.CleanExpressions.Clear();
             foreach (string clean in CleanExpressions) {
                 if (!String.IsNullOrEmpty(clean)) {
                     Configuration.Instance.CleanExpressions.Add(new Regex(clean, RegexOptions.IgnoreCase));
                 }
-            }
-
-            if (IgnoreExpressions.Count == 0) {
-                IgnoreExpressions.Add("sysdiagrams$");
-                IgnoreExpressions.Add("^dbo.aspnet");
-                IgnoreExpressions.Add("^dbo.vw_aspnet");
             }
 
             Configuration.Instance.IgnoreExpressions.Clear();
