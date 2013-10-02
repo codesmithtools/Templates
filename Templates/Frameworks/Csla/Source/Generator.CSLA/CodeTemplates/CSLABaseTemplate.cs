@@ -57,13 +57,13 @@ namespace Generator.CSLA.CodeTemplates {
                 return _cleanExpressions;
             }
             set {
-                _cleanExpressions = null;
                 Configuration.Instance.CleanExpressions = new List<Regex>();
                 foreach (string clean in (value ?? new StringCollection())) {
                     if (!String.IsNullOrEmpty(clean))
                         Configuration.Instance.CleanExpressions.Add(new Regex(clean, RegexOptions.IgnoreCase));
                 }
 
+                _cleanExpressions = null;
                 RefreshDataSource();
             }
         }
@@ -83,13 +83,13 @@ namespace Generator.CSLA.CodeTemplates {
                 return _ignoreExpressions;
             }
             set {
-                _ignoreExpressions = null;
                 Configuration.Instance.IgnoreExpressions = new List<Regex>();
                 foreach (string ignore in (value ?? new StringCollection())) {
                     if (!String.IsNullOrEmpty(ignore))
                         Configuration.Instance.IgnoreExpressions.Add(new Regex(ignore, RegexOptions.IgnoreCase));
                 }
 
+                _ignoreExpressions = null;
                 RefreshDataSource();
             }
         }
@@ -108,13 +108,13 @@ namespace Generator.CSLA.CodeTemplates {
                 return _includeExpressions;
             }
             set {
-                _includeExpressions = null;
                 Configuration.Instance.IncludeExpressions = new List<Regex>();
                 foreach (string include in (value ?? new StringCollection())) {
                     if (!String.IsNullOrEmpty(include))
                         Configuration.Instance.IncludeExpressions.Add(new Regex(include, RegexOptions.IgnoreCase));
                 }
 
+                _includeExpressions = null;
                 RefreshDataSource();
             }
         }
@@ -241,7 +241,7 @@ namespace Generator.CSLA.CodeTemplates {
             "ReadOnlyList",
             "ReadOnlyChildList",
             "NameValueList",
-            "SourceDatabase",
+            //"SourceDatabase",
             "SourceTable",
             "SourceView",
             "SourceCommand",

@@ -15,6 +15,7 @@ using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
+using CodeSmith.CustomProperties;
 using Generator.CSLA.CodeTemplates;
 using SchemaExplorer;
 
@@ -23,6 +24,11 @@ namespace Generator.CSLA
     public class QuickStartCodeTemplate : EntitiesBaseCodeTemplate
     {
         private DatabaseSchema _database;
+
+        public QuickStartCodeTemplate() {
+            IgnoreExpressions = new StringCollection(new[] { "sysdiagrams$", "^dbo.aspnet", "^dbo.vw_aspnet" });
+            CleanExpressions = new StringCollection(new[] { "^(sp|tbl|udf|vw)_" });
+        }
 
         [Category("1. DataSource")]
         [Description("Source Database")]
