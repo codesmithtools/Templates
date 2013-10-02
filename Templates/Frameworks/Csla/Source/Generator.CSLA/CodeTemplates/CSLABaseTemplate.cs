@@ -16,6 +16,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
 using CodeSmith.CustomProperties;
 using CodeSmith.Engine;
@@ -27,9 +28,9 @@ namespace Generator.CSLA.CodeTemplates {
     /// The base class for all of the CSLA templates.
     /// </summary>
     public class CSLABaseTemplate : CodeTemplate {
-        private StringCollection _ignoreExpressions = new StringCollection();
-        private StringCollection _includeExpressions = new StringCollection();
-        private StringCollection _cleanExpressions = new StringCollection();
+        private StringCollection _ignoreExpressions;
+        private StringCollection _includeExpressions;
+        private StringCollection _cleanExpressions;
 
         public CSLABaseTemplate() {
             ResolveTargetLanguage();
@@ -50,18 +51,17 @@ namespace Generator.CSLA.CodeTemplates {
         [DefaultValue("^(sp|tbl|udf|vw)_")]
         public StringCollection CleanExpressions {
             get {
+                if(_cleanExpressions == null)
+                    _cleanExpressions = new StringCollection(Configuration.Instance.CleanExpressions.Select(r => r.ToString()).ToArray());
+
                 return _cleanExpressions;
             }
             set {
-                if (value == null || String.Equals(_cleanExpressions.ToString(), value.ToString()))
-                    return;
-
+                _cleanExpressions = null;
                 Configuration.Instance.CleanExpressions = new List<Regex>();
-                _cleanExpressions = value ?? new StringCollection();
-                foreach (string clean in _cleanExpressions) {
-                    if (!String.IsNullOrEmpty(clean)) {
+                foreach (string clean in (value ?? new StringCollection())) {
+                    if (!String.IsNullOrEmpty(clean))
                         Configuration.Instance.CleanExpressions.Add(new Regex(clean, RegexOptions.IgnoreCase));
-                    }
                 }
 
                 RefreshDataSource();
@@ -74,22 +74,20 @@ namespace Generator.CSLA.CodeTemplates {
         [Category("0. Naming")]
         [Description("List of regular expressions to ignore tables when generating.")]
         [Optional]
-        [DefaultValue("sysdiagrams$")]
+        [DefaultValue("sysdiagrams$, ^dbo.aspnet, ^dbo.vw_aspnet")]
         public StringCollection IgnoreExpressions {
             get {
+                if (_ignoreExpressions == null)
+                    _ignoreExpressions = new StringCollection(Configuration.Instance.IgnoreExpressions.Select(r => r.ToString()).ToArray());
+
                 return _ignoreExpressions;
             }
             set {
-                if (value == null || String.Equals(_ignoreExpressions.ToString(), value.ToString()))
-                    return;
-
+                _ignoreExpressions = null;
                 Configuration.Instance.IgnoreExpressions = new List<Regex>();
-                _ignoreExpressions = value ?? new StringCollection();
-
-                foreach (string ignore in _ignoreExpressions) {
-                    if (!String.IsNullOrEmpty(ignore)) {
+                foreach (string ignore in (value ?? new StringCollection())) {
+                    if (!String.IsNullOrEmpty(ignore))
                         Configuration.Instance.IgnoreExpressions.Add(new Regex(ignore, RegexOptions.IgnoreCase));
-                    }
                 }
 
                 RefreshDataSource();
@@ -103,20 +101,18 @@ namespace Generator.CSLA.CodeTemplates {
         [Description("List of regular expressions to include tables and views when generating mapping.")]
         [Optional]
         public StringCollection IncludeExpressions {
-            get {
+            get { 
+                if (_includeExpressions == null)
+                    _includeExpressions = new StringCollection(Configuration.Instance.IncludeExpressions.Select(r => r.ToString()).ToArray());
+
                 return _includeExpressions;
             }
             set {
-                if (value == null || String.Equals(_includeExpressions.ToString(), value.ToString()))
-                    return;
-
+                _includeExpressions = null;
                 Configuration.Instance.IncludeExpressions = new List<Regex>();
-                _includeExpressions = value ?? new StringCollection();
-
-                foreach (string include in _includeExpressions) {
-                    if (!String.IsNullOrEmpty(include)) {
+                foreach (string include in (value ?? new StringCollection())) {
+                    if (!String.IsNullOrEmpty(include))
                         Configuration.Instance.IncludeExpressions.Add(new Regex(include, RegexOptions.IgnoreCase));
-                    }
                 }
 
                 RefreshDataSource();
