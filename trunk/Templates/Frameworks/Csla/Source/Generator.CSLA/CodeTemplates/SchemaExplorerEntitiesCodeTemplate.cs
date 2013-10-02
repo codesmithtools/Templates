@@ -16,11 +16,7 @@ namespace Generator.CSLA.CodeTemplates {
         private List<IEntity> _entities = new List<IEntity>();
         private DatabaseSchema _database;
 
-        public SchemaExplorerEntitiesCodeTemplate() {
-            CleanExpressions = new StringCollection();
-            IgnoreExpressions = new StringCollection();
-            IncludeExpressions = new StringCollection();
-        }
+        public SchemaExplorerEntitiesCodeTemplate() {}
 
         [Category("1. DataSource")]
         [Description("Source Database")]
@@ -327,6 +323,7 @@ namespace Generator.CSLA.CodeTemplates {
             if (IgnoreExpressions.Count == 0) {
                 IgnoreExpressions.Add("sysdiagrams$");
                 IgnoreExpressions.Add("^dbo.aspnet");
+                IgnoreExpressions.Add("^dbo.vw_aspnet");
             }
 
             Configuration.Instance.IgnoreExpressions.Clear();
