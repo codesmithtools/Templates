@@ -195,7 +195,7 @@ namespace <%= BaseNamespace %>
                     {
                         value = props[i].GetValue(this, null);
                     }
-                    catch (Exception)
+                    catch (System.Exception)
                     {
                         value = "<exception>";
                     }
