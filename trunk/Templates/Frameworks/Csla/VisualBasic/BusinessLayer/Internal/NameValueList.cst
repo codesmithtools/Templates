@@ -68,7 +68,7 @@ Namespace <%= BusinessProjectName %>
                                 Me.Add(New NameValuePair(reader.<%= properties(0).GetReaderMethod() %>("<%= properties(0).KeyName %>"), reader.<%= properties(1).GetReaderMethod() %>("<%= properties(1).KeyName %>")))
                             Loop While reader.Read()
                         Else
-                            Throw New Exception(String.Format("The record was not found In '<%= Entity.SchemaName %>.<%= Entity.EntityKeyName %>' using the following criteria: {0}.", criteria))
+                            Throw New System.Exception(String.Format("The record was not found In '<%= Entity.SchemaName %>.<%= Entity.EntityKeyName %>' using the following criteria: {0}.", criteria))
                         End If
                     End Using
                 End Using
@@ -99,7 +99,7 @@ Namespace <%= BusinessProjectName %>
                                 Me.Add(New NameValuePair(reader.<%= properties(0).GetReaderMethod() %>("<%= properties(0).KeyName %>"), reader.<%= properties(1).GetReaderMethod() %>("<%= properties(1).KeyName %>")))
                             Loop While reader.Read()
                         Else
-                            Throw New Exception(String.Format("The record was not found In '<%= Entity.SchemaName %>.<%= Entity.EntityKeyName %>' using the following criteria: {0}.", criteria))
+                            Throw New System.Exception(String.Format("The record was not found In '<%= Entity.SchemaName %>.<%= Entity.EntityKeyName %>' using the following criteria: {0}.", criteria))
                         End If
                     End Using
                 End Using
