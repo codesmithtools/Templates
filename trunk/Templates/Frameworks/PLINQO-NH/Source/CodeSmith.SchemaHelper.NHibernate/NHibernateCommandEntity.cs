@@ -4,10 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Xml.Linq;
 
-namespace CodeSmith.SchemaHelper.NHibernate
-{
-    public class NHibernateCommandEntity : EntityBase<XDocument>
-    {
+namespace CodeSmith.SchemaHelper.NHibernate {
+    public class NHibernateCommandEntity : EntityBase<XDocument> {
         public const string ModelSuffix = "Result";
 
         internal readonly string XmlNamespace;
@@ -16,26 +14,18 @@ namespace CodeSmith.SchemaHelper.NHibernate
 
         public string AssociatedEntityName { get; private set; }
 
-        public NHibernateCommandEntity(XDocument doc, string fileName)
-            : base(doc)
-        {
+        public NHibernateCommandEntity(XDocument doc, string fileName) : base(doc) {
             // ReSharper disable PossibleNullReferenceException
             XmlNamespace = EntitySource.Root.Name.NamespaceName;
 
-            Namespace = EntitySource.Root
-                .Attribute("namespace")
-                .Value; 
+            Namespace = EntitySource.Root.Attribute("namespace").Value;
 
-            Name = EntitySource.Root
-                .Descendant("sql-query", XmlNamespace)
-                .Attribute("name")
-                .Value;
+            Name = EntitySource.Root.Descendant("sql-query", XmlNamespace).Attribute("name").Value;
 
             EntityKeyName = fileName.Replace(NHibernateUtilities.MapExtension, String.Empty);
 
             var association = EntitySource.Root.Descendant("return", XmlNamespace);
-            if (association != null)
-            {
+            if (association != null) {
                 IsAssociated = true;
                 AssociatedEntityName = association.Attribute("class").Value;
             }
@@ -43,13 +33,11 @@ namespace CodeSmith.SchemaHelper.NHibernate
             // ReSharper restore PossibleNullReferenceException
         }
 
-        protected override void LoadSearchCriteria()
-        {
+        protected override void LoadSearchCriteria() {
             var searchCriteria = new SearchCriteria(SearchCriteriaType.Command);
 
             var queryParams = EntitySource.Root.Descendants("query-param", XmlNamespace);
-            foreach (var queryParam in queryParams)
-            {
+            foreach (var queryParam in queryParams) {
                 var property = new NHibernateCommandProperty(queryParam, this);
                 searchCriteria.Properties.Add(property);
             }
@@ -57,40 +45,28 @@ namespace CodeSmith.SchemaHelper.NHibernate
             SearchCriteria.Add(searchCriteria);
         }
 
-        public override void Initialize()
-        {
+        public override void Initialize() {
             LoadSearchCriteria();
             LoadProperties();
         }
 
-        protected override void LoadAssociations()
-        {
-        }
+        protected override void LoadAssociations() {}
 
-        protected override void LoadExtendedProperties()
-        {
-        }
+        protected override void LoadExtendedProperties() {}
 
-        protected override void LoadKeys()
-        {
-        }
+        protected override void LoadKeys() {}
 
-        protected override void LoadProperties()
-        {
+        protected override void LoadProperties() {
             var queryParams = EntitySource.Root.Descendants("return-scalar", XmlNamespace);
-            foreach (var queryParam in queryParams)
-            {
+            foreach (var queryParam in queryParams) {
                 var property = new NHibernateCommandProperty(queryParam, this);
                 if (!PropertyMap.ContainsKey(property.Name))
                     PropertyMap.Add(property.Name, property);
             }
         }
 
-        public string GetModelName()
-        {
-            return IsAssociated
-                ? AssociatedEntityName
-                : (EntityKeyName + ModelSuffix);
+        public string GetModelName() {
+            return IsAssociated ? AssociatedEntityName : (EntityKeyName + ModelSuffix);
         }
     }
 }
