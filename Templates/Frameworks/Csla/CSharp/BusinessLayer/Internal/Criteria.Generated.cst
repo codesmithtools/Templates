@@ -55,7 +55,7 @@ namespace <%= BusinessProjectName %>
         public <%= BusinessClassName %>(<%= Entity.GetProperties(PropertyType.Key).BuildParametersVariables() %>)<% if(IsCSLA38) { %> : base(typeof(<%= BusinessProjectName %>.<%= ResolveTargetClassName(ChildBusinessClassName, "Info", IsReadOnlyBusinessObject("Info")) %><%= Entity.GenericProperty %>))<% } %>
         {
 <%  foreach(var property in Entity.GetProperties(PropertyType.Key)) { %>
-            <%= property.Name %> = <%= property.VariableName %>;
+            <% if(String.Equals(property.Name, property.VariableName, StringComparison.OrdinalIgnoreCase)) { %>this.<% } %><%= property.Name %> = <%= property.VariableName %>;
 <% } %>
         }
 <% } %>
