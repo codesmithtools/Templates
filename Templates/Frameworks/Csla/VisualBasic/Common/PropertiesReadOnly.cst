@@ -60,7 +60,7 @@
         ' For now, don't generate properties based on tables generated as generics.
         If(association.GenericProperty = String.Empty) Then
     Dim associationClassName As String = association.TypeName
-    If(IsReadOnlyBusinessObject( association, "Info")) Then
+    If(IsReadOnlyBusinessObject(association, "Info")) Then
         associationClassName += "Info"
     End If %>
         '<%= association.AssociationType.ToString() %>
@@ -78,7 +78,7 @@
                 If Not cancel Then
 <% If UseLazyLoading Then %>
                     If Not (FieldManager.FieldExists(<%= association.PrivateMemberVariableName %>Property))
-                        Dim criteria As New <%= BusinessProjectName %>.<%= association.Name %>Criteria<%= association.GenericProperty %>()
+                        Dim criteria As New <%= BusinessProjectName %>.<%= association.TypeName %>Criteria<%= association.GenericProperty %>()
                         <%= association.BuildObjectInitializer(true) %>
 <% If(IncludeSilverlightSupport) Then %>
 #If SILVERLIGHT Then
