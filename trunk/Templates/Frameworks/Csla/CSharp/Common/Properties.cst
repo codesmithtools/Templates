@@ -74,7 +74,7 @@ if (UseMemberVariables){ %>
     // For now, don't generate properties based on tables generated as generics.
     if(association.GenericProperty == String.Empty) {
     string associationClassName = association.TypeName;
-    if(!BusinessObjectExists(association) && IsReadOnlyBusinessObject( association, "Info")) {
+    if(!BusinessObjectExists(association) && IsReadOnlyBusinessObject(association, "Info")) {
         associationClassName += "Info";
     } %>
         // <%= association.AssociationType.ToString() %>
