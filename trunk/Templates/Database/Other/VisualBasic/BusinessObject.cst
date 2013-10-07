@@ -1,4 +1,4 @@
-<%-- 
+﻿<%-- 
 Name: BusinessObject.cst
 Author: Tom DuPont
 Description: Generates a very simple business object.
@@ -240,7 +240,7 @@ Public Function GetPrimaryKeyType(ByVal table As TableSchema) As String
 End Function
 
 Public Overloads Overrides Function GetFileName() As String
-	Return Me.GetClassName(Me.SourceTable) + ".cs"
+	Return Me.GetClassName(Me.SourceTable) + ".vb"
 End Function
 
 </script>
