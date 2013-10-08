@@ -29,7 +29,6 @@ RegisterReferences();
 public void Generate() {
     CodeSmith.SchemaHelper.Configuration.Instance.NamingProperty.PropertyNaming = CodeSmith.SchemaHelper.PropertyNaming.NormalizeRemovePrefix;
     CodeSmith.SchemaHelper.Configuration.Instance.NamingProperty.AssociationNaming = CodeSmith.SchemaHelper.AssociationNaming.List;
-    CodeSmith.SchemaHelper.Configuration.Instance.NamingProperty.AssociationTypeNameSuffix = CodeSmith.SchemaHelper.AssociationNaming.List;
 
     if(String.IsNullOrEmpty(EdmxFile) || !System.IO.File.Exists(EdmxFile))
     {

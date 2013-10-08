@@ -16,21 +16,18 @@ using System.Linq;
 using LinqToEdmx.Model.Conceptual;
 using Generator.Microsoft.Frameworks;
 
-namespace CodeSmith.SchemaHelper
-{
+namespace CodeSmith.SchemaHelper {
     /// <summary>
     /// 
     /// </summary>
     [System.Diagnostics.DebuggerDisplay("ComplexEntity = {Name}, Key = {EntityKeyName}")]
-    public sealed class ComplexEntity : EntityBase<ComplexType>
-    {
+    public sealed class ComplexEntity : EntityBase<ComplexType> {
         #region Constructor(s)
 
         /// <summary>
         /// Constructor that passes in the entity that this class will represent.
         /// </summary>
-        public ComplexEntity(ComplexType entity, string @namespace) : base(entity, @namespace)
-        {
+        public ComplexEntity(ComplexType entity, string @namespace) : base(entity, @namespace) {
             EntityKeyName = EntitySource.Name;
             Name = EntitySource.Name;
             TypeAccess = !String.IsNullOrEmpty(EntitySource.TypeAccess) ? EntitySource.TypeAccess : AccessibilityConstants.Public;
@@ -50,19 +47,14 @@ namespace CodeSmith.SchemaHelper
         /// <summary>
         /// 
         /// </summary>
-        public override void Initialize()
-        {
-        }
-        
+        public override void Initialize() {}
+
         /// <summary>
         /// Override to populate the properties from the implemented entity.
         /// </summary>
-        protected override void LoadProperties()
-        {
-            foreach (var prop in EntitySource.Properties)
-            {
-                if (!Configuration.Instance.ExcludeRegexIsMatch(prop.Name) && !PropertyMap.ContainsKey(prop.Name))
-                {
+        protected override void LoadProperties() {
+            foreach (var prop in EntitySource.Properties) {
+                if (!Configuration.Instance.ExcludeRegexIsMatch(prop.Name) && !PropertyMap.ContainsKey(prop.Name)) {
                     var property = new ComplexProperty(prop, this);
 
                     PropertyMap.Add(property.Name, property);
@@ -76,36 +68,27 @@ namespace CodeSmith.SchemaHelper
         /// <summary>
         /// Override to populate the associations from the implemented entity.
         /// </summary>
-        protected override void LoadAssociations()
-        {
-        }
+        protected override void LoadAssociations() {}
 
         /// <summary>
         /// Override to populate the keys from the implemented entity.
         /// </summary>
-        protected override void LoadKeys()
-        {
-        }
+        protected override void LoadKeys() {}
 
         /// <summary>
         /// Load the extended properties for the entity.
         /// </summary>
-        protected override void LoadExtendedProperties()
-        {
-            if(EntitySource.GetAttributeValue(EdmxConstants.IsFunctionEntityCustomAttribute) != null)
+        protected override void LoadExtendedProperties() {
+            if (EntitySource.GetAttributeValue(EdmxConstants.IsFunctionEntityCustomAttribute) != null)
                 ExtendedProperties.Add(EdmxConstants.IsFunctionEntityCustomAttribute, true);
         }
 
-        protected override void PopulateInheritanceProperties()
-        {
-        }
+        protected override void PopulateInheritanceProperties() {}
 
         /// <summary>
         /// Load the Search Criteria for the entity
         /// </summary>
-        protected override void LoadSearchCriteria()
-        {
-        }
+        protected override void LoadSearchCriteria() {}
 
         #endregion
     }

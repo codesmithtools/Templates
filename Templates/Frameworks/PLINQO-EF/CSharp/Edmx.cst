@@ -34,7 +34,6 @@
     {
         CodeSmith.SchemaHelper.Configuration.Instance.NamingProperty.PropertyNaming = CodeSmith.SchemaHelper.PropertyNaming.NormalizeRemovePrefix;
         CodeSmith.SchemaHelper.Configuration.Instance.NamingProperty.AssociationNaming = CodeSmith.SchemaHelper.AssociationNaming.List;
-        CodeSmith.SchemaHelper.Configuration.Instance.NamingProperty.AssociationTypeNameSuffix = CodeSmith.SchemaHelper.AssociationNaming.List;
 
         Stopwatch watch = Stopwatch.StartNew();
         string filePath = Path.GetFullPath(EdmxFile);
