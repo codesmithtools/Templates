@@ -1,63 +1,60 @@
 ﻿<%@ CodeTemplate Language="C#" TargetLanguage="Text" %>
-<%@ Property Name="SolutionItems" Type="List<SolutionItem>" Optional="False" Category="1.Project" Description="" %>
-<%@ Property Name="Language" Type="Language" Default="CSharp" Optional="False" Category="1.Project" Description="Language the project will be in." %>
-<%@ Property Name="Framework" Type="FrameworkVersion" Default="v40" Optional="False" Category="1.Project"  Description="The .net Framework version." %>
-<%@ Property Name="Location" Type="System.String" Default="" Optional="True" Category="1.Project" Description="This is the path to the Solution location." %>
+<%@ Property Name="SolutionItems" Type="List<Generator.QuickStart.SolutionItem>" Optional="False" Category="1.Project" Description="" %>
+<%@ Property Name="Language" Type="CodeSmith.SchemaHelper.Language" Default="CSharp" Optional="False" Category="1.Project" Description="Language the project will be in." %>
+<%@ Property Name="FrameworkVersion" Type="CodeSmith.SchemaHelper.FrameworkVersion" Optional="False" Category="2. Solution" Description="" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper" %>
 <%@ Assembly Name="Generator.QuickStart" %>
 <%@ Import Namespace="CodeSmith.SchemaHelper" %>
-<%@ Import Namespace="Generator.QuickStart" %>
 <%@ Import Namespace="System.Collections.Generic" %>
 
 
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
-<% foreach(SolutionItem solutionItem in SolutionItems) { 
-	if(solutionItem.Website) { %>
+Microsoft Visual Studio Solution File, Format Version <% if(FrameworkVersion == FrameworkVersion.v45) { %>12<% } else { %>11<% } %>.00
+# Visual Studio <% if(FrameworkVersion == FrameworkVersion.v45) { %>2012<% } else { %>2010<% } %>
+<% foreach(var solutionItem in SolutionItems) { 
+    if(solutionItem.Website) { %>
 Project("{<%= solutionItem.LanguageGuidString %>}") = "<%= solutionItem.Name %>", "<%= solutionItem.Name %>\", "{<%= solutionItem.GuidString %>}"
-	ProjectSection(WebsiteProperties) = preProject
-		TargetFramework = <%= Framework == FrameworkVersion.v35 ? "3.5" : "4.0" %>
-		<% foreach(SolutionItem item in solutionItem.ProjectReferences) { %>
-		ProjectReferences = "{<%=item.Guid.ToString()%>}|<%=item.Name%>.dll;"
-		<% } %>
-		Debug.AspNetCompiler.VirtualPath = "/<%= solutionItem.Name %>"
-		Debug.AspNetCompiler.PhysicalPath = "<%= solutionItem.Name %>\"
-		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\<%= solutionItem.Name %>\"
-		Debug.AspNetCompiler.Updateable = "true"
-		Debug.AspNetCompiler.ForceOverwrite = "true"
-		Debug.AspNetCompiler.FixedNames = "false"
-		Debug.AspNetCompiler.Debug = "True"
-		Release.AspNetCompiler.VirtualPath = "/<%= solutionItem.Name %>"
-		Release.AspNetCompiler.PhysicalPath = "<%= solutionItem.Name %>\"
-		Release.AspNetCompiler.TargetPath = "PrecompiledWeb\<%= solutionItem.Name %>\"
-		Release.AspNetCompiler.Updateable = "true"
-		Release.AspNetCompiler.ForceOverwrite = "true"
-		Release.AspNetCompiler.FixedNames = "false"
-		Release.AspNetCompiler.Debug = "False"
-		VWDPort = "33693"
-		DefaultWebSiteLanguage = <%= solutionItem.Language == Language.CSharp ? "Visual C#" : "Visual Basic" %>
-	EndProjectSection
-	<% } 
-	else {%>
+    ProjectSection(WebsiteProperties) = preProject
+        TargetFramework = "<% if(FrameworkVersion == FrameworkVersion.v45) { %>4.5<% } else if(FrameworkVersion == FrameworkVersion.v40) { %>4.0<% } else { %>3.5<% } %>"
+        <% foreach(var item in solutionItem.ProjectReferences) { %>
+        ProjectReferences = "{<%=item.Guid.ToString()%>}|<%=item.Name%>.dll;"
+        <% } %>
+        Debug.AspNetCompiler.VirtualPath = "/<%= solutionItem.Name %>"
+        Debug.AspNetCompiler.PhysicalPath = "<%= solutionItem.Name %>\"
+        Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\<%= solutionItem.Name %>\"
+        Debug.AspNetCompiler.Updateable = "true"
+        Debug.AspNetCompiler.ForceOverwrite = "true"
+        Debug.AspNetCompiler.FixedNames = "false"
+        Debug.AspNetCompiler.Debug = "True"
+        Release.AspNetCompiler.VirtualPath = "/<%= solutionItem.Name %>"
+        Release.AspNetCompiler.PhysicalPath = "<%= solutionItem.Name %>\"
+        Release.AspNetCompiler.TargetPath = "PrecompiledWeb\<%= solutionItem.Name %>\"
+        Release.AspNetCompiler.Updateable = "true"
+        Release.AspNetCompiler.ForceOverwrite = "true"
+        Release.AspNetCompiler.FixedNames = "false"
+        Release.AspNetCompiler.Debug = "False"
+        VWDPort = "33693"
+        DefaultWebSiteLanguage = <%= solutionItem.Language == Language.CSharp ? "Visual C#" : "Visual Basic" %> 
+    EndProjectSection
+    <% } 
+    else {%>
 Project("{<%= solutionItem.LanguageGuidString %>}") = "<%= solutionItem.Name %>", "<%= solutionItem.Path %>", "{<%= solutionItem.GuidString %>}"
-	<% } %>
+    <% } %>
 EndProject
 <% } %>
 Global
-	GlobalSection(SolutionConfigurationPlatforms) = preSolution
-		Debug|Any CPU = Debug|Any CPU
-		Release|Any CPU = Release|Any CPU
-	EndGlobalSection
-	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-<% foreach(SolutionItem solutionItem in SolutionItems) { %>
-		{<%= solutionItem.GuidString %>}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{<%= solutionItem.GuidString %>}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{<%= solutionItem.GuidString %>}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{<%= solutionItem.GuidString %>}.Release|Any CPU.Build.0 = Release|Any CPU
+    GlobalSection(SolutionConfigurationPlatforms) = preSolution
+        Debug|Any CPU = Debug|Any CPU
+        Release|Any CPU = Release|Any CPU
+    EndGlobalSection
+    GlobalSection(ProjectConfigurationPlatforms) = postSolution
+<% foreach(var solutionItem in SolutionItems) { %>
+        {<%= solutionItem.GuidString %>}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+        {<%= solutionItem.GuidString %>}.Debug|Any CPU.Build.0 = Debug|Any CPU
+        {<%= solutionItem.GuidString %>}.Release|Any CPU.ActiveCfg = Release|Any CPU
+        {<%= solutionItem.GuidString %>}.Release|Any CPU.Build.0 = Release|Any CPU
 <% } %>
-	EndGlobalSection
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
-	EndGlobalSection
+    EndGlobalSection
+    GlobalSection(SolutionProperties) = preSolution
+        HideSolutionNode = FALSE
+    EndGlobalSection
 EndGlobal
-

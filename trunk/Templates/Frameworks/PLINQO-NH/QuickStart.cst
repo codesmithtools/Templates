@@ -6,6 +6,7 @@ Description: Used to Quick Start Visual Studio Projects
 <%@ CodeTemplate Language="C#" TargetLanguage="Text" Debug="True" Description="PLINQO for NHibernate" %>
 <%@ Property Name="Location" Type="System.String" Default="" Optional="False" Category="2.Solution" Description="This is the path to the Solution location." Editor="System.Windows.Forms.Design.FolderNameEditor, System.Design" %>
 <%@ Property Name="SolutionName" Type="System.String" Default="" Optional="False" Category="2.Solution" Description="Name of the project to be generated." %>
+<%@ Property Name="Framework" Type="CodeSmith.SchemaHelper.FrameworkVersion" Default="v45" Optional="False" Category="2.Solution" Description="The .NET Framework version." %>
 <%@ Property Name="LaunchVisualStudio" Type="System.Boolean" Default="True" Optional="False" Category="2.Solution" Description="Launch Visual Studio after generation." %>
 <%@ Property Name="DataProjectName" Type="System.String" Default="" Optional="False" Category="3.Data Project" Description="Name Space for the Data Project." %>
 <%@ Property Name="DataContextName" Type="System.String"  Default="" Optional="True" Category="3.Data Project" Description="Name Space for the Data Project." %>
@@ -27,6 +28,11 @@ The <%= SolutionName %> Solution has been created at <%= Location %>.
 
     public void CreateQuickStart()
     {
+        if (Framework == CodeSmith.SchemaHelper.FrameworkVersion.v35) {
+            Response.WriteLine(String.Concat("FrameworkVersion v35 is not supported. Version v40 will be used instead.", Environment.NewLine));
+            Framework = CodeSmith.SchemaHelper.FrameworkVersion.v40;
+        }
+        
         // Make sure Location is FullPath
         Location = Path.GetFullPath(Location);
 
@@ -98,7 +104,7 @@ The <%= SolutionName %> Solution has been created at <%= Location %>.
             IncludeFunctions = !this.SourceDatabase.Provider.Name.Contains("MySQL"),
             EnsureMultipleResultSets = false,
             ZipFileRoot = @"Common",
-            FrameworkVersion = FrameworkVersion.v40,
+            FrameworkVersion = Framework,
             Language = Language.CSharp,
             Location = this.Location,
             SolutionName = this.SolutionName,
@@ -123,8 +129,7 @@ The <%= SolutionName %> Solution has been created at <%= Location %>.
     {
         QuickStartSolution quickStartSolution = this.Create<QuickStartSolution>();
         quickStartSolution.SolutionItems = solutionItems;
-        quickStartSolution.Framework = FrameworkVersion.v40;
-        quickStartSolution.Location = this.Location;
+        quickStartSolution.FrameworkVersion = Framework;
 
         string filePathAboslute = Path.Combine(Location, String.Concat(SolutionName, ".sln"));
         quickStartSolution.RenderToFile(filePathAboslute, true);
