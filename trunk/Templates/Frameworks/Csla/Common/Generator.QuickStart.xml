@@ -4,6 +4,7 @@
         <name>Generator.QuickStart</name>
     </assembly>
     <members>
+        <!-- Badly formed XML comment ignored for member "P:Generator.QuickStart.ProjectBuilderSettings.FrameworkFolder" -->
         <member name="M:Generator.QuickStart.QuickStartUtils.EnsureMultipleResultSets(System.String)">
             <summary>
             
