@@ -17,14 +17,12 @@ using System.Linq;
 using Generator.Microsoft.Frameworks;
 using LinqToEdmx.Model.Conceptual;
 
-namespace CodeSmith.SchemaHelper
-{
+namespace CodeSmith.SchemaHelper {
     /// <summary>
     /// 
     /// </summary>
     [System.Diagnostics.DebuggerDisplay("ConceptualEntity = {Name}, Key = {EntityKeyName}")]
-    public sealed class ConceptualEntity : EntityBase<EntityType>
-    {
+    public sealed class ConceptualEntity : EntityBase<EntityType> {
         private readonly IEnumerable<LinqToEdmx.Model.Conceptual.Association> _associations;
         private readonly IEnumerable<EntityContainer.AssociationSetLocalType> _associationSets;
 
@@ -33,13 +31,11 @@ namespace CodeSmith.SchemaHelper
         /// <summary>
         /// Constructor that passes in the entity that this class will represent.
         /// </summary>
-        public ConceptualEntity(EntityType entity, string @namespace) : base(entity, @namespace)
-        {
+        public ConceptualEntity(EntityType entity, string @namespace) : base(entity, @namespace) {
             EntityKeyName = EntitySource.Name;
             Name = EntitySource.Name;
 
-            if (!String.IsNullOrEmpty(EntitySource.BaseType))
-            {
+            if (!String.IsNullOrEmpty(EntitySource.BaseType)) {
                 BaseType = EntitySource.BaseType.Replace(String.Concat(Namespace, "."), "");
             }
 
@@ -55,8 +51,7 @@ namespace CodeSmith.SchemaHelper
             CanInsert = true;
         }
 
-        public ConceptualEntity(EntityType entity, IEnumerable<LinqToEdmx.Model.Conceptual.Association> associations, IEnumerable<EntityContainer.AssociationSetLocalType> associationSets, string @namespace) : this(entity, @namespace)
-        {
+        public ConceptualEntity(EntityType entity, IEnumerable<LinqToEdmx.Model.Conceptual.Association> associations, IEnumerable<EntityContainer.AssociationSetLocalType> associationSets, string @namespace) : this(entity, @namespace) {
             _associations = associations;
             _associationSets = associationSets;
         }
@@ -68,8 +63,7 @@ namespace CodeSmith.SchemaHelper
         /// <summary>
         /// 
         /// </summary>
-        public override void Initialize()
-        {
+        public override void Initialize() {
             LoadAssociations();
             PopulateInheritanceProperties();
         }
@@ -81,13 +75,10 @@ namespace CodeSmith.SchemaHelper
         /// <summary>
         /// Override to populate the properties from the implemented entity.
         /// </summary>
-        protected override void LoadProperties()
-        {
-            foreach (var prop in EntitySource.Properties)
-            {
+        protected override void LoadProperties() {
+            foreach (var prop in EntitySource.Properties) {
                 var property = new ConceptualProperty(prop, this);
-                if (!Configuration.Instance.ExcludeRegexIsMatch(prop.Name) && !PropertyMap.ContainsKey(property.Name))
-                {
+                if (!Configuration.Instance.ExcludeRegexIsMatch(prop.Name) && !PropertyMap.ContainsKey(property.Name)) {
                     PropertyMap.Add(property.Name, property);
                 }
             }
@@ -99,11 +90,10 @@ namespace CodeSmith.SchemaHelper
         /// <summary>
         /// Override to populate the associations from the implemented entity.
         /// </summary>
-        protected override void LoadAssociations()
-        {
-            if (_associations == null || _associationSets == null || !_associations.Any() || !_associationSets.Any()) 
+        protected override void LoadAssociations() {
+            if (_associations == null || _associationSets == null || !_associations.Any() || !_associationSets.Any())
                 return;
-            
+
             //<AssociationSet Name="FK__Item__Supplier__1273C1CD" Association="PetShop.Data.FK__Item__Supplier__1273C1CD">
             //
             // <Association Name="FK__Item__Supplier__1273C1CD">
@@ -128,37 +118,32 @@ namespace CodeSmith.SchemaHelper
             //
             //<NavigationProperty Name="Supplier1" Relationship="PetShop.Data.FK__Item__Supplier__1273C1CD" FromRole="Item" ToRole="Supplier" />
             var relationships = (from np in EntitySource.NavigationProperties
-                                join associationSet in _associationSets on
-                                    np.Relationship.ToLower().Trim() equals associationSet.Association.ToLower().Trim()
-                                join association in _associations on
-                                    associationSet.Name.ToLower().Trim() equals association.Name.ToLower().Trim()
-                                select new {NavigationProperty = np, Association = association}).ToList();
+                join associationSet in _associationSets on np.Relationship.ToLower().Trim() equals associationSet.Association.ToLower().Trim()
+                join association in _associations on associationSet.Name.ToLower().Trim() equals association.Name.ToLower().Trim()
+                select new {
+                    NavigationProperty = np,
+                    Association = association
+                }).ToList();
 
-            foreach (var rel in relationships)
-            {
+            foreach (var rel in relationships) {
                 // This sucks but is there a better way to try and detect user defined association's principal role?
-                var principalRoleName = rel.Association.ReferentialConstraint != null
-                                            ? rel.Association.ReferentialConstraint.Principal.Role
-                                            : rel.Association.Name.EndsWith(rel.NavigationProperty.FromRole, StringComparison.OrdinalIgnoreCase)
-                                                  ? rel.NavigationProperty.ToRole
-                                                  : rel.NavigationProperty.FromRole;
+                var principalRoleName = rel.Association.ReferentialConstraint != null ? rel.Association.ReferentialConstraint.Principal.Role : rel.Association.Name.EndsWith(rel.NavigationProperty.FromRole, StringComparison.OrdinalIgnoreCase) ? rel.NavigationProperty.ToRole : rel.NavigationProperty.FromRole;
 
                 var principalRole = rel.Association.Ends.FirstOrDefault(e => e.Role.Equals(principalRoleName, StringComparison.OrdinalIgnoreCase));
                 var dependentRole = rel.Association.Ends.FirstOrDefault(e => e != principalRole);
-                if(principalRole == null || dependentRole == null) 
+                if (principalRole == null || dependentRole == null)
                     continue;
 
                 IEntity principalEntity = EntityStore.Instance.GetEntity(principalRole.Type.Replace(String.Concat(Namespace, "."), ""));
                 IEntity dependentEntity = EntityStore.Instance.GetEntity(dependentRole.Type.Replace(String.Concat(Namespace, "."), ""));
-                if (principalEntity == null || dependentEntity == null) 
+                if (principalEntity == null || dependentEntity == null)
                     continue;
 
                 // TODO: Many To Many Associations will have no properties defined (E.G., Association.Properties) because there is no intermediary entity defined in the conceptual model.
 
                 IAssociation association;
                 AssociationType type;
-                if (String.Equals(rel.NavigationProperty.FromRole, principalRole.Role))
-                {
+                if (String.Equals(rel.NavigationProperty.FromRole, principalRole.Role)) {
                     if (principalRole.Multiplicity == MultiplicityConstants.ZeroToOne)
                         type = dependentRole.Multiplicity == MultiplicityConstants.ZeroToOne || dependentRole.Multiplicity == MultiplicityConstants.One ? AssociationType.OneToZeroOrOne : AssociationType.ZeroOrOneToMany;
                     else if (principalRole.Multiplicity == MultiplicityConstants.One)
@@ -174,8 +159,7 @@ namespace CodeSmith.SchemaHelper
 
                     if (rel.Association.ReferentialConstraint != null)
                         UpdatePropertyTypesWithForeignKeys(rel.Association.ReferentialConstraint.Principal.PropertyRefs);
-                }
-                else // Current Entity is the dependent entity (child).
+                } else // Current Entity is the dependent entity (child).
                 {
                     if (dependentRole.Multiplicity == MultiplicityConstants.ZeroToOne)
                         type = principalRole.Multiplicity == MultiplicityConstants.ZeroToOne || principalRole.Multiplicity == MultiplicityConstants.One ? AssociationType.OneToZeroOrOne : AssociationType.ZeroOrOneToMany;
@@ -209,19 +193,14 @@ namespace CodeSmith.SchemaHelper
         /// <summary>
         /// Override to populate the keys from the implemented entity.
         /// </summary>
-        protected override void LoadKeys()
-        {
-            if (EntitySource.Key == null) return;
+        protected override void LoadKeys() {
+            if (EntitySource.Key == null)
+                return;
 
-            var keys = (from property in EntitySource.Properties
-                        join key in EntitySource.Key.PropertyRefs
-                            on property.Name equals key.Name
-                        select property).ToList();
+            var keys = (from property in EntitySource.Properties join key in EntitySource.Key.PropertyRefs on property.Name equals key.Name select property).ToList();
 
-            foreach (var prop in keys)
-            {
-                if (!Configuration.Instance.ExcludeRegexIsMatch(prop.Name))
-                {
+            foreach (var prop in keys) {
+                if (!Configuration.Instance.ExcludeRegexIsMatch(prop.Name)) {
                     Key.Properties.Add(new ConceptualProperty(prop, this));
                 }
             }
@@ -230,21 +209,17 @@ namespace CodeSmith.SchemaHelper
         /// <summary>
         /// Load the extended properties for the entity.
         /// </summary>
-        protected override void LoadExtendedProperties()
-        {
+        protected override void LoadExtendedProperties() {
             if (Boolean.TrueString.Equals(EntitySource.GetAttributeValue(EdmxConstants.IsViewEntityCustomAttribute)))
                 ExtendedProperties.Add(EdmxConstants.IsViewEntityCustomAttribute, true);
         }
 
-        protected override void PopulateInheritanceProperties()
-        {
-            if(!String.IsNullOrEmpty(BaseType))
+        protected override void PopulateInheritanceProperties() {
+            if (!String.IsNullOrEmpty(BaseType))
                 BaseEntity = EntityStore.Instance.GetEntity(BaseType);
-            
-            foreach (IEntity entity in EntityStore.Instance.EntityCollection.Values)
-            {
-                if ((entity is ConceptualEntity) == false || Name.Equals(entity.Name, StringComparison.OrdinalIgnoreCase) ||
-                    String.IsNullOrEmpty(((ConceptualEntity)entity).BaseType) || !Name.Equals(((ConceptualEntity)entity).BaseType, StringComparison.OrdinalIgnoreCase))
+
+            foreach (IEntity entity in EntityStore.Instance.EntityCollection.Values) {
+                if ((entity is ConceptualEntity) == false || Name.Equals(entity.Name, StringComparison.OrdinalIgnoreCase) || String.IsNullOrEmpty(((ConceptualEntity)entity).BaseType) || !Name.Equals(((ConceptualEntity)entity).BaseType, StringComparison.OrdinalIgnoreCase))
                     continue;
 
                 if (!DerivedEntities.Contains(entity))
@@ -257,10 +232,8 @@ namespace CodeSmith.SchemaHelper
         /// <summary>
         /// Load the Search Criteria for the entity
         /// </summary>
-        protected override void LoadSearchCriteria()
-        {
-            switch (Configuration.Instance.SearchCriteriaProperty.SearchCriteria)
-            {
+        protected override void LoadSearchCriteria() {
+            switch (Configuration.Instance.SearchCriteriaProperty.SearchCriteria) {
                 case SearchCriteriaType.All:
                     AddPrimaryKeySearchCriteria();
                     AddIndexSearchCriteria();
@@ -285,15 +258,13 @@ namespace CodeSmith.SchemaHelper
         /// <summary>
         /// Add PrimaryKeys to the SearchCriteria
         /// </summary>
-        private void AddPrimaryKeySearchCriteria()
-        {
+        private void AddPrimaryKeySearchCriteria() {
             if (Key.Properties.Count == 0)
                 return;
 
             var searchCriteria = new SearchCriteria(SearchCriteriaType.PrimaryKey);
 
-            foreach (var member in Key.Properties)
-            {
+            foreach (var member in Key.Properties) {
                 if (member != null)
                     searchCriteria.Properties.Add(member);
             }
@@ -306,21 +277,17 @@ namespace CodeSmith.SchemaHelper
         /// <summary>
         /// Add ForeignKeys to the SearchCriteria collection
         /// </summary>
-        private void AddForeignKeySearchCriteria()
-        {
-            foreach (var association in AssociationMap.Values)
-            {
+        private void AddForeignKeySearchCriteria() {
+            foreach (var association in AssociationMap.Values) {
                 var searchCriteria = new SearchCriteria(SearchCriteriaType.ForeignKey);
                 searchCriteria.Association = association;
 
-                foreach (var property in association.Properties)
-                {
+                foreach (var property in association.Properties) {
                     searchCriteria.ForeignProperties.Add(property);
                     searchCriteria.Properties.Add(property.Property);
                 }
 
-                if (association.AssociationType == AssociationType.ManyToOne || association.AssociationType == AssociationType.ManyToZeroOrOne)
-                {
+                if (association.AssociationType == AssociationType.ManyToOne || association.AssociationType == AssociationType.ManyToZeroOrOne) {
                     AddToSearchCriteria(searchCriteria);
                 }
 
@@ -331,8 +298,7 @@ namespace CodeSmith.SchemaHelper
         /// <summary>
         /// Add all the indexes to the Search Criteria
         /// </summary>
-        private void AddIndexSearchCriteria()
-        {
+        private void AddIndexSearchCriteria() {
             //foreach (IndexSchema indexSchema in _table.Indexes)
             //{
             //    var searchCriteria = new SearchCriteria(SearchCriteriaType.Index);
@@ -358,8 +324,7 @@ namespace CodeSmith.SchemaHelper
         /// </summary>
         /// <param name="searchCriteria"></param>
         /// <returns></returns>
-        private void AddToSearchCriteria(SearchCriteria searchCriteria)
-        {
+        private void AddToSearchCriteria(SearchCriteria searchCriteria) {
             var key = searchCriteria.Key;
 
             var result = (!String.IsNullOrEmpty(key) && searchCriteria.Properties.Count > 0 && SearchCriteria.Where(x => x.Key == key).Count() == 0);
