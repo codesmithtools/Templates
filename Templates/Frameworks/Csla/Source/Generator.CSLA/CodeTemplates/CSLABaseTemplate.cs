@@ -218,7 +218,17 @@ namespace Generator.CSLA.CodeTemplates {
 
         public virtual void RegisterReferences() {
             // TODO: Add NuGet Support.
-            RegisterReference(IsCSLA38 ? Path.GetFullPath(Path.Combine(CodeTemplateInfo.DirectoryName, @"..\..\Common\Csla\3.8\Client\Csla.dll")) : Path.GetFullPath(Path.Combine(CodeTemplateInfo.DirectoryName, @"..\..\Common\Csla\4.3\Client\Csla.dll")));
+            switch (Configuration.Instance.FrameworkVersion) {
+                case FrameworkVersion.v35:
+                    RegisterReference(Path.GetFullPath(Path.Combine(CodeTemplateInfo.DirectoryName, @"..\..\Common\Csla\3.8\Client\Csla.dll")));
+                    break;
+                case FrameworkVersion.v40:
+                    RegisterReference(Path.GetFullPath(Path.Combine(CodeTemplateInfo.DirectoryName, @"..\..\Common\Csla\4.3\Client\Csla.dll")));
+                    break;
+                case FrameworkVersion.v45:
+                    RegisterReference(Path.GetFullPath(Path.Combine(CodeTemplateInfo.DirectoryName, @"..\..\Common\Csla\4.5\Client\Csla.dll")));
+                    break;
+            }
 
             RegisterReference("System.Configuration");
         }
