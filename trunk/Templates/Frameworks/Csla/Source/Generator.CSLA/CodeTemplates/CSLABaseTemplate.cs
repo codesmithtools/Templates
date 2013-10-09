@@ -57,13 +57,13 @@ namespace Generator.CSLA.CodeTemplates {
                 return _cleanExpressions;
             }
             set {
+                _cleanExpressions = value ?? new StringCollection();
                 Configuration.Instance.CleanExpressions = new List<Regex>();
-                foreach (string clean in (value ?? new StringCollection())) {
+                foreach (string clean in _cleanExpressions) {
                     if (!String.IsNullOrEmpty(clean))
                         Configuration.Instance.CleanExpressions.Add(new Regex(clean, RegexOptions.IgnoreCase));
                 }
 
-                _cleanExpressions = null;
                 RefreshDataSource();
             }
         }
@@ -83,13 +83,13 @@ namespace Generator.CSLA.CodeTemplates {
                 return _ignoreExpressions;
             }
             set {
+                _ignoreExpressions = value ?? new StringCollection();
                 Configuration.Instance.IgnoreExpressions = new List<Regex>();
-                foreach (string ignore in (value ?? new StringCollection())) {
+                foreach (string ignore in _ignoreExpressions) {
                     if (!String.IsNullOrEmpty(ignore))
                         Configuration.Instance.IgnoreExpressions.Add(new Regex(ignore, RegexOptions.IgnoreCase));
                 }
 
-                _ignoreExpressions = null;
                 RefreshDataSource();
             }
         }
@@ -108,13 +108,13 @@ namespace Generator.CSLA.CodeTemplates {
                 return _includeExpressions;
             }
             set {
+                _includeExpressions = value ?? new StringCollection();
                 Configuration.Instance.IncludeExpressions = new List<Regex>();
-                foreach (string include in (value ?? new StringCollection())) {
+                foreach (string include in _includeExpressions) {
                     if (!String.IsNullOrEmpty(include))
                         Configuration.Instance.IncludeExpressions.Add(new Regex(include, RegexOptions.IgnoreCase));
                 }
 
-                _includeExpressions = null;
                 RefreshDataSource();
             }
         }
