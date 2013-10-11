@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace LinqToSqlShared.Generator
 {
@@ -8,7 +6,8 @@ namespace LinqToSqlShared.Generator
     {
         v35 = 1,
         v35_SP1 = 2,
-        v40 = 3
+        v40 = 3,
+        v45 = 4
     }
 
     public enum TableNamingEnum

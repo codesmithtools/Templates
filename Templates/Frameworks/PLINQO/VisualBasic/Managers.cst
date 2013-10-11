@@ -1,4 +1,4 @@
-<%@ CodeTemplate Language="VB" TargetLanguage="XML"
+﻿<%@ CodeTemplate Language="VB" TargetLanguage="XML"
     Description="Generate Linq to Sql Class File" 
     Debug="true" OutputType="None" CompilerVersion="v3.5" %>
 
@@ -21,7 +21,7 @@
     Description="The source database for Linq to Sql." %>
 
 <%@ Property Category="2.Class" Name="Framework"
-    Type="FrameworkEnum" Default="v35_SP1" Optional="False"
+    Type="FrameworkEnum" Default="v45" Optional="False"
     Description="Include Serialization attributes and what kind." %>
     
 <%@ Property Category="2.Mapping" Name="DbmlFile" 
@@ -90,10 +90,13 @@
     CreateDataManagerClass(database, databaseManager)
     CreateDataContextManagerClass(database, databaseManager)
     CreateEntityManagerClasses(database, databaseManager)
-    If Me.Framework = FrameworkEnum.v40 Then
-	Me.RegisterReference(Path.GetFullPath(Path.Combine(Me.CodeTemplateInfo.DirectoryName, "..\Common\v4.0\CodeSmith.Data.dll")))
+    
+    If Me.Framework = FrameworkEnum.v45 Then
+		Me.RegisterReference(Path.GetFullPath(Path.Combine(Me.CodeTemplateInfo.DirectoryName, "..\Common\v4.5\CodeSmith.Data.dll")))
+    ElseIf Me.Framework = FrameworkEnum.v40 Then
+		Me.RegisterReference(Path.GetFullPath(Path.Combine(Me.CodeTemplateInfo.DirectoryName, "..\Common\v4.0\CodeSmith.Data.dll")))
     Else
-	Me.RegisterReference(Path.GetFullPath(Path.Combine(Me.CodeTemplateInfo.DirectoryName, "..\Common\v3.5\CodeSmith.Data.dll")))
+		Me.RegisterReference(Path.GetFullPath(Path.Combine(Me.CodeTemplateInfo.DirectoryName, "..\Common\v3.5\CodeSmith.Data.dll")))
     End If
 End Sub
 

@@ -31,7 +31,7 @@
     Description="The base class for the entity." %>
 
 <%@ Property Category="2.Class" Name="Framework"
-    Type="LinqToSqlShared.Generator.FrameworkEnum" Default="v40" Optional="False"
+    Type="LinqToSqlShared.Generator.FrameworkEnum" Default="v45" Optional="False"
     Description="Which version of the .Net Framework is being generated for." %>
 
 <%@ Property Category="2.Class" Name="IncludeDataContract"

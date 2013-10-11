@@ -3,12 +3,9 @@ using System.IO;
 using CodeSmith.Engine;
 using SchemaExplorer;
 
-namespace QuickStartUtils
-{
-    public class ProjectBuilderSettings
-    {
-        public ProjectBuilderSettings()
-        {
+namespace QuickStartUtils {
+    public class ProjectBuilderSettings {
+        public ProjectBuilderSettings() {
             QueryPattern = QueryPatternEnum.ManagerClasses;
         }
 
@@ -28,39 +25,54 @@ namespace QuickStartUtils
         public bool IncludeDataServices { get; set; }
         public bool IncludeTestProject { get; set; }
         public bool CopyTemplatesToFolder { get; set; }
-        
+
         public string WebSkin { get; set; }
         public QueryPatternEnum QueryPattern { get; set; }
         public FrameworkVersion FrameworkVersion { get; set; }
 
-        public string FrameworkFolder
-        {
-            get { return (FrameworkVersion == FrameworkVersion.v35) ? "v3.5" : "v4.0"; }
+        public string FrameworkFolder {
+            get {
+                switch (FrameworkVersion) {
+                    case FrameworkVersion.v35:
+                        return "v3.5";
+                    case FrameworkVersion.v40:
+                        return "v4.0";
+                    case FrameworkVersion.v45:
+                        return "v4.5";
+                    default:
+                        throw new InvalidOperationException("Invalid FrameworkVersion.");
+                }
+            }
         }
 
-        public string FrameworkString
-        {
-            get { return (FrameworkVersion == FrameworkVersion.v35) ? "3.5" : "4.0"; }
+        public string FrameworkString {
+            get {
+                switch (FrameworkVersion) {
+                    case FrameworkVersion.v35:
+                        return "3.5";
+                    case FrameworkVersion.v40:
+                        return "4.0";
+                    case FrameworkVersion.v45:
+                        return "4.5";
+                    default:
+                        throw new InvalidOperationException("Invalid FrameworkVersion.");
+                }
+            }
         }
 
-        public string LanguageFolder
-        {
+        public string LanguageFolder {
             get { return (Language == LanguageEnum.CSharp) ? "CSharp" : "VisualBasic"; }
         }
 
-        public string LanguageAppendage
-        {
+        public string LanguageAppendage {
             get { return (Language == LanguageEnum.CSharp) ? "cs" : "vb"; }
         }
 
         private string _zipFileFolder;
 
-        public string ZipFileFolder
-        {
-            get
-            {
-                if (string.IsNullOrEmpty(_zipFileFolder))
-                {
+        public string ZipFileFolder {
+            get {
+                if (string.IsNullOrEmpty(_zipFileFolder)) {
                     _zipFileFolder = Path.Combine(WorkingDirectory, "Common");
                     _zipFileFolder = Path.Combine(_zipFileFolder, FrameworkFolder);
                     _zipFileFolder = Path.Combine(_zipFileFolder, LanguageFolder);
@@ -72,10 +84,8 @@ namespace QuickStartUtils
 
         private string _databaseName;
 
-        public string DatabaseName
-        {
-            get
-            {
+        public string DatabaseName {
+            get {
                 if (string.IsNullOrEmpty(_databaseName))
                     _databaseName = StringUtil.ToPascalCase(SourceDatabase.Database.Name);
 
@@ -84,10 +94,9 @@ namespace QuickStartUtils
         }
 
         private string _dataContextName;
-        public string DataContextName
-        {
-            get
-            {
+
+        public string DataContextName {
+            get {
                 if (string.IsNullOrEmpty(_dataContextName))
                     _dataContextName = DatabaseName + "DataContext";
 

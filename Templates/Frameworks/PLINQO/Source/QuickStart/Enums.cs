@@ -3,37 +3,30 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace QuickStartUtils
-{
-    public enum LanguageEnum
-    {
+namespace QuickStartUtils {
+    public enum LanguageEnum {
         CSharp = 1,
         VB = 2
     }
 
-    public enum ProjectTypeEnum
-    {
+    public enum ProjectTypeEnum {
         None = 0,
         DynamicDataWebApp = 1,
         DynamicDataWebSite = 2
     }
 
-    public enum SkinEnum
-    {
+    public enum SkinEnum {
         Default
     }
 
-    public enum QueryPatternEnum
-    {
+    public enum QueryPatternEnum {
         ManagerClasses,
         QueryExtensions
     }
 
-    public enum FrameworkVersion
-    {
+    public enum FrameworkVersion {
         v35,
-        v40
+        v40,
+        v45
     }
-
-
 }

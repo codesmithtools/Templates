@@ -3,19 +3,13 @@
 <%@ Import Namespace="System.Collections.Generic" %>
 <%@ Import Namespace="QuickStartUtils" %>
 <%@ Property Name="SolutionItems" Type="List<SolutionItem>" Optional="False" Category="Projects" Description="" %>
-<%@ Property Name="Language" Type="LanguageEnum" 
-    Default="CSharp" Optional="False" Category="1.Project" 
-    Description="Language the project will be in." %>
-<%@ Property Name="Framework" Type="FrameworkVersion" 
-    Default="v40" Optional="False" Category="1.Project" 
-    Description="The .net Framework version." %>
-<%@ Property Name="Location" Type="System.String" 
-    Default="" Optional="True" Category="1.Project" 
-    Description="This is the path to the Solution location." %>
+<%@ Property Name="Language" Type="LanguageEnum" Default="CSharp" Optional="False" Category="1.Project" Description="Language the project will be in." %>
+<%@ Property Name="Framework" Type="FrameworkVersion" Default="v45" Optional="False" Category="1.Project" Description="The .net Framework version." %>
+<%@ Property Name="Location" Type="System.String" Default="" Optional="True" Category="1.Project" Description="This is the path to the Solution location." %>
 
 
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+Microsoft Visual Studio Solution File, Format Version <% if (Framework == FrameworkVersion.v45) { %>12<% } else { %>11<% } %>.00
+# Visual Studio <% if (Framework == FrameworkVersion.v45) { %>2012<% } else { %>2010<% } %>
 <% foreach(SolutionItem solutionItem in SolutionItems) { 
     string path = solutionItem.Path;
     if (!string.IsNullOrEmpty(Location))    
@@ -24,7 +18,7 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 	if (solutionItem.Website) { %>
 Project("{<%= solutionItem.LanguageGuidString %>}") = "<%= solutionItem.Name %>", "<%= solutionItem.Name %>\", "{<%= solutionItem.GuidString %>}"
 	ProjectSection(WebsiteProperties) = preProject
-		TargetFramework = <%= Framework == FrameworkVersion.v35 ? "3.5" : "4.0" %>
+		TargetFramework = "<% if (Framework == FrameworkVersion.v45) { %>4.5<% } else if (Framework == FrameworkVersion.v40) { %>4.0<% } else { %>3.5<% } %>"
 		<% foreach(SolutionItem item in solutionItem.ProjectReferences) { %>
 		ProjectReferences = "<%=item.Guid.ToString("B")%>|<%=item.Name%>.dll;"
 		<% } %>
