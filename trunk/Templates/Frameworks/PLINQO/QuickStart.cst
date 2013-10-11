@@ -1,9 +1,9 @@
-<%--
+﻿<%--
 Name: Quick Start
-Author: Reggie Bradshaw & Tom DuPont
+Author: Blake Niemyjski & Reggie Bradshaw & Tom DuPont
 Description: Used to Quick Start Visual Studio Projects
 --%>
-<%@ CodeTemplate Language="C#" TargetLanguage="Text" Src="" Inherits="" Debug="True" Description="Template description here." CompilerVersion="v3.5" %>
+<%@ CodeTemplate Language="C#" TargetLanguage="Text" Description="QuickStart template for PLINQO for Linq to SQL." CompilerVersion="v3.5" %>
 <%@ Assembly Name="System" %>
 <%@ Assembly Name="QuickStartUtils" Path="Common"%>
 <%@ Assembly Name="SchemaExplorer" %>
@@ -26,7 +26,7 @@ Description: Used to Quick Start Visual Studio Projects
     Default="CSharp" Optional="False" Category="2.Solution"
     Description="Language the project will be in" %>
 <%@ Property Name="Framework" Type="FrameworkVersion"
-    Default="v40" Optional="False" Category="2.Solution"
+    Default="v45" Optional="False" Category="2.Solution"
     Description="The .net Framework version." %>
 <%@ Property Name="LaunchVisualStudio" Type="System.Boolean"
     Default="True" Optional="False" Category="2.Solution"

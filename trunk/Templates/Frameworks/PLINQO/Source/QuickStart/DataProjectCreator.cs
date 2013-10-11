@@ -1,29 +1,19 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.IO;
-using CodeSmith.Engine;
 
-namespace QuickStartUtils
-{
-    public class DataProjectCreator : ProjectCreator
-    {
-        public DataProjectCreator(ProjectBuilderSettings projectBuilder)
-            : base(projectBuilder) { }
+namespace QuickStartUtils {
+    public class DataProjectCreator : ProjectCreator {
+        public DataProjectCreator(ProjectBuilderSettings projectBuilder) : base(projectBuilder) { }
 
-        public override string ProjectTemplateFile
-        {
+        public override string ProjectTemplateFile {
             get { return "DataProject.zip"; }
         }
 
-        protected override void AddFiles()
-        {
+        protected override void AddFiles() {
             AddCspFile();
         }
 
-        private void AddCspFile()
-        {
+        private void AddCspFile() {
             var cspFileName = Path.ChangeExtension(ProjectFile.Name, ".csp");
 
             string templateCspFile = ProjectBuilder.QueryPattern == QueryPatternEnum.ManagerClasses
@@ -48,7 +38,7 @@ namespace QuickStartUtils
                 .Replace("$entityNamespace$", ProjectBuilder.DataProjectName)
                 .Replace("$language$", ProjectBuilder.LanguageFolder)
                 .Replace("$linqToSql$", linqToSqlPath)
-                .Replace("$frameworkEnum$", ProjectBuilder.FrameworkVersion == FrameworkVersion.v40 ? "v40" : "v35_SP1")
+                .Replace("$frameworkEnum$", GetFrameworkVersionString())
                 .Replace("$languageExtension$", ProjectBuilder.LanguageAppendage);
 
             File.WriteAllText(
@@ -57,6 +47,5 @@ namespace QuickStartUtils
 
             AddNewItem("Generate", cspFileName);
         }
-
     }
 }

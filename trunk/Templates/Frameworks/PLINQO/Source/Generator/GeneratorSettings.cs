@@ -205,7 +205,7 @@ namespace LinqToSqlShared.Generator
             return name;
         }
 
-        private FrameworkEnum _framework = FrameworkEnum.v35_SP1;
+        private FrameworkEnum _framework = FrameworkEnum.v45;
         public FrameworkEnum Framework
         {
             get { return _framework; }

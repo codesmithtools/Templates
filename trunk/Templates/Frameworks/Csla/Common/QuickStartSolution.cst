@@ -14,7 +14,7 @@ Microsoft Visual Studio Solution File, Format Version <% if(FrameworkVersion == 
     if(solutionItem.Website) { %>
 Project("{<%= solutionItem.LanguageGuidString %>}") = "<%= solutionItem.Name %>", "<%= solutionItem.Name %>\", "{<%= solutionItem.GuidString %>}"
     ProjectSection(WebsiteProperties) = preProject
-        TargetFramework = "<% if(FrameworkVersion == FrameworkVersion.v45) { %>4.5<% } else if(FrameworkVersion == FrameworkVersion.v40) { %>4.0<% } else { %>3.5<% } %>"
+        TargetFramework = "<% if (FrameworkVersion == FrameworkVersion.v45) { %>4.5<% } else if(FrameworkVersion == FrameworkVersion.v40) { %>4.0<% } else { %>3.5<% } %>"
         <% foreach(var item in solutionItem.ProjectReferences) { %>
         ProjectReferences = "{<%=item.Guid.ToString()%>}|<%=item.Name%>.dll;"
         <% } %>
