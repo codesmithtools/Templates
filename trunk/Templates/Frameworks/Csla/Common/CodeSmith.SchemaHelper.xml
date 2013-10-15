@@ -1325,11 +1325,6 @@
             Controls the naming for associations.
             </summary>
         </member>
-        <member name="F:CodeSmith.SchemaHelper.AssociationNaming.Preserve">
-            <summary>
-            Preserve the associations name.
-            </summary>
-        </member>
         <member name="F:CodeSmith.SchemaHelper.AssociationNaming.Singular">
             <summary>
             Singularize the association name.
