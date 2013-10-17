@@ -2243,6 +2243,11 @@
             <param name="name"></param>
             <returns></returns>
         </member>
+        <member name="M:CodeSmith.SchemaHelper.Util.NamingConventions.CleanEscapeSystemType(System.String)">
+            <summary>
+            Removes the prefix and suffix of any escaped System Type.
+            </summary>
+        </member>
         <member name="P:CodeSmith.SchemaHelper.Util.NamingConventions.SystemTypeEscape">
             <summary>
             Returns the DBTypeToSystemTypeEscape MapCollection.
