@@ -1,0 +1,11 @@
+﻿<%@ CodeTemplate Language="C#" TargetLanguage="HTML" Description="Generates HTML markup for a boostrap breadcrumbs." %>
+<%@ Property Name="BreadCrumbs" Type="System.Collections.Generic.List<String>" Category="1. Required" Description="A comment delimited list of breadcrumbs to create." %>
+
+<ol class="breadcrumb">
+    <% foreach (var bc in BreadCrumbs.AsIndexedEnumerable()) { %>
+    <% if (!bc.IsLast) { %>
+    <li><a href="#<%= bc.Value.ToLower().Replace(" ", "") %>"><%= bc.Value %></a></li>
+    <% } else { %>
+    <li class="active"><%= bc.Value %></li>
+    <% } } %>
+</ol>

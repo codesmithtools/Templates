@@ -1,0 +1,9 @@
+﻿<%@ CodeTemplate Language="C#" TargetLanguage="HTML" Description="Generates HTML markup for a boostrap progress bar." %>
+<%@ Property Name="PercentComplete" Type="System.Int32" Default="60" Category="1. Required" Description="The percent complete the progress bar should be." %>
+
+<!-- Documentation on progress bar configuration can be found here: http://getbootstrap.com/components/#progress -->
+<div class="progress">
+    <div class="progress-bar" role="progressbar" aria-valuenow="<%= PercentComplete %>" aria-valuemin="0" aria-valuemax="100" style="width: <%= PercentComplete %>%;">
+        <span class="sr-only"><%= PercentComplete %>% Complete</span>
+    </div>
+</div>

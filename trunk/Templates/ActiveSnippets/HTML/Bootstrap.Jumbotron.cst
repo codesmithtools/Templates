@@ -1,0 +1,10 @@
+﻿<%@ CodeTemplate Language="C#" TargetLanguage="HTML" Description="Generates HTML markup for a boostrap jumbotron." %>
+<%@ Property Name="Title" Type="System.String" Category="1. Required" Default="Hello, World!" Description="The jumbotron header" %>
+<%@ Property Name="Content" Type="System.String" Category="1. Required" Default="This is a simple hero unit, a simple jumbotron-style component for calling extra attention to featured content or information." Description="The jumbotron content" %>
+<div class="jumbotron">
+    <div class="container">
+        <h1><%= Title %></h1>
+        <p><%= Content %></p>
+        <p><a class="btn btn-primary btn-lg">Learn more</a></p>
+    </div>
+</div>

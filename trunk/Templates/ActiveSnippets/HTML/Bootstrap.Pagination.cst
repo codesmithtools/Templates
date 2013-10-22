@@ -1,0 +1,11 @@
+﻿<%@ CodeTemplate Language="C#" TargetLanguage="HTML" Description="Generates HTML markup for a boostrap pagination." %>
+<%@ Property Name="Start" Type="System.Int32" Default="1" Category="1. Required" Description="The page number to start with." %>
+<%@ Property Name="End" Type="System.Int32" Default="5" Category="1. Required" Description="The page number to end with." %>
+
+<ul class="pagination">
+    <li<% if (Start == 1) { %> class="disabled"<% } %>><a href="#">&laquo;</a></li>
+    <% for (int index = Start; index <= End; index++) { %>
+    <li><a href="#"><%= index %></a></li>
+     <% } %>
+    <li<% if (Start == End) { %> class="disabled"<% } %>><a href="#">&raquo;</a></li>
+</ul>
