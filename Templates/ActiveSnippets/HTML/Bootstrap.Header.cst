@@ -1,0 +1,22 @@
+﻿<%@ CodeTemplate Language="C#" TargetLanguage="HTML" Description="Generates HTML markup for a boostrap panel." %>
+<%@ Property Name="Header" Type="System.String" Category="1. Required" Default="Panel Header" Description="The panel header." %>
+<%@ Property Name="Content" Type="System.String" Category="1. Required" Default="Panel Content" Description="The panel content." %>
+<%@ Property Name="IncludeFooter" Type="System.Boolean" Category="2. Optional" Default="False" Description="Set this to true if you wish to include a footer." %>
+
+<div class="alert alert-dismissable alert-success">
+    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+    <!--<strong><%= Title %></strong> <a href="#" class="alert-link"><%= Message %></a>-->
+    <strong><%= Title %></strong> <%= Message %>
+</div>
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title"><%= Header %></h3>
+    </div>
+    <div class="panel-body">
+        Panel content
+    </div>
+    <% if (IncludeFooter) { %>
+    <div class="panel-footer">Panel footer</div>
+    <% } %>
+</div>

@@ -1,0 +1,18 @@
+﻿<%@ CodeTemplate Language="C#" TargetLanguage="HTML" Description="Generates HTML markup for a boostrap dropdown." %>
+<%@ Import Namespace="System.Linq" %>
+<%@ Property Name="MenuItems" Type="System.Collections.Generic.List<String>" Category="1. Required" Description="A comment delimited list of menu items to create." %>
+<%@ Property Name="IncludeDividers" Type="System.Boolean" Default="False" Optional="True" Category="2. Optional" Description="If set to true then dividers will be inserted between each menu item." %>
+
+<!-- Single button -->
+<div class="btn-group">
+    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+        <%= MenuItems.FirstOrDefault() %> <span class="caret"></span>
+    </button>
+    <ul class="dropdown-menu" role="menu">
+        <% foreach (var item in MenuItems.AsIndexedEnumerable()) { %>
+        <li><a href="#<%= item.Value.ToLower().Replace(" ", "") %>"><%= item.Value %></a></li>
+        <% if (IncludeDividers && !item.IsLast) { %>
+        <li class="divider"></li>
+        <% } } %>
+    </ul>
+</div>

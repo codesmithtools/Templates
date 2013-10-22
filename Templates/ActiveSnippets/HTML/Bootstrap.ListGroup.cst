@@ -1,0 +1,8 @@
+﻿<%@ CodeTemplate Language="C#" TargetLanguage="HTML" Description="Generates HTML markup for a boostrap list group." %>
+<%@ Property Name="ListGroupItems" Type="System.Collections.Generic.List<String>" Category="1. Required" Description="A comment delimited list of list group items to create." %>
+
+<ul class="list-group">
+    <% foreach (var item in ListGroupItems.AsIndexedEnumerable()) { %>
+    <li class="list-group-item"><%= item.Value %></a></li>
+    <% } %>
+</ul>

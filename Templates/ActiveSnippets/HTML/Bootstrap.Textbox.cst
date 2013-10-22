@@ -1,7 +1,6 @@
 ﻿<%@ CodeTemplate Language="C#" TargetLanguage="HTML" Description="Generates HTML markup for a boostrap textbox based on a model property." %>
-<%@ Import Namespace="System.Text" %>
-<%@ Property Name="ModelPropertyName" Type="System.String" Optional="False" Category="Model" Description="The name of the model property." %>
-<%@ Property Name="IncludeHelpBlock" Type="System.Boolean" Default="False" Optional="True" Category="Output" Description="If set to true then a paragraph tag will be created for the help text content." %>
+<%@ Property Name="ModelPropertyName" Type="System.String" Optional="False" Category="1. Required" Description="The name of the model property." %>
+<%@ Property Name="IncludeHelpBlock" Type="System.Boolean" Default="False" Optional="True" Category="2. Optional" Description="If set to true then a paragraph tag will be created for the help text content." %>
 
 <div class="control-group">
     @Html.LabelFor(m => m.<%= ModelPropertyName %>, new { @class = "control-label" })

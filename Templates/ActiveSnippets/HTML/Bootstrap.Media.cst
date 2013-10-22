@@ -1,0 +1,14 @@
+﻿<%@ CodeTemplate Language="C#" TargetLanguage="HTML" Description="Generates HTML markup for a boostrap media element." %>
+<%@ Property Name="Source" Type="System.String" Default="http://www.youtube.com/user/codesmithtools" Category="1. Required" Description="The source of the media object" %>
+<%@ Property Name="Title" Type="System.String" Default="CodeSmith Tools" Category="1. Required" Description="The title of the media object" %>
+<%@ Property Name="Description" Type="System.String" Default="CodeSmith Tools YouTube Channel" Category="1. Required" Description="The description of the media object" %>
+
+<div class="media">
+    <a class="pull-left" href="#">
+        <img class="media-object" data-src="holder.js/64x64" alt="64x64" src="<%= Source %>" style="width: 64px; height: 64px;">
+    </a>
+    <div class="media-body">
+        <h4 class="media-heading"><%= Title %></h4>
+        <%= Description %>
+    </div>
+</div>

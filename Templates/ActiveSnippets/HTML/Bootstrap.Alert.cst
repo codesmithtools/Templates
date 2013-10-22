@@ -1,0 +1,9 @@
+﻿<%@ CodeTemplate Language="C#" TargetLanguage="HTML" Description="Generates HTML markup for a boostrap alert." %>
+<%@ Property Name="Title" Type="System.String" Category="1. Required" Default="Well done!" Description="The alert header" %>
+<%@ Property Name="Message" Type="System.String" Category="1. Required" Default="You successfully read this important alert message." Description="The alert message" %>
+
+<div class="alert alert-dismissable alert-success">
+    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+    <!--<strong><%= Title %></strong> <a href="#" class="alert-link"><%= Message %></a>-->
+    <strong><%= Title %></strong> <%= Message %>
+</div>

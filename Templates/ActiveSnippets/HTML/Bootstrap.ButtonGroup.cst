@@ -1,0 +1,8 @@
+﻿<%@ CodeTemplate Language="C#" TargetLanguage="HTML" Description="Generates HTML markup for a boostrap button group." %>
+<%@ Property Name="Buttons" Type="System.Collections.Generic.List<String>" Category="1. Required" Description="A comment delimited list of buttons to create." %>
+
+<div class="btn-group">
+    <% foreach (var button in Buttons.AsIndexedEnumerable()) { %>
+    <button type="button" class="btn btn-default"><%= button.Value %></button>
+    <% } %>
+</div>
