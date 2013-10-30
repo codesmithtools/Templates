@@ -1,0 +1,149 @@
+﻿<%-- 
+Name: Json.cst
+Author: Eric J. Smith
+Description: Generate C# classes from a JSON file.
+--%>
+<%@ CodeTemplate Language="C#" TargetLanguage="TypeScript" CompilerVersion="v3.5" Description="Generate C# classes from a JSON file." %>
+<%@ Property Category="1. Required" Name="ClassName" Type="System.String" Optional="False" Description="The name of the class." %>
+<%@ Property Category="1. Required" Name="Source" Type="System.String" Default="http://apps.db.ripe.net/whois/lookup/ripe/inetnum/8.8.8.8.json" Optional="False" Editor="System.Windows.Forms.Design.FileNameEditor, System.Design" Description="The full path to the JSON file or remote json file" %>
+<%@ Import Namespace="System.Collections.Generic" %>
+<%@ Import Namespace="System.IO" %>
+<%@ Import Namespace="System.Net" %>
+<%@ Import Namespace="CodeSmith.Engine.Json" %>
+<%@ Import Namespace="CodeSmith.Engine.Json.Linq" %>
+<%
+JObject root = JObject.Parse(GetJSON(Source));
+Dictionary<string, JObject> objects = GetObjects(root);
+foreach (string name in objects.Keys) {
+    var properties = objects[name] != null ? objects[name].Properties().AsIndexedEnumerable() : new List<JProperty>().AsIndexedEnumerable();
+%>
+
+export class <%= name %> {
+    constructor(<% foreach(var p in properties) { %><%= StringUtil.ToCamelCase(p.Value.Name) %>: <%= GetType(p.Value.Value) %><% if (!p.IsLast) { %>, <% } } %>) {
+        <% foreach(var p in properties) { %>
+        this.<%= StringUtil.ToCamelCase(p.Value.Name) %> = <%= StringUtil.ToCamelCase(p.Value.Name) %>;
+        <% } %>
+    }
+    
+    <% foreach(var p in properties) { %>
+    public <%= StringUtil.ToCamelCase(p.Value.Name) %>: <%= GetType(p.Value.Value) %>;
+    <% } %>
+}
+<% } %>
+
+<script runat="template">
+
+private string GetJSON(string source) {
+    if (String.IsNullOrWhiteSpace(source))
+        throw new ApplicationException("Json file not found.");
+    
+    if (!(source.StartsWith("http") || source.StartsWith("www"))) {
+        if (!File.Exists(source))
+            source = Path.Combine(this.CodeTemplateInfo.DirectoryName, source);
+        
+        if (!File.Exists(source))
+            throw new ApplicationException("Json file not found.");
+        
+        return File.ReadAllText(source);
+    }
+    
+    Uri uri;
+    if (!Uri.TryCreate(Source, UriKind.RelativeOrAbsolute, out uri))
+        throw new ApplicationException("Unable to resolve json source.");
+
+    var request = WebRequest.Create(uri);
+    if (request is HttpWebRequest) {
+        ((HttpWebRequest)request).Accept = "application/json";
+        ((HttpWebRequest)request).AllowAutoRedirect = false;
+    }
+
+    using (var response = request.GetResponse()) {
+        if (response is HttpWebResponse && ((HttpWebResponse)response).StatusCode != HttpStatusCode.OK)
+            throw new ApplicationException("Unable to load downloaded schema.");
+        
+        using (var stream = response.GetResponseStream()) {
+            try {
+                using (var reader = new StreamReader(stream)) {
+                    var json = reader.ReadToEnd();
+                    
+                    Logger.Log.Info(json);
+                    
+                    return json;
+                }
+            } catch (Exception ex) {
+                throw new ApplicationException("Unable to load downloaded schema.", ex);
+            }
+        }
+    }
+}
+
+private string GetType(JToken token) {
+    switch (token.Type) {
+        case JTokenType.Array:
+            if (token.HasValues)
+                return GetType(token.First) + "[]";
+            return "any[]";
+        case JTokenType.Boolean:
+            return "boolean";
+        case JTokenType.Date:
+            return "Date";
+        case JTokenType.Float:
+        case JTokenType.Integer:
+            return "number";
+        case JTokenType.Object:
+            if (token.Parent == null)
+                return "any";
+            if (token.Parent.Type == JTokenType.Property)
+                return StringUtil.ToPascalCase(StringUtil.ToSingular(((JProperty)token.Parent).Name));
+            if (token.Parent.Type == JTokenType.Array && token.Parent.Parent != null && token.Parent.Parent.Type == JTokenType.Property)
+                return StringUtil.ToPascalCase(StringUtil.ToSingular(((JProperty)token.Parent.Parent).Name));
+            return "any";
+        case JTokenType.String:
+            DateTime date;
+            return DateTime.TryParse(token.Value<string>(), out date) ? "Date" : "string";
+    }
+
+    return "any";
+}
+
+private static string[] _intrinsicTypes = new[] { "object", "bool", "DateTime", "float", "int", "string" };
+private bool IsIntrinsicType(string type) {
+    return _intrinsicTypes.Any(t => t.Equals(type));
+}
+
+private Dictionary<string, JObject> GetObjects(JObject j) {
+    var objects = new Dictionary<string, JObject>();
+    objects.Add(ClassName, j);
+    
+    GetObjects(j, objects);
+    return objects;
+}
+
+private void GetObjects(JObject j, Dictionary<string, JObject> objects) {
+    if (j == null)
+        return;
+
+    if (objects == null)
+        objects = new Dictionary<string, JObject>();
+
+    foreach (JProperty p in j.Properties()) {
+        switch (p.Value.Type) {
+            case JTokenType.Array:
+                if (!p.Value.HasValues)
+                    continue;
+                
+                if (!objects.ContainsKey(StringUtil.ToPascalCase(StringUtil.ToSingular(p.Name))) && !IsIntrinsicType(GetType(p.Value.First)))
+                    objects.Add(StringUtil.ToPascalCase(StringUtil.ToSingular(p.Name)), p.Value.First as JObject);
+                
+                GetObjects(p.Value.First as JObject, objects);
+                break;
+            case JTokenType.Object:
+                if (!objects.ContainsKey(StringUtil.ToPascalCase(StringUtil.ToSingular(p.Name))))
+                    objects.Add(StringUtil.ToPascalCase(StringUtil.ToSingular(p.Name)), p.Value as JObject);
+                
+                GetObjects(p.Value as JObject, objects);
+                break;
+        }
+    }
+}
+</script>

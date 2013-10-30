@@ -1,24 +1,16 @@
-<%-- 
+﻿<%-- 
 Name: Json.cst
 Author: Eric J. Smith
 Description: Generate C# classes from a JSON file.
 --%>
-<%@ CodeTemplate Language="C#" TargetLanguage="C#" Debug="True" CompilerVersion="v3.5" Description="Generate C# classes from a JSON file." %>
-<%@ Property Category="General" Name="JsonFile"
-    Type="System.String" Default="sample.json" Optional="False"
-    Description="The full path to the JSON file."
-    Editor="System.Windows.Forms.Design.FileNameEditor, System.Design" %>
-<%@ Property Category="General" Name="RootClassName"
-    Type="System.String" Default="Root" Optional="False"
-    Description="The name of the root class." %>
-<%@ Property Category="General" Name="TargetNamespace"
-    Type="System.String" Default="JsonClasses" Optional="False"
-    Description="The name of the root class." %>
-<%@ Assembly Name="Newtonsoft.Json" %>
+<%@ CodeTemplate Language="C#" TargetLanguage="C#" CompilerVersion="v3.5" Description="Generate C# classes from a JSON file." %>
+<%@ Property Category="1. Required" Name="TargetNamespace" Type="System.String" Default="JsonClasses" Optional="False" Description="The name of the root class." %>
+<%@ Property Category="1. Required" Name="RootClassName" Type="System.String" Default="Root" Optional="False" Description="The name of the root class." %>
+<%@ Property Category="1. Required" Name="JsonFile" Type="System.String" Default="sample.json" Optional="False" Description="The full path to the JSON file." Editor="System.Windows.Forms.Design.FileNameEditor, System.Design" %>
 <%@ Import Namespace="System.IO" %>
 <%@ Import Namespace="System.Collections.Generic" %>
-<%@ Import Namespace="Newtonsoft.Json" %>
-<%@ Import Namespace="Newtonsoft.Json.Linq" %>
+<%@ Import Namespace="CodeSmith.Engine.Json" %>
+<%@ Import Namespace="CodeSmith.Engine.Json.Linq" %>
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
