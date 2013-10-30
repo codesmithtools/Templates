@@ -2,7 +2,7 @@
 <xs:schema targetNamespace="http://www.codesmithtools.com/purchaseorder" elementFormDefault="qualified" xmlns="http://www.codesmithtools.com/purchaseorder" xmlns:xs="http://www.w3.org/2001/XMLSchema">
   <xs:element name="PurchaseOrder">
     <xs:complexType>
-      <xs:any>
+      <xs:all>
         <xs:element name="OrderDate" type="xs:string" minOccurs="1" maxOccurs="1" />
         <xs:element name="SubTotal" type="xs:string" minOccurs="1" maxOccurs="1" />
         <xs:element name="ShipCost" type="xs:string" minOccurs="0" maxOccurs="1" />
@@ -35,7 +35,7 @@
             </xs:sequence>
           </xs:complexType>
         </xs:element>
-      </xs:any>
+      </xs:all>
     </xs:complexType>
   </xs:element>
 </xs:schema>
