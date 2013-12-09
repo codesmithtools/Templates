@@ -1,4 +1,4 @@
-Imports System
+﻿Imports System
 
 Namespace Northwind.DAL
 	''' <summary>
@@ -17,4 +17,3 @@ Namespace Northwind.DAL
 #End Region
 	End Class
 End Namespace
-

@@ -1,4 +1,4 @@
-Public Class PreserveRegionsSample
+﻿Public Class PreserveRegionsSample
 
 #Region "Custom Region 1"
 	
@@ -18,7 +18,7 @@ Public Class PreserveRegionsSample
         ' This section and all other non-custom code
         ' regions will be overwritten during each
         ' template execution.
-        ' Current Date: 7/27/2009 2:02:07 PM
+        ' Current Date: 11/27/2013 11:41:17 AM
 
     End Sub
 
