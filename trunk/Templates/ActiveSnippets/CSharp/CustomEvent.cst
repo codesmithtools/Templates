@@ -1,39 +1,11 @@
-<%@ CodeTemplate Language="C#" TargetLanguage="C#" Debug="True" Description="Generate an Event." %>
+﻿<%@ CodeTemplate Language="C#" TargetLanguage="C#" Debug="True" Description="Generate an Event." %>
 <%@ Assembly Name="CodeSmith.CustomProperties" %>
 <%@ Import Namespace="CodeSmith.CustomProperties" %>
 <%@ Import Namespace="System.Text" %>
 <%@ Property Name="EventName" Type="System.String" Default="MyEvent" Optional="False" Category="Event" Description="The name of the event." %>
 <%@ Property Name="Explicit" Type="System.Boolean" Default="False" Optional="False" Category="Event" Description="Generate explicit implementation code." %>
 <%@ Property Name="Arguments" Type="NameValueCollection" Optional="True" Description="List of event arguments. Enter as Name=DataType" %>
-<script runat="template">
-private string EventClass
-{
-	get 
-	{
-		if (this.Arguments == null || this.Arguments.Count == 0)
-			return "System.EventArgs";
-		
-		return this.EventName + "EventArgs";
-	}
-}
 
-public string GetConstructorArgs()
-{
-	if (this.Arguments == null || this.Arguments.Count == 0)
-		return string.Empty;
-		
-	StringBuilder builder = new StringBuilder();
-	foreach(NameValueEntry entry in this.Arguments)
-	{
-		builder.AppendFormat("{0} {1}, ", entry.Value, StringUtil.ToCamelCase(entry.Key.ToString()));
-	}
-	if (builder.Length > 2)
-		builder.Remove(builder.Length - 2, 2);
-	
-	return builder.ToString();
-}
-</script>
-#region '<%= EventName %>' event definition code
 <% if (this.Arguments != null && this.Arguments.Count > 0) { %>
 /// <summary>
 ///     EventArgs derived type which holds the custom event fields
@@ -41,28 +13,26 @@ public string GetConstructorArgs()
 [Serializable]    
 public class <%= EventClass %> : System.EventArgs
 {
-	/// <summary>
-	///     Use this constructor to initialize the event arguments
-	///     object with the custom event fields
-	/// </summary>
-	public <%= EventClass %>(<%= GetConstructorArgs() %>)
-	{
-		<% foreach(NameValueEntry entry in this.Arguments) { %>
-		_<%= StringUtil.ToCamelCase(entry.Key) %> = <%= StringUtil.ToCamelCase(entry.Key.ToString()) %>;
-		<% } %>
-	}
-
-	<% foreach(NameValueEntry entry in this.Arguments) { %>
-	private <%= entry.Value %> _<%= StringUtil.ToCamelCase(entry.Key) %>;
-	
-	public <%= entry.Value %> <%= StringUtil.ToPascalCase(entry.Key) %>
-	{
-		get { return _<%= StringUtil.ToCamelCase(entry.Key) %>; }
-		set { _<%= StringUtil.ToCamelCase(entry.Key) %> = value; }
+    /// <summary>
+    ///     Use this constructor to initialize the event arguments
+    ///     object with the custom event fields
+    /// </summary>
+    public <%= EventClass %>(<%= GetConstructorArgs() %>)
+    {
+        <% foreach(NameValueEntry entry in this.Arguments) { %>
+        _<%= StringUtil.ToCamelCase(entry.Key) %> = <%= StringUtil.ToCamelCase(entry.Key.ToString()) %>;
+        <% } %>
     }
-	
-	<% } %>
+    <% foreach(NameValueEntry entry in this.Arguments) { %>
 
+    private <%= entry.Value %> _<%= StringUtil.ToCamelCase(entry.Key) %>;
+    
+    public <%= entry.Value %> <%= StringUtil.ToPascalCase(entry.Key) %>
+    {
+        get { return _<%= StringUtil.ToCamelCase(entry.Key) %>; }
+        set { _<%= StringUtil.ToCamelCase(entry.Key) %> = value; }
+    }
+    <% } %>
 }
 
 <% } // if arguments %>
@@ -81,15 +51,15 @@ private <%= EventName %>EventHandler <%= EventName %>EventHandlerDelegate;
 /// </summary>
 public event <%= EventName %>EventHandler <%= EventName %>
 {
-	// Explicit event definition with accessor methods
-	add
-	{
-		<%= EventName %>EventHandlerDelegate = (<%= EventName %>EventHandler) Delegate.Combine(<%= EventName %>EventHandlerDelegate, value); 
-	}
-	remove
-	{
-		<%= EventName %>EventHandlerDelegate = (<%= EventName %>EventHandler) Delegate.Remove(<%= EventName %>EventHandlerDelegate, value); 
-	}
+    // Explicit event definition with accessor methods
+    add
+    {
+        <%= EventName %>EventHandlerDelegate = (<%= EventName %>EventHandler) Delegate.Combine(<%= EventName %>EventHandlerDelegate, value); 
+    }
+    remove
+    {
+        <%= EventName %>EventHandlerDelegate = (<%= EventName %>EventHandler) Delegate.Remove(<%= EventName %>EventHandlerDelegate, value); 
+    }
 }
 
 /// <summary>
@@ -98,10 +68,10 @@ public event <%= EventName %>EventHandler <%= EventName %>
 /// </summary>
 protected virtual void On<%= EventName %>(<%= EventClass %> e)
 {
-	if (<%= EventName %>EventHandlerDelegate != null)
-	{
-		<%= EventName %>EventHandlerDelegate(this, e);
-	}
+    if (<%= EventName %>EventHandlerDelegate != null)
+    {
+        <%= EventName %>EventHandlerDelegate(this, e);
+    }
 }
 <% } else { // this.Explicit%>
 /// <summary>
@@ -115,12 +85,33 @@ public event <%= EventName %>EventHandler <%= EventName %>;
 /// </summary>
 protected virtual void On<%= EventName %>(<%= EventClass %> e)
 {
-	if (<%= EventName %> != null)
-	{
-		<%= EventName %>(this, e);
-	}
+    if (<%= EventName %> != null)
+    {
+        <%= EventName %>(this, e);
+    }
 }
 <% } // else this.Explicit%>
+<script runat="template">
+private string EventClass {
+    get {
+        if (this.Arguments == null || this.Arguments.Count == 0)
+            return "System.EventArgs";
 
+        return this.EventName + "EventArgs";
+    }
+}
 
-#endregion //('<%= EventName %>' event definition code)
+public string GetConstructorArgs() {
+    if (this.Arguments == null || this.Arguments.Count == 0)
+        return string.Empty;
+
+    StringBuilder builder = new StringBuilder();
+    foreach (NameValueEntry entry in this.Arguments) {
+        builder.AppendFormat("{0} {1}, ", entry.Value, StringUtil.ToCamelCase(entry.Key.ToString()));
+    }
+    if (builder.Length > 2)
+        builder.Remove(builder.Length - 2, 2);
+
+    return builder.ToString();
+}
+</script>

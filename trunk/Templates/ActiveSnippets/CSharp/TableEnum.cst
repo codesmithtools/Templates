@@ -1,4 +1,4 @@
-<%-- 
+﻿<%-- 
 Name: Table Enum
 Author: Paul Welter
 Description: Create an enum of tables.
@@ -11,12 +11,12 @@ public enum <%= StringUtil.ToPascalCase(SourceDatabase.Name) %>Tables
 {
 <% for(int x = 0; x < SourceDatabase.Tables.Count; x++) 
 { 
-	TableSchema table = SourceDatabase.Tables[x];
-	if (x < SourceDatabase.Tables.Count -1)
-		Response.WriteLine("\t{0},", StringUtil.ToPascalCase(table.Name));
-	else
-		Response.WriteLine("\t{0}", StringUtil.ToPascalCase(table.Name));
+    TableSchema table = SourceDatabase.Tables[x];
+    if (x < SourceDatabase.Tables.Count -1)
+        Response.WriteLine("\t{0},", StringUtil.ToPascalCase(table.Name));
+    else
+        Response.WriteLine("\t{0}", StringUtil.ToPascalCase(table.Name));
 
 }
-%>	
+%>  
 }

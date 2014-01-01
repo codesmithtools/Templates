@@ -1,4 +1,4 @@
-<%-- 
+﻿<%-- 
 Name: Database Table Properties
 Author: Paul Welter
 Description: Create a list of properties from a database table
@@ -14,8 +14,8 @@ private <%= CSharpAlias[column.SystemType.FullName] %> _<%= StringUtil.ToCamelCa
 
 public <%= CSharpAlias[column.SystemType.FullName] %> <%= StringUtil.ToPascalCase(column.Name) %>
 {
-	get { return _<%= StringUtil.ToCamelCase(column.Name) %>; }
-	set { _<%= StringUtil.ToCamelCase(column.Name) %> = value; }
+    get { return _<%= StringUtil.ToCamelCase(column.Name) %>; }
+    set { _<%= StringUtil.ToCamelCase(column.Name) %> = value; }
 }
 
 <% } %>
