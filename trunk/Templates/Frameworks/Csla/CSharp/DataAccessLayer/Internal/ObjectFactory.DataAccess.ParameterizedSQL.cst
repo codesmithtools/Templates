@@ -441,7 +441,7 @@ if(property.Property.SystemType == "System.String" && !property.Property.IsType(
             using (BypassPropertyChecks(item))
             {
 <% if(Entity.ConcurrencyProperty != null) { %>
-                item.<%= Entity.ConcurrencyProperty.KeyName %> = ADOHelper.GetBytes(reader, "<%= Entity.ConcurrencyProperty.KeyName %>");
+                item.<%= Entity.ConcurrencyProperty.Name %> = ADOHelper.GetBytes(reader, "<%= Entity.ConcurrencyProperty.KeyName %>");
 <% } %>
 <% foreach(IProperty property in Entity.GetProperties(PropertyType.NoConcurrency)) { %>
 <% if( property.IsNullable && property.SystemType != "System.String" && property.SystemType != "System.Byte[]") {%>
