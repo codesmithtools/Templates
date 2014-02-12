@@ -59,7 +59,7 @@
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="ActiproSoftware.Text.Wpf" />
+    <Reference Include="CodeSmith.ActiproSoftware.Text.Wpf" />
     <Reference Include="CodeSmith.Core" />
     <Reference Include="CodeSmith.Engine">
       <Name>CodeSmith.Engine</Name>
