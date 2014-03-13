@@ -1,4 +1,4 @@
-<%-- 
+﻿<%-- 
 CodeSmith DBDocumenter Templates
 Author:  Jason Alexander (jalexander@telligent.com), Eric J. Smith
 --%>
@@ -17,7 +17,7 @@ Author:  Jason Alexander (jalexander@telligent.com), Eric J. Smith
 <table width="780" cellspacing="0" cellpadding="0">
 <tr>
 	<td class="tableheaderbar">
-	      <img src="images/tables_icon.gif" border="0">&nbsp;&nbsp;<%= SourceTable.Name %>&nbsp;&nbsp;<i>(Created <%= SourceTable.DateCreated %>)</i>
+		<img src="images/tables_icon.gif" border="0">&nbsp;&nbsp;<%= SourceTable.Name %>&nbsp;&nbsp;<i>(Created <%= SourceTable.DateCreated %>)</i>
 	</td>
 </tr>
 <% if (SourceTable.Description.Length > 0) { %>	
@@ -29,9 +29,10 @@ Author:  Jason Alexander (jalexander@telligent.com), Eric J. Smith
 <% } %>
 <tr>
 	<td>
-		<table width="780">
+		<table width="820">
 		<tr>
 			<td class="columnheaderbar" width="40">&nbsp;Key</td>
+			<td class="columnheaderbar" width="40">&nbsp;FK</td>
 			<td class="columnheaderbar" width="40">&nbsp;ID</td>
 			<td class="columnheaderbar" width="340">&nbsp;Name</td>
 			<td class="columnheaderbar" width="100" nowrap="nowrap">&nbsp;Data Type</td>
@@ -42,6 +43,11 @@ Author:  Jason Alexander (jalexander@telligent.com), Eric J. Smith
 		<% for (int i = 0; i < SourceTable.Columns.Count; i++) { %>
 		<tr>
 			<% if (SourceTable.Columns[i].IsPrimaryKeyMember) { %>
+			<td align="center"><img src="images/check_icon.gif" border="0"></td>
+			<% } else { %>
+			<td align="center"><img src="images/unchecked_icon.gif" border="0"/></td>
+			<% } %>
+			<% if (SourceTable.Columns[i].IsForeignKeyMember) { %>
 			<td align="center"><img src="images/check_icon.gif" border="0"></td>
 			<% } else { %>
 			<td align="center"><img src="images/unchecked_icon.gif" border="0"/></td>
@@ -72,7 +78,45 @@ Author:  Jason Alexander (jalexander@telligent.com), Eric J. Smith
 		</tr>
 			<% } %>
 		<% } %>
-		</table>
+	<% if (SourceTable.PrimaryKeys.Count>0) { %>
+	<tr>
+		<td class="columnheaderbar" colspan="8">PRIMARY KEYS</td>
+	</td>
+	<tr>
+		<td class="columnheaderbar" colspan="3"></td>
+		<td class="columnheaderbar">Name</td>
+		<td class="columnheaderbar" colspan="2">PK Table</td>
+		<td class="columnheaderbar" colspan="2">FK Table</td>
+	</tr>
+		<% for (int i = 0; i < SourceTable.PrimaryKeys.Count; i++) { %>
+		<tr>
+		<td class="bodyText" colspan="3"></td>
+		<td class="bodyText"><%= SourceTable.PrimaryKeys[i].Name %></td>
+		<td class="bodyText" colspan="2"><%= SourceTable.PrimaryKeys[i].PrimaryKeyTable %></td>
+		<td class="bodyText" colspan="2"><%= SourceTable.PrimaryKeys[i].ForeignKeyTable %></td>
+		</tr>
+		<% } %>
+	<% } %>
+	<% if (SourceTable.ForeignKeys.Count>0) { %>
+	<tr>
+		<td class="columnheaderbar" colspan="8">FOREIGN KEYS</td>
+	</td>
+	<tr>
+		<td class="columnheaderbar" colspan="3"></td>
+		<td class="columnheaderbar">Name</td>
+		<td class="columnheaderbar" colspan="2">FK Table</td>
+		<td class="columnheaderbar" colspan="2">PK Table</td>
+	</tr>
+		<% for (int i = 0; i < SourceTable.ForeignKeys.Count; i++) { %>
+		<tr>
+		<td class="bodyText" colspan="3"></td>
+		<td class="bodyText"><%= SourceTable.ForeignKeys[i].Name %></td>
+		<td class="bodyText" colspan="2"><%= SourceTable.ForeignKeys[i].ForeignKeyTable %></td>
+		<td class="bodyText" colspan="2"><%= SourceTable.ForeignKeys[i].PrimaryKeyTable %></td>
+		</tr>
+		<% } %>
+	<% } %>
+			</table>
 	</td>
 </tr>
 </table>
