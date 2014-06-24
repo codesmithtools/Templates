@@ -1113,7 +1113,7 @@ public string GetBySuffix(IList<ColumnSchema> columns)
     System.Text.StringBuilder bySuffix = new System.Text.StringBuilder();
     foreach(var column in columns.AsIndexedEnumerable())
 	{
-	    if (column.IsFirst) bySuffix.Append("And");
+	    if (!column.IsFirst) bySuffix.Append("And");
 	    bySuffix.Append(column.Value.Name);
 	}
 	
