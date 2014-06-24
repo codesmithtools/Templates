@@ -46,7 +46,8 @@ namespace CodeSmith.SchemaHelper
         /// </summary>
         public override void Initialize()
         {
-            if (EntitySource == null) return;
+            if (EntitySource == null) 
+                return;
 
             //#region Entity Function Imports
             //  <FunctionImport Name="GetCategoryById" EntitySet="Categories" ReturnType="Collection(PetShopModel.Category)">
@@ -56,6 +57,11 @@ namespace CodeSmith.SchemaHelper
             //  <FunctionImport Name="GetCategoryById" ReturnType="Collection(PetShopModel.GetCategoryById_Result1)">
             //#region No Return Type Function Imports
             //  <FunctionImportMapping FunctionImportName="GetCategoryById" FunctionName="PetShopModel.Store.GetCategoryById" >
+            //<Function Name="usp_test" p5:Name="usp_test" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" p5:Schema="dbo" xmlns:p5="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator">
+            //  <Parameter Name="UserID" Mode="In" Type="int" />
+            //  <Parameter Name="FromDate" Mode="In" Type="datetime" />
+            //  <Parameter Name="ToDate" Mode="In" Type="datetime" />
+            //</Function>
             if (EntitySource.ReturnType != null)
             {
                 var returnType = EntitySource.ReturnType.ToString().Replace("Collection(", String.Empty).Replace(Namespace + ".", String.Empty).Replace(")", String.Empty).Trim();
@@ -71,13 +77,14 @@ namespace CodeSmith.SchemaHelper
 
             if(String.IsNullOrEmpty(ReturnType))
                 ReturnType = "System.Int32";
+
+            LoadSearchCriteria();
         }
-        
+
         /// <summary>
         /// Override to populate the properties from the implemented entity.
         /// </summary>
-        protected override void LoadProperties()
-        {
+        protected override void LoadProperties() {
         }
 
         /// <summary>
