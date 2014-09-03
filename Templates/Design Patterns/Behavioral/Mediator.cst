@@ -1,0 +1,146 @@
+﻿<%-- 
+Name: Mediator
+Author: Martin Hart Turner
+Description: Mediator Design Pattern Template
+--%>
+<%@ Assembly Name="CodeSmith.BaseTemplates" %>
+<%@ Import Namespace="CodeSmith.BaseTemplates"  %>
+<%@ Template Language="C#" TargetLanguage="Text" %>
+<%@ Property Name="Namespace" Type="System.String" Default="GangOfFour.Behavioral" Optional="False" Category="Names" Description="The name of the namespace" %>
+<%@ Property Name="AbstractMediatorClassName" Type="System.String" Default="Mediator" Optional="False" Category="Names" Description="Defines an interface for communicating with Colleague objects" %>
+<%@ Property Name="ConcreteMediatorClassName" Type="System.String" Default="ConcreteMediator" Optional="False" Category="Names" Description="Implements cooperative behavior by coordinating Colleague objects" %>
+<%@ Property Name="AbstractColleagueClassName" Type="System.String" Default="Colleague" Optional="False" Category="Names" Description="Each colleague communicates with its mediator whenever it would have otherwise communicated with another colleague" %>
+<%@ Property Name="ConcreteColleague1ClassName" Type="System.String" Default="ConcreteColleague1" Optional="False" Category="Names" Description="First concrete implementation of a colleague" %>
+<%@ Property Name="ConcreteColleague2ClassName" Type="System.String" Default="ConcreteColleague2" Optional="False" Category="Names" Description="Second concrete implementation of a colleague" %>
+<%@ Property Name="UseInterface" Type="System.Boolean" Default="True" Optional="False" Category="Options" Description="Use interfaces instead of abstract classes" %>
+<%@ Property Name="MakeReadonly" Type="System.Boolean" Default="True" Optional="False" Category="Options" Description="Declare properties as readonly where possible" %>
+<%@ Property Name="CreateUsageMethod" Type="System.Boolean" Default="True" Optional="False" Category="Options" Description="Create a method implanting the patterns usage" %>
+<% string mediatorInterfaceName = AbstractMediatorClassName; %>
+<% string attribute = "override"; %>
+<% if(UseInterface) { %>
+<%   attribute = "virtual"; %>
+<% } %>
+<% if(UseInterface) { %>
+<%   mediatorInterfaceName = "I" + mediatorInterfaceName; %>
+<% } %>
+using System;
+
+namespace <%= Namespace %>
+{
+  //--- Define an object that encapsulates how a set of objects interact. 
+  //--- Mediator promotes loose coupling by keeping objects from referring to each other explicitly, and it lets you vary their interaction independently.
+
+<% if(CreateUsageMethod) { %>
+  internal static class Usage
+  {
+    internal static void UsageMethod()
+    {
+      <%= ConcreteMediatorClassName %> m = new <%= ConcreteMediatorClassName %>();
+      <%= ConcreteColleague1ClassName %> c1 = new <%= ConcreteColleague1ClassName %>(m);
+      <%= ConcreteColleague2ClassName %> c2 = new <%= ConcreteColleague2ClassName %>(m);
+      m.Colleague1 = c1;
+      m.Colleague2 = c2;
+      c1.Send("How are you?");
+      c2.Send("Fine, thanks");
+    }
+  }
+<% } else { %>
+  //--- Usage:
+  //<%= ConcreteMediatorClassName %> m = new <%= ConcreteMediatorClassName %>();
+  //<%= ConcreteColleague1ClassName %> c1 = new <%= ConcreteColleague1ClassName %>(m);
+  //<%= ConcreteColleague2ClassName %> c2 = new <%= ConcreteColleague2ClassName %>(m);
+  //m.Colleague1 = c1;
+  //m.Colleague2 = c2;
+  //c1.Send("How are you?");
+  //c2.Send("Fine, thanks");
+<% } %>
+
+<% if(UseInterface) { %>
+  public interface <%= mediatorInterfaceName %>
+  {
+    void Send(string message, <%= AbstractColleagueClassName %> <%= StringUtility.ToCamelCase(AbstractColleagueClassName) %>);
+  }
+<% } else { %>
+  public abstract class <%= AbstractMediatorClassName %>
+  {
+    public abstract void Send(string message, <%= AbstractColleagueClassName %> <%= StringUtility.ToCamelCase(AbstractColleagueClassName) %>);
+  }
+<% } %>
+
+  public class <%= ConcreteMediatorClassName %> : <%= mediatorInterfaceName %>
+  {
+    private <%= ConcreteColleague1ClassName %> colleague1;
+    private <%= ConcreteColleague2ClassName %> colleague2;
+
+    public <%= ConcreteColleague1ClassName %> Colleague1
+    {
+      set { colleague1 = value; }
+    }
+
+    public <%= ConcreteColleague2ClassName %> Colleague2
+    {
+      set { colleague2 = value; }
+    }
+
+    public <%= attribute %> void Send(string message, <%= AbstractColleagueClassName %> <%= StringUtility.ToCamelCase(AbstractColleagueClassName) %>)
+    {
+      if(<%= StringUtility.ToCamelCase(AbstractColleagueClassName) %> == colleague1)
+      {
+        colleague2.Notify(message);
+      }
+      else
+      {
+        colleague1.Notify(message);
+      }
+    }
+  }
+
+  public abstract class <%= AbstractColleagueClassName %>
+  {
+    protected <% if(MakeReadonly) { %>readonly<% } %> <%= mediatorInterfaceName %> <%= StringUtility.ToCamelCase(AbstractMediatorClassName) %>;
+
+    //--- C'tor
+    public <%= AbstractColleagueClassName %>(<%= mediatorInterfaceName %> <%= StringUtility.ToCamelCase(AbstractMediatorClassName) %>)
+    {
+      this.<%= StringUtility.ToCamelCase(AbstractMediatorClassName) %> = <%= StringUtility.ToCamelCase(AbstractMediatorClassName) %>;
+    }
+  }
+
+  public class <%= ConcreteColleague1ClassName %> : <%= AbstractColleagueClassName %>
+  {
+    //--- C'tor
+    public <%= ConcreteColleague1ClassName %>(<%= mediatorInterfaceName %> <%= StringUtility.ToCamelCase(AbstractMediatorClassName) %>)
+      : base(<%= StringUtility.ToCamelCase(AbstractMediatorClassName) %>)
+    {
+    }
+
+    public void Send(string message)
+    {
+      <%= StringUtility.ToCamelCase(AbstractMediatorClassName) %>.Send(message, this);
+    }
+
+    public void Notify(string message)
+    {
+      System.Diagnostics.Debug.WriteLine("Colleague1 gets message: " + message);
+    }
+  }
+
+  public class <%= ConcreteColleague2ClassName %> : <%= AbstractColleagueClassName %>
+  {
+    //--- C'tor
+    public <%= ConcreteColleague2ClassName %>(<%= mediatorInterfaceName %> <%= StringUtility.ToCamelCase(AbstractMediatorClassName) %>)
+      : base(<%= StringUtility.ToCamelCase(AbstractMediatorClassName) %>)
+    {
+    }
+
+    public void Send(string message)
+    {
+      <%= StringUtility.ToCamelCase(AbstractMediatorClassName) %>.Send(message, this);
+    }
+
+    public void Notify(string message)
+    {
+      System.Diagnostics.Debug.WriteLine("Colleague2 gets message: " + message);
+    }
+  }
+}

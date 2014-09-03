@@ -1,0 +1,102 @@
+﻿<%-- 
+Name: Bridge
+Author: Martin Hart Turner
+Description: Bridge Design Pattern Template
+--%>
+<%@ Assembly Name="CodeSmith.BaseTemplates" %>
+<%@ Import Namespace="CodeSmith.BaseTemplates"  %>
+<%@ Template Language="C#" TargetLanguage="Text" %>
+<%@ Property Name="Namespace" Type="System.String" Default="GangOfFour.Structural" Optional="False" Category="Names" Description="The name of the namespace" %>
+<%@ Property Name="AbstractionClassName" Type="System.String" Default="Abstracion" Optional="False" Category="Names" Description="Defines the abstraction's interface. It also maintains a reference to an object of type Implementor" %>
+<%@ Property Name="RefinedAbstractionClassName" Type="System.String" Default="RefinedAbstracion" Optional="False" Category="Names" Description="Extends the interface defined by Abstraction" %>
+<%@ Property Name="AbstractImplementorClassName" Type="System.String" Default="Implementor" Optional="False" Category="Names" Description="Defines the interface for implementation classes. This interface doesn't have to correspond exactly to Abstraction's interface; in fact the two interfaces can be quite different. Typically the Implementation interface provides only primitive operations, and Abstraction defines higher-level operations based on these primitives" %>
+<%@ Property Name="ConcreteImplementor1ClassName" Type="System.String" Default="ConcreteImplementorA" Optional="False" Category="Names" Description="Implements the first Implementor interface and defines its concrete implementation" %>
+<%@ Property Name="ConcreteImplementor2ClassName" Type="System.String" Default="ConcreteImplementorB" Optional="False" Category="Names" Description="Implements the second Implementor interface and defines its concrete implementation" %>
+<%@ Property Name="UseInterface" Type="System.Boolean" Default="True" Optional="False" Category="Options" Description="Use interfaces instead of abstract classes" %>
+<%@ Property Name="CreateUsageMethod" Type="System.Boolean" Default="True" Optional="False" Category="Options" Description="Create a method implanting the patterns usage" %>
+<% string abstractImplementorClassName = AbstractImplementorClassName; %>
+<% string attribute = "override"; %>
+<% if(UseInterface) { %>
+<%   attribute = "virtual"; %>
+<% } %>
+<% if(UseInterface) { %>
+<%   abstractImplementorClassName = "I" + abstractImplementorClassName; %>
+<% } %>
+using System;
+
+namespace <%= Namespace %>
+{
+  //--- Decouple an abstraction from its implementation so that the two can vary independently.
+
+<% if(CreateUsageMethod) { %>
+  internal static class Usage
+  {
+    internal static void UsageMethod()
+    {
+		  <%= AbstractionClassName %> ab = new <%= RefinedAbstractionClassName %>();
+		  ab.Implementor = new <%= ConcreteImplementor1ClassName %>();
+		  ab.DoSomething();
+		  ab.Implementor = new <%= ConcreteImplementor2ClassName %>();
+		  ab.DoSomething();
+    }
+  }
+<% } else { %>
+  //--- Usage:
+  //<%= AbstractionClassName %> ab = new <%= RefinedAbstractionClassName %>();
+  //ab.Implementor = new <%= ConcreteImplementor1ClassName %>();
+  //ab.DoSomething();
+  //ab.Implementor = new <%= ConcreteImplementor2ClassName %>();
+  //ab.DoSomething();
+<% } %>
+
+  public class <%= AbstractionClassName %>
+  {
+    protected <%= abstractImplementorClassName %> implementor { get; private set;}
+
+    public <%= abstractImplementorClassName %> Implementor
+    {
+      set { implementor = value; }
+    }
+
+    public virtual void DoSomething()
+    {
+      implementor.DoSomething();
+    }
+  }
+
+<% if(UseInterface) { %>
+  public interface <%= abstractImplementorClassName %>
+  {
+    void DoSomething();
+  }
+<% } else { %>
+  public abstract class <%= AbstractImplementorClassName %>
+  {
+    public abstract void DoSomething();
+  }
+<% } %>
+
+  public class <%= RefinedAbstractionClassName %> : <%= AbstractionClassName %>
+  {
+    public <%= attribute %> void DoSomething()
+    {
+      implementor.DoSomething();
+    }
+  }
+
+  public class <%= ConcreteImplementor1ClassName %> : <%= abstractImplementorClassName %>
+  {
+    public <%= attribute %> void DoSomething()
+    {
+      System.Diagnostics.Debug.WriteLine("<%= ConcreteImplementor1ClassName %> DoSomething");
+    }
+  }
+
+  public class <%= ConcreteImplementor2ClassName %> : <%= abstractImplementorClassName %>
+  {
+    public <%= attribute %> void DoSomething()
+    {
+      System.Diagnostics.Debug.WriteLine("<%= ConcreteImplementor2ClassName %> DoSomething");
+    }
+  }
+}

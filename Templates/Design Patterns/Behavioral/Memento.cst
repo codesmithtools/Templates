@@ -1,0 +1,108 @@
+﻿<%-- 
+Name: Memento
+Author: Martin Hart Turner
+Description: Memento Design Pattern Template
+--%>
+<%@ Assembly Name="CodeSmith.BaseTemplates" %>
+<%@ Import Namespace="CodeSmith.BaseTemplates"  %>
+<%@ Template Language="C#" TargetLanguage="Text" %>
+<%@ Property Name="Namespace" Type="System.String" Default="GangOfFour.Behavioral" Optional="False" Category="Names" Description="The name of the namespace" %>
+<%@ Property Name="OriginatorClassName" Type="System.String" Default="Originator" Optional="False" Category="Names" Description="Creates a memento containing a snapshot of its current internal state" %>
+<%@ Property Name="MementoClassName" Type="System.String" Default="Memento" Optional="False" Category="Names" Description="Stores internal state of the Originator object. The memento may store as much or as little of the originator's internal state as necessary at its originator's discretion" %>
+<%@ Property Name="CaretakerClassName" Type="System.String" Default="Caretaker" Optional="False" Category="Names" Description="Is responsible for the memento's safekeeping" %>
+<%@ Property Name="MakeReadonly" Type="System.Boolean" Default="True" Optional="False" Category="Options" Description="Declare properties as readonly where possible" %>
+<%@ Property Name="UseInitializers" Type="System.Boolean" Default="True" Optional="False" Category="Options" Description="Initialize classes with initializers" %>
+<%@ Property Name="UseAutoImplementProperties" Type="System.Boolean" Default="True" Optional="False" Category="Options" Description="Use auto-implemented properties" %>
+<%@ Property Name="CreateUsageMethod" Type="System.Boolean" Default="True" Optional="False" Category="Options" Description="Create a method implanting the patterns usage" %>
+using System;
+
+namespace <%= Namespace %>
+{
+  //--- Without violating encapsulation, capture and externalize an object's 
+  //--- internal state so that the object can be restored to this state later.
+
+<% if(CreateUsageMethod) { %>
+  internal static class Usage
+  {
+    internal static void UsageMethod()
+    {
+<% if(UseInitializers) { %>
+      Originator o = new Originator() { State = "On" };
+      Caretaker c = new Caretaker() { Memento = o.CreateMemento() };
+<% } else { %>
+      Originator o = new Originator();
+      o.State = "On";
+      Caretaker c = new Caretaker();
+      c.Memento = o.CreateMemento();
+<% } %>
+      o.State = "Off";
+      o.SetMemento(c.Memento);
+    }
+  }
+<% } else { %>
+  //--- Usage:
+  //Originator o = new Originator();
+  //o.State = "On";
+  //Caretaker c = new Caretaker();
+  //c.Memento = o.CreateMemento();
+  //o.State = "Off";
+  //o.SetMemento(c.Memento);
+<% } %>
+
+  public class <%= OriginatorClassName %>
+  {
+    private string state;
+
+    public string State
+    {
+      get { return state; }
+      set
+      {
+        state = value;
+        System.Diagnostics.Debug.WriteLine("State = " + state);
+      }
+    }
+
+    public Memento CreateMemento()
+    {
+      return (new <%= MementoClassName %>(state));
+    }
+
+    public void SetMemento(<%= MementoClassName %> <%= StringUtility.ToCamelCase(MementoClassName) %>)
+    {
+      System.Diagnostics.Debug.WriteLine("Restoring state...");
+      State = <%= StringUtility.ToCamelCase(MementoClassName) %>.State;
+    }
+  }
+
+  public class <%= MementoClassName %>
+  {
+    private <% if(MakeReadonly) { %>readonly<% } %> string state;
+
+    //--- C'tor
+    public <%= MementoClassName %>(string state)
+    {
+      this.state = state;
+    }
+
+    public string State
+    {
+      get { return state; }
+    }
+  }
+
+  public class <%= CaretakerClassName %>
+  {
+<% if(UseAutoImplementProperties) { %>
+    public <%= MementoClassName %> <%= MementoClassName %> { get; set; }
+<% } else { %>
+    private <%= MementoClassName %> <%= StringUtility.ToCamelCase(MementoClassName) %>;
+
+    public <%= MementoClassName %> <%= MementoClassName %>
+    {
+      set { <%= StringUtility.ToCamelCase(MementoClassName) %> = value; }
+      get { return <%= StringUtility.ToCamelCase(MementoClassName) %>; }
+    }
+<% } %>
+  }
+}

@@ -1,0 +1,165 @@
+﻿<%-- 
+Name: Visitor
+Author: Martin Hart Turner
+Description: Visitor Design Pattern Template
+--%>
+<%@ Assembly Name="CodeSmith.BaseTemplates" %>
+<%@ Import Namespace="CodeSmith.BaseTemplates"  %>
+<%@ Template Language="C#" TargetLanguage="Text" %>
+<%@ Property Name="Namespace" Type="System.String" Default="GangOfFour.Behavioral" Optional="False" Category="Names" Description="The name of the namespace" %>
+<%@ Property Name="AbstractVisitorClassName" Type="System.String" Default="Visitor" Optional="False" Category="Names" Description="Declares a Visit operation for each class of ConcreteElement in the object structure" %>
+<%@ Property Name="ConcreteVisitor1ClassName" Type="System.String" Default="ConcreteVisitor1" Optional="False" Category="Names" Description="Implements each operation declared by the first Visitor" %>
+<%@ Property Name="ConcreteVisitor2ClassName" Type="System.String" Default="ConcreteVisitor2" Optional="False" Category="Names" Description="Implements each operation declared by the second Visitor" %>
+<%@ Property Name="AbstractElementClassName" Type="System.String" Default="Element" Optional="False" Category="Names" Description="Defines an Accept operation that takes a visitor as an argument" %>
+<%@ Property Name="ConcreteElementAClassName" Type="System.String" Default="ConcreteElementA" Optional="False" Category="Names" Description="Implements an Accept operation that takes a visitor as an argument" %>
+<%@ Property Name="ConcreteElementBClassName" Type="System.String" Default="ConcreteElementB" Optional="False" Category="Names" Description="Implements an Accept operation that takes a visitor as an argument" %>
+<%@ Property Name="ObjectStructureClassName" Type="System.String" Default="ObjectStructure" Optional="False" Category="Names" Description="The object that enumerates its elements" %>
+<%@ Property Name="VisitConcreteElementAMethodName" Type="System.String" Default="VisitConcreteElementA" Optional="False" Category="Names" Description="The name of the method to visit elementes of type A" %>
+<%@ Property Name="VisitConcreteElementBMethodName" Type="System.String" Default="VisitConcreteElementB" Optional="False" Category="Names" Description="The name of the method to visit elementes of type A" %>
+<%@ Property Name="UseInterface" Type="System.Boolean" Default="True" Optional="False" Category="Options" Description="Use interfaces instead of abstract classes" %>
+<%@ Property Name="MakeReadonly" Type="System.Boolean" Default="True" Optional="False" Category="Options" Description="Declare properties as readonly where possible" %>
+<%@ Property Name="CreateUsageMethod" Type="System.Boolean" Default="True" Optional="False" Category="Options" Description="Create a method implanting the patterns usage" %>
+<% string visitorInterfaceName = AbstractVisitorClassName; %>
+<% string elementInterfaceName = AbstractElementClassName; %>
+<% string attribute = "override"; %>
+<% if(UseInterface) { %>
+<%   attribute = "virtual"; %>
+<% } %>
+<% if(UseInterface) { %>
+<%   visitorInterfaceName = "I" + visitorInterfaceName; %>
+<% } %>
+<% if(UseInterface) { %>
+<%   elementInterfaceName = "I" + elementInterfaceName; %>
+<% } %>
+using System;
+using System.Collections.Generic;
+
+namespace <%= Namespace %>
+{
+  //--- Represent an operation to be performed on the elements of an object structure. 
+  //--- Visitor lets you define a new operation without changing the classes of the elements on which it operates.
+
+<% if(CreateUsageMethod) { %>
+  public static class Usage
+  {
+    public static void UsageMethod()
+    {
+      <%= ObjectStructureClassName %> o = new <%= ObjectStructureClassName %>();
+      o.Attach(new <%= ConcreteElementAClassName %>());
+      o.Attach(new <%= ConcreteElementBClassName %>());
+      <%= ConcreteVisitor1ClassName %> visitor1 = new <%= ConcreteVisitor1ClassName %>();
+      <%= ConcreteVisitor2ClassName %> visitor2 = new <%= ConcreteVisitor2ClassName %>();
+      o.Accept(visitor1);
+      o.Accept(visitor2);
+    }
+  }
+<% } else { %>
+  //--- Usage:
+  //<%= ObjectStructureClassName %> o = new <%= ObjectStructureClassName %>();
+  //o.Attach(new <%= ConcreteElementAClassName %>());
+  //o.Attach(new <%= ConcreteElementBClassName %>());
+  //<%= ConcreteVisitor1ClassName %> visitor1 = new <%= ConcreteVisitor1ClassName %>();
+  //<%= ConcreteVisitor2ClassName %> visitor2 = new <%= ConcreteVisitor2ClassName %>();
+  //o.Accept(visitor1);
+  //o.Accept(visitor2);
+<% } %>
+
+<% if(UseInterface) { %>
+  public interface <%= visitorInterfaceName %>
+  {
+    void <%= VisitConcreteElementAMethodName %>(<%= ConcreteElementAClassName %> <%= StringUtility.ToCamelCase(ConcreteElementAClassName) %>);
+    void <%= VisitConcreteElementBMethodName %>(<%= ConcreteElementBClassName %> <%= StringUtility.ToCamelCase(ConcreteElementBClassName) %>);
+  }
+<% } else { %>
+  public abstract class <%= visitorInterfaceName %>
+  {
+    public abstract void <%= VisitConcreteElementAMethodName %>(<%= ConcreteElementAClassName %> <%= StringUtility.ToCamelCase(ConcreteElementAClassName) %>);
+    public abstract void <%= VisitConcreteElementBMethodName %>(<%= ConcreteElementBClassName %> <%= StringUtility.ToCamelCase(ConcreteElementBClassName) %>);
+  }
+<% } %>
+
+  public class <%= ConcreteVisitor1ClassName %> : <%= visitorInterfaceName %>
+  {
+    public <%= attribute %> void <%= VisitConcreteElementAMethodName %>(<%= ConcreteElementAClassName %> <%= StringUtility.ToCamelCase(ConcreteElementAClassName) %>)
+    {
+      System.Diagnostics.Debug.WriteLine("{0} visited by {1}", <%= StringUtility.ToCamelCase(ConcreteElementAClassName) %>.GetType().Name, GetType().Name);
+    }
+
+    public <%= attribute %> void <%= VisitConcreteElementBMethodName %>(<%= ConcreteElementBClassName %> <%= StringUtility.ToCamelCase(ConcreteElementBClassName) %>)
+    {
+      System.Diagnostics.Debug.WriteLine("{0} visited by {1}", <%= StringUtility.ToCamelCase(ConcreteElementBClassName) %>.GetType().Name, GetType().Name);
+    }
+  }
+
+  public class <%= ConcreteVisitor2ClassName %> : <%= visitorInterfaceName %>
+  {
+    public <%= attribute %> void <%= VisitConcreteElementAMethodName %>(<%= ConcreteElementAClassName %> <%= StringUtility.ToCamelCase(ConcreteElementAClassName) %>)
+    {
+      System.Diagnostics.Debug.WriteLine("{0} visited by {1}", <%= StringUtility.ToCamelCase(ConcreteElementAClassName) %>.GetType().Name, GetType().Name);
+    }
+
+    public <%= attribute %> void <%= VisitConcreteElementBMethodName %>(<%= ConcreteElementBClassName %> <%= StringUtility.ToCamelCase(ConcreteElementBClassName) %>)
+    {
+      System.Diagnostics.Debug.WriteLine("{0} visited by {1}", <%= StringUtility.ToCamelCase(ConcreteElementBClassName) %>.GetType().Name, GetType().Name);
+    }
+  }
+
+<% if(UseInterface) { %>
+  public interface <%= elementInterfaceName %>
+  {
+    void Accept(<%= visitorInterfaceName %> visitor);
+  }
+<% } else { %>
+  public abstract class <%= elementInterfaceName %>
+  {
+    public abstract void Accept(<%= visitorInterfaceName %> visitor);
+  }
+<% } %>
+
+  public class <%= ConcreteElementAClassName %> : <%= elementInterfaceName %>
+  {
+    public <%= attribute %> void Accept(<%= visitorInterfaceName %> visitor)
+    {
+      visitor.<%= VisitConcreteElementAMethodName %>(this);
+    }
+
+    public void OperationA()
+    {
+    }
+  }
+
+  public class <%= ConcreteElementBClassName %> : <%= elementInterfaceName %>
+  {
+    public <%= attribute %> void Accept(<%= visitorInterfaceName %> visitor)
+    {
+      visitor.<%= VisitConcreteElementBMethodName %>(this);
+    }
+
+    public void OperationB()
+    {
+    }
+  }
+
+  public class <%= ObjectStructureClassName %>
+  {
+    private <% if(MakeReadonly) { %>readonly<% } %> List<<%= elementInterfaceName %>> elements = new List<<%= elementInterfaceName %>>();
+
+    public void Attach(<%= elementInterfaceName %> element)
+    {
+      elements.Add(element);
+    }
+
+    public void Detach(<%= elementInterfaceName %> element)
+    {
+      elements.Remove(element);
+    }
+
+    public void Accept(<%= visitorInterfaceName %> visitor)
+    {
+      foreach(<%= elementInterfaceName %> element in elements)
+      {
+        element.Accept(visitor);
+      }
+    }
+  }
+}

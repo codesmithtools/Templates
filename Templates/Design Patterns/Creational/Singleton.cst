@@ -1,0 +1,73 @@
+﻿<%-- 
+Name: Singleton
+Author: Martin Hart Turner
+Description: Singleton Design Pattern Template
+--%>
+<%@ Template Language="C#" TargetLanguage="Text" %>
+<%@ Property Name="Namespace" Type="System.String" Default="GangOfFour.Creational" Optional="False" Category="Names" Description="The name of the namespace" %>
+<%@ Property Name="SingletonName" Type="System.String" Default="Singleton" Optional="False" Category="Names" Description="Defines an Instance operation that lets clients access its unique instance. Instance is a class operation" %>
+<%@ Property Name="MakeThreadSafe" Type="System.Boolean" Default="False" Optional="False" Category="Options" Description="Make the static Instance method thread safe" %>
+<%@ Property Name="MakeReadonly" Type="System.Boolean" Default="True" Optional="False" Category="Options" Description="Declare properties as readonly where possible" %>
+<%@ Property Name="CreateUsageMethod" Type="System.Boolean" Default="True" Optional="False" Category="Options" Description="Create a method implanting the patterns usage" %>
+using System;
+
+namespace <%= Namespace %>
+{
+  //--- Ensure a class has only one instance and provide a global point of access to it.
+
+<% if(CreateUsageMethod) { %>
+  internal static class Usage
+  {
+    internal static void UsageMethod()
+    {
+		  <%= SingletonName %> s1 = <%= SingletonName %>.Instance();
+		  <%= SingletonName %> s2 = <%= SingletonName %>.Instance();
+		  System.Debug.Assert(s1 == s2);
+    }
+  }
+<% } else { %>
+  //--- Usage:
+  //<%= SingletonName %> s1 = <%= SingletonName %>.Instance();
+  //<%= SingletonName %> s2 = <%= SingletonName %>.Instance();
+  //System.Debug.Assert(s1 == s2);
+<% } %>
+
+  public class <%= SingletonName %>
+  {
+<% if(MakeThreadSafe) { %>
+    private static volatile <%= SingletonName %> instance;
+    private <% if(MakeReadonly) { %>readonly<% } %> static object syncRoot = new Object();
+<% } else { %>
+    private static <%= SingletonName %> instance;
+<% } %>
+
+    //--- C'tor is non public, so can't be instantiated
+    protected <%= SingletonName %>()
+    {
+    }
+
+    public static <%= SingletonName %> Instance()
+    {
+<% if(MakeThreadSafe) { %>
+      //--- Note: Thread safe
+      if(instance == null) 
+      {
+        lock(syncRoot) 
+        {
+          if(instance == null) 
+          {
+            instance = new Singleton();
+          }
+        }
+      }
+<% } else { %>
+      //--- Note: Not thread safe!
+      if(instance == null)
+      {
+        instance = new <%= SingletonName %>();
+      }
+<% } %>
+      return instance;
+    }
+  }
+}

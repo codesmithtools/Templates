@@ -1,0 +1,138 @@
+﻿<%-- 
+Name: Chain of Command
+Author: Martin Hart Turner
+Description: Chain of Command Design Pattern Template
+--%>
+<%@ Assembly Name="CodeSmith.BaseTemplates" %>
+<%@ Import Namespace="CodeSmith.BaseTemplates"  %>
+<%@ Template Language="C#" TargetLanguage="Text" %>
+<%@ Property Name="Namespace" Type="System.String" Default="GangOfFour.Behavioral" Optional="False" Category="Names" Description="The name of the namespace" %>
+<%@ Property Name="AbstractHandlerClassName" Type="System.String" Default="Handler" Optional="False" Category="Names" Description="Defines an interface for handling the requests" %>
+<%@ Property Name="ConcreteHandler1ClassName" Type="System.String" Default="ConcreteHandler1" Optional="False" Category="Names" Description="First class that handles requests it is responsible for" %>
+<%@ Property Name="ConcreteHandler2ClassName" Type="System.String" Default="ConcreteHandler2" Optional="False" Category="Names" Description="Second class that handles requests it is responsible for" %>
+<%@ Property Name="ConcreteHandler3ClassName" Type="System.String" Default="ConcreteHandler3" Optional="False" Category="Names" Description="Third class that handles requests it is responsible for" %>
+<%@ Property Name="UseInterface" Type="System.Boolean" Default="True" Optional="False" Category="Options" Description="Use interfaces instead of abstract classes" %>
+<%@ Property Name="MakeReadonly" Type="System.Boolean" Default="True" Optional="False" Category="Options" Description="Declare properties as readonly where possible" %>
+<%@ Property Name="CreateUsageMethod" Type="System.Boolean" Default="True" Optional="False" Category="Options" Description="Create a method implanting the patterns usage" %>
+<% string handlerInterfaceName = AbstractHandlerClassName; %>
+<% string attribute = "override"; %>
+<% if(UseInterface) { %>
+<%   attribute = "virtual"; %>
+<% } %>
+<% if(UseInterface) { %>
+<%   handlerInterfaceName = "I" + handlerInterfaceName; %>
+<% } %>
+using System;
+
+namespace <%= Namespace %>
+{
+  //--- Avoid coupling the sender of a request to its receiver by giving more than one object a chance to handle the request. 
+  //--- Chain the receiving objects and pass the request along the chain until an object handles it.
+
+<% if(CreateUsageMethod) { %>
+  internal static class Usage
+  {
+    internal static void UsageMethod()
+    {
+		  Handler h1 = new ConcreteHandler1();
+		  Handler h2 = new ConcreteHandler2();
+		  Handler h3 = new ConcreteHandler3();
+		  h1.SetSuccessor(h2);
+		  h2.SetSuccessor(h3);
+		  int[] requests = { 2,5,14,22,18,3,27,20 };
+		  foreach(int request in requests)
+		  {
+		    h1.HandleRequest(request);
+		  }
+    }
+  }
+<% } else { %>
+  //--- Usage:
+  //Handler h1 = new ConcreteHandler1();
+  //Handler h2 = new ConcreteHandler2();
+  //Handler h3 = new ConcreteHandler3();
+  //h1.SetSuccessor(h2);
+  //h2.SetSuccessor(h3);
+  //int[] requests = { 2,5,14,22,18,3,27,20 };
+  //foreach(int request in requests)
+  //{
+  //  h1.HandleRequest(request);
+  //}
+<% } %>
+
+<% if(UseInterface) { %>
+  public interface <%= handlerInterfaceName %>
+  {
+    void HandleRequest(int request);
+  }
+
+  public abstract class <%= AbstractHandlerClassName %> : <%= handlerInterfaceName %>
+  {
+    protected <% if(MakeReadonly) { %>readonly<% } %> <%= handlerInterfaceName %> Successor { get; private set; }
+
+    public void SetSuccessor(<%= handlerInterfaceName %> successor)
+    {
+      Successor = successor;
+    }
+
+    public abstract void HandleRequest(int request);
+  }
+<% } else { %>
+  public abstract class <%= AbstractHandlerClassName %>
+  {
+    protected <%= AbstractHandlerClassName %> Successor { get; private set; }
+
+    public void SetSuccessor(<%= AbstractHandlerClassName %> successor)
+    {
+      Successor = successor;
+    }
+
+    public abstract void HandleRequest(int request);
+  }
+<% } %>
+
+  public class <%= ConcreteHandler1ClassName %> : <%= AbstractHandlerClassName %>
+  {
+    public <%= attribute %> void HandleRequest(int request)
+    {
+      if(request >= 0 && request < 10)
+      {
+        System.Diagnostics.Debug.WriteLine("{0} handled request {1}", GetType().Name, request);
+      }
+      else if(Successor != null)
+      {
+        Successor.HandleRequest(request);
+      }
+    }
+  }
+
+  public class <%= ConcreteHandler2ClassName %> : <%= AbstractHandlerClassName %>
+  {
+    public <%= attribute %> void HandleRequest(int request)
+    {
+      if(request >= 10 && request < 20)
+      {
+        System.Diagnostics.Debug.WriteLine("{0} handled request {1}", GetType().Name, request);
+      }
+      else if(Successor != null)
+      {
+        Successor.HandleRequest(request);
+      }
+    }
+  }
+
+  public class <%= ConcreteHandler3ClassName %> : <%= AbstractHandlerClassName %>
+  {
+    public <%= attribute %> void HandleRequest(int request)
+    {
+      if(request >= 20 && request < 30)
+      {
+        System.Diagnostics.Debug.WriteLine("{0} handled request {1}", GetType().Name, request);
+      }
+      else if(Successor != null)
+      {
+        Successor.HandleRequest(request);
+      }
+    }
+  }
+}

@@ -1,0 +1,63 @@
+﻿<%-- 
+Name: Adapter
+Author: Martin Hart Turner
+Description: Adapter Design Pattern Template
+--%>
+<%@ Assembly Name="CodeSmith.BaseTemplates" %>
+<%@ Import Namespace="CodeSmith.BaseTemplates"  %>
+<%@ Template Language="C#" TargetLanguage="Text" %>
+<%@ Property Name="Namespace" Type="System.String" Default="GangOfFour.Structural" Optional="False" Category="Names" Description="The name of the namespace" %>
+<%@ Property Name="TargetClassName" Type="System.String" Default="Target" Optional="False" Category="Names" Description="Defines the domain-specific interface that Client uses" %>
+<%@ Property Name="AdapterClassName" Type="System.String" Default="Adapter" Optional="False" Category="Names" Description="Adapts the interface Adaptee to the Target interface" %>
+<%@ Property Name="AdapteeClassName" Type="System.String" Default="Adaptee" Optional="False" Category="Names" Description="Defines an existing interface that needs adapting" %>
+<%@ Property Name="MakeReadonly" Type="System.Boolean" Default="True" Optional="False" Category="Options" Description="Declare properties as readonly where possible" %>
+<%@ Property Name="CreateUsageMethod" Type="System.Boolean" Default="True" Optional="False" Category="Options" Description="Create a method implanting the patterns usage" %>
+using System;
+
+namespace <%= Namespace %>
+{
+  //--- Convert the interface of a class into another interface clients expect.
+  //--- Adapter lets classes work together that couldn't otherwise because of incompatible interfaces.
+
+<% if(CreateUsageMethod) { %>
+  internal static class Usage
+  {
+    internal static void UsageMethod()
+    {
+		  <%= TargetClassName %> <%= StringUtility.ToCamelCase(TargetClassName) %> = new <%= AdapterClassName %>();
+		  <%= StringUtility.ToCamelCase(TargetClassName) %>.TargetRequest();
+    }
+  }
+<% } else { %>
+  //--- Usage:
+  //<%= TargetClassName %> <%= StringUtility.ToCamelCase(TargetClassName) %> = new <%= AdapterClassName %>();
+  //<%= StringUtility.ToCamelCase(TargetClassName) %>.TargetRequest();
+<% } %>
+
+  public class <%= TargetClassName %>
+  {
+    public virtual void TargetRequest()
+    {
+      System.Diagnostics.Debug.WriteLine("Called <%= TargetClassName %> TargetRequest()");
+    }
+  }
+
+  public class <%= AdapterClassName %> : <%= TargetClassName %>
+  {
+    private <% if(MakeReadonly) { %>readonly<% } %> <%= AdapteeClassName %> <%= StringUtility.ToCamelCase(AdapteeClassName) %> = new <%= AdapteeClassName %>();
+
+    public override void TargetRequest()
+    {
+      //--- Call the AdapteeSpecificRequest to use the Adaptee's specific functionallity
+      <%= StringUtility.ToCamelCase(AdapteeClassName) %>.AdapteeSpecificRequest();
+    }
+  }
+
+  public class <%= AdapteeClassName %>
+  {
+    public void AdapteeSpecificRequest()
+    {
+      System.Diagnostics.Debug.WriteLine("You called AdapteeSpecificRequest()");
+    }
+  }
+}

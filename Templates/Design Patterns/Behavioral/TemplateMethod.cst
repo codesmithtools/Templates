@@ -1,0 +1,113 @@
+﻿<%-- 
+Name: Template Method
+Author: Martin Hart Turner
+Description: Template Method Design Pattern Template
+--%>
+<%@ Assembly Name="CodeSmith.BaseTemplates" %>
+<%@ Import Namespace="CodeSmith.BaseTemplates"  %>
+<%@ Template Language="C#" TargetLanguage="Text" %>
+<%@ Property Name="Namespace" Type="System.String" Default="GangOfFour.Behavioral" Optional="False" Category="Names" Description="The name of the namespace" %>
+<%@ Property Name="AbstractClassClassName" Type="System.String" Default="AbstractClass" Optional="False" Category="Names" Description="The name of the base abstract class that defines the algorithm" %>
+<%@ Property Name="ConcreteClassAClassName" Type="System.String" Default="ConcreteClassA" Optional="False" Category="Names" Description="Implements the first primitive operations to carry out subclass-specific steps of the algorithm" %>
+<%@ Property Name="ConcreteClassBClassName" Type="System.String" Default="ConcreteClassB" Optional="False" Category="Names" Description="Implements the second primitive operations to carry out subclass-specific steps of the algorithm" %>
+<%@ Property Name="PrimitiveOperation1MethodName" Type="System.String" Default="PrimitiveOperation1" Optional="False" Category="Names" Description="The name of the first primitive method" %>
+<%@ Property Name="PrimitiveOperation2MethodName" Type="System.String" Default="PrimitiveOperation2" Optional="False" Category="Names" Description="The name of the second primitive method" %>
+<%@ Property Name="TemplateMethodMethodName" Type="System.String" Default="TemplateMethod" Optional="False" Category="Names" Description="The name of the method that executes the primitive methods" %>
+<%@ Property Name="UseInterface" Type="System.Boolean" Default="True" Optional="False" Category="Options" Description="Use interfaces instead of abstract classes" %>
+<%@ Property Name="MakeReadonly" Type="System.Boolean" Default="True" Optional="False" Category="Options" Description="Declare properties as readonly where possible" %>
+<%@ Property Name="CreateUsageMethod" Type="System.Boolean" Default="True" Optional="False" Category="Options" Description="Create a method implanting the patterns usage" %>
+<% string abstractClassInterfaceName = AbstractClassClassName; %>
+<% string attribute = "override"; %>
+<% if(UseInterface) { %>
+<%   attribute = "virtual"; %>
+<% } %>
+<% if(UseInterface) { %>
+<%   abstractClassInterfaceName = "I" + abstractClassInterfaceName; %>
+<% } %>
+using System;
+
+namespace <%= Namespace %>
+{
+  //--- Define the skeleton of an algorithm in an operation, deferring some steps to subclasses. 
+  //--- Template Method lets subclasses redefine certain steps of an algorithm without changing the algorithm's structure.
+
+<% if(CreateUsageMethod) { %>
+  internal static class Usage
+  {
+    internal static void UsageMethod()
+    {
+      <%= abstractClassInterfaceName %> aA = new <%= ConcreteClassAClassName %>();
+      aA.<%=TemplateMethodMethodName %>();
+      <%= abstractClassInterfaceName %> aB = new <%= ConcreteClassBClassName %>();
+      aB.<%=TemplateMethodMethodName %>();
+    }
+  }
+<% } else { %>
+  //--- Usage:
+  //<%= abstractClassInterfaceName %> aA = new <%= ConcreteClassAClassName %>();
+  //aA.<%=TemplateMethodMethodName %>();
+  //<%= abstractClassInterfaceName %> aB = new <%= ConcreteClassBClassName %>();
+  //aB.<%=TemplateMethodMethodName %>();
+<% } %>
+
+<% if(UseInterface) { %>
+  public interface <%= abstractClassInterfaceName %>
+  {
+    void <%=TemplateMethodMethodName %>();
+    void <%=PrimitiveOperation1MethodName %>();
+    void <%=PrimitiveOperation2MethodName %>();
+  }
+  
+  public abstract class <%= AbstractClassClassName %> : <%= abstractClassInterfaceName %>
+  {
+    public abstract void <%=PrimitiveOperation1MethodName %>();
+    public abstract void <%=PrimitiveOperation2MethodName %>();
+
+    public void <%=TemplateMethodMethodName %>()
+    {
+      <%=PrimitiveOperation1MethodName %>();
+      <%=PrimitiveOperation2MethodName %>();
+      System.Diagnostics.Debug.WriteLine(string.Empty);
+    }
+  }
+<% } else { %>
+  public abstract class <%= AbstractClassClassName %>
+  {
+    public abstract void <%=PrimitiveOperation1MethodName %>();
+    public abstract void <%=PrimitiveOperation2MethodName %>();
+
+    public void <%=TemplateMethodMethodName %>()
+    {
+      <%=PrimitiveOperation1MethodName %>();
+      <%=PrimitiveOperation2MethodName %>();
+      System.Diagnostics.Debug.WriteLine(string.Empty);
+    }
+  }
+<% } %>
+
+  public class <%= ConcreteClassAClassName %> : <%= AbstractClassClassName %>
+  {
+    public override void <%=PrimitiveOperation1MethodName %>()
+    {
+      System.Diagnostics.Debug.WriteLine("<%= ConcreteClassAClassName %>.<%=PrimitiveOperation1MethodName %>()");
+    }
+
+    public override void <%=PrimitiveOperation2MethodName %>()
+    {
+      System.Diagnostics.Debug.WriteLine("<%= ConcreteClassAClassName %>.<%=PrimitiveOperation2MethodName %>()");
+    }
+  }
+
+  public class <%= ConcreteClassBClassName %> : <%= AbstractClassClassName %>
+  {
+    public override void <%=PrimitiveOperation1MethodName %>()
+    {
+      System.Diagnostics.Debug.WriteLine("<%= ConcreteClassBClassName %>.<%=PrimitiveOperation1MethodName %>()");
+    }
+
+    public override void <%=PrimitiveOperation2MethodName %>()
+    {
+      System.Diagnostics.Debug.WriteLine("<%= ConcreteClassBClassName %>.<%=PrimitiveOperation2MethodName %>()");
+    }
+  }
+}

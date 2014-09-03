@@ -1,0 +1,77 @@
+﻿<%-- 
+Name: Proxy
+Author: Martin Hart Turner
+Description: Proxy Design Pattern Template
+--%>
+<%@ Assembly Name="CodeSmith.BaseTemplates" %>
+<%@ Import Namespace="CodeSmith.BaseTemplates"  %>
+<%@ Template Language="C#" TargetLanguage="Text" %>
+<%@ Property Name="Namespace" Type="System.String" Default="GangOfFour.Structural" Optional="False" Category="Names" Description="The name of the namespace" %>
+<%@ Property Name="AbstractSubjectClassName" Type="System.String" Default="Subject" Optional="False" Category="Names" Description="Defines the common interface for RealSubject and Proxy so that a Proxy can be used anywhere a RealSubject is expected" %>
+<%@ Property Name="RealSubjectClassName" Type="System.String" Default="RealSubject" Optional="False" Category="Names" Description="Defines the real object that the proxy represents" %>
+<%@ Property Name="ProxyClassName" Type="System.String" Default="Proxy" Optional="False" Category="Names" Description="Maintains a reference that lets the proxy access the real subject. Proxy may refer to a Subject if the RealSubject and Subject interfaces are the same" %>
+<%@ Property Name="UseInterface" Type="System.Boolean" Default="True" Optional="False" Category="Options" Description="Use interfaces instead of abstract classes" %>
+<%@ Property Name="CreateUsageMethod" Type="System.Boolean" Default="True" Optional="False" Category="Options" Description="Create a method implanting the patterns usage" %>
+<% string abstractSubjectClassName = AbstractSubjectClassName; %>
+<% string attribute = "override"; %>
+<% if(UseInterface) { %>
+<%   attribute = "virtual"; %>
+<% } %>
+<% if(UseInterface) { %>
+<%   abstractSubjectClassName = "I" + abstractSubjectClassName; %>
+<% } %>
+using System;
+
+namespace <%= Namespace %>
+{
+  //--- Provide a surrogate or placeholder for another object to control access to it.
+
+<% if(CreateUsageMethod) { %>
+  internal static class Usage
+  {
+    internal static void UsageMethod()
+    {
+		  Proxy proxy = new Proxy();
+		  proxy.Request();
+    }
+  }
+<% } else { %>
+  //--- Usage:
+  //Proxy proxy = new Proxy();
+  //proxy.Request();
+<% } %>
+
+<% if(UseInterface) { %>
+  public interface <%= abstractSubjectClassName %>
+  {
+    void Request();
+  }
+<% } else { %>
+  public abstract class <%= abstractSubjectClassName %>
+  {
+    public abstract void Request();
+  }
+<% } %>
+
+  public class <%= RealSubjectClassName %> : <%= abstractSubjectClassName %>
+  {
+    public <%= attribute %> void Request()
+    {
+      System.Diagnostics.Debug.WriteLine("Called RealSubject.Request()");
+    }
+  }
+
+  public class <%= ProxyClassName %> : <%= abstractSubjectClassName %>
+  {
+    private <%= RealSubjectClassName %> <%= StringUtility.ToCamelCase(RealSubjectClassName) %>;
+
+    public <%= attribute %> void Request()
+    {
+      if(<%= StringUtility.ToCamelCase(RealSubjectClassName) %> == null)
+      {
+        <%= StringUtility.ToCamelCase(RealSubjectClassName) %> = new <%= RealSubjectClassName %>();
+      }
+      <%= StringUtility.ToCamelCase(RealSubjectClassName) %>.Request();
+    }
+  }
+}

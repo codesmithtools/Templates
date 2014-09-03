@@ -1,0 +1,93 @@
+﻿<%-- 
+Name: Interpreter
+Author: Martin Hart Turner
+Description: Interpreter Design Pattern Template
+--%>
+<%@ Assembly Name="CodeSmith.BaseTemplates" %>
+<%@ Import Namespace="CodeSmith.BaseTemplates"  %>
+<%@ Template Language="C#" TargetLanguage="Text" %>
+<%@ Property Name="Namespace" Type="System.String" Default="GangOfFour.Behavioral" Optional="False" Category="Names" Description="The name of the namespace" %>
+<%@ Property Name="AbstractExpressionClassName" Type="System.String" Default="AbstractExpression" Optional="False" Category="Names" Description="Declares an interface for executing an operation" %>
+<%@ Property Name="TerminalExpressionClassName" Type="System.String" Default="TerminalExpression" Optional="False" Category="Names" Description="Implements an Interpret operation associated with terminal symbols in the grammar" %>
+<%@ Property Name="NonTerminalExpressionClassName" Type="System.String" Default="NonTerminalExpression" Optional="False" Category="Names" Description="Implements an Interpret operation for nonterminal symbols in the grammar" %>
+<%@ Property Name="UseInterface" Type="System.Boolean" Default="True" Optional="False" Category="Options" Description="Use interfaces instead of abstract classes" %>
+<%@ Property Name="MakeReadonly" Type="System.Boolean" Default="True" Optional="False" Category="Options" Description="Declare properties as readonly where possible" %>
+<%@ Property Name="CreateUsageMethod" Type="System.Boolean" Default="True" Optional="False" Category="Options" Description="Create a method implanting the patterns usage" %>
+<% string abstractExpressionClassName = AbstractExpressionClassName; %>
+<% string attribute = "override"; %>
+<% if(UseInterface) { %>
+<%   attribute = "virtual"; %>
+<% } %>
+<% if(UseInterface) { %>
+<%   abstractExpressionClassName = "I" + abstractExpressionClassName; %>
+<% } %>
+using System;
+
+namespace <%= Namespace %>
+{
+  //--- Given a language, define a representation for its grammar along with an 
+  //--- interpreter that uses the representation to interpret sentences in the language.
+
+<% if(CreateUsageMethod) { %>
+  internal static class Usage
+  {
+    internal static void UsageMethod()
+    {
+		  Context context = new Context();
+		  ArrayList list = new ArrayList();
+		  list.Add(new TerminalExpression());
+		  list.Add(new NonterminalExpression());
+		  list.Add(new TerminalExpression());
+		  list.Add(new TerminalExpression());
+		  foreach(AbstractExpression exp in list)
+		  {
+		    exp.Interpret(context);
+		  }
+    }
+  }
+<% } else { %>
+  //--- Usage:
+  //Context context = new Context();
+  //ArrayList list = new ArrayList();
+  //list.Add(new TerminalExpression());
+  //list.Add(new NonterminalExpression());
+  //list.Add(new TerminalExpression());
+  //list.Add(new TerminalExpression());
+  //foreach(AbstractExpression exp in list)
+  //{
+  //  exp.Interpret(context);
+  //}
+<% } %>
+
+  public class Context
+  {
+  }
+
+<% if(UseInterface) { %>
+  public interface <%= abstractExpressionClassName %>
+  {
+    void Interpret(Context context);
+  }
+<% } else { %>
+  public abstract class <%= AbstractExpressionClassName %>
+  {
+    public abstract void Interpret(Context context);
+  }
+<% } %>
+
+  public class <%= TerminalExpressionClassName %> : <%= abstractExpressionClassName %>
+  {
+    public <%= attribute %> void Interpret(Context context)
+    {
+      System.Diagnostics.Debug.WriteLine("Called Terminal.Interpret()");
+    }
+  }
+
+  public class <%= NonTerminalExpressionClassName %> : <%= abstractExpressionClassName %>
+  {
+    public <%= attribute %> void Interpret(Context context)
+    {
+      System.Diagnostics.Debug.WriteLine("Called Nonterminal.Interpret()");
+    }
+  }
+}

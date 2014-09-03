@@ -1,0 +1,205 @@
+﻿<%-- 
+Name: Iterator
+Author: Martin Hart Turner
+Description: Iterator Design Pattern Template
+--%>
+<%@ Assembly Name="CodeSmith.BaseTemplates" %>
+<%@ Import Namespace="CodeSmith.BaseTemplates"  %>
+<%@ Template Language="C#" TargetLanguage="Text" %>
+<%@ Property Name="Namespace" Type="System.String" Default="GangOfFour.Behavioral" Optional="False" Category="Names" Description="The name of the namespace" %>
+<%@ Property Name="AbstractAggregateClassName" Type="System.String" Default="Aggregate" Optional="False" Category="Names" Description="Defines an interface for creating an Iterator object" %>
+<%@ Property Name="ConcreteAggregateClassName" Type="System.String" Default="ConcreteAggregate" Optional="False" Category="Names" Description="Implements the Iterator creation interface to return an instance of the proper ConcreteIterator" %>
+<%@ Property Name="AbstractIteratorClassName" Type="System.String" Default="Iterator" Optional="False" Category="Names" Description="Defines an interface for accessing and traversing elements" %>
+<%@ Property Name="ConcreteIteratorClassName" Type="System.String" Default="ConcreteIterator" Optional="False" Category="Names" Description="Concrete implementation of the iterator" %>
+<%@ Property Name="GenericCollectionType" Type="System.String" Default="string" Optional="False" Category="Names" Description="The type that is used for the generic List<?>" %>
+<%@ Property Name="UseInterface" Type="System.Boolean" Default="True" Optional="False" Category="Options" Description="Use interfaces instead of abstract classes" %>
+<%@ Property Name="UseGenerics" Type="System.Boolean" Default="True" Optional="False" Category="Options" Description="Use interfaces instead of abstract classes" %>
+<%@ Property Name="MakeReadonly" Type="System.Boolean" Default="True" Optional="False" Category="Options" Description="Declare properties as readonly where possible" %>
+<%@ Property Name="CreateUsageMethod" Type="System.Boolean" Default="True" Optional="False" Category="Options" Description="Create a method implanting the patterns usage" %>
+<% string abstractAggregateClassName = AbstractAggregateClassName; %>
+<% string abstractIteratorClassName = AbstractIteratorClassName; %>
+<% string attribute = "override"; %>
+<% if(UseInterface) { %>
+<%   attribute = "virtual"; %>
+<% } %>
+<% if(UseInterface) { %>
+<%   abstractAggregateClassName = "I" + abstractAggregateClassName; %>
+<% } %>
+<% if(UseInterface) { %>
+<%   abstractIteratorClassName = "I" + abstractIteratorClassName; %>
+<% } %>
+using System;
+<% if(UseGenerics) { %>
+using System.Collections.Generics;
+<% } else { %>
+using System.Collections;
+<% } %>
+
+namespace <%= Namespace %>
+{
+  //--- Provide a way to access the elements of an aggregate object  
+  //--- sequentially without exposing its underlying representation.
+
+<% if(CreateUsageMethod) { %>
+  internal static class Usage
+  {
+    internal static void UsageMethod()
+    {
+    	<%= ConcreteAggregateClassName %> a = new <%= ConcreteAggregateClassName %>();
+    	a[0] = "Item A";
+    	a[1] = "Item B";
+    	a[2] = "Item C";
+    	a[3] = "Item D";
+    	<%= ConcreteIteratorClassName %> i = new <%= ConcreteIteratorClassName %>(a);
+    	System.Diagnostics.Debug.WriteLine("Iterating over collection:");
+    	<%= GenericCollectionType %> item = i.First();
+    	while(item != null)
+    	{
+    	  System.Diagnostics.Debug.WriteLine(item);
+    	  item = i.Next();
+    	}
+    }
+  }
+<% } else { %>
+  //--- Usage:
+	//<%= ConcreteAggregateClassName %> a = new <%= ConcreteAggregateClassName %>();
+	//a[0] = "Item A";
+	//a[1] = "Item B";
+	//a[2] = "Item C";
+	//a[3] = "Item D";
+	//<%= ConcreteIteratorClassName %> i = new <%= ConcreteIteratorClassName %>(a);
+	//System.Diagnostics.Debug.WriteLine("Iterating over collection:");
+	//<%= GenericCollectionType %> item = i.First();
+	//while(item != null)
+	//{
+	//  System.Diagnostics.Debug.WriteLine(item);
+	//  item = i.Next();
+	//}
+<% } %>
+
+<% if(UseInterface) { %>
+  public interface <%= abstractAggregateClassName %>
+  {
+    <%= abstractIteratorClassName %> CreateIterator();
+  }
+<% } else { %>
+  public abstract class <%= abstractAggregateClassName %>
+  {
+    public abstract <%= abstractIteratorClassName %> CreateIterator();
+  }
+<% } %>
+
+  public class <%= ConcreteAggregateClassName %> : <%= abstractAggregateClassName %>
+  {
+<% if(UseGenerics) { %>
+    private List<<%= GenericCollectionType %>> items = new List<<%= GenericCollectionType %>>();
+<% } else { %>
+    private ArrayList items = new ArrayList();
+<% } %>
+
+    public <%= attribute %> <%= abstractIteratorClassName %> CreateIterator()
+    {
+      return new ConcreteIterator(this);
+    }
+
+    public int Count
+    {
+      get { return items.Count; }
+    }
+
+<% if(UseGenerics) { %>
+    public <%= GenericCollectionType %> this[int index]
+<% } else { %>
+    public object this[int index]
+<% } %>
+    {
+      get { return items[index]; }
+      set { items.Insert(index, value); }
+    }
+  }
+
+<% if(UseInterface) { %>
+  public interface <%= abstractIteratorClassName %>
+  {
+<% if(UseGenerics) { %>
+    <%= GenericCollectionType %> First();
+    <%= GenericCollectionType %> Next();
+    bool IsDone();
+    <%= GenericCollectionType %> CurrentItem();
+<% } else { %>
+    object First();
+    object Next();
+    bool IsDone();
+    object CurrentItem();
+<% } %>
+  }
+<% } else { %>
+  public abstract class <%= abstractIteratorClassName %>
+  {
+<% if(UseGenerics) { %>
+    public abstract <%= GenericCollectionType %> First();
+    public abstract <%= GenericCollectionType %> Next();
+    public abstract bool IsDone();
+    public abstract <%= GenericCollectionType %> CurrentItem();
+<% } else { %>
+    public abstract object First();
+    public abstract object Next();
+    public abstract bool IsDone();
+    public abstract object CurrentItem();
+<% } %>
+  }
+<% } %>
+
+  public class <%= ConcreteIteratorClassName %> : <%= abstractIteratorClassName %>
+  {
+    private <% if(MakeReadonly) { %>readonly<% } %> <%= ConcreteAggregateClassName %> aggregate;
+    private int current = 0;
+
+    //--- C'tor
+    public <%= ConcreteIteratorClassName %>(<%= ConcreteAggregateClassName %> aggregate)
+    {
+      this.aggregate = aggregate;
+    }
+
+<% if(UseGenerics) { %>
+    public <%= attribute %> <%= GenericCollectionType %> First()
+<% } else { %>
+    public <%= attribute %> object First()
+<% } %>
+    {
+      return aggregate[0];
+    }
+
+<% if(UseGenerics) { %>
+    public <%= attribute %> <%= GenericCollectionType %> Next()
+<% } else { %>
+    public <%= attribute %> object Next()
+<% } %>
+    {
+<% if(UseGenerics) { %>
+      <%= GenericCollectionType %> ret = null;
+<% } else { %>
+      object ret = null;
+<% } %>
+      if(current < aggregate.Count - 1)
+      {
+        ret = aggregate[++current];
+      }
+      return ret;
+    }
+
+<% if(UseGenerics) { %>
+    public <%= attribute %> <%= GenericCollectionType %> CurrentItem()
+<% } else { %>
+    public <%= attribute %> object CurrentItem()
+<% } %>
+    {
+      return aggregate[current];
+    }
+
+    public <%= attribute %> bool IsDone()
+    {
+      return current >= aggregate.Count;
+    }
+  }
+}

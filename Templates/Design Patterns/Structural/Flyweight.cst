@@ -1,0 +1,122 @@
+﻿<%-- 
+Name: Flyweight
+Author: Martin Hart Turner
+Description: Flyweight Design Pattern Template
+--%>
+<%@ Assembly Name="CodeSmith.BaseTemplates" %>
+<%@ Import Namespace="CodeSmith.BaseTemplates"  %>
+<%@ Template Language="C#" TargetLanguage="Text" %>
+<%@ Property Name="Namespace" Type="System.String" Default="GangOfFour.Structural" Optional="False" Category="Names" Description="The name of the namespace" %>
+<%@ Property Name="FlyweightFactoryName" Type="System.String" Default="FlyweightFactory" Optional="False" Category="Names" Description="Creates and manages flyweight objects" %>
+<%@ Property Name="AbstractFlyweightClassName" Type="System.String" Default="Flyweight" Optional="False" Category="Names" Description="Declares an interface through which flyweights can receive and act on extrinsic state" %>
+<%@ Property Name="ConcreteFlyweightClassName" Type="System.String" Default="ConcreteFlyweight" Optional="False" Category="Names" Description="Implements the Flyweight interface and adds storage for intrinsic state, if any. A ConcreteFlyweight object must be sharable. Any state it stores must be intrinsic, that is, it must be independent of the ConcreteFlyweight object's context" %>
+<%@ Property Name="UnsharedConcreteFlyweightClassName" Type="System.String" Default="UnsharedConcreteFlyweight" Optional="False" Category="Names" Description="Not all Flyweight subclasses need to be shared. The Flyweight interface enables sharing, but it doesn't enforce it. It is common for UnsharedConcreteFlyweight objects to have ConcreteFlyweight objects as children at some level in the flyweight object structure (as the Row and Column classes have)" %>
+<%@ Property Name="UseInterface" Type="System.Boolean" Default="True" Optional="False" Category="Options" Description="Use interfaces instead of abstract classes" %>
+<%@ Property Name="UseGenerics" Type="System.Boolean" Default="True" Optional="False" Category="Options" Description="Declare properties as readonly where possible" %>
+<%@ Property Name="CreateUsageMethod" Type="System.Boolean" Default="True" Optional="False" Category="Options" Description="Create a method implanting the patterns usage" %>
+<% string abstractFlyweightClassName = AbstractFlyweightClassName; %>
+<% string attribute = "override"; %>
+<% if(UseInterface) { %>
+<%   attribute = "virtual"; %>
+<% } %>
+<% if(UseInterface) { %>
+<%   abstractFlyweightClassName = "I" + abstractFlyweightClassName; %>
+<% } %>
+using System;
+
+namespace <%= Namespace %>
+{
+  //--- Use sharing to support large numbers of fine-grained objects efficiently.
+
+<% if(CreateUsageMethod) { %>
+  internal static class Usage
+  {
+    internal static void UsageMethod()
+    {
+		  int extrinsicstate = 22;
+		  <%= FlyweightFactoryName %> factory = new <%= FlyweightFactoryName %>();
+		  Flyweight fx = factory.GetFlyweight("X");
+		  fx.Operation(--extrinsicstate);
+		  Flyweight fy = factory.GetFlyweight("Y");
+		  fy.Operation(--extrinsicstate);
+		  Flyweight fz = factory.GetFlyweight("Z");
+		  fz.Operation(--extrinsicstate);
+		  UnsharedConcreteFlyweight fu = new UnsharedConcreteFlyweight();
+		  fu.Operation(--extrinsicstate);
+    }
+  }
+<% } else { %>
+  //--- Usage:
+  //int extrinsicstate = 22;
+  //<%= FlyweightFactoryName %> factory = new <%= FlyweightFactoryName %>();
+  //Flyweight fx = factory.GetFlyweight("X");
+  //fx.Operation(--extrinsicstate);
+  //Flyweight fy = factory.GetFlyweight("Y");
+  //fy.Operation(--extrinsicstate);
+  //Flyweight fz = factory.GetFlyweight("Z");
+  //fz.Operation(--extrinsicstate);
+  //UnsharedConcreteFlyweight fu = new UnsharedConcreteFlyweight();
+  //fu.Operation(--extrinsicstate);
+<% } %>
+
+<% if(UseGenerics) { %>
+  public class <%= FlyweightFactoryName %>
+<% } else { %>
+  public class <%= FlyweightFactoryName %>
+<% } %>
+  {
+<% if(UseGenerics) { %>
+    private readonly Dictionary<string, <%= abstractFlyweightClassName %>> flyweights = new Dictionary<string, <%= abstractFlyweightClassName %>>();
+<% } else { %>
+    private Hashtable flyweights = new Hashtable();
+<% } %>
+
+    //--- C'tor
+    public <%= FlyweightFactoryName %>()
+    {
+      flyweights.Add("X", new <%= ConcreteFlyweightClassName %>());
+      flyweights.Add("Y", new <%= ConcreteFlyweightClassName %>());
+      flyweights.Add("Z", new <%= ConcreteFlyweightClassName %>());
+    }
+
+<% if(UseGenerics) { %>
+    public <%= abstractFlyweightClassName %> GetFlyweight(TKey key)
+    {
+      return flyweights[key];
+    }
+<% } else { %>
+    public <%= abstractFlyweightClassName %> GetFlyweight(string key)
+    {
+      return ((<%= abstractFlyweightClassName %>)flyweights[key]);
+    }
+<% } %>
+  }
+
+<% if(UseInterface) { %>
+  public interface <%= abstractFlyweightClassName %>
+  {
+    void Operation(int extrinsicstate);
+  }
+<% } else { %>
+  public abstract class <%= abstractFlyweightClassName %>
+  {
+    public abstract void Operation(int extrinsicstate);
+  }
+<% } %>
+
+  public class <%= ConcreteFlyweightClassName %> : <%= abstractFlyweightClassName %>
+  {
+    public <%= attribute %> void Operation(int extrinsicstate)
+    {
+      System.Diagnostics.Debug.WriteLine("ConcreteFlyweight: " + extrinsicstate);
+    }
+  }
+
+  public class <%= UnsharedConcreteFlyweightClassName %> : <%= abstractFlyweightClassName %>
+  {
+    public <%= attribute %> void Operation(int extrinsicstate)
+    {
+      System.Diagnostics.Debug.WriteLine("UnsharedConcreteFlyweight: " + extrinsicstate);
+    }
+  }
+}

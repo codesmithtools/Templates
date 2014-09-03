@@ -1,0 +1,172 @@
+﻿<%-- 
+Name: Abstract Factory
+Author: Martin Hart Turner
+Description: Abstract Factory Design Pattern Template
+--%>
+<%@ Assembly Name="CodeSmith.BaseTemplates" %>
+<%@ Import Namespace="CodeSmith.BaseTemplates"  %>
+<%@ Template Language="C#" TargetLanguage="Text" %>
+<%@ Property Name="Namespace" Type="System.String" Default="GangOfFour.Creational" Optional="False" Category="Names" Description="The name of the namespace" %>
+<%@ Property Name="AbstractFactoryName" Type="System.String" Default="AbstractFactoryBase" Optional="False" Category="Names" Description="Declares an interface for operations that create abstract products" %>
+<%@ Property Name="ConcreteFactory1" Type="System.String" Default="ConcreteFactory1" Optional="False" Category="Names" Description="Implements the operations to create concrete '1' product objects" %>
+<%@ Property Name="ConcreteFactory2" Type="System.String" Default="ConcreteFactory2" Optional="False" Category="Names" Description="Implements the operations to create concrete '2' product objects" %>
+<%@ Property Name="AbstractProductA" Type="System.String" Default="AbstractProductA" Optional="False" Category="Names" Description="Declares an interface for a type of 'A' product object" %>
+<%@ Property Name="AbstractProductB" Type="System.String" Default="AbstractProductB" Optional="False" Category="Names" Description="Declares an interface for a type of 'B' product object" %>
+<%@ Property Name="ConcreteProductA" Type="System.String" Default="ConcreteProductA1" Optional="False" Category="Names" Description="Defines a 'A' product object to be created by the corresponding concrete factory implements the AbstractProduct interface" %>
+<%@ Property Name="ConcreteProductB" Type="System.String" Default="ConcreteProductB1" Optional="False" Category="Names" Description="Defines a 'B' product object to be created by the corresponding concrete factory implements the AbstractProduct interface" %>
+<%@ Property Name="ConcreteProductA2" Type="System.String" Default="ConcreteProductA2" Optional="False" Category="Names" Description="Defines a 'A2' product object to be created by the corresponding concrete factory implements the AbstractProduct interface" %>
+<%@ Property Name="ConcreteProductB2" Type="System.String" Default="ConcreteProductB2" Optional="False" Category="Names" Description="Defines a 'B2' product object to be created by the corresponding concrete factory implements the AbstractProduct interface" %>
+<%@ Property Name="ClientClassName" Type="System.String" Default="ClientClass" Optional="False" Category="Names" Description="Uses interfaces declared by AbstractFactory and AbstractProduct classes" %>
+<%@ Property Name="UseInterface" Type="System.Boolean" Default="True" Optional="False" Category="Options" Description="Use interfaces instead of abstract classes" %>
+<%@ Property Name="MakeReadonly" Type="System.Boolean" Default="True" Optional="False" Category="Options" Description="Declare properties as readonly where possible" %>
+<%@ Property Name="CreateUsageMethod" Type="System.Boolean" Default="True" Optional="False" Category="Options" Description="Create a method implanting the patterns usage" %>
+<% string abstractFactoryName = AbstractFactoryName; %>
+<% string abstractProductA = AbstractProductA; %>
+<% string abstractProductB = AbstractProductB; %>
+<% string attribute = "override"; %>
+<% if(UseInterface) { %>
+<%   attribute = "virtual"; %>
+<% } %>
+<% if(UseInterface) { %>
+<%   abstractFactoryName = "I" + abstractFactoryName; %>
+<% } %>
+<% if(UseInterface) { %>
+<%   abstractProductA = "I" + abstractProductA; %>
+<% } %>
+<% if(UseInterface) { %>
+<%   abstractProductB = "I" + abstractProductB; %>
+<% } %>
+using System;
+
+namespace <%= Namespace %>
+{
+  //--- Provide an interface for creating families of related or 
+  //--- dependent objects without specifying their concrete classes.
+
+<% if(CreateUsageMethod) { %>
+  internal static class Usage
+  {
+    internal static void UsageMethod()
+    {
+  	  <%= abstractFactoryName %> factory1 = new <%= ConcreteFactory1 %>();
+  	  <%= ClientClassName %> client1 = new <%= ClientClassName %>(factory1);
+  	  client1.Run();
+  	  <%= abstractFactoryName %> factory2 = new <%= ConcreteFactory2 %>();
+  	  <%= ClientClassName %> client2 = new <%= ClientClassName %>(factory2);
+  	  client2.Run();
+    }
+  }
+<% } else { %>
+  //--- Usage:
+  //--- Abstract factory 1
+  //<%= abstractFactoryName %> factory1 = new <%= ConcreteFactory1 %>();
+  //<%= ClientClassName %> client1 = new <%= ClientClassName %>(factory1);
+  //client1.Run();
+  //--- Abstract factory 2
+  //<%= abstractFactoryName %> factory2 = new <%= ConcreteFactory2 %>();
+  //<%= ClientClassName %> client2 = new <%= ClientClassName %>(factory2);
+  //client2.Run();
+<% } %>
+
+<% if(UseInterface) { %>
+  public interface <%= abstractFactoryName %>
+  {
+    <%= abstractProductA %> Create<%= AbstractProductA %>();
+    <%= abstractProductB %> Create<%= AbstractProductB %>();
+  }
+<% } else { %>
+  public abstract class <%= abstractFactoryName %>
+  {
+    public abstract <%= AbstractProductA %> Create<%= AbstractProductA %>();
+    public abstract <%= AbstractProductB %> Create<%= AbstractProductB %>();
+  }
+<% } %>
+
+  public class <%= ConcreteFactory1 %> : <%= abstractFactoryName %>
+  {
+    public <%= attribute %> <%= abstractProductA %> Create<%= AbstractProductA %>()
+    {
+      return new <%= ConcreteProductA %>();
+    }
+
+    public <%= attribute %> <%= abstractProductB %> Create<%= AbstractProductB %>()
+    {
+      return new <%= ConcreteProductB %>();
+    }
+  }
+
+  public class <%= ConcreteFactory2 %> : <%= abstractFactoryName %>
+  {
+    public <%= attribute %> <%= abstractProductA %> Create<%= AbstractProductA %>()
+    {
+      return new <%= ConcreteProductA2 %>();
+    }
+
+    public <%= attribute %> <%= abstractProductB %> Create<%= AbstractProductB %>()
+    {
+      return new <%= ConcreteProductB2 %>();
+    }
+  }
+
+<% if(UseInterface) { %>
+  public interface <%= abstractProductA %>
+  {
+  }
+
+  public interface <%= abstractProductB %>
+  {
+    void Interact(<%= abstractProductA %> a);
+  }
+<% } else { %>
+  public abstract class <%= AbstractProductA %>
+  {
+  }
+
+  public abstract class <%= AbstractProductB %>
+  {
+    public abstract void Interact(<%= abstractProductA %> a);
+  }
+<% } %>
+
+  public class <%= ConcreteProductA %> : <%= abstractProductA %>
+  {
+  }
+
+  public class <%= ConcreteProductB %> : <%= abstractProductB %>
+  {
+    public <%= attribute %> void Interact(<%= abstractProductA %> a)
+    {
+      //--- Interact with 'a'
+    }
+  }
+
+  public class <%= ConcreteProductA2 %> : <%= abstractProductA %>
+  {
+  }
+
+  public class <%= ConcreteProductB2 %> : <%= abstractProductB %>
+  {
+    public <%= attribute %> void Interact(<%= abstractProductA %> a)
+    {
+      //--- Interact with 'a'
+    }
+  }
+
+  public class <%= ClientClassName %>
+  {
+    private <% if(MakeReadonly) { %>readonly<% } %> <%= abstractProductA %> <%= StringUtility.ToCamelCase(AbstractProductA) %>;
+    private <% if(MakeReadonly) { %>readonly<% } %> <%= abstractProductB %> <%= StringUtility.ToCamelCase(AbstractProductB) %>;
+
+    //--- C'tor
+    public <%= ClientClassName %>(<%= abstractFactoryName %> factory)
+    {
+      <%= StringUtility.ToCamelCase(AbstractProductB) %> = factory.Create<%= AbstractProductB %>();
+      <%= StringUtility.ToCamelCase(AbstractProductA) %> = factory.Create<%= AbstractProductA %>();
+    }
+
+    public void Run()
+    {
+      <%= StringUtility.ToCamelCase(AbstractProductB) %>.Interact(<%= StringUtility.ToCamelCase(AbstractProductA) %>);
+    }
+  }
+}
