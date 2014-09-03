@@ -1,0 +1,110 @@
+﻿<%-- 
+Name: Factory Method
+Author: Martin Hart Turner
+Description: Factory Method Design Pattern Template
+--%>
+<%@ Assembly Name="CodeSmith.BaseTemplates" %>
+<%@ Import Namespace="CodeSmith.BaseTemplates"  %>
+<%@ Template Language="C#" TargetLanguage="Text" %>
+<%@ Property Name="Namespace" Type="System.String" Default="GangOfFour.Creational" Optional="False" Category="Names" Description="The name of the namespace" %>
+<%@ Property Name="AbstractCreatorClassName" Type="System.String" Default="Creator" Optional="False" Category="Names" Description="Declares the factory method, which returns an object of type Product. Creator may also define a default implementation of the factory method that returns a default ConcreteProduct object" %>
+<%@ Property Name="ConcreteCreator1ClassName" Type="System.String" Default="ConcreteCreator1" Optional="False" Category="Names" Description="Overrides the factory method to return an instance of the first ConcreteProduct" %>
+<%@ Property Name="ConcreteCreator2ClassName" Type="System.String" Default="ConcreteCreator2" Optional="False" Category="Names" Description="Overrides the factory method to return an instance of the first ConcreteProduct" %>
+<%@ Property Name="AbstractProductClassName" Type="System.String" Default="Product" Optional="False" Category="Names" Description="Defines the interface of objects the factory method creates" %>
+<%@ Property Name="ConcreteProduct1ClassName" Type="System.String" Default="ConcreteProduct1" Optional="False" Category="Names" Description="The first class that implements the Product interface" %>
+<%@ Property Name="ConcreteProduct2ClassName" Type="System.String" Default="ConcreteProduct2" Optional="False" Category="Names" Description="The second class that implements the Product interface" %>
+<%@ Property Name="UseInterface" Type="System.Boolean" Default="True" Optional="False" Category="Options" Description="Use interfaces instead of abstract classes" %>
+<%@ Property Name="MakeReadonly" Type="System.Boolean" Default="True" Optional="False" Category="Options" Description="Declare properties as readonly where possible" %>
+<%@ Property Name="CreateUsageMethod" Type="System.Boolean" Default="True" Optional="False" Category="Options" Description="Create a method implanting the patterns usage" %>
+<% string abstractCreatorClassName = AbstractCreatorClassName; %>
+<% string abstractProductClassName = AbstractProductClassName; %>
+<% string attribute = "override"; %>
+<% if(UseInterface) { %>
+<%   attribute = "virtual"; %>
+<% } %>
+<% if(UseInterface) { %>
+<%   abstractCreatorClassName = "I" + abstractCreatorClassName; %>
+<% } %>
+<% if(UseInterface) { %>
+<%   abstractProductClassName = "I" + abstractProductClassName; %>
+<% } %>
+using System;
+
+namespace <%= Namespace %>
+{
+  //--- Define an interface for creating an object, but let subclasses decide which class to instantiate. 
+  //--- Factory Method lets a class defer instantiation to subclasses.
+
+<% if(CreateUsageMethod) { %>
+  internal static class Usage
+  {
+    internal static void UsageMethod()
+    {
+		  <%= abstractCreatorClassName %>[] creators = new <%= AbstractCreatorClassName %>[2];
+		  creators[0] = new <%= ConcreteCreator1ClassName %>();
+		  creators[1] = new <%= ConcreteCreator2ClassName %>();
+		  foreach(<%= abstractCreatorClassName %> creator in creators)
+		  {
+		    <%= abstractProductClassName %> product = creator.FactoryMethod();
+		    System.Diagnostics.Debug.WriteLine("The type created was {0}", product.GetType().Name);
+		  }
+    }
+  }
+<% } else { %>
+  //--- Usage:
+  //<%= abstractCreatorClassName %>[] creators = new <%= AbstractCreatorClassName %>[2];
+  //creators[0] = new <%= ConcreteCreator1ClassName %>();
+  //creators[1] = new <%= ConcreteCreator2ClassName %>();
+  //foreach(<%= abstractCreatorClassName %> creator in creators)
+  //{
+  //  <%= abstractProductClassName %> product = creator.FactoryMethod();
+  //  System.Diagnostics.Debug.WriteLine("The type created was {0}", product.GetType().Name);
+  //}
+<% } %>
+
+<% if(UseInterface) { %>
+  public interface <%= abstractProductClassName %>
+  {
+  }
+<% } else { %>
+  public abstract class <%= AbstractProductClassName %>
+  {
+  }
+<% } %>
+
+  public class <%= ConcreteProduct1ClassName %> : <%= abstractProductClassName %>
+  {
+  }
+
+  public class <%= ConcreteProduct2ClassName %> : <%= abstractProductClassName %>
+  {
+  }
+
+<% if(UseInterface) { %>
+  public interface <%= abstractCreatorClassName %>
+  {
+    <%= abstractProductClassName %> FactoryMethod();
+  }
+<% } else { %>
+  public abstract class <%= AbstractCreatorClassName %>
+  {
+    public abstract <%= abstractProductClassName %> FactoryMethod();
+  }
+<% } %>
+
+  public class <%= ConcreteCreator1ClassName %> : <%= abstractCreatorClassName %>
+  {
+    public <%= attribute %> <%= abstractProductClassName %> FactoryMethod()
+    {
+      return new <%= ConcreteProduct1ClassName %>();
+    }
+  }
+
+  public class <%= ConcreteCreator2ClassName %> : <%= abstractCreatorClassName %>
+  {
+    public <%= attribute %> <%= abstractProductClassName %> FactoryMethod()
+    {
+      return new <%= ConcreteProduct2ClassName %>();
+    }
+  }
+}

@@ -1,0 +1,172 @@
+﻿<%-- 
+Name: Observer
+Author: Martin Hart Turner
+Description: Observer Design Pattern Template
+--%>
+<%@ Assembly Name="CodeSmith.BaseTemplates" %>
+<%@ Import Namespace="CodeSmith.BaseTemplates"  %>
+<%@ Template Language="C#" TargetLanguage="Text" %>
+<%@ Property Name="Namespace" Type="System.String" Default="GangOfFour.Behavioral" Optional="False" Category="Names" Description="The name of the namespace" %>
+<%@ Property Name="AbstractSubjectClassName" Type="System.String" Default="Subject" Optional="False" Category="Names" Description="Provides an interface for attaching and detaching Observer objects" %>
+<%@ Property Name="ConcreteSubjectClassName" Type="System.String" Default="ConcreteSubject" Optional="False" Category="Names" Description="Sends a notification to its observers when its state changes" %>
+<%@ Property Name="AbstractObserverClassName" Type="System.String" Default="Observer" Optional="False" Category="Names" Description="Defines an updating interface for objects that should be notified of changes in a subject" %>
+<%@ Property Name="ConcreteObserverClassName" Type="System.String" Default="ConcreteObserver" Optional="False" Category="Names" Description="Implements the Observer updating interface to keep its state consistent with the subject's" %>
+<%@ Property Name="UseInterface" Type="System.Boolean" Default="True" Optional="False" Category="Options" Description="Use interfaces instead of abstract classes" %>
+<%@ Property Name="MakeReadonly" Type="System.Boolean" Default="True" Optional="False" Category="Options" Description="Declare properties as readonly where possible" %>
+<%@ Property Name="UseAutoImplementProperties" Type="System.Boolean" Default="True" Optional="False" Category="Options" Description="Use auto-implemented properties" %>
+<%@ Property Name="CreateUsageMethod" Type="System.Boolean" Default="True" Optional="False" Category="Options" Description="Create a method implanting the patterns usage" %>
+<% string subjectInterfaceName = AbstractSubjectClassName; %>
+<% string observerInterfaceName = AbstractObserverClassName; %>
+<% string attribute = "override"; %>
+<% if(UseInterface) { %>
+<%   attribute = "virtual"; %>
+<% } %>
+<% if(UseInterface) { %>
+<%   subjectInterfaceName = "I" + subjectInterfaceName; %>
+<% } %>
+<% if(UseInterface) { %>
+<%   observerInterfaceName = "I" + observerInterfaceName; %>
+<% } %>
+using System;
+using System.Collections.Generic;
+
+namespace <%= Namespace %>
+{
+  //--- Define a one-to-many dependency between objects so that when one object changes state, 
+  //--- all its dependents are notified and updated automatically.
+
+<% if(CreateUsageMethod) { %>
+  public static class Usage
+  {
+    public static void UsageMethod()
+    {
+      ConcreteSubject s = new ConcreteSubject();
+      s.Attach(new ConcreteObserver(s, "X"));
+      s.Attach(new ConcreteObserver(s, "Y"));
+      s.Attach(new ConcreteObserver(s, "Z"));
+      s.SubjectState = "ABC";
+      s.Notify();
+    }
+  }
+<% } else { %>
+  //--- Usage:
+  ConcreteSubject s = new ConcreteSubject();
+  s.Attach(new ConcreteObserver(s, "X"));
+  s.Attach(new ConcreteObserver(s, "Y"));
+  s.Attach(new ConcreteObserver(s, "Z"));
+  s.SubjectState = "ABC";
+  s.Notify();
+<% } %>
+
+<% if(UseInterface) { %>
+  public interface <%= subjectInterfaceName %>
+  {
+    void Attach(<%= observerInterfaceName %> observer);
+    void Detach(<%= observerInterfaceName %> observer);
+    void Notify();
+  }
+
+  public abstract class Subject : <%= subjectInterfaceName %>
+  {
+    private <% if(MakeReadonly) { %>readonly<% } %> List<<%= observerInterfaceName %>> observers = new List<<%= observerInterfaceName %>>();
+
+    public void Attach(<%= observerInterfaceName %> observer)
+    {
+      observers.Add(observer);
+    }
+
+    public void Detach(<%= observerInterfaceName %> observer)
+    {
+      observers.Remove(observer);
+    }
+
+    public void Notify()
+    {
+      foreach(<%= observerInterfaceName %> observer in observers)
+      {
+        observer.Update();
+      }
+    }
+  }
+<% } else { %>
+  public abstract class <%= AbstractSubjectClassName %>
+  {
+    private <% if(MakeReadonly) { %>readonly<% } %> List<Observer> observers = new List<Observer>();
+
+    public void Attach(Observer observer)
+    {
+      observers.Add(observer);
+    }
+
+    public void Detach(Observer observer)
+    {
+      observers.Remove(observer);
+    }
+
+    public void Notify()
+    {
+      foreach(Observer o in observers)
+      {
+        o.Update();
+      }
+    }
+  }
+<% } %>
+
+  public class <%= ConcreteSubjectClassName %> : <%= AbstractSubjectClassName %>
+  {
+<% if(UseAutoImplementProperties) { %>
+    public string SubjectState { get; set; }
+<% } else { %>
+    private string subjectState;
+
+    public string SubjectState
+    {
+      get { return subjectState; }
+      set { subjectState = value; }
+    }
+<% } %>
+  }
+
+<% if(UseInterface) { %>
+  public interface <%= observerInterfaceName %>
+  {
+    void Update();
+  }
+<% } else { %>
+  public abstract class Observer
+  {
+    public abstract void Update();
+  }
+<% } %>
+
+  public class <%= ConcreteObserverClassName %> : <%= observerInterfaceName %>
+  {
+    private <% if(MakeReadonly) { %>readonly <% } %>string name;
+    private string observerState;
+    private <%= ConcreteSubjectClassName %> subject;
+
+    //--- C'tor
+    public ConcreteObserver(<%= ConcreteSubjectClassName %> subject, string name)
+    {
+      this.subject = subject;
+      this.name = name;
+    }
+
+    public <%= attribute %> void Update()
+    {
+      observerState = subject.SubjectState;
+      System.Diagnostics.Debug.WriteLine("Observer {0}'s new state is {1}", name, observerState);
+    }
+
+<% if(UseAutoImplementProperties) { %>
+    public <%= ConcreteSubjectClassName %> Subject { get; set; }
+<% } else { %>
+    public <%= ConcreteSubjectClassName %> Subject
+    {
+      get { return subject; }
+      set { subject = value; }
+    }
+<% } %>
+  }
+}

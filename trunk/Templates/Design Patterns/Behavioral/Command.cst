@@ -1,0 +1,151 @@
+﻿<%-- 
+Name: Command
+Author: Martin Hart Turner
+Description: Command Design Pattern Template
+--%>
+<%@ Assembly Name="CodeSmith.BaseTemplates" %>
+<%@ Import Namespace="CodeSmith.BaseTemplates"  %>
+<%@ Template Language="C#" TargetLanguage="Text" %>
+<%@ Property Name="Namespace" Type="System.String" Default="GangOfFour.Behavioral" Optional="False" Category="Names" Description="The name of the namespace" %>
+<%@ Property Name="AbstractCommandClassName" Type="System.String" Default="Command" Optional="False" Category="Names" Description="Declares an interface for executing an operation" %>
+<%@ Property Name="ConcreteCommandClassName" Type="System.String" Default="ConcreteCommand" Optional="False" Category="Names" Description="Defines a binding between a Receiver object and an action" %>
+<%@ Property Name="ReceiverClassName" Type="System.String" Default="Receiver" Optional="False" Category="Names" Description="Knows how to perform the operations associated with carrying out the request" %>
+<%@ Property Name="InvokerClassName" Type="System.String" Default="Invoker" Optional="False" Category="Names" Description="Asks the command to carry out the request" %>
+<%@ Property Name="UseInterface" Type="System.Boolean" Default="True" Optional="False" Category="Options" Description="Use interfaces instead of abstract classes" %>
+<%@ Property Name="MakeReadonly" Type="System.Boolean" Default="True" Optional="False" Category="Options" Description="Declare properties as readonly where possible" %>
+<%@ Property Name="CreateUsageMethod" Type="System.Boolean" Default="True" Optional="False" Category="Options" Description="Create a method implanting the patterns usage" %>
+<% string commandInterfaceName = AbstractCommandClassName; %>
+<% string receiverInterfaceName = ""; %>
+<% string invokerInterfaceName = ""; %>
+<% string attribute = "override"; %>
+<% if(UseInterface) { %>
+<%   attribute = "virtual"; %>
+<% } %>
+<% if(UseInterface) { %>
+<%   commandInterfaceName = "I" + commandInterfaceName; %>
+<% } %>
+<% if(UseInterface) { %>
+<%   receiverInterfaceName = "I" + ReceiverClassName; %>
+<% } %>
+<% if(UseInterface) { %>
+<%   invokerInterfaceName = "I" + InvokerClassName; %>
+<% } %>
+using System;
+
+namespace <%= Namespace %>
+{
+  //--- Encapsulate a request as an object, thereby letting you parameterize clients 
+  //--- with different requests, queue or log requests, and support undoable operations.
+
+<% if(CreateUsageMethod) { %>
+  internal static class Usage
+  {
+    internal static void UsageMethod()
+    {
+		  Receiver receiver = new Receiver();
+		  Command command = new ConcreteCommand(receiver);
+		  Invoker invoker = new Invoker();
+		  invoker.SetCommand(command);
+		  invoker.ExecuteCommand();
+    }
+  }
+<% } else { %>
+  //--- Usage:
+  //Receiver receiver = new Receiver();
+  //Command command = new ConcreteCommand(receiver);
+  //Invoker invoker = new Invoker();
+  //invoker.SetCommand(command);
+  //invoker.ExecuteCommand();
+<% } %>
+
+<% if(UseInterface) { %>
+  public interface <%= commandInterfaceName %>
+  {
+    void Execute();
+  }
+
+  public interface <%= receiverInterfaceName %>
+  {
+    void Action();
+  }
+
+  public interface <%= invokerInterfaceName %>
+  {
+    void SetCommand(<%= commandInterfaceName %> command);
+    void ExecuteCommand();
+  }
+
+  public abstract class <%= AbstractCommandClassName %> : <%= commandInterfaceName %>
+  {
+    protected <%= receiverInterfaceName %> Receiver { get; private set; }
+
+    //--- C'tor
+    public <%= AbstractCommandClassName %>(<%= receiverInterfaceName %> receiver)
+    {
+      Receiver = receiver;
+    }
+    public abstract void Execute();
+  }
+<% } else { %>
+  public abstract class <%= AbstractCommandClassName %>
+  {
+    protected <% if(MakeReadonly) { %>readonly<% } %> <%= ReceiverClassName %> Receiver { get; private set; }
+
+    //--- C'tor
+    public <%= AbstractCommandClassName %>(<%= ReceiverClassName %> receiver)
+    {
+      Receiver = receiver;
+    }
+    public abstract void Execute();
+  }
+<% } %>
+
+  public class <%= ConcreteCommandClassName %> : <%= AbstractCommandClassName %>
+  {
+    //--- C'tor
+<% if(UseInterface) { %>
+    public <%= ConcreteCommandClassName %>(<%= receiverInterfaceName %> receiver):
+<% } else { %>
+    public <%= ConcreteCommandClassName %>(<%= ReceiverClassName %> receiver):
+<% } %>
+      base(receiver)
+    {
+    }
+
+    public override void Execute()
+    {
+      Receiver.Action();
+    }
+  }
+
+<% if(UseInterface) { %>
+  public class <%= ReceiverClassName %> : <%= receiverInterfaceName %>
+<% } else { %>
+  public class <%= ReceiverClassName %>
+<% } %>
+  {
+    public void Action()
+    {
+      System.Diagnostics.Debug.WriteLine("Called Receiver.Action()");
+    }
+  }
+
+<% if(UseInterface) { %>
+  public class <%= InvokerClassName %> : <%= invokerInterfaceName %>
+<% } else { %>
+  public class <%= InvokerClassName %>
+<% } %>
+  {
+    private <%= commandInterfaceName %> command;
+
+    public void SetCommand(<%= commandInterfaceName %> command)
+    {
+      this.command = command;
+    }
+
+    public void ExecuteCommand()
+    {
+      command.Execute();
+    }
+  }
+}

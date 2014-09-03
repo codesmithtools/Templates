@@ -1,0 +1,92 @@
+﻿<%-- 
+Name: Prototype
+Author: Martin Hart Turner
+Description: Prototype Design Pattern Template
+--%>
+<%@ Assembly Name="CodeSmith.BaseTemplates" %>
+<%@ Import Namespace="CodeSmith.BaseTemplates"  %>
+<%@ Template Language="C#" TargetLanguage="Text" %>
+<%@ Property Name="Namespace" Type="System.String" Default="GangOfFour.Creational" Optional="False" Category="Names" Description="The name of the namespace" %>
+<%@ Property Name="AbstractPrototypeClassName" Type="System.String" Default="Prototype" Optional="False" Category="Names" Description="Declares an interace for cloning itself" %>
+<%@ Property Name="ConcretePrototype1ClassName" Type="System.String" Default="ConcretePrototype1" Optional="False" Category="Names" Description="Implements the first class for cloning itself" %>
+<%@ Property Name="ConcretePrototype2ClassName" Type="System.String" Default="ConcretePrototype2" Optional="False" Category="Names" Description="Implements the second class for cloning itself" %>
+<%@ Property Name="MakeReadonly" Type="System.Boolean" Default="True" Optional="False" Category="Options" Description="Declare properties as readonly where possible" %>
+<%@ Property Name="CreateUsageMethod" Type="System.Boolean" Default="True" Optional="False" Category="Options" Description="Create a method implanting the patterns usage" %>
+using System;
+
+namespace <%= Namespace %>
+{
+  //--- Specify the kind of objects to create using a prototypical instance, 
+  //--- and create new objects by copying this prototype.
+
+<% if(CreateUsageMethod) { %>
+  internal static class Usage
+  {
+    internal static void UsageMethod()
+    {
+		  <%= ConcretePrototype1ClassName %> originalObject1 = new <%= ConcretePrototype1ClassName %>("Type 1");
+		  <%= ConcretePrototype1ClassName %> clonedObject1 = (<%= ConcretePrototype1ClassName %>)originalObject1.Clone();
+		  System.Diagnostics.Debug.WriteLine("The cloned object is: {0}", clonedObject1.Id);
+		  <%= ConcretePrototype2ClassName %> originalObject2 = new <%= ConcretePrototype2ClassName %>("Type 2");
+		  <%= ConcretePrototype2ClassName %> clonedObject2 = (<%= ConcretePrototype2ClassName %>)originalObject2.Clone();
+		  System.Diagnostics.Debug.WriteLine("The cloned object is: {0}", clonedObject2.Id);
+    }
+  }
+<% } else { %>
+  //--- Usage:
+  //<%= ConcretePrototype1ClassName %> originalObject1 = new <%= ConcretePrototype1ClassName %>("Type 1");
+  //<%= ConcretePrototype1ClassName %> clonedObject1 = (<%= ConcretePrototype1ClassName %>)originalObject1.Clone();
+  //System.Diagnostics.Debug.WriteLine("The cloned object is: {0}", clonedObject1.Id);
+  //<%= ConcretePrototype2ClassName %> originalObject2 = new <%= ConcretePrototype2ClassName %>("Type 2");
+  //<%= ConcretePrototype2ClassName %> clonedObject2 = (<%= ConcretePrototype2ClassName %>)originalObject2.Clone();
+  //System.Diagnostics.Debug.WriteLine("The cloned object is: {0}", clonedObject2.Id);
+<% } %>
+
+  public abstract class <%= AbstractPrototypeClassName %>
+  {
+    private <% if(MakeReadonly) { %>readonly<% } %> string id;
+    
+    //--- C'tor
+    public <%= AbstractPrototypeClassName %>(string id)
+    {
+      this.id = id;
+    }
+
+    public string Id
+    {
+      get { return id; }
+    }
+
+    public abstract <%= AbstractPrototypeClassName %> Clone();
+  }
+
+  public class <%= ConcretePrototype1ClassName %> : <%= AbstractPrototypeClassName %>
+  {
+    //--- C'tor
+    public <%= ConcretePrototype1ClassName %>(string id)
+      : base(id)
+    {
+    }
+
+    //--- Clone using a shallow copy
+    public override <%= AbstractPrototypeClassName %> Clone()
+    {
+      return (<%= AbstractPrototypeClassName %>)this.MemberwiseClone();
+    }
+  }
+
+  public class <%= ConcretePrototype2ClassName %> : <%= AbstractPrototypeClassName %>
+  {
+    //--- C'tor
+    public <%= ConcretePrototype2ClassName %>(string id)
+      : base(id)
+    {
+    }
+
+    //--- Clone using a shallow copy
+    public override <%= AbstractPrototypeClassName %> Clone()
+    {
+      return (<%= AbstractPrototypeClassName %>)this.MemberwiseClone();
+    }
+  }
+}

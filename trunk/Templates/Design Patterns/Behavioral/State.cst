@@ -1,0 +1,105 @@
+﻿<%-- 
+Name: State
+Author: Martin Hart Turner
+Description: State Design Pattern Template
+--%>
+<%@ Assembly Name="CodeSmith.BaseTemplates" %>
+<%@ Import Namespace="CodeSmith.BaseTemplates"  %>
+<%@ Template Language="C#" TargetLanguage="Text" %>
+<%@ Property Name="Namespace" Type="System.String" Default="GangOfFour.Behavioral" Optional="False" Category="Names" Description="The name of the namespace" %>
+<%@ Property Name="AbstractStateClassName" Type="System.String" Default="State" Optional="False" Category="Names" Description="Defines an interface for encapsulating the behavior associated with a particular state of the Context" %>
+<%@ Property Name="ConcreteStateAClassName" Type="System.String" Default="ConcreteStateA" Optional="False" Category="Names" Description="The first subclass that implements behavior associated with a state of Context" %>
+<%@ Property Name="ConcreteStateBClassName" Type="System.String" Default="ConcreteStateB" Optional="False" Category="Names" Description="The second subclass that implements behavior associated with a state of Context" %>
+<%@ Property Name="ContextClassName" Type="System.String" Default="Context" Optional="False" Category="Names" Description="The name of the class that binds all the operations together" %>
+<%@ Property Name="UseInterface" Type="System.Boolean" Default="True" Optional="False" Category="Options" Description="Use interfaces instead of abstract classes" %>
+<%@ Property Name="MakeReadonly" Type="System.Boolean" Default="True" Optional="False" Category="Options" Description="Declare properties as readonly where possible" %>
+<%@ Property Name="CreateUsageMethod" Type="System.Boolean" Default="True" Optional="False" Category="Options" Description="Create a method implanting the patterns usage" %>
+<% string stateInterfaceName = AbstractStateClassName; %>
+<% string attribute = "override"; %>
+<% if(UseInterface) { %>
+<%   attribute = "virtual"; %>
+<% } %>
+<% if(UseInterface) { %>
+<%   stateInterfaceName = "I" + stateInterfaceName; %>
+<% } %>
+using System;
+
+namespace <%= Namespace %>
+{
+  //--- Allow an object to alter its behavior when its internal state changes.
+  //--- The object will appear to change its class.
+
+<% if(CreateUsageMethod) { %>
+  internal static class Usage
+  {
+    internal static void UsageMethod()
+    {
+      var context = new <%= ContextClassName %>(new <%= ConcreteStateAClassName %>());
+      context.Request();
+      context.Request();
+      context.Request();
+      context.Request();
+    }
+  }
+<% } else { %>
+  //var context = <%= ContextClassName %>(new <%= ConcreteStateAClassName %>());
+  //context.Request();
+  //context.Request();
+  //context.Request();
+  //context.Request();
+<% } %>
+
+<% if(UseInterface) { %>
+  public interface <%= stateInterfaceName %>
+  {
+    void Handle(<%= ContextClassName %> <%= StringUtility.ToCamelCase(ContextClassName) %>);
+  }
+<% } else { %>
+  public abstract class <%= stateInterfaceName %>
+  {
+    public abstract void Handle(<%= ContextClassName %> <%= StringUtility.ToCamelCase(ContextClassName) %>);
+  }
+<% } %>
+
+  public class <%= ConcreteStateAClassName %> : <%= stateInterfaceName %>
+  {
+    public <%= attribute %> void Handle(<%= ContextClassName %> <%= StringUtility.ToCamelCase(ContextClassName) %>)
+    {
+      <%= StringUtility.ToCamelCase(ContextClassName) %>.State = new <%= ConcreteStateBClassName %>();
+    }
+  }
+
+  public class <%= ConcreteStateBClassName %> : <%= stateInterfaceName %>
+  {
+    public <%= attribute %> void Handle(<%= ContextClassName %> <%= StringUtility.ToCamelCase(ContextClassName) %>)
+    {
+      <%= StringUtility.ToCamelCase(ContextClassName) %>.State = new <%= ConcreteStateAClassName %>();
+    }
+  }
+
+  public class <%= ContextClassName %>
+  {
+    private <%= stateInterfaceName %> state;
+
+    //--- C'tor
+    public <%= ContextClassName %>(<%= stateInterfaceName %> state)
+    {
+      <%= AbstractStateClassName %> = state;
+    }
+
+    public <%= stateInterfaceName %> <%= AbstractStateClassName %>
+    {
+      get { return state; }
+      set
+      {
+        state = value;
+        System.Diagnostics.Debug.WriteLine("State: " + state.GetType().Name);
+      }
+    }
+
+    public void Request()
+    {
+      state.Handle(this);
+    }
+  }
+}

@@ -1,0 +1,108 @@
+﻿<%-- 
+Name: Strategy
+Author: Martin Hart Turner
+Description: Strategy Design Pattern Template
+--%>
+<%@ Assembly Name="CodeSmith.BaseTemplates" %>
+<%@ Import Namespace="CodeSmith.BaseTemplates"  %>
+<%@ Template Language="C#" TargetLanguage="Text" %>
+<%@ Property Name="Namespace" Type="System.String" Default="GangOfFour.Behavioral" Optional="False" Category="Names" Description="The name of the namespace" %>
+<%@ Property Name="AbstractStrategyClassName" Type="System.String" Default="Strategy" Optional="False" Category="Names" Description="Declares an interface common to all supported algorithms. Context uses this interface to call the algorithm defined by a ConcreteStrategy" %>
+<%@ Property Name="ConcreteStrategyAClassName" Type="System.String" Default="ConcreteStrategyA" Optional="False" Category="Names" Description="Implements the first algorithm using the Strategy interface" %>
+<%@ Property Name="ConcreteStrategyBClassName" Type="System.String" Default="ConcreteStrategyB" Optional="False" Category="Names" Description="Implements the second algorithm using the Strategy interface" %>
+<%@ Property Name="ConcreteStrategyCClassName" Type="System.String" Default="ConcreteStrategyC" Optional="False" Category="Names" Description="Implements the third algorithm using the Strategy interface" %>
+<%@ Property Name="ContextClassName" Type="System.String" Default="Context" Optional="False" Category="Names" Description="The name of the class that binds all the operations together" %>
+<%@ Property Name="UseInterface" Type="System.Boolean" Default="True" Optional="False" Category="Options" Description="Use interfaces instead of abstract classes" %>
+<%@ Property Name="MakeReadonly" Type="System.Boolean" Default="True" Optional="False" Category="Options" Description="Declare properties as readonly where possible" %>
+<%@ Property Name="CreateUsageMethod" Type="System.Boolean" Default="True" Optional="False" Category="Options" Description="Create a method implanting the patterns usage" %>
+<% string strategyInterfaceName = AbstractStrategyClassName; %>
+<% string attribute = "override"; %>
+<% if(UseInterface) { %>
+<%   attribute = "virtual"; %>
+<% } %>
+<% if(UseInterface) { %>
+<%   strategyInterfaceName = "I" + strategyInterfaceName; %>
+<% } %>
+using System;
+
+namespace <%= Namespace %>
+{
+  //--- Define a family of algorithms, encapsulate each one, and make them interchangeable. 
+  //--- Strategy lets the algorithm vary independently from clients that use it.
+
+<% if(CreateUsageMethod) { %>
+  internal static class Usage
+  {
+    internal static void UsageMethod()
+    {
+      <%= ContextClassName %> context;
+      context = new Context(new <%= ConcreteStrategyAClassName %>());
+      context.ContextInterface();
+      context = new Context(new <%= ConcreteStrategyBClassName %>());
+      context.ContextInterface();
+      context = new Context(new <%= ConcreteStrategyCClassName %>());
+      context.ContextInterface();
+    }
+  }
+<% } else { %>
+  //<%= ContextClassName %> context;
+  //context = new Context(new <%= ConcreteStrategyAClassName %>(());
+  //context.ContextInterface();
+  //context = new Context(new <%= ConcreteStrategyBClassName %>(());
+  //context.ContextInterface();
+  //context = new Context(new <%= ConcreteStrategyCClassName %>(());
+  //context.ContextInterface();
+<% } %>
+
+<% if(UseInterface) { %>
+  public interface <%= strategyInterfaceName %>
+  {
+    void AlgorithmInterface();
+  }
+<% } else { %>
+  public abstract class <%= strategyInterfaceName %>
+  {
+    public abstract void AlgorithmInterface();
+  }
+<% } %>
+
+  public class <%= ConcreteStrategyAClassName %> : <%= strategyInterfaceName %>
+  {
+    public <%= attribute %> void AlgorithmInterface()
+    {
+      System.Diagnostics.Debug.WriteLine("Called ConcreteStrategyA.AlgorithmInterface()");
+    }
+  }
+
+  public class <%= ConcreteStrategyBClassName %> : <%= strategyInterfaceName %>
+  {
+    public <%= attribute %> void AlgorithmInterface()
+    {
+      System.Diagnostics.Debug.WriteLine("Called ConcreteStrategyB.AlgorithmInterface()");
+    }
+  }
+
+  public class <%= ConcreteStrategyCClassName %> : <%= strategyInterfaceName %>
+  {
+    public <%= attribute %> void AlgorithmInterface()
+    {
+      System.Diagnostics.Debug.WriteLine("Called ConcreteStrategyC.AlgorithmInterface()");
+    }
+  }
+
+  public class <%= ContextClassName %>
+  {
+    private <% if(MakeReadonly) { %>readonly<% } %> <%= strategyInterfaceName %> <%= StringUtility.ToCamelCase(AbstractStrategyClassName) %>;
+
+    //--- C'tor
+    public <%= ContextClassName %>(<%= strategyInterfaceName %> <%= StringUtility.ToCamelCase(AbstractStrategyClassName) %>)
+    {
+      this.<%= StringUtility.ToCamelCase(AbstractStrategyClassName) %> = <%= StringUtility.ToCamelCase(AbstractStrategyClassName) %>;
+    }
+
+    public void ContextInterface()
+    {
+      <%= StringUtility.ToCamelCase(AbstractStrategyClassName) %>.AlgorithmInterface();
+    }
+  }
+}

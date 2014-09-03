@@ -1,0 +1,145 @@
+﻿<%-- 
+Name: Singleton
+Author: Martin Hart Turner
+Description: Singleton Design Pattern Template
+--%>
+<%@ Assembly Name="CodeSmith.BaseTemplates" %>
+<%@ Import Namespace="CodeSmith.BaseTemplates"  %>
+<%@ Template Language="C#" TargetLanguage="Text" %>
+<%@ Property Name="Namespace" Type="System.String" Default="GangOfFour.Creational" Optional="False" Category="Names" Description="The name of the namespace" %>
+<%@ Property Name="DirectorClassName" Type="System.String" Default="Director" Optional="False" Category="Names" Description="Constructs an object using the Builder interface" %>
+<%@ Property Name="AbstractBuilderClassName" Type="System.String" Default="Builder" Optional="False" Category="Names" Description="Specifies an abstract interface for creating parts of a Product object" %>
+<%@ Property Name="ConcreteBuilder1ClassName" Type="System.String" Default="ConcreteBuilder1" Optional="False" Category="Names" Description="Constructs and assembles parts of the first product by implementing the Builder interface" %>
+<%@ Property Name="ConcreteBuilder2ClassName" Type="System.String" Default="ConcreteBuilder2" Optional="False" Category="Names" Description="Constructs and assembles parts of the second product by implementing the Builder interface" %>
+<%@ Property Name="ProductClassName" Type="System.String" Default="Product" Optional="False" Category="Names" Description="Represents the complex object under construction. ConcreteBuilder builds the product's internal representation and defines the process by which it's assembled" %>
+<%@ Property Name="UseInterface" Type="System.Boolean" Default="True" Optional="False" Category="Options" Description="Use interfaces instead of abstract classes" %>
+<%@ Property Name="MakeReadonly" Type="System.Boolean" Default="True" Optional="False" Category="Options" Description="Declare properties as readonly where possible" %>
+<%@ Property Name="CreateUsageMethod" Type="System.Boolean" Default="True" Optional="False" Category="Options" Description="Create a method implanting the patterns usage" %>
+<% string abstractBuilderClassName = AbstractBuilderClassName; %>
+<% string attribute = "override"; %>
+<% if(UseInterface) { %>
+<%   attribute = "virtual"; %>
+<% } %>
+<% if(UseInterface) { %>
+<%   abstractBuilderClassName = "I" + abstractBuilderClassName; %>
+<% } %>
+using System;
+using System.Collections.Generic;
+
+namespace <%= Namespace %>
+{
+  //--- Separate the construction of a complex object from its representation 
+  //--- so that the same construction process can create different representations.
+
+<% if(CreateUsageMethod) { %>
+  internal static class Usage
+  {
+    internal static void UsageMethod()
+    {
+		  <%= DirectorClassName %> director = new <%= DirectorClassName %>();
+		  <%= abstractBuilderClassName %> b1 = new <%= ConcreteBuilder1ClassName %>();
+		  <%= abstractBuilderClassName %> b2 = new <%= ConcreteBuilder2ClassName %>();
+		  --- Construct two products
+		  director.Construct(b1);
+		  <%= ProductClassName %> p1 = b1.GetResult();
+		  p1.Show();
+		  director.Construct(b2);
+		  <%= ProductClassName %> p2 = b2.GetResult();
+		  p2.Show();
+    }
+  }
+<% } else { %>
+  //--- Usage:
+  //<%= DirectorClassName %> director = new <%= DirectorClassName %>();
+  //<%= abstractBuilderClassName %> b1 = new <%= ConcreteBuilder1ClassName %>();
+  //<%= abstractBuilderClassName %> b2 = new <%= ConcreteBuilder2ClassName %>();
+  //--- Construct two products
+  //director.Construct(b1);
+  //<%= ProductClassName %> p1 = b1.GetResult();
+  //p1.Show();
+  //director.Construct(b2);
+  //<%= ProductClassName %> p2 = b2.GetResult();
+  //p2.Show();
+<% } %>
+
+  public class <%= DirectorClassName %>
+  {
+    //--- <%= abstractBuilderClassName %> knows how to build individual parts
+    public void Construct(<%= abstractBuilderClassName %> <%= StringUtility.ToCamelCase(AbstractBuilderClassName) %>)
+    {
+      <%= StringUtility.ToCamelCase(AbstractBuilderClassName) %>.BuildPartA();
+      <%= StringUtility.ToCamelCase(AbstractBuilderClassName) %>.BuildPartB();
+    }
+  }
+
+<% if(UseInterface) { %>
+  public interface <%= abstractBuilderClassName %>
+  {
+    void BuildPartA();
+    void BuildPartB();
+    <%= ProductClassName %> GetResult();
+  }
+<% } else { %>
+  public abstract class <%= AbstractBuilderClassName %>
+  {
+    public abstract void BuildPartA();
+    public abstract void BuildPartB();
+    public abstract <%= ProductClassName %> GetResult();
+  }
+<% } %>
+
+  public class <%= ConcreteBuilder1ClassName %> : <%= abstractBuilderClassName %>
+  {
+    private <% if(MakeReadonly) { %>readonly<% } %> <%= ProductClassName %> <%= StringUtility.ToCamelCase(ProductClassName) %> = new <%= ProductClassName %>();
+
+    public <%= attribute %> void BuildPartA()
+    {
+      <%= StringUtility.ToCamelCase(ProductClassName) %>.Add("PartA");
+    }
+
+    public <%= attribute %> void BuildPartB()
+    {
+      <%= StringUtility.ToCamelCase(ProductClassName) %>.Add("PartB");
+    }
+
+    public <%= attribute %> <%= ProductClassName %> GetResult()
+    {
+      return <%= StringUtility.ToCamelCase(ProductClassName) %>;
+    }
+  }
+
+  public class <%= ConcreteBuilder2ClassName %> : <%= abstractBuilderClassName %>
+  {
+    private <% if(MakeReadonly) { %>readonly<% } %> <%= ProductClassName %> <%= StringUtility.ToCamelCase(ProductClassName) %> = new <%= ProductClassName %>();
+
+    public <%= attribute %> void BuildPartA()
+    {
+      <%= StringUtility.ToCamelCase(ProductClassName) %>.Add("PartX");
+    }
+
+    public <%= attribute %> void BuildPartB()
+    {
+      <%= StringUtility.ToCamelCase(ProductClassName) %>.Add("PartY");
+    }
+
+    public <%= attribute %> <%= ProductClassName %> GetResult()
+    {
+      return <%= StringUtility.ToCamelCase(ProductClassName) %>;
+    }
+  }
+
+  public class <%= ProductClassName %>
+  {
+    private <% if(MakeReadonly) { %>readonly<% } %> List<string> parts = new List<string>();
+
+    public void Add(string part)
+    {
+      parts.Add(part);
+    }
+
+    public void Show()
+    {
+      //--- Parts can be enumerated here!
+    }
+  }
+}

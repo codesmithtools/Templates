@@ -1,0 +1,126 @@
+﻿<%-- 
+Name: Composite
+Author: Martin Hart Turner
+Description: Composite Design Pattern Template
+--%>
+<%@ Assembly Name="CodeSmith.BaseTemplates" %>
+<%@ Import Namespace="CodeSmith.BaseTemplates"  %>
+<%@ Template Language="C#" TargetLanguage="Text" %>
+<%@ Property Name="Namespace" Type="System.String" Default="GangOfFour.Structural" Optional="False" Category="Names" Description="The name of the namespace" %>
+<%@ Property Name="AbstractComponentClassName" Type="System.String" Default="Component" Optional="False" Category="Names" Description="Declares the interface for objects in the composition" %>
+<%@ Property Name="CompositeClassName" Type="System.String" Default="Composite" Optional="False" Category="Names" Description="Defines behavior for components having children" %>
+<%@ Property Name="LeafClassName" Type="System.String" Default="Leaf" Optional="False" Category="Names" Description="Represents leaf objects in the composition. A leaf has no children" %>
+<%@ Property Name="MakeReadonly" Type="System.Boolean" Default="True" Optional="False" Category="Options" Description="Declare properties as readonly where possible" %>
+<%@ Property Name="CreateUsageMethod" Type="System.Boolean" Default="True" Optional="False" Category="Options" Description="Create a method implanting the patterns usage" %>
+using System;
+using System.Collections.Generic;
+
+namespace <%= Namespace %>
+{
+  //--- Compose objects into tree structures to represent part-whole hierarchies. 
+  //--- Composite lets clients treat individual objects and compositions of objects uniformly.
+
+<% if(CreateUsageMethod) { %>
+  internal static class Usage
+  {
+    internal static void UsageMethod()
+    {
+		  <%= CompositeClassName %> root = new <%= CompositeClassName %>("root");
+		  root.Add(new <%= LeafClassName %>("Branch 1A"));
+		  root.Add(new <%= LeafClassName %>("Branch 1B"));
+		  <%= CompositeClassName %> comp = new <%= CompositeClassName %>("Composite X");
+		  comp.Add(new <%= LeafClassName %>("Branch 2A"));
+		  comp.Add(new <%= LeafClassName %>("Branch 2B"));
+		  root.Add(comp);
+		  root.Add(new <%= LeafClassName %>("Branch C"));
+		  <%= LeafClassName %> branch = new <%= LeafClassName %>("Branch D");
+		  root.Add(branch);
+		  root.Remove(branch);
+		  root.Display(1);
+    }
+  }
+<% } else { %>
+  //--- Usage:
+  //<%= CompositeClassName %> root = new <%= CompositeClassName %>("root");
+  //root.Add(new <%= LeafClassName %>("Branch 1A"));
+  //root.Add(new <%= LeafClassName %>("Branch 1B"));
+  //<%= CompositeClassName %> comp = new <%= CompositeClassName %>("Composite X");
+  //comp.Add(new <%= LeafClassName %>("Branch 2A"));
+  //comp.Add(new <%= LeafClassName %>("Branch 2B"));
+  //root.Add(comp);
+  //root.Add(new <%= LeafClassName %>("Branch C"));
+  //<%= LeafClassName %> branch = new <%= LeafClassName %>("Branch D");
+  //root.Add(branch);
+  //root.Remove(branch);
+  //root.Display(1);
+<% } %>
+
+  public abstract class <%= AbstractComponentClassName %>
+  {
+    protected string name { get; private set; }
+
+    //--- C'tor
+    public <%= AbstractComponentClassName %>(string name)
+    {
+      this.name = name;
+    }
+
+    public abstract void Add(<%= AbstractComponentClassName %> c);
+    public abstract void Remove(<%= AbstractComponentClassName %> c);
+    public abstract void Display(int depth);
+  }
+
+  public class <%= CompositeClassName %> : <%= AbstractComponentClassName %>
+  {
+    private <% if(MakeReadonly) { %>readonly<% } %> List<<%= AbstractComponentClassName %>> children = new List<<%= AbstractComponentClassName %>>();
+
+    //--- C'tor
+    public <%= CompositeClassName %>(string name)
+      : base(name)
+    {
+    }
+
+    public override void Add(<%= AbstractComponentClassName %> <%= StringUtility.ToCamelCase(AbstractComponentClassName) %>)
+    {
+      children.Add(<%= StringUtility.ToCamelCase(AbstractComponentClassName) %>);
+    }
+
+    public override void Remove(<%= AbstractComponentClassName %> <%= StringUtility.ToCamelCase(AbstractComponentClassName) %>)
+    {
+      children.Remove(<%= StringUtility.ToCamelCase(AbstractComponentClassName) %>);
+    }
+
+    public override void Display(int depth)
+    {
+      System.Diagnostics.Debug.WriteLine(new String('-', depth) + name);
+      foreach(<%= AbstractComponentClassName %> <%= StringUtility.ToCamelCase(AbstractComponentClassName) %> in children)
+      {
+        <%= StringUtility.ToCamelCase(AbstractComponentClassName) %>.Display(depth + 2);
+      }
+    }
+  }
+
+  public class <%= LeafClassName %> : <%= AbstractComponentClassName %>
+  {
+    //--- C'tor
+    public <%= LeafClassName %>(string name)
+      : base(name)
+    {
+    }
+
+    public override void Add(<%= AbstractComponentClassName %> c)
+    {
+      throw new ApplicationException("Cannot add to a branch");
+    }
+
+    public override void Remove(<%= AbstractComponentClassName %> c)
+    {
+      throw new ApplicationException("Cannot remove from a branch");
+    }
+
+    public override void Display(int depth)
+    {
+      //System.Diagnostics.Debug.WriteLine(new String('-', depth) + name);
+    }
+  }
+}

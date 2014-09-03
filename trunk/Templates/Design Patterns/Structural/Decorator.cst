@@ -1,0 +1,112 @@
+﻿<%-- 
+Name: Decorator
+Author: Martin Hart Turner
+Description: Decorator Design Pattern Template
+--%>
+<%@ Assembly Name="CodeSmith.BaseTemplates" %>
+<%@ Import Namespace="CodeSmith.BaseTemplates"  %>
+<%@ Template Language="C#" TargetLanguage="Text" %>
+<%@ Property Name="Namespace" Type="System.String" Default="GangOfFour.Structural" Optional="False" Category="Names" Description="The name of the namespace" %>
+<%@ Property Name="AbstractComponentClassName" Type="System.String" Default="Component" Optional="False" Category="Names" Description="Defines the interface for objects that can have responsibilities added to them dynamically" %>
+<%@ Property Name="ConcreteComponentClassName" Type="System.String" Default="ConcreteComponent" Optional="False" Category="Names" Description="Defines an object to which additional responsibilities can be attached" %>
+<%@ Property Name="DecoratorClassName" Type="System.String" Default="Decorator" Optional="False" Category="Names" Description="Maintains a reference to a Component object and defines an interface that conforms to Component's interface" %>
+<%@ Property Name="ConcreteDecoratorAClassName" Type="System.String" Default="ConcreteDecoratorA" Optional="False" Category="Names" Description="The first concrete class that adds responsibilities to the component" %>
+<%@ Property Name="ConcreteDecoratorBClassName" Type="System.String" Default="ConcreteDecoratorB" Optional="False" Category="Names" Description="The second concrete class that adds responsibilities to the component" %>
+<%@ Property Name="UseInterface" Type="System.Boolean" Default="True" Optional="False" Category="Options" Description="Use interfaces instead of abstract classes" %>
+<%@ Property Name="MakeReadonly" Type="System.Boolean" Default="True" Optional="False" Category="Options" Description="Declare properties as readonly where possible" %>
+<%@ Property Name="CreateUsageMethod" Type="System.Boolean" Default="True" Optional="False" Category="Options" Description="Create a method implanting the patterns usage" %>
+<% string abstractComponentClassName = AbstractComponentClassName; %>
+<% if(UseInterface) { %>
+<%   abstractComponentClassName = "I" + abstractComponentClassName; %>
+<% } %>
+using System;
+
+namespace <%= Namespace %>
+{
+  //--- Attach additional responsibilities to an object dynamically.
+  //--- Decorators provide a flexible alternative to subclassing for extending functionality.
+
+<% if(CreateUsageMethod) { %>
+  internal static class Usage
+  {
+    internal static void UsageMethod()
+    {
+		  <%= ConcreteComponentClassName %> c = new <%= ConcreteComponentClassName %>();
+		  ConcreteDecoratorA d1 = new ConcreteDecoratorA();
+		  ConcreteDecoratorB d2 = new ConcreteDecoratorB();
+		  d1.SetComponent(c);
+		  d2.SetComponent(d1);
+		  d2.Operation();
+    }
+  }
+<% } else { %>
+  //--- Usage:
+  //<%= ConcreteComponentClassName %> c = new <%= ConcreteComponentClassName %>();
+  //ConcreteDecoratorA d1 = new ConcreteDecoratorA();
+  //ConcreteDecoratorB d2 = new ConcreteDecoratorB();
+  //d1.SetComponent(c);
+  //d2.SetComponent(d1);
+  //d2.Operation();
+<% } %>
+
+<% if(UseInterface) { %>
+  public interface <%= abstractComponentClassName %>
+  {
+    void Operation();
+  }
+<% } else { %>
+  public abstract class <%= abstractComponentClassName %>
+  {
+    public abstract void Operation();
+  }
+<% } %>
+
+  public class <%= ConcreteComponentClassName %> : <%= abstractComponentClassName %>
+  {
+    public override void Operation()
+    {
+      System.Diagnostics.Debug.WriteLine("<%= ConcreteComponentClassName %>.Operation()");
+    }
+  }
+
+  public abstract class <%= DecoratorClassName %> : <%= abstractComponentClassName %>
+  {
+    protected <% if(MakeReadonly) { %>readonly<% } %> <%= abstractComponentClassName %> <%= StringUtility.ToCamelCase(AbstractComponentClassName) %> { get; private set; }
+
+    public void SetComponent(<%= abstractComponentClassName %> <%= StringUtility.ToCamelCase(AbstractComponentClassName) %>)
+    {
+      this.<%= StringUtility.ToCamelCase(AbstractComponentClassName) %> = <%= StringUtility.ToCamelCase(AbstractComponentClassName) %>;
+    }
+
+    public virtual  void Operation()
+    {
+      if(<%= StringUtility.ToCamelCase(AbstractComponentClassName) %> != null)
+      {
+        <%= StringUtility.ToCamelCase(AbstractComponentClassName) %>.Operation();
+      }
+    }
+  }
+
+  public class ConcreteDecoratorA : <%= DecoratorClassName %>
+  {
+    public override void Operation()
+    {
+      base.Operation();
+      System.Diagnostics.Debug.WriteLine("ConcreteDecoratorA.Operation()");
+    }
+  }
+
+  public class ConcreteDecoratorB : <%= DecoratorClassName %>
+  {
+    public override void Operation()
+    {
+      base.Operation();
+      AddedBehavior();
+      System.Diagnostics.Debug.WriteLine("ConcreteDecoratorB.Operation()");
+    }
+
+    private void AddedBehavior()
+    {
+    }
+  }
+}

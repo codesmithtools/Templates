@@ -1,0 +1,103 @@
+﻿<%-- 
+Name: Façade
+Author: Martin Hart Turner
+Description: Façade Design Pattern Template
+--%>
+<%@ Assembly Name="CodeSmith.BaseTemplates" %>
+<%@ Import Namespace="CodeSmith.BaseTemplates"  %>
+<%@ Template Language="C#" TargetLanguage="Text" %>
+<%@ Property Name="Namespace" Type="System.String" Default="GangOfFour.Structural" Optional="False" Category="Names" Description="The name of the namespace" %>
+<%@ Property Name="SubSystemOneClassName" Type="System.String" Default="SubSystemOne" Optional="False" Category="Names" Description="Implements the first subsystem functionality. It will handle work assigned by the Facade object. It has no knowledge of the facade and keeps no reference to it" %>
+<%@ Property Name="SubSystemTwoClassName" Type="System.String" Default="SubSystemTwo" Optional="False" Category="Names" Description="Implements the second subsystem functionality. It will handle work assigned by the Facade object. It has no knowledge of the facade and keeps no reference to it" %>
+<%@ Property Name="SubSystemThreeClassName" Type="System.String" Default="SubSystemThree" Optional="False" Category="Names" Description="Implements the third subsystem functionality. It will handle work assigned by the Facade object. It has no knowledge of the facade and keeps no reference to it" %>
+<%@ Property Name="SubSystemFourClassName" Type="System.String" Default="SubSystemFour" Optional="False" Category="Names" Description="Implements the forth subsystem functionality. It will handle work assigned by the Facade object. It has no knowledge of the facade and keeps no reference to it" %>
+<%@ Property Name="FacadeClassName" Type="System.String" Default="Facade" Optional="False" Category="Names" Description="Knows which subsystem classes are responsible for a request" %>
+<%@ Property Name="MakeReadonly" Type="System.Boolean" Default="True" Optional="False" Category="Options" Description="Declare properties as readonly where possible" %>
+<%@ Property Name="CreateUsageMethod" Type="System.Boolean" Default="True" Optional="False" Category="Options" Description="Create a method implanting the patterns usage" %>
+using System;
+
+namespace <%= Namespace %>
+{
+  //--- Provide a unified interface to a set of interfaces in a subsystem.
+  //--- Façade defines a higher-level interface that makes the subsystem easier to use.
+
+<% if(CreateUsageMethod) { %>
+  internal static class Usage
+  {
+    internal static void UsageMethod()
+    {
+		  Facade facade = new Facade();
+		  facade.MethodA();
+		  facade.MethodB();
+    }
+  }
+<% } else { %>
+  //--- Usage:
+  //Facade facade = new Facade();
+  //facade.MethodA();
+  //facade.MethodB();
+<% } %>
+
+  public class <%= SubSystemOneClassName %>
+  {
+    public void MethodOne()
+    {
+      System.Diagnostics.Debug.WriteLine(" <%= SubSystemOneClassName %> Method");
+    }
+  }
+
+  public class <%= SubSystemTwoClassName %>
+  {
+    public void MethodTwo()
+    {
+      System.Diagnostics.Debug.WriteLine(" <%= SubSystemTwoClassName %> Method");
+    }
+  }
+
+  public class <%= SubSystemThreeClassName %>
+  {
+    public void MethodThree()
+    {
+      System.Diagnostics.Debug.WriteLine(" <%= SubSystemThreeClassName %> Method");
+    }
+  }
+
+  public class <%= SubSystemFourClassName %>
+  {
+    public void MethodFour()
+    {
+      System.Diagnostics.Debug.WriteLine(" <%= SubSystemFourClassName %> Method");
+    }
+  }
+
+  public class <%= FacadeClassName %>
+  {
+    private <% if(MakeReadonly) { %>readonly<% } %> <%= SubSystemOneClassName %> one;
+    private <% if(MakeReadonly) { %>readonly<% } %> <%= SubSystemTwoClassName %> two;
+    private <% if(MakeReadonly) { %>readonly<% } %> <%= SubSystemThreeClassName %> three;
+    private <% if(MakeReadonly) { %>readonly<% } %> <%= SubSystemFourClassName %> four;
+
+    public <%= FacadeClassName %>()
+    {
+      one = new <%= SubSystemOneClassName %>();
+      two = new <%= SubSystemTwoClassName %>();
+      three = new <%= SubSystemThreeClassName %>();
+      four = new <%= SubSystemFourClassName %>();
+    }
+
+    public void MethodA()
+    {
+      System.Diagnostics.Debug.WriteLine(" \nMethodA() ---- ");
+      one.MethodOne();
+      two.MethodTwo();
+      four.MethodFour();
+    }
+
+    public void MethodB()
+    {
+      System.Diagnostics.Debug.WriteLine(" \nMethodB() ---- ");
+      two.MethodTwo();
+      three.MethodThree();
+    }
+  }
+}
