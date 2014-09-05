@@ -19,12 +19,10 @@ using System.Linq;
 using CodeSmith.SchemaHelper;
 using LinqToEdmx.Model.Storage;
 
-namespace Generator.Microsoft.Frameworks
-{
-    public partial class EdmxGenerator
-    {
+namespace Generator.Microsoft.Frameworks {
+    public partial class EdmxGenerator {
         #region Private Members
-        
+
         private readonly List<string> _newStorageEntityProperties = new List<string>();
         private readonly List<string> _removedStorageEntityProperties = new List<string>();
 
@@ -36,27 +34,26 @@ namespace Generator.Microsoft.Frameworks
 
         #endregion
 
-        private void CreateStorageEntity(ISchemaEntity entity)
-        {
+        private void CreateStorageEntity(ISchemaEntity entity) {
             // Check to see if this has already been processed.
-            if (_storageEntitys.Contains(entity.EntityKey())) return;
+            if (_storageEntitys.Contains(entity.EntityKey()))
+                return;
 
             bool isNewView;
-            
+
             var entitySet = CreateStorageEntitySet(entity, out isNewView);
             var entityType = CreateStorageEntityType(entity, entitySet.Name, ref isNewView);
-            
+
             // Remove the duplicate properties.
             RemoveDuplicateStorageEntityTypeKeysAndProperties(entityType);
 
             // Remove extra properties values.
             var properties = from property in entityType.Properties
-                             where !(from prop in entity.Properties select prop.KeyName).Contains(property.Name)
-                             select property;
+                where !(from prop in entity.Properties select prop.KeyName).Contains(property.Name)
+                select property;
 
             // Remove all of the key properties that don't exist in the table entity.
-            foreach (var property in properties)
-            {
+            foreach (var property in properties) {
                 var propertyName = ResolveConceptualPropertyNameFromStorageColumnName(entityType.Name, property.Name);
                 _removedStorageEntityProperties.Add(String.Format(PROPERTY_KEY, entity.EntityKeyName, propertyName).ToLower());
                 entityType.Properties.Remove(property);
@@ -68,10 +65,8 @@ namespace Generator.Microsoft.Frameworks
             _storageEntitys.Add(entity.EntityKeyName);
         }
 
-        private void CreateStorageAssociations(TableEntity entity)
-        {
-            foreach (var association in entity.Associations)
-            {
+        private void CreateStorageAssociations(TableEntity entity) {
+            foreach (var association in entity.Associations) {
                 IEntity principalEntity;
                 IEntity dependentEntity;
                 bool isParentEntity;
@@ -82,31 +77,29 @@ namespace Generator.Microsoft.Frameworks
                 CreateStorageAssociationSet(association);
                 CreateStorageAssociation(association);
 
-                if (association.IsParentManyToMany())
-                {
+                if (association.IsParentManyToMany()) {
                     CreateStorageAssociationSet(association.IntermediaryAssociation);
                     CreateStorageAssociation(association.IntermediaryAssociation);
                 }
             }
         }
 
-        private void CreateStorageFunctionEntity(CommandEntity entity)
-        {
+        private void CreateStorageFunctionEntity(CommandEntity entity) {
             // Check to see if this has already been processed.
-            if (_storageFunctions.Contains(entity.EntityKeyName) || !Configuration.Instance.IncludeFunctions) return;
+            if (_storageFunctions.Contains(entity.EntityKeyName) || !Configuration.Instance.IncludeFunctions)
+                return;
 
             //<Function Name="aspnet_Applications_CreateApplication" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+
             #region Validate the Function exists
 
             var function = StorageSchema.Functions.Where(f =>
                 (entity.EntityKeyName.Equals(f.Name, StringComparison.OrdinalIgnoreCase) && entity.SchemaName.Equals(f.Schema, StringComparison.OrdinalIgnoreCase)) ||
                 (entity.EntityKeyName.Equals(f.Name1, StringComparison.OrdinalIgnoreCase) && entity.SchemaName.Equals(f.Schema1, StringComparison.OrdinalIgnoreCase)) ||
-                 entity.EntityKeyName.Equals(f.Name1, StringComparison.OrdinalIgnoreCase) || entity.EntityKeyName.Equals(f.Name, StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
-            
-            if (function == null)
-            {
-                function = new Function()
-                {
+                entity.EntityKeyName.Equals(f.Name1, StringComparison.OrdinalIgnoreCase) || entity.EntityKeyName.Equals(f.Name, StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
+
+            if (function == null) {
+                function = new Function() {
                     Name = entity.EntityKeyName
                 };
 
@@ -119,55 +112,52 @@ namespace Generator.Microsoft.Frameworks
             function.Aggregate = false; //TODO: True if the stored procedure returns an aggregate value; otherwise False.
             function.BuiltIn = false; //TODO: True if the function is a built-in1 function; otherwise False. (A built-in function is a function that is defined in the database. For information about functions that are defined in the storage model)
             function.NiladicFunction = false; //TODO:  A niladic function is a function that accepts no parameters and, when called, does not require parentheses.
-            function.IsComposable = entity.IsFunction; 
+            function.IsComposable = entity.IsFunction;
             function.ParameterTypeSemantics = "AllowImplicitConversion"; //TODO: Determine if this stored procedure is an AllowImplicitConversion.
             function.Schema = entity.SchemaName;
             function.Schema1 = entity.SchemaName;
 
             // Return type cannot be set if the function is composible.
             if (entity.IsFunction)
-                function.ReturnType = entity.ReturnValueParameter != null ? entity.ReturnValueParameter.NativeType : "int";
+                function.ReturnType = entity.ReturnValueParameter != null ? GetNativeType(entity.ReturnValueParameter) : "int";
 
             //<Parameter Name="ApplicationName" Type="nvarchar" Mode="In" />
             //<Parameter Name="ApplicationId" Type="uniqueidentifier" Mode="InOut" />
 
             #region Process Parameters
 
-            if (entity.SearchCriteria != null && entity.SearchCriteria.Count > 0)
-            {
+            if (entity.SearchCriteria != null && entity.SearchCriteria.Count > 0) {
                 #region Remove extra properties values.
 
                 var properties = from property in function.Parameters
-                                 where !(from prop in entity.SearchCriteria[0].Properties select prop.KeyName).Contains(property.Name) || property.Name.Equals("RETURN_VALUE", StringComparison.OrdinalIgnoreCase)
-                                 select property;
+                    where !(from prop in entity.SearchCriteria[0].Properties select prop.KeyName).Contains(property.Name) || property.Name.Equals("RETURN_VALUE", StringComparison.OrdinalIgnoreCase)
+                    select property;
 
                 // Remove all of the key properties that don't exist in the table entity.
-                foreach (var property in properties)
-                {
+                foreach (var property in properties) {
                     function.Parameters.Remove(property);
                 }
 
                 #endregion
 
-                foreach (CommandParameter property in entity.SearchCriteria[0].Properties)
-                {
-                    if (property.KeyName.Equals("RETURN_VALUE", StringComparison.OrdinalIgnoreCase)) continue;
+                foreach (CommandParameter property in entity.SearchCriteria[0].Properties) {
+                    if (property.KeyName.Equals("RETURN_VALUE", StringComparison.OrdinalIgnoreCase))
+                        continue;
 
                     var parameter = function.Parameters.Where(p => property.KeyName.Equals(p.Name, StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
-                    if (parameter == null)
-                    {
-                        parameter = new Parameter() { Name = property.KeyName };
+                    if (parameter == null) {
+                        parameter = new Parameter() {
+                            Name = property.KeyName
+                        };
                         function.Parameters.Add(parameter);
                     }
 
                     //http://msdn.microsoft.com/en-us/library/ee705451.aspx
                     parameter.Name = property.KeyName;
                     parameter.Mode = property.ParameterDirection == ParameterDirection.Input ? "In" : property.ParameterDirection == ParameterDirection.InputOutput ? "InOut" : "Out";
-                    parameter.Type = property.NativeType;
+                    parameter.Type = GetNativeType(property);
                 }
-            }
-            else
-            {
+            } else {
                 function.Parameters.Clear();
             }
 
@@ -178,67 +168,59 @@ namespace Generator.Microsoft.Frameworks
             _storageFunctions.Add(entity.EntityKeyName);
         }
 
-        private void ValidateStorageModel()
-        {
+        private void ValidateStorageModel() {
             ValidateStorageEntities();
             ValidateStorageAssociations();
 
             // Sort the entities.
             StorageSchemaEntityContainer.EntitySets = (from s in StorageSchemaEntityContainer.EntitySets orderby s.Name select s).ToList();
             StorageSchema.EntityTypeStores = (from s in StorageSchema.EntityTypeStores orderby s.Name select s).ToList();
-            
+
             // Sort the associations.
             StorageSchemaEntityContainer.AssociationSets = (from a in StorageSchemaEntityContainer.AssociationSets orderby a.Name select a).ToList();
             StorageSchema.Associations = (from a in StorageSchema.Associations orderby a.Name select a).ToList();
 
             ValidateStorageFunctions();
-       }
+        }
 
-        private void ValidateStorageFunctions()
-        {
-            if (!Configuration.Instance.IncludeFunctions) return;
+        private void ValidateStorageFunctions() {
+            if (!Configuration.Instance.IncludeFunctions)
+                return;
 
             var invalidFunctions = StorageSchema.Functions.Where(f => !_storageFunctions.Contains(f.Name)).ToList();
-            foreach (var type in invalidFunctions)
-            {
+            foreach (var type in invalidFunctions) {
                 StorageSchema.Functions.Remove(type);
             }
 
             StorageSchema.Functions = (from f in StorageSchema.Functions orderby f.Name select f).ToList();
         }
 
-        private void ValidateStorageEntities()
-        {
+        private void ValidateStorageEntities() {
             var processed = new List<string>();
 
             var entitiesToRemove = new List<EntityTypeStore>();
-            foreach (var entity in StorageSchema.EntityTypeStores)
-            {
+            foreach (var entity in StorageSchema.EntityTypeStores) {
                 RemoveDuplicateStorageEntityTypeKeysAndProperties(entity);
 
                 var isEntitySetDefined = StorageSchemaEntityContainer.EntitySets.Count(e => entity.Name.Equals(e.Name, StringComparison.OrdinalIgnoreCase)) > 0;
-                if (processed.Contains(entity.Name) || !isEntitySetDefined || !_storageEntitys.Contains(entity.Name) || entity.Key == null || entity.Key.PropertyRefs.Count == 0)
-                {
+                if (processed.Contains(entity.Name) || !isEntitySetDefined || !_storageEntitys.Contains(entity.Name) || entity.Key == null || entity.Key.PropertyRefs.Count == 0) {
                     if (_storageEntitys.Contains(entity.Name))
                         _storageEntitys.Remove(entity.Name);
 
                     _conceptualEntitiesToRemove.Add(ResolveConceptualNameFromStorageName(entity.Name));
                     entitiesToRemove.Add(entity);
-                }
-                else
+                } else
                     processed.Add(entity.Name);
             }
 
-            foreach (var e in entitiesToRemove)
-            {
+            foreach (var e in entitiesToRemove) {
                 StorageSchema.EntityTypeStores.Remove(e);
             }
 
             processed.Clear();
 
             var entitySetsToRemove = new List<EntityContainer.EntitySetLocalType>();
-            foreach (var e in StorageSchemaEntityContainer.EntitySets)
-            {
+            foreach (var e in StorageSchemaEntityContainer.EntitySets) {
                 var isTableOrView = _storageEntitys.Contains(e.Name) && !String.IsNullOrEmpty(e.Type);
                 var isEntityDefined = String.IsNullOrEmpty(e.Type) && StorageSchema.EntityTypeStores.Count(et => et.Name.Equals(e.Name, StringComparison.OrdinalIgnoreCase)) > 0;
                 if (processed.Contains(e.Name) || (!isTableOrView && !isEntityDefined))
@@ -247,21 +229,18 @@ namespace Generator.Microsoft.Frameworks
                     processed.Add(e.Name);
             }
 
-            foreach (var e in entitySetsToRemove)
-            {
+            foreach (var e in entitySetsToRemove) {
                 StorageSchemaEntityContainer.EntitySets.Remove(e);
             }
 
             //TODO: should we remove entities that are not defined in the mapping model?
         }
 
-        private void ValidateStorageAssociations()
-        {
+        private void ValidateStorageAssociations() {
             var processed = new List<string>();
 
             var associationSetsToRemove = new List<EntityContainer.AssociationSetLocalType>();
-            foreach (var a in StorageSchemaEntityContainer.AssociationSets)
-            {
+            foreach (var a in StorageSchemaEntityContainer.AssociationSets) {
                 var isEndPointValid = a.Ends.Count(e => StorageSchemaEntityContainer.EntitySets.Count(es => es.Name.Equals(e.EntitySet, StringComparison.OrdinalIgnoreCase)) > 0) == 2;
                 if (processed.Contains(a.Name) || !isEndPointValid || !_storageAssociations.Contains(a.Name))
                     associationSetsToRemove.Add(a);
@@ -269,16 +248,14 @@ namespace Generator.Microsoft.Frameworks
                     processed.Add(a.Name);
             }
 
-            foreach (var a in associationSetsToRemove)
-            {
+            foreach (var a in associationSetsToRemove) {
                 StorageSchemaEntityContainer.AssociationSets.Remove(a);
             }
 
             processed.Clear();
 
             var associationsToRemove = new List<LinqToEdmx.Model.Storage.Association>();
-            foreach (var a in StorageSchema.Associations)
-            {
+            foreach (var a in StorageSchema.Associations) {
                 var associationSetExists = StorageSchemaEntityContainer.AssociationSets.Count(e => e.Name.Equals(a.Name, StringComparison.OrdinalIgnoreCase)) > 0;
                 if (processed.Contains(a.Name) || !associationSetExists || !_storageAssociations.Contains(a.Name))
                     associationsToRemove.Add(a);
@@ -286,8 +263,7 @@ namespace Generator.Microsoft.Frameworks
                     processed.Add(a.Name);
             }
 
-            foreach (var a in associationsToRemove)
-            {
+            foreach (var a in associationsToRemove) {
                 StorageSchema.Associations.Remove(a);
             }
 
@@ -295,17 +271,14 @@ namespace Generator.Microsoft.Frameworks
         }
 
         private StorageSchema _storageSchema;
-        private StorageSchema StorageSchema
-        {
-            get
-            {
+
+        private StorageSchema StorageSchema {
+            get {
                 if (_storageSchema != null)
                     return _storageSchema;
 
-                if (RunTime.StorageModels.Untyped.IsEmpty || RunTime.StorageModels.StorageSchema == null)
-                {
-                    RunTime.StorageModels.StorageSchema = new StorageSchema
-                    {
+                if (RunTime.StorageModels.Untyped.IsEmpty || RunTime.StorageModels.StorageSchema == null) {
+                    RunTime.StorageModels.StorageSchema = new StorageSchema {
                         Namespace = String.Concat(_settings.DatabaseName, "Model.Store"),
                         Alias = "Self",
                         Provider = "System.Data.SqlClient",
@@ -319,17 +292,14 @@ namespace Generator.Microsoft.Frameworks
         }
 
         private EntityContainer _storageSchemaEntityContainer;
-        private EntityContainer StorageSchemaEntityContainer
-        {
-            get
-            {
+
+        private EntityContainer StorageSchemaEntityContainer {
+            get {
                 if (_storageSchemaEntityContainer != null)
                     return _storageSchemaEntityContainer;
 
-                if (StorageSchema.EntityContainers.Count == 0)
-                {
-                    StorageSchema.EntityContainers.Add(new EntityContainer()
-                    {
+                if (StorageSchema.EntityContainers.Count == 0) {
+                    StorageSchema.EntityContainers.Add(new EntityContainer() {
                         Name = String.Concat(_settings.DatabaseName, "ModelStoreContainer")
                     });
                 }
@@ -342,19 +312,19 @@ namespace Generator.Microsoft.Frameworks
 
         #region Helpers
 
-        private EntityContainer.EntitySetLocalType CreateStorageEntitySet(ISchemaEntity entity, out bool isNewView)
-        {
+        private EntityContainer.EntitySetLocalType CreateStorageEntitySet(ISchemaEntity entity, out bool isNewView) {
             //<EntitySet Name="Category" EntityType="PetShopModel1.Store.Category" store:Type="Tables" Schema="dbo" />
             //<EntitySet Name="vw_aspnet_Applications" EntityType="PetShopModel1.Store.vw_aspnet_Applications" store:Type="Views" store:Schema="dbo" store:Name="vw_aspnet_Applications">
             var entitySet = StorageSchemaEntityContainer.EntitySets.Where(e =>
-                                                                          (entity.EntityKeyName.Equals(e.Name, StringComparison.OrdinalIgnoreCase) && entity.SchemaName.Equals(e.Schema, StringComparison.OrdinalIgnoreCase)) ||
-                                                                          (entity.EntityKeyName.Equals(e.Name1, StringComparison.OrdinalIgnoreCase) && entity.SchemaName.Equals(e.Schema1, StringComparison.OrdinalIgnoreCase)) ||
-                                                                          entity.EntityKeyName.Equals(e.Name1, StringComparison.OrdinalIgnoreCase) || entity.EntityKeyName.Equals(e.Name, StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
+                (entity.EntityKeyName.Equals(e.Name, StringComparison.OrdinalIgnoreCase) && entity.SchemaName.Equals(e.Schema, StringComparison.OrdinalIgnoreCase)) ||
+                (entity.EntityKeyName.Equals(e.Name1, StringComparison.OrdinalIgnoreCase) && entity.SchemaName.Equals(e.Schema1, StringComparison.OrdinalIgnoreCase)) ||
+                entity.EntityKeyName.Equals(e.Name1, StringComparison.OrdinalIgnoreCase) || entity.EntityKeyName.Equals(e.Name, StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
 
             isNewView = entitySet == null && entity is ViewEntity;
-            if (entitySet == null)
-            {
-                entitySet = new EntityContainer.EntitySetLocalType { Name = entity.EntityKeyName };
+            if (entitySet == null) {
+                entitySet = new EntityContainer.EntitySetLocalType {
+                    Name = entity.EntityKeyName
+                };
                 StorageSchemaEntityContainer.EntitySets.Add(entitySet);
             }
 
@@ -367,27 +337,24 @@ namespace Generator.Microsoft.Frameworks
             entitySet.Type = entity is TableEntity ? EdmxConstants.StorageSchemaGenerationTypeAttributeValueTables : null;
             entitySet.Schema = entity is TableEntity ? entity.SchemaName : null;
 
-            if (entity is ViewEntity)
-            {
+            if (entity is ViewEntity) {
                 entitySet.Type = EdmxConstants.StorageSchemaGenerationTypeAttributeValueViews;
                 entitySet.DefiningQuery = ((ViewEntity)entity).SourceText.Remove(0, ((ViewEntity)entity).SourceText.IndexOf("SELECT", StringComparison.OrdinalIgnoreCase));
-            }
-            else
+            } else
                 entitySet.Table = entity.EntityKeyName;
 
-            if (!String.IsNullOrEmpty(entitySet.Schema1)) entitySet.Schema1 = entity.SchemaName;
-            if (!String.IsNullOrEmpty(entitySet.Name1)) entitySet.Name1 = entity.EntityKeyName;
+            if (!String.IsNullOrEmpty(entitySet.Schema1))
+                entitySet.Schema1 = entity.SchemaName;
+            if (!String.IsNullOrEmpty(entitySet.Name1))
+                entitySet.Name1 = entity.EntityKeyName;
 
             return entitySet;
         }
 
-        private EntityTypeStore CreateStorageEntityType(ISchemaEntity entity, string name, ref bool isNewView)
-        {
+        private EntityTypeStore CreateStorageEntityType(ISchemaEntity entity, string name, ref bool isNewView) {
             EntityTypeStore entityType = StorageSchema.EntityTypeStores.Where(e => ResolveStorageEntityName(entity.EntityKeyName).Equals(e.Name, StringComparison.OrdinalIgnoreCase) || name.Equals(e.Name, StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
-            if (entityType == null)
-            {
-                entityType = new EntityTypeStore()
-                {
+            if (entityType == null) {
+                entityType = new EntityTypeStore() {
                     Name = name,
                     Key = new EntityKeyElement()
                 };
@@ -403,94 +370,81 @@ namespace Generator.Microsoft.Frameworks
             return entityType;
         }
 
-        private static void RemoveDuplicateStorageEntityTypeKeysAndProperties(EntityTypeStore entity)
-        {
+        private static void RemoveDuplicateStorageEntityTypeKeysAndProperties(EntityTypeStore entity) {
             var processed = new List<string>();
             var propertiesToRemove = new List<EntityProperty>();
-            foreach (var property in entity.Properties)
-            {
+            foreach (var property in entity.Properties) {
                 if (processed.Contains(property.Name))
                     propertiesToRemove.Add(property);
                 else
                     processed.Add(property.Name);
             }
 
-            foreach (var e in propertiesToRemove)
-            {
+            foreach (var e in propertiesToRemove) {
                 entity.Properties.Remove(e);
             }
 
             entity.Properties = (from p in entity.Properties select p).ToList();
 
-            if (entity.Key != null)
-            {
+            if (entity.Key != null) {
                 var keysProcessed = new List<string>();
                 var keysToRemove = new List<PropertyRef>();
-                foreach (var property in entity.Key.PropertyRefs)
-                {
+                foreach (var property in entity.Key.PropertyRefs) {
                     if (!processed.Contains(property.Name) || keysProcessed.Contains(property.Name))
                         keysToRemove.Add(property);
                     else
                         keysProcessed.Add(property.Name);
                 }
 
-                foreach (var e in keysToRemove)
-                {
+                foreach (var e in keysToRemove) {
                     entity.Key.PropertyRefs.Remove(e);
                 }
             }
         }
 
-        private static void CreateStorageEntityTypeKeys(ISchemaEntity entity, bool isNewView, EntityTypeStore entityType)
-        {
+        private static void CreateStorageEntityTypeKeys(ISchemaEntity entity, bool isNewView, EntityTypeStore entityType) {
             //<Key>
             //  <PropertyRef Name="CategoryId"  />
             //</Key>
-            if (entity.HasKey || isNewView)
-            {
+            if (entity.HasKey || isNewView) {
                 #region Remove extra key values.
-               
+
                 var items = from property in entityType.Key.PropertyRefs
-                            where !(from prop in entity.Key.Properties select prop.KeyName).Contains(property.Name)
-                            select property;
+                    where !(from prop in entity.Key.Properties select prop.KeyName).Contains(property.Name)
+                    select property;
 
                 // Remove all of the key properties that don't exist in the table entity.
-                foreach (var property in items)
-                {
+                foreach (var property in items) {
                     entityType.Key.PropertyRefs.Remove(property);
                 }
 
                 #endregion
 
-                foreach (var property in entity.Key.Properties.Where(p => entityType.Key.PropertyRefs.Count(pr => pr.Name == p.Name) == 0))
-                {
-                    entityType.Key.PropertyRefs.Add(new PropertyRef() { Name = property.KeyName });
+                foreach (var property in entity.Key.Properties.Where(p => entityType.Key.PropertyRefs.Count(pr => pr.Name == p.Name) == 0)) {
+                    entityType.Key.PropertyRefs.Add(new PropertyRef() {
+                        Name = property.KeyName
+                    });
                 }
-            }
-            else if (entity is TableEntity)
-            {
+            } else if (entity is TableEntity) {
                 entityType.Key.PropertyRefs.Clear();
             }
         }
 
-        private void CreateStorageEntityTypeProperties(ISchemaEntity entity, EntityTypeStore entityType)
-        {
+        private void CreateStorageEntityTypeProperties(ISchemaEntity entity, EntityTypeStore entityType) {
             //<Property Name="CategoryId" Type="varchar" Nullable="false" MaxLength="10"  />
-            foreach (ISchemaProperty property in entity.Properties)
-            {
+            foreach (ISchemaProperty property in entity.Properties) {
                 var entityProperty = entityType.Properties.Where(p => property.KeyName.Equals(p.Name, StringComparison.OrdinalIgnoreCase) || property.KeyName.Equals(p.Name, StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
-                if (entityProperty == null)
-                {
+                if (entityProperty == null) {
                     if (ExcludeProperty(property))
                         continue;
 
-                    entityProperty = new EntityProperty() { Name = property.KeyName };
+                    entityProperty = new EntityProperty() {
+                        Name = property.KeyName
+                    };
                     entityType.Properties.Add(entityProperty);
 
                     _newStorageEntityProperties.Add(String.Format("{0}-{1}", entity.Name, property.Name));
-                }
-                else if (ExcludeProperty(property))
-                {
+                } else if (ExcludeProperty(property)) {
                     entityType.Properties.Remove(entityProperty);
                     continue;
                 }
@@ -502,23 +456,22 @@ namespace Generator.Microsoft.Frameworks
                     entityProperty.Nullable = property.IsNullable;
 
                 if (String.IsNullOrEmpty(entityProperty.DefaultValue) && !String.IsNullOrEmpty(property.DefaultValue)) {
-                    if (entityProperty.DefaultValue.ToLowerInvariant().Contains("autoincrement")) // Needed for sql anywhere
+                    if (property.DefaultValue.ToLowerInvariant().Contains("autoincrement")) // Needed for sql anywhere
                         entityProperty.DefaultValue = null;
                     else if (String.Equals(property.BaseSystemType, "System.Boolean", StringComparison.OrdinalIgnoreCase))
                         entityProperty.DefaultValue = property.DefaultValue.ToLower();
                     else if (String.Equals(property.BaseSystemType, "System.Single", StringComparison.OrdinalIgnoreCase)
-                        || String.Equals(property.BaseSystemType, "System.Int16", StringComparison.OrdinalIgnoreCase)
-                        || String.Equals(property.BaseSystemType, "System.Int32", StringComparison.OrdinalIgnoreCase)
-                        || String.Equals(property.BaseSystemType, "System.Int64", StringComparison.OrdinalIgnoreCase)
-                        || String.Equals(property.BaseSystemType, "System.Byte", StringComparison.OrdinalIgnoreCase)
-                        || String.Equals(property.BaseSystemType, "System.Decimal", StringComparison.OrdinalIgnoreCase)
-                        || String.Equals(property.BaseSystemType, "System.Double", StringComparison.OrdinalIgnoreCase)
-                        || String.Equals(property.BaseSystemType, "System.String", StringComparison.OrdinalIgnoreCase))
+                             || String.Equals(property.BaseSystemType, "System.Int16", StringComparison.OrdinalIgnoreCase)
+                             || String.Equals(property.BaseSystemType, "System.Int32", StringComparison.OrdinalIgnoreCase)
+                             || String.Equals(property.BaseSystemType, "System.Int64", StringComparison.OrdinalIgnoreCase)
+                             || String.Equals(property.BaseSystemType, "System.Byte", StringComparison.OrdinalIgnoreCase)
+                             || String.Equals(property.BaseSystemType, "System.Decimal", StringComparison.OrdinalIgnoreCase)
+                             || String.Equals(property.BaseSystemType, "System.Double", StringComparison.OrdinalIgnoreCase)
+                             || String.Equals(property.BaseSystemType, "System.String", StringComparison.OrdinalIgnoreCase))
                         entityProperty.DefaultValue = property.DefaultValue;
                     else
                         entityProperty.DefaultValue = null;
-                }
-                else {
+                } else {
                     entityProperty.DefaultValue = null;
                 }
 
@@ -528,8 +481,7 @@ namespace Generator.Microsoft.Frameworks
             }
         }
 
-        private void CreateStorageAssociationSet(IAssociation association)
-        {
+        private void CreateStorageAssociationSet(IAssociation association) {
             IEntity principalEntity;
             IEntity dependentEntity;
             bool isParentEntity;
@@ -542,23 +494,18 @@ namespace Generator.Microsoft.Frameworks
             //    <End Role="Product" EntitySet="Product" />
             //</AssociationSet>
             var associationSet = StorageSchemaEntityContainer.AssociationSets.Where(e => e.Name.Equals(association.AssociationKeyName, StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
-            if (associationSet == null)
-            {
-                associationSet = new EntityContainer.AssociationSetLocalType
-                {
+            if (associationSet == null) {
+                associationSet = new EntityContainer.AssociationSetLocalType {
                     Name = association.AssociationKeyName,
                     Ends = new List<EntityContainer.AssociationSetLocalType.EndLocalType>()
                 };
 
                 StorageSchemaEntityContainer.AssociationSets.Add(associationSet);
-            }
-            else
-            {
+            } else {
                 // Remove the AssociationEnd's that don't exist.
                 var items = associationSet.Ends.Where(e => (!e.Role.Equals(toRole) || !e.Role.Equals(ResolveStorageEntityName(association.Entity.EntityKeyName))) &&
                                                            (!e.Role.Equals(fromRole) || !e.Role.Equals(ResolveStorageEntityName(association.ForeignEntity.EntityKeyName))));
-                foreach (var associationEnd in items)
-                {
+                foreach (var associationEnd in items) {
                     associationSet.Ends.Remove(associationEnd);
                 }
             }
@@ -574,15 +521,15 @@ namespace Generator.Microsoft.Frameworks
             associationSet.Ends = (from a in associationSet.Ends orderby a.Role select a).ToList();
         }
 
-        private EntityContainer.AssociationSetLocalType.EndLocalType CreateStorageAssociationSetEnd(IEntity entity, string role, EntityContainer.AssociationSetLocalType set, EntityContainer.AssociationSetLocalType.EndLocalType otherEnd = null)
-        {
+        private EntityContainer.AssociationSetLocalType.EndLocalType CreateStorageAssociationSetEnd(IEntity entity, string role, EntityContainer.AssociationSetLocalType set, EntityContainer.AssociationSetLocalType.EndLocalType otherEnd = null) {
             var end = otherEnd == null ?
                 set.Ends.Where(e => e.Role.Equals(role) || e.Role.Equals(ResolveStorageEntityName(entity.EntityKeyName))).FirstOrDefault() :
                 set.Ends.Where(e => !e.Equals(otherEnd)).FirstOrDefault();
 
-            if (end == null)
-            {
-                end = new EntityContainer.AssociationSetLocalType.EndLocalType() { Role = role };
+            if (end == null) {
+                end = new EntityContainer.AssociationSetLocalType.EndLocalType() {
+                    Role = role
+                };
                 set.Ends.Add(end);
             }
 
@@ -592,8 +539,7 @@ namespace Generator.Microsoft.Frameworks
             return end;
         }
 
-        private void CreateStorageAssociation(IAssociation association)
-        {   
+        private void CreateStorageAssociation(IAssociation association) {
             //<Association Name="FK__Product__Categor__0CBAE877">
             //  <End Role="Category" Type="PetShopModel1.Store.Category" Multiplicity="1" />
             //  <End Role="Product" Type="PetShopModel1.Store.Product" Multiplicity="*" />
@@ -616,9 +562,9 @@ namespace Generator.Microsoft.Frameworks
 
             // The associations are stupid and if an end is added after the ReferentialConstraint, than the API doesn't detect it...
             var assoc = StorageSchema.Associations.Where(a => a.Name.Equals(association.AssociationKeyName)).FirstOrDefault();
-            if (assoc != null) StorageSchema.Associations.Remove(assoc);
-            assoc = new LinqToEdmx.Model.Storage.Association()
-            {
+            if (assoc != null)
+                StorageSchema.Associations.Remove(assoc);
+            assoc = new LinqToEdmx.Model.Storage.Association() {
                 Name = association.AssociationKeyName,
                 Ends = new List<AssociationEnd>()
             };
@@ -630,10 +576,13 @@ namespace Generator.Microsoft.Frameworks
 
             UpdateStorageAssociationEndMultiplicity(association, principalEnd, dependentEnd);
 
-            assoc.ReferentialConstraint = new LinqToEdmx.Model.Storage.Constraint
-            {
-                Principal = new ReferentialConstraintRoleElement() { Role = toRole },
-                Dependent = new ReferentialConstraintRoleElement() { Role = fromRole }
+            assoc.ReferentialConstraint = new LinqToEdmx.Model.Storage.Constraint {
+                Principal = new ReferentialConstraintRoleElement() {
+                    Role = toRole
+                },
+                Dependent = new ReferentialConstraintRoleElement() {
+                    Role = fromRole
+                }
             };
 
             CreateStorageAssociationReferentialConstraintProperties(assoc, association.Properties, association.IsParentManyToMany());
@@ -641,21 +590,20 @@ namespace Generator.Microsoft.Frameworks
             _storageAssociations.Add(association.AssociationKeyName);
         }
 
-        private AssociationEnd CreateStorageAssociationEnd(IEntity entity, string role, LinqToEdmx.Model.Storage.Association assocication, bool isCascadeDelete)
-        {
+        private AssociationEnd CreateStorageAssociationEnd(IEntity entity, string role, LinqToEdmx.Model.Storage.Association assocication, bool isCascadeDelete) {
             //  <End Role="Category" Type="PetShopModel1.Store.Category" Multiplicity="1">
             //     <OnDelete Action="Cascade" /> 
             //  </End> 
             //  <End Role="Product" Type="PetShopModel1.Store.Product" Multiplicity="*" />
-            var end = new AssociationEnd()
-            {
+            var end = new AssociationEnd() {
                 Role = role,
                 Type = String.Concat(StorageSchema.Namespace, ".", entity.EntityKeyName)
             };
 
-            if (isCascadeDelete)
-            {
-                end.OnDelete.Add(new OnAction() { Action = EdmxConstants.OnDeleteActionCascade });
+            if (isCascadeDelete) {
+                end.OnDelete.Add(new OnAction() {
+                    Action = EdmxConstants.OnDeleteActionCascade
+                });
             }
 
             assocication.Ends.Add(end);
@@ -663,10 +611,8 @@ namespace Generator.Microsoft.Frameworks
             return end;
         }
 
-        private static void UpdateStorageAssociationEndMultiplicity(IAssociation association, AssociationEnd principalEnd, AssociationEnd dependentEnd)
-        {
-            switch (association.AssociationType)
-            {
+        private static void UpdateStorageAssociationEndMultiplicity(IAssociation association, AssociationEnd principalEnd, AssociationEnd dependentEnd) {
+            switch (association.AssociationType) {
                 case AssociationType.OneToMany:
                     principalEnd.Multiplicity = MultiplicityConstants.One;
                     dependentEnd.Multiplicity = MultiplicityConstants.Many;
@@ -691,8 +637,7 @@ namespace Generator.Microsoft.Frameworks
             }
         }
 
-        private static void CreateStorageAssociationReferentialConstraintProperties(LinqToEdmx.Model.Storage.Association association, IEnumerable<AssociationProperty> properties, bool isParentEntity)
-        {
+        private static void CreateStorageAssociationReferentialConstraintProperties(LinqToEdmx.Model.Storage.Association association, IEnumerable<AssociationProperty> properties, bool isParentEntity) {
             //  <ReferentialConstraint>
             //      <Principal Role="Category">
             //          <PropertyRef Name="CategoryId" />
@@ -701,26 +646,21 @@ namespace Generator.Microsoft.Frameworks
             //          <PropertyRef Name="CategoryId" />
             //      </Dependent>
             //  </ReferentialConstraint>
-            foreach (var property in properties)
-            {
+            foreach (var property in properties) {
                 var principalProp = !isParentEntity ? property.Property : property.ForeignProperty;
                 var dependentProp = !isParentEntity ? property.ForeignProperty : property.Property;
 
                 var principalProperty = association.ReferentialConstraint.Principal.PropertyRefs.Where(p => p.Name == principalProp.KeyName).FirstOrDefault();
-                if (principalProperty == null)
-                {
-                    principalProperty = new PropertyRef()
-                    {
+                if (principalProperty == null) {
+                    principalProperty = new PropertyRef() {
                         Name = principalProp.KeyName
                     };
                     association.ReferentialConstraint.Principal.PropertyRefs.Add(principalProperty);
                 }
 
                 var dependentProperty = association.ReferentialConstraint.Dependent.PropertyRefs.Where(p => p.Name == dependentProp.KeyName).FirstOrDefault();
-                if (dependentProperty == null)
-                {
-                    dependentProperty = new PropertyRef()
-                    {
+                if (dependentProperty == null) {
+                    dependentProperty = new PropertyRef() {
                         Name = dependentProp.KeyName
                     };
                     association.ReferentialConstraint.Dependent.PropertyRefs.Add(dependentProperty);
@@ -728,15 +668,15 @@ namespace Generator.Microsoft.Frameworks
             }
         }
 
-        private static void ResolveStorageAssociationValues(IAssociation association, out IEntity principalEntity, out IEntity dependentEntity, out bool isParentEntity, out string keyName, out string toRole, out string fromRole)
-        {
+        private static void ResolveStorageAssociationValues(IAssociation association, out IEntity principalEntity, out IEntity dependentEntity, out bool isParentEntity, out string keyName, out string toRole, out string fromRole) {
             bool isManyToManyEntity = association.IsParentManyToMany();
             principalEntity = !isManyToManyEntity ? association.Entity : association.ForeignEntity;
             dependentEntity = !isManyToManyEntity ? association.ForeignEntity : association.Entity;
 
             toRole = principalEntity.EntityKeyName;
             fromRole = dependentEntity.EntityKeyName;
-            if (toRole.Equals(fromRole)) fromRole += 1;
+            if (toRole.Equals(fromRole))
+                fromRole += 1;
 
             keyName = isManyToManyEntity ? association.Entity.EntityKeyName : association.AssociationKeyName;
 
@@ -745,31 +685,27 @@ namespace Generator.Microsoft.Frameworks
                 isParentEntity &= association.IsParentManyToMany();
         }
 
-        private string ResolveStorageEntityName(string entityName)
-        {
+        private string ResolveStorageEntityName(string entityName) {
             if (_storageEntityNames.ContainsKey(entityName))
                 return _storageEntityNames[entityName];
 
             return entityName;
         }
 
-        private static string GetNativeType(ISchemaProperty property)
-        {
+        private static string GetNativeType(ISchemaProperty property) {
             string nativeType = property.NativeType;
-            switch (property.DataType)
-            {
+            switch (property.DataType) {
                 case DbType.Binary:
                 case DbType.AnsiString:
                 case DbType.AnsiStringFixedLength:
                 case DbType.String:
-                case DbType.StringFixedLength:
-                    {
-                        if (property.NativeType != "text" && property.NativeType != "ntext" &&
-                            property.NativeType != "timestamp" && property.NativeType != "image")
-                            if (property.Size == -1)
-                                nativeType += "(max)";
-                        break;
-                    }
+                case DbType.StringFixedLength: {
+                    if (property.NativeType != "text" && property.NativeType != "ntext" &&
+                        property.NativeType != "timestamp" && property.NativeType != "image")
+                        if (property.Size == -1)
+                            nativeType += "(max)";
+                    break;
+                }
                 case DbType.Int16:
                     return "smallint";
                 case DbType.Int32:
