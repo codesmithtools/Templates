@@ -627,7 +627,9 @@ namespace Generator.Microsoft.Frameworks
                     entityProperty.Nullable = property.IsNullable;
 
                 if (String.IsNullOrEmpty(entityProperty.DefaultValue) && !String.IsNullOrEmpty(property.DefaultValue)) {
-                    if (String.Equals(property.BaseSystemType, "System.Boolean", StringComparison.OrdinalIgnoreCase))
+                    if (entityProperty.DefaultValue.ToLowerInvariant().Contains("autoincrement")) // Needed for sql anywhere
+                        entityProperty.DefaultValue = null;
+                    else if (String.Equals(property.BaseSystemType, "System.Boolean", StringComparison.OrdinalIgnoreCase))
                         entityProperty.DefaultValue = property.DefaultValue.ToLower();
                     else if (String.Equals(property.BaseSystemType, "System.Single", StringComparison.OrdinalIgnoreCase)
                         || String.Equals(property.BaseSystemType, "System.Int16", StringComparison.OrdinalIgnoreCase)
