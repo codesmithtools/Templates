@@ -1,4 +1,4 @@
-﻿<%@ CodeTemplate Language="C#" TargetLanguage="XML" Description="Generates an EDMX File" OutputType="None" %>
+﻿<%@ CodeTemplate Language="C#" TargetLanguage="XML" Description="Generates an EDMX File" Debug="True" OutputType="None" %>
 
 <%@ Assembly Name="CodeSmith.CustomProperties" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\Common" %>
@@ -54,12 +54,11 @@
         
         OnPreOutputWritten(this.EdmxFile);
 
-        GeneratorSettings settings = new GeneratorSettings();
+        GeneratorSettings settings = new GeneratorSettings(SourceDatabase);
         settings.MappingFile = filePath;
         settings.ContextNamespace = ContextNamespace;
         settings.DataContextName = DataContextName;
         settings.EntityNamespace = EntityNamespace;
-        settings.DatabaseName = SourceDatabase.Name;
 
         CodeSmith.SchemaHelper.Configuration.Instance.CleanExpressions = new List<Regex>();
         if(CleanExpression != null)

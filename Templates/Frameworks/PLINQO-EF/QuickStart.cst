@@ -28,6 +28,9 @@ Description: Used to Quick Start Visual Studio Projects
 <%@ Property Name="IncludeDataServices" Type="System.Boolean" Default="True" Optional="False" Category="4.Web Project" Description="Include DataServices in Web Project" %>
 <%@ Property Name="InterfaceProjectName" Type="System.String" Default="" Optional="False" Category="4.Web Project" Description="Name Space for the Web Project." %>
 
+<%@ Property Name="IncludeViews" Type="System.Boolean" Default="True" Optional="False" Category="5.Options" Description="Includes Views in Solution." %>
+<%@ Property Name="IncludeFunctions" Type="System.Boolean" Default="True" Optional="False" Category="5.Options" Description="Includes Stored Procedures in Solution" %>
+
 <% CreateQuickStart(); %>
 The <%= SolutionName %> Solution has been created at <%= Location %>.
 
