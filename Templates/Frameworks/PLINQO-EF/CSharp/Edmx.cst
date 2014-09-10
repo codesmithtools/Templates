@@ -32,6 +32,7 @@
 <script runat="template">
     public void Generate()
     {
+        CodeSmith.SchemaHelper.Configuration.Instance.MaxNumberOfKeyProperties = 15;
         CodeSmith.SchemaHelper.Configuration.Instance.NamingProperty.PropertyNaming = CodeSmith.SchemaHelper.PropertyNaming.NormalizeRemovePrefix;
         CodeSmith.SchemaHelper.Configuration.Instance.NamingProperty.AssociationNaming = CodeSmith.SchemaHelper.AssociationNaming.List;
 

@@ -586,8 +586,7 @@ namespace Generator.Microsoft.Frameworks
                 
                 #endregion
                 
-                foreach (var property in entity.Key.Properties.Where(p => entityType.Key.PropertyRefs.Count(pr => pr.Name == p.Name) == 0))
-                {
+                foreach (var property in entity.Key.Properties.Where(p => entityType.Key.PropertyRefs.Count(pr => pr.Name == p.Name) == 0)) {
                     entityType.Key.PropertyRefs.Add(new PropertyRef() { Name =  ResolveEntityPropertyMappedName(entity.Name, property.KeyName, property.Name) });
                 }
             }
