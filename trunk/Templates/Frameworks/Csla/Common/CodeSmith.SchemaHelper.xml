@@ -400,6 +400,12 @@
             
             </summary>
         </member>
+        <member name="P:CodeSmith.SchemaHelper.Configuration.MaxNumberOfKeyProperties">
+            <summary>
+            Set the maximum number of view properties that can be added to the primary keys collection. 
+            Entity Framework has a limit of 15 keys that can be on an entity.
+            </summary>
+        </member>
         <member name="P:CodeSmith.SchemaHelper.Configuration.IncludeManyToManyEntity">
             <summary>
             When true, the intermediary table will added to the EntityManager's Entities List.
