@@ -13,11 +13,31 @@
 
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using SchemaExplorer;
 
-namespace Generator.Microsoft.Frameworks
-{
-    public class GeneratorSettings
-    {
+namespace Generator.Microsoft.Frameworks {
+    public class GeneratorSettings {
+        public GeneratorSettings(IDatabaseSchema schema) {
+            DatabaseName = schema.Name;
+
+            switch (schema.Provider.Name) {
+                case "SQLAnywhereSchemaProvider":
+                    SchemaProviderName = "iAnywhere.Data.SQLAnywhere";
+                    SchemaProviderManifestToken = "12";
+                    break;
+
+                case "MySQLSchemaProvider":
+                    SchemaProviderName = "MySql.Data.MySqlClient";
+                    SchemaProviderManifestToken = "5.5";
+                    break;
+
+                default:
+                    SchemaProviderName = "System.Data.SqlClient";
+                    SchemaProviderManifestToken = "2008";
+                    break;
+            }
+        }
+
         public string MappingFile { get; set; }
 
         public string ContextNamespace { get; set; }
@@ -28,29 +48,22 @@ namespace Generator.Microsoft.Frameworks
 
         public string EntityNamespace { get; set; }
 
-        private List<Regex> _ignoreExpressions = new List<Regex>();
-        public List<Regex> IgnoreExpressions
-        {
-            get { return _ignoreExpressions; }
-        }
+        private readonly List<Regex> _ignoreExpressions = new List<Regex>();
+        public List<Regex> IgnoreExpressions { get { return _ignoreExpressions; } }
 
-        private List<Regex> _includeExpressions = new List<Regex>();
-        public List<Regex> IncludeExpressions
-        {
-            get { return _includeExpressions; }
-        }
+        private readonly List<Regex> _includeExpressions = new List<Regex>();
+        public List<Regex> IncludeExpressions { get { return _includeExpressions; } }
 
-        private List<Regex> _cleanExpressions = new List<Regex>();
-        public List<Regex> CleanExpressions
-        {
-            get { return _cleanExpressions; }
-        }
+        private readonly List<Regex> _cleanExpressions = new List<Regex>();
+        public List<Regex> CleanExpressions { get { return _cleanExpressions; } }
 
         private string _databaseName;
-        public string DatabaseName
-        {
-            get { return _databaseName; }
-            set { _databaseName = CodeSmith.SchemaHelper.Util.NamingConventions.PropertyName(value); }
+        public string DatabaseName { 
+            get { return _databaseName; } 
+            set { _databaseName = CodeSmith.SchemaHelper.Util.NamingConventions.PropertyName(value); } 
         }
+
+        public string SchemaProviderName { get; private set; }
+        public string SchemaProviderManifestToken { get; private set; }
     }
 }

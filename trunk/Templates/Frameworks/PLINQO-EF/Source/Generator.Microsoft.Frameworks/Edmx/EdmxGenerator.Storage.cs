@@ -281,8 +281,8 @@ namespace Generator.Microsoft.Frameworks {
                     RunTime.StorageModels.StorageSchema = new StorageSchema {
                         Namespace = String.Concat(_settings.DatabaseName, "Model.Store"),
                         Alias = "Self",
-                        Provider = "System.Data.SqlClient",
-                        ProviderManifestToken = "2008"
+                        Provider = _settings.SchemaProviderName,
+                        ProviderManifestToken = _settings.SchemaProviderManifestToken 
                     };
                 }
 
