@@ -725,11 +725,34 @@ namespace Generator.Microsoft.Frameworks {
                     return "bigint";
                 case DbType.Double:
                     return "float";
+                case DbType.Date:
+                    // SQL Anywhere provider doesn't support the type date: http://dcx.sybase.com/1201/en/dbprogramming/framework-adodotnet-development.html
+                    if (IsSqlAnywhere(property.Entity))
+                        return "datetime";
+                    break;
                 case DbType.Decimal:
                     return "numeric";
             }
 
             return nativeType;
+        }
+
+        private static bool IsSqlAnywhere(IEntity entity) {
+            var providerName = GetProviderName(entity);
+            return !String.IsNullOrEmpty(providerName) && String.Equals(providerName, "SQLAnywhereSchemaProvider");
+        }
+
+        private static string GetProviderName(IEntity entity) {
+            if (entity is TableEntity)
+                return (entity as TableEntity).EntitySource.Database.Provider.Name;
+
+            if (entity is ViewEntity)
+                return (entity as ViewEntity).EntitySource.Database.Provider.Name;
+
+            if (entity is CommandEntity)
+                return (entity as CommandEntity).EntitySource.Database.Provider.Name;
+
+            return null;
         }
 
         #endregion
