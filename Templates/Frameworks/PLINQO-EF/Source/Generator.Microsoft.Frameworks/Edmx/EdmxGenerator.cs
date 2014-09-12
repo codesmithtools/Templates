@@ -197,6 +197,13 @@ namespace Generator.Microsoft.Frameworks
                 case DbType.String:
                 case DbType.StringFixedLength:
                     {
+                        // Custom Fixes for SQL Anywhere
+                        if (String.Equals(property.NativeType, "LONG BINARY", StringComparison.OrdinalIgnoreCase) ||
+                            String.Equals(property.NativeType, "LONG VARBIT", StringComparison.OrdinalIgnoreCase) ||
+                            String.Equals(property.NativeType, "LONG VARCHAR", StringComparison.OrdinalIgnoreCase) ||
+                            String.Equals(property.NativeType, "LONG NVARCHAR", StringComparison.OrdinalIgnoreCase))
+                            return "Max";
+
                         // Custom Fixes for MySQL... http://www.tutorialspoint.com/mysql/mysql-data-types.htm
                         if (String.Equals(property.NativeType, "BLOB", StringComparison.OrdinalIgnoreCase) ||
                             String.Equals(property.NativeType, "TINYBLOB", StringComparison.OrdinalIgnoreCase) ||

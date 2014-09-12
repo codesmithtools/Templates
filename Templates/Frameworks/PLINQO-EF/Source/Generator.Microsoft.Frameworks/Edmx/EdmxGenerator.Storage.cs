@@ -700,6 +700,17 @@ namespace Generator.Microsoft.Frameworks {
                 case DbType.AnsiStringFixedLength:
                 case DbType.String:
                 case DbType.StringFixedLength: {
+                    // SQL Anywhere
+                    if (String.Equals(property.NativeType, "LONG BINARY", StringComparison.OrdinalIgnoreCase) ||
+                        String.Equals(property.NativeType, "LONG VARBIT", StringComparison.OrdinalIgnoreCase))
+                        return "binary";
+                   
+                    if (String.Equals(property.NativeType, "LONG VARCHAR", StringComparison.OrdinalIgnoreCase))
+                        return "varchar";
+
+                    if(String.Equals(property.NativeType, "LONG NVARCHAR", StringComparison.OrdinalIgnoreCase))
+                        return "nvarchar";
+
                     if (property.NativeType != "text" && property.NativeType != "ntext" &&
                         property.NativeType != "timestamp" && property.NativeType != "image")
                         if (property.Size == -1)
@@ -712,6 +723,8 @@ namespace Generator.Microsoft.Frameworks {
                     return "int";
                 case DbType.Int64:
                     return "bigint";
+                case DbType.Double:
+                    return "float";
                 case DbType.Decimal:
                     return "numeric";
             }
