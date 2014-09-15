@@ -136,6 +136,8 @@ The generated solution contains one or more projects that require MVC4 (http://w
             IncludeDataServices = this.IncludeDataServices,
             InterfaceProjectName = this.InterfaceProjectName,
             IncludeTestProject = false,
+            IncludeFunctions = this.IncludeFunctions,
+            IncludeViews = this.IncludeViews,
             ProjectType = ProjectTypeEnum.DynamicDataWebSite,
             ConnectionStringProviderNameAttribute = "System.Data.EntityClient",
             TestProjectName = String.Empty,
