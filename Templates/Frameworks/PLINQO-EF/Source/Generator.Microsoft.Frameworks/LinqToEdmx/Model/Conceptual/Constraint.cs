@@ -35,12 +35,12 @@ namespace LinqToEdmx.Model.Conceptual
     {
       get
       {
-        var x = GetElement(XName.Get("Documentation", "http://schemas.microsoft.com/ado/2008/09/edm"));
+        var x = GetElement(XName.Get("Documentation", XMLNamespaceFactory.Edm));
         return ((Documentation) (x));
       }
       set
       {
-        SetElement(XName.Get("Documentation", "http://schemas.microsoft.com/ado/2008/09/edm"), value);
+        SetElement(XName.Get("Documentation", XMLNamespaceFactory.Edm), value);
       }
     }
 
@@ -56,12 +56,12 @@ namespace LinqToEdmx.Model.Conceptual
     {
       get
       {
-        var x = GetElement(XName.Get("Principal", "http://schemas.microsoft.com/ado/2008/09/edm"));
+        var x = GetElement(XName.Get("Principal", XMLNamespaceFactory.Edm));
         return ((ReferentialConstraintRoleElement) (x));
       }
       set
       {
-        SetElement(XName.Get("Principal", "http://schemas.microsoft.com/ado/2008/09/edm"), value);
+        SetElement(XName.Get("Principal", XMLNamespaceFactory.Edm), value);
       }
     }
 
@@ -77,12 +77,12 @@ namespace LinqToEdmx.Model.Conceptual
     {
       get
       {
-        var x = GetElement(XName.Get("Dependent", "http://schemas.microsoft.com/ado/2008/09/edm"));
+        var x = GetElement(XName.Get("Dependent", XMLNamespaceFactory.Edm));
         return ((ReferentialConstraintRoleElement) (x));
       }
       set
       {
-        SetElement(XName.Get("Dependent", "http://schemas.microsoft.com/ado/2008/09/edm"), value);
+        SetElement(XName.Get("Dependent", XMLNamespaceFactory.Edm), value);
       }
     }
 
@@ -113,7 +113,7 @@ namespace LinqToEdmx.Model.Conceptual
     {
       get
       {
-        return XName.Get("TConstraint", "http://schemas.microsoft.com/ado/2008/09/edm");
+        return XName.Get("TConstraint", XMLNamespaceFactory.Edm);
       }
     }
 
@@ -152,18 +152,18 @@ namespace LinqToEdmx.Model.Conceptual
 
     private static void BuildElementDictionary()
     {
-      LocalElementDictionary.Add(XName.Get("Documentation", "http://schemas.microsoft.com/ado/2008/09/edm"), typeof (Documentation));
-      LocalElementDictionary.Add(XName.Get("Principal", "http://schemas.microsoft.com/ado/2008/09/edm"), typeof (ReferentialConstraintRoleElement));
-      LocalElementDictionary.Add(XName.Get("Dependent", "http://schemas.microsoft.com/ado/2008/09/edm"), typeof (ReferentialConstraintRoleElement));
+      LocalElementDictionary.Add(XName.Get("Documentation", XMLNamespaceFactory.Edm), typeof (Documentation));
+      LocalElementDictionary.Add(XName.Get("Principal", XMLNamespaceFactory.Edm), typeof (ReferentialConstraintRoleElement));
+      LocalElementDictionary.Add(XName.Get("Dependent", XMLNamespaceFactory.Edm), typeof (ReferentialConstraintRoleElement));
     }
 
     private static void InitFsm()
     {
       var transitions = new Dictionary<int, Transitions>();
-      transitions.Add(1, new Transitions(new SingleTransition(XName.Get("Documentation", "http://schemas.microsoft.com/ado/2008/09/edm"), 2), new SingleTransition(XName.Get("Principal", "http://schemas.microsoft.com/ado/2008/09/edm"), 4)));
-      transitions.Add(2, new Transitions(new SingleTransition(XName.Get("Principal", "http://schemas.microsoft.com/ado/2008/09/edm"), 4)));
-      transitions.Add(4, new Transitions(new SingleTransition(XName.Get("Dependent", "http://schemas.microsoft.com/ado/2008/09/edm"), 6)));
-      transitions.Add(6, new Transitions(new SingleTransition(new WildCard("##other", "http://schemas.microsoft.com/ado/2008/09/edm"), 6)));
+      transitions.Add(1, new Transitions(new SingleTransition(XName.Get("Documentation", XMLNamespaceFactory.Edm), 2), new SingleTransition(XName.Get("Principal", XMLNamespaceFactory.Edm), 4)));
+      transitions.Add(2, new Transitions(new SingleTransition(XName.Get("Principal", XMLNamespaceFactory.Edm), 4)));
+      transitions.Add(4, new Transitions(new SingleTransition(XName.Get("Dependent", XMLNamespaceFactory.Edm), 6)));
+      transitions.Add(6, new Transitions(new SingleTransition(new WildCard("##other", XMLNamespaceFactory.Edm), 6)));
       _validationStates = new FSM(1, new Set<int>(6), transitions);
     }
   }

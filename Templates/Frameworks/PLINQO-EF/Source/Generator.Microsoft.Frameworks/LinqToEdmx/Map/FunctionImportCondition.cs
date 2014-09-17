@@ -68,7 +68,7 @@ namespace LinqToEdmx.Map
     {
       get
       {
-        return XName.Get("TFunctionImportCondition", "http://schemas.microsoft.com/ado/2008/09/mapping/cs");
+        return XName.Get("TFunctionImportCondition", XMLNamespaceFactory.CS);
       }
     }
 

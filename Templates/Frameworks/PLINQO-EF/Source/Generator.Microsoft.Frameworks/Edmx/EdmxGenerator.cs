@@ -50,12 +50,22 @@ namespace Generator.Microsoft.Frameworks
 
         #region Methods
 
-        public void Create(IEnumerable<IEntity> entities)
-        {
-            if (entities == null || entities.Count() <= 0) throw new ArgumentException("Entity Collection cannot be empty", "entities");
+        public void Create(IEnumerable<IEntity> entities) {
+            if (entities == null || entities.Count() <= 0)
+                throw new ArgumentException("Entity Collection cannot be empty", "entities");
 
-            //1. Load Database Object from and existing Edmx file or create a new Edmx Object.
-            _edmx = File.Exists(_settings.MappingFile) ? Edmx.Load(_settings.MappingFile) : new Edmx();
+            XMLNamespaceFactory.Version = (byte)_settings.EntityFrameworkVersion;
+
+            // TODO: We need to look into seeing if the following attributes are required in EF6.
+            //<edmx:ConceptualModels>
+            // <Schema Namespace="SQLModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+
+            try {
+                //1. Load Database Object from and existing Edmx file or create a new Edmx Object.
+                _edmx = File.Exists(_settings.MappingFile) ? Edmx.Load(_settings.MappingFile) : new Edmx();
+            } catch (Exception ex) {
+                throw new ApplicationException(String.Format("There was an error parsing your edmx file. If you are upgrading your existing templates you will need to delete your edmx file and regenerate. Please contact support for more information. Exception: {0}", ex.Message), ex);
+            }
 
             bool temp;
             if (bool.TryParse(GetDesignerProperty("IncludeForeignKeysInModel"), out temp))
@@ -64,16 +74,12 @@ namespace Generator.Microsoft.Frameworks
             //<DesignerProperty Name="EnablePluralization" Value="False" />
             //<DesignerProperty Name="CodeGenerationStrategy" Value="None" />
 
-            foreach (var entity in entities)
-            {
-                if (!entity.HasKey)
-                {
+            foreach (var entity in entities) {
+                if (!entity.HasKey) {
                     var message = String.Format("warning 6013: The table/view '{0}' does not have a primary key defined and no valid primary key could be inferred. This table/view has been excluded. To use the entity, you will need to review your schema, add the correct keys, and regenerate it.", entity.EntityKeyName);
                     Debug.WriteLine(message);
                     Trace.WriteLine(message);
-                }
-                else if (entity is CommandEntity && IsValidFunction(entity as CommandEntity))
-                {
+                } else if (entity is CommandEntity && IsValidFunction(entity as CommandEntity)) {
                     var message = String.Format("warning 6005: The function '{0}' has a parameter that has a data type (E.G., 'sql_variant') which is not supported. The function was excluded.", entity.EntityKeyName);
                     Debug.WriteLine(message);
                     Trace.WriteLine(message);
@@ -86,25 +92,17 @@ namespace Generator.Microsoft.Frameworks
             //   This also builds up a list of renamed column names that we need to keep track of.
             MergeMappingModel(entities);
 
-            foreach (IEntity entity in entities)
-            {
-                if (entity is TableEnumEntity)
-                {
+            foreach (IEntity entity in entities) {
+                if (entity is TableEnumEntity) {
                     Debug.WriteLine("Getting Enum Table: {0}", entity.EntityKeyName);
                     //GetEnum(entity as TableEnumEntity);
-                }
-                else if (entity is TableEntity)
-                {
+                } else if (entity is TableEntity) {
                     Debug.WriteLine("Getting Table Schema: {0}", entity.EntityKeyName);
                     GetEntity(entity as TableEntity);
-                }
-                else if (Configuration.Instance.IncludeViews && entity is ViewEntity)
-                {
+                } else if (Configuration.Instance.IncludeViews && entity is ViewEntity) {
                     Debug.WriteLine("Getting View Schema: {0}", entity.EntityKeyName);
                     GetEntity(entity as ViewEntity);
-                }
-                else if (Configuration.Instance.IncludeFunctions && entity is CommandEntity)
-                {
+                } else if (Configuration.Instance.IncludeFunctions && entity is CommandEntity) {
                     Debug.WriteLine("Getting Function Schema: {0}", entity.EntityKeyName);
                     GetFunctionEntity(entity as CommandEntity);
                 }
@@ -112,10 +110,8 @@ namespace Generator.Microsoft.Frameworks
                 OnSchemaItemProcessed(entity.EntityKeyName);
             }
 
-            foreach (IEntity entity in entities)
-            {
-                if (entity is TableEntity)
-                {
+            foreach (IEntity entity in entities) {
+                if (entity is TableEntity) {
                     CreateStorageAssociations(entity as TableEntity);
                     CreateConceptualAssociations(entity as TableEntity);
                 }
@@ -126,7 +122,6 @@ namespace Generator.Microsoft.Frameworks
             UpdateDesignerProperites();
 
             _edmx.Save(_settings.MappingFile);
-            //_edmx.Save(@"A:\CodeSmith.Experimental\CodeSmith.SchemaHelper\Source\POCO.Test\small2.edmx");
         }
 
         #endregion
@@ -308,27 +303,34 @@ namespace Generator.Microsoft.Frameworks
         #endregion
 
         private Runtime _runtime;
-        private Runtime RunTime
-        {
-            get
-            {
+
+        private Runtime RunTime {
+            get {
                 if (_runtime != null)
                     return _runtime;
 
                 if (_edmx.Runtimes.Count == 0) {
-                    if (String.IsNullOrEmpty(_edmx.Version) || (!_edmx.Version.Equals("1.0") && !_edmx.Version.Equals("2.0"))) {
-                        _edmx.Version = "2.0";
+                    switch (_settings.EntityFrameworkVersion) {
+                        case EntityFrameworkVersion.v4:
+                        case EntityFrameworkVersion.v5:
+                            _edmx.Version = "2.0";
+                            break;
+                        case EntityFrameworkVersion.v6:
+                            _edmx.Version = "3.0";
+                            break;
+                        default:
+                            throw new ArgumentException("We currently do not support this version of Entity Framework.");
                     }
 
                     _edmx.Runtimes.Add(new Runtime());
                 }
 
                 _runtime = _edmx.Runtimes.First();
-                if (_runtime.StorageModels == null) 
+                if (_runtime.StorageModels == null)
                     _runtime.StorageModels = new StorageModels();
                 if (_runtime.ConceptualModels == null)
                     _runtime.ConceptualModels = new ConceptualModels();
-                if (_runtime.Mappings == null) 
+                if (_runtime.Mappings == null)
                     _runtime.Mappings = new Mappings();
 
                 return _runtime;

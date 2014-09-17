@@ -85,7 +85,7 @@ namespace LinqToEdmx.Map
     {
       get
       {
-        return XName.Get("TCondition", "http://schemas.microsoft.com/ado/2008/09/mapping/cs");
+        return XName.Get("TCondition", XMLNamespaceFactory.CS);
       }
     }
 

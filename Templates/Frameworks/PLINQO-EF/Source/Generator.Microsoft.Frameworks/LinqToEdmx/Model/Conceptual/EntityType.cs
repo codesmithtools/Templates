@@ -43,12 +43,12 @@ namespace LinqToEdmx.Model.Conceptual
     {
       get
       {
-        var x = GetElement(XName.Get("Documentation", "http://schemas.microsoft.com/ado/2008/09/edm"));
+        var x = GetElement(XName.Get("Documentation", XMLNamespaceFactory.Edm));
         return ((Documentation) (x));
       }
       set
       {
-        SetElement(XName.Get("Documentation", "http://schemas.microsoft.com/ado/2008/09/edm"), value);
+        SetElement(XName.Get("Documentation", XMLNamespaceFactory.Edm), value);
       }
     }
 
@@ -64,12 +64,12 @@ namespace LinqToEdmx.Model.Conceptual
     {
       get
       {
-        var x = GetElement(XName.Get("Key", "http://schemas.microsoft.com/ado/2008/09/edm"));
+        var x = GetElement(XName.Get("Key", XMLNamespaceFactory.Edm));
         return ((EntityKeyElement) (x));
       }
       set
       {
-        SetElement(XName.Get("Key", "http://schemas.microsoft.com/ado/2008/09/edm"), value);
+        SetElement(XName.Get("Key", XMLNamespaceFactory.Edm), value);
       }
     }
 
@@ -90,7 +90,7 @@ namespace LinqToEdmx.Model.Conceptual
       {
         if ((_propertyField == null))
         {
-          _propertyField = new XTypedList<EntityProperty>(this, LinqToXsdTypeManager.Instance, XName.Get("Property", "http://schemas.microsoft.com/ado/2008/09/edm"));
+          _propertyField = new XTypedList<EntityProperty>(this, LinqToXsdTypeManager.Instance, XName.Get("Property", XMLNamespaceFactory.Edm));
         }
         return _propertyField;
       }
@@ -104,7 +104,7 @@ namespace LinqToEdmx.Model.Conceptual
         {
           if ((_propertyField == null))
           {
-            _propertyField = XTypedList<EntityProperty>.Initialize(this, LinqToXsdTypeManager.Instance, value, XName.Get("Property", "http://schemas.microsoft.com/ado/2008/09/edm"));
+            _propertyField = XTypedList<EntityProperty>.Initialize(this, LinqToXsdTypeManager.Instance, value, XName.Get("Property", XMLNamespaceFactory.Edm));
           }
           else
           {
@@ -131,7 +131,7 @@ namespace LinqToEdmx.Model.Conceptual
       {
         if ((_navigationPropertyField == null))
         {
-          _navigationPropertyField = new XTypedList<NavigationProperty>(this, LinqToXsdTypeManager.Instance, XName.Get("NavigationProperty", "http://schemas.microsoft.com/ado/2008/09/edm"));
+          _navigationPropertyField = new XTypedList<NavigationProperty>(this, LinqToXsdTypeManager.Instance, XName.Get("NavigationProperty", XMLNamespaceFactory.Edm));
         }
         return _navigationPropertyField;
       }
@@ -145,7 +145,7 @@ namespace LinqToEdmx.Model.Conceptual
         {
           if ((_navigationPropertyField == null))
           {
-            _navigationPropertyField = XTypedList<NavigationProperty>.Initialize(this, LinqToXsdTypeManager.Instance, value, XName.Get("NavigationProperty", "http://schemas.microsoft.com/ado/2008/09/edm"));
+            _navigationPropertyField = XTypedList<NavigationProperty>.Initialize(this, LinqToXsdTypeManager.Instance, value, XName.Get("NavigationProperty", XMLNamespaceFactory.Edm));
           }
           else
           {
@@ -254,7 +254,7 @@ namespace LinqToEdmx.Model.Conceptual
     {
       get
       {
-        return XName.Get("TEntityType", "http://schemas.microsoft.com/ado/2008/09/edm");
+        return XName.Get("TEntityType", XMLNamespaceFactory.Edm);
       }
     }
 
@@ -293,21 +293,21 @@ namespace LinqToEdmx.Model.Conceptual
 
     private static void BuildElementDictionary()
     {
-      LocalElementDictionary.Add(XName.Get("Documentation", "http://schemas.microsoft.com/ado/2008/09/edm"), typeof (Documentation));
-      LocalElementDictionary.Add(XName.Get("Key", "http://schemas.microsoft.com/ado/2008/09/edm"), typeof (EntityKeyElement));
-      LocalElementDictionary.Add(XName.Get("Property", "http://schemas.microsoft.com/ado/2008/09/edm"), typeof (EntityProperty));
-      LocalElementDictionary.Add(XName.Get("NavigationProperty", "http://schemas.microsoft.com/ado/2008/09/edm"), typeof (NavigationProperty));
+      LocalElementDictionary.Add(XName.Get("Documentation", XMLNamespaceFactory.Edm), typeof (Documentation));
+      LocalElementDictionary.Add(XName.Get("Key", XMLNamespaceFactory.Edm), typeof (EntityKeyElement));
+      LocalElementDictionary.Add(XName.Get("Property", XMLNamespaceFactory.Edm), typeof (EntityProperty));
+      LocalElementDictionary.Add(XName.Get("NavigationProperty", XMLNamespaceFactory.Edm), typeof (NavigationProperty));
     }
 
     private static void InitFsm()
     {
       var transitions = new Dictionary<int, Transitions>();
-      transitions.Add(1, new Transitions(new SingleTransition(XName.Get("Documentation", "http://schemas.microsoft.com/ado/2008/09/edm"), 2), new SingleTransition(XName.Get("Key", "http://schemas.microsoft.com/ado/2008/09/edm"), 4), new SingleTransition(XName.Get("Property", "http://schemas.microsoft.com/ado/2008/09/edm"), 5), new SingleTransition(XName.Get("NavigationProperty", "http://schemas.microsoft.com/ado/2008/09/edm"), 7), new SingleTransition(new WildCard("##other", "http://schemas.microsoft.com/ado/2008/09/edm"), 9)));
-      transitions.Add(2, new Transitions(new SingleTransition(XName.Get("Key", "http://schemas.microsoft.com/ado/2008/09/edm"), 4), new SingleTransition(XName.Get("Property", "http://schemas.microsoft.com/ado/2008/09/edm"), 5), new SingleTransition(XName.Get("NavigationProperty", "http://schemas.microsoft.com/ado/2008/09/edm"), 7), new SingleTransition(new WildCard("##other", "http://schemas.microsoft.com/ado/2008/09/edm"), 9)));
-      transitions.Add(4, new Transitions(new SingleTransition(XName.Get("Property", "http://schemas.microsoft.com/ado/2008/09/edm"), 4), new SingleTransition(XName.Get("NavigationProperty", "http://schemas.microsoft.com/ado/2008/09/edm"), 7), new SingleTransition(new WildCard("##other", "http://schemas.microsoft.com/ado/2008/09/edm"), 9)));
-      transitions.Add(7, new Transitions(new SingleTransition(XName.Get("NavigationProperty", "http://schemas.microsoft.com/ado/2008/09/edm"), 5), new SingleTransition(XName.Get("Property", "http://schemas.microsoft.com/ado/2008/09/edm"), 5), new SingleTransition(new WildCard("##other", "http://schemas.microsoft.com/ado/2008/09/edm"), 9)));
-      transitions.Add(5, new Transitions(new SingleTransition(XName.Get("Property", "http://schemas.microsoft.com/ado/2008/09/edm"), 5), new SingleTransition(XName.Get("NavigationProperty", "http://schemas.microsoft.com/ado/2008/09/edm"), 7), new SingleTransition(new WildCard("##other", "http://schemas.microsoft.com/ado/2008/09/edm"), 9)));
-      transitions.Add(9, new Transitions(new SingleTransition(new WildCard("##other", "http://schemas.microsoft.com/ado/2008/09/edm"), 9)));
+      transitions.Add(1, new Transitions(new SingleTransition(XName.Get("Documentation", XMLNamespaceFactory.Edm), 2), new SingleTransition(XName.Get("Key", XMLNamespaceFactory.Edm), 4), new SingleTransition(XName.Get("Property", XMLNamespaceFactory.Edm), 5), new SingleTransition(XName.Get("NavigationProperty", XMLNamespaceFactory.Edm), 7), new SingleTransition(new WildCard("##other", XMLNamespaceFactory.Edm), 9)));
+      transitions.Add(2, new Transitions(new SingleTransition(XName.Get("Key", XMLNamespaceFactory.Edm), 4), new SingleTransition(XName.Get("Property", XMLNamespaceFactory.Edm), 5), new SingleTransition(XName.Get("NavigationProperty", XMLNamespaceFactory.Edm), 7), new SingleTransition(new WildCard("##other", XMLNamespaceFactory.Edm), 9)));
+      transitions.Add(4, new Transitions(new SingleTransition(XName.Get("Property", XMLNamespaceFactory.Edm), 4), new SingleTransition(XName.Get("NavigationProperty", XMLNamespaceFactory.Edm), 7), new SingleTransition(new WildCard("##other", XMLNamespaceFactory.Edm), 9)));
+      transitions.Add(7, new Transitions(new SingleTransition(XName.Get("NavigationProperty", XMLNamespaceFactory.Edm), 5), new SingleTransition(XName.Get("Property", XMLNamespaceFactory.Edm), 5), new SingleTransition(new WildCard("##other", XMLNamespaceFactory.Edm), 9)));
+      transitions.Add(5, new Transitions(new SingleTransition(XName.Get("Property", XMLNamespaceFactory.Edm), 5), new SingleTransition(XName.Get("NavigationProperty", XMLNamespaceFactory.Edm), 7), new SingleTransition(new WildCard("##other", XMLNamespaceFactory.Edm), 9)));
+      transitions.Add(9, new Transitions(new SingleTransition(new WildCard("##other", XMLNamespaceFactory.Edm), 9)));
       _validationStates = new FSM(1, new Set<int>(new[]
                                                    {
                                                      2, 1, 4, 5, 7, 9

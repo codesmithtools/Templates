@@ -238,7 +238,7 @@ namespace LinqToEdmx.Model.Storage
     {
       get
       {
-        return XName.Get("Schema", "http://schemas.microsoft.com/ado/2009/02/edm/ssdl");
+        return XName.Get("Schema", XMLNamespaceFactory.SSDL);
       }
     }
 

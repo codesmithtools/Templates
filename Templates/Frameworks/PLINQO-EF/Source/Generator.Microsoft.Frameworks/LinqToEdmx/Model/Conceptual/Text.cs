@@ -38,7 +38,7 @@ namespace LinqToEdmx.Model.Conceptual
     {
       get
       {
-        return XName.Get("TText", "http://schemas.microsoft.com/ado/2008/09/edm");
+        return XName.Get("TText", XMLNamespaceFactory.Edm);
       }
     }
 
@@ -78,7 +78,7 @@ namespace LinqToEdmx.Model.Conceptual
     private static void InitFsm()
     {
       var transitions = new Dictionary<int, Transitions>();
-      transitions.Add(1, new Transitions(new SingleTransition(new WildCard("##other", "http://schemas.microsoft.com/ado/2008/09/edm"), 1)));
+      transitions.Add(1, new Transitions(new SingleTransition(new WildCard("##other", XMLNamespaceFactory.Edm), 1)));
       _validationStates = new FSM(1, new Set<int>(1), transitions);
     }
   }

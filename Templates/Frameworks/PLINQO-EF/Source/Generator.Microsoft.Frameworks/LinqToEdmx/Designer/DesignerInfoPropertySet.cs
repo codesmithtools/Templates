@@ -22,7 +22,7 @@ namespace LinqToEdmx.Designer
     static DesignerInfoPropertySet()
     {
       BuildElementDictionary();
-      ContentModel = new SequenceContentModelEntity(new NamedContentModelEntity(XName.Get("DesignerProperty", "http://schemas.microsoft.com/ado/2008/10/edmx")));
+      ContentModel = new SequenceContentModelEntity(new NamedContentModelEntity(XName.Get("DesignerProperty", XMLNamespaceFactory.Edmx)));
     }
 
     /// <summary>
@@ -39,7 +39,7 @@ namespace LinqToEdmx.Designer
       {
         if ((DesignerPropertyField == null))
         {
-          DesignerPropertyField = new XTypedList<DesignerProperty>(this, LinqToXsdTypeManager.Instance, XName.Get("DesignerProperty", "http://schemas.microsoft.com/ado/2008/10/edmx"));
+          DesignerPropertyField = new XTypedList<DesignerProperty>(this, LinqToXsdTypeManager.Instance, XName.Get("DesignerProperty", XMLNamespaceFactory.Edmx));
         }
         return DesignerPropertyField;
       }
@@ -53,7 +53,7 @@ namespace LinqToEdmx.Designer
         {
           if ((DesignerPropertyField == null))
           {
-            DesignerPropertyField = XTypedList<DesignerProperty>.Initialize(this, LinqToXsdTypeManager.Instance, value, XName.Get("DesignerProperty", "http://schemas.microsoft.com/ado/2008/10/edmx"));
+            DesignerPropertyField = XTypedList<DesignerProperty>.Initialize(this, LinqToXsdTypeManager.Instance, value, XName.Get("DesignerProperty", XMLNamespaceFactory.Edmx));
           }
           else
           {
@@ -77,7 +77,7 @@ namespace LinqToEdmx.Designer
     {
       get
       {
-        return XName.Get("TDesignerInfoPropertySet", "http://schemas.microsoft.com/ado/2008/10/edmx");
+        return XName.Get("TDesignerInfoPropertySet", XMLNamespaceFactory.Edmx);
       }
     }
 
@@ -116,7 +116,7 @@ namespace LinqToEdmx.Designer
 
     private static void BuildElementDictionary()
     {
-      LocalElementDictionary.Add(XName.Get("DesignerProperty", "http://schemas.microsoft.com/ado/2008/10/edmx"), typeof (DesignerProperty));
+      LocalElementDictionary.Add(XName.Get("DesignerProperty", XMLNamespaceFactory.Edmx), typeof (DesignerProperty));
     }
   }
 }

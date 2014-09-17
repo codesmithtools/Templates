@@ -39,11 +39,11 @@ namespace LinqToEdmx.Model.Conceptual
     {
       get
       {
-        return ((TCollectionType) GetElement(XName.Get("CollectionType", "http://schemas.microsoft.com/ado/2008/09/edm")));
+        return ((TCollectionType) GetElement(XName.Get("CollectionType", XMLNamespaceFactory.Edm)));
       }
       set
       {
-        SetElement(XName.Get("CollectionType", "http://schemas.microsoft.com/ado/2008/09/edm"), value);
+        SetElement(XName.Get("CollectionType", XMLNamespaceFactory.Edm), value);
       }
     }
 
@@ -62,11 +62,11 @@ namespace LinqToEdmx.Model.Conceptual
     {
       get
       {
-        return ((ReferenceType) GetElement(XName.Get("ReferenceType", "http://schemas.microsoft.com/ado/2008/09/edm")));
+        return ((ReferenceType) GetElement(XName.Get("ReferenceType", XMLNamespaceFactory.Edm)));
       }
       set
       {
-        SetElement(XName.Get("ReferenceType", "http://schemas.microsoft.com/ado/2008/09/edm"), value);
+        SetElement(XName.Get("ReferenceType", XMLNamespaceFactory.Edm), value);
       }
     }
 
@@ -85,12 +85,12 @@ namespace LinqToEdmx.Model.Conceptual
     {
       get
       {
-        var x = GetElement(XName.Get("RowType", "http://schemas.microsoft.com/ado/2008/09/edm"));
+        var x = GetElement(XName.Get("RowType", XMLNamespaceFactory.Edm));
         return ((RowType) (x));
       }
       set
       {
-        SetElement(XName.Get("RowType", "http://schemas.microsoft.com/ado/2008/09/edm"), value);
+        SetElement(XName.Get("RowType", XMLNamespaceFactory.Edm), value);
       }
     }
 
@@ -109,12 +109,12 @@ namespace LinqToEdmx.Model.Conceptual
     {
       get
       {
-        var x = GetElement(XName.Get("TypeRef", "http://schemas.microsoft.com/ado/2008/09/edm"));
+        var x = GetElement(XName.Get("TypeRef", XMLNamespaceFactory.Edm));
         return ((TypeRef) (x));
       }
       set
       {
-        SetElement(XName.Get("TypeRef", "http://schemas.microsoft.com/ado/2008/09/edm"), value);
+        SetElement(XName.Get("TypeRef", XMLNamespaceFactory.Edm), value);
       }
     }
 
@@ -327,7 +327,7 @@ namespace LinqToEdmx.Model.Conceptual
     {
       get
       {
-        return XName.Get("TCollectionType", "http://schemas.microsoft.com/ado/2008/09/edm");
+        return XName.Get("TCollectionType", XMLNamespaceFactory.Edm);
       }
     }
 
@@ -366,21 +366,21 @@ namespace LinqToEdmx.Model.Conceptual
 
     private static void BuildElementDictionary()
     {
-      LocalElementDictionary.Add(XName.Get("CollectionType", "http://schemas.microsoft.com/ado/2008/09/edm"), typeof (TCollectionType));
-      LocalElementDictionary.Add(XName.Get("ReferenceType", "http://schemas.microsoft.com/ado/2008/09/edm"), typeof (ReferenceType));
-      LocalElementDictionary.Add(XName.Get("RowType", "http://schemas.microsoft.com/ado/2008/09/edm"), typeof (RowType));
-      LocalElementDictionary.Add(XName.Get("TypeRef", "http://schemas.microsoft.com/ado/2008/09/edm"), typeof (TypeRef));
+      LocalElementDictionary.Add(XName.Get("CollectionType", XMLNamespaceFactory.Edm), typeof (TCollectionType));
+      LocalElementDictionary.Add(XName.Get("ReferenceType", XMLNamespaceFactory.Edm), typeof (ReferenceType));
+      LocalElementDictionary.Add(XName.Get("RowType", XMLNamespaceFactory.Edm), typeof (RowType));
+      LocalElementDictionary.Add(XName.Get("TypeRef", XMLNamespaceFactory.Edm), typeof (TypeRef));
     }
 
     private static void InitFsm()
     {
       var transitions = new Dictionary<int, Transitions>();
-      transitions.Add(1, new Transitions(new SingleTransition(XName.Get("CollectionType", "http://schemas.microsoft.com/ado/2008/09/edm"), 2), new SingleTransition(XName.Get("ReferenceType", "http://schemas.microsoft.com/ado/2008/09/edm"), 4), new SingleTransition(XName.Get("RowType", "http://schemas.microsoft.com/ado/2008/09/edm"), 6), new SingleTransition(XName.Get("TypeRef", "http://schemas.microsoft.com/ado/2008/09/edm"), 8), new SingleTransition(new WildCard("##other", "http://schemas.microsoft.com/ado/2008/09/edm"), 9)));
-      transitions.Add(2, new Transitions(new SingleTransition(new WildCard("##other", "http://schemas.microsoft.com/ado/2008/09/edm"), 2)));
-      transitions.Add(4, new Transitions(new SingleTransition(new WildCard("##other", "http://schemas.microsoft.com/ado/2008/09/edm"), 4)));
-      transitions.Add(6, new Transitions(new SingleTransition(new WildCard("##other", "http://schemas.microsoft.com/ado/2008/09/edm"), 6)));
-      transitions.Add(8, new Transitions(new SingleTransition(new WildCard("##other", "http://schemas.microsoft.com/ado/2008/09/edm"), 8)));
-      transitions.Add(9, new Transitions(new SingleTransition(new WildCard("##other", "http://schemas.microsoft.com/ado/2008/09/edm"), 9)));
+      transitions.Add(1, new Transitions(new SingleTransition(XName.Get("CollectionType", XMLNamespaceFactory.Edm), 2), new SingleTransition(XName.Get("ReferenceType", XMLNamespaceFactory.Edm), 4), new SingleTransition(XName.Get("RowType", XMLNamespaceFactory.Edm), 6), new SingleTransition(XName.Get("TypeRef", XMLNamespaceFactory.Edm), 8), new SingleTransition(new WildCard("##other", XMLNamespaceFactory.Edm), 9)));
+      transitions.Add(2, new Transitions(new SingleTransition(new WildCard("##other", XMLNamespaceFactory.Edm), 2)));
+      transitions.Add(4, new Transitions(new SingleTransition(new WildCard("##other", XMLNamespaceFactory.Edm), 4)));
+      transitions.Add(6, new Transitions(new SingleTransition(new WildCard("##other", XMLNamespaceFactory.Edm), 6)));
+      transitions.Add(8, new Transitions(new SingleTransition(new WildCard("##other", XMLNamespaceFactory.Edm), 8)));
+      transitions.Add(9, new Transitions(new SingleTransition(new WildCard("##other", XMLNamespaceFactory.Edm), 9)));
       _validationStates = new FSM(1, new Set<int>(new[]
                                                    {
                                                      2, 1, 4, 6, 8, 9

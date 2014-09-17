@@ -44,7 +44,7 @@ namespace LinqToEdmx.Map
       {
         if ((_entitySetMappingField == null))
         {
-          _entitySetMappingField = new XTypedList<EntitySetMapping>(this, LinqToXsdTypeManager.Instance, XName.Get("EntitySetMapping", "http://schemas.microsoft.com/ado/2008/09/mapping/cs"));
+          _entitySetMappingField = new XTypedList<EntitySetMapping>(this, LinqToXsdTypeManager.Instance, XName.Get("EntitySetMapping", XMLNamespaceFactory.CS));
         }
         return _entitySetMappingField;
       }
@@ -58,7 +58,7 @@ namespace LinqToEdmx.Map
         {
           if ((_entitySetMappingField == null))
           {
-            _entitySetMappingField = XTypedList<EntitySetMapping>.Initialize(this, LinqToXsdTypeManager.Instance, value, XName.Get("EntitySetMapping", "http://schemas.microsoft.com/ado/2008/09/mapping/cs"));
+            _entitySetMappingField = XTypedList<EntitySetMapping>.Initialize(this, LinqToXsdTypeManager.Instance, value, XName.Get("EntitySetMapping", XMLNamespaceFactory.CS));
           }
           else
           {
@@ -85,7 +85,7 @@ namespace LinqToEdmx.Map
       {
         if ((_associationSetMappingField == null))
         {
-          _associationSetMappingField = new XTypedList<AssociationSetMapping>(this, LinqToXsdTypeManager.Instance, XName.Get("AssociationSetMapping", "http://schemas.microsoft.com/ado/2008/09/mapping/cs"));
+          _associationSetMappingField = new XTypedList<AssociationSetMapping>(this, LinqToXsdTypeManager.Instance, XName.Get("AssociationSetMapping", XMLNamespaceFactory.CS));
         }
         return _associationSetMappingField;
       }
@@ -99,7 +99,7 @@ namespace LinqToEdmx.Map
         {
           if ((_associationSetMappingField == null))
           {
-            _associationSetMappingField = XTypedList<AssociationSetMapping>.Initialize(this, LinqToXsdTypeManager.Instance, value, XName.Get("AssociationSetMapping", "http://schemas.microsoft.com/ado/2008/09/mapping/cs"));
+            _associationSetMappingField = XTypedList<AssociationSetMapping>.Initialize(this, LinqToXsdTypeManager.Instance, value, XName.Get("AssociationSetMapping", XMLNamespaceFactory.CS));
           }
           else
           {
@@ -126,7 +126,7 @@ namespace LinqToEdmx.Map
       {
         if ((_functionImportMappingField == null))
         {
-          _functionImportMappingField = new XTypedList<FunctionImportMapping>(this, LinqToXsdTypeManager.Instance, XName.Get("FunctionImportMapping", "http://schemas.microsoft.com/ado/2008/09/mapping/cs"));
+          _functionImportMappingField = new XTypedList<FunctionImportMapping>(this, LinqToXsdTypeManager.Instance, XName.Get("FunctionImportMapping", XMLNamespaceFactory.CS));
         }
         return _functionImportMappingField;
       }
@@ -140,7 +140,7 @@ namespace LinqToEdmx.Map
         {
           if ((_functionImportMappingField == null))
           {
-            _functionImportMappingField = XTypedList<FunctionImportMapping>.Initialize(this, LinqToXsdTypeManager.Instance, value, XName.Get("FunctionImportMapping", "http://schemas.microsoft.com/ado/2008/09/mapping/cs"));
+            _functionImportMappingField = XTypedList<FunctionImportMapping>.Initialize(this, LinqToXsdTypeManager.Instance, value, XName.Get("FunctionImportMapping", XMLNamespaceFactory.CS));
           }
           else
           {
@@ -219,7 +219,7 @@ namespace LinqToEdmx.Map
     {
       get
       {
-        return XName.Get("TEntityContainerMapping", "http://schemas.microsoft.com/ado/2008/09/mapping/cs");
+        return XName.Get("TEntityContainerMapping", XMLNamespaceFactory.CS);
       }
     }
 
@@ -258,9 +258,9 @@ namespace LinqToEdmx.Map
 
     private static void BuildElementDictionary()
     {
-      LocalElementDictionary.Add(XName.Get("EntitySetMapping", "http://schemas.microsoft.com/ado/2008/09/mapping/cs"), typeof (EntitySetMapping));
-      LocalElementDictionary.Add(XName.Get("AssociationSetMapping", "http://schemas.microsoft.com/ado/2008/09/mapping/cs"), typeof (AssociationSetMapping));
-      LocalElementDictionary.Add(XName.Get("FunctionImportMapping", "http://schemas.microsoft.com/ado/2008/09/mapping/cs"), typeof (FunctionImportMapping));
+      LocalElementDictionary.Add(XName.Get("EntitySetMapping", XMLNamespaceFactory.CS), typeof (EntitySetMapping));
+      LocalElementDictionary.Add(XName.Get("AssociationSetMapping", XMLNamespaceFactory.CS), typeof (AssociationSetMapping));
+      LocalElementDictionary.Add(XName.Get("FunctionImportMapping", XMLNamespaceFactory.CS), typeof (FunctionImportMapping));
     }
   }
 }

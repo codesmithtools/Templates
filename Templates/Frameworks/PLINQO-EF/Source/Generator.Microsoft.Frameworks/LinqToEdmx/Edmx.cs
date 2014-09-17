@@ -194,7 +194,7 @@ namespace LinqToEdmx
     {
       get
       {
-        return XName.Get("Edmx", "http://schemas.microsoft.com/ado/2008/10/edmx");
+        return XName.Get("Edmx", XMLNamespaceFactory.Edmx);
       }
     }
 

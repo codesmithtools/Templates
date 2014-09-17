@@ -123,7 +123,7 @@ namespace LinqToEdmx.Map
     {
       get
       {
-        return XName.Get("Mapping", "http://schemas.microsoft.com/ado/2008/09/mapping/cs");
+        return XName.Get("Mapping", XMLNamespaceFactory.CS);
       }
     }
 

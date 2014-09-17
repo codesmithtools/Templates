@@ -42,7 +42,7 @@ namespace LinqToEdmx.Map
     {
       get
       {
-        return XName.Get("TQueryView", "http://schemas.microsoft.com/ado/2008/09/mapping/cs");
+        return XName.Get("TQueryView", XMLNamespaceFactory.CS);
       }
     }
 

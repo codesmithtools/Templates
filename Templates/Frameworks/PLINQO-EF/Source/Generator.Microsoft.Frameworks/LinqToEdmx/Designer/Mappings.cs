@@ -21,7 +21,7 @@ namespace LinqToEdmx.Designer
     static Mappings()
     {
       BuildElementDictionary();
-      ContentModel = new SequenceContentModelEntity(new NamedContentModelEntity(XName.Get("Mapping", "http://schemas.microsoft.com/ado/2008/09/mapping/cs")));
+      ContentModel = new SequenceContentModelEntity(new NamedContentModelEntity(XName.Get("Mapping", XMLNamespaceFactory.CS)));
     }
 
     /// <summary>
@@ -36,11 +36,11 @@ namespace LinqToEdmx.Designer
     {
       get
       {
-        return ((Mapping) GetElement(XName.Get("Mapping", "http://schemas.microsoft.com/ado/2008/09/mapping/cs")));
+        return ((Mapping) GetElement(XName.Get("Mapping", XMLNamespaceFactory.CS)));
       }
       set
       {
-        SetElement(XName.Get("Mapping", "http://schemas.microsoft.com/ado/2008/09/mapping/cs"), value);
+        SetElement(XName.Get("Mapping", XMLNamespaceFactory.CS), value);
       }
     }
 
@@ -58,7 +58,7 @@ namespace LinqToEdmx.Designer
     {
       get
       {
-        return XName.Get("TRuntimeMappings", "http://schemas.microsoft.com/ado/2008/10/edmx");
+        return XName.Get("TRuntimeMappings", XMLNamespaceFactory.Edmx);
       }
     }
 
@@ -97,7 +97,7 @@ namespace LinqToEdmx.Designer
 
     private static void BuildElementDictionary()
     {
-      LocalElementDictionary.Add(XName.Get("Mapping", "http://schemas.microsoft.com/ado/2008/09/mapping/cs"), typeof (Mapping));
+      LocalElementDictionary.Add(XName.Get("Mapping", XMLNamespaceFactory.CS), typeof (Mapping));
     }
   }
 }

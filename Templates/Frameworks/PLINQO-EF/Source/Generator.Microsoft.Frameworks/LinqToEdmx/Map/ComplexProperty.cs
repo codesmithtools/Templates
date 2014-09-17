@@ -46,7 +46,7 @@ namespace LinqToEdmx.Map
       {
         if ((_scalarPropertyField == null))
         {
-          _scalarPropertyField = new XTypedList<ScalarProperty>(this, LinqToXsdTypeManager.Instance, XName.Get("ScalarProperty", "http://schemas.microsoft.com/ado/2008/09/mapping/cs"));
+          _scalarPropertyField = new XTypedList<ScalarProperty>(this, LinqToXsdTypeManager.Instance, XName.Get("ScalarProperty", XMLNamespaceFactory.CS));
         }
         return _scalarPropertyField;
       }
@@ -60,7 +60,7 @@ namespace LinqToEdmx.Map
         {
           if ((_scalarPropertyField == null))
           {
-            _scalarPropertyField = XTypedList<ScalarProperty>.Initialize(this, LinqToXsdTypeManager.Instance, value, XName.Get("ScalarProperty", "http://schemas.microsoft.com/ado/2008/09/mapping/cs"));
+            _scalarPropertyField = XTypedList<ScalarProperty>.Initialize(this, LinqToXsdTypeManager.Instance, value, XName.Get("ScalarProperty", XMLNamespaceFactory.CS));
           }
           else
           {
@@ -87,7 +87,7 @@ namespace LinqToEdmx.Map
       {
         if ((_complexPropertyField == null))
         {
-          _complexPropertyField = new XTypedList<ComplexProperty>(this, LinqToXsdTypeManager.Instance, XName.Get("ComplexProperty", "http://schemas.microsoft.com/ado/2008/09/mapping/cs"));
+          _complexPropertyField = new XTypedList<ComplexProperty>(this, LinqToXsdTypeManager.Instance, XName.Get("ComplexProperty", XMLNamespaceFactory.CS));
         }
         return _complexPropertyField;
       }
@@ -101,7 +101,7 @@ namespace LinqToEdmx.Map
         {
           if ((_complexPropertyField == null))
           {
-            _complexPropertyField = XTypedList<ComplexProperty>.Initialize(this, LinqToXsdTypeManager.Instance, value, XName.Get("ComplexProperty", "http://schemas.microsoft.com/ado/2008/09/mapping/cs"));
+            _complexPropertyField = XTypedList<ComplexProperty>.Initialize(this, LinqToXsdTypeManager.Instance, value, XName.Get("ComplexProperty", XMLNamespaceFactory.CS));
           }
           else
           {
@@ -128,7 +128,7 @@ namespace LinqToEdmx.Map
       {
         if ((_complexTypeMappingField == null))
         {
-          _complexTypeMappingField = new XTypedList<ComplexTypeMapping>(this, LinqToXsdTypeManager.Instance, XName.Get("ComplexTypeMapping", "http://schemas.microsoft.com/ado/2008/09/mapping/cs"));
+          _complexTypeMappingField = new XTypedList<ComplexTypeMapping>(this, LinqToXsdTypeManager.Instance, XName.Get("ComplexTypeMapping", XMLNamespaceFactory.CS));
         }
         return _complexTypeMappingField;
       }
@@ -142,7 +142,7 @@ namespace LinqToEdmx.Map
         {
           if ((_complexTypeMappingField == null))
           {
-            _complexTypeMappingField = XTypedList<ComplexTypeMapping>.Initialize(this, LinqToXsdTypeManager.Instance, value, XName.Get("ComplexTypeMapping", "http://schemas.microsoft.com/ado/2008/09/mapping/cs"));
+            _complexTypeMappingField = XTypedList<ComplexTypeMapping>.Initialize(this, LinqToXsdTypeManager.Instance, value, XName.Get("ComplexTypeMapping", XMLNamespaceFactory.CS));
           }
           else
           {
@@ -169,7 +169,7 @@ namespace LinqToEdmx.Map
       {
         if ((_conditionField == null))
         {
-          _conditionField = new XTypedList<Condition>(this, LinqToXsdTypeManager.Instance, XName.Get("Condition", "http://schemas.microsoft.com/ado/2008/09/mapping/cs"));
+          _conditionField = new XTypedList<Condition>(this, LinqToXsdTypeManager.Instance, XName.Get("Condition", XMLNamespaceFactory.CS));
         }
         return _conditionField;
       }
@@ -183,7 +183,7 @@ namespace LinqToEdmx.Map
         {
           if ((_conditionField == null))
           {
-            _conditionField = XTypedList<Condition>.Initialize(this, LinqToXsdTypeManager.Instance, value, XName.Get("Condition", "http://schemas.microsoft.com/ado/2008/09/mapping/cs"));
+            _conditionField = XTypedList<Condition>.Initialize(this, LinqToXsdTypeManager.Instance, value, XName.Get("Condition", XMLNamespaceFactory.CS));
           }
           else
           {
@@ -262,7 +262,7 @@ namespace LinqToEdmx.Map
     {
       get
       {
-        return XName.Get("TComplexProperty", "http://schemas.microsoft.com/ado/2008/09/mapping/cs");
+        return XName.Get("TComplexProperty", XMLNamespaceFactory.CS);
       }
     }
 
@@ -301,10 +301,10 @@ namespace LinqToEdmx.Map
 
     private static void BuildElementDictionary()
     {
-      LocalElementDictionary.Add(XName.Get("ScalarProperty", "http://schemas.microsoft.com/ado/2008/09/mapping/cs"), typeof (ScalarProperty));
-      LocalElementDictionary.Add(XName.Get("ComplexProperty", "http://schemas.microsoft.com/ado/2008/09/mapping/cs"), typeof (ComplexProperty));
-      LocalElementDictionary.Add(XName.Get("ComplexTypeMapping", "http://schemas.microsoft.com/ado/2008/09/mapping/cs"), typeof (ComplexTypeMapping));
-      LocalElementDictionary.Add(XName.Get("Condition", "http://schemas.microsoft.com/ado/2008/09/mapping/cs"), typeof (Condition));
+      LocalElementDictionary.Add(XName.Get("ScalarProperty", XMLNamespaceFactory.CS), typeof (ScalarProperty));
+      LocalElementDictionary.Add(XName.Get("ComplexProperty", XMLNamespaceFactory.CS), typeof (ComplexProperty));
+      LocalElementDictionary.Add(XName.Get("ComplexTypeMapping", XMLNamespaceFactory.CS), typeof (ComplexTypeMapping));
+      LocalElementDictionary.Add(XName.Get("Condition", XMLNamespaceFactory.CS), typeof (Condition));
     }
   }
 }

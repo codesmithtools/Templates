@@ -39,7 +39,7 @@ namespace LinqToEdmx.Map
       {
         if ((ScalarPropertyField == null))
         {
-          ScalarPropertyField = new XTypedList<ScalarProperty>(this, LinqToXsdTypeManager.Instance, XName.Get("ScalarProperty", "http://schemas.microsoft.com/ado/2008/09/mapping/cs"));
+          ScalarPropertyField = new XTypedList<ScalarProperty>(this, LinqToXsdTypeManager.Instance, XName.Get("ScalarProperty", XMLNamespaceFactory.CS));
         }
         return ScalarPropertyField;
       }
@@ -53,7 +53,7 @@ namespace LinqToEdmx.Map
         {
           if ((ScalarPropertyField == null))
           {
-            ScalarPropertyField = XTypedList<ScalarProperty>.Initialize(this, LinqToXsdTypeManager.Instance, value, XName.Get("ScalarProperty", "http://schemas.microsoft.com/ado/2008/09/mapping/cs"));
+            ScalarPropertyField = XTypedList<ScalarProperty>.Initialize(this, LinqToXsdTypeManager.Instance, value, XName.Get("ScalarProperty", XMLNamespaceFactory.CS));
           }
           else
           {
@@ -77,7 +77,7 @@ namespace LinqToEdmx.Map
       {
         if ((ConditionField == null))
         {
-          ConditionField = new XTypedList<FunctionImportCondition>(this, LinqToXsdTypeManager.Instance, XName.Get("Condition", "http://schemas.microsoft.com/ado/2008/09/mapping/cs"));
+          ConditionField = new XTypedList<FunctionImportCondition>(this, LinqToXsdTypeManager.Instance, XName.Get("Condition", XMLNamespaceFactory.CS));
         }
         return ConditionField;
       }
@@ -91,7 +91,7 @@ namespace LinqToEdmx.Map
         {
           if ((ConditionField == null))
           {
-            ConditionField = XTypedList<FunctionImportCondition>.Initialize(this, LinqToXsdTypeManager.Instance, value, XName.Get("Condition", "http://schemas.microsoft.com/ado/2008/09/mapping/cs"));
+            ConditionField = XTypedList<FunctionImportCondition>.Initialize(this, LinqToXsdTypeManager.Instance, value, XName.Get("Condition", XMLNamespaceFactory.CS));
           }
           else
           {
@@ -132,7 +132,7 @@ namespace LinqToEdmx.Map
     {
       get
       {
-        return XName.Get("TFunctionImportEntityTypeMapping", "http://schemas.microsoft.com/ado/2008/09/mapping/cs");
+        return XName.Get("TFunctionImportEntityTypeMapping", XMLNamespaceFactory.CS);
       }
     }
 
@@ -171,8 +171,8 @@ namespace LinqToEdmx.Map
 
     private static void BuildElementDictionary()
     {
-      LocalElementDictionary.Add(XName.Get("ScalarProperty", "http://schemas.microsoft.com/ado/2008/09/mapping/cs"), typeof (ScalarProperty));
-      LocalElementDictionary.Add(XName.Get("Condition", "http://schemas.microsoft.com/ado/2008/09/mapping/cs"), typeof (FunctionImportCondition));
+      LocalElementDictionary.Add(XName.Get("ScalarProperty", XMLNamespaceFactory.CS), typeof (ScalarProperty));
+      LocalElementDictionary.Add(XName.Get("Condition", XMLNamespaceFactory.CS), typeof (FunctionImportCondition));
     }
   }
 }

@@ -64,7 +64,7 @@ namespace LinqToEdmx.Map
     {
       get
       {
-        return XName.Get("TFunctionMappingScalarProperty", "http://schemas.microsoft.com/ado/2008/09/mapping/cs");
+        return XName.Get("TFunctionMappingScalarProperty", XMLNamespaceFactory.CS);
       }
     }
 

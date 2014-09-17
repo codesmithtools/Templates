@@ -21,7 +21,7 @@ namespace LinqToEdmx.Designer
     static ConceptualModels()
     {
       BuildElementDictionary();
-      ContentModel = new SequenceContentModelEntity(new NamedContentModelEntity(XName.Get("Schema", "http://schemas.microsoft.com/ado/2008/09/edm")));
+      ContentModel = new SequenceContentModelEntity(new NamedContentModelEntity(XName.Get("Schema", XMLNamespaceFactory.Edm)));
     }
 
     /// <summary>
@@ -36,11 +36,11 @@ namespace LinqToEdmx.Designer
     {
       get
       {
-        return ((ConceptualSchema) GetElement(XName.Get("Schema", "http://schemas.microsoft.com/ado/2008/09/edm")));
+        return ((ConceptualSchema) GetElement(XName.Get("Schema", XMLNamespaceFactory.Edm)));
       }
       set
       {
-        SetElement(XName.Get("Schema", "http://schemas.microsoft.com/ado/2008/09/edm"), value);
+        SetElement(XName.Get("Schema", XMLNamespaceFactory.Edm), value);
       }
     }
 
@@ -58,7 +58,7 @@ namespace LinqToEdmx.Designer
     {
       get
       {
-        return XName.Get("TRuntimeConceptualModels", "http://schemas.microsoft.com/ado/2008/10/edmx");
+        return XName.Get("TRuntimeConceptualModels", XMLNamespaceFactory.Edmx);
       }
     }
 
@@ -97,7 +97,7 @@ namespace LinqToEdmx.Designer
 
     private static void BuildElementDictionary()
     {
-      LocalElementDictionary.Add(XName.Get("Schema", "http://schemas.microsoft.com/ado/2008/09/edm"), typeof (ConceptualSchema));
+      LocalElementDictionary.Add(XName.Get("Schema", XMLNamespaceFactory.Edm), typeof (ConceptualSchema));
     }
   }
 }

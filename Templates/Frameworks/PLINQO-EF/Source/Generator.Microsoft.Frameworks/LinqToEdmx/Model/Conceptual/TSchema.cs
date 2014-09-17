@@ -53,7 +53,7 @@ namespace LinqToEdmx.Model.Conceptual
       {
         if ((_usingField == null))
         {
-          _usingField = new XTypedList<Using>(this, LinqToXsdTypeManager.Instance, XName.Get("Using", "http://schemas.microsoft.com/ado/2008/09/edm"));
+          _usingField = new XTypedList<Using>(this, LinqToXsdTypeManager.Instance, XName.Get("Using", XMLNamespaceFactory.Edm));
         }
         return _usingField;
       }
@@ -67,7 +67,7 @@ namespace LinqToEdmx.Model.Conceptual
         {
           if ((_usingField == null))
           {
-            _usingField = XTypedList<Using>.Initialize(this, LinqToXsdTypeManager.Instance, value, XName.Get("Using", "http://schemas.microsoft.com/ado/2008/09/edm"));
+            _usingField = XTypedList<Using>.Initialize(this, LinqToXsdTypeManager.Instance, value, XName.Get("Using", XMLNamespaceFactory.Edm));
           }
           else
           {
@@ -94,7 +94,7 @@ namespace LinqToEdmx.Model.Conceptual
       {
         if ((_associationField == null))
         {
-          _associationField = new XTypedList<Association>(this, LinqToXsdTypeManager.Instance, XName.Get("Association", "http://schemas.microsoft.com/ado/2008/09/edm"));
+          _associationField = new XTypedList<Association>(this, LinqToXsdTypeManager.Instance, XName.Get("Association", XMLNamespaceFactory.Edm));
         }
         return _associationField;
       }
@@ -108,7 +108,7 @@ namespace LinqToEdmx.Model.Conceptual
         {
           if ((_associationField == null))
           {
-            _associationField = XTypedList<Association>.Initialize(this, LinqToXsdTypeManager.Instance, value, XName.Get("Association", "http://schemas.microsoft.com/ado/2008/09/edm"));
+            _associationField = XTypedList<Association>.Initialize(this, LinqToXsdTypeManager.Instance, value, XName.Get("Association", XMLNamespaceFactory.Edm));
           }
           else
           {
@@ -135,7 +135,7 @@ namespace LinqToEdmx.Model.Conceptual
       {
         if ((_complexTypeField == null))
         {
-          _complexTypeField = new XTypedList<ComplexType>(this, LinqToXsdTypeManager.Instance, XName.Get("ComplexType", "http://schemas.microsoft.com/ado/2008/09/edm"));
+          _complexTypeField = new XTypedList<ComplexType>(this, LinqToXsdTypeManager.Instance, XName.Get("ComplexType", XMLNamespaceFactory.Edm));
         }
         return _complexTypeField;
       }
@@ -149,7 +149,7 @@ namespace LinqToEdmx.Model.Conceptual
         {
           if ((_complexTypeField == null))
           {
-            _complexTypeField = XTypedList<ComplexType>.Initialize(this, LinqToXsdTypeManager.Instance, value, XName.Get("ComplexType", "http://schemas.microsoft.com/ado/2008/09/edm"));
+            _complexTypeField = XTypedList<ComplexType>.Initialize(this, LinqToXsdTypeManager.Instance, value, XName.Get("ComplexType", XMLNamespaceFactory.Edm));
           }
           else
           {
@@ -176,7 +176,7 @@ namespace LinqToEdmx.Model.Conceptual
       {
         if ((_entityTypeField == null))
         {
-          _entityTypeField = new XTypedList<EntityType>(this, LinqToXsdTypeManager.Instance, XName.Get("EntityType", "http://schemas.microsoft.com/ado/2008/09/edm"));
+          _entityTypeField = new XTypedList<EntityType>(this, LinqToXsdTypeManager.Instance, XName.Get("EntityType", XMLNamespaceFactory.Edm));
         }
         return _entityTypeField;
       }
@@ -190,7 +190,7 @@ namespace LinqToEdmx.Model.Conceptual
         {
           if ((_entityTypeField == null))
           {
-            _entityTypeField = XTypedList<EntityType>.Initialize(this, LinqToXsdTypeManager.Instance, value, XName.Get("EntityType", "http://schemas.microsoft.com/ado/2008/09/edm"));
+            _entityTypeField = XTypedList<EntityType>.Initialize(this, LinqToXsdTypeManager.Instance, value, XName.Get("EntityType", XMLNamespaceFactory.Edm));
           }
           else
           {
@@ -217,7 +217,7 @@ namespace LinqToEdmx.Model.Conceptual
       {
         if ((_functionField == null))
         {
-          _functionField = new XTypedList<Function>(this, LinqToXsdTypeManager.Instance, XName.Get("Function", "http://schemas.microsoft.com/ado/2008/09/edm"));
+          _functionField = new XTypedList<Function>(this, LinqToXsdTypeManager.Instance, XName.Get("Function", XMLNamespaceFactory.Edm));
         }
         return _functionField;
       }
@@ -231,7 +231,7 @@ namespace LinqToEdmx.Model.Conceptual
         {
           if ((_functionField == null))
           {
-            _functionField = XTypedList<Function>.Initialize(this, LinqToXsdTypeManager.Instance, value, XName.Get("Function", "http://schemas.microsoft.com/ado/2008/09/edm"));
+            _functionField = XTypedList<Function>.Initialize(this, LinqToXsdTypeManager.Instance, value, XName.Get("Function", XMLNamespaceFactory.Edm));
           }
           else
           {
@@ -258,7 +258,7 @@ namespace LinqToEdmx.Model.Conceptual
       {
         if ((_entityContainerField == null))
         {
-          _entityContainerField = new XTypedList<EntityContainer>(this, LinqToXsdTypeManager.Instance, XName.Get("EntityContainer", "http://schemas.microsoft.com/ado/2008/09/edm"));
+          _entityContainerField = new XTypedList<EntityContainer>(this, LinqToXsdTypeManager.Instance, XName.Get("EntityContainer", XMLNamespaceFactory.Edm));
         }
         return _entityContainerField;
       }
@@ -272,7 +272,7 @@ namespace LinqToEdmx.Model.Conceptual
         {
           if ((_entityContainerField == null))
           {
-            _entityContainerField = XTypedList<EntityContainer>.Initialize(this, LinqToXsdTypeManager.Instance, value, XName.Get("EntityContainer", "http://schemas.microsoft.com/ado/2008/09/edm"));
+            _entityContainerField = XTypedList<EntityContainer>.Initialize(this, LinqToXsdTypeManager.Instance, value, XName.Get("EntityContainer", XMLNamespaceFactory.Edm));
           }
           else
           {
@@ -345,7 +345,7 @@ namespace LinqToEdmx.Model.Conceptual
     {
       get
       {
-        return XName.Get("TSchema", "http://schemas.microsoft.com/ado/2008/09/edm");
+        return XName.Get("TSchema", XMLNamespaceFactory.Edm);
       }
     }
 
@@ -384,24 +384,24 @@ namespace LinqToEdmx.Model.Conceptual
 
     private static void BuildElementDictionary()
     {
-      LocalElementDictionary.Add(XName.Get("Using", "http://schemas.microsoft.com/ado/2008/09/edm"), typeof (Using));
-      LocalElementDictionary.Add(XName.Get("Association", "http://schemas.microsoft.com/ado/2008/09/edm"), typeof (Association));
-      LocalElementDictionary.Add(XName.Get("ComplexType", "http://schemas.microsoft.com/ado/2008/09/edm"), typeof (ComplexType));
-      LocalElementDictionary.Add(XName.Get("EntityType", "http://schemas.microsoft.com/ado/2008/09/edm"), typeof (EntityType));
-      LocalElementDictionary.Add(XName.Get("Function", "http://schemas.microsoft.com/ado/2008/09/edm"), typeof (Function));
-      LocalElementDictionary.Add(XName.Get("EntityContainer", "http://schemas.microsoft.com/ado/2008/09/edm"), typeof (EntityContainer));
+      LocalElementDictionary.Add(XName.Get("Using", XMLNamespaceFactory.Edm), typeof (Using));
+      LocalElementDictionary.Add(XName.Get("Association", XMLNamespaceFactory.Edm), typeof (Association));
+      LocalElementDictionary.Add(XName.Get("ComplexType", XMLNamespaceFactory.Edm), typeof (ComplexType));
+      LocalElementDictionary.Add(XName.Get("EntityType", XMLNamespaceFactory.Edm), typeof (EntityType));
+      LocalElementDictionary.Add(XName.Get("Function", XMLNamespaceFactory.Edm), typeof (Function));
+      LocalElementDictionary.Add(XName.Get("EntityContainer", XMLNamespaceFactory.Edm), typeof (EntityContainer));
     }
 
     private static void InitFsm()
     {
       var transitions = new Dictionary<int, Transitions>();
-      transitions.Add(1, new Transitions(new SingleTransition(XName.Get("Using", "http://schemas.microsoft.com/ado/2008/09/edm"), 1), new SingleTransition(XName.Get("Association", "http://schemas.microsoft.com/ado/2008/09/edm"), 3), new SingleTransition(XName.Get("ComplexType", "http://schemas.microsoft.com/ado/2008/09/edm"), 5), new SingleTransition(XName.Get("EntityType", "http://schemas.microsoft.com/ado/2008/09/edm"), 7), new SingleTransition(XName.Get("Function", "http://schemas.microsoft.com/ado/2008/09/edm"), 9), new SingleTransition(XName.Get("EntityContainer", "http://schemas.microsoft.com/ado/2008/09/edm"), 1), new SingleTransition(new WildCard("##other", "http://schemas.microsoft.com/ado/2008/09/edm"), 13)));
-      transitions.Add(3, new Transitions(new SingleTransition(XName.Get("Association", "http://schemas.microsoft.com/ado/2008/09/edm"), 1), new SingleTransition(XName.Get("Using", "http://schemas.microsoft.com/ado/2008/09/edm"), 1), new SingleTransition(XName.Get("ComplexType", "http://schemas.microsoft.com/ado/2008/09/edm"), 5), new SingleTransition(XName.Get("EntityType", "http://schemas.microsoft.com/ado/2008/09/edm"), 7), new SingleTransition(XName.Get("Function", "http://schemas.microsoft.com/ado/2008/09/edm"), 9), new SingleTransition(XName.Get("EntityContainer", "http://schemas.microsoft.com/ado/2008/09/edm"), 1), new SingleTransition(new WildCard("##other", "http://schemas.microsoft.com/ado/2008/09/edm"), 13)));
-      transitions.Add(5, new Transitions(new SingleTransition(XName.Get("ComplexType", "http://schemas.microsoft.com/ado/2008/09/edm"), 5), new SingleTransition(XName.Get("Using", "http://schemas.microsoft.com/ado/2008/09/edm"), 1), new SingleTransition(XName.Get("Association", "http://schemas.microsoft.com/ado/2008/09/edm"), 3), new SingleTransition(XName.Get("EntityType", "http://schemas.microsoft.com/ado/2008/09/edm"), 7), new SingleTransition(XName.Get("Function", "http://schemas.microsoft.com/ado/2008/09/edm"), 9), new SingleTransition(XName.Get("EntityContainer", "http://schemas.microsoft.com/ado/2008/09/edm"), 12), new SingleTransition(new WildCard("##other", "http://schemas.microsoft.com/ado/2008/09/edm"), 13)));
-      transitions.Add(7, new Transitions(new SingleTransition(XName.Get("EntityType", "http://schemas.microsoft.com/ado/2008/09/edm"), 7), new SingleTransition(XName.Get("Using", "http://schemas.microsoft.com/ado/2008/09/edm"), 1), new SingleTransition(XName.Get("Association", "http://schemas.microsoft.com/ado/2008/09/edm"), 3), new SingleTransition(XName.Get("ComplexType", "http://schemas.microsoft.com/ado/2008/09/edm"), 5), new SingleTransition(XName.Get("Function", "http://schemas.microsoft.com/ado/2008/09/edm"), 9), new SingleTransition(XName.Get("EntityContainer", "http://schemas.microsoft.com/ado/2008/09/edm"), 12), new SingleTransition(new WildCard("##other", "http://schemas.microsoft.com/ado/2008/09/edm"), 13)));
-      transitions.Add(9, new Transitions(new SingleTransition(XName.Get("Function", "http://schemas.microsoft.com/ado/2008/09/edm"), 9), new SingleTransition(XName.Get("Using", "http://schemas.microsoft.com/ado/2008/09/edm"), 1), new SingleTransition(XName.Get("Association", "http://schemas.microsoft.com/ado/2008/09/edm"), 3), new SingleTransition(XName.Get("ComplexType", "http://schemas.microsoft.com/ado/2008/09/edm"), 5), new SingleTransition(XName.Get("EntityType", "http://schemas.microsoft.com/ado/2008/09/edm"), 7), new SingleTransition(XName.Get("EntityContainer", "http://schemas.microsoft.com/ado/2008/09/edm"), 12), new SingleTransition(new WildCard("##other", "http://schemas.microsoft.com/ado/2008/09/edm"), 13)));
-      transitions.Add(12, new Transitions(new SingleTransition(new WildCard("##other", "http://schemas.microsoft.com/ado/2008/09/edm"), 12)));
-      transitions.Add(13, new Transitions(new SingleTransition(new WildCard("##other", "http://schemas.microsoft.com/ado/2008/09/edm"), 13)));
+      transitions.Add(1, new Transitions(new SingleTransition(XName.Get("Using", XMLNamespaceFactory.Edm), 1), new SingleTransition(XName.Get("Association", XMLNamespaceFactory.Edm), 3), new SingleTransition(XName.Get("ComplexType", XMLNamespaceFactory.Edm), 5), new SingleTransition(XName.Get("EntityType", XMLNamespaceFactory.Edm), 7), new SingleTransition(XName.Get("Function", XMLNamespaceFactory.Edm), 9), new SingleTransition(XName.Get("EntityContainer", XMLNamespaceFactory.Edm), 1), new SingleTransition(new WildCard("##other", XMLNamespaceFactory.Edm), 13)));
+      transitions.Add(3, new Transitions(new SingleTransition(XName.Get("Association", XMLNamespaceFactory.Edm), 1), new SingleTransition(XName.Get("Using", XMLNamespaceFactory.Edm), 1), new SingleTransition(XName.Get("ComplexType", XMLNamespaceFactory.Edm), 5), new SingleTransition(XName.Get("EntityType", XMLNamespaceFactory.Edm), 7), new SingleTransition(XName.Get("Function", XMLNamespaceFactory.Edm), 9), new SingleTransition(XName.Get("EntityContainer", XMLNamespaceFactory.Edm), 1), new SingleTransition(new WildCard("##other", XMLNamespaceFactory.Edm), 13)));
+      transitions.Add(5, new Transitions(new SingleTransition(XName.Get("ComplexType", XMLNamespaceFactory.Edm), 5), new SingleTransition(XName.Get("Using", XMLNamespaceFactory.Edm), 1), new SingleTransition(XName.Get("Association", XMLNamespaceFactory.Edm), 3), new SingleTransition(XName.Get("EntityType", XMLNamespaceFactory.Edm), 7), new SingleTransition(XName.Get("Function", XMLNamespaceFactory.Edm), 9), new SingleTransition(XName.Get("EntityContainer", XMLNamespaceFactory.Edm), 12), new SingleTransition(new WildCard("##other", XMLNamespaceFactory.Edm), 13)));
+      transitions.Add(7, new Transitions(new SingleTransition(XName.Get("EntityType", XMLNamespaceFactory.Edm), 7), new SingleTransition(XName.Get("Using", XMLNamespaceFactory.Edm), 1), new SingleTransition(XName.Get("Association", XMLNamespaceFactory.Edm), 3), new SingleTransition(XName.Get("ComplexType", XMLNamespaceFactory.Edm), 5), new SingleTransition(XName.Get("Function", XMLNamespaceFactory.Edm), 9), new SingleTransition(XName.Get("EntityContainer", XMLNamespaceFactory.Edm), 12), new SingleTransition(new WildCard("##other", XMLNamespaceFactory.Edm), 13)));
+      transitions.Add(9, new Transitions(new SingleTransition(XName.Get("Function", XMLNamespaceFactory.Edm), 9), new SingleTransition(XName.Get("Using", XMLNamespaceFactory.Edm), 1), new SingleTransition(XName.Get("Association", XMLNamespaceFactory.Edm), 3), new SingleTransition(XName.Get("ComplexType", XMLNamespaceFactory.Edm), 5), new SingleTransition(XName.Get("EntityType", XMLNamespaceFactory.Edm), 7), new SingleTransition(XName.Get("EntityContainer", XMLNamespaceFactory.Edm), 12), new SingleTransition(new WildCard("##other", XMLNamespaceFactory.Edm), 13)));
+      transitions.Add(12, new Transitions(new SingleTransition(new WildCard("##other", XMLNamespaceFactory.Edm), 12)));
+      transitions.Add(13, new Transitions(new SingleTransition(new WildCard("##other", XMLNamespaceFactory.Edm), 13)));
       _validationStates = new FSM(1, new Set<int>(new[] {1, 3, 5, 7, 9, 12, 13}), transitions);
     }
   }

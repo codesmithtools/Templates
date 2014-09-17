@@ -135,7 +135,7 @@ namespace LinqToEdmx.Designer
     {
       get
       {
-        return XName.Get("TEntityTypeShape", "http://schemas.microsoft.com/ado/2008/10/edmx");
+        return XName.Get("TEntityTypeShape", XMLNamespaceFactory.Edmx);
       }
     }
 

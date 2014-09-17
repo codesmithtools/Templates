@@ -23,7 +23,7 @@ namespace LinqToEdmx.Designer
     static DataServices()
     {
       BuildElementDictionary();
-      ContentModel = new SequenceContentModelEntity(new NamedContentModelEntity(XName.Get("Schema", "http://schemas.microsoft.com/ado/2008/09/edm")));
+      ContentModel = new SequenceContentModelEntity(new NamedContentModelEntity(XName.Get("Schema", XMLNamespaceFactory.Edm)));
     }
 
     /// <summary>
@@ -40,7 +40,7 @@ namespace LinqToEdmx.Designer
       {
         if ((_schemaField == null))
         {
-          _schemaField = new XTypedList<ConceptualSchema>(this, LinqToXsdTypeManager.Instance, XName.Get("Schema", "http://schemas.microsoft.com/ado/2008/09/edm"));
+          _schemaField = new XTypedList<ConceptualSchema>(this, LinqToXsdTypeManager.Instance, XName.Get("Schema", XMLNamespaceFactory.Edm));
         }
         return _schemaField;
       }
@@ -54,7 +54,7 @@ namespace LinqToEdmx.Designer
         {
           if ((_schemaField == null))
           {
-            _schemaField = XTypedList<ConceptualSchema>.Initialize(this, LinqToXsdTypeManager.Instance, value, XName.Get("Schema", "http://schemas.microsoft.com/ado/2008/09/edm"));
+            _schemaField = XTypedList<ConceptualSchema>.Initialize(this, LinqToXsdTypeManager.Instance, value, XName.Get("Schema", XMLNamespaceFactory.Edm));
           }
           else
           {
@@ -78,7 +78,7 @@ namespace LinqToEdmx.Designer
     {
       get
       {
-        return XName.Get("TDataServices", "http://schemas.microsoft.com/ado/2008/10/edmx");
+        return XName.Get("TDataServices", XMLNamespaceFactory.Edmx);
       }
     }
 
@@ -117,7 +117,7 @@ namespace LinqToEdmx.Designer
 
     private static void BuildElementDictionary()
     {
-      LocalElementDictionary.Add(XName.Get("Schema", "http://schemas.microsoft.com/ado/2008/09/edm"), typeof (ConceptualSchema));
+      LocalElementDictionary.Add(XName.Get("Schema", XMLNamespaceFactory.Edm), typeof (ConceptualSchema));
     }
   }
 }

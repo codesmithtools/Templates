@@ -23,7 +23,7 @@ namespace LinqToEdmx.Model.Conceptual
     static Documentation()
     {
       BuildElementDictionary();
-      ContentModel = new SequenceContentModelEntity(new NamedContentModelEntity(XName.Get("Summary", "http://schemas.microsoft.com/ado/2008/09/edm")), new NamedContentModelEntity(XName.Get("LongDescription", "http://schemas.microsoft.com/ado/2008/09/edm")));
+      ContentModel = new SequenceContentModelEntity(new NamedContentModelEntity(XName.Get("Summary", XMLNamespaceFactory.Edm)), new NamedContentModelEntity(XName.Get("LongDescription", XMLNamespaceFactory.Edm)));
     }
 
     /// <summary>
@@ -38,12 +38,12 @@ namespace LinqToEdmx.Model.Conceptual
     {
       get
       {
-        var x = GetElement(XName.Get("Summary", "http://schemas.microsoft.com/ado/2008/09/edm"));
+        var x = GetElement(XName.Get("Summary", XMLNamespaceFactory.Edm));
         return ((Text) (x));
       }
       set
       {
-        SetElement(XName.Get("Summary", "http://schemas.microsoft.com/ado/2008/09/edm"), value);
+        SetElement(XName.Get("Summary", XMLNamespaceFactory.Edm), value);
       }
     }
 
@@ -59,12 +59,12 @@ namespace LinqToEdmx.Model.Conceptual
     {
       get
       {
-        var x = GetElement(XName.Get("LongDescription", "http://schemas.microsoft.com/ado/2008/09/edm"));
+        var x = GetElement(XName.Get("LongDescription", XMLNamespaceFactory.Edm));
         return ((Text) (x));
       }
       set
       {
-        SetElement(XName.Get("LongDescription", "http://schemas.microsoft.com/ado/2008/09/edm"), value);
+        SetElement(XName.Get("LongDescription", XMLNamespaceFactory.Edm), value);
       }
     }
 
@@ -82,7 +82,7 @@ namespace LinqToEdmx.Model.Conceptual
     {
       get
       {
-        return XName.Get("TDocumentation", "http://schemas.microsoft.com/ado/2008/09/edm");
+        return XName.Get("TDocumentation", XMLNamespaceFactory.Edm);
       }
     }
 
@@ -121,8 +121,8 @@ namespace LinqToEdmx.Model.Conceptual
 
     private static void BuildElementDictionary()
     {
-      LocalElementDictionary.Add(XName.Get("Summary", "http://schemas.microsoft.com/ado/2008/09/edm"), typeof (Text));
-      LocalElementDictionary.Add(XName.Get("LongDescription", "http://schemas.microsoft.com/ado/2008/09/edm"), typeof (Text));
+      LocalElementDictionary.Add(XName.Get("Summary", XMLNamespaceFactory.Edm), typeof (Text));
+      LocalElementDictionary.Add(XName.Get("LongDescription", XMLNamespaceFactory.Edm), typeof (Text));
     }
   }
 }

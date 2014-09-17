@@ -32,11 +32,11 @@ namespace LinqToEdmx.Designer
     {
       get
       {
-        return ((StorageModels) GetElement(XName.Get("StorageModels", "http://schemas.microsoft.com/ado/2008/10/edmx")));
+        return ((StorageModels) GetElement(XName.Get("StorageModels", XMLNamespaceFactory.Edmx)));
       }
       set
       {
-        SetElement(XName.Get("StorageModels", "http://schemas.microsoft.com/ado/2008/10/edmx"), value);
+        SetElement(XName.Get("StorageModels", XMLNamespaceFactory.Edmx), value);
       }
     }
 
@@ -52,11 +52,11 @@ namespace LinqToEdmx.Designer
     {
       get
       {
-        return ((ConceptualModels) GetElement(XName.Get("ConceptualModels", "http://schemas.microsoft.com/ado/2008/10/edmx")));
+        return ((ConceptualModels) GetElement(XName.Get("ConceptualModels", XMLNamespaceFactory.Edmx)));
       }
       set
       {
-        SetElement(XName.Get("ConceptualModels", "http://schemas.microsoft.com/ado/2008/10/edmx"), value);
+        SetElement(XName.Get("ConceptualModels", XMLNamespaceFactory.Edmx), value);
       }
     }
 
@@ -72,11 +72,11 @@ namespace LinqToEdmx.Designer
     {
       get
       {
-        return ((Mappings) GetElement(XName.Get("Mappings", "http://schemas.microsoft.com/ado/2008/10/edmx")));
+        return ((Mappings) GetElement(XName.Get("Mappings", XMLNamespaceFactory.Edmx)));
       }
       set
       {
-        SetElement(XName.Get("Mappings", "http://schemas.microsoft.com/ado/2008/10/edmx"), value);
+        SetElement(XName.Get("Mappings", XMLNamespaceFactory.Edmx), value);
       }
     }
 
@@ -94,7 +94,7 @@ namespace LinqToEdmx.Designer
     {
       get
       {
-        return XName.Get("TRuntime", "http://schemas.microsoft.com/ado/2008/10/edmx");
+        return XName.Get("TRuntime", XMLNamespaceFactory.Edmx);
       }
     }
 
@@ -133,9 +133,9 @@ namespace LinqToEdmx.Designer
 
     private static void BuildElementDictionary()
     {
-      LocalElementDictionary.Add(XName.Get("StorageModels", "http://schemas.microsoft.com/ado/2008/10/edmx"), typeof (StorageModels));
-      LocalElementDictionary.Add(XName.Get("ConceptualModels", "http://schemas.microsoft.com/ado/2008/10/edmx"), typeof (ConceptualModels));
-      LocalElementDictionary.Add(XName.Get("Mappings", "http://schemas.microsoft.com/ado/2008/10/edmx"), typeof (Mappings));
+      LocalElementDictionary.Add(XName.Get("StorageModels", XMLNamespaceFactory.Edmx), typeof (StorageModels));
+      LocalElementDictionary.Add(XName.Get("ConceptualModels", XMLNamespaceFactory.Edmx), typeof (ConceptualModels));
+      LocalElementDictionary.Add(XName.Get("Mappings", XMLNamespaceFactory.Edmx), typeof (Mappings));
     }
   }
 }

@@ -44,7 +44,7 @@ namespace LinqToEdmx.Designer
       {
         if ((_designerField == null))
         {
-          _designerField = new XTypedList<Designer>(this, LinqToXsdTypeManager.Instance, XName.Get("Designer", "http://schemas.microsoft.com/ado/2008/10/edmx"));
+          _designerField = new XTypedList<Designer>(this, LinqToXsdTypeManager.Instance, XName.Get("Designer", XMLNamespaceFactory.Edmx));
         }
         return _designerField;
       }
@@ -58,7 +58,7 @@ namespace LinqToEdmx.Designer
         {
           if ((_designerField == null))
           {
-            _designerField = XTypedList<Designer>.Initialize(this, LinqToXsdTypeManager.Instance, value, XName.Get("Designer", "http://schemas.microsoft.com/ado/2008/10/edmx"));
+            _designerField = XTypedList<Designer>.Initialize(this, LinqToXsdTypeManager.Instance, value, XName.Get("Designer", XMLNamespaceFactory.Edmx));
           }
           else
           {
@@ -85,7 +85,7 @@ namespace LinqToEdmx.Designer
       {
         if ((_runtimeField == null))
         {
-          _runtimeField = new XTypedList<Runtime>(this, LinqToXsdTypeManager.Instance, XName.Get("Runtime", "http://schemas.microsoft.com/ado/2008/10/edmx"));
+          _runtimeField = new XTypedList<Runtime>(this, LinqToXsdTypeManager.Instance, XName.Get("Runtime", XMLNamespaceFactory.Edmx));
         }
         return _runtimeField;
       }
@@ -99,7 +99,7 @@ namespace LinqToEdmx.Designer
         {
           if ((_runtimeField == null))
           {
-            _runtimeField = XTypedList<Runtime>.Initialize(this, LinqToXsdTypeManager.Instance, value, XName.Get("Runtime", "http://schemas.microsoft.com/ado/2008/10/edmx"));
+            _runtimeField = XTypedList<Runtime>.Initialize(this, LinqToXsdTypeManager.Instance, value, XName.Get("Runtime", XMLNamespaceFactory.Edmx));
           }
           else
           {
@@ -126,7 +126,7 @@ namespace LinqToEdmx.Designer
       {
         if ((_dataServicesField == null))
         {
-          _dataServicesField = new XTypedList<DataServices>(this, LinqToXsdTypeManager.Instance, XName.Get("DataServices", "http://schemas.microsoft.com/ado/2008/10/edmx"));
+          _dataServicesField = new XTypedList<DataServices>(this, LinqToXsdTypeManager.Instance, XName.Get("DataServices", XMLNamespaceFactory.Edmx));
         }
         return _dataServicesField;
       }
@@ -140,7 +140,7 @@ namespace LinqToEdmx.Designer
         {
           if ((_dataServicesField == null))
           {
-            _dataServicesField = XTypedList<DataServices>.Initialize(this, LinqToXsdTypeManager.Instance, value, XName.Get("DataServices", "http://schemas.microsoft.com/ado/2008/10/edmx"));
+            _dataServicesField = XTypedList<DataServices>.Initialize(this, LinqToXsdTypeManager.Instance, value, XName.Get("DataServices", XMLNamespaceFactory.Edmx));
           }
           else
           {
@@ -181,7 +181,7 @@ namespace LinqToEdmx.Designer
     {
       get
       {
-        return XName.Get("TEdmx", "http://schemas.microsoft.com/ado/2008/10/edmx");
+        return XName.Get("TEdmx", XMLNamespaceFactory.Edmx);
       }
     }
 
@@ -220,9 +220,9 @@ namespace LinqToEdmx.Designer
 
     private static void BuildElementDictionary()
     {
-      LocalElementDictionary.Add(XName.Get("Designer", "http://schemas.microsoft.com/ado/2008/10/edmx"), typeof (Designer));
-      LocalElementDictionary.Add(XName.Get("Runtime", "http://schemas.microsoft.com/ado/2008/10/edmx"), typeof (Runtime));
-      LocalElementDictionary.Add(XName.Get("DataServices", "http://schemas.microsoft.com/ado/2008/10/edmx"), typeof (DataServices));
+      LocalElementDictionary.Add(XName.Get("Designer", XMLNamespaceFactory.Edmx), typeof (Designer));
+      LocalElementDictionary.Add(XName.Get("Runtime", XMLNamespaceFactory.Edmx), typeof (Runtime));
+      LocalElementDictionary.Add(XName.Get("DataServices", XMLNamespaceFactory.Edmx), typeof (DataServices));
     }
   }
 }

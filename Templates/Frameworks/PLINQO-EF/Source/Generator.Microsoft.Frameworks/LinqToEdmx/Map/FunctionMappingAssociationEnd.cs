@@ -23,7 +23,7 @@ namespace LinqToEdmx.Map
     static FunctionMappingAssociationEnd()
     {
       BuildElementDictionary();
-      ContentModel = new SequenceContentModelEntity(new NamedContentModelEntity(XName.Get("ScalarProperty", "http://schemas.microsoft.com/ado/2008/09/mapping/cs")));
+      ContentModel = new SequenceContentModelEntity(new NamedContentModelEntity(XName.Get("ScalarProperty", XMLNamespaceFactory.CS)));
     }
 
     /// <summary>
@@ -40,7 +40,7 @@ namespace LinqToEdmx.Map
       {
         if ((_scalarPropertyField == null))
         {
-          _scalarPropertyField = new XTypedList<FunctionMappingScalarProperty>(this, LinqToXsdTypeManager.Instance, XName.Get("ScalarProperty", "http://schemas.microsoft.com/ado/2008/09/mapping/cs"));
+          _scalarPropertyField = new XTypedList<FunctionMappingScalarProperty>(this, LinqToXsdTypeManager.Instance, XName.Get("ScalarProperty", XMLNamespaceFactory.CS));
         }
         return _scalarPropertyField;
       }
@@ -54,7 +54,7 @@ namespace LinqToEdmx.Map
         {
           if ((_scalarPropertyField == null))
           {
-            _scalarPropertyField = XTypedList<FunctionMappingScalarProperty>.Initialize(this, LinqToXsdTypeManager.Instance, value, XName.Get("ScalarProperty", "http://schemas.microsoft.com/ado/2008/09/mapping/cs"));
+            _scalarPropertyField = XTypedList<FunctionMappingScalarProperty>.Initialize(this, LinqToXsdTypeManager.Instance, value, XName.Get("ScalarProperty", XMLNamespaceFactory.CS));
           }
           else
           {
@@ -129,7 +129,7 @@ namespace LinqToEdmx.Map
     {
       get
       {
-        return XName.Get("TFunctionMappingAssociationEnd", "http://schemas.microsoft.com/ado/2008/09/mapping/cs");
+        return XName.Get("TFunctionMappingAssociationEnd", XMLNamespaceFactory.CS);
       }
     }
 
@@ -168,7 +168,7 @@ namespace LinqToEdmx.Map
 
     private static void BuildElementDictionary()
     {
-      LocalElementDictionary.Add(XName.Get("ScalarProperty", "http://schemas.microsoft.com/ado/2008/09/mapping/cs"), typeof (FunctionMappingScalarProperty));
+      LocalElementDictionary.Add(XName.Get("ScalarProperty", XMLNamespaceFactory.CS), typeof (FunctionMappingScalarProperty));
     }
   }
 }

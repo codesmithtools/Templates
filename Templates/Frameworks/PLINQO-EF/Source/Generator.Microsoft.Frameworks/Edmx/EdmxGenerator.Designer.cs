@@ -17,65 +17,80 @@ using System.Linq;
 using System.Text;
 using LinqToEdmx.Designer;
 
-namespace Generator.Microsoft.Frameworks
-{
-    public partial class EdmxGenerator
-    {
+namespace Generator.Microsoft.Frameworks {
+    public partial class EdmxGenerator {
         private bool _createdMappingDesigner;
 
         /// <summary>
         /// 2.2: Create Designer.
         /// </summary>
-        private void CreateDesigner()
-        {
-            if (_createdMappingDesigner) return;
+        private void CreateDesigner() {
+            if (_createdMappingDesigner)
+                return;
             _createdMappingDesigner = true;
 
             var designer = Designer;
 
-            if (designer.Connection == null)
-            {
-                designer.Connection = new Connection()
-                {
-                    DesignerInfoPropertySet = new DesignerInfoPropertySet()
-                    {
-                        DesignerProperties = new List<DesignerProperty>()
-                                                         {
-                                                             new DesignerProperty() { Name = "MetadataArtifactProcessing", Value = "EmbedInOutputAssembly" }
-                                                         }
+            if (designer.Connection == null) {
+                designer.Connection = new Connection() {
+                    DesignerInfoPropertySet = new DesignerInfoPropertySet() {
+                        DesignerProperties = new List<DesignerProperty>() {
+                            new DesignerProperty() {
+                                Name = "MetadataArtifactProcessing",
+                                Value = "EmbedInOutputAssembly"
+                            }
+                        }
                     }
                 };
             }
 
-            if (designer.Options == null)
-            {
-                designer.Options = new Options()
-                {
-                    DesignerInfoPropertySet = new DesignerInfoPropertySet()
-                    {
-                        DesignerProperties = new List<DesignerProperty>()
-                                                         {
-                                                             new DesignerProperty() { Name = "ValidateOnBuild", Value = "True" },
-                                                             new DesignerProperty() { Name = "EnablePluralization", Value = "False" },
-                                                             new DesignerProperty() { Name = "IncludeForeignKeysInModel", Value = "True" },
-                                                             new DesignerProperty() { Name = "CodeGenerationStrategy", Value = "None" },
-                                                             new DesignerProperty() { Name = EdmxConstants.ContextNamespace, Value = _settings.ContextNamespace },
-                                                             new DesignerProperty() { Name = EdmxConstants.EntityNamespace, Value = _settings.EntityNamespace }
-                                                         }
+            if (designer.Options == null) {
+                designer.Options = new Options() {
+                    DesignerInfoPropertySet = new DesignerInfoPropertySet() {
+                        DesignerProperties = new List<DesignerProperty>() {
+                            new DesignerProperty() {
+                                Name = "ValidateOnBuild",
+                                Value = "True"
+                            },
+                            new DesignerProperty() {
+                                Name = "EnablePluralization",
+                                Value = "False"
+                            },
+                            new DesignerProperty() {
+                                Name = "IncludeForeignKeysInModel",
+                                Value = "True"
+                            },
+                            new DesignerProperty() {
+                                Name = "CodeGenerationStrategy",
+                                Value = "None"
+                            },
+                            new DesignerProperty() {
+                                Name = EdmxConstants.ContextNamespace,
+                                Value = _settings.ContextNamespace
+                            },
+                            new DesignerProperty() {
+                                Name = EdmxConstants.EntityNamespace,
+                                Value = _settings.EntityNamespace
+                            }
+                        }
                     }
                 };
+                if (_settings.EntityFrameworkVersion == EntityFrameworkVersion.v6)
+                    designer.Options.DesignerInfoPropertySet.DesignerProperties.Add(new DesignerProperty() {
+                        Name = "UseLegacyProvider",
+                        Value = "False"
+                    });
             }
 
-            if (designer.Diagrams == null)
-            {
-                designer.Diagrams = new Diagrams() { Diagram = new List<Diagram>() { new Diagram() { Name = "Model1" } } };
+            if (designer.Diagrams == null) {
+                // This fixes the issue with downgrading VS Versions. If you are using the same version of VS or upgrading VS Versions you can uncomment the code below.
+                designer.Diagrams = new Diagrams(); //{ Diagram = new List<Diagram>() { new Diagram() { Name = "Model1" } } };
             }
         }
 
         #region Methods
 
-        private string GetDesignerProperty(string key)
-        {
+        private string GetDesignerProperty(string key) {
             if (!_createdMappingDesigner)
                 CreateDesigner();
 
@@ -85,12 +100,13 @@ namespace Generator.Microsoft.Frameworks
             return null;
         }
 
-        private void SetDesignerProperty(string key, string value)
-        {
+        private void SetDesignerProperty(string key, string value) {
             if (GetDesignerProperty(key) == null)
-                Designer.Options.DesignerInfoPropertySet.DesignerProperties.Add(new DesignerProperty() { Name = key, Value = value });
-            else
-            {
+                Designer.Options.DesignerInfoPropertySet.DesignerProperties.Add(new DesignerProperty() {
+                    Name = key,
+                    Value = value
+                });
+            else {
                 var property = Designer.Options.DesignerInfoPropertySet.DesignerProperties.Where(p => p.Name.Equals(key)).First();
                 property.Value = value;
             }
@@ -98,12 +114,9 @@ namespace Generator.Microsoft.Frameworks
 
         #endregion
 
-        private Designer Designer
-        {
-            get
-            {
-                if (_edmx.Designers.Count == 0)
-                {
+        private Designer Designer {
+            get {
+                if (_edmx.Designers.Count == 0) {
                     _edmx.Designers.Add(new Designer());
                 }
 
