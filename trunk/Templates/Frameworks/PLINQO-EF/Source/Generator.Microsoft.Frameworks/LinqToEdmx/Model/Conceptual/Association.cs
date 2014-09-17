@@ -38,11 +38,11 @@ namespace LinqToEdmx.Model.Conceptual
     {
       get
       {
-        return ((Documentation) GetElement(XName.Get("Documentation", "http://schemas.microsoft.com/ado/2008/09/edm")));
+        return ((Documentation) GetElement(XName.Get("Documentation", XMLNamespaceFactory.Edm)));
       }
       set
       {
-        SetElement(XName.Get("Documentation", "http://schemas.microsoft.com/ado/2008/09/edm"), value);
+        SetElement(XName.Get("Documentation", XMLNamespaceFactory.Edm), value);
       }
     }
 
@@ -60,7 +60,7 @@ namespace LinqToEdmx.Model.Conceptual
       {
         if ((_endField == null))
         {
-          _endField = new XTypedList<AssociationEnd>(this, LinqToXsdTypeManager.Instance, XName.Get("End", "http://schemas.microsoft.com/ado/2008/09/edm"));
+          _endField = new XTypedList<AssociationEnd>(this, LinqToXsdTypeManager.Instance, XName.Get("End", XMLNamespaceFactory.Edm));
         }
         return _endField;
       }
@@ -74,7 +74,7 @@ namespace LinqToEdmx.Model.Conceptual
         {
           if ((_endField == null))
           {
-            _endField = XTypedList<AssociationEnd>.Initialize(this, LinqToXsdTypeManager.Instance, value, XName.Get("End", "http://schemas.microsoft.com/ado/2008/09/edm"));
+            _endField = XTypedList<AssociationEnd>.Initialize(this, LinqToXsdTypeManager.Instance, value, XName.Get("End", XMLNamespaceFactory.Edm));
           }
           else
           {
@@ -96,11 +96,11 @@ namespace LinqToEdmx.Model.Conceptual
     {
       get
       {
-        return ((Constraint) GetElement(XName.Get("ReferentialConstraint", "http://schemas.microsoft.com/ado/2008/09/edm")));
+        return ((Constraint) GetElement(XName.Get("ReferentialConstraint", XMLNamespaceFactory.Edm)));
       }
       set
       {
-        SetElement(XName.Get("ReferentialConstraint", "http://schemas.microsoft.com/ado/2008/09/edm"), value);
+        SetElement(XName.Get("ReferentialConstraint", XMLNamespaceFactory.Edm), value);
       }
     }
 
@@ -148,7 +148,7 @@ namespace LinqToEdmx.Model.Conceptual
     {
       get
       {
-        return XName.Get("TAssociation", "http://schemas.microsoft.com/ado/2008/09/edm");
+        return XName.Get("TAssociation", XMLNamespaceFactory.Edm);
       }
     }
 
@@ -187,19 +187,19 @@ namespace LinqToEdmx.Model.Conceptual
 
     private static void BuildElementDictionary()
     {
-      LocalElementDictionary.Add(XName.Get("Documentation", "http://schemas.microsoft.com/ado/2008/09/edm"), typeof (Documentation));
-      LocalElementDictionary.Add(XName.Get("End", "http://schemas.microsoft.com/ado/2008/09/edm"), typeof (AssociationEnd));
-      LocalElementDictionary.Add(XName.Get("ReferentialConstraint", "http://schemas.microsoft.com/ado/2008/09/edm"), typeof (Constraint));
+      LocalElementDictionary.Add(XName.Get("Documentation", XMLNamespaceFactory.Edm), typeof (Documentation));
+      LocalElementDictionary.Add(XName.Get("End", XMLNamespaceFactory.Edm), typeof (AssociationEnd));
+      LocalElementDictionary.Add(XName.Get("ReferentialConstraint", XMLNamespaceFactory.Edm), typeof (Constraint));
     }
 
     private static void InitFsm()
     {
       var transitions = new Dictionary<int, Transitions>();
-      transitions.Add(1, new Transitions(new SingleTransition(XName.Get("Documentation", "http://schemas.microsoft.com/ado/2008/09/edm"), 2), new SingleTransition(XName.Get("End", "http://schemas.microsoft.com/ado/2008/09/edm"), 4)));
-      transitions.Add(2, new Transitions(new SingleTransition(XName.Get("End", "http://schemas.microsoft.com/ado/2008/09/edm"), 4)));
-      transitions.Add(4, new Transitions(new SingleTransition(XName.Get("End", "http://schemas.microsoft.com/ado/2008/09/edm"), 4), new SingleTransition(XName.Get("ReferentialConstraint", "http://schemas.microsoft.com/ado/2008/09/edm"), 6), new SingleTransition(new WildCard("##other", "http://schemas.microsoft.com/ado/2008/09/edm"), 7)));
-      transitions.Add(6, new Transitions(new SingleTransition(new WildCard("##other", "http://schemas.microsoft.com/ado/2008/09/edm"), 6)));
-      transitions.Add(7, new Transitions(new SingleTransition(new WildCard("##other", "http://schemas.microsoft.com/ado/2008/09/edm"), 7)));
+      transitions.Add(1, new Transitions(new SingleTransition(XName.Get("Documentation", XMLNamespaceFactory.Edm), 2), new SingleTransition(XName.Get("End", XMLNamespaceFactory.Edm), 4)));
+      transitions.Add(2, new Transitions(new SingleTransition(XName.Get("End", XMLNamespaceFactory.Edm), 4)));
+      transitions.Add(4, new Transitions(new SingleTransition(XName.Get("End", XMLNamespaceFactory.Edm), 4), new SingleTransition(XName.Get("ReferentialConstraint", XMLNamespaceFactory.Edm), 6), new SingleTransition(new WildCard("##other", XMLNamespaceFactory.Edm), 7)));
+      transitions.Add(6, new Transitions(new SingleTransition(new WildCard("##other", XMLNamespaceFactory.Edm), 6)));
+      transitions.Add(7, new Transitions(new SingleTransition(new WildCard("##other", XMLNamespaceFactory.Edm), 7)));
       _validationStates = new FSM(1, new Set<int>(new[] {4, 6, 7}), transitions);
     }
   }

@@ -47,7 +47,7 @@ namespace LinqToEdmx.Map
     {
       get
       {
-        return XName.Get("TResultBinding", "http://schemas.microsoft.com/ado/2008/09/mapping/cs");
+        return XName.Get("TResultBinding", XMLNamespaceFactory.CS);
       }
     }
 

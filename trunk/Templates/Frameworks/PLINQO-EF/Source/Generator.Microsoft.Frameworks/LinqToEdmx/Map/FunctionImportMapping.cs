@@ -21,7 +21,7 @@ namespace LinqToEdmx.Map
     static FunctionImportMapping()
     {
       BuildElementDictionary();
-      ContentModel = new SequenceContentModelEntity(new NamedContentModelEntity(XName.Get("ResultMapping", "http://schemas.microsoft.com/ado/2008/09/mapping/cs")));
+      ContentModel = new SequenceContentModelEntity(new NamedContentModelEntity(XName.Get("ResultMapping", XMLNamespaceFactory.CS)));
     }
 
     /// <summary>
@@ -36,11 +36,11 @@ namespace LinqToEdmx.Map
     {
       get
       {
-        return ((FunctionImportMappingResultMapping) GetElement(XName.Get("ResultMapping", "http://schemas.microsoft.com/ado/2008/09/mapping/cs")));
+        return ((FunctionImportMappingResultMapping) GetElement(XName.Get("ResultMapping", XMLNamespaceFactory.CS)));
       }
       set
       {
-        SetElement(XName.Get("ResultMapping", "http://schemas.microsoft.com/ado/2008/09/mapping/cs"), value);
+        SetElement(XName.Get("ResultMapping", XMLNamespaceFactory.CS), value);
       }
     }
 
@@ -92,7 +92,7 @@ namespace LinqToEdmx.Map
     {
       get
       {
-        return XName.Get("TFunctionImportMapping", "http://schemas.microsoft.com/ado/2008/09/mapping/cs");
+        return XName.Get("TFunctionImportMapping", XMLNamespaceFactory.CS);
       }
     }
 
@@ -131,7 +131,7 @@ namespace LinqToEdmx.Map
 
     private static void BuildElementDictionary()
     {
-      LocalElementDictionary.Add(XName.Get("ResultMapping", "http://schemas.microsoft.com/ado/2008/09/mapping/cs"), typeof (FunctionImportMappingResultMapping));
+      LocalElementDictionary.Add(XName.Get("ResultMapping", XMLNamespaceFactory.CS), typeof (FunctionImportMappingResultMapping));
     }
   }
 }

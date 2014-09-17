@@ -23,7 +23,7 @@ namespace LinqToEdmx.Model.Storage
     static Documentation()
     {
       BuildElementDictionary();
-      ContentModel = new SequenceContentModelEntity(new NamedContentModelEntity(XName.Get("Summary", "http://schemas.microsoft.com/ado/2009/02/edm/ssdl")), new NamedContentModelEntity(XName.Get("LongDescription", "http://schemas.microsoft.com/ado/2009/02/edm/ssdl")));
+      ContentModel = new SequenceContentModelEntity(new NamedContentModelEntity(XName.Get("Summary", XMLNamespaceFactory.SSDL)), new NamedContentModelEntity(XName.Get("LongDescription", XMLNamespaceFactory.SSDL)));
     }
 
     /// <summary>
@@ -38,12 +38,12 @@ namespace LinqToEdmx.Model.Storage
     {
       get
       {
-        var x = GetElement(XName.Get("Summary", "http://schemas.microsoft.com/ado/2009/02/edm/ssdl"));
+        var x = GetElement(XName.Get("Summary", XMLNamespaceFactory.SSDL));
         return ((Text) (x));
       }
       set
       {
-        SetElement(XName.Get("Summary", "http://schemas.microsoft.com/ado/2009/02/edm/ssdl"), value);
+        SetElement(XName.Get("Summary", XMLNamespaceFactory.SSDL), value);
       }
     }
 
@@ -59,12 +59,12 @@ namespace LinqToEdmx.Model.Storage
     {
       get
       {
-        var x = GetElement(XName.Get("LongDescription", "http://schemas.microsoft.com/ado/2009/02/edm/ssdl"));
+        var x = GetElement(XName.Get("LongDescription", XMLNamespaceFactory.SSDL));
         return ((Text) (x));
       }
       set
       {
-        SetElement(XName.Get("LongDescription", "http://schemas.microsoft.com/ado/2009/02/edm/ssdl"), value);
+        SetElement(XName.Get("LongDescription", XMLNamespaceFactory.SSDL), value);
       }
     }
 
@@ -82,7 +82,7 @@ namespace LinqToEdmx.Model.Storage
     {
       get
       {
-        return XName.Get("TDocumentation", "http://schemas.microsoft.com/ado/2009/02/edm/ssdl");
+        return XName.Get("TDocumentation", XMLNamespaceFactory.SSDL);
       }
     }
 
@@ -121,8 +121,8 @@ namespace LinqToEdmx.Model.Storage
 
     private static void BuildElementDictionary()
     {
-      LocalElementDictionary.Add(XName.Get("Summary", "http://schemas.microsoft.com/ado/2009/02/edm/ssdl"), typeof (Text));
-      LocalElementDictionary.Add(XName.Get("LongDescription", "http://schemas.microsoft.com/ado/2009/02/edm/ssdl"), typeof (Text));
+      LocalElementDictionary.Add(XName.Get("Summary", XMLNamespaceFactory.SSDL), typeof (Text));
+      LocalElementDictionary.Add(XName.Get("LongDescription", XMLNamespaceFactory.SSDL), typeof (Text));
     }
   }
 }

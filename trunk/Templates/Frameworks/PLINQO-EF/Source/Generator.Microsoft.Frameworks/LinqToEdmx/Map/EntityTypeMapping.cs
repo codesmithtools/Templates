@@ -23,7 +23,7 @@ namespace LinqToEdmx.Map
     static EntityTypeMapping()
     {
       BuildElementDictionary();
-      ContentModel = new SequenceContentModelEntity(new NamedContentModelEntity(XName.Get("MappingFragment", "http://schemas.microsoft.com/ado/2008/09/mapping/cs")), new NamedContentModelEntity(XName.Get("ModificationFunctionMapping", "http://schemas.microsoft.com/ado/2008/09/mapping/cs")));
+      ContentModel = new SequenceContentModelEntity(new NamedContentModelEntity(XName.Get("MappingFragment", XMLNamespaceFactory.CS)), new NamedContentModelEntity(XName.Get("ModificationFunctionMapping", XMLNamespaceFactory.CS)));
     }
 
     /// <summary>
@@ -40,7 +40,7 @@ namespace LinqToEdmx.Map
       {
         if ((MappingFragmentField == null))
         {
-          MappingFragmentField = new XTypedList<MappingFragment>(this, LinqToXsdTypeManager.Instance, XName.Get("MappingFragment", "http://schemas.microsoft.com/ado/2008/09/mapping/cs"));
+          MappingFragmentField = new XTypedList<MappingFragment>(this, LinqToXsdTypeManager.Instance, XName.Get("MappingFragment", XMLNamespaceFactory.CS));
         }
         return MappingFragmentField;
       }
@@ -54,7 +54,7 @@ namespace LinqToEdmx.Map
         {
           if ((MappingFragmentField == null))
           {
-            MappingFragmentField = XTypedList<MappingFragment>.Initialize(this, LinqToXsdTypeManager.Instance, value, XName.Get("MappingFragment", "http://schemas.microsoft.com/ado/2008/09/mapping/cs"));
+            MappingFragmentField = XTypedList<MappingFragment>.Initialize(this, LinqToXsdTypeManager.Instance, value, XName.Get("MappingFragment", XMLNamespaceFactory.CS));
           }
           else
           {
@@ -76,11 +76,11 @@ namespace LinqToEdmx.Map
     {
       get
       {
-        return ((EntityTypeModificationFunctionMapping) GetElement(XName.Get("ModificationFunctionMapping", "http://schemas.microsoft.com/ado/2008/09/mapping/cs")));
+        return ((EntityTypeModificationFunctionMapping) GetElement(XName.Get("ModificationFunctionMapping", XMLNamespaceFactory.CS)));
       }
       set
       {
-        SetElement(XName.Get("ModificationFunctionMapping", "http://schemas.microsoft.com/ado/2008/09/mapping/cs"), value);
+        SetElement(XName.Get("ModificationFunctionMapping", XMLNamespaceFactory.CS), value);
       }
     }
 
@@ -115,7 +115,7 @@ namespace LinqToEdmx.Map
     {
       get
       {
-        return XName.Get("TEntityTypeMapping", "http://schemas.microsoft.com/ado/2008/09/mapping/cs");
+        return XName.Get("TEntityTypeMapping", XMLNamespaceFactory.CS);
       }
     }
 
@@ -154,8 +154,8 @@ namespace LinqToEdmx.Map
 
     private static void BuildElementDictionary()
     {
-      LocalElementDictionary.Add(XName.Get("MappingFragment", "http://schemas.microsoft.com/ado/2008/09/mapping/cs"), typeof (MappingFragment));
-      LocalElementDictionary.Add(XName.Get("ModificationFunctionMapping", "http://schemas.microsoft.com/ado/2008/09/mapping/cs"), typeof (EntityTypeModificationFunctionMapping));
+      LocalElementDictionary.Add(XName.Get("MappingFragment", XMLNamespaceFactory.CS), typeof (MappingFragment));
+      LocalElementDictionary.Add(XName.Get("ModificationFunctionMapping", XMLNamespaceFactory.CS), typeof (EntityTypeModificationFunctionMapping));
     }
   }
 }

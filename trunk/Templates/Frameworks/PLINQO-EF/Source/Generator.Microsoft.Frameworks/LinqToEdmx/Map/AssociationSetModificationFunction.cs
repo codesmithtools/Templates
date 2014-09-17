@@ -40,7 +40,7 @@ namespace LinqToEdmx.Map
       {
         if ((_endPropertyField == null))
         {
-          _endPropertyField = new XTypedList<FunctionMappingEndProperty>(this, LinqToXsdTypeManager.Instance, XName.Get("EndProperty", "http://schemas.microsoft.com/ado/2008/09/mapping/cs"));
+          _endPropertyField = new XTypedList<FunctionMappingEndProperty>(this, LinqToXsdTypeManager.Instance, XName.Get("EndProperty", XMLNamespaceFactory.CS));
         }
         return _endPropertyField;
       }
@@ -54,7 +54,7 @@ namespace LinqToEdmx.Map
         {
           if ((_endPropertyField == null))
           {
-            _endPropertyField = XTypedList<FunctionMappingEndProperty>.Initialize(this, LinqToXsdTypeManager.Instance, value, XName.Get("EndProperty", "http://schemas.microsoft.com/ado/2008/09/mapping/cs"));
+            _endPropertyField = XTypedList<FunctionMappingEndProperty>.Initialize(this, LinqToXsdTypeManager.Instance, value, XName.Get("EndProperty", XMLNamespaceFactory.CS));
           }
           else
           {
@@ -112,7 +112,7 @@ namespace LinqToEdmx.Map
     {
       get
       {
-        return XName.Get("TAssociationSetModificationFunction", "http://schemas.microsoft.com/ado/2008/09/mapping/cs");
+        return XName.Get("TAssociationSetModificationFunction", XMLNamespaceFactory.CS);
       }
     }
 
@@ -151,7 +151,7 @@ namespace LinqToEdmx.Map
 
     private static void BuildElementDictionary()
     {
-      LocalElementDictionary.Add(XName.Get("EndProperty", "http://schemas.microsoft.com/ado/2008/09/mapping/cs"), typeof (FunctionMappingEndProperty));
+      LocalElementDictionary.Add(XName.Get("EndProperty", XMLNamespaceFactory.CS), typeof (FunctionMappingEndProperty));
     }
   }
 }

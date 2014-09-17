@@ -20,7 +20,7 @@ namespace LinqToEdmx.Designer
     static StorageModels()
     {
       BuildElementDictionary();
-      ContentModel = new SequenceContentModelEntity(new NamedContentModelEntity(XName.Get("Schema", "http://schemas.microsoft.com/ado/2009/02/edm/ssdl")));
+      ContentModel = new SequenceContentModelEntity(new NamedContentModelEntity(XName.Get("Schema", XMLNamespaceFactory.SSDL)));
     }
 
     /// <summary>
@@ -35,11 +35,11 @@ namespace LinqToEdmx.Designer
     {
       get
       {
-        return ((StorageSchema) GetElement(XName.Get("Schema", "http://schemas.microsoft.com/ado/2009/02/edm/ssdl")));
+        return ((StorageSchema) GetElement(XName.Get("Schema", XMLNamespaceFactory.SSDL)));
       }
       set
       {
-        SetElement(XName.Get("Schema", "http://schemas.microsoft.com/ado/2009/02/edm/ssdl"), value);
+        SetElement(XName.Get("Schema", XMLNamespaceFactory.SSDL), value);
       }
     }
 
@@ -57,7 +57,7 @@ namespace LinqToEdmx.Designer
     {
       get
       {
-        return XName.Get("TRuntimeStorageModels", "http://schemas.microsoft.com/ado/2008/10/edmx");
+        return XName.Get("TRuntimeStorageModels", XMLNamespaceFactory.Edmx);
       }
     }
 
@@ -96,7 +96,7 @@ namespace LinqToEdmx.Designer
 
     private static void BuildElementDictionary()
     {
-      LocalElementDictionary.Add(XName.Get("Schema", "http://schemas.microsoft.com/ado/2009/02/edm/ssdl"), typeof (StorageSchema));
+      LocalElementDictionary.Add(XName.Get("Schema", XMLNamespaceFactory.SSDL), typeof (StorageSchema));
     }
   }
 }

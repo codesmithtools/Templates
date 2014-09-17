@@ -47,7 +47,7 @@ namespace LinqToEdmx.Designer
     {
       get
       {
-        return XName.Get("TConnectorPoint", "http://schemas.microsoft.com/ado/2008/10/edmx");
+        return XName.Get("TConnectorPoint", XMLNamespaceFactory.Edmx);
       }
     }
 

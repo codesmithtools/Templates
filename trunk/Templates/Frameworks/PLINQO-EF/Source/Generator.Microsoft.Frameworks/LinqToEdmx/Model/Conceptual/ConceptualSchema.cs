@@ -251,7 +251,7 @@ namespace LinqToEdmx.Model.Conceptual
     {
       get
       {
-        return XName.Get("Schema", "http://schemas.microsoft.com/ado/2008/09/edm");
+        return XName.Get("Schema", XMLNamespaceFactory.Edm);
       }
     }
 

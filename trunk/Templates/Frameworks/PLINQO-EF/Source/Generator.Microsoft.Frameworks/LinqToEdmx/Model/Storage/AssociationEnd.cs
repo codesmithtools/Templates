@@ -37,12 +37,12 @@ namespace LinqToEdmx.Model.Storage
     {
       get
       {
-        var x = GetElement(XName.Get("Documentation", "http://schemas.microsoft.com/ado/2009/02/edm/ssdl"));
+        var x = GetElement(XName.Get("Documentation", XMLNamespaceFactory.SSDL));
         return ((Documentation) (x));
       }
       set
       {
-        SetElement(XName.Get("Documentation", "http://schemas.microsoft.com/ado/2009/02/edm/ssdl"), value);
+        SetElement(XName.Get("Documentation", XMLNamespaceFactory.SSDL), value);
       }
     }
 
@@ -63,7 +63,7 @@ namespace LinqToEdmx.Model.Storage
       {
         if ((_onDeleteField == null))
         {
-          _onDeleteField = new XTypedList<OnAction>(this, LinqToXsdTypeManager.Instance, XName.Get("OnDelete", "http://schemas.microsoft.com/ado/2009/02/edm/ssdl"));
+          _onDeleteField = new XTypedList<OnAction>(this, LinqToXsdTypeManager.Instance, XName.Get("OnDelete", XMLNamespaceFactory.SSDL));
         }
         return _onDeleteField;
       }
@@ -77,7 +77,7 @@ namespace LinqToEdmx.Model.Storage
         {
           if ((_onDeleteField == null))
           {
-            _onDeleteField = XTypedList<OnAction>.Initialize(this, LinqToXsdTypeManager.Instance, value, XName.Get("OnDelete", "http://schemas.microsoft.com/ado/2009/02/edm/ssdl"));
+            _onDeleteField = XTypedList<OnAction>.Initialize(this, LinqToXsdTypeManager.Instance, value, XName.Get("OnDelete", XMLNamespaceFactory.SSDL));
           }
           else
           {
@@ -168,7 +168,7 @@ namespace LinqToEdmx.Model.Storage
     {
       get
       {
-        return XName.Get("TAssociationEnd", "http://schemas.microsoft.com/ado/2009/02/edm/ssdl");
+        return XName.Get("TAssociationEnd", XMLNamespaceFactory.SSDL);
       }
     }
 
@@ -207,17 +207,17 @@ namespace LinqToEdmx.Model.Storage
 
     private static void BuildElementDictionary()
     {
-      LocalElementDictionary.Add(XName.Get("Documentation", "http://schemas.microsoft.com/ado/2009/02/edm/ssdl"), typeof (Documentation));
-      LocalElementDictionary.Add(XName.Get("OnDelete", "http://schemas.microsoft.com/ado/2009/02/edm/ssdl"), typeof (OnAction));
+      LocalElementDictionary.Add(XName.Get("Documentation", XMLNamespaceFactory.SSDL), typeof (Documentation));
+      LocalElementDictionary.Add(XName.Get("OnDelete", XMLNamespaceFactory.SSDL), typeof (OnAction));
     }
 
     private static void InitFsm()
     {
       var transitions = new Dictionary<int, Transitions>();
-      transitions.Add(1, new Transitions(new SingleTransition(XName.Get("Documentation", "http://schemas.microsoft.com/ado/2009/02/edm/ssdl"), 2), new SingleTransition(XName.Get("OnDelete", "http://schemas.microsoft.com/ado/2009/02/edm/ssdl"), 3), new SingleTransition(new WildCard("##other", "http://schemas.microsoft.com/ado/2009/02/edm/ssdl"), 5)));
-      transitions.Add(2, new Transitions(new SingleTransition(XName.Get("OnDelete", "http://schemas.microsoft.com/ado/2009/02/edm/ssdl"), 2), new SingleTransition(new WildCard("##other", "http://schemas.microsoft.com/ado/2009/02/edm/ssdl"), 5)));
-      transitions.Add(5, new Transitions(new SingleTransition(new WildCard("##other", "http://schemas.microsoft.com/ado/2009/02/edm/ssdl"), 5)));
-      transitions.Add(3, new Transitions(new SingleTransition(XName.Get("OnDelete", "http://schemas.microsoft.com/ado/2009/02/edm/ssdl"), 3), new SingleTransition(new WildCard("##other", "http://schemas.microsoft.com/ado/2009/02/edm/ssdl"), 5)));
+      transitions.Add(1, new Transitions(new SingleTransition(XName.Get("Documentation", XMLNamespaceFactory.SSDL), 2), new SingleTransition(XName.Get("OnDelete", XMLNamespaceFactory.SSDL), 3), new SingleTransition(new WildCard("##other", XMLNamespaceFactory.SSDL), 5)));
+      transitions.Add(2, new Transitions(new SingleTransition(XName.Get("OnDelete", XMLNamespaceFactory.SSDL), 2), new SingleTransition(new WildCard("##other", XMLNamespaceFactory.SSDL), 5)));
+      transitions.Add(5, new Transitions(new SingleTransition(new WildCard("##other", XMLNamespaceFactory.SSDL), 5)));
+      transitions.Add(3, new Transitions(new SingleTransition(XName.Get("OnDelete", XMLNamespaceFactory.SSDL), 3), new SingleTransition(new WildCard("##other", XMLNamespaceFactory.SSDL), 5)));
       _validationStates = new FSM(1, new Set<int>(new[]
                                                    {
                                                      2, 1, 3, 5

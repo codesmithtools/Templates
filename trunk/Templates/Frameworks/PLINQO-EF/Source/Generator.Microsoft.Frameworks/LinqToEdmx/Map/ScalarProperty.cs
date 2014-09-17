@@ -47,7 +47,7 @@ namespace LinqToEdmx.Map
     {
       get
       {
-        return XName.Get("TScalarProperty", "http://schemas.microsoft.com/ado/2008/09/mapping/cs");
+        return XName.Get("TScalarProperty", XMLNamespaceFactory.CS);
       }
     }
 

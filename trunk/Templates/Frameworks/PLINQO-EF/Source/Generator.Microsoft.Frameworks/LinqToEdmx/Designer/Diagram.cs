@@ -44,7 +44,7 @@ namespace LinqToEdmx.Designer
       {
         if ((_entityTypeShapeField == null))
         {
-          _entityTypeShapeField = new XTypedList<EntityTypeShape>(this, LinqToXsdTypeManager.Instance, XName.Get("EntityTypeShape", "http://schemas.microsoft.com/ado/2008/10/edmx"));
+          _entityTypeShapeField = new XTypedList<EntityTypeShape>(this, LinqToXsdTypeManager.Instance, XName.Get("EntityTypeShape", XMLNamespaceFactory.Edmx));
         }
         return _entityTypeShapeField;
       }
@@ -58,7 +58,7 @@ namespace LinqToEdmx.Designer
         {
           if ((_entityTypeShapeField == null))
           {
-            _entityTypeShapeField = XTypedList<EntityTypeShape>.Initialize(this, LinqToXsdTypeManager.Instance, value, XName.Get("EntityTypeShape", "http://schemas.microsoft.com/ado/2008/10/edmx"));
+            _entityTypeShapeField = XTypedList<EntityTypeShape>.Initialize(this, LinqToXsdTypeManager.Instance, value, XName.Get("EntityTypeShape", XMLNamespaceFactory.Edmx));
           }
           else
           {
@@ -85,7 +85,7 @@ namespace LinqToEdmx.Designer
       {
         if ((_associationConnectorField == null))
         {
-          _associationConnectorField = new XTypedList<AssociationConnector>(this, LinqToXsdTypeManager.Instance, XName.Get("AssociationConnector", "http://schemas.microsoft.com/ado/2008/10/edmx"));
+          _associationConnectorField = new XTypedList<AssociationConnector>(this, LinqToXsdTypeManager.Instance, XName.Get("AssociationConnector", XMLNamespaceFactory.Edmx));
         }
         return _associationConnectorField;
       }
@@ -99,7 +99,7 @@ namespace LinqToEdmx.Designer
         {
           if ((_associationConnectorField == null))
           {
-            _associationConnectorField = XTypedList<AssociationConnector>.Initialize(this, LinqToXsdTypeManager.Instance, value, XName.Get("AssociationConnector", "http://schemas.microsoft.com/ado/2008/10/edmx"));
+            _associationConnectorField = XTypedList<AssociationConnector>.Initialize(this, LinqToXsdTypeManager.Instance, value, XName.Get("AssociationConnector", XMLNamespaceFactory.Edmx));
           }
           else
           {
@@ -126,7 +126,7 @@ namespace LinqToEdmx.Designer
       {
         if ((_inheritanceConnectorField == null))
         {
-          _inheritanceConnectorField = new XTypedList<InheritanceConnector>(this, LinqToXsdTypeManager.Instance, XName.Get("InheritanceConnector", "http://schemas.microsoft.com/ado/2008/10/edmx"));
+          _inheritanceConnectorField = new XTypedList<InheritanceConnector>(this, LinqToXsdTypeManager.Instance, XName.Get("InheritanceConnector", XMLNamespaceFactory.Edmx));
         }
         return _inheritanceConnectorField;
       }
@@ -140,7 +140,7 @@ namespace LinqToEdmx.Designer
         {
           if ((_inheritanceConnectorField == null))
           {
-            _inheritanceConnectorField = XTypedList<InheritanceConnector>.Initialize(this, LinqToXsdTypeManager.Instance, value, XName.Get("InheritanceConnector", "http://schemas.microsoft.com/ado/2008/10/edmx"));
+            _inheritanceConnectorField = XTypedList<InheritanceConnector>.Initialize(this, LinqToXsdTypeManager.Instance, value, XName.Get("InheritanceConnector", XMLNamespaceFactory.Edmx));
           }
           else
           {
@@ -265,7 +265,7 @@ namespace LinqToEdmx.Designer
     {
       get
       {
-        return XName.Get("TDiagram", "http://schemas.microsoft.com/ado/2008/10/edmx");
+        return XName.Get("TDiagram", XMLNamespaceFactory.Edmx);
       }
     }
 
@@ -304,9 +304,9 @@ namespace LinqToEdmx.Designer
 
     private static void BuildElementDictionary()
     {
-      LocalElementDictionary.Add(XName.Get("EntityTypeShape", "http://schemas.microsoft.com/ado/2008/10/edmx"), typeof (EntityTypeShape));
-      LocalElementDictionary.Add(XName.Get("AssociationConnector", "http://schemas.microsoft.com/ado/2008/10/edmx"), typeof (AssociationConnector));
-      LocalElementDictionary.Add(XName.Get("InheritanceConnector", "http://schemas.microsoft.com/ado/2008/10/edmx"), typeof (InheritanceConnector));
+      LocalElementDictionary.Add(XName.Get("EntityTypeShape", XMLNamespaceFactory.Edmx), typeof (EntityTypeShape));
+      LocalElementDictionary.Add(XName.Get("AssociationConnector", XMLNamespaceFactory.Edmx), typeof (AssociationConnector));
+      LocalElementDictionary.Add(XName.Get("InheritanceConnector", XMLNamespaceFactory.Edmx), typeof (InheritanceConnector));
     }
   }
 }

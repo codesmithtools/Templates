@@ -20,7 +20,7 @@ namespace LinqToEdmx.Designer
     static Connection()
     {
       BuildElementDictionary();
-      ContentModel = new SequenceContentModelEntity(new NamedContentModelEntity(XName.Get("DesignerInfoPropertySet", "http://schemas.microsoft.com/ado/2008/10/edmx")));
+      ContentModel = new SequenceContentModelEntity(new NamedContentModelEntity(XName.Get("DesignerInfoPropertySet", XMLNamespaceFactory.Edmx)));
     }
 
     /// <summary>
@@ -35,11 +35,11 @@ namespace LinqToEdmx.Designer
     {
       get
       {
-        return ((DesignerInfoPropertySet) GetElement(XName.Get("DesignerInfoPropertySet", "http://schemas.microsoft.com/ado/2008/10/edmx")));
+        return ((DesignerInfoPropertySet) GetElement(XName.Get("DesignerInfoPropertySet", XMLNamespaceFactory.Edmx)));
       }
       set
       {
-        SetElement(XName.Get("DesignerInfoPropertySet", "http://schemas.microsoft.com/ado/2008/10/edmx"), value);
+        SetElement(XName.Get("DesignerInfoPropertySet", XMLNamespaceFactory.Edmx), value);
       }
     }
 
@@ -57,7 +57,7 @@ namespace LinqToEdmx.Designer
     {
       get
       {
-        return XName.Get("TConnection", "http://schemas.microsoft.com/ado/2008/10/edmx");
+        return XName.Get("TConnection", XMLNamespaceFactory.Edmx);
       }
     }
 
@@ -96,7 +96,7 @@ namespace LinqToEdmx.Designer
 
     private static void BuildElementDictionary()
     {
-      LocalElementDictionary.Add(XName.Get("DesignerInfoPropertySet", "http://schemas.microsoft.com/ado/2008/10/edmx"), typeof (DesignerInfoPropertySet));
+      LocalElementDictionary.Add(XName.Get("DesignerInfoPropertySet", XMLNamespaceFactory.Edmx), typeof (DesignerInfoPropertySet));
     }
   }
 }

@@ -39,12 +39,12 @@ namespace LinqToEdmx.Model.Conceptual
     {
       get
       {
-        var x = GetElement(XName.Get("Documentation", "http://schemas.microsoft.com/ado/2008/09/edm"));
+        var x = GetElement(XName.Get("Documentation", XMLNamespaceFactory.Edm));
         return ((Documentation) (x));
       }
       set
       {
-        SetElement(XName.Get("Documentation", "http://schemas.microsoft.com/ado/2008/09/edm"), value);
+        SetElement(XName.Get("Documentation", XMLNamespaceFactory.Edm), value);
       }
     }
 
@@ -93,7 +93,7 @@ namespace LinqToEdmx.Model.Conceptual
     {
       get
       {
-        return XName.Get("TOnAction", "http://schemas.microsoft.com/ado/2008/09/edm");
+        return XName.Get("TOnAction", XMLNamespaceFactory.Edm);
       }
     }
 
@@ -132,15 +132,15 @@ namespace LinqToEdmx.Model.Conceptual
 
     private static void BuildElementDictionary()
     {
-      LocalElementDictionary.Add(XName.Get("Documentation", "http://schemas.microsoft.com/ado/2008/09/edm"), typeof (Documentation));
+      LocalElementDictionary.Add(XName.Get("Documentation", XMLNamespaceFactory.Edm), typeof (Documentation));
     }
 
     private static void InitFsm()
     {
       var transitions = new Dictionary<int, Transitions>();
-      transitions.Add(1, new Transitions(new SingleTransition(XName.Get("Documentation", "http://schemas.microsoft.com/ado/2008/09/edm"), 2), new SingleTransition(new WildCard("##other", "http://schemas.microsoft.com/ado/2008/09/edm"), 3)));
-      transitions.Add(2, new Transitions(new SingleTransition(new WildCard("##other", "http://schemas.microsoft.com/ado/2008/09/edm"), 2)));
-      transitions.Add(3, new Transitions(new SingleTransition(new WildCard("##other", "http://schemas.microsoft.com/ado/2008/09/edm"), 3)));
+      transitions.Add(1, new Transitions(new SingleTransition(XName.Get("Documentation", XMLNamespaceFactory.Edm), 2), new SingleTransition(new WildCard("##other", XMLNamespaceFactory.Edm), 3)));
+      transitions.Add(2, new Transitions(new SingleTransition(new WildCard("##other", XMLNamespaceFactory.Edm), 2)));
+      transitions.Add(3, new Transitions(new SingleTransition(new WildCard("##other", XMLNamespaceFactory.Edm), 3)));
       _validationStates = new FSM(1, new Set<int>(new[]
                                                    {
                                                      2, 1, 3

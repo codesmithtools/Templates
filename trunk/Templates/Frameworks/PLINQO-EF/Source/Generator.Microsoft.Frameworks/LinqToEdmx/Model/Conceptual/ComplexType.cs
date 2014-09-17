@@ -38,12 +38,12 @@ namespace LinqToEdmx.Model.Conceptual
     {
       get
       {
-        var x = GetElement(XName.Get("Documentation", "http://schemas.microsoft.com/ado/2008/09/edm"));
+        var x = GetElement(XName.Get("Documentation", XMLNamespaceFactory.Edm));
         return ((Documentation) (x));
       }
       set
       {
-        SetElement(XName.Get("Documentation", "http://schemas.microsoft.com/ado/2008/09/edm"), value);
+        SetElement(XName.Get("Documentation", XMLNamespaceFactory.Edm), value);
       }
     }
 
@@ -61,7 +61,7 @@ namespace LinqToEdmx.Model.Conceptual
       {
         if ((_propertyField == null))
         {
-          _propertyField = new XTypedList<ComplexTypeProperty>(this, LinqToXsdTypeManager.Instance, XName.Get("Property", "http://schemas.microsoft.com/ado/2008/09/edm"));
+          _propertyField = new XTypedList<ComplexTypeProperty>(this, LinqToXsdTypeManager.Instance, XName.Get("Property", XMLNamespaceFactory.Edm));
         }
         return _propertyField;
       }
@@ -75,7 +75,7 @@ namespace LinqToEdmx.Model.Conceptual
         {
           if ((_propertyField == null))
           {
-            _propertyField = XTypedList<ComplexTypeProperty>.Initialize(this, LinqToXsdTypeManager.Instance, value, XName.Get("Property", "http://schemas.microsoft.com/ado/2008/09/edm"));
+            _propertyField = XTypedList<ComplexTypeProperty>.Initialize(this, LinqToXsdTypeManager.Instance, value, XName.Get("Property", XMLNamespaceFactory.Edm));
           }
           else
           {
@@ -148,7 +148,7 @@ namespace LinqToEdmx.Model.Conceptual
     {
       get
       {
-        return XName.Get("TComplexType", "http://schemas.microsoft.com/ado/2008/09/edm");
+        return XName.Get("TComplexType", XMLNamespaceFactory.Edm);
       }
     }
 
@@ -187,17 +187,17 @@ namespace LinqToEdmx.Model.Conceptual
 
     private static void BuildElementDictionary()
     {
-      LocalElementDictionary.Add(XName.Get("Documentation", "http://schemas.microsoft.com/ado/2008/09/edm"), typeof (Documentation));
-      LocalElementDictionary.Add(XName.Get("Property", "http://schemas.microsoft.com/ado/2008/09/edm"), typeof (ComplexTypeProperty));
+      LocalElementDictionary.Add(XName.Get("Documentation", XMLNamespaceFactory.Edm), typeof (Documentation));
+      LocalElementDictionary.Add(XName.Get("Property", XMLNamespaceFactory.Edm), typeof (ComplexTypeProperty));
     }
 
     private static void InitFsm()
     {
       var transitions = new Dictionary<int, Transitions>();
-      transitions.Add(1, new Transitions(new SingleTransition(XName.Get("Documentation", "http://schemas.microsoft.com/ado/2008/09/edm"), 2), new SingleTransition(XName.Get("Property", "http://schemas.microsoft.com/ado/2008/09/edm"), 3), new SingleTransition(new WildCard("##other", "http://schemas.microsoft.com/ado/2008/09/edm"), 5)));
-      transitions.Add(2, new Transitions(new SingleTransition(XName.Get("Property", "http://schemas.microsoft.com/ado/2008/09/edm"), 2), new SingleTransition(new WildCard("##other", "http://schemas.microsoft.com/ado/2008/09/edm"), 5)));
-      transitions.Add(5, new Transitions(new SingleTransition(new WildCard("##other", "http://schemas.microsoft.com/ado/2008/09/edm"), 5)));
-      transitions.Add(3, new Transitions(new SingleTransition(XName.Get("Property", "http://schemas.microsoft.com/ado/2008/09/edm"), 3), new SingleTransition(new WildCard("##other", "http://schemas.microsoft.com/ado/2008/09/edm"), 5)));
+      transitions.Add(1, new Transitions(new SingleTransition(XName.Get("Documentation", XMLNamespaceFactory.Edm), 2), new SingleTransition(XName.Get("Property", XMLNamespaceFactory.Edm), 3), new SingleTransition(new WildCard("##other", XMLNamespaceFactory.Edm), 5)));
+      transitions.Add(2, new Transitions(new SingleTransition(XName.Get("Property", XMLNamespaceFactory.Edm), 2), new SingleTransition(new WildCard("##other", XMLNamespaceFactory.Edm), 5)));
+      transitions.Add(5, new Transitions(new SingleTransition(new WildCard("##other", XMLNamespaceFactory.Edm), 5)));
+      transitions.Add(3, new Transitions(new SingleTransition(XName.Get("Property", XMLNamespaceFactory.Edm), 3), new SingleTransition(new WildCard("##other", XMLNamespaceFactory.Edm), 5)));
       _validationStates = new FSM(1, new Set<int>(new[]
                                                    {
                                                      2, 1, 3, 5

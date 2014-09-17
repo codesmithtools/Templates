@@ -22,7 +22,7 @@ namespace LinqToEdmx.Designer
     static Diagrams()
     {
       BuildElementDictionary();
-      ContentModel = new SequenceContentModelEntity(new NamedContentModelEntity(XName.Get("Diagram", "http://schemas.microsoft.com/ado/2008/10/edmx")));
+      ContentModel = new SequenceContentModelEntity(new NamedContentModelEntity(XName.Get("Diagram", XMLNamespaceFactory.Edmx)));
     }
 
     /// <summary>
@@ -39,7 +39,7 @@ namespace LinqToEdmx.Designer
       {
         if ((_diagramField == null))
         {
-          _diagramField = new XTypedList<Diagram>(this, LinqToXsdTypeManager.Instance, XName.Get("Diagram", "http://schemas.microsoft.com/ado/2008/10/edmx"));
+          _diagramField = new XTypedList<Diagram>(this, LinqToXsdTypeManager.Instance, XName.Get("Diagram", XMLNamespaceFactory.Edmx));
         }
         return _diagramField;
       }
@@ -53,7 +53,7 @@ namespace LinqToEdmx.Designer
         {
           if ((_diagramField == null))
           {
-            _diagramField = XTypedList<Diagram>.Initialize(this, LinqToXsdTypeManager.Instance, value, XName.Get("Diagram", "http://schemas.microsoft.com/ado/2008/10/edmx"));
+            _diagramField = XTypedList<Diagram>.Initialize(this, LinqToXsdTypeManager.Instance, value, XName.Get("Diagram", XMLNamespaceFactory.Edmx));
           }
           else
           {
@@ -77,7 +77,7 @@ namespace LinqToEdmx.Designer
     {
       get
       {
-        return XName.Get("TDiagrams", "http://schemas.microsoft.com/ado/2008/10/edmx");
+        return XName.Get("TDiagrams", XMLNamespaceFactory.Edmx);
       }
     }
 
@@ -116,7 +116,7 @@ namespace LinqToEdmx.Designer
 
     private static void BuildElementDictionary()
     {
-      LocalElementDictionary.Add(XName.Get("Diagram", "http://schemas.microsoft.com/ado/2008/10/edmx"), typeof (Diagram));
+      LocalElementDictionary.Add(XName.Get("Diagram", XMLNamespaceFactory.Edmx), typeof (Diagram));
     }
   }
 }

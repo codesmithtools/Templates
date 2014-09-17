@@ -38,7 +38,7 @@ namespace LinqToEdmx.Model.Storage
       {
         if ((_propertyRefField == null))
         {
-          _propertyRefField = new XTypedList<PropertyRef>(this, LinqToXsdTypeManager.Instance, XName.Get("PropertyRef", "http://schemas.microsoft.com/ado/2009/02/edm/ssdl"));
+          _propertyRefField = new XTypedList<PropertyRef>(this, LinqToXsdTypeManager.Instance, XName.Get("PropertyRef", XMLNamespaceFactory.SSDL));
         }
         return _propertyRefField;
       }
@@ -52,7 +52,7 @@ namespace LinqToEdmx.Model.Storage
         {
           if ((_propertyRefField == null))
           {
-            _propertyRefField = XTypedList<PropertyRef>.Initialize(this, LinqToXsdTypeManager.Instance, value, XName.Get("PropertyRef", "http://schemas.microsoft.com/ado/2009/02/edm/ssdl"));
+            _propertyRefField = XTypedList<PropertyRef>.Initialize(this, LinqToXsdTypeManager.Instance, value, XName.Get("PropertyRef", XMLNamespaceFactory.SSDL));
           }
           else
           {
@@ -89,7 +89,7 @@ namespace LinqToEdmx.Model.Storage
     {
       get
       {
-        return XName.Get("TEntityKeyElement", "http://schemas.microsoft.com/ado/2009/02/edm/ssdl");
+        return XName.Get("TEntityKeyElement", XMLNamespaceFactory.SSDL);
       }
     }
 
@@ -128,15 +128,15 @@ namespace LinqToEdmx.Model.Storage
 
     private static void BuildElementDictionary()
     {
-      LocalElementDictionary.Add(XName.Get("PropertyRef", "http://schemas.microsoft.com/ado/2009/02/edm/ssdl"), typeof (PropertyRef));
+      LocalElementDictionary.Add(XName.Get("PropertyRef", XMLNamespaceFactory.SSDL), typeof (PropertyRef));
     }
 
     private static void InitFsm()
     {
       var transitions = new Dictionary<int, Transitions>();
-      transitions.Add(1, new Transitions(new SingleTransition(XName.Get("PropertyRef", "http://schemas.microsoft.com/ado/2009/02/edm/ssdl"), 2)));
-      transitions.Add(2, new Transitions(new SingleTransition(XName.Get("PropertyRef", "http://schemas.microsoft.com/ado/2009/02/edm/ssdl"), 2), new SingleTransition(new WildCard("##other", "http://schemas.microsoft.com/ado/2009/02/edm/ssdl"), 3)));
-      transitions.Add(3, new Transitions(new SingleTransition(new WildCard("##other", "http://schemas.microsoft.com/ado/2009/02/edm/ssdl"), 3)));
+      transitions.Add(1, new Transitions(new SingleTransition(XName.Get("PropertyRef", XMLNamespaceFactory.SSDL), 2)));
+      transitions.Add(2, new Transitions(new SingleTransition(XName.Get("PropertyRef", XMLNamespaceFactory.SSDL), 2), new SingleTransition(new WildCard("##other", XMLNamespaceFactory.SSDL), 3)));
+      transitions.Add(3, new Transitions(new SingleTransition(new WildCard("##other", XMLNamespaceFactory.SSDL), 3)));
       _validationStates = new FSM(1, new Set<int>(new[]
                                                    {
                                                      2, 3

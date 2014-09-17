@@ -23,7 +23,7 @@ namespace LinqToEdmx.Designer
     static AssociationConnector()
     {
       BuildElementDictionary();
-      ContentModel = new SequenceContentModelEntity(new NamedContentModelEntity(XName.Get("ConnectorPoint", "http://schemas.microsoft.com/ado/2008/10/edmx")));
+      ContentModel = new SequenceContentModelEntity(new NamedContentModelEntity(XName.Get("ConnectorPoint", XMLNamespaceFactory.Edmx)));
     }
 
     /// <summary>
@@ -40,7 +40,7 @@ namespace LinqToEdmx.Designer
       {
         if ((_connectorPointField == null))
         {
-          _connectorPointField = new XTypedList<ConnectorPoint>(this, LinqToXsdTypeManager.Instance, XName.Get("ConnectorPoint", "http://schemas.microsoft.com/ado/2008/10/edmx"));
+          _connectorPointField = new XTypedList<ConnectorPoint>(this, LinqToXsdTypeManager.Instance, XName.Get("ConnectorPoint", XMLNamespaceFactory.Edmx));
         }
         return _connectorPointField;
       }
@@ -54,7 +54,7 @@ namespace LinqToEdmx.Designer
         {
           if ((_connectorPointField == null))
           {
-            _connectorPointField = XTypedList<ConnectorPoint>.Initialize(this, LinqToXsdTypeManager.Instance, value, XName.Get("ConnectorPoint", "http://schemas.microsoft.com/ado/2008/10/edmx"));
+            _connectorPointField = XTypedList<ConnectorPoint>.Initialize(this, LinqToXsdTypeManager.Instance, value, XName.Get("ConnectorPoint", XMLNamespaceFactory.Edmx));
           }
           else
           {
@@ -116,7 +116,7 @@ namespace LinqToEdmx.Designer
     {
       get
       {
-        return XName.Get("TAssociationConnector", "http://schemas.microsoft.com/ado/2008/10/edmx");
+        return XName.Get("TAssociationConnector", XMLNamespaceFactory.Edmx);
       }
     }
 
@@ -155,7 +155,7 @@ namespace LinqToEdmx.Designer
 
     private static void BuildElementDictionary()
     {
-      LocalElementDictionary.Add(XName.Get("ConnectorPoint", "http://schemas.microsoft.com/ado/2008/10/edmx"), typeof (ConnectorPoint));
+      LocalElementDictionary.Add(XName.Get("ConnectorPoint", XMLNamespaceFactory.Edmx), typeof (ConnectorPoint));
     }
   }
 }

@@ -37,7 +37,7 @@ namespace LinqToEdmx.Model.Storage
     {
       get
       {
-        return XName.Get("TText", "http://schemas.microsoft.com/ado/2009/02/edm/ssdl");
+        return XName.Get("TText", XMLNamespaceFactory.SSDL);
       }
     }
 
@@ -77,7 +77,7 @@ namespace LinqToEdmx.Model.Storage
     private static void InitFsm()
     {
       var transitions = new Dictionary<int, Transitions>();
-      transitions.Add(1, new Transitions(new SingleTransition(new WildCard("##other", "http://schemas.microsoft.com/ado/2009/02/edm/ssdl"), 1)));
+      transitions.Add(1, new Transitions(new SingleTransition(new WildCard("##other", XMLNamespaceFactory.SSDL), 1)));
       _validationStates = new FSM(1, new Set<int>(1), transitions);
     }
   }

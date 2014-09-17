@@ -18,8 +18,9 @@ using SchemaExplorer;
 namespace Generator.Microsoft.Frameworks {
     public class GeneratorSettings {
         public GeneratorSettings(IDatabaseSchema schema) {
-            DatabaseName = schema.Name;
+            EntityFrameworkVersion = EntityFrameworkVersion.v6;
 
+            DatabaseName = schema.Name;
             switch (schema.Provider.Name) {
                 case "SQLAnywhereSchemaProvider":
                     SchemaProviderName = "iAnywhere.Data.SQLAnywhere";
@@ -65,5 +66,7 @@ namespace Generator.Microsoft.Frameworks {
 
         public string SchemaProviderName { get; private set; }
         public string SchemaProviderManifestToken { get; private set; }
+
+        public EntityFrameworkVersion EntityFrameworkVersion { get; set; }
     }
 }

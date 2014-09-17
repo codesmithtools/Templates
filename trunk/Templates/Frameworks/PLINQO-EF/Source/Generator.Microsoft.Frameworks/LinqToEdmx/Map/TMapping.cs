@@ -25,7 +25,7 @@ namespace LinqToEdmx.Map
     static TMapping()
     {
       BuildElementDictionary();
-      ContentModel = new SequenceContentModelEntity(new NamedContentModelEntity(XName.Get("Alias", "http://schemas.microsoft.com/ado/2008/09/mapping/cs")), new NamedContentModelEntity(XName.Get("EntityContainerMapping", "http://schemas.microsoft.com/ado/2008/09/mapping/cs")));
+      ContentModel = new SequenceContentModelEntity(new NamedContentModelEntity(XName.Get("Alias", XMLNamespaceFactory.CS)), new NamedContentModelEntity(XName.Get("EntityContainerMapping", XMLNamespaceFactory.CS)));
     }
 
     /// <summary>
@@ -42,7 +42,7 @@ namespace LinqToEdmx.Map
       {
         if ((_aliasField == null))
         {
-          _aliasField = new XTypedList<Alias>(this, LinqToXsdTypeManager.Instance, XName.Get("Alias", "http://schemas.microsoft.com/ado/2008/09/mapping/cs"));
+          _aliasField = new XTypedList<Alias>(this, LinqToXsdTypeManager.Instance, XName.Get("Alias", XMLNamespaceFactory.CS));
         }
         return _aliasField;
       }
@@ -56,7 +56,7 @@ namespace LinqToEdmx.Map
         {
           if ((_aliasField == null))
           {
-            _aliasField = XTypedList<Alias>.Initialize(this, LinqToXsdTypeManager.Instance, value, XName.Get("Alias", "http://schemas.microsoft.com/ado/2008/09/mapping/cs"));
+            _aliasField = XTypedList<Alias>.Initialize(this, LinqToXsdTypeManager.Instance, value, XName.Get("Alias", XMLNamespaceFactory.CS));
           }
           else
           {
@@ -78,11 +78,11 @@ namespace LinqToEdmx.Map
     {
       get
       {
-        return ((EntityContainerMapping) GetElement(XName.Get("EntityContainerMapping", "http://schemas.microsoft.com/ado/2008/09/mapping/cs")));
+        return ((EntityContainerMapping) GetElement(XName.Get("EntityContainerMapping", XMLNamespaceFactory.CS)));
       }
       set
       {
-        SetElement(XName.Get("EntityContainerMapping", "http://schemas.microsoft.com/ado/2008/09/mapping/cs"), value);
+        SetElement(XName.Get("EntityContainerMapping", XMLNamespaceFactory.CS), value);
       }
     }
 
@@ -124,7 +124,7 @@ namespace LinqToEdmx.Map
     {
       get
       {
-        return XName.Get("TMapping", "http://schemas.microsoft.com/ado/2008/09/mapping/cs");
+        return XName.Get("TMapping", XMLNamespaceFactory.CS);
       }
     }
 
@@ -163,8 +163,8 @@ namespace LinqToEdmx.Map
 
     private static void BuildElementDictionary()
     {
-      LocalElementDictionary.Add(XName.Get("Alias", "http://schemas.microsoft.com/ado/2008/09/mapping/cs"), typeof (Alias));
-      LocalElementDictionary.Add(XName.Get("EntityContainerMapping", "http://schemas.microsoft.com/ado/2008/09/mapping/cs"), typeof (EntityContainerMapping));
+      LocalElementDictionary.Add(XName.Get("Alias", XMLNamespaceFactory.CS), typeof (Alias));
+      LocalElementDictionary.Add(XName.Get("EntityContainerMapping", XMLNamespaceFactory.CS), typeof (EntityContainerMapping));
     }
   }
 }
