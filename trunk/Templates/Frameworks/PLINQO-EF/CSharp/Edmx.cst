@@ -56,6 +56,7 @@
         OnPreOutputWritten(this.EdmxFile);
 
         GeneratorSettings settings = new GeneratorSettings(SourceDatabase);
+        settings.EntityFrameworkVersion = EntityFrameworkVersion.v4; // Change this line if you want to support EF6.
         settings.MappingFile = filePath;
         settings.ContextNamespace = ContextNamespace;
         settings.DataContextName = DataContextName;
