@@ -42,7 +42,7 @@ public void Generate() {
     var queryExtensionsEditable = this.Create<QueryExtensionEditable>();
     var queryExtensionsGenerated = this.Create<QueryExtensionGenerated>();
 
-    var entityProvider = new EdmxEntityProvider(EdmxFile);
+    var entityProvider = new EdmxEntityProvider(EdmxFile, EntityFrameworkVersion.v4); // Change this line if you want to support EF6.
     var entityManager = new EntityManager((IEntityProvider)entityProvider);
     foreach(var entity in entityManager.Entities.Where(e => IsConceptualEntity(e)))
     {
