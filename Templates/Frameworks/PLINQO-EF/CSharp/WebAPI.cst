@@ -61,7 +61,7 @@ public void Generate()
     if (!Directory.Exists(this.ViewDirectory))
         Directory.CreateDirectory(this.ViewDirectory);
 
-    EdmxEntityProvider entityProvider = new EdmxEntityProvider(EdmxFile);
+    EdmxEntityProvider entityProvider = new EdmxEntityProvider(EdmxFile, EntityFrameworkVersion.v4); // Change this line if you want to support EF6.
     EntityManager entityManager = new EntityManager((IEntityProvider)entityProvider);
 
     CreateControllers(entityManager.Entities, entityProvider.EntityNamespace, entityProvider.ContextNamespace, entityProvider.DataContextName, entityProvider.LazyLoadingEnabled);

@@ -20,10 +20,8 @@ using LinqToEdmx;
 using LinqToEdmx.Model.Conceptual;
 using Association = LinqToEdmx.Model.Conceptual.Association;
 
-namespace Generator.Microsoft.Frameworks
-{
-    public class EdmxEntityProvider : IEntityProvider
-    {
+namespace Generator.Microsoft.Frameworks {
+    public class EdmxEntityProvider : IEntityProvider {
         #region Members
 
         private const string EdmxExtension = ".edmx";
@@ -33,9 +31,9 @@ namespace Generator.Microsoft.Frameworks
 
         #region Constructors
 
-        public EdmxEntityProvider(string fileName)
-        {
+        public EdmxEntityProvider(string fileName, EntityFrameworkVersion version = EntityFrameworkVersion.v6) {
             _fileName = fileName;
+            XMLNamespaceFactory.Version = (byte)version;
         }
 
         #endregion
@@ -44,33 +42,29 @@ namespace Generator.Microsoft.Frameworks
 
         #region Provider Methods
 
-        public bool Validate()
-        {
+        public bool Validate() {
             if (String.IsNullOrEmpty(_fileName))
                 return false;
 
             _fileName = System.IO.Path.GetFullPath(_fileName);
-            if (!System.IO.File.Exists(_fileName)) return false;
+            if (!System.IO.File.Exists(_fileName))
+                return false;
 
             if (!System.IO.Path.HasExtension(_fileName) || !EdmxExtension.Equals(System.IO.Path.GetExtension(_fileName), StringComparison.OrdinalIgnoreCase))
                 return false;
 
             Edmx edmx = null;
 
-            try
-            {
+            try {
                 edmx = Edmx.Load(_fileName);
-            }
-            catch (Exception)
-            {
-            }
+            } catch (Exception) {}
 
             return edmx != null;
         }
 
-        public void Load()
-        {
-            if (!Validate()) return;
+        public void Load() {
+            if (!Validate())
+                return;
 
             var edmx = Edmx.Load(_fileName);
 
@@ -92,27 +86,22 @@ namespace Generator.Microsoft.Frameworks
                 entity.ValidateAllMembers();
         }
 
-        public void Save()
-        {
-        }
+        public void Save() {}
 
         #endregion
 
         #region Helpers
 
-        private static void CreateEntityTypes(Edmx edmx, string conceptualNamespace)
-        {
+        private static void CreateEntityTypes(Edmx edmx, string conceptualNamespace) {
             var associations = edmx.GetItems<Association>();
             var associationSets = edmx.GetItems<EntityContainer.AssociationSetLocalType>();
 
             // First loop through the EntityTypes and populate the EntityCollection with the Entity / Columns.
-            foreach (var entity in edmx.GetItems<EntityType>())
-            {
+            foreach (var entity in edmx.GetItems<EntityType>()) {
                 if (entity == null)
                     continue;
 
-                if (Configuration.Instance.ExcludeRegexIsMatch(entity.Name))
-                {
+                if (Configuration.Instance.ExcludeRegexIsMatch(entity.Name)) {
                     Trace.WriteLine(String.Format("Skipping EntityType: '{0}', the EntityType was excluded!", entity.Name));
 
                     EntityStore.Instance.ExcludedEntityCollection.Add(entity.Name, new ConceptualEntity(entity, conceptualNamespace));
@@ -123,16 +112,13 @@ namespace Generator.Microsoft.Frameworks
             }
         }
 
-        private static void CreateEntityFunctions(Edmx edmx, string conceptualNamespace)
-        {
+        private static void CreateEntityFunctions(Edmx edmx, string conceptualNamespace) {
             // First loop through the Functions and populate the EntityCollection with the Entity / Columns.
-            foreach (var entity in edmx.GetItems<EntityContainer.FunctionImportLocalType>())
-            {
+            foreach (var entity in edmx.GetItems<EntityContainer.FunctionImportLocalType>()) {
                 if (entity == null)
                     continue;
 
-                if (Configuration.Instance.ExcludeRegexIsMatch(entity.Name))
-                {
+                if (Configuration.Instance.ExcludeRegexIsMatch(entity.Name)) {
                     Trace.WriteLine(String.Format("Skipping EntityType: '{0}', the EntityType was excluded!", entity.Name));
 
                     EntityStore.Instance.ExcludedEntityCollection.Add(entity.Name, new FunctionEntity(entity, conceptualNamespace));
@@ -143,16 +129,13 @@ namespace Generator.Microsoft.Frameworks
             }
         }
 
-        private static void CreateComplexTypes(Edmx edmx, string conceptualNamespace)
-        {
+        private static void CreateComplexTypes(Edmx edmx, string conceptualNamespace) {
             // First loop through the EntityTypes and populate the EntityCollection with the Entity / Columns.
-            foreach (var entity in edmx.GetItems<ComplexType>())
-            {
+            foreach (var entity in edmx.GetItems<ComplexType>()) {
                 if (entity == null)
                     continue;
 
-                if (Configuration.Instance.ExcludeRegexIsMatch(entity.Name))
-                {
+                if (Configuration.Instance.ExcludeRegexIsMatch(entity.Name)) {
                     Trace.WriteLine(String.Format("Skipping EntityType: '{0}', the EntityType was excluded!", entity.Name));
 
                     EntityStore.Instance.ExcludedEntityCollection.Add(entity.Name, new ComplexEntity(entity, conceptualNamespace));
@@ -163,11 +146,8 @@ namespace Generator.Microsoft.Frameworks
             }
         }
 
-        private static string GetDesignerProperty(Edmx edmx, string key)
-        {
-            var hasDesignerProperties = edmx.Designers != null && edmx.Designers.First().Options != null &&
-                                        edmx.Designers.First().Options.DesignerInfoPropertySet != null &&
-                                        edmx.Designers.First().Options.DesignerInfoPropertySet.DesignerProperties != null;
+        private static string GetDesignerProperty(Edmx edmx, string key) {
+            var hasDesignerProperties = edmx.Designers != null && edmx.Designers.First().Options != null && edmx.Designers.First().Options.DesignerInfoPropertySet != null && edmx.Designers.First().Options.DesignerInfoPropertySet.DesignerProperties != null;
 
             if (hasDesignerProperties && edmx.Designers.First().Options.DesignerInfoPropertySet.DesignerProperties.Count(p => p.Name.Equals(key)) > 0)
                 return edmx.Designers.First().Options.DesignerInfoPropertySet.DesignerProperties.Where(p => p.Name.Equals(key)).First().Value;
@@ -181,21 +161,9 @@ namespace Generator.Microsoft.Frameworks
 
         #region Properties
 
-        public string Name
-        {
-            get
-            {
-                return "Entity Framework Entity Provider";
-            }
-        }
+        public string Name { get { return "Entity Framework Entity Provider"; } }
 
-        public string Description
-        {
-            get
-            {
-                return "Entity Framework 4 Provider";
-            }
-        }
+        public string Description { get { return "Entity Framework 4 Provider"; } }
 
         public string EntityNamespace { get; private set; }
 
