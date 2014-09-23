@@ -255,7 +255,7 @@ namespace Generator.CSLA.CodeTemplates {
 
         #endregion
 
-        private bool _restoringPropertyValues = true;
+        private bool _canPopulateEntities;
 
         private void EnsureEntitiesExists(TableSchemaCollection value) {
             // If entities exist then return.
@@ -266,10 +266,10 @@ namespace Generator.CSLA.CodeTemplates {
             if (value == null || value.Count <= 0)
                 return;
 
-            bool previousValue = _restoringPropertyValues;
-            _restoringPropertyValues = true;
+            bool previousValue = _canPopulateEntities;
+            _canPopulateEntities = true;
             SourceDatabase = value[0].Database;
-            _restoringPropertyValues = previousValue;
+            _canPopulateEntities = previousValue;
         }
 
         public virtual void OnDatabaseChanged() {
@@ -277,26 +277,15 @@ namespace Generator.CSLA.CodeTemplates {
                 if (!UpdateEntities())
                     return;
 
-                if (State == TemplateState.RestoringProperties)
+                if (State != TemplateState.Default)
                     return;
 
-                if (!_restoringPropertyValues && ShouldPopulateDefaultEntities) {
+                if (!_canPopulateEntities && ShouldPopulateDefaultEntities) {
                     PopulateDefaultEntities(_entities);
                 } else {
                     Refresh();
                 }
             }
-        }
-
-        protected override void OnPropertiesLoaded() {
-            if (TemplateContext.Current == null && UpdateEntities()) {
-                if (ShouldPopulateDefaultEntities)
-                    PopulateDefaultEntities(_entities);
-                else
-                    Refresh();
-            }
-
-            base.OnPropertiesLoaded();
         }
 
         [Browsable(false)]
