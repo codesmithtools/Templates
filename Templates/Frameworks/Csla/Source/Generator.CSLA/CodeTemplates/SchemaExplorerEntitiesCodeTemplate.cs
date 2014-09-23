@@ -23,15 +23,18 @@ namespace Generator.CSLA.CodeTemplates {
         public DatabaseSchema SourceDatabase {
             get { return _database; }
             set {
-                if (value != null && (_database == null || (_database != null && value.Name != _database.Name && value.ConnectionString != _database.ConnectionString))) {
-                    _database = value;
-                    if (!_database.DeepLoad) {
-                        _database.DeepLoad = true;
-                        _database.Refresh();
-                    }
-
-                    OnDatabaseChanged();
+                if (value == null) {
+                    _database = null;
+                    return;
                 }
+
+                _database = value;
+                if (!_database.DeepLoad) {
+                    _database.DeepLoad = true;
+                    _database.Refresh();
+                }
+
+                OnDatabaseChanged();
             }
         }
 

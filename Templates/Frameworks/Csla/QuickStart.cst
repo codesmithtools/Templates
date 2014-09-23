@@ -40,6 +40,7 @@ public override void Generate()
     
     Entities entityCSP = this.Create<Entities>();
     this.CopyPropertiesTo(entityCSP);
+    entityCSP.SourceDatabase = this.SourceDatabase;
     entityCSP.Location = Path.Combine(this.Location, this.BusinessProjectName);
     entityCSP.SavePropertiesToXmlFile(Path.Combine(CodeTemplateInfo.DirectoryName, "Common\\Entities.csp"));
     
@@ -47,6 +48,7 @@ public override void Generate()
     {
         DataAccess dataAccess = this.Create<DataAccess>();
         this.CopyPropertiesTo(dataAccess);
+        dataAccess.SourceDatabase = this.SourceDatabase;
         dataAccess.Location = Path.Combine(this.Location, this.DataProjectName);
         dataAccess.SavePropertiesToXmlFile(Path.Combine(CodeTemplateInfo.DirectoryName, "Common\\DataAccess.csp"));
     }
