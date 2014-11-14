@@ -13,6 +13,7 @@
 <%@ Property Name="EntityContext" Type="SchemaMapper.EntityContext"  %>
 
 <%@ Property Name="ContextNamespace" Type="System.String"  %>
+<%@ Property Name="ContextBaseClass" Type="System.String" Default="System.Data.Entity.DbContext" Optional="True"  %>
 <%@ Property Name="EntityNamespace" Type="System.String"  %>
 <%@ Property Name="MappingNamespace" Type="System.String"  %>
 <%@ Property Name="InterfaceMode" Type="Boolean" Default="False" Optional="True" %>
@@ -46,6 +47,8 @@ namespace <%= ContextNamespace %>
         System.Data.Entity.IDbSet<TEntity> Set<TEntity>() where TEntity : class;
 
         int SaveChanges();
+        System.Threading.Tasks.Task<int> SaveChangesAsync();
+        System.Threading.Tasks.Task<int> SaveChangesAsync(System.Threading.CancellationToken cancellationToken);
     }
 
     public partial interface I<%= EntityContext.ClassName.ToSafeName() %> : IDbContext
@@ -57,36 +60,43 @@ namespace <%= ContextNamespace %>
 
 <% } // if interface %>
     public partial class <%= EntityContext.ClassName.ToSafeName() %>
-        : System.Data.Entity.DbContext<%= InterfaceMode ? ", I" + EntityContext.ClassName.ToSafeName() : string.Empty %>
+        : <%= ContextBaseClass %><%= InterfaceMode ? ", I" + EntityContext.ClassName.ToSafeName() : string.Empty %>
     {
         public <%= EntityContext.ClassName.ToSafeName() %>()
             :base("Name=<%= EntityContext.ClassName.ToSafeName() %>")
-        { }
+        {
+            InitializeContext();
+        }
 
         public <%= EntityContext.ClassName.ToSafeName() %>(System.Data.Entity.Infrastructure.DbCompiledModel model)
             : base("Name=<%= EntityContext.ClassName.ToSafeName() %>", model)
-        { }
+        {
+            InitializeContext();
+        }
 
         public <%= EntityContext.ClassName.ToSafeName() %>(string nameOrConnectionString)
             : base(nameOrConnectionString)
-        { }
+        {
+            InitializeContext();
+        }
 
         public <%= EntityContext.ClassName.ToSafeName() %>(string nameOrConnectionString, System.Data.Entity.Infrastructure.DbCompiledModel model)
             : base(nameOrConnectionString, model)
-        { }
+        {
+            InitializeContext();
+        }
 
         public <%= EntityContext.ClassName.ToSafeName() %>(System.Data.Common.DbConnection existingConnection, bool contextOwnsConnection)
             : base(existingConnection, contextOwnsConnection)
-        { }
+        {
+            InitializeContext();
+        }
 
         public <%= EntityContext.ClassName.ToSafeName() %>(System.Data.Common.DbConnection existingConnection, System.Data.Entity.Infrastructure.DbCompiledModel model, bool contextOwnsConnection)
             : base(existingConnection, model, contextOwnsConnection)
-        { }
-
-        public <%= EntityContext.ClassName.ToSafeName() %>(System.Data.Objects.ObjectContext objectContext, bool dbContextOwnsObjectContext)
-            : base(objectContext, dbContextOwnsObjectContext)
-        { }
-
+        {
+            InitializeContext();
+        }
 
 <% foreach(var p in EntityContext.Entities) { %>
         public System.Data.Entity.<%= InterfaceMode ? "I" : "" %>DbSet<<%= EntityNamespace %>.<%= p.ClassName.ToSafeName() %>> <%= p.ContextName.ToSafeName() %> { get; set; }
@@ -107,5 +117,8 @@ namespace <%= ContextNamespace %>
             return base.Set<TEntity>();
         }
 <% } // if interface %>
+
+        partial void InitializeContext();
+        partial void InitializeMapping(System.Data.Entity.DbModelBuilder modelBuilder);
     }
 }

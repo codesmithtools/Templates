@@ -17,11 +17,12 @@
 <%@ Import Namespace="System.Linq" %>
 <%@ Import Namespace="System.Text" %>
 <%@ Import Namespace="System.Text.RegularExpressions" %>
+<%@ Import Namespace="CodeSmith.CustomProperties" %>
 
 <%@ Import Namespace="SchemaMapper" %>
 
 <%@ Property Name="SourceDatabase"
-             Type="SchemaExplorer.DatabaseSchema"
+             Type="SchemaExplorer.SchemaSelector"
              Category="1.Database"
              OnChanged="OnSourceDatabaseChanged"
              Description="The source database." %>
@@ -83,18 +84,6 @@
              Default="Plural"
              Description="Tell generator how the context properties are to be named." %>
 
-<%@ Property Name="IgnoreList"
-             Type="CodeSmith.CustomProperties.StringCollection"
-             Category="5.Customization"
-             Default="sysdiagrams$"
-             Optional="True"
-             Description="List of regular expressions to ignore tables, views and commands when generating mapping." %>
-<%@ Property Name="InclusionMode"
-             Type="Boolean"
-             Category="5.Customization"
-             Default="False"
-             Optional="True"
-             Description="Change the IgnoreList to be a list of table to include instead of ignore." %>
 <%@ Property Name="CleanExpressions"
              Type="CodeSmith.CustomProperties.StringCollection"
              Category="5.Customization"
@@ -107,6 +96,26 @@
              Default="False"
              Optional="True"
              Description="Use interfaces for DbContext." %>
+<%@ Property Name="IncludeViews"
+             Type="Boolean"
+             Category="5.Customization"
+             Default="False"
+             Optional="True"
+             Description="Include views as entities." %>
+<%@ Property Name="ContextBaseClass" 
+             Type="System.String" 
+             Category="5.Customization"
+             Default="System.Data.Entity.DbContext" 
+             Optional="True" 
+             Description="Base class for DbContext file."%>
+             
+<%@ Property Name="RenameMapping"
+             Type="CodeSmith.CustomProperties.NameValueCollection"
+             Category="5.Customization"
+             Default=""
+             Optional="True"
+             Description="Name value pair for custom renaming. Name is orginal name, Value is new name." %>
+
 
 
 <%@ Property Name="IncludeQuery"
@@ -171,8 +180,6 @@
              Optional="True"
              Description="Mark mock files as internal." %>
 
-
-
 <%@ Register Name="ContextGeneratedClass"
              Template="Internal\Context.Generated.cst"
              MergeProperties="False" %>
@@ -228,15 +235,32 @@ Generating Entities ...
         generator.Settings.EntityNaming = EntityNaming;
         generator.Settings.RelationshipNaming = RelationshipNaming;
         generator.Settings.ContextNaming = ContextNaming;
+        
+        generator.Settings.IncludeViews = IncludeViews;
 
-        foreach(string s in IgnoreList)
-          if (!string.IsNullOrEmpty(s))
-            generator.Settings.IgnoreExpressions.Add(s);
+        /*
+        generator.Settings.InclusionMode = InclusionMode;
+        
+        if (IgnoreList != null)
+            foreach(string s in IgnoreList)
+              if (!string.IsNullOrEmpty(s))
+                generator.Settings.IgnoreExpressions.Add(s);
 
-        foreach(string s in CleanExpressions)
-          if (!string.IsNullOrEmpty(s))
-            generator.Settings.CleanExpressions.Add(s);
+        if (IgnoreColumns != null)
+            foreach(string s in IgnoreColumns)
+              if (!string.IsNullOrEmpty(s))
+                generator.Settings.IgnoreColumns.Add(s);
+        */
+        
+        if (CleanExpressions != null)
+            foreach(string s in CleanExpressions)
+              if (!string.IsNullOrEmpty(s))
+                generator.Settings.CleanExpressions.Add(s);
 
+        if (RenameMapping != null)
+            foreach(NameValueEntry pair in RenameMapping)
+                generator.Settings.RenameRules[pair.Key] = pair.Value;
+          
         generator.SchemaItemProcessed += OnSchemaItemProcessed;
         
         // generate from database
@@ -257,7 +281,6 @@ Generating Entities ...
         
         this.RegisterReference("System.Configuration");
         this.RegisterReference("System.Data");
-        this.RegisterReference("System.Data.Entity");
         this.RegisterReference("System.Runtime.Serialization");
         this.RegisterReference("EntityFramework");
 

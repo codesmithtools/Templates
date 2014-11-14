@@ -11,10 +11,9 @@
     <language>en-US</language>
     <tags>EntityFramework CodeSmith</tags>
     <dependencies>
-      <dependency id="EntityFramework" version="4.3.0" />
+      <dependency id="EntityFramework" version="6.0.0" />
     </dependencies>
     <frameworkAssemblies>
-      <frameworkAssembly assemblyName="System.Data.Entity" targetFramework="" />
       <frameworkAssembly assemblyName="System.ComponentModel.DataAnnotations" targetFramework="" />
     </frameworkAssemblies>
   </metadata>
@@ -24,6 +23,6 @@
     <file src="..\..\CSharp\Internal\*.cs" target="tools\CSharp\Internal\" />
     <file src="..\..\CSharp\*.cst" target="tools\CSharp\" />
     <file src="install.ps1" target="tools\install.ps1" />
-    <file src="readme.txt" target="content\" />
+    <file src="..\..\readme.md" target="content\" />
   </files>
 </package>

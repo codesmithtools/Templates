@@ -1,6 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio 2013
+VisualStudioVersion = 12.0.30501.0
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SchemaMapper", "SchemaMapper\SchemaMapper.csproj", "{B1729527-5608-4E98-9A3B-C76AE9DFC1F3}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SchemaMapper.Tests", "SchemaMapper.Tests\SchemaMapper.Tests.csproj", "{9237C0C0-D586-49D1-AB12-C20F29B8A256}"
@@ -15,37 +17,62 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{663D336C-6098-4184-9125-096D713B7361}"
 	ProjectSection(SolutionItems) = preProject
 		.nuget\NuGet.Config = .nuget\NuGet.Config
-		.nuget\NuGet.targets = .nuget\NuGet.targets
 		.nuget\nuget.exe = .nuget\nuget.exe
+		.nuget\NuGet.targets = .nuget\NuGet.targets
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{ED38A781-3A33-4E92-A6D1-51F975EF6C34}"
 	ProjectSection(SolutionItems) = preProject
 		Build\Build.bat = Build\Build.bat
-		Build\PLINQO.EntityFramework.DbContext.nuspec = Build\PLINQO.EntityFramework.DbContext.nuspec
 		Build\install.ps1 = Build\install.ps1
-		Build\readme.txt = Build\readme.txt
+		Build\PLINQO.EntityFramework.DbContext.nuspec = Build\PLINQO.EntityFramework.DbContext.nuspec
+		..\readme.md = ..\readme.md
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Samples", "Samples", "{687F8B44-042A-4DCB-85A2-E9005FD94FA2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Petshop.Data", "Samples\Petshop.Data\Petshop.Data.csproj", "{5BC06EAA-1207-4BC4-8F4E-80A2AABE550A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdventureWorks.Data", "Samples\AdventureWorks.Data\AdventureWorks.Data.csproj", "{3C043248-B883-4F7B-AE10-248D981EA655}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tracker.Data", "Samples\Tracker.Data\Tracker.Data.csproj", "{CF7E6F25-7E92-45E3-B6DD-55C9BDFA600A}"
+EndProject
 Global
-	GlobalSection(TestCaseManagementSettings) = postSolution
-		CategoryFile = SchemaMapper.vsmdi
-	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{9237C0C0-D586-49D1-AB12-C20F29B8A256}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9237C0C0-D586-49D1-AB12-C20F29B8A256}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9237C0C0-D586-49D1-AB12-C20F29B8A256}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9237C0C0-D586-49D1-AB12-C20F29B8A256}.Release|Any CPU.Build.0 = Release|Any CPU
 		{B1729527-5608-4E98-9A3B-C76AE9DFC1F3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{B1729527-5608-4E98-9A3B-C76AE9DFC1F3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B1729527-5608-4E98-9A3B-C76AE9DFC1F3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B1729527-5608-4E98-9A3B-C76AE9DFC1F3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9237C0C0-D586-49D1-AB12-C20F29B8A256}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9237C0C0-D586-49D1-AB12-C20F29B8A256}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9237C0C0-D586-49D1-AB12-C20F29B8A256}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9237C0C0-D586-49D1-AB12-C20F29B8A256}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5BC06EAA-1207-4BC4-8F4E-80A2AABE550A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5BC06EAA-1207-4BC4-8F4E-80A2AABE550A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5BC06EAA-1207-4BC4-8F4E-80A2AABE550A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5BC06EAA-1207-4BC4-8F4E-80A2AABE550A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3C043248-B883-4F7B-AE10-248D981EA655}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3C043248-B883-4F7B-AE10-248D981EA655}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3C043248-B883-4F7B-AE10-248D981EA655}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3C043248-B883-4F7B-AE10-248D981EA655}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CF7E6F25-7E92-45E3-B6DD-55C9BDFA600A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CF7E6F25-7E92-45E3-B6DD-55C9BDFA600A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CF7E6F25-7E92-45E3-B6DD-55C9BDFA600A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CF7E6F25-7E92-45E3-B6DD-55C9BDFA600A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{5BC06EAA-1207-4BC4-8F4E-80A2AABE550A} = {687F8B44-042A-4DCB-85A2-E9005FD94FA2}
+		{3C043248-B883-4F7B-AE10-248D981EA655} = {687F8B44-042A-4DCB-85A2-E9005FD94FA2}
+		{CF7E6F25-7E92-45E3-B6DD-55C9BDFA600A} = {687F8B44-042A-4DCB-85A2-E9005FD94FA2}
+	EndGlobalSection
+	GlobalSection(TestCaseManagementSettings) = postSolution
+		CategoryFile = SchemaMapper.vsmdi
 	EndGlobalSection
 EndGlobal

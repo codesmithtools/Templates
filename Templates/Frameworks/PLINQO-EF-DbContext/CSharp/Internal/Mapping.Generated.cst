@@ -25,6 +25,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace <%= MappingNamespace %>
 {
@@ -76,6 +77,9 @@ public string PropertyExpression(Property property)
     bool isString = property.SystemType == typeof(string);
     bool isByteArray = property.SystemType == typeof(byte[]);
     bool isDecimal = property.SystemType == typeof(Decimal);
+    bool isBlob = string.Equals(property.NativeType, "text", StringComparison.OrdinalIgnoreCase) ||
+        string.Equals(property.NativeType, "ntext", StringComparison.OrdinalIgnoreCase) ||
+        string.Equals(property.NativeType, "image", StringComparison.OrdinalIgnoreCase);
 
     StringBuilder sb = new StringBuilder();
     sb.Append(' ', 3 * 4);
@@ -101,8 +105,14 @@ public string PropertyExpression(Property property)
       sb.Append(' ', 4 * 4);
       sb.Append(".HasDatabaseGeneratedOption(DatabaseGeneratedOption.Computed)");
     }
+    else if (property.IsPrimaryKey == true)
+    {
+      sb.AppendLine();
+      sb.Append(' ', 4 * 4);
+      sb.Append(".HasDatabaseGeneratedOption(DatabaseGeneratedOption.None)");
+    }
 
-    if ((isString || isByteArray) && (property.MaxLength > 0 && property.MaxLength < 8000))
+    if (!isBlob && (isString || isByteArray) && (property.MaxLength > 0 && property.MaxLength < 8000))
     {
       sb.AppendLine();
       sb.Append(' ', 4 * 4);
