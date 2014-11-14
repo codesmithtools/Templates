@@ -767,12 +767,6 @@
             Is this IProperty a RowVersion column for the Entity.
             </summary>
         </member>
-        <member name="P:CodeSmith.SchemaHelper.ISchemaProperty.IsReadOnly">
-            <summary>
-            Is this IProperty ReadOnly.
-            Computed by looking at IsIdentity, IsRowVersion, and IsComputed.
-            </summary>
-        </member>
         <member name="M:CodeSmith.SchemaHelper.CommandProperty.#ctor(SchemaExplorer.ICommandResultColumnSchema,CodeSmith.SchemaHelper.IEntity)">
             <summary>
             Creates an CommandMember from the supplied data.
@@ -824,11 +818,6 @@
         <member name="P:CodeSmith.SchemaHelper.CommandProperty.IsRowVersion">
             <summary>
             Is this IProperty a RowVersion column for the Entity.
-            </summary>
-        </member>
-        <member name="P:CodeSmith.SchemaHelper.CommandProperty.IsReadOnly">
-            <summary>
-            Is this IProperty ReadOnly.  Computed by looking at IsIdentity, IsRowVersion, and IsComputed.
             </summary>
         </member>
         <member name="T:CodeSmith.SchemaHelper.CommandParameter">
@@ -893,11 +882,6 @@
         <member name="P:CodeSmith.SchemaHelper.CommandParameter.IsRowVersion">
             <summary>
             Is this IProperty a RowVersion column for the Entity.
-            </summary>
-        </member>
-        <member name="P:CodeSmith.SchemaHelper.CommandParameter.IsReadOnly">
-            <summary>
-            Is this IProperty ReadOnly.  Computed by looking at IsIdentity, IsRowVersion, and IsComputed.
             </summary>
         </member>
         <member name="T:CodeSmith.SchemaHelper.EntityBase`1">
@@ -1957,11 +1941,6 @@
             Is this IProperty a RowVersion column for the Entity.
             </summary>
         </member>
-        <member name="P:CodeSmith.SchemaHelper.TableProperty.IsReadOnly">
-            <summary>
-            Is this IProperty ReadOnly.  Computed by looking at IsIdentity, IsRowVersion, and IsComputed.
-            </summary>
-        </member>
         <member name="T:CodeSmith.SchemaHelper.AccessibilityHelper">
             <summary>
             Helps determine the Access Modifier of Interfaces, Enumerations, Classes, Structs, Properties and Members.
@@ -2316,11 +2295,6 @@
         <member name="P:CodeSmith.SchemaHelper.ViewProperty.IsRowVersion">
             <summary>
             Is this IProperty a RowVersion column for the Entity.
-            </summary>
-        </member>
-        <member name="P:CodeSmith.SchemaHelper.ViewProperty.IsReadOnly">
-            <summary>
-            Is this IProperty ReadOnly.  Computed by looking at IsIdentity, IsRowVersion, and IsComputed.
             </summary>
         </member>
     </members>
