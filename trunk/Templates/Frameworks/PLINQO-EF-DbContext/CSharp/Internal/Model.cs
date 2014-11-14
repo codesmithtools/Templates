@@ -212,6 +212,8 @@ namespace SchemaMapper
         {
             get { return Scale.HasValue; }
         }
+
+        public string Default { get; set; }
     }
 
     [DebuggerDisplay("Other: {OtherEntity}, Property: {OtherPropertyName}, Relationship: {RelationshipName}")]

@@ -38,9 +38,5 @@ namespace <%= ContextNamespace %>
 <% } // if interface %>    
     public partial class <%= EntityContext.ClassName.ToSafeName() %>
     {
-        protected void InitializeMapping(DbModelBuilder modelBuilder)
-        {
-
-        }
     }
 }

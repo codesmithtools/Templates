@@ -1,0 +1,219 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{5BC06EAA-1207-4BC4-8F4E-80A2AABE550A}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Petshop.Data</RootNamespace>
+    <AssemblyName>Petshop.Data</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\EntityFramework.6.0.1\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer">
+      <HintPath>..\..\packages\EntityFramework.6.0.1\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.Entity" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Entities\Account.cs" />
+    <Compile Include="Entities\Account.Generated.cs">
+      <DependentUpon>Account.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\BannerData.cs" />
+    <Compile Include="Entities\BannerData.Generated.cs">
+      <DependentUpon>BannerData.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\Category.cs" />
+    <Compile Include="Entities\Category.Generated.cs">
+      <DependentUpon>Category.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\Inventory.cs" />
+    <Compile Include="Entities\Inventory.Generated.cs">
+      <DependentUpon>Inventory.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\Item.cs" />
+    <Compile Include="Entities\Item.Generated.cs">
+      <DependentUpon>Item.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\LineItem.cs" />
+    <Compile Include="Entities\LineItem.Generated.cs">
+      <DependentUpon>LineItem.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\Orders.cs" />
+    <Compile Include="Entities\Orders.Generated.cs">
+      <DependentUpon>Orders.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\OrderStatus.cs" />
+    <Compile Include="Entities\OrderStatus.Generated.cs">
+      <DependentUpon>OrderStatus.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\Product.cs" />
+    <Compile Include="Entities\Product.Generated.cs">
+      <DependentUpon>Product.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\Profile.cs" />
+    <Compile Include="Entities\Profile.Generated.cs">
+      <DependentUpon>Profile.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\SignOn.cs" />
+    <Compile Include="Entities\SignOn.Generated.cs">
+      <DependentUpon>SignOn.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\Supplier.cs" />
+    <Compile Include="Entities\Supplier.Generated.cs">
+      <DependentUpon>Supplier.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Mapping\AccountMap.cs" />
+    <Compile Include="Mapping\AccountMap.Generated.cs">
+      <DependentUpon>AccountMap.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Mapping\BannerDataMap.cs" />
+    <Compile Include="Mapping\BannerDataMap.Generated.cs">
+      <DependentUpon>BannerDataMap.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Mapping\CategoryMap.cs" />
+    <Compile Include="Mapping\CategoryMap.Generated.cs">
+      <DependentUpon>CategoryMap.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Mapping\InventoryMap.cs" />
+    <Compile Include="Mapping\InventoryMap.Generated.cs">
+      <DependentUpon>InventoryMap.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Mapping\ItemMap.cs" />
+    <Compile Include="Mapping\ItemMap.Generated.cs">
+      <DependentUpon>ItemMap.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Mapping\LineItemMap.cs" />
+    <Compile Include="Mapping\LineItemMap.Generated.cs">
+      <DependentUpon>LineItemMap.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Mapping\OrdersMap.cs" />
+    <Compile Include="Mapping\OrdersMap.Generated.cs">
+      <DependentUpon>OrdersMap.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Mapping\OrderStatusMap.cs" />
+    <Compile Include="Mapping\OrderStatusMap.Generated.cs">
+      <DependentUpon>OrderStatusMap.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Mapping\ProductMap.cs" />
+    <Compile Include="Mapping\ProductMap.Generated.cs">
+      <DependentUpon>ProductMap.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Mapping\ProfileMap.cs" />
+    <Compile Include="Mapping\ProfileMap.Generated.cs">
+      <DependentUpon>ProfileMap.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Mapping\SignOnMap.cs" />
+    <Compile Include="Mapping\SignOnMap.Generated.cs">
+      <DependentUpon>SignOnMap.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Mapping\SupplierMap.cs" />
+    <Compile Include="Mapping\SupplierMap.Generated.cs">
+      <DependentUpon>SupplierMap.cs</DependentUpon>
+    </Compile>
+    <Compile Include="PetshopContext.cs" />
+    <Compile Include="PetshopContext.Generated.cs">
+      <DependentUpon>PetshopContext.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Queries\AccountExtensions.cs" />
+    <Compile Include="Queries\AccountExtensions.Generated.cs">
+      <DependentUpon>AccountExtensions.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Queries\BannerDataExtensions.cs" />
+    <Compile Include="Queries\BannerDataExtensions.Generated.cs">
+      <DependentUpon>BannerDataExtensions.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Queries\CategoryExtensions.cs" />
+    <Compile Include="Queries\CategoryExtensions.Generated.cs">
+      <DependentUpon>CategoryExtensions.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Queries\InventoryExtensions.cs" />
+    <Compile Include="Queries\InventoryExtensions.Generated.cs">
+      <DependentUpon>InventoryExtensions.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Queries\ItemExtensions.cs" />
+    <Compile Include="Queries\ItemExtensions.Generated.cs">
+      <DependentUpon>ItemExtensions.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Queries\LineItemExtensions.cs" />
+    <Compile Include="Queries\LineItemExtensions.Generated.cs">
+      <DependentUpon>LineItemExtensions.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Queries\OrdersExtensions.cs" />
+    <Compile Include="Queries\OrdersExtensions.Generated.cs">
+      <DependentUpon>OrdersExtensions.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Queries\OrderStatusExtensions.cs" />
+    <Compile Include="Queries\OrderStatusExtensions.Generated.cs">
+      <DependentUpon>OrderStatusExtensions.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Queries\ProductExtensions.cs" />
+    <Compile Include="Queries\ProductExtensions.Generated.cs">
+      <DependentUpon>ProductExtensions.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Queries\ProfileExtensions.cs" />
+    <Compile Include="Queries\ProfileExtensions.Generated.cs">
+      <DependentUpon>ProfileExtensions.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Queries\SignOnExtensions.cs" />
+    <Compile Include="Queries\SignOnExtensions.Generated.cs">
+      <DependentUpon>SignOnExtensions.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Queries\SupplierExtensions.cs" />
+    <Compile Include="Queries\SupplierExtensions.Generated.cs">
+      <DependentUpon>SupplierExtensions.cs</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="packages.config" />
+    <None Include="Petshop.csp" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

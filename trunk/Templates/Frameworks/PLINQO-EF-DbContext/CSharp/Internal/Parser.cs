@@ -276,14 +276,14 @@ namespace SchemaMapper
                 return null;
 
             var parser = new CSharpParser();
-            CompilationUnit compilationUnit;
+            SyntaxTree syntaxTree;
 
             using (var stream = File.OpenText(mappingFile))
-                compilationUnit = parser.Parse(stream, mappingFile);
+                syntaxTree = parser.Parse(stream, mappingFile);
 
             var visitor = new MappingVisitor();
 
-            visitor.VisitCompilationUnit(compilationUnit, null);
+            visitor.VisitSyntaxTree(syntaxTree, null);
             var parsedEntity = visitor.ParsedEntity;
 
             if (parsedEntity != null)
@@ -323,11 +323,11 @@ namespace SchemaMapper
         public ContextVisitor()
         {
             ContextBaseType = "DbContext";
-            DataSetType = "DbSet";
+            DataSetTypes = new HashSet<string> {"DbSet", "IDbSet"};
         }
 
         public string ContextBaseType { get; set; }
-        public string DataSetType { get; set; }
+        public HashSet<string> DataSetTypes { get; set; }
 
         public ParsedContext ParsedContext { get; set; }
 
@@ -357,7 +357,7 @@ namespace SchemaMapper
 
             // look for property to return generic DbSet type
             var memberType = propertyDeclaration.ReturnType as MemberType;
-            if (memberType == null || memberType.MemberName != DataSetType)
+            if (memberType == null || !DataSetTypes.Contains(memberType.MemberName))
                 return base.VisitPropertyDeclaration(propertyDeclaration, data);
 
             // get the first generic type
@@ -388,14 +388,14 @@ namespace SchemaMapper
                 return null;
 
             var parser = new CSharpParser();
-            CompilationUnit compilationUnit;
+            SyntaxTree syntaxTree;
 
             using (var stream = File.OpenText(contextFile))
-                compilationUnit = parser.Parse(stream, contextFile);
+                syntaxTree = parser.Parse(stream, contextFile);
 
             var visitor = new ContextVisitor();
 
-            visitor.VisitCompilationUnit(compilationUnit, null);
+            visitor.VisitSyntaxTree(syntaxTree, null);
             var parsedContext = visitor.ParsedContext;
 
             if (parsedContext != null)

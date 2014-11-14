@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -46,7 +45,7 @@ namespace SchemaMapper
             EntityNaming = EntityNaming.Singular;
             TableNaming = TableNaming.Singular;
             CleanExpressions = new List<string> { @"^\d+" };
-            IgnoreExpressions = new List<string>();
+            RenameRules = new Dictionary<string, string>();
         }
 
         public TableNaming TableNaming { get; set; }
@@ -57,24 +56,19 @@ namespace SchemaMapper
 
         public ContextNaming ContextNaming { get; set; }
 
-        public List<string> IgnoreExpressions { get; set; }
-
         public List<string> CleanExpressions { get; set; }
 
-        public bool InclusionMode { get; set; }
+        public Dictionary<string, string> RenameRules { get; set; }
 
-        public bool IsIgnored(string name)
-        {
-            if (IgnoreExpressions.Count == 0)
-                return false;
+        public bool IncludeViews { get; set; }
 
-            bool isMatch = IgnoreExpressions.Any(regex => Regex.IsMatch(name, regex));
-
-            return InclusionMode ? !isMatch : isMatch;
-        }
 
         public string CleanName(string name)
         {
+            string rename;
+            if (RenameRules.TryGetValue(name, out rename))
+                return rename;
+
             if (CleanExpressions.Count == 0)
                 return name;
 
@@ -93,7 +87,7 @@ namespace SchemaMapper
             if (RelationshipNaming == RelationshipNaming.ListSuffix)
                 return name + "List";
 
-            return StringUtil.ToPascalCase(StringUtil.ToPlural(name));
+            return StringUtil.ToPlural(name);
         }
 
         public string ContextName(string name)
@@ -104,7 +98,7 @@ namespace SchemaMapper
             if (ContextNaming == ContextNaming.TableSuffix)
                 return name + "Table";
 
-            return StringUtil.ToPascalCase(StringUtil.ToPlural(name));
+            return StringUtil.ToPlural(name);
         }
 
         public string EntityName(string name)
@@ -114,7 +108,7 @@ namespace SchemaMapper
             else if (TableNaming != TableNaming.Singular && EntityNaming == EntityNaming.Singular)
                 name = StringUtil.ToSingular(name);
 
-            return StringUtil.ToPascalCase(name);
+            return name;
         }
     }
 
@@ -176,7 +170,6 @@ namespace SchemaMapper
             const string globalContextname = "global::RelationshipName";
             return UniqueName(globalContextname, name);
         }
-
     }
 
     public class Generator
@@ -205,27 +198,26 @@ namespace SchemaMapper
             get { return _settings; }
         }
 
-        public EntityContext Generate(DatabaseSchema databaseSchema)
+        public EntityContext Generate(SchemaSelector databaseSchema)
         {
-            // only DeepLoad when in ignore mode
-            databaseSchema.DeepLoad = !Settings.InclusionMode;
-
             var entityContext = new EntityContext();
-            entityContext.DatabaseName = databaseSchema.Name;
+            entityContext.DatabaseName = databaseSchema.Database.Name;
 
-            string dataContextName = StringUtil.ToPascalCase(databaseSchema.Name) + "Context";
+            string dataContextName = StringUtil.ToPascalCase(entityContext.DatabaseName) + "Context";
             dataContextName = _namer.UniqueClassName(dataContextName);
 
             entityContext.ClassName = dataContextName;
 
-            foreach (TableSchema t in databaseSchema.Tables)
+            var tables = databaseSchema.Tables
+                .Selected()
+                .OrderBy(t => t.SortName)
+                .ToTables();
+
+            foreach (TableSchema t in tables)
             {
-                if (Settings.IsIgnored(t.FullName))
+                if (IsManyToMany(t))
                 {
-                    Debug.WriteLine("Skipping Table: " + t.FullName);
-                }
-                else if (IsManyToMany(t))
-                {
+                    Debug.WriteLine("Many To Many Table: " + t.FullName);
                     CreateManyToMany(entityContext, t);
                 }
                 else
@@ -235,6 +227,22 @@ namespace SchemaMapper
                 }
 
                 OnSchemaItemProcessed(t.FullName);
+            }
+
+            if (Settings.IncludeViews)
+            {
+                var views = databaseSchema.Views
+                    .Selected()
+                    .OrderBy(t => t.SortName)
+                    .ToViews();
+
+                foreach (ViewSchema v in views)
+                {
+                    Debug.WriteLine("Getting View Schema: " + v.FullName);
+                    GetEntity(entityContext, v);
+
+                    OnSchemaItemProcessed(v.FullName);
+                }
             }
 
             return entityContext;
@@ -249,7 +257,7 @@ namespace SchemaMapper
               ?? CreateEntity(entityContext, tableSchema);
 
             if (!entity.Properties.IsProcessed)
-                CreateProperties(entity, tableSchema);
+                CreateProperties(entity, tableSchema.Columns.Selected());
 
             if (processRelationships && !entity.Relationships.IsProcessed)
                 CreateRelationships(entityContext, entity, tableSchema);
@@ -261,7 +269,21 @@ namespace SchemaMapper
             return entity;
         }
 
-        private Entity CreateEntity(EntityContext entityContext, TableSchema tableSchema)
+        private Entity GetEntity(EntityContext entityContext, ViewSchema viewSchema)
+        {
+            string key = viewSchema.FullName;
+
+            Entity entity = entityContext.Entities.ByTable(key)
+              ?? CreateEntity(entityContext, viewSchema);
+
+            if (!entity.Properties.IsProcessed)
+                CreateProperties(entity, viewSchema.Columns);
+
+            entity.IsProcessed = true;
+            return entity;
+        }
+
+        private Entity CreateEntity(EntityContext entityContext, TabularObjectBase tableSchema)
         {
             var entity = new Entity
             {
@@ -290,59 +312,66 @@ namespace SchemaMapper
         }
 
 
-        private void CreateProperties(Entity entity, TableSchema tableSchema)
+        private void CreateProperties(Entity entity, IEnumerable<DataObjectBase> columnSchemaCollection)
         {
-            foreach (ColumnSchema columnSchema in tableSchema.Columns)
+            foreach (DataObjectBase dataObjectBase in columnSchemaCollection)
             {
                 // skip unsupported type
-                if (columnSchema.NativeType.Equals("hierarchyid", StringComparison.OrdinalIgnoreCase)
-                  || columnSchema.NativeType.Equals("sql_variant", StringComparison.OrdinalIgnoreCase))
+                if (dataObjectBase.NativeType.Equals("hierarchyid", StringComparison.OrdinalIgnoreCase)
+                  || dataObjectBase.NativeType.Equals("sql_variant", StringComparison.OrdinalIgnoreCase))
                 {
-                    Debug.WriteLine(string.Format("Skipping column '{0}' because it has an unsupported db type '{1}'.",
-                                                  columnSchema.Name, columnSchema.NativeType));
+                    Debug.WriteLine("Skipping column '{0}' because it has an unsupported db type '{1}'.",
+                        dataObjectBase.Name, dataObjectBase.NativeType);
+
                     continue;
                 }
 
-                Property property = entity.Properties.ByColumn(columnSchema.Name);
+                Property property = entity.Properties.ByColumn(dataObjectBase.Name);
 
                 if (property == null)
                 {
-                    property = new Property { ColumnName = columnSchema.Name };
+                    property = new Property { ColumnName = dataObjectBase.Name };
                     entity.Properties.Add(property);
                 }
 
-                string propertyName = ToPropertyName(entity.ClassName, columnSchema.Name);
+                string propertyName = ToPropertyName(entity.ClassName, dataObjectBase.Name);
                 propertyName = _namer.UniqueName(entity.ClassName, propertyName);
 
                 property.PropertyName = propertyName;
 
-                property.DataType = columnSchema.DataType;
-                property.SystemType = columnSchema.SystemType;
-                property.NativeType = columnSchema.NativeType;
+                property.DataType = dataObjectBase.DataType;
+                property.SystemType = dataObjectBase.SystemType;
+                property.NativeType = dataObjectBase.NativeType;
 
-                property.IsPrimaryKey = columnSchema.IsPrimaryKeyMember;
-                property.IsForeignKey = columnSchema.IsForeignKeyMember;
-                property.IsNullable = columnSchema.AllowDBNull;
+                property.IsNullable = dataObjectBase.AllowDBNull;
 
-                property.IsIdentity = IsIdentity(columnSchema);
-                property.IsRowVersion = IsRowVersion(columnSchema);
-                property.IsAutoGenerated = IsDbGenerated(columnSchema);
+                property.IsIdentity = IsIdentity(dataObjectBase);
+                property.IsRowVersion = IsRowVersion(dataObjectBase);
+                property.IsAutoGenerated = IsDbGenerated(dataObjectBase);
 
-                if (columnSchema.IsUnique)
-                    property.IsUnique = columnSchema.IsUnique;
+                property.Default = GetDefaultValue(dataObjectBase);
 
                 if (property.SystemType == typeof(string)
                   || property.SystemType == typeof(byte[]))
                 {
-                    property.MaxLength = columnSchema.Size;
+                    property.MaxLength = dataObjectBase.Size;
                 }
 
                 if (property.SystemType == typeof(float)
                   || property.SystemType == typeof(double)
                   || property.SystemType == typeof(decimal))
                 {
-                    property.Precision = columnSchema.Precision;
-                    property.Scale = columnSchema.Scale;
+                    property.Precision = dataObjectBase.Precision;
+                    property.Scale = dataObjectBase.Scale;
+                }
+
+                var columnSchema = dataObjectBase as ColumnSchema;
+                if (columnSchema != null)
+                {
+                    property.IsPrimaryKey = columnSchema.IsPrimaryKeyMember;
+                    property.IsForeignKey = columnSchema.IsForeignKeyMember;
+                    if (columnSchema.IsUnique)
+                        property.IsUnique = true;
                 }
 
                 property.IsProcessed = true;
@@ -354,17 +383,8 @@ namespace SchemaMapper
 
         private void CreateRelationships(EntityContext entityContext, Entity entity, TableSchema tableSchema)
         {
-            foreach (TableKeySchema tableKey in tableSchema.ForeignKeys)
+            foreach (TableKeySchema tableKey in tableSchema.ForeignKeys.Selected())
             {
-                if (Settings.IsIgnored(tableKey.ForeignKeyTable.FullName)
-                    || Settings.IsIgnored(tableKey.PrimaryKeyTable.FullName))
-                {
-                    Debug.WriteLine("Skipping relationship '{0}' because table '{1}' or '{2}' is ignored.", 
-                        tableKey.FullName, tableKey.ForeignKeyTable.FullName, tableKey.PrimaryKeyTable.FullName);
-
-                    continue;
-                }
-
                 CreateRelationship(entityContext, entity, tableKey);
             }
 
@@ -385,8 +405,12 @@ namespace SchemaMapper
             bool foreignMembersRequired;
             bool primaryMembersRequired;
 
-            var foreignMembers = GetKeyMembers(foreignEntity, tableKeySchema.ForeignKeyMemberColumns, tableKeySchema.Name, out foreignMembersRequired);
-            var primaryMembers = GetKeyMembers(primaryEntity, tableKeySchema.PrimaryKeyMemberColumns, tableKeySchema.Name, out primaryMembersRequired);
+            List<string> foreignMembers = GetKeyMembers(foreignEntity, tableKeySchema.ForeignKeyMemberColumns, tableKeySchema.Name, out foreignMembersRequired);
+            List<string> primaryMembers = GetKeyMembers(primaryEntity, tableKeySchema.PrimaryKeyMemberColumns, tableKeySchema.Name, out primaryMembersRequired);
+
+            // skip invalid fkeys
+            if (foreignMembers == null || primaryMembers == null)
+                return;
 
             Relationship foreignRelationship = foreignEntity.Relationships
               .FirstOrDefault(r => r.RelationshipName == relationshipName && r.IsForeignKey);
@@ -430,7 +454,6 @@ namespace SchemaMapper
             primaryRelationship.CascadeDelete = isCascadeDelete;
 
             bool isOneToOne = IsOneToOne(tableKeySchema, foreignRelationship);
-
             if (isOneToOne)
                 primaryRelationship.ThisCardinality = primaryMembersRequired ? Cardinality.One : Cardinality.ZeroOrOne;
             else
@@ -536,7 +559,7 @@ namespace SchemaMapper
                     method.IsKey = true;
                     method.SourceName = tableSchema.PrimaryKey.FullName;
 
-                    if (!entity.Methods.Any(m => m.NameSuffix == method.NameSuffix))
+                    if (entity.Methods.All(m => m.NameSuffix != method.NameSuffix))
                         entity.Methods.Add(method);
                 }
             }
@@ -556,7 +579,7 @@ namespace SchemaMapper
                 columns.Add(column);
 
                 Method method = GetMethodFromColumns(entity, columns);
-                if (method != null && !entity.Methods.Any(m => m.NameSuffix == method.NameSuffix))
+                if (method != null && entity.Methods.All(m => m.NameSuffix != method.NameSuffix))
                     entity.Methods.Add(method);
 
                 columns.Clear();
@@ -575,13 +598,16 @@ namespace SchemaMapper
                 method.IsUnique = index.IsUnique;
                 method.IsIndex = true;
 
-                if (!entity.Methods.Any(m => m.NameSuffix == method.NameSuffix))
+                if (entity.Methods.All(m => m.NameSuffix != method.NameSuffix))
                     entity.Methods.Add(method);
             }
         }
 
         private static Method GetMethodFromColumns(Entity entity, IEnumerable<ColumnSchema> columns)
         {
+            if (columns.Any(c => c.Selected() == false))
+                return null;
+
             var method = new Method();
             string methodName = string.Empty;
 
@@ -613,10 +639,10 @@ namespace SchemaMapper
                 var property = entity.Properties.ByColumn(member.Name);
 
                 if (property == null)
-                    throw new InvalidOperationException(string.Format(
-                        "Could not find column {0} for relationship {1}.",
-                        member.Name,
-                        name));
+                {
+                    Debug.WriteLine("Could not find column {0} for relationship {1}.", member.Name, name);
+                    return null;
+                }
 
                 if (!isRequired)
                     isRequired = property.IsRequired;
@@ -659,8 +685,10 @@ namespace SchemaMapper
             if (isFkeyPkey)
                 return true;
 
+            return false;
+
             // if f.key is unique
-            return tableKeySchema.ForeignKeyMemberColumns.All(column => column.IsUnique);
+            //return tableKeySchema.ForeignKeyMemberColumns.All(column => column.IsUnique);
         }
 
         private static bool IsManyToMany(TableSchema tableSchema)
@@ -806,6 +834,24 @@ namespace SchemaMapper
             }
 
             return false;
+        }
+
+        private static string GetDefaultValue(DataObjectBase column)
+        {
+            try
+            {
+                if (!column.ExtendedProperties.Contains(ExtendedPropertyNames.DefaultValue))
+                    return null;
+
+                string value = column.ExtendedProperties[ExtendedPropertyNames.DefaultValue].Value.ToString();
+                return value;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("Error: " + ex.Message);
+            }
+
+            return null;
         }
         #endregion
     }

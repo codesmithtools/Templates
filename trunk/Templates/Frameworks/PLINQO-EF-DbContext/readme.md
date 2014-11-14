@@ -2,6 +2,8 @@
 
 Entity Framework DbContext templates for CodeSmith Generator
 
+[![Build status](https://ci.appveyor.com/api/projects/status/3ms4lgjmuokutiv0?svg=true)](https://ci.appveyor.com/project/LoreSoft/plinqo-entityframework-dbcontext)
+
 ##Download
 
 The PLINQO templates are available on nuget.org via package name `PLINQO.EntityFramework.DbContext`.
@@ -13,10 +15,17 @@ To install PLINQO.EntityFramework.DbContext, run the following command in the Pa
 More information about NuGet package avaliable at
 https://nuget.org/packages/PLINQO.EntityFramework.DbContext
 
+##Development Builds
+
+Development builds are available on the myget.org feed.  A development build is promoted to the main NuGet feed when it's determined to be stable. 
+
+In your Package Manager settings add the following package source for development builds:
+http://www.myget.org/F/loresoft/
+
 
 ## License
 
-Copyright (c) 2012, LoreSoft
+Copyright (c) 2014, LoreSoft
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:

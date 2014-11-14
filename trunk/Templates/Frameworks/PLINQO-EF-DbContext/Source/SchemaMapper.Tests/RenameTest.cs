@@ -10,63 +10,64 @@ using SchemaExplorer.Serialization;
 
 namespace SchemaMapper.Tests
 {
-  [TestClass]
-  public class RenameTest
-  {
-    [TestMethod]
-    public void RenameEntity()
+    [TestClass]
+    public class RenameTest
     {
-      DatabaseSchema databaseSchema = GetDatabaseSchema("Tracker");
-      Assert.IsNotNull(databaseSchema);
+        [TestMethod]
+        public void RenameEntity()
+        {
+            var selector = GetDatabaseSchema("Tracker");
+            Assert.IsNotNull(selector);
 
-      var generator = new Generator();
-      EntityContext entityContext = generator.Generate(databaseSchema);
+            var generator = new Generator();
+            EntityContext entityContext = generator.Generate(selector);
 
-      Assert.IsNotNull(entityContext);
+            Assert.IsNotNull(entityContext);
 
-      var settings = new XmlWriterSettings { Indent = true };
-      var serializer = new XmlSerializer(typeof(EntityContext));
+            var settings = new XmlWriterSettings { Indent = true };
+            var serializer = new XmlSerializer(typeof(EntityContext));
 
-      using (var writer = XmlWriter.Create(@"..\..\Tracker.Before.xml", settings))
-        serializer.Serialize(writer, entityContext);
+            using (var writer = XmlWriter.Create(@"..\..\Tracker.Before.xml", settings))
+                serializer.Serialize(writer, entityContext);
 
-      entityContext.RenameEntity("Task", "TaskRename");
+            entityContext.RenameEntity("Task", "TaskRename");
 
-      using (var writer = XmlWriter.Create(@"..\..\Tracker.After.xml", settings))
-        serializer.Serialize(writer, entityContext);
+            using (var writer = XmlWriter.Create(@"..\..\Tracker.After.xml", settings))
+                serializer.Serialize(writer, entityContext);
+        }
+
+        [TestMethod]
+        public void RenameProperty()
+        {
+            var selector = GetDatabaseSchema("Tracker");
+            Assert.IsNotNull(selector);
+            var generator = new Generator();
+            EntityContext entityContext = generator.Generate(selector);
+
+            Assert.IsNotNull(entityContext);
+
+            var settings = new XmlWriterSettings { Indent = true };
+            var serializer = new XmlSerializer(typeof(EntityContext));
+
+            using (var writer = XmlWriter.Create(@"..\..\Tracker.Before.xml", settings))
+                serializer.Serialize(writer, entityContext);
+
+            entityContext.RenameProperty("Task", "PriorityId", "NewPriorityId");
+
+            using (var writer = XmlWriter.Create(@"..\..\Tracker.After.xml", settings))
+                serializer.Serialize(writer, entityContext);
+        }
+
+
+        private SchemaSelector GetDatabaseSchema(string name)
+        {
+            var databaseSchema = DatabaseSchemaSerializer.GetDatabaseSchemaFromName(name);            
+            
+            var selector = new SchemaSelector(databaseSchema.Provider, databaseSchema.ConnectionString);
+            selector.Database.DeepLoad = true;
+
+            return selector;
+        }
+
     }
-
-    [TestMethod]
-    public void RenameProperty()
-    {
-      DatabaseSchema databaseSchema = GetDatabaseSchema("Tracker");
-      Assert.IsNotNull(databaseSchema);
-
-      var generator = new Generator();
-      EntityContext entityContext = generator.Generate(databaseSchema);
-
-      Assert.IsNotNull(entityContext);
-
-      var settings = new XmlWriterSettings { Indent = true };
-      var serializer = new XmlSerializer(typeof(EntityContext));
-
-      using (var writer = XmlWriter.Create(@"..\..\Tracker.Before.xml", settings))
-        serializer.Serialize(writer, entityContext);
-
-      entityContext.RenameProperty("Task", "PriorityId", "NewPriorityId");
-
-      using (var writer = XmlWriter.Create(@"..\..\Tracker.After.xml", settings))
-        serializer.Serialize(writer, entityContext);
-    }
-
-
-    private DatabaseSchema GetDatabaseSchema(string name)
-    {
-      var db = DatabaseSchemaSerializer.GetDatabaseSchemaFromName(name);
-      db.Database.DeepLoad = true;
-
-      return db;
-    }
-
-  }
 }

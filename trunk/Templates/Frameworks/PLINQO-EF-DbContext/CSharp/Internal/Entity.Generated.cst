@@ -1,4 +1,4 @@
-<%@ Template Language="C#" TargetLanguage="C#" Debug="True" Encoding="UTF-8" %>
+﻿<%@ Template Language="C#" TargetLanguage="C#" Debug="True" Encoding="UTF-8" %>
 
 <%@ Assembly Src="Model.cs" %>
 <%@ Assembly Src="Extensions.cs" %>
@@ -33,6 +33,25 @@ namespace <%= EntityNamespace %>
     {
         public <%= Entity.ClassName.ToSafeName() %>()
         {
+<% foreach(var p in Entity.Properties.Where(p => !string.IsNullOrEmpty(p.Default))) { %>
+<% if(p.SystemType == typeof(DateTime) && Regex.IsMatch(p.Default, @"(sysdatetime|getdate)", RegexOptions.IgnoreCase) ) { %>
+            <%= p.PropertyName.ToSafeName() %> = DateTime.Now;
+<% } else if(p.SystemType == typeof(DateTime) && Regex.IsMatch(p.Default, @"(sysutcdatetime|getutcdate)", RegexOptions.IgnoreCase) ) { %>
+            <%= p.PropertyName.ToSafeName() %> = DateTime.UtcNow;
+<% } else if(p.SystemType == typeof(DateTimeOffset) && Regex.IsMatch(p.Default, @"(sysdatetime|sysdatetimeoffset|getdate)", RegexOptions.IgnoreCase) ) { %>
+            <%= p.PropertyName.ToSafeName() %> = DateTimeOffset.Now;
+<% } else if(p.SystemType == typeof(DateTimeOffset) && Regex.IsMatch(p.Default, @"(sysutcdatetime|getutcdate)", RegexOptions.IgnoreCase) ) { %>
+            <%= p.PropertyName.ToSafeName() %> = DateTimeOffset.UtcNow;
+<% } else if(p.SystemType == typeof(Int16) || p.SystemType == typeof(Int32) || p.SystemType == typeof(Int64) || p.SystemType == typeof(byte)) { %>
+            <%= p.PropertyName.ToSafeName() %> = <%= Regex.Replace(p.Default, @"[\(\) ]", "").Trim() %>;
+<% } else if(p.SystemType == typeof(Decimal) || p.SystemType == typeof(Single) || p.SystemType == typeof(Double)) { %>
+            <%= p.PropertyName.ToSafeName() %> = (<%= p.SystemType %>)<%= Regex.Replace(p.Default, @"[\(\) ]", "").Trim() %>;
+<% } else if(p.SystemType == typeof(string)) { %>
+            <%= p.PropertyName.ToSafeName() %> = "<%= Regex.Replace(p.Default, @"[\(\)']", "").Trim() %>";
+<% } else if(p.SystemType == typeof(bool) && p.Default.Contains("1")) { %>
+            <%= p.PropertyName.ToSafeName() %> = true;
+<% } // defaults%>
+<% } // foreach %>
 <% foreach(var r in Entity.Relationships.Where(e => e.ThisCardinality == Cardinality.Many)) { %>
             <%= r.ThisPropertyName.ToSafeName() %> = new List<<%= r.OtherEntity.ToSafeName() %>>();
 <% } // foreach %>
