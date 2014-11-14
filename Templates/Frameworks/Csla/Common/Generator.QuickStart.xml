@@ -7,24 +7,20 @@
         <!-- Badly formed XML comment ignored for member "P:Generator.QuickStart.ProjectBuilderSettings.FrameworkFolder" -->
         <member name="M:Generator.QuickStart.QuickStartUtils.EnsureMultipleResultSets(System.String)">
             <summary>
-            
             </summary>
             <param name="connectionString"></param>
             <returns></returns>
         </member>
         <member name="M:Generator.QuickStart.Base.BaseTemplate.Generate">
             <summary>
-            
             </summary>
         </member>
         <member name="M:Generator.QuickStart.Base.MasterTemplate.Initialize">
             <summary>
-            
             </summary>
         </member>
         <member name="M:Generator.QuickStart.EntityCodeTemplate.OnEntityChanged">
             <summary>
-            
             </summary>
         </member>
     </members>

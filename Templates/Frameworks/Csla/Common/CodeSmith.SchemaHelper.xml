@@ -6,7 +6,6 @@
     <members>
         <member name="T:CodeSmith.SchemaHelper.AssociationBase`1">
             <summary>
-            
             </summary>
             <typeparam name="T"></typeparam>
         </member>
@@ -317,7 +316,6 @@
         </member>
         <member name="M:CodeSmith.SchemaHelper.PropertyExtensions.FriendlyName(CodeSmith.SchemaHelper.IProperty)">
             <summary>
-            
             </summary>
             <param name="property"></param>
             <returns></returns>
@@ -362,7 +360,6 @@
         </member>
         <member name="M:CodeSmith.SchemaHelper.Configuration.#ctor">
             <summary>
-            
             </summary>
         </member>
         <member name="M:CodeSmith.SchemaHelper.Configuration.EnumRegexIsMatch(System.String,System.Boolean)">
@@ -397,12 +394,11 @@
         </member>
         <member name="P:CodeSmith.SchemaHelper.Configuration.Instance">
             <summary>
-            
             </summary>
         </member>
         <member name="P:CodeSmith.SchemaHelper.Configuration.MaxNumberOfKeyProperties">
             <summary>
-            Set the maximum number of view properties that can be added to the primary keys collection. 
+            Set the maximum number of view properties that can be added to the primary keys collection.
             Entity Framework has a limit of 15 keys that can be on an entity.
             </summary>
         </member>
@@ -413,30 +409,30 @@
         </member>
         <member name="P:CodeSmith.SchemaHelper.Configuration.IncludeManyToManyAssociations">
             <summary>
-            Controls whether Many to Many associations will be created. 
+            Controls whether Many to Many associations will be created.
             When set to false, ManyToMany associations will be treated as 1-0/* and */1-0.
             </summary>
         </member>
         <member name="P:CodeSmith.SchemaHelper.Configuration.CustomProcedureNameFormat">
             <summary>
             The format needed for the custom procedures.
-            
             Sample: usp_cust_{0}_
             </summary>
         </member>
         <member name="P:CodeSmith.SchemaHelper.Configuration.IncludeFunctionExtendedProperties">
             <summary>
-            If set to true, Expensive operations will be executed. This includes getting ExtendedProperty information for Commands and other expensive operations.
+            If set to true, Expensive operations will be executed. This includes getting ExtendedProperty information for Commands
+            and other expensive operations.
             </summary>
         </member>
         <member name="P:CodeSmith.SchemaHelper.Configuration.GenerateViewKeys">
             <summary>
-            Views do not define any keys, but in cases where frameworks need to define a key like entity framework a key is defined as any non-nullable column.
+            Views do not define any keys, but in cases where frameworks need to define a key like entity framework a key is defined
+            as any non-nullable column.
             </summary>
         </member>
         <member name="T:CodeSmith.SchemaHelper.Configuration.Nested">
             <summary>
-            
             </summary>
         </member>
         <member name="F:CodeSmith.SchemaHelper.Configuration.Nested.Current">
@@ -446,7 +442,6 @@
         </member>
         <member name="M:CodeSmith.SchemaHelper.Configuration.Nested.#cctor">
             <summary>
-            
             </summary>
         </member>
         <member name="T:CodeSmith.SchemaHelper.CommandProperty">
@@ -462,7 +457,6 @@
         </member>
         <member name="T:CodeSmith.SchemaHelper.IProperty">
             <summary>
-            
             </summary>
         </member>
         <member name="M:CodeSmith.SchemaHelper.IProperty.IsType(CodeSmith.SchemaHelper.PropertyType)">
@@ -512,6 +506,11 @@
         <member name="P:CodeSmith.SchemaHelper.IProperty.SetterAccess">
             <summary>
             The Setter Access of the IProperty
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.IProperty.IsReadOnly">
+            <summary>
+            Returns true if the property should be treated as read only.
             </summary>
         </member>
         <member name="P:CodeSmith.SchemaHelper.IProperty.SystemType">
@@ -651,6 +650,11 @@
         <member name="P:CodeSmith.SchemaHelper.PropertyBase`1.SetterAccess">
             <summary>
             The Setter Access of the IProperty
+            </summary>
+        </member>
+        <member name="P:CodeSmith.SchemaHelper.PropertyBase`1.IsReadOnly">
+            <summary>
+            Returns true if the property should be treated as read only (Identity, currency, computed column or contains an extended property).
             </summary>
         </member>
         <member name="P:CodeSmith.SchemaHelper.PropertyBase`1.ExtendedProperties">
@@ -829,7 +833,8 @@
         </member>
         <member name="T:CodeSmith.SchemaHelper.CommandParameter">
             <summary>
-            This represents a Parameter to a command object from the Database.  Using a property to inherit the naming Functionality from the Schema Helper.
+            This represents a Parameter to a command object from the Database.  Using a property to inherit the naming
+            Functionality from the Schema Helper.
             </summary>
         </member>
         <member name="M:CodeSmith.SchemaHelper.CommandParameter.#ctor(SchemaExplorer.IParameterSchema,CodeSmith.SchemaHelper.IEntity)">
@@ -975,7 +980,7 @@
         </member>
         <member name="P:CodeSmith.SchemaHelper.IEntity.ConcurrencyProperty">
             <summary>
-            Returns the ConcurrencyProperty of the Entity. 
+            Returns the ConcurrencyProperty of the Entity.
             </summary>
         </member>
         <member name="P:CodeSmith.SchemaHelper.IEntity.HasIdentityProperty">
@@ -1081,7 +1086,6 @@
         </member>
         <member name="M:CodeSmith.SchemaHelper.EntityBase`1.ValidateAllMembers">
             <summary>
-            
             </summary>
         </member>
         <member name="M:CodeSmith.SchemaHelper.EntityBase`1.ToString">
@@ -1097,7 +1101,6 @@
         </member>
         <member name="M:CodeSmith.SchemaHelper.EntityBase`1.GetSearchCriteria(CodeSmith.SchemaHelper.SearchCriteriaType)">
             <summary>
-            
             </summary>
             <param name="criteria"></param>
             <returns></returns>
@@ -1166,7 +1169,7 @@
         </member>
         <member name="P:CodeSmith.SchemaHelper.EntityBase`1.ConcurrencyProperty">
             <summary>
-            Returns the ConcurrencyProperty of the Entity. 
+            Returns the ConcurrencyProperty of the Entity.
             </summary>
         </member>
         <member name="P:CodeSmith.SchemaHelper.EntityBase`1.HasConcurrencyProperty">
@@ -1239,35 +1242,9 @@
             Returns a list of all the Properties of this Entity.
             </summary>
         </member>
-        <member name="T:CodeSmith.SchemaHelper.EntityManager">
-            <summary>
-            
-            </summary>
-        </member>
-        <member name="M:CodeSmith.SchemaHelper.EntityManager.#ctor(CodeSmith.SchemaHelper.IEntityProvider)">
-            <summary>
-            
-            </summary>
-            <param name="provider"></param>
-        </member>
-        <member name="P:CodeSmith.SchemaHelper.EntityManager.Entities">
-            <summary>
-            
-            </summary>
-        </member>
-        <member name="P:CodeSmith.SchemaHelper.EntityManager.ExcludedEntities">
-            <summary>
-            
-            </summary>
-        </member>
         <member name="T:CodeSmith.SchemaHelper.EntityStore">
             <summary>
             Stores all the Entities in a collection. EntityStore is made static so it can be accessed anywhere.
-            </summary>
-        </member>
-        <member name="M:CodeSmith.SchemaHelper.EntityStore.#ctor">
-            <summary>
-            
             </summary>
         </member>
         <member name="M:CodeSmith.SchemaHelper.EntityStore.GetEntity(System.String)">
@@ -1279,7 +1256,6 @@
         </member>
         <member name="M:CodeSmith.SchemaHelper.EntityStore.GetExcludedEntity(System.String)">
             <summary>
-            
             </summary>
             <param name="key"></param>
             <returns></returns>
@@ -1293,7 +1269,6 @@
         </member>
         <member name="P:CodeSmith.SchemaHelper.EntityStore.Instance">
             <summary>
-            
             </summary>
         </member>
         <member name="P:CodeSmith.SchemaHelper.EntityStore.EntityCollection">
@@ -1313,7 +1288,6 @@
         </member>
         <member name="T:CodeSmith.SchemaHelper.EntityStore.Nested">
             <summary>
-            
             </summary>
         </member>
         <member name="F:CodeSmith.SchemaHelper.EntityStore.Nested.Current">
@@ -1323,7 +1297,6 @@
         </member>
         <member name="M:CodeSmith.SchemaHelper.EntityStore.Nested.#cctor">
             <summary>
-            
             </summary>
         </member>
         <member name="T:CodeSmith.SchemaHelper.AssociationNaming">
@@ -1493,7 +1466,6 @@
         </member>
         <member name="M:CodeSmith.SchemaHelper.EntityKey.#ctor">
             <summary>
-            
             </summary>
         </member>
         <member name="P:CodeSmith.SchemaHelper.EntityKey.IsComposite">
@@ -1518,12 +1490,10 @@
         </member>
         <member name="T:CodeSmith.SchemaHelper.SearchCriteria">
             <summary>
-            
             </summary>
         </member>
         <member name="M:CodeSmith.SchemaHelper.SearchCriteria.#ctor(CodeSmith.SchemaHelper.SearchCriteriaType)">
             <summary>
-            
             </summary>
             <param name="type"></param>
         </member>
@@ -1551,7 +1521,6 @@
         </member>
         <member name="P:CodeSmith.SchemaHelper.SearchCriteria.IsUniqueResult">
             <summary>
-            
             </summary>
         </member>
         <member name="P:CodeSmith.SchemaHelper.SearchCriteria.MethodName">
@@ -1582,20 +1551,18 @@
         <member name="M:CodeSmith.SchemaHelper.SchemaExplorerExtensions.IsManyToMany(SchemaExplorer.ITableSchema)">
             <summary>
             Checks to see if a Table is part of a ManyToMany relationship. It checks for the following:
-            
             1) Table must have Two ForeignKeys.
             2) All columns must be either...
-               a) IProperty of the Primary Key.
-               b) IProperty of a Foreign Key.
-               c) A DateTime stamp (CreateDate, EditDate, etc).
-               d) Name matches Version Regex.
+            a) IProperty of the Primary Key.
+            b) IProperty of a Foreign Key.
+            c) A DateTime stamp (CreateDate, EditDate, etc).
+            d) Name matches Version Regex.
             </summary>
             <param name="table"></param>
             <returns></returns>
         </member>
         <member name="M:CodeSmith.SchemaHelper.SchemaExplorerExtensions.IsEnum(SchemaExplorer.ITableSchema)">
             <summary>
-            
             </summary>
             <param name="table"></param>
             <returns></returns>
@@ -1638,7 +1605,6 @@
         <member name="M:CodeSmith.SchemaHelper.SchemaExplorerExtensions.IsFixedLength(SchemaExplorer.IDataObject)">
             <summary>
             Is the column a FixedLength column.
-            
             http://msdn.microsoft.com/en-us/library/aa258271(v=sql.80).aspx
             </summary>
             <param name="column"></param>
@@ -1646,14 +1612,12 @@
         </member>
         <member name="M:CodeSmith.SchemaHelper.SchemaExplorerExtensions.EntityKey(CodeSmith.SchemaHelper.IEntity)">
             <summary>
-            
             </summary>
             <param name="entity"></param>
             <returns></returns>
         </member>
         <member name="M:CodeSmith.SchemaHelper.SchemaExplorerExtensions.ToCollection(System.Collections.Generic.IEnumerable{CodeSmith.SchemaHelper.IEntity})">
             <summary>
-            
             </summary>
             <param name="entities"></param>
             <returns></returns>
@@ -1742,18 +1706,15 @@
         </member>
         <member name="T:CodeSmith.SchemaHelper.SchemaExplorerEntityProvider">
             <summary>
-            
             </summary>
         </member>
         <member name="M:CodeSmith.SchemaHelper.SchemaExplorerEntityProvider.#ctor(SchemaExplorer.DatabaseSchema)">
             <summary>
-            
             </summary>
             <param name="database"></param>
         </member>
         <member name="M:CodeSmith.SchemaHelper.SchemaExplorerEntityProvider.#ctor(SchemaExplorer.TableSchemaCollection,SchemaExplorer.ViewSchemaCollection,SchemaExplorer.CommandSchemaCollection)">
             <summary>
-            
             </summary>
             <param name="tables"></param>
             <param name="views"></param>
@@ -1761,18 +1722,15 @@
         </member>
         <member name="M:CodeSmith.SchemaHelper.SchemaExplorerEntityProvider.Validate">
             <summary>
-            
             </summary>
             <returns></returns>
         </member>
         <member name="M:CodeSmith.SchemaHelper.SchemaExplorerEntityProvider.Load">
             <summary>
-            
             </summary>
         </member>
         <member name="M:CodeSmith.SchemaHelper.SchemaExplorerEntityProvider.Save">
             <summary>
-            
             </summary>
         </member>
         <member name="M:CodeSmith.SchemaHelper.SchemaExplorerEntityProvider.Initialize(SchemaExplorer.TableSchemaCollection,SchemaExplorer.ViewSchemaCollection,SchemaExplorer.CommandSchemaCollection)">
@@ -1794,12 +1752,10 @@
         </member>
         <member name="T:CodeSmith.SchemaHelper.TableAssociation">
             <summary>
-            
             </summary>
         </member>
         <member name="M:CodeSmith.SchemaHelper.TableAssociation.#ctor(SchemaExplorer.ITableKeySchema,CodeSmith.SchemaHelper.AssociationType,CodeSmith.SchemaHelper.IEntity,CodeSmith.SchemaHelper.IEntity,System.Boolean,System.String,CodeSmith.SchemaHelper.IAssociation,System.Boolean,CodeSmith.SchemaHelper.IEntity)">
             <summary>
-            
             </summary>
             <param name="source"></param>
             <param name="associationType"></param>
@@ -1844,7 +1800,6 @@
         </member>
         <member name="M:CodeSmith.SchemaHelper.TableAssociation.FromChildPrimaryKey(CodeSmith.SchemaHelper.TableEntity,SchemaExplorer.ITableKeySchema)">
             <summary>
-            
             </summary>
             <param name="source"></param>
             <param name="tableKeySchema"></param>
@@ -1852,7 +1807,6 @@
         </member>
         <member name="M:CodeSmith.SchemaHelper.TableAssociation.FromChildManyToMany(CodeSmith.SchemaHelper.TableEntity,SchemaExplorer.IMemberColumnSchema,System.String)">
             <summary>
-            
             </summary>
             <param name="source"></param>
             <param name="foreignColumn"></param>
@@ -1861,7 +1815,6 @@
         </member>
         <member name="T:CodeSmith.SchemaHelper.TableEntity">
             <summary>
-            
             </summary>
         </member>
         <member name="M:CodeSmith.SchemaHelper.TableEntity.#ctor(SchemaExplorer.ITableSchema)">
@@ -2012,21 +1965,19 @@
         <member name="T:CodeSmith.SchemaHelper.AccessibilityHelper">
             <summary>
             Helps determine the Access Modifier of Interfaces, Enumerations, Classes, Structs, Properties and Members.
-            
             Documentation: http://msdn.microsoft.com/en-us/library/ms173121.aspx
-            
             TODO: Add support for checking member types.
             TODO: Add better support for checking dissallowed types and unit tests.
             TODO: Add checks to see if the new Accessibility keyword is needed.
-            TODO: Add Support for VB.NET 
+            TODO: Add Support for VB.NET
             </summary>
         </member>
         <member name="M:CodeSmith.SchemaHelper.AccessibilityHelper.EnumerationAccessibility(System.String,System.String,System.Boolean,System.Boolean)">
             <summary>
             Resolves the Accessibility for a Enumeration.
             Valid modifiers: public, protected, internal, private, new
-            Documentation: http://msdn.microsoft.com/en-us/library/wxh6fsc7(v=VS.100).aspx, http://msdn.microsoft.com/en-us/library/sbbt4032(VS.71).aspx
-            
+            Documentation: http://msdn.microsoft.com/en-us/library/wxh6fsc7(v=VS.100).aspx,
+            http://msdn.microsoft.com/en-us/library/sbbt4032(VS.71).aspx
             Note: Enumeration members are always public, and no access modifiers can be applied.
             </summary>
             <param name="modifier"></param>
@@ -2038,13 +1989,13 @@
             <summary>
             Resolves the Accessibility for a Interface.
             Valid modifiers: public, protected, internal, private, new
-            Documentation: http://msdn.microsoft.com/en-us/library/wxh6fsc7(v=VS.100).aspx, http://msdn.microsoft.com/en-us/library/sbbt4032(VS.71).aspx
-            
-            Note: Interfaces declared directly within a namespace can be declared as public or internal and, just like classes and structs, 
-                  interfaces default to internal access. Interface members are always public because the purpose of an interface is to 
-                  enable other types to access a class or struct. No access modifiers can be applied to interface members.
-            
-                  Enumeration members are always public, and no access modifiers can be applied.
+            Documentation: http://msdn.microsoft.com/en-us/library/wxh6fsc7(v=VS.100).aspx,
+            http://msdn.microsoft.com/en-us/library/sbbt4032(VS.71).aspx
+            Note: Interfaces declared directly within a namespace can be declared as public or internal and, just like classes and
+            structs,
+            interfaces default to internal access. Interface members are always public because the purpose of an interface is to
+            enable other types to access a class or struct. No access modifiers can be applied to interface members.
+            Enumeration members are always public, and no access modifiers can be applied.
             </summary>
             <param name="modifier"></param>
             <param name="defaultAccessModifier"></param>
@@ -2055,15 +2006,16 @@
             <summary>
             Resolves the Accessibility for a Struct.
             Valid Access Modifiers: public, protected, internal, private, new
-            Documentation: http://msdn.microsoft.com/en-us/library/wxh6fsc7(v=VS.100).aspx, http://msdn.microsoft.com/en-us/library/sbbt4032(VS.71).aspx
-            
-            Notes: Struct that are declared directly within a namespace (in other words, that are not nested within other classes or structs) can be either public or internal. 
-                   Internal is the default if no access modifier is specified.
-            
-                   Struct members, including nested classes and structs, can be declared as public, internal, or private. 
-                   Class members, including nested classes and structs, can be public, protected internal, protected, internal, or private. 
-                   The access level for class members and struct members, including nested classes and structs, is private by default. 
-                   Private nested types are not accessible from outside the containing type.
+            Documentation: http://msdn.microsoft.com/en-us/library/wxh6fsc7(v=VS.100).aspx,
+            http://msdn.microsoft.com/en-us/library/sbbt4032(VS.71).aspx
+            Notes: Struct that are declared directly within a namespace (in other words, that are not nested within other classes
+            or structs) can be either public or internal.
+            Internal is the default if no access modifier is specified.
+            Struct members, including nested classes and structs, can be declared as public, internal, or private.
+            Class members, including nested classes and structs, can be public, protected internal, protected, internal, or
+            private.
+            The access level for class members and struct members, including nested classes and structs, is private by default.
+            Private nested types are not accessible from outside the containing type.
             </summary>
             <param name="modifier"></param>
             <param name="defaultAccessModifier"></param>
@@ -2075,18 +2027,19 @@
             <summary>
             Resolves the Accessibility for a Class.
             Valid Access Modifiers: public, protected, internal, private, new
-            Documentation: http://msdn.microsoft.com/en-us/library/wxh6fsc7(v=VS.100).aspx, http://msdn.microsoft.com/en-us/library/sbbt4032(VS.71).aspx
-            
-            Notes: Classes that are declared directly within a namespace (in other words, that are not nested within other classes or structs) can be either public or internal. 
-                   Internal is the default if no access modifier is specified.
-            
-                   Derived classes cannot have greater accessibility than their base types. 
-                   In other words, you cannot have a public class B that derives from an internal class A. If this were allowed, 
-                   it would have the effect of making A public, because all protected or internal members of A are accessible from the derived class.
-                   
-                   Class members, including nested classes and structs, can be public, protected internal, protected, internal, or private. 
-                   The access level for class members and struct members, including nested classes and structs, is private by default. 
-                   Private nested types are not accessible from outside the containing type.
+            Documentation: http://msdn.microsoft.com/en-us/library/wxh6fsc7(v=VS.100).aspx,
+            http://msdn.microsoft.com/en-us/library/sbbt4032(VS.71).aspx
+            Notes: Classes that are declared directly within a namespace (in other words, that are not nested within other classes
+            or structs) can be either public or internal.
+            Internal is the default if no access modifier is specified.
+            Derived classes cannot have greater accessibility than their base types.
+            In other words, you cannot have a public class B that derives from an internal class A. If this were allowed,
+            it would have the effect of making A public, because all protected or internal members of A are accessible from the
+            derived class.
+            Class members, including nested classes and structs, can be public, protected internal, protected, internal, or
+            private.
+            The access level for class members and struct members, including nested classes and structs, is private by default.
+            Private nested types are not accessible from outside the containing type.
             </summary>
             <param name="modifier"></param>
             <param name="baseClassModifier"></param>
@@ -2099,23 +2052,25 @@
             <summary>
             Resolves the Accessibility for a Property.
             Valid Access Modifiers: public, protected, protected internal, internal, private, new
-            Documentation: http://msdn.microsoft.com/en-us/library/wxh6fsc7(v=VS.100).aspx, http://msdn.microsoft.com/en-us/library/sbbt4032(VS.71).aspx
-            
-            Note: Class members (including nested classes and structs) can be declared with any of the five types of access. Struct members cannot be 
-                  declared as protected because structs do not support inheritance.
-            
-                  Normally, the accessibility of a member is not greater than the accessibility of the type that contains it. However, a public member of an 
-                  internal class might be accessible from outside the assembly if the member implements interface methods or overrides virtual methods 
-                  that are defined in a public base class.
-            
-                  The type of any member that is a field, property, or event must be at least as accessible as the member itself. Similarly, 
-                  the return type and the parameter types of any member that is a method, indexer, or delegate must be at least as accessible as the member itself.  
-                  For example, you cannot have a public method M that returns a class C unless C is also public. Likewise, you cannot have a protected property of  
-                  type A if A is declared as private.
-            
-                  User-defined operators must always be declared as public. For more information, see operator (C# Reference).
-            
-                  Destructors cannot have accessibility modifiers.
+            Documentation: http://msdn.microsoft.com/en-us/library/wxh6fsc7(v=VS.100).aspx,
+            http://msdn.microsoft.com/en-us/library/sbbt4032(VS.71).aspx
+            Note: Class members (including nested classes and structs) can be declared with any of the five types of access. Struct
+            members cannot be
+            declared as protected because structs do not support inheritance.
+            Normally, the accessibility of a member is not greater than the accessibility of the type that contains it. However, a
+            public member of an
+            internal class might be accessible from outside the assembly if the member implements interface methods or overrides
+            virtual methods
+            that are defined in a public base class.
+            The type of any member that is a field, property, or event must be at least as accessible as the member itself.
+            Similarly,
+            the return type and the parameter types of any member that is a method, indexer, or delegate must be at least as
+            accessible as the member itself.
+            For example, you cannot have a public method M that returns a class C unless C is also public. Likewise, you cannot
+            have a protected property of
+            type A if A is declared as private.
+            User-defined operators must always be declared as public. For more information, see operator (C# Reference).
+            Destructors cannot have accessibility modifiers.
             </summary>
             <param name="getterModifier"></param>
             <param name="setterModifier"></param>
@@ -2124,14 +2079,12 @@
         </member>
         <member name="M:CodeSmith.SchemaHelper.AccessibilityHelper.UpdatePropertyAccessibility``1(CodeSmith.SchemaHelper.PropertyBase{``0})">
             <summary>
-            
             </summary>
             <param name="property"></param>
             <typeparam name="T"></typeparam>
         </member>
         <member name="M:CodeSmith.SchemaHelper.AccessibilityHelper.UpdateAssociationAccessibility``1(CodeSmith.SchemaHelper.AssociationBase{``0})">
             <summary>
-            
             </summary>
             <param name="association"></param>
             <typeparam name="T"></typeparam>
@@ -2148,14 +2101,15 @@
             <summary>
             Resolves the access modifier for a class.
             Valid Access Modifiers: public, protected, internal, private, new
-            Documentation: http://msdn.microsoft.com/en-us/library/wxh6fsc7(v=VS.100).aspx, http://msdn.microsoft.com/en-us/library/sbbt4032(VS.71).aspx
-            
-            Notes: Classes that are declared directly within a namespace (in other words, that are not nested within other classes or structs) can be either public or internal. 
-                   Internal is the default if no access modifier is specified.
-            
-                   Derived classes cannot have greater accessibility than their base types. 
-                   In other words, you cannot have a public class B that derives from an internal class A. If this were allowed, 
-                   it would have the effect of making A public, because all protected or internal members of A are accessible from the derived class.
+            Documentation: http://msdn.microsoft.com/en-us/library/wxh6fsc7(v=VS.100).aspx,
+            http://msdn.microsoft.com/en-us/library/sbbt4032(VS.71).aspx
+            Notes: Classes that are declared directly within a namespace (in other words, that are not nested within other classes
+            or structs) can be either public or internal.
+            Internal is the default if no access modifier is specified.
+            Derived classes cannot have greater accessibility than their base types.
+            In other words, you cannot have a public class B that derives from an internal class A. If this were allowed,
+            it would have the effect of making A public, because all protected or internal members of A are accessible from the
+            derived class.
             </summary>
             <param name="modifier"></param>
             <param name="baseTypeModifier"></param>
@@ -2185,12 +2139,10 @@
         </member>
         <member name="T:CodeSmith.SchemaHelper.Util.NamingConventions">
             <summary>
-            
             </summary>
         </member>
         <member name="M:CodeSmith.SchemaHelper.Util.NamingConventions.PrivateMemberVariableName(System.String,System.Boolean,System.Boolean)">
             <summary>
-            
             </summary>
             <param name="value"></param>
             <param name="useKeywordRenameAlias"></param>
@@ -2199,7 +2151,6 @@
         </member>
         <member name="M:CodeSmith.SchemaHelper.Util.NamingConventions.VariableName(System.String,System.Boolean,System.Boolean)">
             <summary>
-            
             </summary>
             <param name="value"></param>
             <param name="useKeywordRenameAlias"></param>
@@ -2208,7 +2159,6 @@
         </member>
         <member name="M:CodeSmith.SchemaHelper.Util.NamingConventions.PropertyName(System.String,System.Boolean,System.Boolean)">
             <summary>
-            
             </summary>
             <param name="value"></param>
             <param name="useKeywordRenameAlias"></param>
@@ -2236,7 +2186,6 @@
         </member>
         <member name="M:CodeSmith.SchemaHelper.Util.NamingConventions.GetSafeName(System.String,System.String)">
             <summary>
-            
             </summary>
             <param name="schema"></param>
             <param name="name"></param>
@@ -2244,7 +2193,6 @@
         </member>
         <member name="M:CodeSmith.SchemaHelper.Util.NamingConventions.GetSafeName(System.String)">
             <summary>
-            
             </summary>
             <param name="name"></param>
             <returns></returns>
@@ -2288,7 +2236,8 @@
         </member>
         <member name="M:CodeSmith.SchemaHelper.ViewEntity.LoadKeys">
             <summary>
-            Views do not define any keys, but in cases where frameworks need to define a key like entity framework a key is defined as any non-nullable column.
+            Views do not define any keys, but in cases where frameworks need to define a key like entity framework a key is defined
+            as any non-nullable column.
             </summary>
         </member>
         <member name="M:CodeSmith.SchemaHelper.ViewEntity.LoadProperties">
