@@ -98,6 +98,10 @@ namespace CodeSmith.SchemaHelper
 
             foreach (var property in members)
             {
+                if (property.ExtendedProperties.ContainsKey(SchemaHelper.Configuration.Instance.IsReadOnlyColumnExtendedProperty)) {
+                    continue;
+                }
+
                 string className = String.Empty;
                 string includeThisPrefix = !isObjectFactory ? "Me." : String.Empty;
                 string propertyName = property.Name;
