@@ -36,7 +36,7 @@
 
 <% foreach(IProperty property in Entity.GetProperties(PropertyType.NoConcurrency)){ %>
             //// <%= property.Name %>
-<% if (property.IsReadOnly()) { %>
+<% if (property.IsReadOnly) { %>
             // AuthorizationRules.AllowWrite(<%= property.PrivateMemberVariableName %>Property, canWrite);
 <% } %>
             // AuthorizationRules.AllowRead(<%= property.PrivateMemberVariableName %>Property, canRead);

@@ -29,7 +29,7 @@ if (UseMemberVariables){ %>
         public <%= property.SystemType %> <%= property.Name %>
         {
             get { return GetProperty(<%= property.PrivateMemberVariableName %>Property, <%= property.PrivateMemberVariableName %>); }
-            <% if(property.IsReadOnly()) { %>internal <% } %>set { SetProperty(<%= property.PrivateMemberVariableName %>Property, ref <%= property.PrivateMemberVariableName %>, value); }
+            <% if(property.IsReadOnly) { %>internal <% } %>set { SetProperty(<%= property.PrivateMemberVariableName %>Property, ref <%= property.PrivateMemberVariableName %>, value); }
         }
 
 <%if (property.IsType(PropertyType.Key) && !property.IsType(PropertyType.Identity)) { %>
@@ -54,7 +54,7 @@ if (UseMemberVariables){ %>
         public <%= property.SystemType %> <%= property.Name %>
         {
             get { return GetProperty(<%= property.PrivateMemberVariableName %>Property); }
-            <% if(property.IsReadOnly()) { %>internal <% } %>set{ SetProperty(<%= property.PrivateMemberVariableName %>Property, value); }
+            <% if(property.IsReadOnly) { %>internal <% } %>set{ SetProperty(<%= property.PrivateMemberVariableName %>Property, value); }
         }
 
 <%if (property.IsType(PropertyType.Key) && !property.IsType(PropertyType.Identity)) { %>

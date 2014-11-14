@@ -9,25 +9,6 @@ namespace CodeSmith.SchemaHelper
     /// </summary>
     public static class MemberExtensions
     {
-        /// <summary>
-        /// Returns true if the property is of type Identity / Concurrency / Computed
-        /// </summary>
-        /// <param name="property"></param>
-        /// <returns></returns>
-        public static bool IsReadOnly(this IProperty property)
-        {
-            if (property.IsType(PropertyType.Identity))
-                return true;
-
-            if (property.IsType(PropertyType.Concurrency))
-                return true;
-
-            if (property.IsType(PropertyType.Computed))
-                return true;
-
-            return false;
-        }
-
         public static string GetReaderMethod(this IProperty property)
         {
             var prop = property as ISchemaProperty;
