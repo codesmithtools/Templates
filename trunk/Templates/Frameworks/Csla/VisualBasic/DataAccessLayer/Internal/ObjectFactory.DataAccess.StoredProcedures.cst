@@ -54,21 +54,21 @@ Namespace <%= DataProjectName %>
     
             Using BypassPropertyChecks(item)
                 ' Default values.
-<% If (Entity.HasKey) Then %>
+<% If(Entity.HasKey) Then %>
     <% For Each prop As IProperty In Entity.GetProperties(PropertyType.Key)
     If (prop.SystemType = "System.Guid") Then %>
                 item.<%=prop.Name %> = Guid.NewGuid()
     <% End If
     Next
+End If
     For Each association As IAssociation In Entity.Associations
         For Each prop As AssociationProperty In association.Properties
-    If (prop.Property.SystemType = "System.String" And Not prop.Property.IsType(PropertyType.Identity) And prop.Property.IsType(PropertyType.Foreign)) Then %>
+            If (prop.Property.SystemType = "System.String" And Not prop.Property.IsType(PropertyType.Identity) And prop.Property.IsType(PropertyType.Foreign)) Then %>
                 item.<%= prop.Property.Name %> = "BN"
-    <% End If
-    Next
+            <% End If
+        Next
     Next
     %>
-<% End If %>
     
                 CheckRules(item)
                 MarkNew(item)
@@ -216,15 +216,15 @@ End If %>
             If Not (stopProccessingChildren) Then
                 ' Update Child Items.
     <%-- One-To-Zero-Or-One --%>
-    <% For Each association As IAssociation In Entity.Associations.Where(Function(a) a.AssociationType = AssociationType.OneToZeroOrOne OrElse a.AssociationType = AssociationType.OneToOne) %>
+    <% For Each association As IAssociation In Entity.Associations.Where(Function(a) (a.AssociationType = AssociationType.OneToZeroOrOne OrElse a.AssociationType = AssociationType.OneToOne) And Not IsReadOnly(a, "InfoList")) %>
                 Update_<%= association.Name %>_<%= association.Name %>_<%= StringUtil.ToPascalCase(association.AssociationKeyName) %>(item)
     <% Next %>
     <%-- Many-To-One --%>
-    <% For Each association As IAssociation In Entity.Associations.Where(Function(a) a.AssociationType = AssociationType.ManyToOne OrElse a.AssociationType = AssociationType.ManyToZeroOrOne) %>
+    <% For Each association As IAssociation In Entity.Associations.Where(Function(a) (a.AssociationType = AssociationType.ManyToOne OrElse a.AssociationType = AssociationType.ManyToZeroOrOne) And Not IsReadOnly(a, "InfoList")) %>
                 Update_<%= association.Name %>_<%= association.Name %>_<%= StringUtil.ToPascalCase(association.AssociationKeyName) %>(item)
     <% Next %>
     <%-- One-To-Many & Many-To-Many --%>
-    <% For Each association As IAssociation In Entity.Associations.Where(Function(a) a.AssociationType = AssociationType.OneToMany OrElse a.AssociationType = AssociationType.OneToOne OrElse a.AssociationType = AssociationType.OneToZeroOrOne OrElse a.AssociationType = AssociationType.ZeroOrOneToMany) %>
+    <% For Each association As IAssociation In Entity.Associations.Where(Function(a) (a.AssociationType = AssociationType.OneToMany OrElse a.AssociationType = AssociationType.OneToOne OrElse a.AssociationType = AssociationType.OneToZeroOrOne OrElse a.AssociationType = AssociationType.ZeroOrOneToMany) And Not IsReadOnly(a, "InfoList")) %>
                 Update_<%= association.Name %>_<%= association.Name %>_<%= StringUtil.ToPascalCase(association.AssociationKeyName) %>(item)
     <% Next %>
             End If
@@ -261,7 +261,7 @@ End If %>
             If (cancel) Then
                 Return
             End If
-    
+
             ' Don't update If the item isn't dirty.
             If (item.IsDirty) Then
     
@@ -278,24 +278,26 @@ End If %>
     <%= association.SearchCriteria.BuildUpdateStatements("itemToUpdate", "item.") %>
                     Next
     <% Next %>
-    
+
                     ' Update Child Items.
     <%-- One-To-Zero-Or-One --%>
-    <% For Each association As IAssociation In Entity.Associations.Where(Function(a) a.AssociationType = AssociationType.OneToZeroOrOne OrElse a.AssociationType = AssociationType.OneToOne) %>
+    <% For Each association As IAssociation In Entity.Associations.Where(Function(a) (a.AssociationType = AssociationType.OneToZeroOrOne OrElse a.AssociationType = AssociationType.OneToOne) And Not IsReadOnly(a, "InfoList")) %>
                     Update_<%= association.Name %>_<%= association.Name %>_<%= StringUtil.ToPascalCase(association.AssociationKeyName) %>(item)
     <% Next %>
     <%-- Many-To-One --%>
-    <% For Each association As IAssociation In Entity.Associations.Where(Function(a) a.AssociationType = AssociationType.ManyToOne OrElse a.AssociationType = AssociationType.ManyToZeroOrOne) %>
+    <% For Each association As IAssociation In Entity.Associations.Where(Function(a) (a.AssociationType = AssociationType.ManyToOne OrElse AssociationType.ManyToZeroOrOne) And Not IsReadOnly(a, "InfoList")) %>
                     Update_<%= association.Name %>_<%= association.Name %>_<%= StringUtil.ToPascalCase(association.AssociationKeyName) %>(item)
     <% Next %>
     <%-- One-To-Many & Many-To-Many --%>
-    <% For Each association As IAssociation In Entity.Associations.Where(Function(a) a.AssociationType = AssociationType.OneToMany OrElse a.AssociationType = AssociationType.ZeroOrOneToMany OrElse a.AssociationType = AssociationType.ManyToMany) %>
+    <% For Each association As IAssociation In Entity.Associations.Where(Function(a) (a.AssociationType = AssociationType.OneToMany OrElse a.AssociationType = AssociationType.ZeroOrOneToMany OrElse a.AssociationType = AssociationType.ManyToMany) And Not IsReadOnly(a, "InfoList")) %>
                     Update_<%= association.Name %>_<%= association.Name %>_<%= StringUtil.ToPascalCase(association.AssociationKeyName) %>(item)
     <% Next %>
         
                     ' Delete the old.
                     Dim criteria As New <%= CriteriaClassName %>()
+<% If(Entity.HasKey) Then %>
                     <%= Entity.GetProperties(PropertyType.Key).BuildObjectInitializer(true, false, true) %>
+<% End If %>
                     Delete(criteria)
         
                     ' Mark the original as the new one.
@@ -304,14 +306,14 @@ End If %>
     If Not(prop.IsType(PropertyType.Identity)) Then %>
                     item.Original<%= prop.Name %> = item.<%= prop.Name %>
     <% End If
-    Next 
-End If %>
+    Next %>
+<% End If %>
 
                     MarkOld(item)
                     CheckRules(item)
-    
+
                     OnUpdated()
-    
+
                     Return
                 End If
     
@@ -347,13 +349,14 @@ End If %>
                 End Using
             End If
     
-<% If (Entity.HasKey) Then %>
+<% If(Entity.HasKey) Then %>
     <% For Each prop As IProperty In Entity.GetProperties(PropertyType.Key)
         If Not (prop.IsType(PropertyType.Identity)) Then %>
             item.Original<%= prop.Name %> = item.<%= prop.Name %>
-    <%  End If
-    Next
-End If %>
+    <% End If
+    Next %>
+<% End If %>
+
 
             MarkOld(item)
             CheckRules(item)
@@ -361,15 +364,15 @@ End If %>
             If Not (stopProccessingChildren) Then
                 ' Update Child Items.
     <%-- One-To-Zero-Or-One --%>
-    <% For Each association As IAssociation In Entity.Associations.Where(Function(a) a.AssociationType = AssociationType.OneToZeroOrOne OrElse a.AssociationType = AssociationType.OneToOne) %>
+    <% For Each association As IAssociation In Entity.Associations.Where(Function(a) (a.AssociationType = AssociationType.OneToZeroOrOne OrElse a.AssociationType = AssociationType.OneToOne) And Not IsReadOnly(a, "InfoList")) %>
                 Update_<%= association.Name %>_<%= association.Name %>_<%= StringUtil.ToPascalCase(association.AssociationKeyName) %>(item)
     <% Next %>
     <%-- Many-To-One --%>
-    <% For Each association As IAssociation In Entity.Associations.Where(Function(a) a.AssociationType = AssociationType.ManyToOne OrElse a.AssociationType = AssociationType.ManyToZeroOrOne) %>
+    <% For Each association As IAssociation In Entity.Associations.Where(Function(a) (a.AssociationType = AssociationType.ManyToOne OrElse a.AssociationType = AssociationType.ManyToZeroOrOne) And Not IsReadOnly(a, "InfoList")) %>
                 Update_<%= association.Name %>_<%= association.Name %>_<%= StringUtil.ToPascalCase(association.AssociationKeyName) %>(item)
     <% Next %>
     <%-- One-To-Many & Many-To-Many --%>
-    <% For Each association As IAssociation In Entity.Associations.Where(Function(a) a.AssociationType = AssociationType.OneToMany OrElse a.AssociationType = AssociationType.ZeroOrOneToMany OrElse a.AssociationType = AssociationType.ManyToMany) %>
+    <% For Each association As IAssociation In Entity.Associations.Where(Function(a) (a.AssociationType = AssociationType.OneToMany OrElse a.AssociationType = AssociationType.ZeroOrOneToMany OrElse a.AssociationType = AssociationType.ManyToMany) And Not IsReadOnly(a, "InfoList")) %>
                 Update_<%= association.Name %>_<%= association.Name %>_<%= StringUtil.ToPascalCase(association.AssociationKeyName) %>(item)
     <% Next %>
             End If
@@ -399,12 +402,18 @@ End If %>
             End If
     
             Dim criteria As New <%= CriteriaClassName %>()
+<% If(Entity.HasKey) Then %>
     <%= Entity.GetProperties(PropertyType.Key).BuildObjectInitializer(True) %>
+<% End If %>
             DoDelete(criteria)
 
             MarkNew(item)
         End Sub
 
+        ''' <summary>
+        ''' This call to delete is for immediate deletion and doesn't keep track of any entity state.
+        ''' </summary>
+        ''' <param name="criteria">The Criteria.</param>
         Private Sub DoDelete(ByVal criteria As <%= Entity.Name %>Criteria)
             Dim cancel As Boolean = False
             OnDeleting(criteria, cancel)
@@ -435,17 +444,18 @@ End If %>
     
         Public Function Map(ByVal reader As SafeDataReader) As <%= Entity.Name %>
             Dim item As <%= Entity.Name %> = CType(Activator.CreateInstance(GetType(<%= Entity.Name %>), True), <%= Entity.Name %>)
+<% If Not(IsReadOnlyBusinessObject) Then %>
             Using BypassPropertyChecks(item)
     <% If Not(Entity.ConcurrencyProperty Is Nothing) Then %>
                 item.<%= Entity.ConcurrencyProperty.Name %> = ADOHelper.GetBytes(reader, "<%= Entity.ConcurrencyProperty.KeyName %>")
     <% End If %>
-    <% for each prop as IProperty In Entity.GetProperties(PropertyType.NoConcurrency) 
+    <% For Each prop as IProperty In Entity.GetProperties(PropertyType.NoConcurrency) 
         If prop.IsNullable And Not prop.SystemType = "System.String" And Not prop.SystemType = "System.Byte()" Then %>
                 item.<%= prop.Name %> = If(reader.IsDBNull("<%= prop.KeyName %>"), Nothing, <%If not prop.HasByteArrayColumn() Then %>reader.<%= prop.GetReaderMethod() %>("<%= prop.KeyName %>")<% else %>ADOHelper.GetBytes(reader, "<%= prop.KeyName %>")<% End If %>)
     <%If(prop.IsType(PropertyType.Key) And Not prop.IsType(PropertyType.Identity)) %>
                 item.Original<%= prop.Name %> = If(reader.IsDBNull("<%= prop.KeyName %>"), Nothing, <%If not prop.HasByteArrayColumn() Then %>reader.<%= prop.GetReaderMethod() %>("<%= prop.KeyName %>")<% else %>ADOHelper.GetBytes(reader, "<%= prop.KeyName %>")<% End If %>)
     <% End If %>
-    <% Else%>
+    <% Else %>
                 item.<%= prop.Name %> = <%If not prop.HasByteArrayColumn() Then %>reader.<%= prop.GetReaderMethod() %>("<%= prop.KeyName %>")<% else %>ADOHelper.GetBytes(reader, "<%= prop.KeyName %>")<% End If %>
     <%If(prop.IsType(PropertyType.Key) And Not prop.IsType(PropertyType.Identity)) %>
                 item.Original<%= prop.Name %> = <%If not prop.HasByteArrayColumn() Then %>reader.<%= prop.GetReaderMethod() %>("<%= prop.KeyName %>")<% else %>ADOHelper.GetBytes(reader, "<%= prop.KeyName %>")<% End If %>
@@ -453,6 +463,15 @@ End If %>
     End If %>
     <% Next %>
             End Using
+<% Else %>
+    <% For Each prop as IProperty In Entity.GetProperties(PropertyType.NoConcurrency) 
+        If prop.IsNullable And Not prop.SystemType = "System.String" And Not prop.SystemType = "System.Byte()" Then %>
+                LoadProperty(item, <%= BusinessClassName %>.<%= prop.PrivateMemberVariableName %>Property, If(reader.IsDBNull("<%= prop.KeyName %>"), Nothing, <%If not prop.HasByteArrayColumn() Then %>reader.<%= prop.GetReaderMethod() %>("<%= prop.KeyName %>")<% else %>ADOHelper.GetBytes(reader, "<%= prop.KeyName %>")<% End If %>))
+    <% Else %>
+                LoadProperty(item, <%= BusinessClassName %>.<%= prop.PrivateMemberVariableName %>Property, <%If not prop.HasByteArrayColumn() Then %>reader.<%= prop.GetReaderMethod() %>("<%= prop.KeyName %>")<% else %>ADOHelper.GetBytes(reader, "<%= prop.KeyName %>")<% End If %>)
+    <% End If %>
+    <% Next %>
+<% End If %>
 
             MarkOld(item)
     <% If(IsChildBusinessObject) Then %>
@@ -463,7 +482,7 @@ End If %>
         End Function
     
     <%-- One-To-Zero-Or-One --%>
-    <% For Each association As IAssociation In Entity.Associations.Where(Function(a) a.AssociationType = AssociationType.OneToZeroOrOne OrElse a.AssociationType = AssociationType.OneToOne) %>
+    <% For Each association As IAssociation In Entity.Associations.Where(Function(a) (a.AssociationType = AssociationType.OneToZeroOrOne OrElse a.AssociationType = AssociationType.OneToOne) And Not IsReadOnly(a, "InfoList")) %>
         'Associations.Where(Function(a) a.AssociationType = AssociationType.OneToZeroOrOne OrElse a.AssociationType = AssociationType.OneToOne)
         Private Shared Sub Update_<%= association.Name %>_<%= association.Name %>_<%= StringUtil.ToPascalCase(association.AssociationKeyName) %>(ByRef item As <%= Entity.Name %>)
     <%= association.SearchCriteria.BuildUpdateStatements("item." + association.Name) %>
@@ -473,7 +492,7 @@ End If %>
         End Sub
     <% Next %>
     <%-- Many-To-One --%>
-    <% For Each association As IAssociation In Entity.Associations.Where(Function(a) a.AssociationType = AssociationType.ManyToOne OrElse a.AssociationType = AssociationType.ManyToZeroOrOne) %>
+    <% For Each association As IAssociation In Entity.Associations.Where(Function(a) (a.AssociationType = AssociationType.ManyToOne OrElse a.AssociationType = AssociationType.ManyToZeroOrOne) And Not IsReadOnly(a, "InfoList")) %>
         'Associations.Where(Function(a) a.AssociationType = AssociationType.ManyToOne OrElse a.AssociationType = AssociationType.ManyToZeroOrOne)
         Private Shared Sub Update_<%= association.Name %>_<%= association.Name %>_<%= StringUtil.ToPascalCase(association.AssociationKeyName) %>(ByRef item As <%= Entity.Name %>)
     <%= association.SearchCriteria.BuildUpdateStatements("item." + association.Name) %>
@@ -483,7 +502,7 @@ End If %>
         End Sub
     <% Next %>
     <%-- One-To-Many & Many-To-Many --%>
-    <% For Each association As IAssociation In Entity.Associations.Where(Function(a) a.AssociationType = AssociationType.OneToMany OrElse a.AssociationType = AssociationType.ZeroOrOneToMany OrElse a.AssociationType = AssociationType.ManyToMany) %>
+    <% For Each association As IAssociation In Entity.Associations.Where(Function(a) (a.AssociationType = AssociationType.OneToMany OrElse a.AssociationType = AssociationType.ZeroOrOneToMany OrElse a.AssociationType = AssociationType.ManyToMany) And Not IsReadOnly(a, "InfoList")) %>
         'Where(Function(a) a.AssociationType = AssociationType.OneToMany OrElse a.AssociationType = AssociationType.ZeroOrOneToMany OrElse a.AssociationType = AssociationType.ManyToMany)
         Private Shared Sub Update_<%= association.Name %>_<%= association.Name %>_<%= StringUtil.ToPascalCase(association.AssociationKeyName) %>(ByRef item As <%= Entity.Name %>)
             For Each itemToUpdate As <%= association.TypeName %> In item.<%= association.Name %>

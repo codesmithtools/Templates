@@ -5,6 +5,7 @@
 <%@ Assembly Name="Generator.CSLA" Path="..\..\Common" %>
 <%@ Import Namespace="CodeSmith.SchemaHelper" %>
 <%@ Import Namespace="Generator.CSLA" %>
+<%@ Import Namespace="System.Linq" %>
 
     <% If DataAccessImplementation = DataAccessMethod.ObjectFactoryNone OrElse DataAccessImplementation = DataAccessMethod.ObjectFactoryParameterizedSQL OrElse DataAccessImplementation = DataAccessMethod.ObjectFactoryStoredProcedures Then %>
 #Region "Overridden properties"
@@ -19,19 +20,19 @@
                     End If
     
     <%-- One-To-Zero-Or-One --%>
-    <% For Each association As IAssociation In Entity.Associations.Where(Function(a) a.AssociationType = AssociationType.OneToZeroOrOne OrElse a.AssociationType = AssociationType.OneToOne) %>
+    <% For Each association As IAssociation In Entity.Associations.Where(Function(a) (a.AssociationType = AssociationType.OneToZeroOrOne OrElse a.AssociationType = AssociationType.OneToOne) And Not IsReadOnlyBusinessObject(a, "InfoList")) %>
                     If (FieldManager.FieldExists(<%= association.PrivateMemberVariableName %>Property) AndAlso <%= association.Name %>.IsDirty) Then
                         Return True
                     End If
     <% Next %>
     <%-- Many-To-One --%>
-    <% For Each association As IAssociation In Entity.Associations.Where(Function(a) a.AssociationType = AssociationType.ManyToOne OrElse a.AssociationType = AssociationType.ManyToZeroOrOne) %>
+    <% For Each association As IAssociation In Entity.Associations.Where(Function(a) (a.AssociationType = AssociationType.ManyToOne OrElse a.AssociationType = AssociationType.ManyToZeroOrOne) And Not IsReadOnlyBusinessObject(a, "InfoList")) %>
                     If (FieldManager.FieldExists(<%= association.PrivateMemberVariableName %>Property) AndAlso <%= association.Name %>.IsDirty) Then
                         Return True
                     End If
     <% Next %>
     <%-- One-To-Many & Many-To-Many --%>
-    <% For Each association As IAssociation In Entity.Associations.Where(Function(a) a.AssociationType = AssociationType.OneToMany OrElse a.AssociationType = AssociationType.OneToOne OrElse a.AssociationType = AssociationType.OneToZeroOrOne OrElse a.AssociationType = AssociationType.ZeroOrOneToMany) %>
+    <% For Each association As IAssociation In Entity.Associations.Where(Function(a) (a.AssociationType = AssociationType.OneToMany OrElse a.AssociationType = AssociationType.OneToOne OrElse a.AssociationType = AssociationType.OneToZeroOrOne OrElse a.AssociationType = AssociationType.ZeroOrOneToMany) And Not IsReadOnlyBusinessObject(a, "InfoList")) %>
                     If (FieldManager.FieldExists(<%= association.PrivateMemberVariableName %>Property) AndAlso <%= association.Name %>.IsDirty) Then
                         Return True
                     End If

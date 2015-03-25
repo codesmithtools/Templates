@@ -187,26 +187,27 @@ if(property.Property.SystemType == "System.String" && !property.Property.IsType(
                 }
             }
 
-<% if(Entity.HasKey) { foreach(IProperty property in Entity.GetProperties(PropertyType.Key)) { if(!property.IsType(PropertyType.Identity)) {%>
+<% if(Entity.HasKey) {
+    foreach(var property in Entity.GetProperties(PropertyType.Key)) { if(!property.IsType(PropertyType.Identity)) {%>
             item.Original<%= property.Name %> = item.<%= property.Name %>;
 <% } } } %>
 
             MarkOld(item);
             CheckRules(item);
-            
+
             if(!stopProccessingChildren)
             {
             // Update Child Items.
 <%-- One-To-Zero-Or-One --%>
-<% foreach(IAssociation association in Entity.Associations.Where(a => a.AssociationType == AssociationType.OneToZeroOrOne || a.AssociationType == AssociationType.OneToOne)) { %>
+<% foreach(IAssociation association in Entity.Associations.Where(a => (a.AssociationType == AssociationType.OneToZeroOrOne || a.AssociationType == AssociationType.OneToOne) && !IsReadOnly(a, "InfoList"))) { %>
                 Update_<%= association.Name %>_<%= association.Name %>_<%= StringUtil.ToPascalCase(association.AssociationKeyName) %>(ref item);
 <% } %>
 <%-- Many-To-One --%>
-<% foreach(IAssociation association in Entity.Associations.Where(a => a.AssociationType == AssociationType.ManyToOne || a.AssociationType == AssociationType.ManyToZeroOrOne)) { %>
+<% foreach(IAssociation association in Entity.Associations.Where(a => (a.AssociationType == AssociationType.ManyToOne || a.AssociationType == AssociationType.ManyToZeroOrOne) && !IsReadOnly(a, "InfoList"))) { %>
                 Update_<%= association.Name %>_<%= association.Name %>_<%= StringUtil.ToPascalCase(association.AssociationKeyName) %>(ref item);
 <% } %>
 <%-- One-To-Many & Many-To-Many --%>
-<% foreach(IAssociation association in Entity.Associations.Where(a => a.AssociationType == AssociationType.OneToMany  || a.AssociationType == AssociationType.ZeroOrOneToMany  || a.AssociationType == AssociationType.ManyToMany)) { %>
+<% foreach(IAssociation association in Entity.Associations.Where(a => (a.AssociationType == AssociationType.OneToMany  || a.AssociationType == AssociationType.ZeroOrOneToMany  || a.AssociationType == AssociationType.ManyToMany) && !IsReadOnly(a, "InfoList"))) { %>
                 Update_<%= association.Name %>_<%= association.Name %>_<%= StringUtil.ToPascalCase(association.AssociationKeyName) %>(ref item);
 <% } %>
             }
@@ -272,15 +273,15 @@ if(property.Property.SystemType == "System.String" && !property.Property.IsType(
 
                     // Update Children
 <%-- One-To-Zero-Or-One --%>
-<% foreach(IAssociation association in Entity.Associations.Where(a => a.AssociationType == AssociationType.OneToZeroOrOne || a.AssociationType == AssociationType.OneToOne)) { %>
+<% foreach(IAssociation association in Entity.Associations.Where(a => (a.AssociationType == AssociationType.OneToZeroOrOne || a.AssociationType == AssociationType.OneToOne) && !IsReadOnly(a, "InfoList"))) { %>
                     Update_<%= association.Name %>_<%= association.Name %>_<%= StringUtil.ToPascalCase(association.AssociationKeyName) %>(ref item);
 <% } %>
 <%-- Many-To-One --%>
-<% foreach(IAssociation association in Entity.Associations.Where(a => a.AssociationType == AssociationType.ManyToOne || a.AssociationType == AssociationType.ManyToZeroOrOne)) { %>
+<% foreach(IAssociation association in Entity.Associations.Where(a => (a.AssociationType == AssociationType.ManyToOne || a.AssociationType == AssociationType.ManyToZeroOrOne) && !IsReadOnly(a, "InfoList"))) { %>
                     Update_<%= association.Name %>_<%= association.Name %>_<%= StringUtil.ToPascalCase(association.AssociationKeyName) %>(ref item);
 <% } %>
 <%-- One-To-Many & Many-To-Many --%>
-<% foreach(IAssociation association in Entity.Associations.Where(a => a.AssociationType == AssociationType.OneToMany  || a.AssociationType == AssociationType.ZeroOrOneToMany  || a.AssociationType == AssociationType.ManyToMany)) { %>
+<% foreach(IAssociation association in Entity.Associations.Where(a => (a.AssociationType == AssociationType.OneToMany  || a.AssociationType == AssociationType.ZeroOrOneToMany  || a.AssociationType == AssociationType.ManyToMany) && !IsReadOnly(a, "InfoList"))) { %>
                     Update_<%= association.Name %>_<%= association.Name %>_<%= StringUtil.ToPascalCase(association.AssociationKeyName) %>(ref item);
 <% } %>
     
@@ -294,7 +295,8 @@ if(property.Property.SystemType == "System.String" && !property.Property.IsType(
                     Delete(criteria);
     
                     // Mark the original as the new one.
-<% if(Entity.HasKey) { foreach(var property in Entity.GetProperties(PropertyType.Key)) { if(!property.IsType(PropertyType.Identity)) { %>
+<% if(Entity.HasKey) {
+    foreach(IProperty property in Entity.GetProperties(PropertyType.Key)) { if(!property.IsType(PropertyType.Identity)) { %>
                     item.Original<%= property.Name %> = item.<%= property.Name %>;
 <% } } } %>
 
@@ -357,21 +359,22 @@ if(property.Property.SystemType == "System.String" && !property.Property.IsType(
             {
                 // Update Child Items.
 <%-- One-To-Zero-Or-One --%>
-<% foreach(IAssociation association in Entity.Associations.Where(a => a.AssociationType == AssociationType.OneToZeroOrOne || a.AssociationType == AssociationType.OneToOne)) { %>
+<% foreach(IAssociation association in Entity.Associations.Where(a => (a.AssociationType == AssociationType.OneToZeroOrOne || a.AssociationType == AssociationType.OneToOne) && !IsReadOnly(a, "InfoList"))) { %>
                 Update_<%= association.Name %>_<%= association.Name %>_<%= StringUtil.ToPascalCase(association.AssociationKeyName) %>(ref item);
 <% } %>
 <%-- Many-To-One --%>
-<% foreach(IAssociation association in Entity.Associations.Where(a => a.AssociationType == AssociationType.ManyToOne || a.AssociationType == AssociationType.ManyToZeroOrOne)) { %>
+<% foreach(IAssociation association in Entity.Associations.Where(a => (a.AssociationType == AssociationType.ManyToOne || a.AssociationType == AssociationType.ManyToZeroOrOne) && !IsReadOnly(a, "InfoList"))) { %>
                 Update_<%= association.Name %>_<%= association.Name %>_<%= StringUtil.ToPascalCase(association.AssociationKeyName) %>(ref item);
 <% } %>
 <%-- One-To-Many & Many-To-Many --%>
-<% foreach(IAssociation association in Entity.Associations.Where(a => a.AssociationType == AssociationType.OneToMany  || a.AssociationType == AssociationType.ZeroOrOneToMany  || a.AssociationType == AssociationType.ManyToMany)) { %>
+<% foreach(IAssociation association in Entity.Associations.Where(a => (a.AssociationType == AssociationType.OneToMany  || a.AssociationType == AssociationType.ZeroOrOneToMany  || a.AssociationType == AssociationType.ManyToMany) && !IsReadOnly(a, "InfoList"))) { %>
                 Update_<%= association.Name %>_<%= association.Name %>_<%= StringUtil.ToPascalCase(association.AssociationKeyName) %>(ref item);
 <% } %>
             }
 
             OnUpdated();
         }
+
         #endregion
 
         #region Delete
@@ -438,6 +441,7 @@ if(property.Property.SystemType == "System.String" && !property.Property.IsType(
         public <%= BusinessClassName %> Map(SafeDataReader reader)
         {
             var item = (<%= BusinessClassName %>)Activator.CreateInstance(typeof(<%= BusinessClassName %>), true);
+<% if(!IsReadOnlyBusinessObject) { %>
             using (BypassPropertyChecks(item))
             {
 <% if(Entity.ConcurrencyProperty != null) { %>
@@ -454,7 +458,15 @@ if(property.Property.SystemType == "System.String" && !property.Property.IsType(
                 item.Original<%= property.Name %> = <%if(!property.HasByteArrayColumn()) { %>reader.<%= property.GetReaderMethod() %>("<%= property.KeyName %>");<% } else { %>ADOHelper.GetBytes(reader, "<%= property.KeyName %>");<% } %>
 <% } } }%>
             }
-            
+<% } else { %>
+<% foreach(IProperty property in Entity.GetProperties(PropertyType.NoConcurrency)) { %>
+<% if(property.IsNullable && property.SystemType != "System.String" && property.SystemType != "System.Byte[]") {%>
+            LoadProperty(item, <%= BusinessClassName %>.<%= property.PrivateMemberVariableName %>Property, reader.IsDBNull("<%= property.KeyName %>") ? (<%= property.SystemType %>)null : <%if(!property.HasByteArrayColumn()) { %>reader.<%= property.GetReaderMethod() %>("<%= property.KeyName %>")<% } else { %>ADOHelper.GetBytes(reader, "<%= property.KeyName %>")<% } %>);
+<% } else { %>
+            LoadProperty(item, <%= BusinessClassName %>.<%= property.PrivateMemberVariableName %>Property, <%if(!property.HasByteArrayColumn()) { %>reader.<%= property.GetReaderMethod() %>("<%= property.KeyName %>")<% } else { %>ADOHelper.GetBytes(reader, "<%= property.KeyName %>")<% } %>);
+<% } } %>
+<% } %>
+
             MarkOld(item);
 <% if(IsChildBusinessObject) { %>
             MarkAsChild(item);
@@ -465,7 +477,7 @@ if(property.Property.SystemType == "System.String" && !property.Property.IsType(
 <% if (!IsReadOnlyBusinessObject) { %>
 
 <%-- One-To-Zero-Or-One --%>
-<% foreach(IAssociation association in Entity.Associations.Where(a => a.AssociationType == AssociationType.OneToZeroOrOne || a.AssociationType == AssociationType.OneToOne)) { %>
+<% foreach(IAssociation association in Entity.Associations.Where(a => (a.AssociationType == AssociationType.OneToZeroOrOne || a.AssociationType == AssociationType.OneToOne) && !IsReadOnly(a, "InfoList"))) { %>
         //Associations.Where(a => a.AssociationType == AssociationType.OneToZeroOrOne || a.AssociationType == AssociationType.OneToOne)
         private static void Update_<%= association.Name %>_<%= association.Name %>_<%= StringUtil.ToPascalCase(association.AssociationKeyName) %>(ref <%= BusinessClassName %> item)
         {
@@ -475,7 +487,7 @@ if(property.Property.SystemType == "System.String" && !property.Property.IsType(
         }
 <% } %>
 <%-- Many-To-One --%>
-<% foreach(IAssociation association in Entity.Associations.Where(a => a.AssociationType == AssociationType.ManyToOne || a.AssociationType == AssociationType.ManyToZeroOrOne)) { %>
+<% foreach(IAssociation association in Entity.Associations.Where(a => (a.AssociationType == AssociationType.ManyToOne || a.AssociationType == AssociationType.ManyToZeroOrOne) && !IsReadOnly(a, "InfoList"))) { %>
         //Associations.Where(a => a.AssociationType == AssociationType.ManyToOne || a.AssociationType == AssociationType.ManyToZeroOrOne)
         private static void Update_<%= association.Name %>_<%= association.Name %>_<%= StringUtil.ToPascalCase(association.AssociationKeyName) %>(ref <%= BusinessClassName %> item)
         {
@@ -485,7 +497,7 @@ if(property.Property.SystemType == "System.String" && !property.Property.IsType(
         }
 <% } %>
 <%-- One-To-Many & Many-To-Many --%>
-<% foreach(IAssociation association in Entity.Associations.Where(a => a.AssociationType == AssociationType.OneToMany  || a.AssociationType == AssociationType.ZeroOrOneToMany  || a.AssociationType == AssociationType.ManyToMany)) { %>
+<% foreach(IAssociation association in Entity.Associations.Where(a => (a.AssociationType == AssociationType.OneToMany  || a.AssociationType == AssociationType.ZeroOrOneToMany  || a.AssociationType == AssociationType.ManyToMany) && !IsReadOnly(a, "InfoList"))) { %>
         //Where(a => a.AssociationType == AssociationType.OneToMany  || a.AssociationType == AssociationType.ZeroOrOneToMany  || a.AssociationType == AssociationType.ManyToMany)
         private static void Update_<%= association.Name %>_<%= association.Name %>_<%= StringUtil.ToPascalCase(association.AssociationKeyName) %>(ref <%= BusinessClassName %> item)
         {
