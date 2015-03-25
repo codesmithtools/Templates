@@ -13,6 +13,7 @@
 
 using System;
 using System.ComponentModel;
+using CodeSmith.SchemaHelper;
 
 namespace Generator.CSLA
 {
@@ -35,6 +36,26 @@ namespace Generator.CSLA
         [Category("3. Business Project")]
         [Description("If set to true then the Object Factory Read-Only logic will be implemented.")]
         public bool IsReadOnlyBusinessObject { get; set; }
+
+        public bool IsReadOnly(IAssociation association, string suffix) {
+            if (association.Properties.Count <= 0)
+                return false;
+
+            string key = String.Format("{0}{1}", association.ForeignEntity.EntityKeyName, suffix);
+            if (ContextData.Get(key) == null)
+                return false;
+
+            var value = ContextData[key];
+            switch (value) {
+                case Constants.ReadOnlyChild:
+                case Constants.ReadOnlyRoot:
+                case Constants.ReadOnlyChildList:
+                case Constants.ReadOnlyList:
+                    return true;
+            }
+
+            return false;
+        }
 
         [Category("4. Data Project")]
         [Description("The Name Space for the Data Project.")]

@@ -5,12 +5,14 @@
 <%@ Assembly Name="CodeSmith.SchemaHelper.CSharpExtensions" Path="..\..\Common" %>
 <%@ Assembly Name="Generator.CSLA" Path="..\..\Common" %>
 <%@ Import Namespace="CodeSmith.SchemaHelper" %>
+<%@ Import Namespace="Generator.CSLA" %>
 <%@ Import Namespace="System.Linq" %>
 
         #region Properties
 
+<% string modifier = (DataAccessImplementation == DataAccessMethod.ObjectFactoryNone || DataAccessImplementation == DataAccessMethod.ObjectFactoryParameterizedSQL || DataAccessImplementation == DataAccessMethod.ObjectFactoryStoredProcedures) ? "internal" : "private"; %>
 <%  foreach(IProperty property in Entity.GetProperties(PropertyType.NoConcurrency)){ if (UseMemberVariables){ %>
-        private static readonly PropertyInfo<<%= property.SystemType %>> <%= property.PrivateMemberVariableName %>Property = RegisterProperty<<%= property.SystemType %>>(p => p.<%= property.Name %>, "<%= property.FriendlyName() %>"<% if(property.IsNullable) { %>, (<%= property.SystemType %>)null<% } %><%if (IsCSLA43 || IsCSLA45) { %>, RelationshipTypes.PrivateField<% }%>);
+        <%= modifier %> static readonly PropertyInfo<<%= property.SystemType %>> <%= property.PrivateMemberVariableName %>Property = RegisterProperty<<%= property.SystemType %>>(p => p.<%= property.Name %>, "<%= property.FriendlyName() %>"<% if(property.IsNullable) { %>, (<%= property.SystemType %>)null<% } %><%if (IsCSLA43 || IsCSLA45) { %>, RelationshipTypes.PrivateField<% }%>);
         private <%= property.SystemType %> <%= property.PrivateMemberVariableName %> = <%= property.PrivateMemberVariableName %>Property.DefaultValue;
 <% if(property.HasDescription) { %>
 
@@ -23,7 +25,7 @@
         }
 
 <% } else { %>
-        private static readonly PropertyInfo<<%= property.SystemType %>> <%= property.PrivateMemberVariableName %>Property = RegisterProperty<<%= property.SystemType %>>(p => p.<%= property.Name %>, "<%= property.FriendlyName() %>"<% if(property.IsNullable) { %>, (<%= property.SystemType %>)null<% } %>);
+        <%= modifier %> static readonly PropertyInfo<<%= property.SystemType %>> <%= property.PrivateMemberVariableName %>Property = RegisterProperty<<%= property.SystemType %>>(p => p.<%= property.Name %>, "<%= property.FriendlyName() %>"<% if(property.IsNullable) { %>, (<%= property.SystemType %>)null<% } %>);
 <% if(property.HasDescription) { %>
 
         /// <summary>
@@ -44,7 +46,7 @@
         associationClassName += "Info";
     } %>
         // <%= association.AssociationType.ToString() %>
-        private static readonly PropertyInfo<<%= associationClassName %><%= association.GenericProperty %>> <%= association.PrivateMemberVariableName %>Property = RegisterProperty<<%= associationClassName %><%= association.GenericProperty %>>(p => p.<%= association.Name %>, "<%= association.Name %>");
+        <%= modifier %> static readonly PropertyInfo<<%= associationClassName %><%= association.GenericProperty %>> <%= association.PrivateMemberVariableName %>Property = RegisterProperty<<%= associationClassName %><%= association.GenericProperty %>>(p => p.<%= association.Name %>, "<%= association.Name %>");
 <% if(association.HasDescription) { %>
         /// <summary>
         /// <%= association.Description %>
@@ -134,7 +136,7 @@
         associationClassName += "Info";
     } %>
         // <%= association.AssociationType.ToString() %>
-        private static readonly PropertyInfo<<%= associationClassName %><%= association.GenericProperty %>> <%= association.PrivateMemberVariableName %>Property = RegisterProperty<<%= associationClassName %><%= association.GenericProperty %>>(p => p.<%= association.Name %>, "<%= association.Name %>");
+        <%= modifier %> static readonly PropertyInfo<<%= associationClassName %><%= association.GenericProperty %>> <%= association.PrivateMemberVariableName %>Property = RegisterProperty<<%= associationClassName %><%= association.GenericProperty %>>(p => p.<%= association.Name %>, "<%= association.Name %>");
 <% if(association.HasDescription) { %>
         /// <summary>
         /// <%= association.Description %>
@@ -223,7 +225,7 @@ if(!result.Equals("(true)", StringComparison.CurrentCultureIgnoreCase) && !resul
     }
     %>
         // <%= association.AssociationType.ToString() %>
-        private static readonly PropertyInfo<<%= associationClassName %>List<%= association.GenericProperty %>> <%= association.PrivateMemberVariableName %>Property = RegisterProperty<<%= associationClassName %>List<%= association.GenericProperty %>>(p => p.<%= association.Name %>, "<%= association.Name %>");
+        <%= modifier %> static readonly PropertyInfo<<%= associationClassName %>List<%= association.GenericProperty %>> <%= association.PrivateMemberVariableName %>Property = RegisterProperty<<%= associationClassName %>List<%= association.GenericProperty %>>(p => p.<%= association.Name %>, "<%= association.Name %>");
 <% if(association.HasDescription) { %>
         /// <summary>
         /// <%= association.Description %>

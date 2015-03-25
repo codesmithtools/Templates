@@ -5,13 +5,15 @@
 <%@ Assembly Name="CodeSmith.SchemaHelper.VisualBasicExtensions" Path="..\..\Common" %>
 <%@ Assembly Name="Generator.CSLA" Path="..\..\Common" %>
 <%@ Import Namespace="CodeSmith.SchemaHelper" %>
+<%@ Import Namespace="Generator.CSLA" %>
 <%@ Import Namespace="System.Linq" %>
 
 #Region "Properties"
     
+    <% Dim modifier As String = If(DataAccessImplementation = DataAccessMethod.ObjectFactoryNone OrElse DataAccessImplementation = DataAccessMethod.ObjectFactoryParameterizedSQL OrElse DataAccessImplementation = DataAccessMethod.ObjectFactoryStoredProcedures, "Friend", "Private") %>
     <%  For Each prop As IProperty In Entity.GetProperties(PropertyType.NoConcurrency)
     If UseMemberVariables Then %>
-        Private Shared ReadOnly <%= prop.PrivateMemberVariableName %>Property As PropertyInfo(Of <%= prop.SystemType %>) = RegisterProperty(Of <%= prop.SystemType %>)(Function(p As <%= BusinessClassName %>) p.<%= prop.Name %>, "<%= prop.FriendlyName() %>"<% If(prop.IsNullable And prop.SystemType = "System.String") Then %>, vbNullString<% Else If(prop.CanGenerateNullDefault()) Then %>, CType(Nothing, <%= prop.SystemType %>)<%End If%><% If (IsCSLA43 OrElse IsCSLA45) Then %>, RelationshipTypes.PrivateField<% End If %>)
+        <%= modifier %> Shared ReadOnly <%= prop.PrivateMemberVariableName %>Property As PropertyInfo(Of <%= prop.SystemType %>) = RegisterProperty(Of <%= prop.SystemType %>)(Function(p As <%= BusinessClassName %>) p.<%= prop.Name %>, "<%= prop.FriendlyName() %>"<% If(prop.IsNullable And prop.SystemType = "System.String") Then %>, vbNullString<% Else If(prop.CanGenerateNullDefault()) Then %>, CType(Nothing, <%= prop.SystemType %>)<%End If%><% If (IsCSLA43 OrElse IsCSLA45) Then %>, RelationshipTypes.PrivateField<% End If %>)
         Private <%= prop.PrivateMemberVariableName %> As <%= prop.SystemType %> = <%= prop.PrivateMemberVariableName %>Property.DefaultValue
     <% If(prop.HasDescription) Then %>
         ''' <summary>
@@ -32,7 +34,7 @@
                 Return GetProperty(<%= prop.PrivateMemberVariableName %>Property, <%= prop.PrivateMemberVariableName %>) 
             End Get
     <% Else %>
-        Private Shared ReadOnly <%= prop.PrivateMemberVariableName %>Property As PropertyInfo(Of <%= prop.SystemType %>) = RegisterProperty(Of <%= prop.SystemType %>)(Function(p As <%= BusinessClassName %>) p.<%= prop.Name %>, "<%= prop.FriendlyName() %>"<% If(prop.IsNullable And prop.SystemType = "System.String") Then %>, vbNullString<% Else If(prop.CanGenerateNullDefault()) Then %>, CType(Nothing, <%= prop.SystemType %>)<%End If%>)
+        <%= modifier %> Shared ReadOnly <%= prop.PrivateMemberVariableName %>Property As PropertyInfo(Of <%= prop.SystemType %>) = RegisterProperty(Of <%= prop.SystemType %>)(Function(p As <%= BusinessClassName %>) p.<%= prop.Name %>, "<%= prop.FriendlyName() %>"<% If(prop.IsNullable And prop.SystemType = "System.String") Then %>, vbNullString<% Else If(prop.CanGenerateNullDefault()) Then %>, CType(Nothing, <%= prop.SystemType %>)<%End If%>)
     <% If(prop.HasDescription) Then %>
         ''' <summary>
         ''' <%= prop.Description %>
@@ -64,7 +66,7 @@
         associationClassName += "Info"
     End If %>
         '<%= association.AssociationType.ToString() %>
-        Private Shared ReadOnly <%= association.PrivateMemberVariableName %>Property As PropertyInfo(Of <%= associationClassName %><%= association.GenericProperty %>) = RegisterProperty(Of <%= associationClassName %><%= association.GenericProperty %>)(Function(p As <%= BusinessClassName %>) p.<%= association.Name %>, "<%= association.Name %>")
+        <%= modifier %> Shared ReadOnly <%= association.PrivateMemberVariableName %>Property As PropertyInfo(Of <%= associationClassName %><%= association.GenericProperty %>) = RegisterProperty(Of <%= associationClassName %><%= association.GenericProperty %>)(Function(p As <%= BusinessClassName %>) p.<%= association.Name %>, "<%= association.Name %>")
     <% If(association.HasDescription) Then %>
         ''' <summary>
         ''' <%= association.Description %>
@@ -130,7 +132,7 @@
         associationClassName += "Info"
     End If %>
         '<%= association.AssociationType.ToString() %>
-        Private Shared ReadOnly <%= association.PrivateMemberVariableName %>Property As PropertyInfo(Of <%= associationClassName %>) = RegisterProperty(Of <%= associationClassName %>)(Function(p As <%= BusinessClassName %>) p.<%= association.Name %>, "<%= association.Name %>")
+        <%= modifier %> Shared ReadOnly <%= association.PrivateMemberVariableName %>Property As PropertyInfo(Of <%= associationClassName %>) = RegisterProperty(Of <%= associationClassName %>)(Function(p As <%= BusinessClassName %>) p.<%= association.Name %>, "<%= association.Name %>")
     <% If(association.HasDescription) Then %>
         ''' <summary>
         ''' <%= association.Description %>
@@ -199,7 +201,7 @@
             associationClassName += "Info"
         End If %>
         '<%= association.AssociationType.ToString() %>
-        Private Shared ReadOnly <%= association.PrivateMemberVariableName %>Property As PropertyInfo(Of <%= associationClassName %>List<%= association.GenericProperty %>) = RegisterProperty(Of <%= associationClassName %>List<%= association.GenericProperty %>)(Function(p As <%= BusinessClassName %>) p.<%= association.Name %>, "<%= association.Name %>")
+        <%= modifier %> Shared ReadOnly <%= association.PrivateMemberVariableName %>Property As PropertyInfo(Of <%= associationClassName %>List<%= association.GenericProperty %>) = RegisterProperty(Of <%= associationClassName %>List<%= association.GenericProperty %>)(Function(p As <%= BusinessClassName %>) p.<%= association.Name %>, "<%= association.Name %>")
     <% If(association.HasDescription) Then %>
         ''' <summary>
         ''' <%= association.Description %>

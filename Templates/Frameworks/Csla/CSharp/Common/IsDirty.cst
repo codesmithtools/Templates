@@ -5,6 +5,7 @@
 <%@ Assembly Name="Generator.CSLA" Path="..\..\Common" %>
 <%@ Import Namespace="CodeSmith.SchemaHelper" %>
 <%@ Import Namespace="Generator.CSLA" %>
+<%@ Import Namespace="System.Linq" %>
 
 
 <% if(DataAccessImplementation == DataAccessMethod.ObjectFactoryNone || DataAccessImplementation == DataAccessMethod.ObjectFactoryParameterizedSQL || DataAccessImplementation == DataAccessMethod.ObjectFactoryStoredProcedures) { %>
@@ -19,15 +20,15 @@
             {
                 if (base.IsDirty) return true;
 <%-- One-To-Zero-Or-One --%>
-<% foreach(IAssociation association in Entity.Associations.Where(a => a.AssociationType == AssociationType.OneToZeroOrOne || a.AssociationType == AssociationType.OneToOne)) { %>
+<% foreach(IAssociation association in Entity.Associations.Where(a => (a.AssociationType == AssociationType.OneToZeroOrOne || a.AssociationType == AssociationType.OneToOne) && !IsReadOnlyBusinessObject(a, "InfoList"))) { %>
                 if (FieldManager.FieldExists(<%= association.PrivateMemberVariableName %>Property) && <%= association.Name %>.IsDirty) return true;
 <% } %>
 <%-- Many-To-One --%>
-<% foreach(IAssociation association in Entity.Associations.Where(a => a.AssociationType == AssociationType.ManyToOne || a.AssociationType == AssociationType.ManyToZeroOrOne)) { %>
+<% foreach(IAssociation association in Entity.Associations.Where(a => (a.AssociationType == AssociationType.ManyToOne || a.AssociationType == AssociationType.ManyToZeroOrOne) && !IsReadOnlyBusinessObject(a, "InfoList"))) { %>
                 if (FieldManager.FieldExists(<%= association.PrivateMemberVariableName %>Property) && <%= association.Name %>.IsDirty) return true;
 <% } %>
 <%-- One-To-Many & Many-To-Many --%>
-<% foreach(IAssociation association in Entity.Associations.Where(a => a.AssociationType == AssociationType.OneToMany  || a.AssociationType == AssociationType.ZeroOrOneToMany  || a.AssociationType == AssociationType.ManyToMany)) { %>
+<% foreach(IAssociation association in Entity.Associations.Where(a => (a.AssociationType == AssociationType.OneToMany  || a.AssociationType == AssociationType.ZeroOrOneToMany  || a.AssociationType == AssociationType.ManyToMany) && !IsReadOnlyBusinessObject(a, "InfoList"))) { %>
                 if (FieldManager.FieldExists(<%= association.PrivateMemberVariableName %>Property) && <%= association.Name %>.IsDirty) return true;
 <% } %>
 
