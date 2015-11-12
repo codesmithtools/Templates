@@ -1,5 +1,4 @@
-
-USE PetShop;
+﻿USE PetShop;
 GO
 
 IF OBJECT_ID ( 'dbo.GetAllAccounts', 'P' ) IS NOT NULL 
