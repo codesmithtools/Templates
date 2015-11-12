@@ -1,4 +1,4 @@
-﻿public class PreserveRegionsSample
+﻿public class InsertRegionsSample
 {
 
     public void SomeCustomMethod()
