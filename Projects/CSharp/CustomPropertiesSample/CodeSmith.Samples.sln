@@ -1,6 +1,6 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+Microsoft Visual Studio Solution File, Format Version 14.00
+# Visual Studio 2015
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeSmith.Samples", "CodeSmith.Samples.csproj", "{BCBFCFC6-E57A-41B5-979C-60BD8DE9FECA}"
 EndProject
 Global

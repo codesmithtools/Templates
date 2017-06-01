@@ -1,6 +1,6 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+Microsoft Visual Studio Solution File, Format Version 14.00
+# Visual Studio 2015
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VSIntegrationSample", "VSIntegrationSample.csproj", "{D36F2EE6-3987-4880-858A-DF7CDC0FEF47}"
 EndProject
 Global

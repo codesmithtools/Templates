@@ -1,6 +1,6 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+Microsoft Visual Studio Solution File, Format Version 14.00
+# Visual Studio 2015
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeSmith.SchemaHelper.NHibernate", "CodeSmith.SchemaHelper.NHibernate\CodeSmith.SchemaHelper.NHibernate.csproj", "{E56BF2D7-0907-4BF0-BAD8-B754D2E916E4}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeSmith.Data.NHibernate", "CodeSmith.Data.NHibernate\CodeSmith.Data.NHibernate.csproj", "{20D2F5EE-21AE-45C0-A6AF-E52AAFFCDD7E}"

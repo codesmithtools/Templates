@@ -1,6 +1,6 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+Microsoft Visual Studio Solution File, Format Version 14.00
+# Visual Studio 2015
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{E50D5F01-E6E7-4246-8B37-B80FD5BE682F}"
 	ProjectSection(SolutionItems) = preProject
 		..\Master.proj = ..\Master.proj
