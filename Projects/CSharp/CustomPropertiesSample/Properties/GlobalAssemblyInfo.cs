@@ -15,7 +15,7 @@ using System.Resources;
 [assembly: AssemblyCompany("CodeSmith Tools, LLC")]
 [assembly: AssemblyProduct("CodeSmith Generator")]
 [assembly: AssemblyConfiguration("Release")]
-[assembly: AssemblyCopyright("Copyright (c) 2002-2012 CodeSmith Tools, LLC.  All rights reserved.")]
+[assembly: AssemblyCopyright("Copyright (c) 2002-2017 CodeSmith Tools, LLC.  All rights reserved.")]
 [assembly: AssemblyVersion("6.0.0.0")]
 [assembly: AssemblyFileVersion("6.0.0.0")]
 [assembly: AssemblyInformationalVersion("6.0.0.0")]

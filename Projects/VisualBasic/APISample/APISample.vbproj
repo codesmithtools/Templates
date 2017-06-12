@@ -33,10 +33,12 @@
     <OutputPath>bin\Release\</OutputPath>
     <DocumentationFile>APISample.xml</DocumentationFile>
     <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022,42353,42354,42355</NoWarn>
-    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="CodeSmith.ActiproSoftware.Text.Wpf" />
+    <Reference Include="CodeSmith.BaseTemplates, Version=6.0.0.0, Culture=neutral, PublicKeyToken=9fd61cdb91609a7a, processorArchitecture=MSIL" />
+    <Reference Include="CodeSmith.CustomProperties, Version=6.0.0.0, Culture=neutral, PublicKeyToken=9fd61cdb91609a7a, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform, Version=1.0.4.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="CodeSmith.Core" />
     <Reference Include="CodeSmith.Engine">
       <Name>CodeSmith.Engine</Name>
@@ -105,4 +107,10 @@
     <Content Include="readme.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
+  <Target Name="AfterBuild">
+    <ItemGroup>
+      <RoslynFiles Include="C:\Program Files (x86)\CodeSmith\v8.0\bin\roslyn\*.*" />
+    </ItemGroup>
+    <Copy SourceFiles="@(RoslynFiles)" DestinationFolder="$(OutputPath)\roslyn" />
+  </Target>
 </Project>
