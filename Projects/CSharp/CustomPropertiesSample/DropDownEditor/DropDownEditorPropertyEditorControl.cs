@@ -1,12 +1,12 @@
 //------------------------------------------------------------------------------
 //
-// Copyright (c) 2002-2011 CodeSmith Tools, LLC.  All rights reserved.
-// 
+// Copyright (c) 2002-2017 CodeSmith Tools, LLC.  All rights reserved.
+//
 // The terms of use for this software are contained in the file
 // named sourcelicense.txt, which can be found in the root of this distribution.
 // By using this software in any fashion, you are agreeing to be bound by the
 // terms of this license.
-// 
+//
 // You must not remove this notice, or any other, from this software.
 //
 //------------------------------------------------------------------------------
@@ -23,7 +23,7 @@ namespace CodeSmith.Samples
 	{
 		public System.Windows.Forms.TextBox SampleStringTextBox;
 		public System.Windows.Forms.CheckBox SampleBooleanCheckBox;
-		/// <summary> 
+		/// <summary>
 		/// Required designer variable.
 		/// </summary>
 		private System.ComponentModel.Container components = null;
@@ -36,7 +36,7 @@ namespace CodeSmith.Samples
 			// TODO: Add any initialization after the InitializeComponent call
 
 		}
-		
+
 		public void Start(IWindowsFormsEditorService editorService, object value)
 		{
 			if (value is DropDownEditorProperty)
@@ -45,8 +45,8 @@ namespace CodeSmith.Samples
 				SampleBooleanCheckBox.Checked = ((DropDownEditorProperty)value).SampleBoolean;
 			}
 		}
-		
-		/// <summary> 
+
+		/// <summary>
 		/// Clean up any resources being used.
 		/// </summary>
 		protected override void Dispose( bool disposing )
@@ -62,8 +62,8 @@ namespace CodeSmith.Samples
 		}
 
 		#region Component Designer generated code
-		/// <summary> 
-		/// Required method for Designer support - do not modify 
+		/// <summary>
+		/// Required method for Designer support - do not modify
 		/// the contents of this method with the code editor.
 		/// </summary>
 		private void InitializeComponent()
@@ -71,24 +71,24 @@ namespace CodeSmith.Samples
 			this.SampleStringTextBox = new System.Windows.Forms.TextBox();
 			this.SampleBooleanCheckBox = new System.Windows.Forms.CheckBox();
 			this.SuspendLayout();
-			// 
+			//
 			// SampleStringTextBox
-			// 
+			//
 			this.SampleStringTextBox.Location = new System.Drawing.Point(8, 8);
 			this.SampleStringTextBox.Name = "SampleStringTextBox";
 			this.SampleStringTextBox.TabIndex = 0;
 			this.SampleStringTextBox.Text = "Hello World!";
-			// 
+			//
 			// SampleBooleanCheckBox
-			// 
+			//
 			this.SampleBooleanCheckBox.Location = new System.Drawing.Point(8, 32);
 			this.SampleBooleanCheckBox.Name = "SampleBooleanCheckBox";
 			this.SampleBooleanCheckBox.Size = new System.Drawing.Size(112, 24);
 			this.SampleBooleanCheckBox.TabIndex = 1;
 			this.SampleBooleanCheckBox.Text = "Sample Boolean";
-			// 
+			//
 			// DropDownEditorPropertyEditorControl
-			// 
+			//
 			this.Controls.Add(this.SampleBooleanCheckBox);
 			this.Controls.Add(this.SampleStringTextBox);
 			this.Name = "DropDownEditorPropertyEditorControl";

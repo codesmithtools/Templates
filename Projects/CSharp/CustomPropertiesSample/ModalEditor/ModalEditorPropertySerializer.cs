@@ -1,12 +1,12 @@
 //------------------------------------------------------------------------------
 //
-// Copyright (c) 2002-2011 CodeSmith Tools, LLC.  All rights reserved.
-// 
+// Copyright (c) 2002-2017 CodeSmith Tools, LLC.  All rights reserved.
+//
 // The terms of use for this software are contained in the file
 // named sourcelicense.txt, which can be found in the root of this distribution.
 // By using this software in any fashion, you are agreeing to be bound by the
 // terms of this license.
-// 
+//
 // You must not remove this notice, or any other, from this software.
 //
 //------------------------------------------------------------------------------
@@ -27,7 +27,7 @@ namespace CodeSmith.Samples
 		public ModalEditorPropertySerializer()
 		{
 		}
-		
+
 		/// <summary>
 		/// This method will be used to save the property value when a template is being compiled.
 		/// </summary>
@@ -39,7 +39,7 @@ namespace CodeSmith.Samples
 			// Nothing special needs to be done to save this property so we just return the unmodified property value.
 			return propertyValue;
 		}
-		
+
 		/// <summary>
 		/// This method will be used to restore the property value after a template has been compiled.
 		/// </summary>
@@ -51,7 +51,7 @@ namespace CodeSmith.Samples
 			// Nothing special needs to be done to load this property so we just return the unmodified property value.
 			return propertyValue;
 		}
-		
+
 		/// <summary>
 		/// This method will be used when serializing the property value to an XML property set.
 		/// </summary>
@@ -61,7 +61,7 @@ namespace CodeSmith.Samples
         public void WritePropertyXml(PropertySerializerContext context, System.Xml.XmlWriter writer, object propertyValue)
 		{
 			if (propertyValue == null) return;
-			
+
 			ModalEditorProperty modalEditorPropertyValue = propertyValue as ModalEditorProperty;
 			if (modalEditorPropertyValue != null)
 			{
@@ -69,7 +69,7 @@ namespace CodeSmith.Samples
 				writer.WriteElementString("SampleString", modalEditorPropertyValue.SampleString);
 			}
 		}
-		
+
 		/// <summary>
 		/// This method will be used when deserializing the property from an XML property set.
 		/// </summary>
@@ -102,7 +102,7 @@ namespace CodeSmith.Samples
             modalEditorPropertyValue.SampleString = sampleString;
             return modalEditorPropertyValue;
 		}
-		
+
 		/// <summary>
 		/// This method will be used to parse a default value for a property when a template is being instantiated.
 		/// </summary>

@@ -1,12 +1,12 @@
 //------------------------------------------------------------------------------
 //
-// Copyright (c) 2002-2011 CodeSmith Tools, LLC.  All rights reserved.
-// 
+// Copyright (c) 2002-2017 CodeSmith Tools, LLC.  All rights reserved.
+//
 // The terms of use for this software are contained in the file
 // named sourcelicense.txt, which can be found in the root of this distribution.
 // By using this software in any fashion, you are agreeing to be bound by the
 // terms of this license.
-// 
+//
 // You must not remove this notice, or any other, from this software.
 //
 //------------------------------------------------------------------------------
@@ -23,17 +23,17 @@ namespace CodeSmith.Samples
 	{
 		private IWindowsFormsEditorService editorService;
 		private ModalEditorPropertyEditorForm _modalEditorPropertyEditorForm;
-		
+
 		public ModalEditorPropertyEditor(): base()
 		{
 		}
-		
-		public override object EditValue(ITypeDescriptorContext context, IServiceProvider provider, object value) 
+
+		public override object EditValue(ITypeDescriptorContext context, IServiceProvider provider, object value)
 		{
-			if (provider != null) 
+			if (provider != null)
 			{
 				editorService = (IWindowsFormsEditorService)provider.GetService(typeof(IWindowsFormsEditorService));
-				if (editorService != null) 
+				if (editorService != null)
 				{
 					if (_modalEditorPropertyEditorForm == null) _modalEditorPropertyEditorForm = new ModalEditorPropertyEditorForm();
 					_modalEditorPropertyEditorForm.Start(editorService, value);
@@ -48,11 +48,11 @@ namespace CodeSmith.Samples
 					}
 				}
 			}
-			
+
 			return value;
 		}
-		
-		public override UITypeEditorEditStyle GetEditStyle(ITypeDescriptorContext context) 
+
+		public override UITypeEditorEditStyle GetEditStyle(ITypeDescriptorContext context)
 		{
 			return UITypeEditorEditStyle.Modal;
 		}

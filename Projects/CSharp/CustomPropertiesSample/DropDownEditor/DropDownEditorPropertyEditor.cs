@@ -1,12 +1,12 @@
 //------------------------------------------------------------------------------
 //
-// Copyright (c) 2002-2011 CodeSmith Tools, LLC.  All rights reserved.
-// 
+// Copyright (c) 2002-2017 CodeSmith Tools, LLC.  All rights reserved.
+//
 // The terms of use for this software are contained in the file
 // named sourcelicense.txt, which can be found in the root of this distribution.
 // By using this software in any fashion, you are agreeing to be bound by the
 // terms of this license.
-// 
+//
 // You must not remove this notice, or any other, from this software.
 //
 //------------------------------------------------------------------------------
@@ -20,32 +20,32 @@ namespace CodeSmith.Samples
 {
 	public class DropDownEditorPropertyEditor : UITypeEditor
 	{
-		private IWindowsFormsEditorService editorService;
+		private IWindowsFormsEditorService _editorService;
 		private DropDownEditorPropertyEditorControl _dropDownEditorPropertyEditorControl;
-		
+
 		public DropDownEditorPropertyEditor(): base()
 		{
 		}
-		
-		public override object EditValue(ITypeDescriptorContext context, IServiceProvider provider, object value) 
+
+		public override object EditValue(ITypeDescriptorContext context, IServiceProvider provider, object value)
 		{
-			if (provider != null) 
+			if (provider != null)
 			{
-				editorService = (IWindowsFormsEditorService)provider.GetService(typeof(IWindowsFormsEditorService));
-				if (editorService != null) 
+				_editorService = (IWindowsFormsEditorService)provider.GetService(typeof(IWindowsFormsEditorService));
+				if (_editorService != null)
 				{
 					if (_dropDownEditorPropertyEditorControl == null) _dropDownEditorPropertyEditorControl = new DropDownEditorPropertyEditorControl();
-					_dropDownEditorPropertyEditorControl.Start(editorService, value);
-					editorService.DropDownControl(_dropDownEditorPropertyEditorControl);
-					
+					_dropDownEditorPropertyEditorControl.Start(_editorService, value);
+					_editorService.DropDownControl(_dropDownEditorPropertyEditorControl);
+
 					return new DropDownEditorProperty(_dropDownEditorPropertyEditorControl.SampleStringTextBox.Text, _dropDownEditorPropertyEditorControl.SampleBooleanCheckBox.Checked);
 				}
 			}
-			
+
 			return value;
 		}
-		
-		public override UITypeEditorEditStyle GetEditStyle(ITypeDescriptorContext context) 
+
+		public override UITypeEditorEditStyle GetEditStyle(ITypeDescriptorContext context)
 		{
 			return UITypeEditorEditStyle.DropDown;
 		}

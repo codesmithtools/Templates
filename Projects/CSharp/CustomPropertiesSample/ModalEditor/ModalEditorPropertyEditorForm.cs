@@ -1,12 +1,12 @@
 //------------------------------------------------------------------------------
 //
-// Copyright (c) 2002-2011 CodeSmith Tools, LLC.  All rights reserved.
-// 
+// Copyright (c) 2002-2017 CodeSmith Tools, LLC.  All rights reserved.
+//
 // The terms of use for this software are contained in the file
 // named sourcelicense.txt, which can be found in the root of this distribution.
 // By using this software in any fashion, you are agreeing to be bound by the
 // terms of this license.
-// 
+//
 // You must not remove this notice, or any other, from this software.
 //
 //------------------------------------------------------------------------------
@@ -40,7 +40,7 @@ namespace CodeSmith.Samples
 			// TODO: Add any constructor code after InitializeComponent call
 			//
 		}
-		
+
 		public void Start(IWindowsFormsEditorService editorService, object value)
 		{
 			if (value is ModalEditorProperty)
@@ -76,32 +76,32 @@ namespace CodeSmith.Samples
 			this.SampleBooleanCheckBox = new System.Windows.Forms.CheckBox();
 			this.SampleStringTextBox = new System.Windows.Forms.TextBox();
 			this.SuspendLayout();
-			// 
+			//
 			// button1
-			// 
+			//
 			this.button1.DialogResult = System.Windows.Forms.DialogResult.OK;
 			this.button1.Location = new System.Drawing.Point(32, 64);
 			this.button1.Name = "button1";
 			this.button1.TabIndex = 5;
 			this.button1.Text = "OK";
-			// 
+			//
 			// SampleBooleanCheckBox
-			// 
+			//
 			this.SampleBooleanCheckBox.Location = new System.Drawing.Point(8, 32);
 			this.SampleBooleanCheckBox.Name = "SampleBooleanCheckBox";
 			this.SampleBooleanCheckBox.Size = new System.Drawing.Size(112, 24);
 			this.SampleBooleanCheckBox.TabIndex = 4;
 			this.SampleBooleanCheckBox.Text = "Sample Boolean";
-			// 
+			//
 			// SampleStringTextBox
-			// 
+			//
 			this.SampleStringTextBox.Location = new System.Drawing.Point(8, 8);
 			this.SampleStringTextBox.Name = "SampleStringTextBox";
 			this.SampleStringTextBox.TabIndex = 3;
 			this.SampleStringTextBox.Text = "Hello World!";
-			// 
+			//
 			// ModalEditorPropertyEditorForm
-			// 
+			//
 			this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
 			this.ClientSize = new System.Drawing.Size(115, 94);
 			this.ControlBox = false;

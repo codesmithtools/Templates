@@ -1,12 +1,12 @@
 //------------------------------------------------------------------------------
 //
-// Copyright (c) 2002-2011 CodeSmith Tools, LLC.  All rights reserved.
-// 
+// Copyright (c) 2002-2017 CodeSmith Tools, LLC.  All rights reserved.
+//
 // The terms of use for this software are contained in the file
 // named sourcelicense.txt, which can be found in the root of this distribution.
 // By using this software in any fashion, you are agreeing to be bound by the
 // terms of this license.
-// 
+//
 // You must not remove this notice, or any other, from this software.
 //
 //------------------------------------------------------------------------------
@@ -24,7 +24,7 @@ namespace CodeSmith.Samples
 	public class PurchaseOrder
 	{
 		public Address ShipTo;
-		public string OrderDate; 
+		public string OrderDate;
 		[XmlArrayAttribute("Items")]
 		public OrderedItem[] OrderedItems;
 		public decimal SubTotal;
@@ -35,7 +35,7 @@ namespace CodeSmith.Samples
 			return string.Format("{{PO: ${0}}}", TotalCost);
 		}
 	}
-	
+
 	public class Address
 	{
 		[XmlAttribute]
@@ -46,7 +46,7 @@ namespace CodeSmith.Samples
 		public string State;
 		public string Zip;
 	}
-	
+
 	public class OrderedItem
 	{
 		public string ItemName;
@@ -54,7 +54,7 @@ namespace CodeSmith.Samples
 		public decimal UnitPrice;
 		public int Quantity;
 		public decimal LineTotal;
-		
+
 		public void Calculate()
 		{
 			LineTotal = UnitPrice * Quantity;
