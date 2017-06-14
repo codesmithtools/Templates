@@ -1,5 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <Import Project="packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.5\build\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props" Condition="Exists('packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.5\build\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" />
+  <Import Project="packages\Microsoft.Net.Compilers.2.1.0\build\Microsoft.Net.Compilers.props" Condition="Exists('packages\Microsoft.Net.Compilers.2.1.0\build\Microsoft.Net.Compilers.props')" />
   <PropertyGroup>
     <ProjectGuid>{1426E744-9D04-43D4-B498-6D00670BF051}</ProjectGuid>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -9,6 +11,8 @@
     <OutputType>Exe</OutputType>
     <RootNamespace>APISample</RootNamespace>
     <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <OutputPath>bin\Debug\</OutputPath>
@@ -19,10 +23,58 @@
     <DefineConstants>TRACE</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="CodeSmith.ActiproSoftware.Text.Wpf" />
-    <Reference Include="CodeSmith.BaseTemplates, Version=6.0.0.0, Culture=neutral, PublicKeyToken=9fd61cdb91609a7a, processorArchitecture=MSIL" />
-    <Reference Include="CodeSmith.CustomProperties, Version=6.0.0.0, Culture=neutral, PublicKeyToken=9fd61cdb91609a7a, processorArchitecture=MSIL" />
-    <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform, Version=1.0.4.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="CodeSmith.ActiproSoftware.PropertyGrid.Legacy.Wpf, Version=117.1.651.0, Culture=neutral, PublicKeyToken=9fd61cdb91609a7a, processorArchitecture=MSIL">
+      <HintPath>packages\SchemaExplorer.8.0.0\lib\net462\CodeSmith.ActiproSoftware.PropertyGrid.Legacy.Wpf.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="CodeSmith.ActiproSoftware.Shared.Wpf, Version=117.1.651.0, Culture=neutral, PublicKeyToken=9fd61cdb91609a7a, processorArchitecture=MSIL">
+      <HintPath>packages\SchemaExplorer.8.0.0\lib\net462\CodeSmith.ActiproSoftware.Shared.Wpf.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="CodeSmith.ActiproSoftware.Text.Addons.DotNet.Wpf, Version=117.1.651.0, Culture=neutral, PublicKeyToken=9fd61cdb91609a7a, processorArchitecture=MSIL">
+      <HintPath>packages\CodeSmith.Generator.8.0.0\lib\net462\CodeSmith.ActiproSoftware.Text.Addons.DotNet.Wpf.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="CodeSmith.ActiproSoftware.Text.LLParser.Wpf, Version=117.1.651.0, Culture=neutral, PublicKeyToken=9fd61cdb91609a7a, processorArchitecture=MSIL">
+      <HintPath>packages\CodeSmith.Generator.8.0.0\lib\net462\CodeSmith.ActiproSoftware.Text.LLParser.Wpf.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="CodeSmith.ActiproSoftware.Text.Wpf, Version=117.1.651.0, Culture=neutral, PublicKeyToken=9fd61cdb91609a7a, processorArchitecture=MSIL">
+      <HintPath>packages\CodeSmith.Generator.8.0.0\lib\net462\CodeSmith.ActiproSoftware.Text.Wpf.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="CodeSmith.BaseTemplates, Version=6.0.0.0, Culture=neutral, PublicKeyToken=9fd61cdb91609a7a, processorArchitecture=MSIL">
+      <HintPath>packages\CodeSmith.Generator.BaseTemplates.8.0.0\lib\net462\CodeSmith.BaseTemplates.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="CodeSmith.Core, Version=1.1.0.0, Culture=neutral, PublicKeyToken=9fd61cdb91609a7a, processorArchitecture=MSIL">
+      <HintPath>packages\CodeSmith.Generator.8.0.0\lib\net462\CodeSmith.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="CodeSmith.CustomProperties, Version=6.0.0.0, Culture=neutral, PublicKeyToken=9fd61cdb91609a7a, processorArchitecture=MSIL">
+      <HintPath>packages\CodeSmith.Generator.CustomProperties.8.0.0\lib\net462\CodeSmith.CustomProperties.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="CodeSmith.Engine, Version=6.0.0.0, Culture=neutral, PublicKeyToken=9fd61cdb91609a7a, processorArchitecture=MSIL">
+      <HintPath>packages\CodeSmith.Generator.8.0.0\lib\net462\CodeSmith.Engine.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform, Version=1.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.5\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="policy.1.0.CodeSmith.Core, Version=8.0.0.15410, Culture=neutral, PublicKeyToken=9fd61cdb91609a7a, processorArchitecture=MSIL">
+      <HintPath>packages\CodeSmith.Generator.8.0.0\lib\net462\policy.1.0.CodeSmith.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="SchemaExplorer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=9fd61cdb91609a7a, processorArchitecture=MSIL">
+      <HintPath>packages\SchemaExplorer.8.0.0\lib\net462\SchemaExplorer.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="SchemaExplorer.SqlSchemaProvider, Version=6.0.0.0, Culture=neutral, PublicKeyToken=9fd61cdb91609a7a, processorArchitecture=MSIL">
+      <HintPath>packages\SchemaExplorer.SqlSchemaProvider.8.0.0\lib\net462\SchemaExplorer.SqlSchemaProvider.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System">
       <Name>System</Name>
     </Reference>
@@ -31,18 +83,6 @@
     </Reference>
     <Reference Include="System.Xml">
       <Name>System.XML</Name>
-    </Reference>
-    <Reference Include="CodeSmith.Core">
-      <Name>CodeSmith.Core</Name>
-    </Reference>
-    <Reference Include="CodeSmith.Engine">
-      <Name>CodeSmith.Engine</Name>
-    </Reference>
-    <Reference Include="SchemaExplorer">
-      <Name>SchemaExplorer</Name>
-    </Reference>
-    <Reference Include="SchemaExplorer.SqlSchemaProvider">
-      <Name>SchemaExplorer.SqlSchemaProvider</Name>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -53,6 +93,8 @@
       <SubType>Code</SubType>
     </Compile>
     <Content Include="readme.txt" />
+    <None Include="app.config" />
+    <None Include="packages.config" />
     <None Include="StoredProcedures.cst" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
@@ -61,5 +103,12 @@
       <RoslynFiles Include="C:\Program Files (x86)\CodeSmith\v8.0\bin\roslyn\*.*" />
     </ItemGroup>
     <Copy SourceFiles="@(RoslynFiles)" DestinationFolder="$(OutputPath)\roslyn" />
+  </Target>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('packages\Microsoft.Net.Compilers.2.1.0\build\Microsoft.Net.Compilers.props')" Text="$([System.String]::Format('$(ErrorText)', 'packages\Microsoft.Net.Compilers.2.1.0\build\Microsoft.Net.Compilers.props'))" />
+    <Error Condition="!Exists('packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.5\build\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" Text="$([System.String]::Format('$(ErrorText)', 'packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.5\build\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props'))" />
   </Target>
 </Project>

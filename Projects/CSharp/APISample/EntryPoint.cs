@@ -11,7 +11,7 @@ namespace APISample {
 
             CompileTemplateResult result = engine.Compile(path);
             if (result.Errors.Count == 0) {
-                var database = new DatabaseSchema(new SqlSchemaProvider(), @"Server=.;Database=PetShop;Integrated Security=True;");
+                var database = new DatabaseSchema(new SqlSchemaProvider(), "Server=.;Database=PetShop;Integrated Security=True;");
                 TableSchema table = database.Tables["Inventory"];
 
                 CodeTemplate template = result.CreateTemplateInstance();

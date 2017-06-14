@@ -9,7 +9,7 @@ Module EntryPoint
 
         Dim result As CompileTemplateResult = engine.Compile(path)
         If result.Errors.Count = 0 Then
-            Dim database As New DatabaseSchema(New SqlSchemaProvider(), "Server=(local);Database=PetShop;Integrated Security=True;")
+            Dim database As New DatabaseSchema(New SqlSchemaProvider(), "Server=.;Database=PetShop;Integrated Security=True;")
             Dim table As TableSchema = database.Tables("Inventory")
 
             Dim template As CodeTemplate = result.CreateTemplateInstance()
