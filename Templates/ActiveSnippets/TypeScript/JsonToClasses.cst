@@ -1,11 +1,11 @@
-﻿<%-- 
+﻿<%--
 Name: Json.cst
 Author: Eric J. Smith
 Description: Generate C# classes from a JSON file.
 --%>
 <%@ CodeTemplate Language="C#" TargetLanguage="TypeScript" CompilerVersion="v3.5" Description="Generate C# classes from a JSON file." %>
 <%@ Property Category="1. Required" Name="ClassName" Type="System.String" Optional="False" Description="The name of the class." %>
-<%@ Property Category="1. Required" Name="Source" Type="System.String" Default="http://apps.db.ripe.net/whois/lookup/ripe/inetnum/8.8.8.8.json" Optional="False" Editor="System.Windows.Forms.Design.FileNameEditor, System.Design" Description="The full path to the JSON file or remote json file" %>
+<%@ Property Category="1. Required" Name="Source" Type="System.String" Default="http://date.jsontest.com/" Optional="False" Editor="System.Windows.Forms.Design.FileNameEditor, System.Design" Description="The full path to the JSON file or remote json file" %>
 <%@ Import Namespace="System.Collections.Generic" %>
 <%@ Import Namespace="System.IO" %>
 <%@ Import Namespace="System.Net" %>
@@ -24,7 +24,7 @@ export class <%= name %> {
         this.<%= StringUtil.ToCamelCase(p.Value.Name) %> = <%= StringUtil.ToCamelCase(p.Value.Name) %>;
         <% } %>
     }
-    
+
     <% foreach(var p in properties) { %>
     public <%= StringUtil.ToCamelCase(p.Value.Name) %>: <%= GetType(p.Value.Value) %>;
     <% } %>
@@ -36,17 +36,17 @@ export class <%= name %> {
 private string GetJSON(string source) {
     if (String.IsNullOrWhiteSpace(source))
         throw new ApplicationException("Json file not found.");
-    
+
     if (!(source.StartsWith("http") || source.StartsWith("www"))) {
         if (!File.Exists(source))
             source = Path.Combine(this.CodeTemplateInfo.DirectoryName, source);
-        
+
         if (!File.Exists(source))
             throw new ApplicationException("Json file not found.");
-        
+
         return File.ReadAllText(source);
     }
-    
+
     Uri uri;
     if (!Uri.TryCreate(Source, UriKind.RelativeOrAbsolute, out uri))
         throw new ApplicationException("Unable to resolve json source.");
@@ -60,14 +60,14 @@ private string GetJSON(string source) {
     using (var response = request.GetResponse()) {
         if (response is HttpWebResponse && ((HttpWebResponse)response).StatusCode != HttpStatusCode.OK)
             throw new ApplicationException("Unable to load downloaded schema.");
-        
+
         using (var stream = response.GetResponseStream()) {
             try {
                 using (var reader = new StreamReader(stream)) {
                     var json = reader.ReadToEnd();
-                    
+
                     Logger.Log.Info(json);
-                    
+
                     return json;
                 }
             } catch (Exception ex) {
@@ -114,7 +114,7 @@ private bool IsIntrinsicType(string type) {
 private Dictionary<string, JObject> GetObjects(JObject j) {
     var objects = new Dictionary<string, JObject>();
     objects.Add(ClassName, j);
-    
+
     GetObjects(j, objects);
     return objects;
 }
@@ -131,16 +131,16 @@ private void GetObjects(JObject j, Dictionary<string, JObject> objects) {
             case JTokenType.Array:
                 if (!p.Value.HasValues)
                     continue;
-                
+
                 if (!objects.ContainsKey(StringUtil.ToPascalCase(StringUtil.ToSingular(p.Name))) && !IsIntrinsicType(GetType(p.Value.First)))
                     objects.Add(StringUtil.ToPascalCase(StringUtil.ToSingular(p.Name)), p.Value.First as JObject);
-                
+
                 GetObjects(p.Value.First as JObject, objects);
                 break;
             case JTokenType.Object:
                 if (!objects.ContainsKey(StringUtil.ToPascalCase(StringUtil.ToSingular(p.Name))))
                     objects.Add(StringUtil.ToPascalCase(StringUtil.ToSingular(p.Name)), p.Value as JObject);
-                
+
                 GetObjects(p.Value as JObject, objects);
                 break;
         }
