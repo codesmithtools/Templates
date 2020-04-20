@@ -30,11 +30,7 @@ staleLabel: stale
 # Comment to post when marking as stale. Set to `false` to disable
 markComment: >
   There hasn't been any activity on this issue recently. Due to the high number
-  of incoming GitHub notifications, we have to clean some of the old issues,
-  as many of them have already been resolved with the latest updates.
-  Please make sure to update to the latest Home Assistant version and check
-  if that solves the issue. Let us know if that works for you by adding a
-  comment 👍
+  of incoming GitHub notifications, we have to clean some of the old issues.
   This issue now has been marked as stale and will be closed if no further
   activity occurs. Thank you for your contributions.
 # Comment to post when removing the stale label.
