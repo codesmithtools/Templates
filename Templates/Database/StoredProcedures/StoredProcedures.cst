@@ -1111,14 +1111,19 @@ public string GetEntityName(bool plural)
 public string GetBySuffix(IList<ColumnSchema> columns)
 {
     System.Text.StringBuilder bySuffix = new System.Text.StringBuilder();
+    int colCnt = 0;
     foreach(var column in columns.AsIndexedEnumerable())
 	{
-	    if (!column.IsFirst) bySuffix.Append("And");
+	    if (column.IsFirst && colCnt >= 1) { 
+            bySuffix.Append("And");
+        }
 	    bySuffix.Append(column.Value.Name);
+        colCnt++;
 	}
 	
 	return bySuffix.ToString();
 }
+
 #endregion
 
 #region Template Overrides
