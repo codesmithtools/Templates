@@ -12,6 +12,7 @@
 <%@ Property Name="SelectPrefix" Type="System.String" Default="Get" Category="Style" Description="Prefix to use for all generated SELECT stored procedures." %>
 <%@ Assembly Name="SchemaExplorer" %>
 <%@ Assembly Name="CodeSmith.BaseTemplates" %>
+<%@ Assembly Name="CodeSmith.CustomProperties" %>
 <%@ Assembly Name="System.Data" %>
 <%@ Import Namespace="SchemaExplorer" %>
 <%@ Import Namespace="System.Data" %>

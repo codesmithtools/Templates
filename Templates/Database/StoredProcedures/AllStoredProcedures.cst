@@ -11,6 +11,7 @@
 	Description="If supplied, any matching tables will not get stored procedures generated. (* is treated as a wildcard)" %>
 <%@ Assembly Name="SchemaExplorer" %>
 <%@ Assembly Name="CodeSmith.BaseTemplates" %>
+<%@ Assembly Name="CodeSmith.CustomProperties" %>
 <%@ Import Namespace="SchemaExplorer" %>
 <%-- Register the StoredProcedures template and have it's properties merged into this template.  --%>
 <%@ Register Template="StoredProcedures.cst" Name="StoredProceduresTemplate" MergeProperties="True" ExcludeProperties="SourceTable,IsolationLevel,OutputFile" %>

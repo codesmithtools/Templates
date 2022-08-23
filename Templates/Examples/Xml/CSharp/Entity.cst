@@ -9,6 +9,7 @@ Description: This template generates a simplistic entity object.  It can only be
 <%@ XmlProperty Name="EntityMap" Schema="EntityMap.xsd" Optional="True" Category="Context" %>
 <%@ Property Name="EntityName" Type="System.String" Optional="True" Category="Context" Description="If this template is being called directly, then specify the element name to target." %>
 <%@ Assembly Name="CodeSmith.BaseTemplates" %>
+<%@ Assembly Name="CodeSmith.CustomProperties" %>
 <%@ Import Namespace="CodeSmith.BaseTemplates" %>
 using System;
 

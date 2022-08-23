@@ -1,4 +1,4 @@
-﻿<%--
+<%--
 	Author: 
 		Todd Carrico
 	
@@ -12,11 +12,10 @@
     Description="Generates a script to replace data in a table." %>
 
 <%@ Assembly Name="SchemaExplorer" %>
+<%@ Assembly Name="CodeSmith.BaseTemplates" %>
 <%@ Assembly Name="CodeSmith.CustomProperties" %>
 <%@ Assembly Name="System.Data" %>
-<%@ Assembly Name="CodeSmith.BaseTemplates" %>
 <%@ Assembly Name="System.Design" %>
-<%@ Assembly Name="CodeSmith.CustomProperties" %>
 
 <%@ Import Namespace="SchemaExplorer" %>
 <%@ Import Namespace="System.Text" %>

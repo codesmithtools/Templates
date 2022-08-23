@@ -9,6 +9,7 @@ Description: Create a list of properties from database table
 <%@ Assembly Name="System.Data" %>
 <%@ Assembly Name="SchemaExplorer" %>
 <%@ Assembly Name="CodeSmith.BaseTemplates" %>
+<%@ Assembly Name="CodeSmith.CustomProperties" %>
 
 <%@ Import Namespace="System.Data" %>
 <%@ Import Namespace="SchemaExplorer" %>

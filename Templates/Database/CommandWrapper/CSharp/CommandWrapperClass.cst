@@ -18,6 +18,7 @@
 
 <%-- Register referenced assemblies.  --%>
 <%@ Assembly Name="CodeSmith.BaseTemplates" %>
+<%@ Assembly Name="CodeSmith.CustomProperties" %>
 <%@ Assembly Name="SchemaExplorer" %>
 
 <%-- Import commonly used namespaces. --%>

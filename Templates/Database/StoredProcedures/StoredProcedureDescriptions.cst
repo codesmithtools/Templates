@@ -49,6 +49,7 @@
 
 <%@ Assembly Name="SchemaExplorer" %>
 <%@ Assembly Name="CodeSmith.BaseTemplates" %>
+<%@ Assembly Name="CodeSmith.CustomProperties" %>
 
 <%@ Import Namespace="CodeSmith.BaseTemplates" %>
 <%@ Import Namespace="SchemaExplorer" %>

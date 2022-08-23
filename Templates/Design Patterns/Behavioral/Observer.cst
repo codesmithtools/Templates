@@ -4,6 +4,7 @@ Author: Martin Hart Turner
 Description: Observer Design Pattern Template
 --%>
 <%@ Assembly Name="CodeSmith.BaseTemplates" %>
+<%@ Assembly Name="CodeSmith.CustomProperties" %>
 <%@ Import Namespace="CodeSmith.BaseTemplates"  %>
 <%@ Template Language="C#" TargetLanguage="C#" %>
 <%@ Property Name="Namespace" Type="System.String" Default="GangOfFour.Behavioral" Optional="False" Category="Names" Description="The name of the namespace" %>
