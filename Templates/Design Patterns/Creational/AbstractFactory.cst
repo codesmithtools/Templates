@@ -1,11 +1,11 @@
-﻿<%-- 
+﻿<%--
 Name: Abstract Factory
 Author: Martin Hart Turner
 Description: Abstract Factory Design Pattern Template
 --%>
 <%@ Assembly Name="CodeSmith.BaseTemplates" %>
 <%@ Import Namespace="CodeSmith.BaseTemplates"  %>
-<%@ Template Language="C#" TargetLanguage="Text" %>
+<%@ Template Language="C#" TargetLanguage="C#" %>
 <%@ Property Name="Namespace" Type="System.String" Default="GangOfFour.Creational" Optional="False" Category="Names" Description="The name of the namespace" %>
 <%@ Property Name="AbstractFactoryName" Type="System.String" Default="AbstractFactoryBase" Optional="False" Category="Names" Description="Declares an interface for operations that create abstract products" %>
 <%@ Property Name="ConcreteFactory1" Type="System.String" Default="ConcreteFactory1" Optional="False" Category="Names" Description="Implements the operations to create concrete '1' product objects" %>
@@ -40,7 +40,7 @@ using System;
 
 namespace <%= Namespace %>
 {
-  //--- Provide an interface for creating families of related or 
+  //--- Provide an interface for creating families of related or
   //--- dependent objects without specifying their concrete classes.
 
 <% if(CreateUsageMethod) { %>

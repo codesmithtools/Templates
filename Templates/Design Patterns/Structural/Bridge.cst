@@ -1,11 +1,11 @@
-﻿<%-- 
+﻿<%--
 Name: Bridge
 Author: Martin Hart Turner
 Description: Bridge Design Pattern Template
 --%>
 <%@ Assembly Name="CodeSmith.BaseTemplates" %>
 <%@ Import Namespace="CodeSmith.BaseTemplates"  %>
-<%@ Template Language="C#" TargetLanguage="Text" %>
+<%@ Template Language="C#" TargetLanguage="C#" %>
 <%@ Property Name="Namespace" Type="System.String" Default="GangOfFour.Structural" Optional="False" Category="Names" Description="The name of the namespace" %>
 <%@ Property Name="AbstractionClassName" Type="System.String" Default="Abstracion" Optional="False" Category="Names" Description="Defines the abstraction's interface. It also maintains a reference to an object of type Implementor" %>
 <%@ Property Name="RefinedAbstractionClassName" Type="System.String" Default="RefinedAbstracion" Optional="False" Category="Names" Description="Extends the interface defined by Abstraction" %>

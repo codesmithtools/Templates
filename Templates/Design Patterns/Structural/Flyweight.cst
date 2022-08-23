@@ -1,11 +1,11 @@
-﻿<%-- 
+﻿<%--
 Name: Flyweight
 Author: Martin Hart Turner
 Description: Flyweight Design Pattern Template
 --%>
 <%@ Assembly Name="CodeSmith.BaseTemplates" %>
 <%@ Import Namespace="CodeSmith.BaseTemplates"  %>
-<%@ Template Language="C#" TargetLanguage="Text" %>
+<%@ Template Language="C#" TargetLanguage="C#" %>
 <%@ Property Name="Namespace" Type="System.String" Default="GangOfFour.Structural" Optional="False" Category="Names" Description="The name of the namespace" %>
 <%@ Property Name="FlyweightFactoryName" Type="System.String" Default="FlyweightFactory" Optional="False" Category="Names" Description="Creates and manages flyweight objects" %>
 <%@ Property Name="AbstractFlyweightClassName" Type="System.String" Default="Flyweight" Optional="False" Category="Names" Description="Declares an interface through which flyweights can receive and act on extrinsic state" %>

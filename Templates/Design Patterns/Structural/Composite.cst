@@ -1,11 +1,11 @@
-﻿<%-- 
+﻿<%--
 Name: Composite
 Author: Martin Hart Turner
 Description: Composite Design Pattern Template
 --%>
 <%@ Assembly Name="CodeSmith.BaseTemplates" %>
 <%@ Import Namespace="CodeSmith.BaseTemplates"  %>
-<%@ Template Language="C#" TargetLanguage="Text" %>
+<%@ Template Language="C#" TargetLanguage="C#" %>
 <%@ Property Name="Namespace" Type="System.String" Default="GangOfFour.Structural" Optional="False" Category="Names" Description="The name of the namespace" %>
 <%@ Property Name="AbstractComponentClassName" Type="System.String" Default="Component" Optional="False" Category="Names" Description="Declares the interface for objects in the composition" %>
 <%@ Property Name="CompositeClassName" Type="System.String" Default="Composite" Optional="False" Category="Names" Description="Defines behavior for components having children" %>
@@ -17,7 +17,7 @@ using System.Collections.Generic;
 
 namespace <%= Namespace %>
 {
-  //--- Compose objects into tree structures to represent part-whole hierarchies. 
+  //--- Compose objects into tree structures to represent part-whole hierarchies.
   //--- Composite lets clients treat individual objects and compositions of objects uniformly.
 
 <% if(CreateUsageMethod) { %>

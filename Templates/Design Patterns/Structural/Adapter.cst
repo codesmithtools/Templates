@@ -1,11 +1,11 @@
-﻿<%-- 
+﻿<%--
 Name: Adapter
 Author: Martin Hart Turner
 Description: Adapter Design Pattern Template
 --%>
 <%@ Assembly Name="CodeSmith.BaseTemplates" %>
 <%@ Import Namespace="CodeSmith.BaseTemplates"  %>
-<%@ Template Language="C#" TargetLanguage="Text" %>
+<%@ Template Language="C#" TargetLanguage="C#" %>
 <%@ Property Name="Namespace" Type="System.String" Default="GangOfFour.Structural" Optional="False" Category="Names" Description="The name of the namespace" %>
 <%@ Property Name="TargetClassName" Type="System.String" Default="Target" Optional="False" Category="Names" Description="Defines the domain-specific interface that Client uses" %>
 <%@ Property Name="AdapterClassName" Type="System.String" Default="Adapter" Optional="False" Category="Names" Description="Adapts the interface Adaptee to the Target interface" %>

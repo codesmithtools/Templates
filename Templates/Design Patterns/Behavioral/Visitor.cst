@@ -1,11 +1,11 @@
-﻿<%-- 
+﻿<%--
 Name: Visitor
 Author: Martin Hart Turner
 Description: Visitor Design Pattern Template
 --%>
 <%@ Assembly Name="CodeSmith.BaseTemplates" %>
 <%@ Import Namespace="CodeSmith.BaseTemplates"  %>
-<%@ Template Language="C#" TargetLanguage="Text" %>
+<%@ Template Language="C#" TargetLanguage="C#" %>
 <%@ Property Name="Namespace" Type="System.String" Default="GangOfFour.Behavioral" Optional="False" Category="Names" Description="The name of the namespace" %>
 <%@ Property Name="AbstractVisitorClassName" Type="System.String" Default="Visitor" Optional="False" Category="Names" Description="Declares a Visit operation for each class of ConcreteElement in the object structure" %>
 <%@ Property Name="ConcreteVisitor1ClassName" Type="System.String" Default="ConcreteVisitor1" Optional="False" Category="Names" Description="Implements each operation declared by the first Visitor" %>
@@ -36,7 +36,7 @@ using System.Collections.Generic;
 
 namespace <%= Namespace %>
 {
-  //--- Represent an operation to be performed on the elements of an object structure. 
+  //--- Represent an operation to be performed on the elements of an object structure.
   //--- Visitor lets you define a new operation without changing the classes of the elements on which it operates.
 
 <% if(CreateUsageMethod) { %>

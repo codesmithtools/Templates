@@ -1,9 +1,9 @@
-﻿<%-- 
+﻿<%--
 Name: Singleton
 Author: Martin Hart Turner
 Description: Singleton Design Pattern Template
 --%>
-<%@ Template Language="C#" TargetLanguage="Text" %>
+<%@ Template Language="C#" TargetLanguage="C#" %>
 <%@ Property Name="Namespace" Type="System.String" Default="GangOfFour.Creational" Optional="False" Category="Names" Description="The name of the namespace" %>
 <%@ Property Name="SingletonName" Type="System.String" Default="Singleton" Optional="False" Category="Names" Description="Defines an Instance operation that lets clients access its unique instance. Instance is a class operation" %>
 <%@ Property Name="MakeThreadSafe" Type="System.Boolean" Default="False" Optional="False" Category="Options" Description="Make the static Instance method thread safe" %>
@@ -50,11 +50,11 @@ namespace <%= Namespace %>
     {
 <% if(MakeThreadSafe) { %>
       //--- Note: Thread safe
-      if(instance == null) 
+      if(instance == null)
       {
-        lock(syncRoot) 
+        lock(syncRoot)
         {
-          if(instance == null) 
+          if(instance == null)
           {
             instance = new Singleton();
           }

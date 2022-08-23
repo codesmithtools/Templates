@@ -1,11 +1,11 @@
-﻿<%-- 
+﻿<%--
 Name: Chain of Command
 Author: Martin Hart Turner
 Description: Chain of Command Design Pattern Template
 --%>
 <%@ Assembly Name="CodeSmith.BaseTemplates" %>
 <%@ Import Namespace="CodeSmith.BaseTemplates"  %>
-<%@ Template Language="C#" TargetLanguage="Text" %>
+<%@ Template Language="C#" TargetLanguage="C#" %>
 <%@ Property Name="Namespace" Type="System.String" Default="GangOfFour.Behavioral" Optional="False" Category="Names" Description="The name of the namespace" %>
 <%@ Property Name="AbstractHandlerClassName" Type="System.String" Default="Handler" Optional="False" Category="Names" Description="Defines an interface for handling the requests" %>
 <%@ Property Name="ConcreteHandler1ClassName" Type="System.String" Default="ConcreteHandler1" Optional="False" Category="Names" Description="First class that handles requests it is responsible for" %>
@@ -26,7 +26,7 @@ using System;
 
 namespace <%= Namespace %>
 {
-  //--- Avoid coupling the sender of a request to its receiver by giving more than one object a chance to handle the request. 
+  //--- Avoid coupling the sender of a request to its receiver by giving more than one object a chance to handle the request.
   //--- Chain the receiving objects and pass the request along the chain until an object handles it.
 
 <% if(CreateUsageMethod) { %>

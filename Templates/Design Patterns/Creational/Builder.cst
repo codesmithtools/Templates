@@ -1,11 +1,11 @@
-﻿<%-- 
+﻿<%--
 Name: Singleton
 Author: Martin Hart Turner
 Description: Singleton Design Pattern Template
 --%>
 <%@ Assembly Name="CodeSmith.BaseTemplates" %>
 <%@ Import Namespace="CodeSmith.BaseTemplates"  %>
-<%@ Template Language="C#" TargetLanguage="Text" %>
+<%@ Template Language="C#" TargetLanguage="C#" %>
 <%@ Property Name="Namespace" Type="System.String" Default="GangOfFour.Creational" Optional="False" Category="Names" Description="The name of the namespace" %>
 <%@ Property Name="DirectorClassName" Type="System.String" Default="Director" Optional="False" Category="Names" Description="Constructs an object using the Builder interface" %>
 <%@ Property Name="AbstractBuilderClassName" Type="System.String" Default="Builder" Optional="False" Category="Names" Description="Specifies an abstract interface for creating parts of a Product object" %>
@@ -28,7 +28,7 @@ using System.Collections.Generic;
 
 namespace <%= Namespace %>
 {
-  //--- Separate the construction of a complex object from its representation 
+  //--- Separate the construction of a complex object from its representation
   //--- so that the same construction process can create different representations.
 
 <% if(CreateUsageMethod) { %>

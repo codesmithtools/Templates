@@ -1,11 +1,11 @@
-﻿<%-- 
+﻿<%--
 Name: Prototype
 Author: Martin Hart Turner
 Description: Prototype Design Pattern Template
 --%>
 <%@ Assembly Name="CodeSmith.BaseTemplates" %>
 <%@ Import Namespace="CodeSmith.BaseTemplates"  %>
-<%@ Template Language="C#" TargetLanguage="Text" %>
+<%@ Template Language="C#" TargetLanguage="C#" %>
 <%@ Property Name="Namespace" Type="System.String" Default="GangOfFour.Creational" Optional="False" Category="Names" Description="The name of the namespace" %>
 <%@ Property Name="AbstractPrototypeClassName" Type="System.String" Default="Prototype" Optional="False" Category="Names" Description="Declares an interace for cloning itself" %>
 <%@ Property Name="ConcretePrototype1ClassName" Type="System.String" Default="ConcretePrototype1" Optional="False" Category="Names" Description="Implements the first class for cloning itself" %>
@@ -16,7 +16,7 @@ using System;
 
 namespace <%= Namespace %>
 {
-  //--- Specify the kind of objects to create using a prototypical instance, 
+  //--- Specify the kind of objects to create using a prototypical instance,
   //--- and create new objects by copying this prototype.
 
 <% if(CreateUsageMethod) { %>
@@ -45,7 +45,7 @@ namespace <%= Namespace %>
   public abstract class <%= AbstractPrototypeClassName %>
   {
     private <% if(MakeReadonly) { %>readonly<% } %> string id;
-    
+
     //--- C'tor
     public <%= AbstractPrototypeClassName %>(string id)
     {

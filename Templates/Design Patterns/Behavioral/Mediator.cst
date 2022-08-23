@@ -1,11 +1,11 @@
-﻿<%-- 
+﻿<%--
 Name: Mediator
 Author: Martin Hart Turner
 Description: Mediator Design Pattern Template
 --%>
 <%@ Assembly Name="CodeSmith.BaseTemplates" %>
 <%@ Import Namespace="CodeSmith.BaseTemplates"  %>
-<%@ Template Language="C#" TargetLanguage="Text" %>
+<%@ Template Language="C#" TargetLanguage="C#" %>
 <%@ Property Name="Namespace" Type="System.String" Default="GangOfFour.Behavioral" Optional="False" Category="Names" Description="The name of the namespace" %>
 <%@ Property Name="AbstractMediatorClassName" Type="System.String" Default="Mediator" Optional="False" Category="Names" Description="Defines an interface for communicating with Colleague objects" %>
 <%@ Property Name="ConcreteMediatorClassName" Type="System.String" Default="ConcreteMediator" Optional="False" Category="Names" Description="Implements cooperative behavior by coordinating Colleague objects" %>
@@ -27,7 +27,7 @@ using System;
 
 namespace <%= Namespace %>
 {
-  //--- Define an object that encapsulates how a set of objects interact. 
+  //--- Define an object that encapsulates how a set of objects interact.
   //--- Mediator promotes loose coupling by keeping objects from referring to each other explicitly, and it lets you vary their interaction independently.
 
 <% if(CreateUsageMethod) { %>

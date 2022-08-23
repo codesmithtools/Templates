@@ -1,11 +1,11 @@
-﻿<%-- 
+﻿<%--
 Name: Decorator
 Author: Martin Hart Turner
 Description: Decorator Design Pattern Template
 --%>
 <%@ Assembly Name="CodeSmith.BaseTemplates" %>
 <%@ Import Namespace="CodeSmith.BaseTemplates"  %>
-<%@ Template Language="C#" TargetLanguage="Text" %>
+<%@ Template Language="C#" TargetLanguage="C#" %>
 <%@ Property Name="Namespace" Type="System.String" Default="GangOfFour.Structural" Optional="False" Category="Names" Description="The name of the namespace" %>
 <%@ Property Name="AbstractComponentClassName" Type="System.String" Default="Component" Optional="False" Category="Names" Description="Defines the interface for objects that can have responsibilities added to them dynamically" %>
 <%@ Property Name="ConcreteComponentClassName" Type="System.String" Default="ConcreteComponent" Optional="False" Category="Names" Description="Defines an object to which additional responsibilities can be attached" %>

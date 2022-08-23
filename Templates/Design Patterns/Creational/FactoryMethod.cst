@@ -1,11 +1,11 @@
-﻿<%-- 
+﻿<%--
 Name: Factory Method
 Author: Martin Hart Turner
 Description: Factory Method Design Pattern Template
 --%>
 <%@ Assembly Name="CodeSmith.BaseTemplates" %>
 <%@ Import Namespace="CodeSmith.BaseTemplates"  %>
-<%@ Template Language="C#" TargetLanguage="Text" %>
+<%@ Template Language="C#" TargetLanguage="C#" %>
 <%@ Property Name="Namespace" Type="System.String" Default="GangOfFour.Creational" Optional="False" Category="Names" Description="The name of the namespace" %>
 <%@ Property Name="AbstractCreatorClassName" Type="System.String" Default="Creator" Optional="False" Category="Names" Description="Declares the factory method, which returns an object of type Product. Creator may also define a default implementation of the factory method that returns a default ConcreteProduct object" %>
 <%@ Property Name="ConcreteCreator1ClassName" Type="System.String" Default="ConcreteCreator1" Optional="False" Category="Names" Description="Overrides the factory method to return an instance of the first ConcreteProduct" %>
@@ -32,7 +32,7 @@ using System;
 
 namespace <%= Namespace %>
 {
-  //--- Define an interface for creating an object, but let subclasses decide which class to instantiate. 
+  //--- Define an interface for creating an object, but let subclasses decide which class to instantiate.
   //--- Factory Method lets a class defer instantiation to subclasses.
 
 <% if(CreateUsageMethod) { %>

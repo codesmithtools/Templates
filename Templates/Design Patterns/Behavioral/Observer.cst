@@ -1,11 +1,11 @@
-﻿<%-- 
+﻿<%--
 Name: Observer
 Author: Martin Hart Turner
 Description: Observer Design Pattern Template
 --%>
 <%@ Assembly Name="CodeSmith.BaseTemplates" %>
 <%@ Import Namespace="CodeSmith.BaseTemplates"  %>
-<%@ Template Language="C#" TargetLanguage="Text" %>
+<%@ Template Language="C#" TargetLanguage="C#" %>
 <%@ Property Name="Namespace" Type="System.String" Default="GangOfFour.Behavioral" Optional="False" Category="Names" Description="The name of the namespace" %>
 <%@ Property Name="AbstractSubjectClassName" Type="System.String" Default="Subject" Optional="False" Category="Names" Description="Provides an interface for attaching and detaching Observer objects" %>
 <%@ Property Name="ConcreteSubjectClassName" Type="System.String" Default="ConcreteSubject" Optional="False" Category="Names" Description="Sends a notification to its observers when its state changes" %>
@@ -32,7 +32,7 @@ using System.Collections.Generic;
 
 namespace <%= Namespace %>
 {
-  //--- Define a one-to-many dependency between objects so that when one object changes state, 
+  //--- Define a one-to-many dependency between objects so that when one object changes state,
   //--- all its dependents are notified and updated automatically.
 
 <% if(CreateUsageMethod) { %>

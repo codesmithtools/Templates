@@ -1,11 +1,11 @@
-﻿<%-- 
+﻿<%--
 Name: Iterator
 Author: Martin Hart Turner
 Description: Iterator Design Pattern Template
 --%>
 <%@ Assembly Name="CodeSmith.BaseTemplates" %>
 <%@ Import Namespace="CodeSmith.BaseTemplates"  %>
-<%@ Template Language="C#" TargetLanguage="Text" %>
+<%@ Template Language="C#" TargetLanguage="C#" %>
 <%@ Property Name="Namespace" Type="System.String" Default="GangOfFour.Behavioral" Optional="False" Category="Names" Description="The name of the namespace" %>
 <%@ Property Name="AbstractAggregateClassName" Type="System.String" Default="Aggregate" Optional="False" Category="Names" Description="Defines an interface for creating an Iterator object" %>
 <%@ Property Name="ConcreteAggregateClassName" Type="System.String" Default="ConcreteAggregate" Optional="False" Category="Names" Description="Implements the Iterator creation interface to return an instance of the proper ConcreteIterator" %>
@@ -37,7 +37,7 @@ using System.Collections;
 
 namespace <%= Namespace %>
 {
-  //--- Provide a way to access the elements of an aggregate object  
+  //--- Provide a way to access the elements of an aggregate object
   //--- sequentially without exposing its underlying representation.
 
 <% if(CreateUsageMethod) { %>

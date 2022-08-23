@@ -1,11 +1,11 @@
-﻿<%-- 
+﻿<%--
 Name: Template Method
 Author: Martin Hart Turner
 Description: Template Method Design Pattern Template
 --%>
 <%@ Assembly Name="CodeSmith.BaseTemplates" %>
 <%@ Import Namespace="CodeSmith.BaseTemplates"  %>
-<%@ Template Language="C#" TargetLanguage="Text" %>
+<%@ Template Language="C#" TargetLanguage="C#" %>
 <%@ Property Name="Namespace" Type="System.String" Default="GangOfFour.Behavioral" Optional="False" Category="Names" Description="The name of the namespace" %>
 <%@ Property Name="AbstractClassClassName" Type="System.String" Default="AbstractClass" Optional="False" Category="Names" Description="The name of the base abstract class that defines the algorithm" %>
 <%@ Property Name="ConcreteClassAClassName" Type="System.String" Default="ConcreteClassA" Optional="False" Category="Names" Description="Implements the first primitive operations to carry out subclass-specific steps of the algorithm" %>
@@ -28,7 +28,7 @@ using System;
 
 namespace <%= Namespace %>
 {
-  //--- Define the skeleton of an algorithm in an operation, deferring some steps to subclasses. 
+  //--- Define the skeleton of an algorithm in an operation, deferring some steps to subclasses.
   //--- Template Method lets subclasses redefine certain steps of an algorithm without changing the algorithm's structure.
 
 <% if(CreateUsageMethod) { %>
@@ -57,7 +57,7 @@ namespace <%= Namespace %>
     void <%=PrimitiveOperation1MethodName %>();
     void <%=PrimitiveOperation2MethodName %>();
   }
-  
+
   public abstract class <%= AbstractClassClassName %> : <%= abstractClassInterfaceName %>
   {
     public abstract void <%=PrimitiveOperation1MethodName %>();

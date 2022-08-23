@@ -1,11 +1,11 @@
-﻿<%-- 
+﻿<%--
 Name: Interpreter
 Author: Martin Hart Turner
 Description: Interpreter Design Pattern Template
 --%>
 <%@ Assembly Name="CodeSmith.BaseTemplates" %>
 <%@ Import Namespace="CodeSmith.BaseTemplates"  %>
-<%@ Template Language="C#" TargetLanguage="Text" %>
+<%@ Template Language="C#" TargetLanguage="C#" %>
 <%@ Property Name="Namespace" Type="System.String" Default="GangOfFour.Behavioral" Optional="False" Category="Names" Description="The name of the namespace" %>
 <%@ Property Name="AbstractExpressionClassName" Type="System.String" Default="AbstractExpression" Optional="False" Category="Names" Description="Declares an interface for executing an operation" %>
 <%@ Property Name="TerminalExpressionClassName" Type="System.String" Default="TerminalExpression" Optional="False" Category="Names" Description="Implements an Interpret operation associated with terminal symbols in the grammar" %>
@@ -25,7 +25,7 @@ using System;
 
 namespace <%= Namespace %>
 {
-  //--- Given a language, define a representation for its grammar along with an 
+  //--- Given a language, define a representation for its grammar along with an
   //--- interpreter that uses the representation to interpret sentences in the language.
 
 <% if(CreateUsageMethod) { %>

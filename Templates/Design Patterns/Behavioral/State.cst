@@ -1,11 +1,11 @@
-﻿<%-- 
+﻿<%--
 Name: State
 Author: Martin Hart Turner
 Description: State Design Pattern Template
 --%>
 <%@ Assembly Name="CodeSmith.BaseTemplates" %>
 <%@ Import Namespace="CodeSmith.BaseTemplates"  %>
-<%@ Template Language="C#" TargetLanguage="Text" %>
+<%@ Template Language="C#" TargetLanguage="C#" %>
 <%@ Property Name="Namespace" Type="System.String" Default="GangOfFour.Behavioral" Optional="False" Category="Names" Description="The name of the namespace" %>
 <%@ Property Name="AbstractStateClassName" Type="System.String" Default="State" Optional="False" Category="Names" Description="Defines an interface for encapsulating the behavior associated with a particular state of the Context" %>
 <%@ Property Name="ConcreteStateAClassName" Type="System.String" Default="ConcreteStateA" Optional="False" Category="Names" Description="The first subclass that implements behavior associated with a state of Context" %>

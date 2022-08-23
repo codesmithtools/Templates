@@ -1,11 +1,11 @@
-﻿<%-- 
+﻿<%--
 Name: Façade
 Author: Martin Hart Turner
 Description: Façade Design Pattern Template
 --%>
 <%@ Assembly Name="CodeSmith.BaseTemplates" %>
 <%@ Import Namespace="CodeSmith.BaseTemplates"  %>
-<%@ Template Language="C#" TargetLanguage="Text" %>
+<%@ Template Language="C#" TargetLanguage="C#" %>
 <%@ Property Name="Namespace" Type="System.String" Default="GangOfFour.Structural" Optional="False" Category="Names" Description="The name of the namespace" %>
 <%@ Property Name="SubSystemOneClassName" Type="System.String" Default="SubSystemOne" Optional="False" Category="Names" Description="Implements the first subsystem functionality. It will handle work assigned by the Facade object. It has no knowledge of the facade and keeps no reference to it" %>
 <%@ Property Name="SubSystemTwoClassName" Type="System.String" Default="SubSystemTwo" Optional="False" Category="Names" Description="Implements the second subsystem functionality. It will handle work assigned by the Facade object. It has no knowledge of the facade and keeps no reference to it" %>
