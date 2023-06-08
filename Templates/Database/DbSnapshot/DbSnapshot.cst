@@ -1,12 +1,16 @@
 ﻿<%--
 	Author: 
 		Todd Carrico
-	
+
+    Update: Joe Johnston 
+        Allow Azure and other cloud based servers DBs
 	Description:
 		DBSnaptshot will create a file for every database object 
 		and if configured will attempt to script your database.
 	Remarks:
-		Only tested with Microsoft SQL Server
+		Only tested with Microsoft SQL Server 
+        and Azure MS SQL 
+        
 --%>
 <%@ CodeTemplate Language="C#" TargetLanguage="TEXT" Src="SubTemplates/DbSnapshot.CodeBehind.cs" Inherits="_Main" Description="Scripts DatabaseObjects" Debug="True" %>
 <%@ Property Name="SourceDatabase" Type="SchemaExplorer.DatabaseSchema" Category="1. Context" Description="Database that the documentation should be based on." %>
@@ -244,11 +248,23 @@ public string ParseServerName( SchemaExplorer.DatabaseSchema db )
 	
 	_serverName = conn.DataSource;
 	conn = null;
-	if (_serverName.Trim().StartsWith(".")
-			|| _serverName.Trim().StartsWith("(local)") 
-			|| _serverName.Trim().StartsWith("127.0.0.1"))
-		_serverName = CleanName(System.Windows.Forms.SystemInformation.ComputerName);
+	if (    _serverName.Trim().StartsWith(".")
+            || _serverName.Trim().StartsWith("(local)") 
+			|| _serverName.Trim().StartsWith("127.0.0.1") 
+        ) {          
+            _serverName = CleanName(System.Windows.Forms.SystemInformation.ComputerName);
+        } else if (
+            // Allow a cloud source with port  TCP:xxx,1111 or a UDP:xxxx,1433 
+            _serverName.Trim().Contains(":") /* eg tcp:myCloudData.database.windows.net,5588 */
+        ) {
+            const RegexOptions ro = RegexOptions.IgnoreCase; // | RegexOptions.IgnorePatternWhitespace | RegexOptions.Multiline | RegexOptions.Compiled ;
+            String regexptrn = @"^.*\:(\w+)(\..*$)";
+            String InPutString = _serverName.Trim();
+            _serverName = Regex.Replace(InPutString, regexptrn, "$1", ro); 
+        }
 		
+        if ( _serverName.Trim() == "") { _serverName = CleanName(System.Windows.Forms.SystemInformation.ComputerName); } // edge case 
+        
 	return _serverName;
 }
 
