@@ -261,6 +261,7 @@ public string ParseServerName( SchemaExplorer.DatabaseSchema db )
             String regexptrn = @"^.*\:(\w+)(\..*$)";
             String InPutString = _serverName.Trim();
             _serverName = Regex.Replace(InPutString, regexptrn, "$1", ro); 
+            CleanName( _serverName ); //insure the name can be used to create a folder safely
         }
 		
         if ( _serverName.Trim() == "") { _serverName = CleanName(System.Windows.Forms.SystemInformation.ComputerName); } // edge case 
