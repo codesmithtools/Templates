@@ -246,24 +246,19 @@ public string ParseServerName( SchemaExplorer.DatabaseSchema db )
 	
 	_serverName = conn.DataSource;
 	conn = null;
-	if (    _serverName.Trim().StartsWith(".")
-            || _serverName.Trim().StartsWith("(local)") 
-			|| _serverName.Trim().StartsWith("127.0.0.1") 
-        ) {          
-            _serverName = CleanName(System.Windows.Forms.SystemInformation.ComputerName);
-        } else if (
-            // Allow a cloud source with port  TCP:xxx,1111 or a UDP:xxxx,1433 
-            _serverName.Trim().Contains(":") /* eg tcp:myCloudData.database.windows.net,5588 */
-        ) {
-            const RegexOptions ro = RegexOptions.IgnoreCase; // | RegexOptions.IgnorePatternWhitespace | RegexOptions.Multiline | RegexOptions.Compiled ;
-            String regexptrn = @"^.*\:(\w+)(\..*$)";
-            String InPutString = _serverName.Trim();
-            _serverName = Regex.Replace(InPutString, regexptrn, "$1", ro); 
-            CleanName( _serverName ); //insure the name can be used to create a folder safely
-        }
-		
-        if ( _serverName.Trim() == "") { _serverName = CleanName(System.Windows.Forms.SystemInformation.ComputerName); } // edge case 
-        
+
+    string name = _serverName.Trim();
+    if (name.StartsWith(".") || name.StartsWith("(local)") || name.StartsWith("127.0.0.1")) {
+        _serverName = CleanName(System.Windows.Forms.SystemInformation.ComputerName);
+    } else if (name.Contains(":")) {
+        // Allow a cloud source with port  TCP:xxx,1111 or a UDP:xxxx,1433 eg tcp:myCloudData.database.windows.net,5588
+        _serverName = CleanName(Regex.Replace(name, @"^.*\:(\w+)(\..*$)", "$1", RegexOptions.IgnoreCase)); 
+    }
+
+    if (String.IsNullOrEmpty(_serverName.Trim())) {
+        _serverName = CleanName(System.Windows.Forms.SystemInformation.ComputerName); 
+    }
+
 	return _serverName;
 }
 
