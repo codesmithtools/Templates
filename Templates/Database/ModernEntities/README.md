@@ -1,7 +1,7 @@
 # Modern entities: EF Core, nullable
 
-Templates for today's .NET: an EF Core entity per table and a `DbContext`, shaped as EF Core's scaffolding writes them,
-from a database's schema.
+EF Core entities and a `DbContext` for a database. An entity per table and the `DbContext`, shaped as EF Core's
+scaffolding writes them, from the database's schema.
 
 - Entities are `partial` classes with `get; set;` properties: nullable reference types, `required` where a row must
   set a value, a navigation to each row a foreign key refers to, and a collection of the rows that refer to it.

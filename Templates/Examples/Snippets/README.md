@@ -1,6 +1,6 @@
 # Snippets
 
-Small templates for code you'd otherwise type by hand (8.x ran them as ActiveSnippets in Visual Studio's editor):
+Small templates for code you'd otherwise type by hand. 8.x ran them as ActiveSnippets in Visual Studio's editor.
 
 | Template | What it writes |
 | --- | --- |

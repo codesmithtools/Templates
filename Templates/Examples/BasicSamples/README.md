@@ -1,6 +1,6 @@
 # Basic samples
 
-The template language, a feature at a time, in C# and VB:
+The template language, a feature at a time, in C# and VB.
 
 | Template | What it shows |
 | --- | --- |

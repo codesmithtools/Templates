@@ -1,6 +1,6 @@
 # Database documentation (DBDocumenter)
 
-HTML documentation of a database: a page for each table, view and stored procedure, with their columns, keys,
+HTML documentation of a database. A page for each table, view and stored procedure, with their columns, keys,
 indexes, parameters and SQL. It documents the PetShop sample database (`PetShop.db3`, SQLite) in this folder.
 
 ```sh
