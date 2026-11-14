@@ -1,11 +1,14 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="utf-8"?>
 <codeSmith xmlns="http://www.codesmithtools.com/schema/csp.xsd">
   <propertySets>
     <propertySet template="master.cst">
-      <property name="DocumentationTitle">Database Documentation</property>
-      <property name="ServerName">Server</property>
-      <property name="OutputDirectory">.\PetShop\</property>
-      <property name="SourceDatabase">PetShop</property>
+      <property name="DocumentationTitle">PetShop</property>
+      <property name="ServerName">PetShop.db3</property>
+      <property name="OutputDirectory">Docs/</property>
+      <property name="SourceDatabase">
+        <connectionString>Data Source=PetShop.db3;Read Only=True</connectionString>
+        <providerType>SchemaExplorer.SQLiteSchemaProvider,SchemaExplorer.SQLiteSchemaProvider</providerType>
+      </property>
     </propertySet>
   </propertySets>
 </codeSmith>

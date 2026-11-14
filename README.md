@@ -1,19 +1,45 @@
-This project contains all of the CodeSmith Generator sample templates and projects.
-We have created this project so that the CodeSmith Generator community can always
-have access to the latest updates as well as contribute patches and samples.
+# CodeSmith Generator samples
 
-**CodeSmith Tools Website**
-http://www.codesmithtools.com/
+Templates and projects for [CodeSmith Generator](https://github.com/codesmithtools/Generator) 9.0: the `cs` command
+line and the VS Code extension, on Windows, Linux and macOS. Each sample runs as it is, with the one command in its
+README; the database samples bring their own SQLite database.
 
-### Project Templates ###
-  * [PLINQO](http://www.codesmithtools.com/product/frameworks#plinqo) - PLINQO - Supercharged LINQ to SQL
-  * [PLINQO EF](http://www.codesmithtools.com/product/frameworks#plinqoef) - PLINQO EF - PLINQO for Entity Framework
-  * [CodeSmith Generator CSLA Templates](http://www.codesmithtools.com/product/frameworks#csla) - CSLA Templates supporting the latest CSLA.NET framework.
-  * [NHibernate](http://www.codesmithtools.com/product/frameworks#nhibernate) - NHibernate Templates supporting the latest NHibernate framework.
-  * Stored Procedures - Generate stored procedures from database schema.
-  * DBDocumenter - Create an HTML document of your database.
-  * [Many more](http://www.codesmithtools.com/product/generator#templates)...
+Get one with `cs sample new <name>` (`cs sample list` lists them), or *CodeSmith: New from Sample...* in VS Code. Or
+clone this repository.
 
-### Other CodeSmith Templates ###
-  * [.netTiers](http://www.codesmithtools.com/product/frameworks#nettiers)
-  * [Kinetic Framework](http://www.codesmithtools.com/product/frameworks#kinetic)
+## Start here
+
+| Sample | What it does |
+| --- | --- |
+| [HelloWorld](Templates/Start/HelloWorld) | A template that writes a class, and a project that generates two. |
+| [TableToClass](Templates/Start/TableToClass) | A C# record for each table of a database. |
+
+## Database
+
+| Sample | What it does |
+| --- | --- |
+| [ModernEntities](Templates/Database/ModernEntities) | EF Core entities and a `DbContext`, as EF Core's scaffolding writes them. |
+| [DBDocumenter](Templates/Database/DBDocumenter) | HTML documentation of a database's tables, views and procedures. |
+| [ScriptTableData](Templates/Database/ScriptTableData) | An `INSERT` script of a table's rows. |
+
+## Examples
+
+| Sample | What it shows |
+| --- | --- |
+| [BasicSamples](Templates/Examples/BasicSamples) | The template language, a feature at a time (C# and VB). |
+| [Merge](Templates/Examples/Merge) | Regenerating into files with hand-written code (PreserveRegions, InsertRegion). |
+| [Xml](Templates/Examples/Xml) | XML input typed by a schema (`<%@ XmlProperty %>`). |
+| [JsonToClasses](Templates/Examples/JsonToClasses) | Classes from a JSON document. |
+| [Maps](Templates/Examples/Maps) | Type maps (`<%@ Map %>`). |
+| [Snippets](Templates/Examples/Snippets) | Small templates: a table enum, table properties, an exception class. |
+| [ExtendedProperties](Templates/Examples/ExtendedProperties) | Everything a schema provider gives about a database. |
+
+## Also here
+
+- [Legacy](Templates/Legacy): 8.x's framework templates (CSLA 3.8–4.5, PLINQO, Entity Framework 6, NHibernate 3.2) and
+  projects, unchanged, for projects built on them.
+- `Maps/`: type maps for SQL Server, MySQL, PostgreSQL, Oracle, SQLite, DbType, C#, VB, TypeScript and JavaScript.
+- `Data/`: the PetShop sample database for SQLite (`PetShop.db3`), SQL Server, PostgreSQL, MySQL and Oracle, and the
+  Tracker database for SQL Server.
+
+Contributions are welcome: a sample should run with one command, against `PetShop.db3` where it needs a database.

@@ -3,7 +3,7 @@
   <propertySets>
     <propertySet template="EntityMaster.cst">
       <property name="EntityMap">NorthwindMap.xml</property>
-      <property name="OutputDirectory">output\</property>
+      <property name="OutputDirectory">output/</property>
     </propertySet>
   </propertySets>
 </codeSmith>

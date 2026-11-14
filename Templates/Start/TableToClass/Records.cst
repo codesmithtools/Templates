@@ -1,0 +1,17 @@
+<%@ CodeTemplate Language="C#" TargetLanguage="Text" Description="A C# record for each table of a database, a file each." %>
+<%@ Property Name="SourceDatabase" Type="SchemaExplorer.DatabaseSchema" Category="Source" Description="The database." %>
+<%@ Property Name="TargetNamespace" Type="System.String" Default="MyApp.Data" Category="Output" Description="The records' namespace." %>
+<%@ Property Name="OutputDirectory" Type="System.String" Default="Generated" Category="Output" Description="Where the files go." %>
+<%@ Register Name="RecordTemplate" Template="Record.cst" MergeProperties="False" %>
+<%@ Assembly Name="SchemaExplorer" %>
+<%@ Import Namespace="SchemaExplorer" %>
+<%@ Import Namespace="System.IO" %>
+<%-- The master template: it renders Record.cst (a sub-template) once per table, each to its own file. --%>
+<% foreach (TableSchema table in SourceDatabase.Tables) {
+       var record = Create<RecordTemplate>();
+       record.SourceTable = table;
+       record.TargetNamespace = TargetNamespace;
+       string file = Path.Combine(OutputDirectory, StringUtil.ToPascalCase(table.Name) + ".cs");
+       record.RenderToFile(file, true); %>
+<%= file %>
+<% } %>

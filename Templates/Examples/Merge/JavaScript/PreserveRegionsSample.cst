@@ -1,4 +1,4 @@
-﻿<%@ Template Language="JavaScript" TargetLanguage="JavaScript" Description="Demonstrates using a PreserveRegions merge strategy in JavaScript." %>
+﻿<%@ Template Language="C#" TargetLanguage="JavaScript" Description="Demonstrates using a PreserveRegions merge strategy in JavaScript." %>
 (function () {
 	'use strict';
 

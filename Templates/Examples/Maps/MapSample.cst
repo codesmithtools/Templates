@@ -14,8 +14,8 @@ returned when the specified key does not exist. --%>
 <%-- This map directive uses one of the included maps called Sql-CSharp which translates SQL
 data types to C# data types.  You don't need to specify the extension for the map file src
 attribute and if you don't specify a path, it will search in the current directory for a file
-with the specified name and .csmap extension, it will then check in your
-"My Documents\CodeSmith\Maps" folder. --%>
+with the specified name and .csmap extension, then in the maps folder (Engine.CodeSmithMapsDirectory
+in cs config), then in the maps CodeSmith Generator comes with. --%>
 <%@ Map Name="SqlCSharp" Src="Sql-CSharp" Description="System to C# Type Map" %>
 
 
@@ -44,5 +44,5 @@ for this specific lookup.  Since the key doesn't exist, it should return the def
 KeyNotFoundException being thrown. --%>
 <% try { %>
 <%= SqlCSharp["unknown"] %>
-<% } catch (Exception e) { Response.WriteLine(e.ToString()); } %>
+<% } catch (System.Collections.Generic.KeyNotFoundException e) { Response.WriteLine(e.GetType().Name + ": " + e.Message); } %>
 

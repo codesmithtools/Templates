@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<codeSmith xmlns="http://www.codesmithtools.com/schema/csp.xsd">
+  <propertySets>
+    <propertySet name="TableEnum" output="Generated/PetShopTables.cs" template="TableEnum.cst">
+      <property name="SourceDatabase">
+        <connectionString>Data Source=PetShop.db3;Read Only=True</connectionString>
+        <providerType>SchemaExplorer.SQLiteSchemaProvider,SchemaExplorer.SQLiteSchemaProvider</providerType>
+      </property>
+    </propertySet>
+    <propertySet name="TableProperties" output="Generated/ProductProperties.cs" template="TableProperties.cst">
+      <property name="SourceTable">
+        <connectionString>Data Source=PetShop.db3;Read Only=True</connectionString>
+        <providerType>SchemaExplorer.SQLiteSchemaProvider,SchemaExplorer.SQLiteSchemaProvider</providerType>
+        <table>
+          <name>Product</name>
+        </table>
+      </property>
+    </propertySet>
+    <propertySet name="CustomException" output="Generated/OrderException.cs" template="CustomException.cst">
+      <property name="ClassName">OrderException</property>
+      <property name="ClassNamespace">PetShop</property>
+    </propertySet>
+  </propertySets>
+</codeSmith>

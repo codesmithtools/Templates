@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<codeSmith xmlns="http://www.codesmithtools.com/schema/csp.xsd">
+  <propertySets>
+    <propertySet name="PetShop" output="Generated/ExtendedProperties.txt" template="ExtendedProperties.cst">
+      <property name="SourceDatabase">
+        <connectionString>Data Source=PetShop.db3;Read Only=True</connectionString>
+        <providerType>SchemaExplorer.SQLiteSchemaProvider,SchemaExplorer.SQLiteSchemaProvider</providerType>
+      </property>
+    </propertySet>
+  </propertySets>
+</codeSmith>

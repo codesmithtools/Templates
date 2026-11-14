@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<codeSmith xmlns="http://www.codesmithtools.com/schema/csp.xsd">
+  <propertySets>
+    <propertySet name="Customer" output="Generated/Customer.cs" template="Hello.cst">
+      <property name="TargetNamespace">Acme.Sales</property>
+      <property name="ClassName">Customer</property>
+      <property name="Fields">Name, Email</property>
+    </propertySet>
+    <propertySet name="Order" output="Generated/Order.cs" template="Hello.cst">
+      <property name="TargetNamespace">Acme.Sales</property>
+      <property name="ClassName">Order</property>
+      <property name="Fields">Number, CustomerName</property>
+    </propertySet>
+  </propertySets>
+</codeSmith>

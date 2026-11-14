@@ -5,12 +5,11 @@ Description:
 --%>
 <%@ CodeTemplate Language="VB" 
     TargetLanguage="Text" 
-    CompilerVersion="v3.5"
     Debug="False" 
-    Description="Sample using .net 3.5 syntax" %>
+    Description="Sample using LINQ" %>
 
 
-Sample using .net 3.5 Linq syntax.
+Sample using LINQ.
 
 Cities with length less then 5:
 

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<codeSmith xmlns="http://www.codesmithtools.com/schema/csp.xsd">
+  <propertySets>
+    <propertySet name="Category.sql" output="Generated/Category.sql" template="ScriptTableData.cst">
+      <property name="SourceTable">
+        <connectionString>Data Source=PetShop.db3;Read Only=True</connectionString>
+        <providerType>SchemaExplorer.SQLiteSchemaProvider,SchemaExplorer.SQLiteSchemaProvider</providerType>
+        <table>
+          <name>Category</name>
+        </table>
+      </property>
+    </propertySet>
+  </propertySets>
+</codeSmith>

@@ -2,7 +2,7 @@
 <codeSmith xmlns="http://www.codesmithtools.com/schema/csp.xsd">
   <propertySets>
     <propertySet template="EntityMaster.cst">
-      <property name="OutputDirectory">output\</property>
+      <property name="OutputDirectory">output/</property>
       <property name="EntityMap">NorthwindMap.xml</property>
     </propertySet>
   </propertySets>
