@@ -116,3 +116,8 @@ $RECYCLE.BIN/
 .vs/config/applicationhost.config
 *.zip
 TestResult.xml
+
+# What the samples generate, and editor-only projects (cs new code-project)
+Templates/**/Generated/
+Templates/Database/DBDocumenter/Docs/
+.codesmith/
