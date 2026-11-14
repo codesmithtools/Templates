@@ -33,6 +33,7 @@ public partial class <%= Names.Entity(Table) %>Configuration : IEntityTypeConfig
        if (Names.ColumnType(column) != null) settings.Add("HasColumnType(\"" + Names.ColumnType(column) + "\")");
        if (Names.NumberedByTheApplication(column)) settings.Add("ValueGeneratedNever()");
        if (Names.IsRowVersion(column)) settings.Add("IsRowVersion()");
+       else if (Names.IsComputed(column)) settings.Add("HasComputedColumnSql()");
        if (settings.Count == 0) continue; %>
         entity.Property(e => e.<%= Names.Property(column) %>).<%= string.Join(".", settings) %>;
 <% } %>

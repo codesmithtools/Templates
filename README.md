@@ -31,6 +31,12 @@ clone this repository.
 | --- | --- |
 | [FullStack](Templates/Web/FullStack) | EF Core entities, an ASP.NET Core minimal API and a TypeScript client from one database. |
 
+## Frameworks
+
+| Sample | What it does |
+| --- | --- |
+| [Csla](Templates/Frameworks/Csla) | CSLA .NET 10 business objects, their DAL and its EF Core implementation, regenerated as the schema changes. |
+
 ## Examples
 
 | Sample | What it shows |
@@ -46,7 +52,7 @@ clone this repository.
 ## Also here
 
 - [Legacy](Templates/Legacy): 8.x's framework templates (CSLA 3.8–4.5, PLINQO, Entity Framework 6, NHibernate 3.2) and
-  projects, unchanged, for projects built on them.
+  projects, unchanged, for projects built on them. Csla above is CSLA 9 and 10's.
 - `Maps/`: type maps for SQL Server, MySQL, PostgreSQL, Oracle, SQLite, DbType, C#, VB, TypeScript and JavaScript.
 - `Data/`: the PetShop sample database for SQLite (`PetShop.db3`), SQL Server, PostgreSQL, MySQL and Oracle, and the
   Tracker database for SQL Server.

@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="App/App.csproj" />
+  <Project Path="PetShop.Business/PetShop.Business.csproj" />
+  <Project Path="PetShop.Dal/PetShop.Dal.csproj" />
+  <Project Path="PetShop.Dal.EfCore/PetShop.Dal.EfCore.csproj" />
+</Solution>

@@ -46,9 +46,10 @@ public static class Web
     /// <summary>A column's JSON name, as ASP.NET Core writes it (System.Text.Json's camel case: AccountID is accountID).</summary>
     public static string Json(ColumnSchema column) => System.Text.Json.JsonNamingPolicy.CamelCase.ConvertName(Names.Property(column));
 
-    /// <summary>A column the database fills in itself (an identity, SQLite's INTEGER PRIMARY KEY, a rowversion).</summary>
+    /// <summary>A column the database fills in itself (an identity, SQLite's INTEGER PRIMARY KEY, a rowversion, a computed
+    /// column).</summary>
     public static bool Generated(ColumnSchema column) =>
-        Names.IsRowVersion(column) ||
+        Names.IsRowVersion(column) || Names.IsComputed(column) ||
         bool.TryParse(Convert.ToString(column.ExtendedProperties["CS_IsIdentity"]?.Value), out bool identity) && identity;
 
     /// <summary>What a new row is given: every column the database doesn't fill in.</summary>

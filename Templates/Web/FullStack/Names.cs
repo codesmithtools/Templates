@@ -132,6 +132,10 @@ public static class Names
     public static bool IsRowVersion(ColumnSchema column) =>
         (column.NativeType == "timestamp" || column.NativeType == "rowversion") && column.GetClrType(TypeMapping.Modern) == typeof(byte[]);
 
+    /// <summary>A computed column: the database works it out, and EF Core never writes it.</summary>
+    public static bool IsComputed(ColumnSchema column) =>
+        bool.TryParse(System.Convert.ToString(column.ExtendedProperties["CS_IsComputed"]?.Value), out bool computed) && computed;
+
     /// <summary>A column type EF Core has to be told (PostgreSQL's jsonb, which a string would otherwise be sent as text).</summary>
     public static string ColumnType(ColumnSchema column) =>
         column.NativeType == "json" || column.NativeType == "jsonb" ? column.NativeType : null;

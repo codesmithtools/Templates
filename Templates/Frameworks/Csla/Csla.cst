@@ -1,0 +1,185 @@
+<%@ CodeTemplate Language="C#" TargetLanguage="Text" Description="CSLA .NET business objects for a database, with their DAL (interfaces and DTOs) and its EF Core implementation. Writes Model.md: what each table became, and why." %>
+<%@ Property Name="SourceDatabase" Type="SchemaExplorer.DatabaseSchema" Category="Source" Description="The database." %>
+<%@ Property Name="Namespace" Type="System.String" Default="MyApp" Category="Output" Description="The root namespace and the projects' names: {Namespace}.Business, {Namespace}.Dal and {Namespace}.Dal.EfCore." %>
+<%@ Property Name="ContextName" Type="System.String" Default="AppDbContext" Category="Output" Description="The DbContext's class name." %>
+<%@ Property Name="OutputDirectory" Type="System.String" Default="." Category="Output" Description="The folder of the three projects: each one's generated files go to its Generated folder." %>
+<%@ Property Name="Exclude" Type="System.String" Default="sysdiagrams, __EFMigrationsHistory" Optional="True" Category="Model" Description="Tables (Orders) and columns (Orders.Notes) to leave out, separated by commas; * and ? match any characters." %>
+<%@ Property Name="Children" Type="System.String" Default="" Optional="True" Category="Model" Description="Tables to make children of another, besides those the keys say (Parent: Child, Child; Parent: Child)." %>
+<%@ Property Name="TargetFramework" Type="System.String" Default="net10.0" Category="Projects" Description="A project file's target framework, where it writes one (a project that isn't there)." %>
+<%@ Property Name="CslaVersion" Type="System.String" Default="10.2.0" Category="Projects" Description="The Csla package's version, where it writes the business objects' project (9.x works too)." %>
+<%@ Property Name="EfCoreVersion" Type="System.String" Default="10.0.15" Category="Projects" Description="The EF Core package's version, where it writes the EF Core DAL's project." %>
+<%@ Register Name="ProjectTemplate" Template="Project.cst" MergeProperties="False" %>
+<%@ Register Name="EditableTemplate" Template="Editable.cst" MergeProperties="False" %>
+<%@ Register Name="ChildListTemplate" Template="ChildList.cst" MergeProperties="False" %>
+<%@ Register Name="InfoTemplate" Template="Info.cst" MergeProperties="False" %>
+<%@ Register Name="ListTemplate" Template="List.cst" MergeProperties="False" %>
+<%@ Register Name="NameValueListTemplate" Template="NameValueList.cst" MergeProperties="False" %>
+<%@ Register Name="DalTemplate" Template="Dal.cst" MergeProperties="False" %>
+<%@ Register Name="DalCommonTemplate" Template="DalCommon.cst" MergeProperties="False" %>
+<%@ Register Name="EntityTemplate" Template="Entity.cst" MergeProperties="False" %>
+<%@ Register Name="ConfigurationTemplate" Template="Configuration.cst" MergeProperties="False" %>
+<%@ Register Name="ContextTemplate" Template="Context.cst" MergeProperties="False" %>
+<%@ Register Name="EfDalTemplate" Template="EfDal.cst" MergeProperties="False" %>
+<%@ Register Name="EfCommonTemplate" Template="EfCommon.cst" MergeProperties="False" %>
+<%@ Assembly Name="SchemaExplorer" %>
+<%@ Import Namespace="SchemaExplorer" %>
+<%@ Import Namespace="System.Collections.Generic" %>
+<%@ Import Namespace="System.IO" %>
+<%@ Import Namespace="System.Linq" %>
+<%@ Assembly Src="Names.cs" %>
+<%@ Assembly Src="Model.cs" %>
+<%--
+The master: the business objects (Editable.cst, ChildList.cst, Info.cst, List.cst, NameValueList.cst), the DAL's
+interfaces (Dal.cst, DalCommon.cst) and its EF Core implementation (Entity.cst, Configuration.cst, Context.cst, EfDal.cst,
+EfCommon.cst), each project's into its Generated folder. A .g.cs file there that this run didn't write (a table that's
+gone) is removed. A project's file is written once, where there isn't one (Project.cst). What it writes itself is
+Model.md.
+--%>
+<% var model = Model.Of(SourceDatabase, Exclude, Children); Generate(model); %>
+# <%= SourceDatabase.Name %>'s business objects
+
+What each table of <%= SourceDatabase.Name %> became, and why, as `Csla.cst` generated them. Change it with the settings
+(`Exclude`, `Children`) and with partial classes of your own; generate again when the schema changes.
+
+## Roots
+
+Editable roots (`BusinessBase`), saved with their children in one transaction; a read-only list (`ReadOnlyListBase`)
+of each; a name/value list (`NameValueListBase`) of those another table refers to.
+
+| Table | Editable | Children | Read-only list | Name/value list |
+| --- | --- | --- | --- | --- |
+<% foreach (TableSchema table in model.Tables.Where(t => !model.IsChild(t))) { %>
+| <%= table.Name %> | `<%= Model.Class(table) %>` | <%= Model.And(model.ChildrenOf(table).Select(c => "`" + model.ChildListProperty(c) + "`")) %> | `<%= Model.ListName(table) %>` of `<%= Model.InfoName(table) %>`: all<%= string.Concat(model.ListCriteria(table).Select(c => ", by " + string.Join(" and ", c.Columns.Select(Model.Property)))) %> | <%= model.HasNameValueList(table) ? "`" + Model.NameValueListName(table) + "` (" + model.DisplayColumn(table).Name + ")" : "" %> |
+<% } %>
+<% if (model.Tables.Any(model.IsChild)) { %>
+
+## Children
+
+Editable children (`BusinessBase`) in a list (`BusinessListBase`) of their parent's, which saves them.
+
+| Table | Editable | In | Why |
+| --- | --- | --- | --- |
+<% foreach (TableSchema table in model.Tables.Where(model.IsChild)) { %>
+| <%= table.Name %> | `<%= Model.Class(table) %>` | `<%= Model.Class(model.Parent(table)) %>.<%= model.ChildListProperty(table) %>` (`<%= Model.ChildList(table) %>`) | <%= model.WhyChild(table) %> |
+<% } %>
+<% } %>
+<% var notes = model.Notes.Distinct().ToList(); if (notes.Count > 0) { %>
+
+## Left out
+
+<% foreach (string note in notes) { %>
+- <%= note %>
+<% } %>
+<% } %>
+<script runat="template">
+private void Generate(Model model)
+{
+    string business = Path.Combine(OutputDirectory, Namespace + ".Business", "Generated");
+    string dal = Path.Combine(OutputDirectory, Namespace + ".Dal", "Generated");
+    string efCore = Path.Combine(OutputDirectory, Namespace + ".Dal.EfCore", "Generated");
+    var written = new HashSet<string>();
+
+    void Render(CodeTemplate template, string directory, string name)
+    {
+        string file = Path.Combine(directory, name + ".g.cs");
+        template.RenderToFile(file, true);
+        written.Add(Path.GetFullPath(file));
+    }
+    T Table<T>(TableSchema table) where T : CodeTemplate, new()
+    {
+        var template = Create<T>();
+        template.SetProperty("Table", table);
+        template.SetProperty("Namespace", Namespace);
+        template.SetProperty("Exclude", Exclude);
+        template.SetProperty("Children", Children);
+        return template;
+    }
+
+    foreach (TableSchema table in model.Tables)
+    {
+        Render(Table<EditableTemplate>(table), business, Model.Class(table));
+        if (model.IsChild(table))
+            Render(Table<ChildListTemplate>(table), business, Model.ChildList(table));
+        else
+        {
+            Render(Table<InfoTemplate>(table), business, Model.InfoName(table));
+            Render(Table<ListTemplate>(table), business, Model.ListName(table));
+            if (model.HasNameValueList(table))
+                Render(Table<NameValueListTemplate>(table), business, Model.NameValueListName(table));
+        }
+
+        Render(Table<DalTemplate>(table), dal, Model.Class(table));
+
+        var efDal = Table<EfDalTemplate>(table);
+        efDal.ContextName = ContextName;
+        Render(efDal, efCore, Model.Dal(table));
+    }
+
+    var dalCommon = Create<DalCommonTemplate>();
+    dalCommon.SourceDatabase = SourceDatabase;
+    dalCommon.Namespace = Namespace;
+    Render(dalCommon, dal, "Dal");
+
+    // the entities: every table's (the DbContext has them all), as the ModernEntities sample generates them
+    foreach (TableSchema table in SourceDatabase.Tables)
+    {
+        var entity = Create<EntityTemplate>();
+        entity.Table = table;
+        entity.Namespace = Namespace + ".Dal.EfCore";
+        Render(entity, efCore, Names.Entity(table));
+        var configuration = Create<ConfigurationTemplate>();
+        configuration.Table = table;
+        configuration.Namespace = Namespace + ".Dal.EfCore";
+        Render(configuration, efCore, Names.Entity(table) + "Configuration");
+    }
+    var context = Create<ContextTemplate>();
+    context.SourceDatabase = SourceDatabase;
+    context.Namespace = Namespace + ".Dal.EfCore";
+    context.ContextName = ContextName;
+    Render(context, efCore, ContextName);
+
+    var efCommon = Create<EfCommonTemplate>();
+    efCommon.SourceDatabase = SourceDatabase;
+    efCommon.Namespace = Namespace;
+    efCommon.ContextName = ContextName;
+    efCommon.Exclude = Exclude;
+    efCommon.Children = Children;
+    Render(efCommon, efCore, "EfCore");
+
+    foreach (string directory in new[] { business, dal, efCore })
+        RemoveStale(directory, written);
+
+    // a project file for each, where there isn't one yet: a new database's projects build as they are
+    foreach (var (kind, project) in new[] { ("Business", ".Business"), ("Dal", ".Dal"), ("EfCore", ".Dal.EfCore") })
+    {
+        string file = Path.Combine(OutputDirectory, Namespace + project, Namespace + project + ".csproj");
+        if (File.Exists(file))
+            continue;
+        var template = Create<ProjectTemplate>();
+        template.Kind = kind;
+        template.Namespace = Namespace;
+        template.TargetFramework = TargetFramework;
+        template.CslaVersion = CslaVersion;
+        template.EfCoreVersion = EfCoreVersion;
+        template.RenderToFile(file, false);
+    }
+}
+
+// A generated file this run didn't write: its table (or column, or setting) is gone. Raised as an output without
+// content first: cs check counts it as a change (and cancels), cs generate removes it.
+private void RemoveStale(string directory, HashSet<string> written)
+{
+    if (!Directory.Exists(directory))
+        return;
+    foreach (string file in Directory.GetFiles(directory, "*.g.cs"))
+    {
+        string path = Path.GetFullPath(file);
+        if (written.Contains(path))
+            continue;
+        var output = new OutputCancelEventArgs(new OutputFile(path));
+        OnPreOutputWritten(output);
+        if (!output.Cancel)
+            File.Delete(path);
+    }
+}
+</script>
