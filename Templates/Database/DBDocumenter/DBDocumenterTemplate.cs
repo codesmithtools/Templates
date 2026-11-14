@@ -7,6 +7,7 @@ using System;
 using System.IO;
 using System.Data;
 using System.Data.SqlClient;
+using System.Reflection;
 using System.ComponentModel;
 using System.ComponentModel.Design;
 using CodeSmith.Engine;
@@ -85,6 +86,26 @@ public class DBDocumenterTemplate : CodeTemplate
 	
 	public void OutputSystemInformation(string connectionString, int indentLevel)
 	{
+		// xp_msver is SQL Server's: another database has no system information to show (and a SqlConnection to it
+		// only waits out its timeout before failing).
+		PropertyInfo sourceDatabase = this.GetType().GetProperty("SourceDatabase");
+		DatabaseSchema database = sourceDatabase != null ? sourceDatabase.GetValue(this, null) as DatabaseSchema : null;
+		if (database != null && database.Provider != null && database.Provider.Name != "SqlSchemaProvider")
+		{
+			int indent = Response.IndentLevel;
+			Response.IndentLevel = indentLevel;
+			Response.WriteLine("<table width=\"95%\">");
+			Response.WriteLine("<tr>");
+			Response.WriteLine("	<td width=\"40\">&nbsp;</td>");
+			Response.WriteLine("	<td width=\"100%\" align=\"left\">");
+			Response.WriteLine("		<span class=\"bodyText\">System information is shown for SQL Server databases; this one uses the " + database.Provider.Description + ".</span>");
+			Response.WriteLine("    </td>");
+			Response.WriteLine("</tr>");
+			Response.WriteLine("</table>");
+			Response.IndentLevel = indent;
+			return;
+		}
+
 		SqlDataReader info = null;
 		
 		try
