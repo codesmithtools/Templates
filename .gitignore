@@ -119,5 +119,7 @@ TestResult.xml
 
 # What the samples generate, and editor-only projects (cs new code-project)
 Templates/**/Generated/
+Templates/**/client/src/generated/
+node_modules/
 Templates/Database/DBDocumenter/Docs/
 .codesmith/

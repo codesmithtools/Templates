@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<codeSmith xmlns="http://www.codesmithtools.com/schema/csp.xsd">
+  <propertySets>
+    <propertySet name="CSharp" output="Generated/Category.cs" template="CSharpEnum.cst">
+      <property name="SourceTable">
+        <connectionString>Data Source=PetShop.db3;Read Only=True</connectionString>
+        <providerType>SchemaExplorer.SQLiteSchemaProvider,SchemaExplorer.SQLiteSchemaProvider</providerType>
+        <table>
+          <name>Category</name>
+        </table>
+      </property>
+      <property name="TargetNamespace">PetShop.Data</property>
+    </propertySet>
+    <propertySet name="TypeScript" output="Generated/category.ts" template="TypeScriptEnum.cst">
+      <property name="SourceTable">
+        <connectionString>Data Source=PetShop.db3;Read Only=True</connectionString>
+        <providerType>SchemaExplorer.SQLiteSchemaProvider,SchemaExplorer.SQLiteSchemaProvider</providerType>
+        <table>
+          <name>Category</name>
+        </table>
+      </property>
+    </propertySet>
+  </propertySets>
+</codeSmith>

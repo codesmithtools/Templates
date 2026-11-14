@@ -1,0 +1,24 @@
+<%@ CodeTemplate Language="C#" TargetLanguage="Text" Description="A stored procedure's page: its parameters." %>
+<%@ Property Name="Command" Type="SchemaExplorer.CommandSchema" Description="The procedure (or function)." %>
+<%@ Assembly Name="SchemaExplorer" %>
+<%@ Import Namespace="SchemaExplorer" %>
+<%@ Assembly Src="Docs.cs" %>
+# <%= Docs.Text(Docs.Title(Command)) %>
+
+A procedure of the [<%= Docs.Text(Command.Database.Name) %>](../README.md) database.
+<% foreach (string paragraph in Docs.Paragraphs(Docs.Description(Command))) { %>
+
+<%= paragraph %>
+<% } %>
+
+## Parameters
+
+<% if (Command.Parameters.Count == 0) { %>
+None.
+<% } else { %>
+| Parameter | Direction | Type | Default | Description |
+| --- | --- | --- | --- | --- |
+<% foreach (ParameterSchema parameter in Command.Parameters) { %>
+| <%= Docs.Text(parameter.Name) %> | <%= Docs.Direction(parameter) %> | <%= Docs.Text(Docs.Type(parameter)) %> | <%= Docs.Default(parameter) %> | <%= Docs.Cell(Docs.Description(parameter)) %> |
+<% } %>
+<% } %>

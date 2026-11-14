@@ -18,9 +18,18 @@ clone this repository.
 
 | Sample | What it does |
 | --- | --- |
-| [ModernEntities](Templates/Database/ModernEntities) | EF Core entities and a `DbContext`, as EF Core's scaffolding writes them. |
+| [ModernEntities](Templates/Database/ModernEntities) | EF Core entities, their configurations and a `DbContext`. |
+| [DapperRepositories](Templates/Database/DapperRepositories) | A record and an async Dapper repository for each table. |
+| [MarkdownDocs](Templates/Database/MarkdownDocs) | Markdown documentation of a database, with a Mermaid diagram of its tables. |
 | [DBDocumenter](Templates/Database/DBDocumenter) | HTML documentation of a database's tables, views and procedures. |
 | [ScriptTableData](Templates/Database/ScriptTableData) | An `INSERT` script of a table's rows. |
+| [LookupEnums](Templates/Database/LookupEnums) | A C# enum and a TypeScript const from a lookup table's rows. |
+
+## Web
+
+| Sample | What it does |
+| --- | --- |
+| [FullStack](Templates/Web/FullStack) | EF Core entities, an ASP.NET Core minimal API and a TypeScript client from one database. |
 
 ## Examples
 

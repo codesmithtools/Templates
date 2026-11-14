@@ -1,4 +1,4 @@
-<%@ CodeTemplate Language="C#" TargetLanguage="C#" Description="The DbContext: a DbSet per table, with its table, key, columns and relationships." %>
+<%@ CodeTemplate Language="C#" TargetLanguage="C#" Description="The DbContext: a DbSet per table, and each table's configuration." %>
 <%@ Property Name="SourceDatabase" Type="SchemaExplorer.DatabaseSchema" Description="The database." %>
 <%@ Property Name="Namespace" Type="System.String" Default="MyApp.Data" %>
 <%@ Property Name="ContextName" Type="System.String" Default="AppDbContext" %>
@@ -21,36 +21,8 @@ public partial class <%= ContextName %>(DbContextOptions<<%= ContextName %>> opt
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
 <% foreach (TableSchema table in SourceDatabase.Tables) { %>
-        modelBuilder.Entity<<%= Names.Entity(table) %>>(entity =>
-        {
-<% if (Names.Schema(table) != null) { %>
-            entity.ToTable("<%= table.Name %>", "<%= Names.Schema(table) %>");
-<% } else { %>
-            entity.ToTable("<%= table.Name %>");
+        modelBuilder.ApplyConfiguration(new <%= Names.Entity(table) %>Configuration());
 <% } %>
-<% if (table.HasPrimaryKey) { %>
-            entity.HasKey(e => <%= Names.Members("e", table, table.PrimaryKey.MemberColumns) %>);
-<% } else { %>
-            entity.HasNoKey();
-<% } %>
-<% foreach (ColumnSchema column in table.Columns) {
-       var settings = new System.Collections.Generic.List<string>();
-       if (Names.Property(column) != column.Name) settings.Add("HasColumnName(\"" + column.Name + "\")");
-       if (Names.ColumnType(column) != null) settings.Add("HasColumnType(\"" + Names.ColumnType(column) + "\")");
-       if (Names.NumberedByTheApplication(column)) settings.Add("ValueGeneratedNever()");
-       if (Names.IsRowVersion(column)) settings.Add("IsRowVersion()");
-       if (settings.Count == 0) continue; %>
-            entity.Property(e => e.<%= Names.Property(column) %>).<%= string.Join(".", settings) %>;
-<% } %>
-<% foreach (TableKeySchema key in table.ForeignKeys) { if (!Names.Related(key)) continue; %>
-            entity.HasOne(d => d.<%= Names.Navigation(key) %>).WithMany(p => p.<%= Names.Inverse(key) %>)
-                .HasForeignKey(d => <%= Names.Members("d", table, key.ForeignKeyMemberColumns) %>)<% if (!Names.RefersToPrimaryKey(key)) { %>
-                .HasPrincipalKey(p => <%= Names.Members("p", key.PrimaryKeyTable, key.PrimaryKeyMemberColumns) %>)<% } %>
-                .HasConstraintName("<%= key.Name %>");
-<% } %>
-        });
-<% } %>
-
         OnModelCreatingPartial(modelBuilder);
     }
 

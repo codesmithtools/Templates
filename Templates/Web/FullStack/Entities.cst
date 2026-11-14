@@ -1,0 +1,43 @@
+<%@ CodeTemplate Language="C#" TargetLanguage="Text" Description="EF Core entities (partial classes, nullable reference types), their configurations and a DbContext for a database's tables." %>
+<%@ Property Name="SourceDatabase" Type="SchemaExplorer.DatabaseSchema" Category="Source" Description="The database." %>
+<%@ Property Name="Namespace" Type="System.String" Default="MyApp.Data" Category="Output" Description="The namespace of the generated code." %>
+<%@ Property Name="ContextName" Type="System.String" Default="AppDbContext" Category="Output" Description="The DbContext's class name." %>
+<%@ Property Name="OutputDirectory" Type="System.String" Default="Generated" Category="Output" Description="Where the files go, relative to the project." %>
+<%@ Register Name="EntityTemplate" Template="Entity.cst" MergeProperties="False" %>
+<%@ Register Name="ConfigurationTemplate" Template="Configuration.cst" MergeProperties="False" %>
+<%@ Register Name="ContextTemplate" Template="Context.cst" MergeProperties="False" %>
+<%@ Assembly Name="SchemaExplorer" %>
+<%@ Import Namespace="SchemaExplorer" %>
+<%@ Import Namespace="System.IO" %>
+<%@ Assembly Src="Names.cs" %>
+<%-- The master: for each table its entity (Entity.cst) and configuration (Configuration.cst), and the DbContext
+(Context.cst). Names.cs is what they share. --%>
+<% Generate(); %>
+<script runat="template">
+private void Generate()
+{
+    Directory.CreateDirectory(OutputDirectory);
+    foreach (TableSchema table in SourceDatabase.Tables)
+    {
+        var entity = Create<EntityTemplate>();
+        entity.Table = table;
+        entity.Namespace = Namespace;
+        string file = Path.Combine(OutputDirectory, Names.Entity(table) + ".cs");
+        entity.RenderToFile(file, true);
+        Response.WriteLine(file);
+        var configuration = Create<ConfigurationTemplate>();
+        configuration.Table = table;
+        configuration.Namespace = Namespace;
+        string configurationFile = Path.Combine(OutputDirectory, Names.Entity(table) + "Configuration.cs");
+        configuration.RenderToFile(configurationFile, true);
+        Response.WriteLine(configurationFile);
+    }
+    var context = Create<ContextTemplate>();
+    context.SourceDatabase = SourceDatabase;
+    context.Namespace = Namespace;
+    context.ContextName = ContextName;
+    string contextFile = Path.Combine(OutputDirectory, ContextName + ".cs");
+    context.RenderToFile(contextFile, true);
+    Response.WriteLine(contextFile);
+}
+</script>

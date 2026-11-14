@@ -1,0 +1,47 @@
+<%@ CodeTemplate Language="C#" TargetLanguage="Text" Description="Markdown documentation of a database: a README with a Mermaid ER diagram, and a page for each table, view and procedure." %>
+<%@ Property Name="SourceDatabase" Type="SchemaExplorer.DatabaseSchema" Category="Source" Description="The database." %>
+<%@ Property Name="OutputDirectory" Type="System.String" Default="Generated" Category="Output" Description="Where the pages go, relative to the project." %>
+<%@ Register Name="ReadmeTemplate" Template="Readme.cst" MergeProperties="False" %>
+<%@ Register Name="TableTemplate" Template="Table.cst" MergeProperties="False" %>
+<%@ Register Name="ViewTemplate" Template="View.cst" MergeProperties="False" %>
+<%@ Register Name="ProcedureTemplate" Template="Procedure.cst" MergeProperties="False" %>
+<%@ Assembly Name="SchemaExplorer" %>
+<%@ Import Namespace="SchemaExplorer" %>
+<%@ Import Namespace="System.IO" %>
+<%@ Assembly Src="Docs.cs" %>
+<%-- The master: README.md (Readme.cst), and a page for each table, view and procedure. Docs.cs is what they share. --%>
+<% Generate(); %>
+<script runat="template">
+private void Generate()
+{
+    var readme = Create<ReadmeTemplate>();
+    readme.SourceDatabase = SourceDatabase;
+    Write(readme, "README.md");
+    foreach (TableSchema table in SourceDatabase.Tables)
+    {
+        var page = Create<TableTemplate>();
+        page.Table = table;
+        Write(page, Docs.Page(table));
+    }
+    foreach (ViewSchema view in SourceDatabase.Views)
+    {
+        var page = Create<ViewTemplate>();
+        page.View = view;
+        Write(page, Docs.Page(view));
+    }
+    foreach (CommandSchema command in SourceDatabase.Commands)
+    {
+        var page = Create<ProcedureTemplate>();
+        page.Command = command;
+        Write(page, Docs.Page(command));
+    }
+}
+
+// Renders a page to its file in OutputDirectory, and lists the file.
+private void Write(CodeTemplate page, string path)
+{
+    string file = Path.Combine(OutputDirectory, path);
+    page.RenderToFile(file, true);
+    Response.WriteLine(file);
+}
+</script>

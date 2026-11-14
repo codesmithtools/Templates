@@ -1,7 +1,7 @@
 # Modern entities: EF Core, nullable
 
-EF Core entities and a `DbContext` for a database. An entity per table and the `DbContext`, shaped as EF Core's
-scaffolding writes them, from the database's schema.
+EF Core entities and a `DbContext` for a database. An entity and its configuration per table, and the `DbContext`,
+from the database's schema.
 
 - Entities are `partial` classes with `get; set;` properties: nullable reference types, `required` where a row must
   set a value, a navigation to each row a foreign key refers to, and a collection of the rows that refer to it.
@@ -9,17 +9,19 @@ scaffolding writes them, from the database's schema.
   `Orders`, and a table name that two schemas have gets its schema in front.
 - A foreign key's property has the type of the key it refers to (an SQLite `integer` key is a `long`, and so are the
   columns that refer to it).
-- The context maps each entity to its table (with its schema, unless it's the database's default), its key (composite
-  keys too; `HasNoKey` without one), its relationships (`HasPrincipalKey` for one to a unique key that isn't the
-  primary key), a key the application numbers (`ValueGeneratedNever`), a rowversion and a `jsonb` column.
-- `OnModelCreatingPartial` and the partial classes take your own configuration and members without editing generated
-  code.
+- Each entity's configuration (an `IEntityTypeConfiguration<T>`) maps it to its table (with its schema, unless it's
+  the database's default), its key (composite keys too; `HasNoKey` without one), its relationships
+  (`HasPrincipalKey` for one to a unique key that isn't the primary key), a key the application numbers
+  (`ValueGeneratedNever`), a rowversion and a `jsonb` column. The context applies them all.
+- The partial classes take your own members, `ConfigurePartial` an entity's own mapping and `OnModelCreatingPartial`
+  the model's, without editing generated code.
 
 | File | What it is |
 | --- | --- |
-| `Entities.cst` | The master: renders `Entity.cst` for each table and `Context.cst` once, into `OutputDirectory`. |
+| `Entities.cst` | The master: renders `Entity.cst` and `Configuration.cst` for each table and `Context.cst` once, into `OutputDirectory`. |
 | `Entity.cst` | One table's class. Types come from `column.GetCSharpTypeName()` (`DateOnly`, `int?`, `string?`). |
-| `Context.cst` | The `DbContext`: a primary constructor, a `DbSet` per table, and `OnModelCreating`. |
+| `Configuration.cst` | One table's `IEntityTypeConfiguration<T>`: its table, key, columns and relationships. |
+| `Context.cst` | The `DbContext`: a primary constructor, a `DbSet` per table, and `OnModelCreating` applying the configurations. |
 | `Names.cs` | What the templates share (`<%@ Assembly Src="Names.cs" %>`): names, types and relationships. |
 | `codesmith.options.json` | `langVersion: "latest"` for the templates' own code; warnings reported. |
 | `Entities.csp` | Generates from the PetShop sample database in this folder (`PetShop.db3`, SQLite). |

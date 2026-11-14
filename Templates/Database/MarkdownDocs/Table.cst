@@ -1,0 +1,60 @@
+<%@ CodeTemplate Language="C#" TargetLanguage="Text" Description="A table's page: its columns, keys, indexes, and the tables that refer to it." %>
+<%@ Property Name="Table" Type="SchemaExplorer.TableSchema" Description="The table." %>
+<%@ Assembly Name="SchemaExplorer" %>
+<%@ Import Namespace="SchemaExplorer" %>
+<%@ Import Namespace="System.Linq" %>
+<%@ Assembly Src="Docs.cs" %>
+# <%= Docs.Text(Docs.Title(Table)) %>
+
+A table of the [<%= Docs.Text(Table.Database.Name) %>](../README.md) database.
+<% foreach (string paragraph in Docs.Paragraphs(Docs.Description(Table))) { %>
+
+<%= paragraph %>
+<% } %>
+
+## Columns
+
+| Column | Type | Nullable | Default | Key | Description |
+| --- | --- | --- | --- | --- | --- |
+<% foreach (ColumnSchema column in Table.Columns) { %>
+| <%= Docs.Text(column.Name) %> | <%= Docs.Text(Docs.Type(column)) %> | <%= column.AllowDBNull ? "yes" : "no" %> | <%= Docs.Default(column) %> | <%= Docs.Keys(column) %> | <%= Docs.Cell(Docs.Description(column)) %> |
+<% } %>
+
+## Primary key
+
+<% if (Table.HasPrimaryKey) { %>
+<%= Docs.Columns(Table.PrimaryKey.MemberColumns) %> (<%= Docs.Text(Table.PrimaryKey.Name) %>)
+<% } else { %>
+None.
+<% } %>
+<% if (Table.ForeignKeys.Count > 0) { %>
+
+## Foreign keys
+
+| Key | Columns | References |
+| --- | --- | --- |
+<% foreach (TableKeySchema key in Table.ForeignKeys) { %>
+| <%= Docs.Text(key.Name) %> | <%= Docs.Columns(key.ForeignKeyMemberColumns) %> | <%= Docs.Link(key.PrimaryKeyTable, true) %> (<%= Docs.Columns(key.PrimaryKeyMemberColumns) %>) |
+<% } %>
+<% } %>
+<% if (Table.Indexes.Count > 0) { %>
+
+## Indexes
+
+| Index | Columns | Unique |
+| --- | --- | --- |
+<% foreach (IndexSchema index in Table.Indexes) { %>
+| <%= Docs.Text(index.Name) %> | <%= Docs.Columns(index.MemberColumns) %> | <%= index.IsUnique ? "yes" : "no" %> |
+<% } %>
+<% } %>
+<% var referencedBy = Docs.ReferencedBy(Table).ToList(); %>
+<% if (referencedBy.Count > 0) { %>
+
+## Referenced by
+
+| Key | Table | Columns |
+| --- | --- | --- |
+<% foreach (TableKeySchema key in referencedBy) { %>
+| <%= Docs.Text(key.Name) %> | <%= Docs.Link(key.ForeignKeyTable, true) %> | <%= Docs.Columns(key.ForeignKeyMemberColumns) %> |
+<% } %>
+<% } %>

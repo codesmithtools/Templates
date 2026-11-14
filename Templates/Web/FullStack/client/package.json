@@ -1,0 +1,17 @@
+{
+  "name": "petshop-client",
+  "private": true,
+  "type": "module",
+  "description": "The PetShop API's TypeScript client: src/generated/petshop.ts is generated (FullStack.csp), src/example.ts uses it.",
+  "scripts": {
+    "check": "tsc --noEmit",
+    "start": "node src/example.ts"
+  },
+  "dependencies": {
+    "zod": "4.6.7"
+  },
+  "devDependencies": {
+    "@types/node": "24.19.2",
+    "typescript": "7.0.2"
+  }
+}

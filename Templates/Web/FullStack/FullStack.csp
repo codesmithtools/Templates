@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<codeSmith xmlns="http://www.codesmithtools.com/schema/csp.xsd">
+  <defaultProperties>
+    <property name="SourceDatabase">
+      <connectionString>Data Source=PetShop.db3;Read Only=True</connectionString>
+      <providerType>SchemaExplorer.SQLiteSchemaProvider,SchemaExplorer.SQLiteSchemaProvider</providerType>
+    </property>
+  </defaultProperties>
+  <propertySets>
+    <propertySet name="Entities" output="Generated/Data/Files.txt" template="Entities.cst">
+      <property name="Namespace">PetShop.Data</property>
+      <property name="ContextName">PetShopContext</property>
+      <property name="OutputDirectory">Generated/Data</property>
+    </propertySet>
+    <propertySet name="Api" output="Generated/Api/Files.txt" template="Api.cst">
+      <property name="Namespace">PetShop.Api</property>
+      <property name="DataNamespace">PetShop.Data</property>
+      <property name="ContextName">PetShopContext</property>
+      <property name="ApiName">PetShop</property>
+      <property name="OutputDirectory">Generated/Api</property>
+    </propertySet>
+    <propertySet name="Client" output="client/src/generated/petshop.ts" template="Client.cst">
+      <property name="ApiName">PetShop</property>
+    </propertySet>
+  </propertySets>
+</codeSmith>

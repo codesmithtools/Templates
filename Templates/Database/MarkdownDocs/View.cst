@@ -1,0 +1,20 @@
+<%@ CodeTemplate Language="C#" TargetLanguage="Text" Description="A view's page: its columns." %>
+<%@ Property Name="View" Type="SchemaExplorer.ViewSchema" Description="The view." %>
+<%@ Assembly Name="SchemaExplorer" %>
+<%@ Import Namespace="SchemaExplorer" %>
+<%@ Assembly Src="Docs.cs" %>
+# <%= Docs.Text(Docs.Title(View)) %>
+
+A view of the [<%= Docs.Text(View.Database.Name) %>](../README.md) database.
+<% foreach (string paragraph in Docs.Paragraphs(Docs.Description(View))) { %>
+
+<%= paragraph %>
+<% } %>
+
+## Columns
+
+| Column | Type | Nullable | Description |
+| --- | --- | --- | --- |
+<% foreach (ViewColumnSchema column in View.Columns) { %>
+| <%= Docs.Text(column.Name) %> | <%= Docs.Text(Docs.Type(column)) %> | <%= column.AllowDBNull ? "yes" : "no" %> | <%= Docs.Cell(Docs.Description(column)) %> |
+<% } %>

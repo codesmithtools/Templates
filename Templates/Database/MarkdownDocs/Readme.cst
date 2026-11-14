@@ -1,0 +1,59 @@
+<%@ CodeTemplate Language="C#" TargetLanguage="Text" Description="A database's README: its tables, views and procedures, and a Mermaid ER diagram of the tables." %>
+<%@ Property Name="SourceDatabase" Type="SchemaExplorer.DatabaseSchema" Description="The database." %>
+<%@ Assembly Name="SchemaExplorer" %>
+<%@ Import Namespace="SchemaExplorer" %>
+<%@ Assembly Src="Docs.cs" %>
+# <%= Docs.Text(SourceDatabase.Name) %>
+<% foreach (string paragraph in Docs.Paragraphs(Docs.Description(SourceDatabase))) { %>
+
+<%= paragraph %>
+<% } %>
+
+Generated from the database's schema by CodeSmith Generator.
+<% if (SourceDatabase.Tables.Count > 0) { %>
+
+## Tables
+
+<% foreach (TableSchema table in SourceDatabase.Tables) { %>
+- <%= Docs.Link(table) %><%= Docs.Summary(table) %>
+<% } %>
+<% } %>
+<% if (SourceDatabase.Views.Count > 0) { %>
+
+## Views
+
+<% foreach (ViewSchema view in SourceDatabase.Views) { %>
+- <%= Docs.Link(view) %><%= Docs.Summary(view) %>
+<% } %>
+<% } %>
+<% if (SourceDatabase.Commands.Count > 0) { %>
+
+## Procedures
+
+<% foreach (CommandSchema command in SourceDatabase.Commands) { %>
+- <%= Docs.Link(command) %><%= Docs.Summary(command) %>
+<% } %>
+<% } %>
+<% if (SourceDatabase.Tables.Count > 0) { %>
+
+## Diagram
+
+<%-- Mermaid: GitHub and VS Code's preview draw it. The entities, then a relationship for each foreign key. --%>
+```mermaid
+erDiagram
+<% foreach (TableSchema table in SourceDatabase.Tables) { %>
+<% if (table.Columns.Count == 0) { %>
+    <%= Docs.EntityDeclaration(table) %>
+<% } else { %>
+    <%= Docs.EntityDeclaration(table) %> {
+<% foreach (ColumnSchema column in table.Columns) { %>
+        <%= Docs.Attribute(column) %>
+<% } %>
+    }
+<% } %>
+<% } %>
+<% foreach (TableKeySchema key in Docs.Relationships(SourceDatabase)) { %>
+    <%= Docs.Relationship(key) %>
+<% } %>
+```
+<% } %>
