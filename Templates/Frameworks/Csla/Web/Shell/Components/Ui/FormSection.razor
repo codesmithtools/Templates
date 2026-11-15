@@ -1,0 +1,27 @@
+@* A card of fields: a table's columns, or a group of them (Ship..., Bill...). *@
+<section class="card section" id="@Id" aria-labelledby="@(Id + "-title")">
+    <header class="section-head">
+        <span class="icon-tile"><Icon Name="@Icon" Size="15" /></span>
+        <div style="flex: 1; min-width: 0">
+            <h2 id="@(Id + "-title")">@Title</h2>
+            @if (Description is not null)
+            {
+                <p>@Description</p>
+            }
+        </div>
+        @Actions
+    </header>
+    <div class="section-body">
+        <div class="fields">@ChildContent</div>
+    </div>
+</section>
+
+@code {
+    [Parameter, EditorRequired] public string Title { get; set; } = "";
+    [Parameter] public string? Description { get; set; }
+    [Parameter] public string Icon { get; set; } = "file";
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter] public RenderFragment? Actions { get; set; }
+
+    private string Id => "section-" + Title.ToLowerInvariant().Replace(' ', '-');
+}

@@ -1,0 +1,15 @@
+@* When the connection to the server drops: rejoining, and what to do if it can't (app.css styles it). *@
+<script type="module" src="@Assets["Components/Layout/ReconnectModal.razor.js"]"></script>
+
+<dialog id="components-reconnect-modal" data-nosnippet>
+    <div class="components-reconnect-container">
+        <div class="components-rejoining-animation" aria-hidden="true"></div>
+        <p class="components-reconnect-first-attempt-visible">Rejoining the server…</p>
+        <p class="components-reconnect-repeated-attempt-visible">Couldn't rejoin: trying again in <span id="components-seconds-to-next-attempt"></span> seconds.</p>
+        <p class="components-reconnect-failed-visible">Couldn't rejoin. Retry, or reload the page.</p>
+        <button id="components-reconnect-button" class="btn btn-primary components-reconnect-failed-visible">Retry</button>
+        <p class="components-pause-visible">The server paused this session.</p>
+        <p class="components-resume-failed-visible">Couldn't resume the session. Retry, or reload the page.</p>
+        <button id="components-resume-button" class="btn btn-primary components-pause-visible components-resume-failed-visible">Resume</button>
+    </div>
+</dialog>

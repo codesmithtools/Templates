@@ -1,0 +1,19 @@
+@page "/error"
+@using System.Diagnostics
+
+<PageTitle>Error · @Site.Name</PageTitle>
+
+<div class="card">
+    <div class="empty">
+        <span class="art"><Icon Name="alert-triangle" Size="24" /></span>
+        <h1>Something went wrong</h1>
+        <p>The request failed. @(RequestId is null ? null : $"Its id: {RequestId}.")</p>
+        <div class="actions"><a class="btn btn-primary" href="">Home</a></div>
+    </div>
+</div>
+
+@code {
+    [CascadingParameter] private HttpContext? HttpContext { get; set; }
+
+    private string? RequestId => Activity.Current?.Id ?? HttpContext?.TraceIdentifier;
+}

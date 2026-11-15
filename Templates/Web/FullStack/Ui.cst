@@ -1,0 +1,60 @@
+<%@ CodeTemplate Language="C#" TargetLanguage="Text" Description="A React web UI for the API (Api.cst), over its client (Client.cst): a file per table with its fields and pages (UiTable.cst), and the routes and navigation (UiIndex.cst). Your app (its shell, theme and components) renders them." %>
+<%@ Property Name="SourceDatabase" Type="SchemaExplorer.DatabaseSchema" Category="Source" Description="The database." %>
+<%@ Property Name="OutputDirectory" Type="System.String" Default="client/src/generated/ui" Category="Output" Description="Where the files go: index.ts, and a file per table in tables/." %>
+<%@ Property Name="Client" Type="System.String" Default="../petshop.ts" Category="Output" Description="The generated client (Client.cst's output), as index.ts would import it: relative to OutputDirectory." %>
+<%@ Property Name="App" Type="System.String" Default="../../app" Category="Output" Description="Your app's folder (api.ts, the client it calls; kit/, the components), relative to OutputDirectory." %>
+<%@ Property Name="Exclude" Type="System.String" Default="sysdiagrams, __EFMigrationsHistory" Optional="True" Category="Model" Description="Tables to leave out of the UI (the API still has them), separated by commas; * and ? match any characters (aspnet_*)." %>
+<%@ Register Name="TableTemplate" Template="UiTable.cst" MergeProperties="False" %>
+<%@ Register Name="IndexTemplate" Template="UiIndex.cst" MergeProperties="False" %>
+<%@ Assembly Name="SchemaExplorer" %>
+<%@ Import Namespace="SchemaExplorer" %>
+<%@ Import Namespace="System.Collections.Generic" %>
+<%@ Import Namespace="System.IO" %>
+<%@ Assembly Src="Names.cs" %>
+<%@ Assembly Src="Web.cs" %>
+<%@ Assembly Src="Ui.cs" %>
+<%-- The master: UiTable.cst for each table into tables/, and UiIndex.cst. A table's file this run didn't write (a
+table that's gone, or one left out) is removed. --%>
+<% Generate(); %>
+<script runat="template">
+private void Generate()
+{
+    string folder = Path.Combine(OutputDirectory, "tables");
+    Directory.CreateDirectory(folder);
+    var written = new HashSet<string>();
+    foreach (TableSchema table in SourceDatabase.Tables)
+    {
+        if (Ui.Excluded(table, Exclude))
+            continue;
+        var page = Create<TableTemplate>();
+        page.Table = table;
+        page.Client = "../" + Client;
+        page.App = "../" + App;
+        page.Exclude = Exclude;
+        string file = Path.Combine(folder, Names.Entity(table) + ".tsx");
+        page.RenderToFile(file, true);
+        written.Add(Path.GetFullPath(file));
+        Response.WriteLine(file);
+    }
+    var index = Create<IndexTemplate>();
+    index.SourceDatabase = SourceDatabase;
+    index.App = App;
+    index.Exclude = Exclude;
+    string indexFile = Path.Combine(OutputDirectory, "index.ts");
+    index.RenderToFile(indexFile, true);
+    Response.WriteLine(indexFile);
+
+    // a table's file this run didn't write: its table is gone (or left out). Raised as an output without content
+    // first: cs check counts it as a change (and cancels), cs generate removes it.
+    foreach (string file in Directory.GetFiles(folder, "*.tsx"))
+    {
+        string path = Path.GetFullPath(file);
+        if (written.Contains(path))
+            continue;
+        var output = new OutputCancelEventArgs(new OutputFile(path));
+        OnPreOutputWritten(output);
+        if (!output.Cancel)
+            File.Delete(path);
+    }
+}
+</script>

@@ -20,7 +20,12 @@ public partial class Order
     // the order's total is its lines'
     partial void OnSaving() => TotalPrice = LinesTotal;
 
-    partial void OnAddBusinessRules() => BusinessRules.AddRule(new HasLines(LineItemsProperty));
+    partial void OnAddBusinessRules()
+    {
+        BusinessRules.AddRule(new HasLines(LineItemsProperty));
+        // only an Admin changes the payment's authorization number
+        BusinessRules.AddRule(new IsInRole(AuthorizationActions.WriteProperty, AuthorizationNumberProperty, "Admin"));
+    }
 
     // only an Admin deletes an order
     static partial void OnAddObjectAuthorizationRules(IAddObjectAuthorizationRulesContext context) =>

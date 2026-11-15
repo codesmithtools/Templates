@@ -1,0 +1,143 @@
+@* A child grid's card: its rows, each with its own state (New, changed) and broken rules; adding and removing rows; a
+   row's details (more columns, its own children) when it has them; the footer's count and totals. *@
+@typeparam TItem where TItem : Csla.Core.BusinessBase
+
+<section class="card section" data-grid="@Name" aria-label="@Grid.Title">
+    <header class="section-head">
+        <span class="icon-tile"><Icon Name="@Grid.Icon" Size="15" /></span>
+        <h2>@Grid.Title <span class="count">@Grid.Rows.Count</span></h2>
+        @if (!Grid.Editor.ReadOnly)
+        {
+            <button type="button" class="btn btn-sm" aria-label="Add @Grid.Singular" @onclick="Grid.AddAsync"><Icon Name="plus" Size="14" /><span class="hide-mobile">Add @Grid.Singular</span></button>
+        }
+    </header>
+    @if (ListError is { Length: > 0 } error)
+    {
+        <p class="list-error" role="alert"><Icon Name="alert" Size="15" /> @error</p>
+    }
+    @if (Grid.Rows.Count == 0)
+    {
+        <div class="grid-empty">
+            <span class="icon-tile"><Icon Name="@Grid.Icon" Size="18" /></span>
+            <span>No @Formats.PluralOf(Grid.Singular) yet.</span>
+            @if (!Grid.Editor.ReadOnly)
+            {
+                <button type="button" class="btn btn-sm" @onclick="Grid.AddAsync"><Icon Name="plus" Size="14" /> Add the first</button>
+            }
+        </div>
+    }
+    else
+    {
+        var extra = Grid.Columns.ToList();
+        int span = Columns + extra.Count + 2;
+        <div class="grid-scroll">
+            <table class="grid">
+                <thead>
+                    <tr>
+                        <th class="index" scope="col"><span class="sr-only">Row</span>#</th>
+                        @Head
+                        @foreach (var column in extra)
+                        {
+                            <th class="@(column.Numeric ? "num" : null)" scope="col">@column.Title</th>
+                        }
+                        <th class="actions" scope="col"><span class="sr-only">Actions</span></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (int i = 0; i < Grid.Rows.Count; i++)
+                    {
+                        var row = Grid.Rows[i];
+                        var messages = Grid.MessagesOf(row);
+                        bool expanded = Grid.HasDetail && Grid.IsExpanded(row);
+                        <tr @key="row" class="grid-row @(row.IsNew ? "new" : null) @(expanded ? "expanded" : null) @(messages.Any(m => m.Severity == Csla.Rules.RuleSeverity.Error) ? "invalid" : null) @(messages.Count > 0 ? "has-messages" : null)">
+                            <td class="index">
+                                @if (row.IsNew)
+                                {
+                                    <span class="new-tag" title="New: inserted when it's saved">New</span>
+                                }
+                                else
+                                {
+                                    @(i + 1)
+                                    @if (row.IsSelfDirty)
+                                    {
+                                        <span class="dirty" title="Changed: updated when it's saved"></span>
+                                    }
+                                }
+                            </td>
+                            @Row(row)
+                            @foreach (var column in extra)
+                            {
+                                <td class="computed @(column.Numeric ? "num" : null)">@column.Value(row)</td>
+                            }
+                            <td class="actions">
+                                <span class="row-actions">
+                                    @if (Grid.HasDetail)
+                                    {
+                                        <button type="button" class="icon-btn sm" aria-expanded="@(expanded ? "true" : "false")" aria-label="@(expanded ? "Hide details" : "Show details")" title="Details" @onclick="() => Grid.Toggle(row)">
+                                            <Icon Name="@(expanded ? "chevron-down" : "chevron-right")" Size="15" />
+                                        </button>
+                                    }
+                                    @if (!Grid.Editor.ReadOnly)
+                                    {
+                                        <button type="button" class="icon-btn sm danger" aria-label="Remove @Grid.Singular @(i + 1)" title="Remove" @onclick="() => Grid.Remove(row)">
+                                            <Icon Name="trash" Size="15" />
+                                        </button>
+                                    }
+                                </span>
+                            </td>
+                        </tr>
+                        @if (messages.Count > 0)
+                        {
+                            <tr class="row-messages">
+                                <td colspan="@span">
+                                    <div class="row-message-list" aria-live="polite">
+                                        @foreach (var (severity, message) in messages)
+                                        {
+                                            string kind = severity == Csla.Rules.RuleSeverity.Error ? "error" : severity == Csla.Rules.RuleSeverity.Warning ? "warning" : "info";
+                                            <span class="message @kind"><Icon Name="@(kind == "error" ? "alert" : kind == "warning" ? "alert-triangle" : "info")" Size="13" /> @message</span>
+                                        }
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                        @if (expanded && Detail is not null)
+                        {
+                            <tr class="detail">
+                                <td colspan="@span">@Detail(row)</td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+        <footer class="section-foot">
+            <span>@Formats.Plural(Grid.Rows.Count, Grid.Singular)</span>
+            <div class="totals">
+                @foreach (var total in Grid.Totals)
+                {
+                    <div class="total"><span>@total.Label</span><strong>@total.Value</strong></div>
+                }
+            </div>
+        </footer>
+    }
+</section>
+
+@code {
+    [Parameter, EditorRequired] public IChildGrid<TItem> Grid { get; set; } = default!;
+
+    /// <summary>The generated columns' headers.</summary>
+    [Parameter, EditorRequired] public RenderFragment Head { get; set; } = default!;
+
+    /// <summary>A row's generated cells.</summary>
+    [Parameter, EditorRequired] public RenderFragment<TItem> Row { get; set; } = default!;
+
+    /// <summary>A row's details: the columns that didn't fit, its own children.</summary>
+    [Parameter] public RenderFragment<TItem>? Detail { get; set; }
+
+    /// <summary>How many generated columns there are.</summary>
+    [Parameter] public int Columns { get; set; }
+
+    private string Name => Grid.GetType().Name;
+
+    private string? ListError => Grid.ListInfo is { } info && Grid.Editor.Shows(info) ? info.ErrorText : null;
+}

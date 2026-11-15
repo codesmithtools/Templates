@@ -4,8 +4,8 @@ import { createPetShopClient } from "./generated/petshop.ts";
 
 const petShop = createPetShopClient({ baseUrl: process.env.PETSHOP_API ?? "http://localhost:5000" });
 
-const categories = await petShop.categories.list();
-for (const category of categories) {
+const categories = await petShop.categories.list({ sort: "name" });
+for (const category of categories.items) {
   console.log(`${category.categoryId}: ${category.name ?? "(no name)"}`);
 }
 

@@ -1,59 +1,98 @@
-<%@ CodeTemplate Language="C#" TargetLanguage="Text" Description="A database's README: its tables, views and procedures, and a Mermaid ER diagram of the tables." %>
+<%@ CodeTemplate Language="C#" TargetLanguage="Text" Description="A database's README: the database at a glance, a Mermaid ER diagram of its tables, and its tables, relationships, views and procedures." %>
 <%@ Property Name="SourceDatabase" Type="SchemaExplorer.DatabaseSchema" Description="The database." %>
 <%@ Assembly Name="SchemaExplorer" %>
 <%@ Import Namespace="SchemaExplorer" %>
+<%@ Import Namespace="System.Linq" %>
 <%@ Assembly Src="Docs.cs" %>
+<%
+var tables = SourceDatabase.Tables.Cast<TableSchema>().ToList();
+var relationships = Docs.Relationships(SourceDatabase).ToList();
+var contents = new[] { tables.Count > 0 ? "[Diagram](#diagram)" : null, tables.Count > 0 ? "[Tables](#tables)" : null, relationships.Count > 0 ? "[Relationships](#relationships)" : null,
+    SourceDatabase.Views.Count > 0 ? "[Views](#views)" : null, SourceDatabase.Commands.Count > 0 ? "[Procedures](#procedures)" : null }.Where(c => c != null).ToList();
+bool tableDescriptions = tables.Any(t => Docs.Description(t).Length > 0);
+%>
 # <%= Docs.Text(SourceDatabase.Name) %>
 <% foreach (string paragraph in Docs.Paragraphs(Docs.Description(SourceDatabase))) { %>
 
 <%= paragraph %>
 <% } %>
 
-Generated from the database's schema by CodeSmith Generator.
-<% if (SourceDatabase.Tables.Count > 0) { %>
+The tables, views and procedures of the <%= Docs.Text(SourceDatabase.Name) %> database (<%= Docs.Product(SourceDatabase) %>): their columns, keys and indexes, and how the tables relate. Generated from its schema by CodeSmith Generator.
+
+| Tables | Views | Procedures | Columns | Relationships | Indexes |
+| :---: | :---: | :---: | :---: | :---: | :---: |
+| <%= tables.Count %> | <%= SourceDatabase.Views.Count %> | <%= SourceDatabase.Commands.Count %> | <%= tables.Sum(t => t.Columns.Count) %> | <%= relationships.Count %> | <%= tables.Sum(t => t.Indexes.Count) %> |
+<% if (contents.Count > 1) { %>
+
+<%= string.Join(" · ", contents) %>
+<% } %>
+<% if (tables.Count > 0) { %>
+
+## Diagram
+
+Each table with its keys. A line joins a foreign key to the table it refers to; a table's page has all its columns.
+
+<%-- Mermaid: GitHub and VS Code's preview draw it. The entities, then a relationship for each foreign key. --%>
+```mermaid
+%%{init: {"er": {"layoutDirection": "LR", "fontSize": 14}}}%%
+erDiagram
+<% foreach (TableSchema table in tables) { %>
+<% var columns = Docs.KeyColumns(table).ToList(); %>
+<% if (columns.Count == 0) { %>
+    <%= Docs.EntityDeclaration(table) %>
+<% } else { %>
+    <%= Docs.EntityDeclaration(table) %> {
+<% foreach (ColumnSchema column in columns) { %>
+        <%= Docs.Attribute(column) %>
+<% } %>
+    }
+<% } %>
+<% } %>
+<% foreach (TableKeySchema key in relationships) { %>
+    <%= Docs.Relationship(key) %>
+<% } %>
+```
 
 ## Tables
 
-<% foreach (TableSchema table in SourceDatabase.Tables) { %>
-- <%= Docs.Link(table) %><%= Docs.Summary(table) %>
+| Table | Columns | Primary key | References | Referenced by |<%= tableDescriptions ? " Description |" : "" %>
+| --- | ---: | --- | --- | --- |<%= tableDescriptions ? " --- |" : "" %>
+<% foreach (TableSchema table in tables) { %>
+<%
+var parents = Docs.Parents(table);
+var children = Docs.Children(table);
+%>
+| <%= Docs.Link(table) %> | <%= table.Columns.Count %> | <%= table.HasPrimaryKey ? Docs.Code(string.Join(", ", table.PrimaryKey.MemberColumns.Cast<MemberColumnSchema>().Select(c => c.Name))) : "none" %> | <%= parents.Count == 0 ? "—" : string.Join(", ", parents.Select(p => Docs.Link(p))) %> | <%= children.Count == 0 ? "—" : string.Join(", ", children.Select(c => Docs.Link(c))) %> |<%= tableDescriptions ? " " + Docs.Cell(Docs.Description(table)) + " |" : "" %>
+<% } %>
+<% } %>
+<% if (relationships.Count > 0) { %>
+
+## Relationships
+
+| Foreign key | From | To | Kind |
+| --- | --- | --- | --- |
+<% foreach (TableKeySchema key in relationships) { %>
+<% var columns = key.ForeignKeyMemberColumns.Cast<MemberColumnSchema>().ToList(); %>
+| <%= Docs.Code(key.Name) %> | <%= Docs.Link(key.ForeignKeyTable) %> (<%= Docs.Code(string.Join(", ", columns.Select(c => c.Name))) %>) | <%= Docs.Link(key.PrimaryKeyTable) %> (<%= Docs.Code(string.Join(", ", columns.Select(c => Docs.ReferencedColumn(key, c.Name)))) %>) | <%= Docs.Cardinality(key) %> |
 <% } %>
 <% } %>
 <% if (SourceDatabase.Views.Count > 0) { %>
 
 ## Views
 
+| View | Columns | Uses | Description |
+| --- | ---: | --- | --- |
 <% foreach (ViewSchema view in SourceDatabase.Views) { %>
-- <%= Docs.Link(view) %><%= Docs.Summary(view) %>
+| <%= Docs.Link(view) %> | <%= view.Columns.Count %> | <%= Docs.Uses(view).Count == 0 ? "—" : string.Join(", ", Docs.Uses(view).Select(u => Docs.Link(u))) %> | <%= Docs.Cell(Docs.Description(view)) %> |
 <% } %>
 <% } %>
 <% if (SourceDatabase.Commands.Count > 0) { %>
 
 ## Procedures
 
+| Procedure | Parameters | Uses | Description |
+| --- | ---: | --- | --- |
 <% foreach (CommandSchema command in SourceDatabase.Commands) { %>
-- <%= Docs.Link(command) %><%= Docs.Summary(command) %>
+| <%= Docs.Link(command) %> | <%= command.Parameters.Cast<ParameterSchema>().Count(p => p.Direction != System.Data.ParameterDirection.ReturnValue) %> | <%= Docs.Uses(command).Count == 0 ? "—" : string.Join(", ", Docs.Uses(command).Select(u => Docs.Link(u))) %> | <%= Docs.Cell(Docs.Description(command)) %> |
 <% } %>
-<% } %>
-<% if (SourceDatabase.Tables.Count > 0) { %>
-
-## Diagram
-
-<%-- Mermaid: GitHub and VS Code's preview draw it. The entities, then a relationship for each foreign key. --%>
-```mermaid
-erDiagram
-<% foreach (TableSchema table in SourceDatabase.Tables) { %>
-<% if (table.Columns.Count == 0) { %>
-    <%= Docs.EntityDeclaration(table) %>
-<% } else { %>
-    <%= Docs.EntityDeclaration(table) %> {
-<% foreach (ColumnSchema column in table.Columns) { %>
-        <%= Docs.Attribute(column) %>
-<% } %>
-    }
-<% } %>
-<% } %>
-<% foreach (TableKeySchema key in Docs.Relationships(SourceDatabase)) { %>
-    <%= Docs.Relationship(key) %>
-<% } %>
-```
 <% } %>

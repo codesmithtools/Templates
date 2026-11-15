@@ -35,8 +35,41 @@ public static class Docs
         return "[" + Text(Title(item)) + "](" + (sameFolder ? "" : Folder(item) + "/") + Uri.EscapeDataString(file) + ")";
     }
 
+    /// <summary>A Markdown link to a page from another page (from: null for the README): Cart.md, ../views/....</summary>
+    public static string Link(SchemaObjectWithOwnerBase item, SchemaObjectWithOwnerBase from)
+    {
+        if (from == null)
+            return Link(item);
+        if (!Files(item).TryGetValue(item, out string file))
+            return Text(Title(item));
+        string path = Folder(item) == Folder(from) ? "" : "../" + Folder(item) + "/";
+        return "[" + Text(Title(item)) + "](" + path + Uri.EscapeDataString(file) + ")";
+    }
+
     private static string Folder(SchemaObjectWithOwnerBase item) =>
         item is TableSchema ? "tables" : item is ViewSchema ? "views" : "procedures";
+
+    /// <summary>The heading of a page's kind in the README: Tables, Views, Procedures.</summary>
+    public static string Kind(SchemaObjectWithOwnerBase item) =>
+        item is TableSchema ? "Tables" : item is ViewSchema ? "Views" : "Procedures";
+
+    /// <summary>A page's breadcrumbs: the README, its kind's list there, and the page.</summary>
+    public static string Breadcrumbs(SchemaObjectWithOwnerBase item) =>
+        "[" + Text(item.Database.Name) + "](../README.md) › [" + Kind(item) + "](../README.md#" + Kind(item).ToLowerInvariant() + ") › **" + Text(Title(item)) + "**";
+
+    /// <summary>The links to the pages before and after a page (its kind's, in the database's order), and the README.</summary>
+    public static string Pager(SchemaObjectWithOwnerBase item)
+    {
+        var items = Files(item).Keys.ToList();
+        int i = items.FindIndex(each => each.FullName == item.FullName);
+        var parts = new List<string>();
+        if (i > 0)
+            parts.Add("← " + Link(items[i - 1], true));
+        parts.Add("[All " + Kind(item).ToLowerInvariant() + "](../README.md#" + Kind(item).ToLowerInvariant() + ")");
+        if (i >= 0 && i < items.Count - 1)
+            parts.Add(Link(items[i + 1], true) + " →");
+        return string.Join(" · ", parts);
+    }
 
     // The files of a folder's pages: each title, without what a file name can't have, once (case aside, as on Windows).
     private static Dictionary<SchemaObjectWithOwnerBase, string> Files(SchemaObjectWithOwnerBase item)
@@ -99,6 +132,106 @@ public static class Docs
     /// <summary>What keys a column is part of: PK, FK, or both.</summary>
     public static string Keys(ColumnSchema column) =>
         string.Join(", ", new[] { column.IsPrimaryKeyMember ? "PK" : null, column.IsForeignKeyMember ? "FK" : null }.Where(k => k != null));
+
+    /// <summary>A column's keys for its table's page: PK (bold), FK, and unique where an index of its own makes it so.</summary>
+    public static string KeyCell(ColumnSchema column) =>
+        string.Join(", ", new[] { column.IsPrimaryKeyMember ? "**PK**" : null, column.IsForeignKeyMember ? "FK" : null, IsUnique(column) ? "unique" : null }.Where(k => k != null));
+
+    /// <summary>A column with a unique index of its own (not its table's primary key).</summary>
+    public static bool IsUnique(ColumnSchema column) =>
+        !column.IsPrimaryKeyMember && column.Table.Indexes.Cast<IndexSchema>().Any(i => i.IsUnique && !i.IsPrimaryKey && i.MemberColumns.Count == 1 && i.MemberColumns[0].Name == column.Name);
+
+    /// <summary>The foreign key a column is in, if any.</summary>
+    public static TableKeySchema ForeignKeyOf(ColumnSchema column) =>
+        column.Table.ForeignKeys.Cast<TableKeySchema>().FirstOrDefault(k => k.ForeignKeyMemberColumns.Any(c => c.Name == column.Name));
+
+    /// <summary>The column a foreign key's column refers to.</summary>
+    public static string ReferencedColumn(TableKeySchema key, string column)
+    {
+        var columns = key.ForeignKeyMemberColumns.Cast<MemberColumnSchema>().ToList();
+        var referenced = key.PrimaryKeyMemberColumns.Cast<MemberColumnSchema>().ToList();
+        int i = columns.FindIndex(c => c.Name == column);
+        return i >= 0 && i < referenced.Count ? referenced[i].Name : referenced.Select(c => c.Name).FirstOrDefault() ?? "";
+    }
+
+    /// <summary>A foreign key that is its table's primary key too: a row each (one to one).</summary>
+    public static bool IsOneToOne(TableKeySchema key)
+    {
+        var table = key.ForeignKeyTable;
+        if (!table.HasPrimaryKey)
+            return false;
+        var primary = table.PrimaryKey.MemberColumns.Cast<MemberColumnSchema>().Select(c => c.Name).OrderBy(n => n, StringComparer.Ordinal);
+        return primary.SequenceEqual(key.ForeignKeyMemberColumns.Cast<MemberColumnSchema>().Select(c => c.Name).OrderBy(n => n, StringComparer.Ordinal));
+    }
+
+    /// <summary>A foreign key's kind: many to one, or one to one; optional where its columns may be null.</summary>
+    public static string Cardinality(TableKeySchema key) =>
+        (IsOneToOne(key) ? "one to one" : "many to one") + (key.ForeignKeyMemberColumns.Cast<MemberColumnSchema>().Any(c => c.AllowDBNull) ? ", optional" : "");
+
+    /// <summary>The tables a table refers to, each once.</summary>
+    public static List<TableSchema> Parents(TableSchema table) =>
+        table.ForeignKeys.Cast<TableKeySchema>().Select(k => k.PrimaryKeyTable).GroupBy(t => t.FullName).Select(g => g.First()).ToList();
+
+    /// <summary>The tables that refer to a table, each once.</summary>
+    public static List<TableSchema> Children(TableSchema table) =>
+        ReferencedBy(table).Select(k => k.ForeignKeyTable).GroupBy(t => t.FullName).Select(g => g.First()).ToList();
+
+    /// <summary>The provider's product: SQL Server, PostgreSQL, MySQL, SQLite, Oracle.</summary>
+    public static string Product(DatabaseSchema database)
+    {
+        string name = database.Provider?.Name ?? "";
+        foreach (var (word, product) in new[] { ("SQLite", "SQLite"), ("PostgreSQL", "PostgreSQL"), ("MySQL", "MySQL"), ("Oracle", "Oracle"), ("Sql", "SQL Server") })
+            if (name.IndexOf(word, StringComparison.OrdinalIgnoreCase) >= 0)
+                return product;
+        return name;
+    }
+
+    /// <summary>A count and its noun: 1 column, 12 columns.</summary>
+    public static string Plural(int count, string one, string many = null) => count + " " + (count == 1 ? one : many ?? one + "s");
+
+    // SQL: a view's or procedure's, and the tables and views it names
+
+    /// <summary>A view's or procedure's SQL, or "".</summary>
+    public static string Sql(SchemaObjectWithOwnerBase item)
+    {
+        try
+        {
+            return ((item is ViewSchema view ? view.ViewText : item is CommandSchema command ? command.CommandText : "") ?? "").Trim();
+        }
+        catch (Exception)
+        {
+            return ""; // a provider that can't read it
+        }
+    }
+
+    /// <summary>The fence around a code block: three backticks, or more than the code has in a row.</summary>
+    public static string Fence(string code) =>
+        new string('`', Math.Max(3, Regex.Matches(code ?? "", "`+").Select(m => m.Length + 1).DefaultIfEmpty(0).Max()));
+
+    /// <summary>The tables and views a view's or procedure's SQL names after FROM, JOIN, UPDATE, INTO or MERGE
+    /// (comments and strings aside).</summary>
+    public static List<SchemaObjectWithOwnerBase> Uses(SchemaObjectWithOwnerBase item)
+    {
+        string sql = Regex.Replace(Sql(item), @"--[^\r\n]*|/\*.*?\*/|'(?:[^']|'')*'", " ", RegexOptions.Singleline);
+        var objects = item.Database.Tables.Cast<SchemaObjectWithOwnerBase>().Concat(item.Database.Views.Cast<SchemaObjectWithOwnerBase>()).ToList();
+        var found = new List<SchemaObjectWithOwnerBase>();
+        string part = @"(?:\[[^\]]+\]|""[^""]+""|`[^`]+`|[\w$#]+)";
+        foreach (Match match in Regex.Matches(sql, @"\b(?:from|join|update|into|merge)\s+\(?\s*((?:" + part + @"\s*\.\s*)*" + part + ")", RegexOptions.IgnoreCase))
+        {
+            var parts = Regex.Matches(match.Groups[1].Value, part).Select(m => m.Value.Trim('[', ']', '"', '`')).ToList();
+            string name = parts[parts.Count - 1], owner = parts.Count > 1 ? parts[parts.Count - 2] : null;
+            var named = objects.Where(o => string.Equals(o.Name, name, StringComparison.OrdinalIgnoreCase)).ToList();
+            var used = (owner == null ? null : named.FirstOrDefault(o => string.Equals(o.Owner, owner, StringComparison.OrdinalIgnoreCase))) ?? named.FirstOrDefault();
+            if (used != null && used.FullName != item.FullName && !found.Any(f => f.FullName == used.FullName && f.GetType() == used.GetType()))
+                found.Add(used);
+        }
+        return found;
+    }
+
+    /// <summary>The views and procedures whose SQL names a table or view.</summary>
+    public static List<SchemaObjectWithOwnerBase> UsedBy(SchemaObjectWithOwnerBase item) =>
+        item.Database.Views.Cast<SchemaObjectWithOwnerBase>().Concat(item.Database.Commands.Cast<SchemaObjectWithOwnerBase>())
+            .Where(o => Uses(o).Any(u => u.FullName == item.FullName && u.GetType() == item.GetType())).ToList();
 
     /// <summary>A key's or an index's columns: OrderId, LineNum.</summary>
     public static string Columns(IEnumerable<MemberColumnSchema> columns) => string.Join(", ", columns.Select(c => Text(c.Name)));
@@ -231,12 +364,49 @@ public static class Docs
     }
 
     /// <summary>A foreign key as a relationship: one row of the table it refers to (||), or none where its columns can
-    /// be null (|o), to any number of the table's (o{), labeled with its columns.</summary>
+    /// be null (|o), to any number of the table's (o{), or to one where the key is its primary key (o|), labeled with
+    /// its columns.</summary>
     public static string Relationship(TableKeySchema key)
     {
         bool optional = key.ForeignKeyMemberColumns.Any(c => c.AllowDBNull);
         string label = string.Join(", ", key.ForeignKeyMemberColumns.Select(c => c.Name)).Replace("\"", "'");
-        return Entity(key.PrimaryKeyTable) + (optional ? " |o--o{ " : " ||--o{ ") + Entity(key.ForeignKeyTable) + " : \"" + label + "\"";
+        return Entity(key.PrimaryKeyTable) + (optional ? " |o--" : " ||--") + (IsOneToOne(key) ? "o| " : "o{ ") + Entity(key.ForeignKeyTable) + " : \"" + label + "\"";
+    }
+
+    /// <summary>The columns an entity shows in the README's diagram: its keys, and those another table's key refers to.</summary>
+    public static IEnumerable<ColumnSchema> KeyColumns(TableSchema table)
+    {
+        var referenced = new HashSet<string>(ReferencedBy(table).SelectMany(k => k.PrimaryKeyMemberColumns.Cast<MemberColumnSchema>()).Select(c => c.Name));
+        return table.Columns.Cast<ColumnSchema>().Where(c => c.IsPrimaryKeyMember || c.IsForeignKeyMember || referenced.Contains(c.Name));
+    }
+
+    /// <summary>A table's diagram on its page: the table with every column, the tables it refers to and those that
+    /// refer to it with their keys, and the relationships between it and them. Mermaid's lines.</summary>
+    public static IEnumerable<string> Neighborhood(TableSchema table)
+    {
+        var keys = table.ForeignKeys.Cast<TableKeySchema>().Concat(ReferencedBy(table))
+            .Where(k => Entities(table.Database).ContainsKey(k.PrimaryKeyTable) && Entities(table.Database).ContainsKey(k.ForeignKeyTable))
+            .GroupBy(k => k.ForeignKeyTable.FullName + "/" + k.Name).Select(g => g.First()).ToList();
+        var tables = new List<TableSchema> { table };
+        foreach (var key in keys)
+            foreach (var each in new[] { key.PrimaryKeyTable, key.ForeignKeyTable })
+                if (!tables.Any(t => t.FullName == each.FullName))
+                    tables.Add(each);
+        foreach (var each in tables)
+        {
+            var columns = each.FullName == table.FullName ? each.Columns.Cast<ColumnSchema>().ToList() : KeyColumns(each).ToList();
+            if (columns.Count == 0)
+            {
+                yield return EntityDeclaration(each);
+                continue;
+            }
+            yield return EntityDeclaration(each) + " {";
+            foreach (var column in columns)
+                yield return "    " + Attribute(column);
+            yield return "}";
+        }
+        foreach (var key in keys)
+            yield return Relationship(key);
     }
 
     // A word to Mermaid: letters, digits and _ (others become _), starting with a letter.

@@ -1,0 +1,176 @@
+@* A combobox over a lookup (a name/value list): type to narrow it, arrows to move, Enter to pick, Esc to leave it. *@
+@using System.Globalization
+@inject IJSRuntime JS
+
+<div class="combo">
+    <input id="@Id" class="input" role="combobox" type="text" autocomplete="off" spellcheck="false"
+           aria-expanded="@(_open ? "true" : "false")" aria-controls="@ListId" aria-autocomplete="list"
+           aria-activedescendant="@(_open && _active >= 0 && _active < _options.Count ? OptionId(_active) : null)"
+           aria-label="@AriaLabel" aria-invalid="@(Invalid ? "true" : null)" aria-describedby="@AriaDescribedBy"
+           value="@(_open ? _query : SelectedName)" placeholder="@(Items is null ? "Loading…" : Placeholder)" readonly="@ReadOnly"
+           @oninput="OnInput" @onkeydown="OnKeyDown" @onclick="Open" @onblur="Close" />
+    @if (!_open && Value is not null && SelectedName != KeyText(Value))
+    {
+        <span class="code">@KeyText(Value)</span>
+    }
+    <span class="chevron"><Icon Name="chevrons-up-down" Size="14" /></span>
+    @if (_open)
+    {
+        <ul class="listbox" id="@ListId" role="listbox" aria-label="@AriaLabel">
+            @for (int i = 0; i < _options.Count; i++)
+            {
+                int index = i;
+                var option = _options[i];
+                bool selected = Equals(option.Key, Value);
+                <li id="@OptionId(index)" role="option" aria-selected="@(selected ? "true" : "false")"
+                    class="option @(index == _active ? "active" : null) @(option.Key is null ? "none" : null)"
+                    @onmousedown="() => Pick(option)" @onmousedown:preventDefault @onmousemove="() => _active = index">
+                    <span class="name">@Highlight(option.Name)</span>
+                    @if (option.Key is not null)
+                    {
+                        <span class="key">@KeyText(option.Key)</span>
+                    }
+                    @if (selected)
+                    {
+                        <Icon Name="check" Size="14" Class="check" />
+                    }
+                </li>
+            }
+            @if (_options.Count == 0)
+            {
+                <li class="empty">Nothing matches “@_query”</li>
+            }
+        </ul>
+    }
+</div>
+
+@code {
+    private bool _open;
+    private string _query = "";
+    private int _active = -1;
+    private List<(object? Key, string Name)> _options = [];
+
+    [Parameter] public string Id { get; set; } = "lookup-" + Guid.NewGuid().ToString("n")[..8];
+
+    /// <summary>The lookup: its keys and names (Lookup.Of a name/value list); null while it loads.</summary>
+    [Parameter] public IReadOnlyDictionary<object, string>? Items { get; set; }
+
+    [Parameter] public object? Value { get; set; }
+    [Parameter] public EventCallback<object?> ValueChanged { get; set; }
+
+    /// <summary>"None" first: a key that may be null.</summary>
+    [Parameter] public bool AllowNone { get; set; }
+
+    [Parameter] public string NoneText { get; set; } = "None";
+    [Parameter] public string Placeholder { get; set; } = "Choose…";
+    [Parameter] public bool ReadOnly { get; set; }
+    [Parameter] public bool Invalid { get; set; }
+    [Parameter] public string? AriaLabel { get; set; }
+    [Parameter] public string? AriaDescribedBy { get; set; }
+    [Parameter] public EventCallback OnTouched { get; set; }
+
+    private string ListId => Id + "-list";
+
+    private string OptionId(int index) => Id + "-option-" + index;
+
+    private string SelectedName => Value is null ? "" : Items is not null && Items.TryGetValue(Value, out var name) ? name : KeyText(Value);
+
+    private static string KeyText(object key) => Convert.ToString(key, CultureInfo.InvariantCulture) ?? "";
+
+    private void Open()
+    {
+        if (ReadOnly || _open || Items is null)
+            return;
+        _open = true;
+        _query = "";
+        Filter();
+        _active = _options.FindIndex(o => Equals(o.Key, Value));
+    }
+
+    private async Task Close()
+    {
+        if (!_open)
+            return;
+        _open = false;
+        _query = "";
+        await OnTouched.InvokeAsync();
+    }
+
+    private void OnInput(ChangeEventArgs e)
+    {
+        if (!_open)
+            Open();
+        _query = e.Value?.ToString() ?? "";
+        Filter();
+        _active = _options.Count > 0 ? 0 : -1;
+    }
+
+    private void Filter()
+    {
+        var items = Items ?? new Dictionary<object, string>();
+        var options = new List<(object? Key, string Name)>();
+        string query = _query.Trim();
+        if (AllowNone && query.Length == 0)
+            options.Add((null, NoneText));
+        foreach (var (key, name) in items)
+            if (query.Length == 0 || name.Contains(query, StringComparison.CurrentCultureIgnoreCase) || KeyText(key).Contains(query, StringComparison.OrdinalIgnoreCase))
+                options.Add((key, name));
+        _options = options;
+    }
+
+    private async Task OnKeyDown(KeyboardEventArgs e)
+    {
+        switch (e.Key)
+        {
+            case "ArrowDown":
+            case "ArrowUp":
+                if (!_open)
+                {
+                    Open();
+                    return;
+                }
+                if (_options.Count == 0)
+                    return;
+                _active = e.Key == "ArrowDown" ? (_active + 1) % _options.Count : (_active <= 0 ? _options.Count - 1 : _active - 1);
+                await JS.InvokeVoidAsync("ui.scrollIntoView", "#" + OptionId(_active));
+                break;
+            case "Enter":
+                if (_open && _active >= 0 && _active < _options.Count)
+                    await Pick(_options[_active]);
+                else
+                    Open();
+                break;
+            case "Escape":
+                await Close();
+                break;
+            case "Tab":
+                await Close();
+                break;
+        }
+    }
+
+    private async Task Pick((object? Key, string Name) option)
+    {
+        _open = false;
+        _query = "";
+        if (!Equals(option.Key, Value))
+            await ValueChanged.InvokeAsync(option.Key);
+        await OnTouched.InvokeAsync();
+    }
+
+    private RenderFragment Highlight(string name) => builder =>
+    {
+        string query = _query.Trim();
+        int at = query.Length == 0 ? -1 : name.IndexOf(query, StringComparison.CurrentCultureIgnoreCase);
+        if (at < 0)
+        {
+            builder.AddContent(0, name);
+            return;
+        }
+        builder.AddContent(1, name[..at]);
+        builder.OpenElement(2, "mark");
+        builder.AddContent(3, name.Substring(at, query.Length));
+        builder.CloseElement();
+        builder.AddContent(4, name[(at + query.Length)..]);
+    };
+}

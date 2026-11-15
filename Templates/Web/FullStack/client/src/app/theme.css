@@ -1,0 +1,166 @@
+/* The theme: every color, size and timing the app uses, as custom properties. Light by default, dark where the system
+   is (prefers-color-scheme) or where the app says so ([data-theme] on <html>, which the theme menu sets). Restyle the
+   app here; app.css only uses these. */
+
+:root {
+  color-scheme: light;
+
+  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, "Cascadia Code", "JetBrains Mono", Menlo, Consolas, monospace;
+  --text-xs: 12px;
+  --text-sm: 13px;
+  --text-base: 14px;
+  --text-md: 15px;
+  --text-lg: 17px;
+  --text-xl: 22px;
+  --text-2xl: 28px;
+
+  /* neutrals: slate */
+  --bg: #f8fafc;
+  --surface: #ffffff;
+  --surface-2: #f8fafc;
+  --surface-3: #f1f5f9;
+  --surface-hover: #f5f7fa;
+  --sidebar-bg: #ffffff;
+  --overlay: rgb(15 23 42 / 0.32);
+  --border: #e5e7eb;
+  --border-strong: #d4d8df;
+  --text: #0f172a;
+  --text-2: #334155;
+  --text-3: #64748b;
+  --text-4: #94a3b8;
+
+  /* the accent: indigo */
+  --accent: #4f46e5;
+  --accent-hover: #4338ca;
+  --accent-text: #4338ca;
+  --accent-contrast: #ffffff;
+  --accent-soft: #eef2ff;
+  --accent-soft-2: #e0e7ff;
+  --accent-ring: rgb(79 70 229 / 0.28);
+
+  /* status */
+  --success: #059669;
+  --success-soft: #ecfdf5;
+  --success-text: #047857;
+  --warning: #d97706;
+  --warning-soft: #fffbeb;
+  --warning-text: #b45309;
+  --danger: #e11d48;
+  --danger-hover: #be123c;
+  --danger-soft: #fff1f2;
+  --danger-text: #be123c;
+  --danger-ring: rgb(225 29 72 / 0.25);
+
+  --radius-sm: 7px;
+  --radius: 10px;
+  --radius-lg: 12px;
+  --shadow-xs: 0 1px 1px rgb(15 23 42 / 0.03);
+  --shadow-sm: 0 1px 2px rgb(15 23 42 / 0.05), 0 0 0 1px rgb(15 23 42 / 0.01);
+  --shadow: 0 1px 3px rgb(15 23 42 / 0.06), 0 1px 2px rgb(15 23 42 / 0.04);
+  --shadow-lg: 0 16px 40px -12px rgb(15 23 42 / 0.22), 0 4px 14px -6px rgb(15 23 42 / 0.1);
+  --skeleton: #e9edf2;
+  --skeleton-shine: #f5f7fa;
+
+  --sidebar-width: 260px;
+  --topbar-height: 56px;
+  --content-width: 1200px;
+  --row-height: 40px;
+
+  --ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --fast: 120ms;
+  --medium: 180ms;
+}
+
+/* dark: the system's, unless the app says light */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg: #0b0d12;
+    --surface: #11141b;
+    --surface-2: #0e1117;
+    --surface-3: #171b24;
+    --surface-hover: #151922;
+    --sidebar-bg: #0d1016;
+    --overlay: rgb(2 4 8 / 0.6);
+    --border: #1f2430;
+    --border-strong: #2b3241;
+    --text: #e6e8ee;
+    --text-2: #c3c8d4;
+    --text-3: #8d95a7;
+    --text-4: #5f6779;
+    --accent: #818cf8;
+    --accent-hover: #a5b4fc;
+    --accent-text: #a5b4fc;
+    --accent-contrast: #0b0d12;
+    --accent-soft: rgb(129 140 248 / 0.12);
+    --accent-soft-2: rgb(129 140 248 / 0.2);
+    --accent-ring: rgb(129 140 248 / 0.35);
+    --success: #34d399;
+    --success-soft: rgb(52 211 153 / 0.12);
+    --success-text: #6ee7b7;
+    --warning: #fbbf24;
+    --warning-soft: rgb(251 191 36 / 0.12);
+    --warning-text: #fcd34d;
+    --danger: #fb7185;
+    --danger-hover: #fda4af;
+    --danger-soft: rgb(251 113 133 / 0.12);
+    --danger-text: #fda4af;
+    --danger-ring: rgb(251 113 133 / 0.3);
+    --shadow-xs: none;
+    --shadow-sm: 0 1px 2px rgb(0 0 0 / 0.3);
+    --shadow: 0 1px 3px rgb(0 0 0 / 0.4);
+    --shadow-lg: 0 20px 50px -12px rgb(0 0 0 / 0.7), 0 0 0 1px rgb(255 255 255 / 0.04);
+    --skeleton: #181c25;
+    --skeleton-shine: #1f2430;
+  }
+}
+
+/* dark, as the app says */
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #0b0d12;
+  --surface: #11141b;
+  --surface-2: #0e1117;
+  --surface-3: #171b24;
+  --surface-hover: #151922;
+  --sidebar-bg: #0d1016;
+  --overlay: rgb(2 4 8 / 0.6);
+  --border: #1f2430;
+  --border-strong: #2b3241;
+  --text: #e6e8ee;
+  --text-2: #c3c8d4;
+  --text-3: #8d95a7;
+  --text-4: #5f6779;
+  --accent: #818cf8;
+  --accent-hover: #a5b4fc;
+  --accent-text: #a5b4fc;
+  --accent-contrast: #0b0d12;
+  --accent-soft: rgb(129 140 248 / 0.12);
+  --accent-soft-2: rgb(129 140 248 / 0.2);
+  --accent-ring: rgb(129 140 248 / 0.35);
+  --success: #34d399;
+  --success-soft: rgb(52 211 153 / 0.12);
+  --success-text: #6ee7b7;
+  --warning: #fbbf24;
+  --warning-soft: rgb(251 191 36 / 0.12);
+  --warning-text: #fcd34d;
+  --danger: #fb7185;
+  --danger-hover: #fda4af;
+  --danger-soft: rgb(251 113 133 / 0.12);
+  --danger-text: #fda4af;
+  --danger-ring: rgb(251 113 133 / 0.3);
+  --shadow-xs: none;
+  --shadow-sm: 0 1px 2px rgb(0 0 0 / 0.3);
+  --shadow: 0 1px 3px rgb(0 0 0 / 0.4);
+  --shadow-lg: 0 20px 50px -12px rgb(0 0 0 / 0.7), 0 0 0 1px rgb(255 255 255 / 0.04);
+  --skeleton: #181c25;
+  --skeleton-shine: #1f2430;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --fast: 0ms;
+    --medium: 0ms;
+  }
+}

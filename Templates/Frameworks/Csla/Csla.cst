@@ -1,8 +1,8 @@
-<%@ CodeTemplate Language="C#" TargetLanguage="Text" Description="CSLA .NET business objects for a database, with their DAL (interfaces and DTOs) and its EF Core implementation. Writes Model.md: what each table became, and why." %>
+<%@ CodeTemplate Language="C#" TargetLanguage="Text" Description="CSLA .NET business objects for a database, with their DAL (interfaces and DTOs), its EF Core implementation and a Blazor web app over them. Writes Model.md: what each table became, and why." %>
 <%@ Property Name="SourceDatabase" Type="SchemaExplorer.DatabaseSchema" Category="Source" Description="The database." %>
-<%@ Property Name="Namespace" Type="System.String" Default="MyApp" Category="Output" Description="The root namespace and the projects' names: {Namespace}.Business, {Namespace}.Dal and {Namespace}.Dal.EfCore." %>
+<%@ Property Name="Namespace" Type="System.String" Default="MyApp" Category="Output" Description="The root namespace and the projects' names: {Namespace}.Business, {Namespace}.Dal, {Namespace}.Dal.EfCore and {Namespace}.Web." %>
 <%@ Property Name="ContextName" Type="System.String" Default="AppDbContext" Category="Output" Description="The DbContext's class name." %>
-<%@ Property Name="OutputDirectory" Type="System.String" Default="." Category="Output" Description="The folder of the three projects: each one's generated files go to its Generated folder." %>
+<%@ Property Name="OutputDirectory" Type="System.String" Default="." Category="Output" Description="The folder of the four projects: each one's generated files go to its Generated folder." %>
 <%@ Property Name="Exclude" Type="System.String" Default="sysdiagrams, __EFMigrationsHistory" Optional="True" Category="Model" Description="Tables (Orders) and columns (Orders.Notes) to leave out, separated by commas; * and ? match any characters." %>
 <%@ Property Name="Children" Type="System.String" Default="" Optional="True" Category="Model" Description="Tables to make children of another, besides those the keys say (Parent: Child, Child; Parent: Child)." %>
 <%@ Property Name="TargetFramework" Type="System.String" Default="net10.0" Category="Projects" Description="A project file's target framework, where it writes one (a project that isn't there)." %>
@@ -21,6 +21,13 @@
 <%@ Register Name="ContextTemplate" Template="Context.cst" MergeProperties="False" %>
 <%@ Register Name="EfDalTemplate" Template="EfDal.cst" MergeProperties="False" %>
 <%@ Register Name="EfCommonTemplate" Template="EfCommon.cst" MergeProperties="False" %>
+<%@ Register Name="ListPageTemplate" Template="Web/ListPage.cst" MergeProperties="False" %>
+<%@ Register Name="EditPageTemplate" Template="Web/EditPage.cst" MergeProperties="False" %>
+<%@ Register Name="ChildGridTemplate" Template="Web/ChildGrid.cst" MergeProperties="False" %>
+<%@ Register Name="SiteTemplate" Template="Web/Site.cst" MergeProperties="False" %>
+<%@ Register Name="ImportsTemplate" Template="Web/Imports.cst" MergeProperties="False" %>
+<%@ Register Name="ProgramTemplate" Template="Web/Program.cst" MergeProperties="False" %>
+<%@ Register Name="ShellTemplate" Template="Web/Shell.cst" MergeProperties="False" %>
 <%@ Assembly Name="SchemaExplorer" %>
 <%@ Import Namespace="SchemaExplorer" %>
 <%@ Import Namespace="System.Collections.Generic" %>
@@ -28,12 +35,14 @@
 <%@ Import Namespace="System.Linq" %>
 <%@ Assembly Src="Names.cs" %>
 <%@ Assembly Src="Model.cs" %>
+<%@ Assembly Src="Web/Web.cs" %>
 <%--
 The master: the business objects (Editable.cst, ChildList.cst, Info.cst, List.cst, NameValueList.cst), the DAL's
-interfaces (Dal.cst, DalCommon.cst) and its EF Core implementation (Entity.cst, Configuration.cst, Context.cst, EfDal.cst,
-EfCommon.cst), each project's into its Generated folder. A .g.cs file there that this run didn't write (a table that's
-gone) is removed. A project's file is written once, where there isn't one (Project.cst). What it writes itself is
-Model.md.
+interfaces (Dal.cst, DalCommon.cst), its EF Core implementation (Entity.cst, Configuration.cst, Context.cst, EfDal.cst,
+EfCommon.cst) and the web app's pages (Web/ListPage.cst, Web/EditPage.cst, Web/ChildGrid.cst, Web/Site.cst), each
+project's into its Generated folder. A file there that this run didn't write (a table that's gone, a page you replaced)
+is removed. A project's file is written once, where there isn't one (Project.cst), and so are the web app's Program.cs
+(Web/Program.cst) and shell (Web/Shell/). What it writes itself is Model.md.
 --%>
 <% var model = Model.Of(SourceDatabase, Exclude, Children); Generate(model); %>
 # <%= SourceDatabase.Name %>'s business objects
@@ -63,6 +72,17 @@ Editable children (`BusinessBase`) in a list (`BusinessListBase`) of their paren
 | <%= table.Name %> | `<%= Model.Class(table) %>` | `<%= Model.Class(model.Parent(table)) %>.<%= model.ChildListProperty(table) %>` (`<%= Model.ChildList(table) %>`) | <%= model.WhyChild(table) %> |
 <% } %>
 <% } %>
+
+## Pages
+
+`<%= Namespace %>.Web`'s, for each root: its list (search, sort, a filter for each fetch by a foreign key) and its editor,
+with a grid for each of its children.
+
+| Page | List | Editor | Grids |
+| --- | --- | --- | --- |
+<% foreach (TableSchema table in model.Tables.Where(t => !model.IsChild(t))) { %>
+| <%= Web.Title(table) %> | `/<%= Web.Route(table) %>` | `/<%= Web.Route(table) %>/<%= Web.RouteTemplate(Model.Key(table)) %>` | <%= Model.And(model.DescendantsOf(table).Select(c => "`" + Web.Grid(c) + "`")) %> |
+<% } %>
 <% var notes = model.Notes.Distinct().ToList(); if (notes.Count > 0) { %>
 
 ## Left out
@@ -77,11 +97,14 @@ private void Generate(Model model)
     string business = Path.Combine(OutputDirectory, Namespace + ".Business", "Generated");
     string dal = Path.Combine(OutputDirectory, Namespace + ".Dal", "Generated");
     string efCore = Path.Combine(OutputDirectory, Namespace + ".Dal.EfCore", "Generated");
+    string webProject = Path.Combine(OutputDirectory, Namespace + ".Web");
+    string web = Path.Combine(webProject, "Generated");
     var written = new HashSet<string>();
 
-    void Render(CodeTemplate template, string directory, string name)
+    void Render(CodeTemplate template, string directory, string name) => RenderAs(template, directory, name + ".g.cs");
+    void RenderAs(CodeTemplate template, string directory, string file)
     {
-        string file = Path.Combine(directory, name + ".g.cs");
+        file = Path.Combine(directory, file);
         template.RenderToFile(file, true);
         written.Add(Path.GetFullPath(file));
     }
@@ -113,7 +136,31 @@ private void Generate(Model model)
         var efDal = Table<EfDalTemplate>(table);
         efDal.ContextName = ContextName;
         Render(efDal, efCore, Model.Dal(table));
+
+        // the web app's pages: a root's list and editor, a child's grid; not one you've replaced with your own
+        if (model.IsChild(table))
+            RenderPage(Table<ChildGridTemplate>(table), Web.Grid(table));
+        else
+        {
+            RenderPage(Table<ListPageTemplate>(table), Web.ListPage(table));
+            RenderPage(Table<EditPageTemplate>(table), Web.EditPage(table));
+        }
     }
+    void RenderPage(CodeTemplate template, string name)
+    {
+        if (!Replaced(webProject, name + ".razor"))
+            RenderAs(template, web, name + ".razor");
+    }
+
+    var site = Create<SiteTemplate>();
+    site.SourceDatabase = SourceDatabase;
+    site.Namespace = Namespace;
+    site.Exclude = Exclude;
+    site.Children = Children;
+    Render(site, web, "Site");
+    var imports = Create<ImportsTemplate>();
+    imports.Namespace = Namespace;
+    RenderAs(imports, web, "_Imports.razor");
 
     var dalCommon = Create<DalCommonTemplate>();
     dalCommon.SourceDatabase = SourceDatabase;
@@ -146,11 +193,12 @@ private void Generate(Model model)
     efCommon.Children = Children;
     Render(efCommon, efCore, "EfCore");
 
-    foreach (string directory in new[] { business, dal, efCore })
+    foreach (string directory in new[] { business, dal, efCore, web })
         RemoveStale(directory, written);
 
     // a project file for each, where there isn't one yet: a new database's projects build as they are
-    foreach (var (kind, project) in new[] { ("Business", ".Business"), ("Dal", ".Dal"), ("EfCore", ".Dal.EfCore") })
+    var (provider, database) = Database(webProject);
+    foreach (var (kind, project) in new[] { ("Business", ".Business"), ("Dal", ".Dal"), ("EfCore", ".Dal.EfCore"), ("Web", ".Web") })
     {
         string file = Path.Combine(OutputDirectory, Namespace + project, Namespace + project + ".csproj");
         if (File.Exists(file))
@@ -161,17 +209,66 @@ private void Generate(Model model)
         template.TargetFramework = TargetFramework;
         template.CslaVersion = CslaVersion;
         template.EfCoreVersion = EfCoreVersion;
+        template.Provider = provider;
+        template.DatabaseFile = database;
+        template.RenderToFile(file, false);
+    }
+
+    // the web app's Program.cs and shell (its layout, components and theme), where they aren't yet: then they're yours
+    string program = Path.Combine(webProject, "Program.cs");
+    if (!File.Exists(program))
+    {
+        var template = Create<ProgramTemplate>();
+        template.Namespace = Namespace;
+        template.Provider = provider;
+        template.DatabaseFile = database;
+        template.RenderToFile(program, false);
+    }
+    string shell = Path.Combine(CodeTemplateInfo.DirectoryName, "Web", "Shell");
+    foreach (string source in Directory.GetFiles(shell, "*", SearchOption.AllDirectories).OrderBy(f => f, StringComparer.Ordinal))
+    {
+        string file = Path.Combine(webProject, Path.GetRelativePath(shell, source));
+        if (File.Exists(file))
+            continue;
+        var template = Create<ShellTemplate>();
+        template.Source = source;
+        template.Namespace = Namespace;
         template.RenderToFile(file, false);
     }
 }
 
-// A generated file this run didn't write: its table (or column, or setting) is gone. Raised as an output without
-// content first: cs check counts it as a change (and cancels), cs generate removes it.
+// A page you've written: a .razor of the generated page's name in the web project, outside Generated/ (Pages/OrderEditPage.razor).
+private static bool Replaced(string webProject, string file) =>
+    Directory.Exists(webProject) &&
+    Directory.EnumerateFiles(webProject, file, SearchOption.AllDirectories)
+        .Select(f => Path.GetRelativePath(webProject, f).Replace('\\', '/'))
+        .Any(f => !f.StartsWith("Generated/") && !f.StartsWith("bin/") && !f.StartsWith("obj/"));
+
+// The web app's EF Core provider, and a SQLite database's file from its project's folder.
+private (string Provider, string File) Database(string webProject)
+{
+    string type = SourceDatabase.Provider.GetType().Name;
+    if (type.Contains("PostgreSQL"))
+        return ("PostgreSQL", "");
+    if (type.Contains("MySQL"))
+        return ("MySql", "");
+    if (!type.Contains("SQLite"))
+        return ("SqlServer", "");
+    var builder = new System.Data.Common.DbConnectionStringBuilder { ConnectionString = SourceDatabase.ConnectionString };
+    object source = builder.TryGetValue("Data Source", out var value) || builder.TryGetValue("DataSource", out value) ? value : null;
+    string path = source == null ? null : Path.GetFullPath(Environment.ExpandEnvironmentVariables(source.ToString()));
+    if (path == null || !File.Exists(path))
+        return ("Sqlite", "");
+    return ("Sqlite", Path.GetRelativePath(Path.GetFullPath(webProject), path));
+}
+
+// A generated file this run didn't write: its table (or column, or setting) is gone, or you've replaced its page. Raised
+// as an output without content first: cs check counts it as a change (and cancels), cs generate removes it.
 private void RemoveStale(string directory, HashSet<string> written)
 {
     if (!Directory.Exists(directory))
         return;
-    foreach (string file in Directory.GetFiles(directory, "*.g.cs"))
+    foreach (string file in Directory.GetFiles(directory, "*.g.cs").Concat(Directory.GetFiles(directory, "*.razor")))
     {
         string path = Path.GetFullPath(file);
         if (written.Contains(path))

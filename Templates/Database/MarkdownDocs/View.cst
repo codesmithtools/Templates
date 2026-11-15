@@ -1,20 +1,56 @@
-<%@ CodeTemplate Language="C#" TargetLanguage="Text" Description="A view's page: its columns." %>
+<%@ CodeTemplate Language="C#" TargetLanguage="Text" Description="A view's page: its columns, the tables and views it uses, and its SQL." %>
 <%@ Property Name="View" Type="SchemaExplorer.ViewSchema" Description="The view." %>
 <%@ Assembly Name="SchemaExplorer" %>
 <%@ Import Namespace="SchemaExplorer" %>
+<%@ Import Namespace="System.Linq" %>
 <%@ Assembly Src="Docs.cs" %>
-# <%= Docs.Text(Docs.Title(View)) %>
+<%
+var columns = View.Columns.Cast<ViewColumnSchema>().ToList();
+var uses = Docs.Uses(View);
+var usedBy = Docs.UsedBy(View);
+string sql = Docs.Sql(View);
+bool descriptions = columns.Any(c => Docs.Description(c).Length > 0);
+%>
+<%= Docs.Breadcrumbs(View) %>
 
-A view of the [<%= Docs.Text(View.Database.Name) %>](../README.md) database.
+# <%= Docs.Text(Docs.Title(View)) %>
 <% foreach (string paragraph in Docs.Paragraphs(Docs.Description(View))) { %>
 
 <%= paragraph %>
 <% } %>
 
+| Columns | Uses | Used by |
+| :---: | :---: | :---: |
+| <%= columns.Count %> | <%= uses.Count %> | <%= usedBy.Count %> |
+
 ## Columns
 
-| Column | Type | Nullable | Description |
-| --- | --- | --- | --- |
-<% foreach (ViewColumnSchema column in View.Columns) { %>
-| <%= Docs.Text(column.Name) %> | <%= Docs.Text(Docs.Type(column)) %> | <%= column.AllowDBNull ? "yes" : "no" %> | <%= Docs.Cell(Docs.Description(column)) %> |
+| # | Column | Type | Nullable |<%= descriptions ? " Description |" : "" %>
+| ---: | --- | --- | :---: |<%= descriptions ? " --- |" : "" %>
+<% for (int i = 0; i < columns.Count; i++) { %>
+| <%= i + 1 %> | <%= Docs.Code(columns[i].Name) %> | <%= Docs.Text(Docs.Type(columns[i])) %> | <%= columns[i].AllowDBNull ? "yes" : "no" %> |<%= descriptions ? " " + Docs.Cell(Docs.Description(columns[i])) + " |" : "" %>
 <% } %>
+<% if (uses.Count > 0 || usedBy.Count > 0) { %>
+
+## Related
+<% if (uses.Count > 0) { %>
+
+Uses <%= string.Join(", ", uses.Select(u => Docs.Link(u, View))) %>.
+<% } %>
+<% if (usedBy.Count > 0) { %>
+
+Used by <%= string.Join(", ", usedBy.Select(u => Docs.Link(u, View))) %>.
+<% } %>
+<% } %>
+<% if (sql.Length > 0) { %>
+
+## Definition
+
+<%= Docs.Fence(sql) %>sql
+<%= sql %>
+<%= Docs.Fence(sql) %>
+<% } %>
+
+---
+
+<%= Docs.Pager(View) %>

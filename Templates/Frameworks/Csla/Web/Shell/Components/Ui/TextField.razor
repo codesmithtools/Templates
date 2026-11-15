@@ -1,0 +1,39 @@
+@* A text property: an input, or a text area for long text. Each keystroke sets the property, and CSLA checks its rules. *@
+@inherits FieldBase
+
+<FieldFrame Field="this" Length="Text.Length" MaxLength="MaxLength">
+    @if (Multiline)
+    {
+        <textarea id="@Id" class="input" rows="3" value="@Text" @oninput="OnInput" @onblur="Touch" readonly="@(!CanWrite)"
+                  placeholder="@Placeholder" aria-label="@(Compact ? LabelText : null)" aria-invalid="@(Invalid ? "true" : null)"
+                  aria-describedby="@MessageId" aria-required="@(Required ? "true" : null)"></textarea>
+    }
+    else
+    {
+        <input id="@Id" class="input @(Mono ? "mono" : null)" type="@Type" value="@Text" @oninput="OnInput" @onblur="Touch"
+               readonly="@(!CanWrite)" placeholder="@Placeholder" autocomplete="off" spellcheck="@(Mono ? "false" : null)"
+               aria-label="@(Compact ? LabelText : null)" aria-invalid="@(Invalid ? "true" : null)"
+               aria-describedby="@MessageId" aria-required="@(Required ? "true" : null)" />
+    }
+</FieldFrame>
+
+@code {
+    /// <summary>The column's size: the counter's limit (CSLA's StringLength rule says when it's passed).</summary>
+    [Parameter] public int? MaxLength { get; set; }
+
+    [Parameter] public bool Multiline { get; set; }
+
+    /// <summary>A code or a key: monospaced.</summary>
+    [Parameter] public bool Mono { get; set; }
+
+    /// <summary>The input's type: text, email, tel, url.</summary>
+    [Parameter] public string Type { get; set; } = "text";
+
+    private string Text => Info.Value as string ?? "";
+
+    private void OnInput(ChangeEventArgs e)
+    {
+        Info.Value = e.Value as string ?? "";
+        Touch();
+    }
+}

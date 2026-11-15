@@ -1,0 +1,138 @@
+<%--
+CodeSmith DBDocumenter Templates
+Author:  Jason Alexander, Eric J. Smith
+--%>
+<%@ CodeTemplate Language="C#" TargetLanguage="HTML" Src="DBDocumenterTemplate.cs" Inherits="DBDocumenterTemplate" Description="A procedure's (or function's) page: its parameters, the tables and views it uses, and its SQL." %>
+<%@ Property Name="SourceDatabase" Type="SchemaExplorer.DatabaseSchema" Category="Context" Description="The database." %>
+<%@ Property Name="SourceCommand" Type="SchemaExplorer.CommandSchema" Category="Context" Description="The procedure." %>
+<%@ Property Name="ServerName" Type="System.String" Optional="True" Category="Output" Description="The server's name." %>
+<%@ Property Name="DocumentationTitle" Type="System.String" Default="Database Documentation" Category="Output" Description="The documentation's title." %>
+<%@ Register Name="HeaderTemplate" Template="header.cst" MergeProperties="False" %>
+<%@ Register Name="FooterTemplate" Template="footer.cst" MergeProperties="False" %>
+<%@ Assembly Name="SchemaExplorer" %>
+<%@ Assembly Name="System.Design" %>
+<%@ Assembly Src="Site.cs" %>
+<%@ Assembly Src="SqlHighlighter.cs" %>
+<%@ Assembly Src="ErDiagram.cs" %>
+<%@ Import Namespace="System.Data" %>
+<%@ Import Namespace="System.Linq" %>
+<%@ Import Namespace="SchemaExplorer" %>
+<script runat="template">
+protected override string Root => "../";
+</script>
+<%
+DocSite site = Site;
+CommandSchema command = SourceCommand;
+string title = DocSite.Title(command);
+string schema = DocSite.Schema(command);
+string description = DocSite.Description(command);
+string sql = DocSite.Sql(command);
+var parameters = command.Parameters.Cast<ParameterSchema>().ToList();
+var inputs = parameters.Where(p => p.Direction != ParameterDirection.ReturnValue).ToList();
+var returns = parameters.FirstOrDefault(p => p.Direction == ParameterDirection.ReturnValue);
+var uses = site.Uses(command);
+bool parameterDescriptions = parameters.Any(p => DocSite.Description(p).Length > 0);
+bool defaults = parameters.Any(p => DocSite.Default(p).Length > 0);
+int index = site.Commands.ToList().FindIndex(c => DocSite.Key(c) == DocSite.Key(command));
+var previous = index > 0 ? site.Commands[index - 1] : null;
+var next = index >= 0 && index < site.Commands.Count - 1 ? site.Commands[index + 1] : null;
+
+var header = Create<HeaderTemplate>();
+header.RootPath = Root;
+header.PageTitle = title;
+header.Active = DocSite.Key(command);
+header.Crumbs = "<li><a href=\"../index.html#procedures\">Procedures</a></li><li><span aria-current=\"page\">" + H(title) + "</span></li>";
+OutputTemplate(header);
+%>
+<div class="page">
+<article class="doc">
+<header class="page-head">
+<div class="eyebrow"><span class="kind kind-procedure"><%= Icon("procedure") %>Procedure</span><% if (schema.Length > 0) { %><span class="eyebrow-schema"><%= H(schema) %></span><% } %></div>
+<div class="title-row">
+<h1 class="page-title"><%= H(command.Name) %></h1>
+<button type="button" class="copy-button" data-copy="<%= H(command.FullName) %>" aria-label="Copy the procedure's name" title="Copy name"><%= Icon("copy") %><%= Icon("check", "icon icon-done") %></button>
+</div>
+<% if (description.Length > 0) { %>
+<p class="lede"><%= H(description) %></p>
+<% } %>
+<dl class="facts">
+<div class="fact"><dt>Parameters</dt><dd><%= inputs.Count %></dd></div>
+<div class="fact"><dt>Returns</dt><dd><%= returns != null ? "<code>" + H(DocSite.Type(returns)) + "</code>" : "<span class=\"faint\">—</span>" %></dd></div>
+<div class="fact"><dt>Uses</dt><dd><%= uses.Count %></dd></div>
+<div class="fact"><dt>SQL</dt><dd><%= sql.Length > 0 ? Plural(SqlHighlighter.LineCount(SqlHighlighter.Layout(sql)), "line") : "<span class=\"faint\">None</span>" %></dd></div>
+</dl>
+</header>
+
+<section class="section">
+<%= Heading("parameters", "Parameters", inputs.Count) %>
+<% if (inputs.Count == 0) { %>
+<%= Empty("parameter", "It takes no parameters.") %>
+<% } else { %>
+<div class="card table-card"><div class="table-scroll">
+<table class="grid columns">
+<thead><tr><th class="num ordinal">#</th><th>Parameter</th><th>Direction</th><th>Type</th><% if (defaults) { %><th>Default</th><% } %><% if (parameterDescriptions) { %><th>Description</th><% } %></tr></thead>
+<tbody>
+<% int ordinal = 0; %>
+<% foreach (ParameterSchema parameter in inputs) { %>
+<%
+ordinal++;
+string direction = DocSite.Direction(parameter);
+string defaultValue = DocSite.Default(parameter);
+%>
+<tr id="<%= DocSite.Anchor(parameter.Name) %>">
+<td class="num ordinal"><%= ordinal %></td>
+<td class="cell-column"><div class="column-name"><code><%= H(parameter.Name) %></code></div></td>
+<td><%= Badge(direction, direction == "in" ? "muted" : direction == "out" ? "fk" : "unique") %></td>
+<td><code class="type"><%= H(DocSite.Type(parameter)) %></code></td>
+<% if (defaults) { %><td><%= defaultValue.Length > 0 ? "<code class=\"default\">" + H(defaultValue) + "</code>" : "" %></td><% } %>
+<% if (parameterDescriptions) { %><td class="desc"><%= H(DocSite.Description(parameter)) %></td><% } %>
+</tr>
+<% } %>
+</tbody>
+</table>
+</div></div>
+<% } %>
+</section>
+
+<% if (uses.Count > 0) { %>
+<section class="section">
+<%= Heading("uses", "Uses", uses.Count) %>
+<p class="section-lede">The tables and views its SQL reads or writes.</p>
+<ul class="chips">
+<% foreach (var item in uses) { %>
+<li><a class="chip" href="<%= H(Href(item)) %>"><%= KindIcon(item) %><%= H(DocSite.Title(item)) %></a></li>
+<% } %>
+</ul>
+</section>
+<% } %>
+
+<section class="section">
+<%= Heading("definition", "Definition") %>
+<% if (sql.Length == 0) { %>
+<%= Empty("file-code", "The provider doesn't read this procedure's SQL.") %>
+<% } else { %>
+<%= CodeBlock(sql, title) %>
+<% } %>
+</section>
+
+<% if (previous != null || next != null) { %>
+<nav class="pager" aria-label="Procedures">
+<% if (previous != null) { %><a class="pager-link" href="<%= H(Href(previous)) %>" rel="prev"><span class="pager-label"><%= Icon("arrow-left") %>Previous</span><span class="pager-title"><%= H(DocSite.Title(previous)) %></span></a><% } else { %><span></span><% } %>
+<% if (next != null) { %><a class="pager-link pager-next" href="<%= H(Href(next)) %>" rel="next"><span class="pager-label">Next<%= Icon("arrow-right") %></span><span class="pager-title"><%= H(DocSite.Title(next)) %></span></a><% } %>
+</nav>
+<% } %>
+</article>
+<aside class="toc" aria-label="On this page">
+<p class="toc-title">On this page</p>
+<ul>
+<li><a href="#parameters">Parameters</a></li>
+<% if (uses.Count > 0) { %><li><a href="#uses">Uses</a></li><% } %>
+<li><a href="#definition">Definition</a></li>
+</ul>
+</aside>
+</div>
+<%
+var footer = Create<FooterTemplate>();
+footer.RootPath = Root;
+OutputTemplate(footer);
+%>

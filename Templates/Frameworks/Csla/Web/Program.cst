@@ -1,0 +1,63 @@
+<%@ CodeTemplate Language="C#" TargetLanguage="C#" Description="The web app's Program.cs: Blazor, interactive on the server; CSLA; the database (a copy of a SQLite file, or a connection string); the shell's services. Written once, when it isn't there, and then yours." %>
+<%@ Property Name="Namespace" Type="System.String" Default="MyApp" Description="The root namespace." %>
+<%@ Property Name="Provider" Type="System.String" Default="Sqlite" Description="The EF Core provider: Sqlite, SqlServer, PostgreSQL or MySql." %>
+<%@ Property Name="DatabaseFile" Type="System.String" Default="" Optional="True" Description="A SQLite database file, copied beside the app when it's built (the csproj links it)." %>
+<%@ Assembly Name="SchemaExplorer" %>
+<%@ Assembly Src="../Names.cs" %>
+<%@ Assembly Src="../Model.cs" %>
+<%
+    string dal = "Add" + Model.ServicesName(Namespace) + "Dal";
+    string file = System.IO.Path.GetFileName(DatabaseFile);
+    string copy = System.IO.Path.GetFileNameWithoutExtension(file) + ".web" + System.IO.Path.GetExtension(file);
+%>
+// The web app: the business objects' pages (Generated/), interactive on the server, on the EF Core DAL. Csla.cst wrote this
+// file once: it's yours.
+using Csla.Configuration;
+using Microsoft.EntityFrameworkCore;
+
+var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddRazorComponents().AddInteractiveServerComponents();
+builder.Services.AddCascadingAuthenticationState();
+
+// CSLA: an ApplicationContext for each circuit, and its user (AddServerSideBlazor), ViewModel<T>, the data portal here
+builder.Services.AddCsla(options => options.AddAspNetCore().AddServerSideBlazor());
+
+<% if (Provider == "Sqlite" && file.Length > 0) { %>
+// the database: a copy of <%= file %>, made at each start (the one beside the project stays as it is)
+string database = Path.Combine(AppContext.BaseDirectory, "<%= copy %>");
+File.Copy(Path.Combine(AppContext.BaseDirectory, "<%= file %>"), database, overwrite: true);
+builder.Services.<%= dal %>(options => options.UseSqlite($"Data Source={database};Pooling=False"));
+<% } else { %>
+// the database: ConnectionStrings:<%= Namespace %> (appsettings.json, user secrets or the environment)
+string connection = builder.Configuration.GetConnectionString(<%= Model.Literal(Namespace) %>)
+    ?? throw new InvalidOperationException("Set ConnectionStrings:<%= Namespace %> (appsettings.json, user secrets or an environment variable).");
+<% if (Provider == "SqlServer") { %>
+builder.Services.<%= dal %>(options => options.UseSqlServer(connection));
+<% } else if (Provider == "PostgreSQL") { %>
+builder.Services.<%= dal %>(options => options.UseNpgsql(connection));
+<% } else if (Provider == "MySql") { %>
+builder.Services.<%= dal %>(options => options.UseMySQL(connection));
+<% } else { %>
+builder.Services.<%= dal %>(options => options.UseSqlite(connection));
+<% } %>
+<% } %>
+
+// the shell's: toasts, questions, the palette, the roots' counts, the editors' view model (Components/Ui)
+builder.Services.AddUi();
+
+var app = builder.Build();
+
+if (!app.Environment.IsDevelopment())
+{
+    app.UseExceptionHandler("/error", createScopeForErrors: true);
+    app.UseHsts();
+}
+app.UseStatusCodePagesWithReExecute("/not-found", createScopeForStatusCodePages: true);
+app.UseRequestLocalization("en-US");
+app.UseDemoUsers(); // who you are: the demo's sign-in (Components/Layout/DemoUsers.cs)
+app.UseAntiforgery();
+app.MapStaticAssets();
+app.MapRazorComponents<App>().AddInteractiveServerRenderMode();
+
+app.Run();

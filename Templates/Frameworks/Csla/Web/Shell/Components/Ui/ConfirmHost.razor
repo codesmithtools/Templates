@@ -1,0 +1,48 @@
+@* The question before what can't be undone (Confirmations.AskAsync). *@
+@implements IDisposable
+@inject Confirmations Confirmations
+@inject IJSRuntime JS
+
+@if (Confirmations.Current is { } question)
+{
+    <div class="overlay" @onclick="() => Confirmations.Answer(false)" @onkeydown="OnKeyDown">
+        <div class="dialog" role="alertdialog" aria-modal="true" aria-labelledby="confirm-title" aria-describedby="confirm-message" @onclick:stopPropagation>
+            <div class="dialog-head">
+                <span class="icon-tile @(question.Danger ? "danger" : null)"><Icon Name="@question.Icon" Size="18" /></span>
+                <div>
+                    <h2 id="confirm-title">@question.Title</h2>
+                    <p id="confirm-message">@question.Message</p>
+                </div>
+            </div>
+            <div class="dialog-actions">
+                <button type="button" class="btn" id="confirm-cancel" @onclick="() => Confirmations.Answer(false)">Cancel</button>
+                <button type="button" class="btn @(question.Danger ? "btn-danger-solid" : "btn-primary")" id="confirm-ok" @onclick="() => Confirmations.Answer(true)">@question.Confirm</button>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    private Confirmation? _focused;
+
+    protected override void OnInitialized() => Confirmations.Changed += Refresh;
+
+    private void Refresh() => _ = InvokeAsync(StateHasChanged);
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (Confirmations.Current is { } question && !ReferenceEquals(question, _focused))
+        {
+            _focused = question;
+            await JS.InvokeVoidAsync("ui.focus", question.Danger ? "#confirm-cancel" : "#confirm-ok");
+        }
+    }
+
+    private void OnKeyDown(KeyboardEventArgs e)
+    {
+        if (e.Key == "Escape")
+            Confirmations.Answer(false);
+    }
+
+    public void Dispose() => Confirmations.Changed -= Refresh;
+}

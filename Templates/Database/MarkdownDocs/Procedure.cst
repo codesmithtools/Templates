@@ -1,24 +1,56 @@
-<%@ CodeTemplate Language="C#" TargetLanguage="Text" Description="A stored procedure's page: its parameters." %>
+<%@ CodeTemplate Language="C#" TargetLanguage="Text" Description="A stored procedure's page: its parameters, the tables and views it uses, and its SQL." %>
 <%@ Property Name="Command" Type="SchemaExplorer.CommandSchema" Description="The procedure (or function)." %>
 <%@ Assembly Name="SchemaExplorer" %>
 <%@ Import Namespace="SchemaExplorer" %>
+<%@ Import Namespace="System.Data" %>
+<%@ Import Namespace="System.Linq" %>
 <%@ Assembly Src="Docs.cs" %>
-# <%= Docs.Text(Docs.Title(Command)) %>
+<%
+var parameters = Command.Parameters.Cast<ParameterSchema>().Where(p => p.Direction != ParameterDirection.ReturnValue).ToList();
+var returns = Command.Parameters.Cast<ParameterSchema>().FirstOrDefault(p => p.Direction == ParameterDirection.ReturnValue);
+var uses = Docs.Uses(Command);
+string sql = Docs.Sql(Command);
+bool defaults = parameters.Any(p => Docs.Default(p).Length > 0);
+bool descriptions = parameters.Any(p => Docs.Description(p).Length > 0);
+%>
+<%= Docs.Breadcrumbs(Command) %>
 
-A procedure of the [<%= Docs.Text(Command.Database.Name) %>](../README.md) database.
+# <%= Docs.Text(Docs.Title(Command)) %>
 <% foreach (string paragraph in Docs.Paragraphs(Docs.Description(Command))) { %>
 
 <%= paragraph %>
 <% } %>
 
+| Parameters | Returns | Uses |
+| :---: | :---: | :---: |
+| <%= parameters.Count %> | <%= returns != null ? Docs.Text(Docs.Type(returns)) : "—" %> | <%= uses.Count %> |
+
 ## Parameters
 
-<% if (Command.Parameters.Count == 0) { %>
-None.
+<% if (parameters.Count == 0) { %>
+It takes none.
 <% } else { %>
-| Parameter | Direction | Type | Default | Description |
-| --- | --- | --- | --- | --- |
-<% foreach (ParameterSchema parameter in Command.Parameters) { %>
-| <%= Docs.Text(parameter.Name) %> | <%= Docs.Direction(parameter) %> | <%= Docs.Text(Docs.Type(parameter)) %> | <%= Docs.Default(parameter) %> | <%= Docs.Cell(Docs.Description(parameter)) %> |
+| # | Parameter | Direction | Type |<%= defaults ? " Default |" : "" %><%= descriptions ? " Description |" : "" %>
+| ---: | --- | --- | --- |<%= defaults ? " --- |" : "" %><%= descriptions ? " --- |" : "" %>
+<% for (int i = 0; i < parameters.Count; i++) { %>
+| <%= i + 1 %> | <%= Docs.Code(parameters[i].Name) %> | <%= Docs.Direction(parameters[i]) %> | <%= Docs.Text(Docs.Type(parameters[i])) %> |<%= defaults ? " " + Docs.Default(parameters[i]) + " |" : "" %><%= descriptions ? " " + Docs.Cell(Docs.Description(parameters[i])) + " |" : "" %>
 <% } %>
 <% } %>
+<% if (uses.Count > 0) { %>
+
+## Uses
+
+<%= string.Join(", ", uses.Select(u => Docs.Link(u, Command))) %>
+<% } %>
+<% if (sql.Length > 0) { %>
+
+## Definition
+
+<%= Docs.Fence(sql) %>sql
+<%= sql %>
+<%= Docs.Fence(sql) %>
+<% } %>
+
+---
+
+<%= Docs.Pager(Command) %>

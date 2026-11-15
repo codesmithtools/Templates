@@ -1,0 +1,342 @@
+@* A list's page: its rows (a root's read-only list) searched, sorted and paged; a row opens its editor. *@
+@typeparam TItem where TItem : class
+@using System.Globalization
+@inject NavigationManager Navigation
+
+<PageTitle>@Page.Root.Title · @Site.Name</PageTitle>
+<Breadcrumbs Current="@Page.Root.Title" />
+<CascadingValue Value="this" IsFixed="true">@Columns</CascadingValue>
+
+<header class="page-head">
+    <div class="page-title">
+        <span class="page-icon"><Icon Name="@Page.Root.Icon" Size="22" Stroke="1.75" /></span>
+        <div class="titles">
+            <h1 tabindex="-1">@Page.Root.Title</h1>
+            <div class="sub">
+                @if (Page.Rows is null)
+                {
+                    <span class="skeleton" style="width: 120px"></span>
+                }
+                else
+                {
+                    <span>@Formats.Plural(Page.Rows.Count, Page.Root.Singular.ToLowerInvariant())@(Page.Filtered ? " (filtered)" : "")</span>
+                }
+                <span class="type-chip" title="CSLA's read-only list">@Page.Root.ListType</span>
+            </div>
+        </div>
+    </div>
+    <div class="page-actions">
+        @if (Page.CanCreate)
+        {
+            <a class="btn btn-primary" href="@Page.Root.NewHref" data-shortcut="new"><Icon Name="plus" Size="15" /> New @Page.Root.Singular.ToLowerInvariant() <kbd>N</kbd></a>
+        }
+    </div>
+</header>
+
+<div class="toolbar">
+    <div class="search">
+        <Icon Name="search" Size="15" />
+        <input class="input" type="text" placeholder="Search @Page.Root.Title.ToLowerInvariant()…" value="@_search" @oninput="OnSearch"
+               data-shortcut="search" aria-label="Search @Page.Root.Title.ToLowerInvariant()" autocomplete="off" />
+        @if (_search.Length == 0)
+        {
+            <kbd>/</kbd>
+        }
+        else
+        {
+            <button type="button" class="icon-btn sm clear" aria-label="Clear the search" @onclick="ClearSearch"><Icon Name="x" Size="14" /></button>
+        }
+    </div>
+    @Filters
+    <div class="grow"></div>
+    @if (Page.Rows is not null && Page.Rows.Count > 0)
+    {
+        <span class="result-count" aria-live="polite">
+            @if (_view.Count == 0)
+            {
+                <text>No matches</text>
+            }
+            else
+            {
+                <text>@(First + 1)–@Math.Min(First + _pageSize, _view.Count) of @_view.Count.ToString("N0", CultureInfo.CurrentCulture)</text>
+            }
+        </span>
+    }
+</div>
+
+<div class="card table-card" style="@(Page.Refreshing ? "opacity: .6; transition: opacity .15s" : null)">
+    @if (Page.Rows is null)
+    {
+        <table class="table" aria-busy="true">
+            <thead><tr>@for (int c = 0; c < Math.Max(_columns.Count, 4); c++) { <th><span class="skeleton" style="width: 70px; height: 10px"></span></th> }</tr></thead>
+            <tbody>
+                @for (int r = 0; r < 8; r++)
+                {
+                    <tr>@for (int c = 0; c < Math.Max(_columns.Count, 4); c++) { <td><span class="skeleton" style="width: @(40 + (r * 7 + c * 13) % 45)%"></span></td> }</tr>
+                }
+            </tbody>
+        </table>
+    }
+    else if (Page.Problem is { } problem)
+    {
+        <div class="empty">
+            <span class="art"><Icon Name="alert-triangle" Size="24" /></span>
+            <h2>@problem.Title</h2>
+            <p>@problem.Message</p>
+            @if (problem.Detail is { } detail)
+            {
+                <p class="mono" style="font-size: 12px">@detail</p>
+            }
+            <div class="actions"><button type="button" class="btn" @onclick="Page.LoadAsync"><Icon Name="refresh" Size="15" /> Try again</button></div>
+        </div>
+    }
+    else if (Page.Rows.Count == 0)
+    {
+        <div class="empty">
+            <span class="art"><Icon Name="@Page.Root.Icon" Size="24" /></span>
+            <h2>No @Page.Root.Title.ToLowerInvariant() @(Page.Filtered ? "here" : "yet")</h2>
+            <p>@(Page.Filtered ? "Nothing matches the filter." : $"When there are, they're listed here: {Page.Root.ListType}, CSLA's read-only list.")</p>
+            @if (Page.Filtered)
+            {
+                <div class="actions"><a class="btn" href="@Page.Root.Href"><Icon Name="x" Size="15" /> Clear the filter</a></div>
+            }
+            else if (Page.CanCreate)
+            {
+                <div class="actions"><a class="btn btn-primary" href="@Page.Root.NewHref"><Icon Name="plus" Size="15" /> New @Page.Root.Singular.ToLowerInvariant()</a></div>
+            }
+        </div>
+    }
+    else if (_view.Count == 0)
+    {
+        <div class="empty">
+            <span class="art"><Icon Name="search" Size="24" /></span>
+            <h2>Nothing matches “@_search”</h2>
+            <p>Search looks in every column shown, names of lookups too.</p>
+            <div class="actions"><button type="button" class="btn" @onclick="ClearSearch">Clear the search</button></div>
+        </div>
+    }
+    else
+    {
+        <div class="table-scroll">
+            <table class="table">
+                <thead>
+                    <tr>
+                        @foreach (var column in _columns)
+                        {
+                            bool on = column.Title == _sort;
+                            <th class="@(column.Numeric() ? "num" : null)" scope="col" aria-sort="@(on ? (_descending ? "descending" : "ascending") : null)">
+                                <button type="button" class="sort @(on ? "on" : null)" @onclick="() => SortBy(column)">
+                                    @column.Title
+                                    <Icon Name="@(on && _descending ? "arrow-down" : "arrow-up")" Size="12" />
+                                </button>
+                            </th>
+                        }
+                        <th class="go"><span class="sr-only">Open</span></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var row in _view.Skip(First).Take(_pageSize))
+                    {
+                        string href = Page.RowHref(row);
+                        <tr class="row" tabindex="0" @onclick="() => Navigation.NavigateTo(href)" @onkeydown="e => OnRowKey(e, href)">
+                            @for (int c = 0; c < _columns.Count; c++)
+                            {
+                                var column = _columns[c];
+                                string text = column.Text(row);
+                                if (c == 0)
+                                {
+                                    <td class="@CellClass(column)" data-label="@column.Title"><a href="@href" @onclick:stopPropagation>@Highlight(text)</a></td>
+                                }
+                                else if (column.Lookup is not null && column.Value(row) is { } key && text != Convert.ToString(key, CultureInfo.InvariantCulture))
+                                {
+                                    <td data-label="@column.Title"><span class="lookup">@Highlight(text) <code>@key</code></span></td>
+                                }
+                                else if (column.Kind == ValueKind.Bool)
+                                {
+                                    <td class="center" data-label="@column.Title">
+                                        @if (column.Value(row) is true)
+                                        {
+                                            <Icon Name="check" Size="15" Class="yes" />
+                                        }
+                                        else
+                                        {
+                                            <span class="no">—</span>
+                                        }
+                                    </td>
+                                }
+                                else
+                                {
+                                    <td class="@CellClass(column)" data-label="@column.Title" title="@(column.Kind == ValueKind.LongText ? text : null)">@Highlight(text)</td>
+                                }
+                            }
+                            <td class="go"><Icon Name="chevron-right" Size="15" /></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        @if (_view.Count > 10)
+        {
+            <footer class="pager">
+                <label>
+                    Rows
+                    <select value="@_pageSize" @onchange="OnPageSize" aria-label="Rows per page">
+                        @foreach (int size in new[] { 10, 25, 50, 100 })
+                        {
+                            <option value="@size">@size</option>
+                        }
+                    </select>
+                </label>
+                <div class="grow"></div>
+                <div class="pages">
+                    <button type="button" class="icon-btn sm" aria-label="Previous page" disabled="@(_page == 0)" @onclick="() => _page--"><Icon Name="chevron-left" Size="15" /></button>
+                    <span class="page-no">Page @(_page + 1) of @Pages</span>
+                    <button type="button" class="icon-btn sm" aria-label="Next page" disabled="@(_page >= Pages - 1)" @onclick="() => _page++"><Icon Name="chevron-right" Size="15" /></button>
+                </div>
+            </footer>
+        }
+    }
+</div>
+
+@code {
+    private readonly List<IListColumn<TItem>> _generated = [];
+    private List<IListColumn<TItem>> _columns = [];
+    private List<TItem> _view = [];
+    private string _search = "";
+    private string? _sort; // the sorted column's title
+    private bool _descending;
+    private int _page;
+    private int _pageSize = 25;
+
+    [Parameter, EditorRequired] public ListPage<TItem> Page { get; set; } = default!;
+    [Parameter, EditorRequired] public RenderFragment Columns { get; set; } = default!;
+    [Parameter] public RenderFragment? Filters { get; set; }
+
+    public void Add(IListColumn<TItem> column)
+    {
+        _generated.Add(column);
+        StateHasChanged();
+    }
+
+    public void Refresh()
+    {
+        Compute();
+        StateHasChanged();
+    }
+
+    private int First => _page * _pageSize;
+    private int Pages => Math.Max(1, (_view.Count + _pageSize - 1) / _pageSize);
+
+    protected override void OnParametersSet() => Compute();
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (firstRender)
+        {
+            Compute(); // the columns are in
+            StateHasChanged();
+        }
+    }
+
+    // searched (every word, in any column shown), then sorted
+    private void Compute()
+    {
+        var hidden = Page.HiddenColumns.ToHashSet();
+        _columns = _generated.Where(c => !hidden.Contains(c.Title)).ToList();
+        foreach (var column in Page.MoreColumns)
+        {
+            int after = column.After is null ? -1 : _columns.FindIndex(c => c.Title == column.After);
+            _columns.Insert(after < 0 ? _columns.Count : after + 1, column);
+        }
+        IEnumerable<TItem> rows = Page.Rows ?? [];
+        string[] words = _search.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+        if (words.Length > 0)
+            rows = rows.Where(row =>
+            {
+                string text = string.Join(" ", _columns.Select(c => c.Text(row) + " " + c.Value(row)));
+                return words.All(w => text.Contains(w, StringComparison.CurrentCultureIgnoreCase));
+            });
+        if (_columns.FirstOrDefault(c => c.Title == _sort) is { } sort)
+            rows = _descending ? rows.OrderByDescending(sort.SortKey, ByValue) : rows.OrderBy(sort.SortKey, ByValue);
+        _view = rows.ToList();
+        if (_page >= Pages)
+            _page = Pages - 1;
+    }
+
+    private static readonly IComparer<object?> ByValue = Comparer<object?>.Create((a, b) => a switch
+    {
+        null => b is null ? 0 : 1,
+        string s when b is string t => string.Compare(s, t, StringComparison.CurrentCultureIgnoreCase),
+        IComparable c when b is not null && a.GetType() == b.GetType() => c.CompareTo(b),
+        _ => b is null ? -1 : string.Compare(a.ToString(), b.ToString(), StringComparison.CurrentCulture),
+    });
+
+    private void OnSearch(ChangeEventArgs e)
+    {
+        _search = e.Value?.ToString() ?? "";
+        _page = 0;
+        Compute();
+    }
+
+    private void ClearSearch()
+    {
+        _search = "";
+        _page = 0;
+        Compute();
+    }
+
+    private void SortBy(IListColumn<TItem> column)
+    {
+        if (_sort != column.Title)
+            (_sort, _descending) = (column.Title, false);
+        else if (!_descending)
+            _descending = true;
+        else
+            _sort = null;
+        Compute();
+    }
+
+    private void OnPageSize(ChangeEventArgs e)
+    {
+        _pageSize = int.TryParse(e.Value?.ToString(), out int size) ? size : 25;
+        _page = 0;
+        Compute();
+    }
+
+    private void OnRowKey(KeyboardEventArgs e, string href)
+    {
+        if (e.Key == "Enter")
+            Navigation.NavigateTo(href);
+    }
+
+    private static string? CellClass(IListColumn<TItem> column) => column.Kind switch
+    {
+        ValueKind.Key => "key",
+        ValueKind.Number or ValueKind.Money => "num",
+        ValueKind.Date or ValueKind.DateTime => "dim",
+        ValueKind.LongText => "clip dim",
+        _ => null,
+    };
+
+    private RenderFragment Highlight(string text) => builder =>
+    {
+        string[] words = _search.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+        int at = -1, length = 0;
+        foreach (string word in words)
+        {
+            int found = text.IndexOf(word, StringComparison.CurrentCultureIgnoreCase);
+            if (found >= 0 && (at < 0 || found < at))
+                (at, length) = (found, word.Length);
+        }
+        if (at < 0)
+        {
+            builder.AddContent(0, text);
+            return;
+        }
+        builder.AddContent(1, text[..at]);
+        builder.OpenElement(2, "mark");
+        builder.AddContent(3, text.Substring(at, length));
+        builder.CloseElement();
+        builder.AddContent(4, text[(at + length)..]);
+    };
+}

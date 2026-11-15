@@ -1,0 +1,64 @@
+@* Who you are (the demo's users), and switching: CSLA's ApplicationContext.User, which tells Blazor's AuthenticationState,
+   so each page checks its permissions again (Delete comes and goes, fields lock and unlock). *@
+@inject ApplicationContext ApplicationContext
+@inject IJSRuntime JS
+@inject Toasts Toasts
+
+<div class="menu-wrap">
+    <button type="button" class="user-btn" aria-haspopup="menu" aria-expanded="@(_open ? "true" : "false")" @onclick="() => _open = !_open" title="Switch user">
+        <span class="avatar" style="--avatar: @Current.Color">@Current.Initial</span>
+        <span class="who hide-mobile"><small>Signed in as</small><strong>@Current.Name</strong></span>
+        <Icon Name="chevron-down" Size="14" Class="muted" />
+    </button>
+    @if (_open)
+    {
+        <div class="menu-backdrop" @onclick="() => _open = false"></div>
+        <div class="menu" role="menu" aria-label="Switch user" @onkeydown="OnKeyDown">
+            <div class="menu-label">Sign in as</div>
+            @foreach (var user in DemoUsers.All)
+            {
+                <button type="button" class="menu-item" role="menuitemradio" aria-checked="@(user == Current ? "true" : "false")" @onclick="() => SwitchAsync(user)">
+                    <span class="avatar" style="--avatar: @user.Color">@user.Initial</span>
+                    <span class="grow"><strong>@user.Name</strong><small>@user.Description</small></span>
+                    @if (user == Current)
+                    {
+                        <Icon Name="check" Size="15" Class="check" />
+                    }
+                </button>
+            }
+            <div class="menu-note">A demo's sign-in: the role is all the business objects' authorization rules look at.</div>
+        </div>
+    }
+</div>
+
+@code {
+    private bool _open;
+
+    [CascadingParameter] private Task<AuthenticationState>? Authentication { get; set; }
+
+    private DemoUser _current = DemoUsers.Clerk;
+    private DemoUser Current => _current;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if (Authentication is not null)
+            _current = DemoUsers.Find((await Authentication).User.Identity?.Name);
+    }
+
+    private async Task SwitchAsync(DemoUser user)
+    {
+        _open = false;
+        if (user == _current)
+            return;
+        await JS.InvokeVoidAsync("ui.setCookie", DemoUsers.Cookie, user.Name); // the next page load's user
+        ApplicationContext.User = user.Principal; // this circuit's, now
+        _current = user;
+        Toasts.Info("Signed in as " + user.Name, user.Description);
+    }
+
+    private void OnKeyDown(KeyboardEventArgs e)
+    {
+        if (e.Key == "Escape")
+            _open = false;
+    }
+}

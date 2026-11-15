@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+  <!-- The web app: a page for each root (Generated/: its list and its editor, with its children's grids), on the business
+       objects and the EF Core DAL, interactive on the server. Components/ and wwwroot/ are the shell, the components and
+       the theme the pages use. Csla.cst wrote this file once: it's yours. -->
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="../PetShop.Business/PetShop.Business.csproj" />
+    <ProjectReference Include="../PetShop.Dal.EfCore/PetShop.Dal.EfCore.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Csla.AspNetCore" Version="10.2.0" />
+    <PackageReference Include="Csla.Blazor" Version="10.2.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.15" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="../PetShop.db3" Link="PetShop.db3" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+</Project>

@@ -1,0 +1,58 @@
+@* A date, a date and time, or a time: the browser's own picker. *@
+@inherits FieldBase
+@using System.Globalization
+
+<FieldFrame Field="this">
+    <input id="@Id" class="input" type="@InputType" value="@Text" @onchange="OnChange" @onblur="Touch" readonly="@(!CanWrite)"
+           aria-label="@(Compact ? LabelText : null)" aria-invalid="@(Invalid ? "true" : null)"
+           aria-describedby="@MessageId" aria-required="@(Required ? "true" : null)" />
+</FieldFrame>
+
+@code {
+    /// <summary>A time of day too (datetime-local), not just a date.</summary>
+    [Parameter] public bool WithTime { get; set; }
+
+    private bool TimeOnlyValue => ValueType == typeof(TimeOnly) || ValueType == typeof(TimeSpan);
+
+    private string InputType => TimeOnlyValue ? "time" : WithTime ? "datetime-local" : "date";
+
+    private string Format => WithTime ? "yyyy-MM-ddTHH:mm" : "yyyy-MM-dd";
+
+    private string Text => Info.Value switch
+    {
+        DateTime d => d.ToString(Format, CultureInfo.InvariantCulture),
+        DateTimeOffset d => d.ToString(Format, CultureInfo.InvariantCulture),
+        DateOnly d => d.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture),
+        TimeOnly t => t.ToString("HH:mm", CultureInfo.InvariantCulture),
+        TimeSpan t => t.ToString(@"hh\:mm", CultureInfo.InvariantCulture),
+        _ => "",
+    };
+
+    private void OnChange(ChangeEventArgs e)
+    {
+        string text = e.Value?.ToString() ?? "";
+        Touch();
+        if (text.Length == 0)
+        {
+            if (IsNullable)
+            {
+                InputError = null;
+                Info.Value = null;
+            }
+            else
+                InputError = TimeOnlyValue ? "Enter a time." : "Enter a date.";
+            return;
+        }
+        var invariant = CultureInfo.InvariantCulture;
+        object? value = ValueType switch
+        {
+            var t when t == typeof(DateOnly) => DateOnly.Parse(text, invariant),
+            var t when t == typeof(TimeOnly) => TimeOnly.Parse(text, invariant),
+            var t when t == typeof(TimeSpan) => TimeSpan.Parse(text, invariant),
+            var t when t == typeof(DateTimeOffset) => new DateTimeOffset(DateTime.Parse(text, invariant)),
+            _ => DateTime.Parse(text, invariant),
+        };
+        InputError = null;
+        Info.Value = value;
+    }
+}

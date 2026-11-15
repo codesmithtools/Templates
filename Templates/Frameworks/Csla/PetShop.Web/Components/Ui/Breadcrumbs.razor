@@ -1,0 +1,19 @@
+@* The top bar's trail: home, the root's list, the page. *@
+<SectionContent SectionName="crumbs">
+    <a href="">@Site.Name</a>
+    @if (Parent is not null)
+    {
+        <span class="sep" aria-hidden="true">/</span>
+        <a href="@Parent.Href">@Parent.Title</a>
+    }
+    @if (Current is not null)
+    {
+        <span class="sep" aria-hidden="true">/</span>
+        <span class="current" aria-current="page">@Current</span>
+    }
+</SectionContent>
+
+@code {
+    [Parameter] public RootPage? Parent { get; set; }
+    [Parameter] public string? Current { get; set; }
+}

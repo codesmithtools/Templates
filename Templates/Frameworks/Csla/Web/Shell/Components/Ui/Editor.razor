@@ -1,0 +1,253 @@
+@* An editor's page: the object's title and state, its fields and grids (the generated page's), what CSLA says of it
+   beside them (its metastate, the user's permissions, its broken rules), and the bar that saves it. *@
+
+<PageTitle>@Page.Title · @Site.Name</PageTitle>
+<Breadcrumbs Parent="Page.Root" Current="@(Page.Loading ? null : Page.Title)" />
+
+@if (Page.Loading)
+{
+    <div class="page-head" aria-busy="true">
+        <div class="titles"><span class="skeleton" style="width: 90px"></span><span class="skeleton title"></span></div>
+    </div>
+    <div class="editor">
+        <div class="editor-main">
+            @for (int i = 0; i < 2; i++)
+            {
+                <div class="card section">
+                    <div class="section-head"><span class="skeleton" style="width: 160px"></span></div>
+                    <div class="section-body">
+                        <div class="fields">
+                            @for (int j = 0; j < 6; j++)
+                            {
+                                <div class="field"><span class="skeleton" style="width: 40%"></span><span class="skeleton block"></span></div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+        <aside class="rail"><span class="skeleton card-block"></span><span class="skeleton card-block"></span></aside>
+    </div>
+}
+else if (Page.LoadProblem is { } problem)
+{
+    <div class="card">
+        <div class="empty">
+            <span class="art"><Icon Name="alert-triangle" Size="24" /></span>
+            <h2>@problem.Title</h2>
+            <p>@problem.Message</p>
+            <div class="actions">
+                <a class="btn" href="@Page.Root.Href"><Icon Name="arrow-left" Size="15" /> All @Page.Root.Title.ToLowerInvariant()</a>
+                <button type="button" class="btn btn-ghost" @onclick="Page.ReloadAsync"><Icon Name="refresh" Size="15" /> Try again</button>
+            </div>
+        </div>
+    </div>
+}
+else if (Page.Object is { } model)
+{
+    var issues = Page.Issues;
+    int errors = issues.Count(i => i.Severity == Csla.Rules.RuleSeverity.Error);
+    <CascadingValue TValue="IEditor" Value="Page" IsFixed="true">
+        <div class="editor-page">
+        <NavigationLock OnBeforeInternalNavigation="Page.OnLeavingAsync" ConfirmExternalNavigation="Page.HasChanges" />
+
+        <header class="page-head">
+            <div class="page-title">
+                <span class="page-icon"><Icon Name="@Page.Root.Icon" Size="22" Stroke="1.75" /></span>
+                <div class="titles">
+                    <a class="eyebrow" href="@Page.Root.Href"><Icon Name="arrow-left" Size="13" /> @Page.Root.Title</a>
+                    <div class="title-row">
+                        <h1 tabindex="-1">@Page.Title</h1>
+                        @if (model.IsNew)
+                        {
+                            <span class="badge badge-new"><Icon Name="sparkles" Size="12" /> New</span>
+                        }
+                        @if (Page.HasChanges)
+                        {
+                            <span class="badge badge-dirty"><span class="dot"></span> Unsaved changes</span>
+                        }
+                        else if (Page.SavedAt is not null)
+                        {
+                            <span class="badge badge-saved"><Icon Name="check" Size="12" /> Saved</span>
+                        }
+                        @if (Page.ShowAll && errors > 0)
+                        {
+                            <span class="badge badge-invalid"><Icon Name="alert" Size="12" /> @Formats.Plural(errors, "issue")</span>
+                        }
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        @if (Page.SaveProblem is { } saveProblem)
+        {
+            <div class="banner error" role="alert">
+                <Icon Name="alert" Size="18" />
+                <div class="grow">
+                    <strong>@saveProblem.Title</strong>
+                    <p>@saveProblem.Message</p>
+                    @if (saveProblem.Detail is { } detail)
+                    {
+                        <details><summary>Details</summary><pre>@detail</pre></details>
+                    }
+                </div>
+                @if (saveProblem.CanReload)
+                {
+                    <button type="button" class="btn btn-sm" @onclick="Page.ReloadAsync"><Icon Name="refresh" Size="14" /> Reload</button>
+                }
+                <button type="button" class="icon-btn sm" aria-label="Dismiss" @onclick="Page.DismissProblem"><Icon Name="x" Size="15" /></button>
+            </div>
+        }
+        @if (Page.ReadOnly)
+        {
+            <div class="banner info" role="status">
+                <Icon Name="lock" Size="18" />
+                <div class="grow">
+                    <strong>Read-only for @Page.UserName</strong>
+                    <p>The @Page.Root.Singular.ToLowerInvariant()'s authorization rules don't let @Page.UserName @(model.IsNew ? "create" : "edit") one.</p>
+                </div>
+            </div>
+        }
+
+        <div class="editor">
+            <div class="editor-main">@ChildContent</div>
+
+            <aside class="rail" aria-label="What CSLA says of it">
+                @{ var stats = Page.Stats.ToList(); }
+                @if (stats.Count > 0)
+                {
+                    <div class="card rail-card">
+                        <h3><Icon Name="sparkles" Size="13" /> <span class="grow">Summary</span></h3>
+                        <div class="stats">
+                            @foreach (var stat in stats)
+                            {
+                                <div class="stat @(stat.Big ? "big" : null)"><span>@stat.Label</span><strong>@stat.Value</strong></div>
+                            }
+                        </div>
+                    </div>
+                }
+                <div class="card rail-card">
+                    <h3><Icon Name="layers" Size="13" /> <span class="grow">Business object</span></h3>
+                    <div class="rail-type" title="@Page.TypeName">@Page.TypeName</div>
+                    <div class="flags">
+                        @Flag("IsNew", model.IsNew, "")
+                        @Flag("IsDirty", model.IsDirty, "warn")
+                        @Flag("IsValid", model.IsValid, "", bad: !model.IsValid)
+                        @Flag("IsSavable", model.IsSavable, "")
+                        @Flag("IsSelfDirty", model.IsSelfDirty, "warn")
+                        @Flag("IsBusy", model.IsBusy || Page.Busy, "warn")
+                    </div>
+                </div>
+                <div class="card rail-card">
+                    <h3><Icon Name="shield" Size="13" /> <span class="grow">Permissions</span> <span class="role @(Page.UserName == "Admin" ? "admin" : null)">@Page.UserName</span></h3>
+                    <div class="perms">
+                        @Permission("Create", Page.CanCreate)
+                        @Permission("Edit", Page.CanEdit)
+                        @Permission("Delete", Page.CanDelete)
+                    </div>
+                </div>
+                <div class="card rail-card">
+                    <h3><Icon Name="check-circle" Size="13" /> <span class="grow">Rules</span> @if (issues.Count > 0) { <span class="count">@issues.Count</span> }</h3>
+                    @if (issues.Count == 0)
+                    {
+                        <div class="all-good"><Icon Name="check-circle" Size="15" /> Every rule passes</div>
+                    }
+                    else
+                    {
+                        <ul class="issues">
+                            @foreach (var issue in issues.Take(6))
+                            {
+                                string kind = issue.Severity == Csla.Rules.RuleSeverity.Error ? "error" : issue.Severity == Csla.Rules.RuleSeverity.Warning ? "warning" : "info";
+                                <li>
+                                    <button type="button" class="issue @kind" @onclick="() => Page.GoToAsync(issue)" disabled="@(issue.Info is null)">
+                                        <Icon Name="@(kind == "error" ? "alert" : kind == "warning" ? "alert-triangle" : "info")" Size="14" />
+                                        <span>
+                                            @if (issue.Where is not null)
+                                            {
+                                                <span class="where">@issue.Where</span>
+                                            }
+                                            @issue.Message
+                                        </span>
+                                    </button>
+                                </li>
+                            }
+                            @if (issues.Count > 6)
+                            {
+                                <li class="muted" style="padding: 4px 6px; font-size: 12px">and @(issues.Count - 6) more</li>
+                            }
+                        </ul>
+                    }
+                </div>
+            </aside>
+        </div>
+
+        <div class="action-bar" role="region" aria-label="Save">
+            <div class="status @StatusClass(model, errors)" aria-live="polite">
+                <span class="dot"></span>
+                <span>@StatusText(model, errors)</span>
+                @if (Page.HasChanges && !Page.Busy)
+                {
+                    <span aria-hidden="true">·</span>
+                    <button type="button" class="link" @onclick="Page.DiscardAsync">Discard</button>
+                }
+            </div>
+            <button type="button" class="btn btn-ghost" data-shortcut="cancel" @onclick="Page.Cancel">Cancel</button>
+            @if (Page.CanDelete && !model.IsNew)
+            {
+                <button type="button" class="btn btn-danger" @onclick="Page.DeleteAsync" disabled="@Page.Busy"><Icon Name="trash" Size="15" /><span class="label-long">Delete</span></button>
+            }
+            <span class="spacer"></span>
+            @* not IsSavable yet: it looks it, and a click shows what's wrong *@
+            <button type="button" class="btn btn-primary @(model.IsSavable ? null : "unsavable")" data-shortcut="save" @onclick="Page.SaveAsync"
+                    disabled="@(Page.Busy || Page.ReadOnly || (!model.IsNew && !model.IsDirty))" title="@SaveTitle(model, errors)">
+                @if (Page.Busy)
+                {
+                    <Icon Name="loader" Size="15" Class="spinner" />
+                }
+                else
+                {
+                    <Icon Name="@(model.IsNew ? "plus" : "save")" Size="15" />
+                }
+                <span>@(model.IsNew ? "Create" : "Save")<span class="label-long">@(model.IsNew ? " " + Page.Root.Singular.ToLowerInvariant() : " changes")</span></span>
+                <kbd>Ctrl S</kbd>
+            </button>
+        </div>
+        </div>
+    </CascadingValue>
+}
+
+@code {
+    [Parameter, EditorRequired] public IEditorPage Page { get; set; } = default!;
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    private static RenderFragment Flag(string name, bool on, string tone, bool bad = false) =>
+        @<div class="flag @(on || bad ? "on" : null) @(bad ? "bad" : on ? tone : null)" title="@name: @(on ? "true" : "false")"><span>@name</span><i></i></div>;
+
+    private static RenderFragment Permission(string action, bool allowed) =>
+        @<div class="perm @(allowed ? null : "denied")">
+            <Icon Name="@(allowed ? "check" : "x")" Size="14" Class="@(allowed ? "yes" : "no")" />
+            <span>@action</span>
+            <span class="as muted">@(allowed ? "allowed" : "not allowed")</span>
+        </div>;
+
+    private string StatusClass(Csla.Core.BusinessBase model, int errors) =>
+        Page.Busy ? "dirty" : errors > 0 && (Page.ShowAll || Page.HasChanges) ? "invalid" : Page.HasChanges ? "dirty" : "clean";
+
+    private string StatusText(Csla.Core.BusinessBase model, int errors)
+    {
+        if (Page.Busy)
+            return "Saving…";
+        if (errors > 0 && (Page.ShowAll || Page.HasChanges))
+            return errors == 1 ? "1 issue to fix" : $"{errors} issues to fix";
+        if (Page.HasChanges)
+            return model.IsNew ? "Ready to create" : "Unsaved changes";
+        if (model.IsNew)
+            return "New: fill it in";
+        if (Page.SavedAt is { } saved)
+            return "Saved at " + saved.ToString("h:mm tt");
+        return "No changes";
+    }
+
+    private static string SaveTitle(Csla.Core.BusinessBase model, int errors) =>
+        model.IsSavable ? "Save (Ctrl+S)" : errors > 0 ? $"Fix {Formats.Plural(errors, "issue")} to save" : !model.IsDirty ? "Nothing to save" : "Can't save yet";
+}

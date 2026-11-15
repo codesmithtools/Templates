@@ -1,0 +1,30 @@
+@* Light, dark, or the system's: remembered in the browser. *@
+@inject IJSRuntime JS
+
+<div class="segmented" role="group" aria-label="Theme">
+    @foreach (var (value, icon, label) in Themes)
+    {
+        <button type="button" aria-pressed="@(_theme == value ? "true" : "false")" aria-label="@label theme" title="@label" @onclick="() => SetAsync(value)">
+            <Icon Name="@icon" Size="14" />
+        </button>
+    }
+</div>
+
+@code {
+    private static readonly (string Value, string Icon, string Label)[] Themes = [("light", "sun", "Light"), ("dark", "moon", "Dark"), ("system", "monitor", "System")];
+    private string _theme = "system";
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender)
+            return;
+        _theme = await JS.InvokeAsync<string>("ui.currentTheme");
+        StateHasChanged();
+    }
+
+    public async Task SetAsync(string theme)
+    {
+        _theme = theme;
+        await JS.InvokeVoidAsync("ui.theme", theme);
+    }
+}

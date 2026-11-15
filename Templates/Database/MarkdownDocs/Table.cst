@@ -1,60 +1,105 @@
-<%@ CodeTemplate Language="C#" TargetLanguage="Text" Description="A table's page: its columns, keys, indexes, and the tables that refer to it." %>
+<%@ CodeTemplate Language="C#" TargetLanguage="Text" Description="A table's page: its columns, a diagram of the tables it relates to, its keys both ways, its indexes, and the views and procedures that use it." %>
 <%@ Property Name="Table" Type="SchemaExplorer.TableSchema" Description="The table." %>
 <%@ Assembly Name="SchemaExplorer" %>
 <%@ Import Namespace="SchemaExplorer" %>
 <%@ Import Namespace="System.Linq" %>
 <%@ Assembly Src="Docs.cs" %>
-# <%= Docs.Text(Docs.Title(Table)) %>
+<%
+var columns = Table.Columns.Cast<ColumnSchema>().ToList();
+var foreignKeys = Table.ForeignKeys.Cast<TableKeySchema>().ToList();
+var referencedBy = Docs.ReferencedBy(Table).ToList();
+var indexes = Table.Indexes.Cast<IndexSchema>().OrderByDescending(i => i.IsPrimaryKey).ThenBy(i => i.Name, StringComparer.OrdinalIgnoreCase).ToList();
+var usedBy = Docs.UsedBy(Table);
+bool defaults = columns.Any(c => Docs.Default(c).Length > 0);
+bool descriptions = columns.Any(c => Docs.Description(c).Length > 0);
+bool references = foreignKeys.Count > 0;
+string primaryKey = Table.HasPrimaryKey ? Docs.Code(string.Join(", ", Table.PrimaryKey.MemberColumns.Cast<MemberColumnSchema>().Select(c => c.Name))) : "none";
+%>
+<%= Docs.Breadcrumbs(Table) %>
 
-A table of the [<%= Docs.Text(Table.Database.Name) %>](../README.md) database.
+# <%= Docs.Text(Docs.Title(Table)) %>
 <% foreach (string paragraph in Docs.Paragraphs(Docs.Description(Table))) { %>
 
 <%= paragraph %>
 <% } %>
 
+| Columns | Primary key | References | Referenced by | Indexes |
+| :---: | :---: | :---: | :---: | :---: |
+| <%= columns.Count %> | <%= primaryKey %> | <%= foreignKeys.Count %> | <%= referencedBy.Count %> | <%= indexes.Count %> |
+
 ## Columns
 
-| Column | Type | Nullable | Default | Key | Description |
-| --- | --- | --- | --- | --- | --- |
-<% foreach (ColumnSchema column in Table.Columns) { %>
-| <%= Docs.Text(column.Name) %> | <%= Docs.Text(Docs.Type(column)) %> | <%= column.AllowDBNull ? "yes" : "no" %> | <%= Docs.Default(column) %> | <%= Docs.Keys(column) %> | <%= Docs.Cell(Docs.Description(column)) %> |
+| # | Column | Type | Nullable | Key |<%= defaults ? " Default |" : "" %><%= references ? " References |" : "" %><%= descriptions ? " Description |" : "" %>
+| ---: | --- | --- | :---: | --- |<%= defaults ? " --- |" : "" %><%= references ? " --- |" : "" %><%= descriptions ? " --- |" : "" %>
+<% for (int i = 0; i < columns.Count; i++) { %>
+<%
+ColumnSchema column = columns[i];
+var key = column.IsForeignKeyMember ? Docs.ForeignKeyOf(column) : null;
+string reference = key == null ? "" : Docs.Link(key.PrimaryKeyTable, Table) + " (" + Docs.Code(Docs.ReferencedColumn(key, column.Name)) + ")";
+%>
+| <%= i + 1 %> | <%= Docs.Code(column.Name) %> | <%= Docs.Text(Docs.Type(column)) %> | <%= column.AllowDBNull ? "yes" : "no" %> | <%= Docs.KeyCell(column) %> |<%= defaults ? " " + Docs.Default(column) + " |" : "" %><%= references ? " " + reference + " |" : "" %><%= descriptions ? " " + Docs.Cell(Docs.Description(column)) + " |" : "" %>
 <% } %>
 
-## Primary key
+## Relationships
+<% if (foreignKeys.Count == 0 && referencedBy.Count == 0) { %>
 
-<% if (Table.HasPrimaryKey) { %>
-<%= Docs.Columns(Table.PrimaryKey.MemberColumns) %> (<%= Docs.Text(Table.PrimaryKey.Name) %>)
+No foreign key joins <%= Docs.Text(Docs.Title(Table)) %> to another table.
 <% } else { %>
-None.
-<% } %>
-<% if (Table.ForeignKeys.Count > 0) { %>
 
-## Foreign keys
+```mermaid
+%%{init: {"er": {"layoutDirection": "LR", "fontSize": 14}}}%%
+erDiagram
+<% foreach (string line in Docs.Neighborhood(Table)) { %>
+    <%= line %>
+<% } %>
+```
 
-| Key | Columns | References |
-| --- | --- | --- |
-<% foreach (TableKeySchema key in Table.ForeignKeys) { %>
-| <%= Docs.Text(key.Name) %> | <%= Docs.Columns(key.ForeignKeyMemberColumns) %> | <%= Docs.Link(key.PrimaryKeyTable, true) %> (<%= Docs.Columns(key.PrimaryKeyMemberColumns) %>) |
+### References
+
+<% if (foreignKeys.Count == 0) { %>
+It refers to no other table.
+<% } else { %>
+| Foreign key | Columns | References | Kind |
+| --- | --- | --- | --- |
+<% foreach (TableKeySchema fk in foreignKeys) { %>
+<% var members = fk.ForeignKeyMemberColumns.Cast<MemberColumnSchema>().ToList(); %>
+| <%= Docs.Code(fk.Name) %> | <%= Docs.Code(string.Join(", ", members.Select(c => c.Name))) %> | <%= Docs.Link(fk.PrimaryKeyTable, Table) %> (<%= Docs.Code(string.Join(", ", members.Select(c => Docs.ReferencedColumn(fk, c.Name)))) %>) | <%= Docs.Cardinality(fk) %> |
 <% } %>
 <% } %>
-<% if (Table.Indexes.Count > 0) { %>
+
+### Referenced by
+
+<% if (referencedBy.Count == 0) { %>
+No other table refers to it.
+<% } else { %>
+| Table | Columns | Foreign key | Kind |
+| --- | --- | --- | --- |
+<% foreach (TableKeySchema fk in referencedBy) { %>
+| <%= Docs.Link(fk.ForeignKeyTable, Table) %> | <%= Docs.Code(string.Join(", ", fk.ForeignKeyMemberColumns.Cast<MemberColumnSchema>().Select(c => c.Name))) %> | <%= Docs.Code(fk.Name) %> | <%= Docs.Cardinality(fk).Replace("many to one", "one to many") %> |
+<% } %>
+<% } %>
+<% } %>
+<% if (indexes.Count > 0) { %>
 
 ## Indexes
 
-| Index | Columns | Unique |
+| Index | Columns | Kind |
 | --- | --- | --- |
-<% foreach (IndexSchema index in Table.Indexes) { %>
-| <%= Docs.Text(index.Name) %> | <%= Docs.Columns(index.MemberColumns) %> | <%= index.IsUnique ? "yes" : "no" %> |
+<% foreach (IndexSchema index in indexes) { %>
+| <%= Docs.Code(index.Name) %> | <%= Docs.Code(string.Join(", ", index.MemberColumns.Cast<MemberColumnSchema>().Select(c => c.Name))) %> | <%= index.IsPrimaryKey ? "primary key" : index.IsUnique ? "unique" : "index" %><%= index.IsClustered ? ", clustered" : "" %> |
 <% } %>
 <% } %>
-<% var referencedBy = Docs.ReferencedBy(Table).ToList(); %>
-<% if (referencedBy.Count > 0) { %>
+<% if (usedBy.Count > 0) { %>
 
-## Referenced by
+## Used by
 
-| Key | Table | Columns |
-| --- | --- | --- |
-<% foreach (TableKeySchema key in referencedBy) { %>
-| <%= Docs.Text(key.Name) %> | <%= Docs.Link(key.ForeignKeyTable, true) %> | <%= Docs.Columns(key.ForeignKeyMemberColumns) %> |
+The views and procedures whose SQL reads or writes it.
+
+<% foreach (var item in usedBy) { %>
+- <%= Docs.Link(item, Table) %> (<%= item is ViewSchema ? "view" : "procedure" %>)
 <% } %>
 <% } %>
+
+---
+
+<%= Docs.Pager(Table) %>

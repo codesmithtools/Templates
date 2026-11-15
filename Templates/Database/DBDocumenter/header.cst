@@ -1,66 +1,98 @@
-<%-- 
+<%--
 CodeSmith DBDocumenter Templates
-Author:  Jason Alexander (jalexander@telligent.com), Eric J. Smith
+Author:  Jason Alexander, Eric J. Smith
 --%>
-<%@ CodeTemplate Language="C#" TargetLanguage="HTML" Description="Generates a set of HTML-based database documentation." %>
-<%@ Property Name="SourceDatabase" Type="SchemaExplorer.DatabaseSchema" Category="Context" Description="Database that the documentation should be based on." %>
-<%@ Property Name="ServerName" Type="System.String" Category="Output" Description="The name of the actual database server that is being documented." %>
-<%@ Property Name="DocumentationTitle" Type="System.String" Default="Database Documentation" Category="Output" Description="Defines what the title of the HTML page that will be generated will be." %>
-<%@ Property Name="SelectedTabIndex" Type="System.Int32" Default="0" Category="Output" Description="What tab should be selected." %>
+<%@ CodeTemplate Language="C#" TargetLanguage="HTML" Src="DBDocumenterTemplate.cs" Inherits="DBDocumenterTemplate" Description="The top of every page: its head, the sidebar (every table, view and procedure) and the top bar with its breadcrumbs." %>
+<%@ Property Name="SourceDatabase" Type="SchemaExplorer.DatabaseSchema" Category="Context" Description="The database." %>
+<%@ Property Name="ServerName" Type="System.String" Optional="True" Category="Output" Description="The server's name." %>
+<%@ Property Name="DocumentationTitle" Type="System.String" Default="Database Documentation" Category="Output" Description="The documentation's title." %>
+<%@ Property Name="PageTitle" Type="System.String" Optional="True" Category="Page" Description="The page's title (none: the overview)." %>
+<%@ Property Name="RootPath" Type="System.String" Default="" Optional="True" Category="Page" Description="The output folder from the page's folder: empty or ../." %>
+<%@ Property Name="Active" Type="System.String" Default="overview" Optional="True" Category="Page" Description="What the sidebar marks as this page: overview, server, or an object's key." %>
+<%@ Property Name="Crumbs" Type="System.String" Default="" Optional="True" Category="Page" Description="The breadcrumbs after the database's (HTML: li elements)." %>
 <%@ Assembly Name="SchemaExplorer" %>
-<html>
-<head>
-	<title><%= DocumentationTitle %></title>
-	<link href="dbdocs.css" type="text/css" rel="stylesheet" />	
-</head>
-<body>
-<table cellpadding="0" cellspacing="0" width="100%">
-	<tr>
-		<td width="5%">
-			&nbsp;&nbsp;<img src="images/server.gif" border="0"/>
-		</td>
-		<td class="titlebar">
-			<%= DocumentationTitle %> : <%= ServerName %> : <%= SourceDatabase.Database.Name %>
-		</td>
-	</tr>
-	<tr>
-		<td colspan="2" class="colorbar">&nbsp;</td>
-	</tr>
-	<tr>
-		<td class="menubar" colspan="2">
-			<table cellspacing="0" cellpadding="4" width="100%">
-				<tr>
-					<% if (SelectedTabIndex == 0) { %>
-					<td class="menuitem-on" width="25%">General</td>
-					<% } else { %>
-					<td class="menuitem-off" width="25%">
-						<a href="index.html" class="menuitemanchor">General</a>
-					</td>
-					<% } %>
-					<% if (SelectedTabIndex == 1) { %>
-					<td class="menuitem-on" width="25%">Tables</td>
-					<% } else { %>
-					<td class="menuitem-off" width="25%">
-						<a href="tables.html" class="menuitemanchor">Tables</a>
-					</td>
-					<% } %>
-					<% if (SelectedTabIndex == 2) { %>
-					<td class="menuitem-on" width="25%">Stored Procedures</td>
-					<% } else { %>
-					<td class="menuitem-off" width="25%">
-						<a href="sprocs.html" class="menuitemanchor">Stored Procedures</a>
-					</td>
-					<% } %>
-					<% if (SelectedTabIndex == 3) { %>
-					<td class="menuitem-on" width="25%">Views</td>
-					<% } else { %>
-					<td class="menuitem-off" width="25%">
-						<a href="views.html" class="menuitemanchor">Views</a>
-					</td>
-					<% } %>
-				</tr>
-			</table>
-		</td>
-	</tr>
-</table>
+<%@ Assembly Name="System.Design" %>
+<%@ Assembly Src="Site.cs" %>
+<%@ Assembly Src="SqlHighlighter.cs" %>
+<%@ Assembly Src="ErDiagram.cs" %>
+<%@ Import Namespace="System.Collections.Generic" %>
+<%@ Import Namespace="System.Linq" %>
+<%@ Import Namespace="SchemaExplorer" %>
+<script runat="template">
+protected override string Root => RootPath ?? "";
 
+// A group of the sidebar: a table, view or procedure a link each. Open unless it's long (and this page isn't in it).
+private void Group(string title, string anchor, IEnumerable<SchemaObjectWithOwnerBase> objects)
+{
+    var items = objects.ToList();
+    if (items.Count == 0)
+        return;
+    bool here = items.Any(i => DocSite.Key(i) == Active);
+    Response.WriteLine("<details class=\"nav-group\" data-group=\"" + anchor + "\"" + (here || items.Count <= 40 ? " open" : "") + ">");
+    Response.WriteLine("<summary class=\"nav-group-title\">" + Icon("chevron", "icon nav-chevron") + "<span>" + H(title) + "</span><span class=\"nav-count\">" + items.Count + "</span></summary>");
+    Response.WriteLine("<ul class=\"nav-list\">");
+    foreach (var item in items)
+    {
+        bool current = DocSite.Key(item) == Active;
+        string schema = DocSite.Schema(item);
+        Response.WriteLine("<li><a class=\"nav-item" + (current ? " is-active\" aria-current=\"page" : "") + "\" href=\"" + H(Href(item)) + "\" title=\"" + H(DocSite.Title(item)) + "\">" +
+            (schema.Length > 0 ? "<span class=\"nav-schema\">" + H(schema) + ".</span>" : "") + H(item.Name) + "</a></li>");
+    }
+    Response.WriteLine("</ul>");
+    Response.WriteLine("</details>");
+}
+</script>
+<% DocSite site = Site; %>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="generator" content="CodeSmith Generator">
+<title><%= H(string.IsNullOrEmpty(PageTitle) ? DocumentationTitle : PageTitle + " · " + DocumentationTitle) %></title>
+<script>try{var t=localStorage.getItem("dbdocs-theme");if(t==="light"||t==="dark")document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234f46e5' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cellipse cx='12' cy='5' rx='9' ry='3'/%3E%3Cpath d='M3 5V19A9 3 0 0 0 21 19V5'/%3E%3Cpath d='M3 12A9 3 0 0 0 21 12'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="<%= Root %>assets/docs.css">
+</head>
+<body data-root="<%= Root %>">
+<a class="skip-link" href="#content">Skip to content</a>
+<div class="layout">
+<aside class="sidebar" id="sidebar" aria-label="Navigation">
+<div class="sidebar-top">
+<a class="brand" href="<%= Root %>index.html">
+<span class="brand-mark"><%= Icon("database") %></span>
+<span class="brand-text"><span class="brand-name"><%= H(DocumentationTitle) %></span><span class="brand-sub"><%= H(site.Product) %><%= string.IsNullOrEmpty(ServerName) ? "" : " · " + H(ServerName) %></span></span>
+</a>
+<button type="button" class="icon-button sidebar-close" data-nav-close aria-label="Close navigation"><%= Icon("x") %></button>
+</div>
+<button type="button" class="search-field" data-search-open aria-haspopup="dialog" aria-controls="search">
+<%= Icon("search") %><span class="search-field-text">Search tables, columns…</span><kbd class="kbd" data-shortcut>Ctrl K</kbd>
+</button>
+<nav class="nav" aria-label="Database objects">
+<div class="nav-top">
+<a class="nav-link<%= Active == "overview" ? " is-active\" aria-current=\"page" : "" %>" href="<%= Root %>index.html"><%= Icon("overview") %><span>Overview</span></a>
+<a class="nav-link" href="<%= Root %>index.html#diagram"><%= Icon("diagram") %><span>Diagram</span></a>
+<% if (site.IsSqlServer) { %>
+<a class="nav-link<%= Active == "server" ? " is-active\" aria-current=\"page" : "" %>" href="<%= Root %>server.html"><%= Icon("server") %><span>Server</span></a>
+<% } %>
+</div>
+<% Group("Tables", "tables", site.Tables); %>
+<% Group("Views", "views", site.Views); %>
+<% Group("Procedures", "procedures", site.Commands); %>
+</nav>
+<div class="sidebar-foot">Generated by <a href="https://www.codesmithtools.com/">CodeSmith Generator</a></div>
+</aside>
+<div class="scrim" data-nav-close></div>
+<div class="main">
+<header class="topbar">
+<button type="button" class="icon-button nav-toggle" data-nav-open aria-label="Open navigation" aria-controls="sidebar" aria-expanded="false"><%= Icon("menu") %></button>
+<nav class="crumbs" aria-label="Breadcrumb"><ol>
+<li><a href="<%= Root %>index.html"><%= Icon("database", "icon crumb-icon") %><%= H(DocumentationTitle) %></a></li>
+<%= Crumbs %>
+</ol></nav>
+<div class="topbar-actions">
+<button type="button" class="icon-button search-mini" data-search-open aria-label="Search"><%= Icon("search") %></button>
+<button type="button" class="icon-button" data-theme-toggle aria-label="Switch theme" title="Switch theme"><%= Icon("sun", "icon icon-sun") %><%= Icon("moon", "icon icon-moon") %></button>
+</div>
+</header>
+<main class="content" id="content">

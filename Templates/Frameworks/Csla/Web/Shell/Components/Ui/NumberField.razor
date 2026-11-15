@@ -1,0 +1,97 @@
+@* A number: an integer, a decimal, money. Text that isn't a number says so, and leaves the property as it was. *@
+@inherits FieldBase
+@using System.Globalization
+
+<FieldFrame Field="this" Prefix="@(Money ? CultureInfo.CurrentCulture.NumberFormat.CurrencySymbol : null)">
+    <input id="@Id" class="input num" type="text" inputmode="@(Scale > 0 ? "decimal" : "numeric")" value="@_text"
+           @oninput="OnInput" @onblur="OnBlur" readonly="@(!CanWrite)" placeholder="@Placeholder" autocomplete="off"
+           aria-label="@(Compact ? LabelText : null)" aria-invalid="@(Invalid ? "true" : null)"
+           aria-describedby="@MessageId" aria-required="@(Required ? "true" : null)" />
+</FieldFrame>
+
+@code {
+    private static readonly object Unset = new();
+    private string _text = "";
+    private object? _shown = Unset;
+
+    /// <summary>Money: the currency's symbol before it.</summary>
+    [Parameter] public bool Money { get; set; }
+
+    /// <summary>Decimal places (the column's scale).</summary>
+    [Parameter] public int Scale { get; set; }
+
+    protected override void OnParametersSet()
+    {
+        // the property changed under the field (a revert, a save): show it, unless it's what's being typed
+        object? value = Info.Value;
+        if (Equals(value, _shown))
+            return;
+        _shown = value;
+        if (!(TryParse(_text, out var typed) && Equals(typed, value)))
+        {
+            _text = Format(value);
+            InputError = null;
+        }
+    }
+
+    private void OnInput(ChangeEventArgs e)
+    {
+        _text = e.Value?.ToString() ?? "";
+        if (_text.Trim().Length == 0)
+        {
+            if (IsNullable)
+                Set(null);
+            else
+                InputError = "Enter a number.";
+        }
+        else if (TryParse(_text, out var value))
+            Set(value);
+        else
+            InputError = Scale > 0 ? "Enter a number, like 12.50." : "Enter a whole number.";
+        Touch();
+    }
+
+    private void Set(object? value)
+    {
+        InputError = null;
+        _shown = value;
+        Info.Value = value;
+    }
+
+    private void OnBlur()
+    {
+        if (InputError is null)
+            _text = Format(Info.Value);
+        Touch();
+    }
+
+    private bool TryParse(string text, out object? value)
+    {
+        value = null;
+        if (!decimal.TryParse(text, NumberStyles.Number | NumberStyles.AllowCurrencySymbol, CultureInfo.CurrentCulture, out decimal number))
+            return false;
+        var type = ValueType;
+        bool integer = type == typeof(int) || type == typeof(long) || type == typeof(short) || type == typeof(byte);
+        if (integer && number != decimal.Truncate(number))
+            return false;
+        try
+        {
+            value = type == typeof(decimal) ? number : Convert.ChangeType(number, type, CultureInfo.InvariantCulture);
+            return true;
+        }
+        catch (OverflowException)
+        {
+            return false;
+        }
+    }
+
+    private string Format(object? value) => value switch
+    {
+        null => "",
+        decimal d => d.ToString(Scale > 0 ? "F" + Scale : "0.##########", CultureInfo.CurrentCulture),
+        double d => d.ToString(Scale > 0 ? "F" + Scale : "0.##########", CultureInfo.CurrentCulture),
+        float f => f.ToString(Scale > 0 ? "F" + Scale : "0.######", CultureInfo.CurrentCulture),
+        IFormattable f => f.ToString(null, CultureInfo.CurrentCulture),
+        _ => value.ToString() ?? "",
+    };
+}

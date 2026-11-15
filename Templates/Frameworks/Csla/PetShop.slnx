@@ -3,4 +3,5 @@
   <Project Path="PetShop.Business/PetShop.Business.csproj" />
   <Project Path="PetShop.Dal/PetShop.Dal.csproj" />
   <Project Path="PetShop.Dal.EfCore/PetShop.Dal.EfCore.csproj" />
+  <Project Path="PetShop.Web/PetShop.Web.csproj" />
 </Solution>

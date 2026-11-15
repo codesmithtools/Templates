@@ -1,0 +1,48 @@
+@* The shell: the sidebar, the top bar (where you are, the palette, the theme, who you are) and the page; toasts,
+   questions and the palette over them. Csla.cst wrote this file once: it's yours. *@
+@inherits LayoutComponentBase
+@inject NavigationManager Navigation
+
+<a class="skip" href="#main">Skip to the page</a>
+<div class="app @(_drawer ? "drawer-open" : null)">
+    <Sidebar OnNavigate="() => _drawer = false" />
+    <div class="scrim" @onclick="() => _drawer = false"></div>
+    <div class="main">
+        <header class="topbar">
+            <button type="button" class="icon-btn only-mobile" aria-label="Open the navigation" @onclick="() => _drawer = true"><Icon Name="menu" Size="18" /></button>
+            <nav class="crumbs" aria-label="Breadcrumb"><SectionOutlet SectionName="crumbs" /></nav>
+            <div class="topbar-actions">
+                <span class="hide-mobile"><ThemeSwitch /></span>
+                <UserMenu />
+            </div>
+        </header>
+        <main class="content" id="main" tabindex="-1">
+            <ErrorBoundary @ref="_boundary">
+                <ChildContent>@Body</ChildContent>
+                <ErrorContent Context="exception">
+                    <div class="card">
+                        <div class="empty">
+                            <span class="art"><Icon Name="alert-triangle" Size="24" /></span>
+                            <h2>Something went wrong on this page</h2>
+                            <p>@exception.GetBaseException().Message</p>
+                            <div class="actions">
+                                <button type="button" class="btn" @onclick="() => _boundary?.Recover()"><Icon Name="refresh" Size="15" /> Try again</button>
+                                <a class="btn btn-ghost" href="">Home</a>
+                            </div>
+                        </div>
+                    </div>
+                </ErrorContent>
+            </ErrorBoundary>
+        </main>
+    </div>
+</div>
+<CommandPalette />
+<ConfirmHost />
+<ToastHost />
+
+@code {
+    private bool _drawer;
+    private ErrorBoundary? _boundary;
+
+    protected override void OnParametersSet() => _boundary?.Recover(); // a new page starts without the last one's error
+}

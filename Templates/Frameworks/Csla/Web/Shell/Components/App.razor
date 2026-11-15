@@ -1,0 +1,50 @@
+@* The document: the theme before the first paint, the shell's outline until the circuit's up, and the app, interactive
+   on the server. Csla.cst wrote this file once: it's yours. *@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="light dark" />
+    <base href="/" />
+    <script>
+        try { var theme = localStorage.getItem('theme'); if (theme === 'light' || theme === 'dark') document.documentElement.dataset.theme = theme; } catch (e) { }
+    </script>
+    <ResourcePreloader />
+    <link rel="stylesheet" href="@Assets["app.css"]" />
+    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+    <ImportMap />
+    <HeadOutlet @rendermode="RenderMode" />
+</head>
+
+<body>
+    <div class="boot" aria-hidden="true">
+        <div class="boot-side">
+            <span class="skeleton" style="width: 60%"></span>
+            <span class="skeleton block"></span>
+            <span class="skeleton" style="width: 80%"></span>
+            <span class="skeleton" style="width: 70%"></span>
+            <span class="skeleton" style="width: 75%"></span>
+        </div>
+        <div class="boot-main">
+            <div class="boot-top"></div>
+            <div class="boot-body">
+                <span class="skeleton title"></span>
+                <span class="skeleton" style="width: 30%"></span>
+                <span class="skeleton card-block"></span>
+            </div>
+        </div>
+    </div>
+    <Routes @rendermode="RenderMode" />
+    <ReconnectModal />
+    <script src="@Assets["app.js"]"></script>
+    <script src="@Assets["_framework/blazor.web.js"]"></script>
+</body>
+
+</html>
+
+@code {
+    // interactive on the server, without prerendering: a page loads its business objects once, in its circuit
+    private static readonly IComponentRenderMode RenderMode = new InteractiveServerRenderMode(prerender: false);
+}

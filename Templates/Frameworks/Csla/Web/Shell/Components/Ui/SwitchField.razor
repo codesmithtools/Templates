@@ -1,0 +1,23 @@
+@* A yes or no: a switch. *@
+@inherits FieldBase
+
+<FieldFrame Field="this" NoStateIcon>
+    <div class="switch-row">
+        <button id="@Id" type="button" class="switch" role="switch" aria-checked="@(On ? "true" : "false")"
+                aria-label="@(Compact ? LabelText : null)" disabled="@(!CanWrite)" @onclick="Toggle"></button>
+        @if (!Compact)
+        {
+            <span class="switch-text">@(On ? "Yes" : "No")</span>
+        }
+    </div>
+</FieldFrame>
+
+@code {
+    private bool On => Info.Value is true;
+
+    private void Toggle()
+    {
+        Info.Value = !On;
+        Touch();
+    }
+}

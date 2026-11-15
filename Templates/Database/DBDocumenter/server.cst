@@ -1,0 +1,104 @@
+<%--
+CodeSmith DBDocumenter Templates
+Author:  Jason Alexander, Eric J. Smith
+--%>
+<%@ CodeTemplate Language="C#" TargetLanguage="HTML" Src="DBDocumenterTemplate.cs" Inherits="DBDocumenterTemplate" Description="The server page (server.html), for SQL Server: the server's version, edition and collation, and the database's." %>
+<%@ Property Name="SourceDatabase" Type="SchemaExplorer.DatabaseSchema" Category="Context" Description="The database." %>
+<%@ Property Name="ServerName" Type="System.String" Optional="True" Category="Output" Description="The server's name." %>
+<%@ Property Name="DocumentationTitle" Type="System.String" Default="Database Documentation" Category="Output" Description="The documentation's title." %>
+<%@ Register Name="HeaderTemplate" Template="header.cst" MergeProperties="False" %>
+<%@ Register Name="FooterTemplate" Template="footer.cst" MergeProperties="False" %>
+<%@ Assembly Name="SchemaExplorer" %>
+<%@ Assembly Name="System.Design" %>
+<%@ Assembly Name="Microsoft.Data.SqlClient" %>
+<%@ Assembly Src="Site.cs" %>
+<%@ Assembly Src="SqlHighlighter.cs" %>
+<%@ Assembly Src="ErDiagram.cs" %>
+<%@ Import Namespace="System.Collections.Generic" %>
+<%@ Import Namespace="System.Linq" %>
+<%@ Import Namespace="SchemaExplorer" %>
+<script runat="template">
+/// <summary>The server's and the database's properties (SERVERPROPERTY, sys.databases). SQL Server only.</summary>
+public List<KeyValuePair<string, string>> ServerProperties(DatabaseSchema database)
+{
+    var properties = new List<KeyValuePair<string, string>>();
+    using (var connection = new Microsoft.Data.SqlClient.SqlConnection(database.ConnectionString))
+    using (var command = connection.CreateCommand())
+    {
+        // one row, a column each (their collations differ, so no UNION)
+        command.CommandText = @"
+            SELECT
+                SERVERPROPERTY('ProductVersion') AS [Version],
+                SERVERPROPERTY('ProductLevel') AS [Level],
+                SERVERPROPERTY('ProductUpdateLevel') AS [Update],
+                SERVERPROPERTY('Edition') AS [Edition],
+                SERVERPROPERTY('ServerName') AS [Server],
+                SERVERPROPERTY('MachineName') AS [Machine],
+                SERVERPROPERTY('Collation') AS [Server collation],
+                d.name AS [Database],
+                d.collation_name AS [Database collation],
+                d.compatibility_level AS [Compatibility level],
+                d.recovery_model_desc AS [Recovery model],
+                CONVERT(nvarchar(32), d.create_date, 120) AS [Created],
+                CAST(CAST((SELECT SUM(size) FROM sys.database_files) * 8 / 1024.0 AS decimal(12, 1)) AS nvarchar(32)) + ' MB' AS [Size],
+                @@VERSION AS [Version string]
+            FROM sys.databases d WHERE d.database_id = DB_ID()";
+        connection.Open();
+        using (var reader = command.ExecuteReader())
+            if (reader.Read())
+                for (int i = 0; i < reader.FieldCount; i++)
+                {
+                    string value = reader.IsDBNull(i) ? "" : Convert.ToString(reader.GetValue(i), System.Globalization.CultureInfo.InvariantCulture).Trim();
+                    if (value.Length > 0)
+                        properties.Add(new KeyValuePair<string, string>(reader.GetName(i), value));
+                }
+    }
+    return properties;
+}
+</script>
+<%
+DocSite site = Site;
+List<KeyValuePair<string, string>> properties = null;
+string error = null;
+try
+{
+    properties = ServerProperties(SourceDatabase);
+}
+catch (Exception ex)
+{
+    error = ex.Message;
+}
+var header = Create<HeaderTemplate>();
+header.PageTitle = "Server";
+header.Active = "server";
+header.Crumbs = "<li><span aria-current=\"page\">Server</span></li>";
+OutputTemplate(header);
+%>
+<div class="page page-wide">
+<article class="doc">
+<header class="page-head">
+<div class="eyebrow"><span class="kind"><%= Icon("server") %>Server</span></div>
+<h1 class="page-title"><%= H(string.IsNullOrEmpty(ServerName) ? site.Product : ServerName) %></h1>
+<p class="lede">The SQL Server that has the <strong><%= H(SourceDatabase.Name) %></strong> database, as it described itself when the pages were generated.</p>
+</header>
+<section class="section">
+<%= Heading("properties", "Properties") %>
+<% if (error != null) { %>
+<div class="callout callout-warning"><%= Icon("alert") %><div><p><strong>The server's properties couldn't be read.</strong></p><p class="small"><%= H(error) %></p></div></div>
+<% } else { %>
+<div class="card">
+<dl class="properties">
+<% foreach (var property in properties.Where(p => p.Key != "Version string")) { %>
+<div class="property"><dt><%= H(property.Key) %></dt><dd><%= H(property.Value) %></dd></div>
+<% } %>
+</dl>
+</div>
+<% var version = properties.FirstOrDefault(p => p.Key == "Version string").Value; %>
+<% if (!string.IsNullOrEmpty(version)) { %>
+<pre class="version-string"><%= H(version) %></pre>
+<% } %>
+<% } %>
+</section>
+</article>
+</div>
+<% OutputTemplate(Create<FooterTemplate>()); %>

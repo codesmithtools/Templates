@@ -1,0 +1,91 @@
+@* A field's frame: its label (required, locked, a counter), its control, and CSLA's messages for its property: ErrorText,
+   WarningText and InformationText, once the field's been touched (or a save wasn't). *@
+@if (!Field.CanRead)
+{
+    <div class="field span-@Field.Span">
+        @if (!Field.Compact)
+        {
+            <div class="field-label"><label>@Field.LabelText</label></div>
+        }
+        <div class="readonly-value pending" title="You may not see this"><Icon Name="lock" Size="13" /> Hidden</div>
+    </div>
+}
+else if (Field.Compact)
+{
+    <div class="field @Field.StateClass" title="@(Field.ErrorText.Length > 0 ? Field.ErrorText : Field.WarningText.Length > 0 ? Field.WarningText : null)">
+        <div class="control @ControlClass">
+            @if (Prefix is not null)
+            {
+                <span class="prefix">@Prefix</span>
+            }
+            @ChildContent
+            @StateIcon
+        </div>
+    </div>
+}
+else
+{
+    <div class="field span-@Field.Span @Field.StateClass">
+        <div class="field-label">
+            <label for="@Field.Id">@Field.LabelText</label>
+            @if (Field.Required && Field.CanWrite)
+            {
+                <span class="req" aria-hidden="true">*</span>
+            }
+            @if (!Field.CanWrite)
+            {
+                <span class="lock" title="@Field.LockReason"><Icon Name="lock" Size="12" /></span>
+            }
+            @if (MaxLength is int max && Field.CanWrite)
+            {
+                <span class="counter @(Length > max ? "over" : max >= 20 && Length >= max * 0.9 ? "near" : null)">@Length / @max</span>
+            }
+        </div>
+        <div class="control @ControlClass">
+            @if (Prefix is not null)
+            {
+                <span class="prefix">@Prefix</span>
+            }
+            @ChildContent
+            @StateIcon
+        </div>
+        <div id="@Field.MessageId" aria-live="polite">
+            @if (Field.ErrorText.Length > 0)
+            {
+                <div class="message error"><Icon Name="alert" Size="14" /><span>@Field.ErrorText</span></div>
+            }
+            @if (Field.WarningText.Length > 0)
+            {
+                <div class="message warning"><Icon Name="alert-triangle" Size="14" /><span>@Field.WarningText</span></div>
+            }
+            @if (Field.InformationText.Length > 0)
+            {
+                <div class="message info"><Icon Name="info" Size="14" /><span>@Field.InformationText</span></div>
+            }
+            @if (!Field.CanWrite && Field.KeySetOnce)
+            {
+                <div class="help">Its key: set when it's created.</div>
+            }
+            else if (Field.Help is { } help && Field.ErrorText.Length == 0)
+            {
+                <div class="help">@help</div>
+            }
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter, EditorRequired] public FieldBase Field { get; set; } = default!;
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter] public int Length { get; set; }
+    [Parameter] public int? MaxLength { get; set; }
+    [Parameter] public string? Prefix { get; set; }
+    [Parameter] public bool NoStateIcon { get; set; }
+
+    // CSLA's IsBusy (an async rule running), what's wrong, or a lock in a grid
+    private string? StateIconName => NoStateIcon ? null : Field.Info.IsBusy ? "loader" : Field.ErrorText.Length > 0 ? "alert" : Field.WarningText.Length > 0 ? "alert-triangle" : Field.Compact && !Field.CanWrite ? "lock" : null;
+
+    private string ControlClass => (Prefix is null ? "" : "has-prefix ") + (StateIconName is null ? "" : "has-state");
+
+    private RenderFragment? StateIcon => StateIconName is { } name ? @<span class="state-icon @(name == "lock" ? "locked" : null)" title="@(name == "lock" ? Field.LockReason : name == "loader" ? "Checking…" : null)"><Icon Name="@name" Size="@(name == "lock" ? 13 : 15)" Class="@(name == "loader" ? "spinner" : null)" /></span> : null;
+}

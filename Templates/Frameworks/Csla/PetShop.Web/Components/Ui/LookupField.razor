@@ -1,0 +1,15 @@
+@* A foreign key: its table's name/value list, as a combobox. *@
+@inherits FieldBase
+
+<FieldFrame Field="this" NoStateIcon>
+    <LookupPicker Id="@Id" Items="Items" Value="Info.Value" ValueChanged="Set" AllowNone="IsNullable" ReadOnly="!CanWrite"
+                  Invalid="Invalid" AriaLabel="@LabelText" AriaDescribedBy="@MessageId" OnTouched="Touch"
+                  Placeholder="@(Placeholder ?? "Choose " + LabelText.ToLowerInvariant() + "…")" />
+</FieldFrame>
+
+@code {
+    /// <summary>The lookup's keys and names: <c>Lookup.Of(await portal.FetchAsync())</c> of the name/value list.</summary>
+    [Parameter] public IReadOnlyDictionary<object, string>? Items { get; set; }
+
+    private void Set(object? key) => Info.Value = key;
+}

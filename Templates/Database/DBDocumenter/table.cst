@@ -1,0 +1,199 @@
+<%--
+CodeSmith DBDocumenter Templates
+Author:  Jason Alexander, Eric J. Smith
+--%>
+<%@ CodeTemplate Language="C#" TargetLanguage="HTML" Src="DBDocumenterTemplate.cs" Inherits="DBDocumenterTemplate" Description="A table's page: its columns, its relationships both ways (with a diagram), its indexes, and the views and procedures that use it." %>
+<%@ Property Name="SourceDatabase" Type="SchemaExplorer.DatabaseSchema" Category="Context" Description="The database." %>
+<%@ Property Name="SourceTable" Type="SchemaExplorer.TableSchema" Category="Context" Description="The table." %>
+<%@ Property Name="ServerName" Type="System.String" Optional="True" Category="Output" Description="The server's name." %>
+<%@ Property Name="DocumentationTitle" Type="System.String" Default="Database Documentation" Category="Output" Description="The documentation's title." %>
+<%@ Register Name="HeaderTemplate" Template="header.cst" MergeProperties="False" %>
+<%@ Register Name="FooterTemplate" Template="footer.cst" MergeProperties="False" %>
+<%@ Assembly Name="SchemaExplorer" %>
+<%@ Assembly Name="System.Design" %>
+<%@ Assembly Src="Site.cs" %>
+<%@ Assembly Src="SqlHighlighter.cs" %>
+<%@ Assembly Src="ErDiagram.cs" %>
+<%@ Import Namespace="System.Collections.Generic" %>
+<%@ Import Namespace="System.Linq" %>
+<%@ Import Namespace="SchemaExplorer" %>
+<script runat="template">
+protected override string Root => "../";
+</script>
+<%
+DocSite site = Site;
+TableSchema table = SourceTable;
+string title = DocSite.Title(table);
+string schema = DocSite.Schema(table);
+string description = DocSite.Description(table);
+var foreignKeys = table.ForeignKeys.Cast<TableKeySchema>().ToList();
+var referencedBy = site.ReferencedBy(table).ToList();
+var indexes = table.Indexes.Cast<IndexSchema>().OrderByDescending(i => i.IsPrimaryKey).ThenBy(i => i.Name, StringComparer.OrdinalIgnoreCase).ToList();
+var usedBy = site.UsedBy(table);
+bool columnDescriptions = table.Columns.Cast<ColumnSchema>().Any(c => DocSite.Description(c).Length > 0);
+bool defaults = table.Columns.Cast<ColumnSchema>().Any(c => DocSite.Default(c).Length > 0);
+string diagram = ErDiagram.Neighborhood(site, table, Root);
+int index = site.Tables.ToList().FindIndex(t => DocSite.Key(t) == DocSite.Key(table));
+var previous = index > 0 ? site.Tables[index - 1] : null;
+var next = index >= 0 && index < site.Tables.Count - 1 ? site.Tables[index + 1] : null;
+
+var header = Create<HeaderTemplate>();
+header.RootPath = Root;
+header.PageTitle = title;
+header.Active = DocSite.Key(table);
+header.Crumbs = "<li><a href=\"../index.html#tables\">Tables</a></li><li><span aria-current=\"page\">" + H(title) + "</span></li>";
+OutputTemplate(header);
+%>
+<div class="page">
+<article class="doc">
+<header class="page-head">
+<div class="eyebrow"><span class="kind kind-table"><%= Icon("table") %>Table</span><% if (schema.Length > 0) { %><span class="eyebrow-schema"><%= H(schema) %></span><% } %></div>
+<div class="title-row">
+<h1 class="page-title"><%= H(table.Name) %></h1>
+<button type="button" class="copy-button" data-copy="<%= H(table.FullName) %>" aria-label="Copy the table's name" title="Copy name"><%= Icon("copy") %><%= Icon("check", "icon icon-done") %></button>
+</div>
+<% if (description.Length > 0) { %>
+<p class="lede"><%= H(description) %></p>
+<% } %>
+<dl class="facts">
+<div class="fact"><dt>Columns</dt><dd><%= table.Columns.Count %></dd></div>
+<div class="fact"><dt>Primary key</dt><dd><%= table.HasPrimaryKey ? Names(table.PrimaryKey.MemberColumns.Cast<MemberColumnSchema>()) : "<span class=\"faint\">None</span>" %></dd></div>
+<div class="fact"><dt>References</dt><dd><%= foreignKeys.Count %></dd></div>
+<div class="fact"><dt>Referenced by</dt><dd><%= referencedBy.Count %></dd></div>
+<div class="fact"><dt>Indexes</dt><dd><%= indexes.Count %></dd></div>
+</dl>
+</header>
+
+<section class="section">
+<%= Heading("columns", "Columns", table.Columns.Count) %>
+<div class="card table-card"><div class="table-scroll">
+<table class="grid columns">
+<thead><tr><th class="num ordinal">#</th><th>Column</th><th>Type</th><th>Null</th><% if (defaults) { %><th>Default</th><% } %><% if (columnDescriptions) { %><th>Description</th><% } %></tr></thead>
+<tbody>
+<% int ordinal = 0; %>
+<% foreach (ColumnSchema column in table.Columns) { %>
+<%
+ordinal++;
+var key = column.IsForeignKeyMember ? DocSite.ForeignKeyOf(column) : null;
+string defaultValue = DocSite.Default(column);
+%>
+<tr id="<%= DocSite.Anchor(column.Name) %>">
+<td class="num ordinal"><%= ordinal %></td>
+<td class="cell-column">
+<div class="column-name"><code><%= H(column.Name) %></code><%= column.IsPrimaryKeyMember ? Badge("PK", "pk", "Primary key") : "" %><%= column.IsForeignKeyMember ? Badge("FK", "fk", "Foreign key") : "" %><%= DocSite.IsIdentity(column) ? Badge("Identity", "identity", "The database numbers it") : "" %><%= DocSite.IsUnique(column) ? Badge("Unique", "unique") : "" %></div>
+<% if (key != null && site.Find(key.PrimaryKeyTable) != null) { %>
+<div class="column-ref"><%= Icon("arrow-out", "icon") %><%= ColumnLink(key.PrimaryKeyTable, DocSite.ReferencedColumn(key, column.Name)) %></div>
+<% } %>
+</td>
+<td><code class="type"><%= H(DocSite.Type(column)) %></code></td>
+<td><%= column.AllowDBNull ? Badge("NULL", "muted", "Nullable") : "<span class=\"not-null\">NOT NULL</span>" %></td>
+<% if (defaults) { %><td><%= defaultValue.Length > 0 ? "<code class=\"default\">" + H(defaultValue) + "</code>" : "" %></td><% } %>
+<% if (columnDescriptions) { %><td class="desc"><%= H(DocSite.Description(column)) %></td><% } %>
+</tr>
+<% } %>
+</tbody>
+</table>
+</div></div>
+</section>
+
+<section class="section">
+<%= Heading("relationships", "Relationships", foreignKeys.Count + referencedBy.Count) %>
+<% if (diagram.Length == 0) { %>
+<%= Empty("link", "No foreign keys join <strong>" + H(title) + "</strong> to another table.") %>
+<% } else { %>
+<div class="card er-card er-card-mini" data-er>
+<div class="er-viewport er-static"><%= diagram %></div>
+</div>
+<div class="relations">
+<div class="relation-group">
+<h3 class="subhead"><%= Icon("arrow-out") %>References <span class="count"><%= foreignKeys.Count %></span></h3>
+<% if (foreignKeys.Count == 0) { %>
+<p class="faint small">It refers to no other table.</p>
+<% } else { %>
+<ul class="relation-list">
+<% foreach (TableKeySchema fk in foreignKeys) { %>
+<% var columns = fk.ForeignKeyMemberColumns.Cast<MemberColumnSchema>().ToList(); %>
+<li class="relation">
+<div class="relation-main"><%= Names(columns) %><%= Icon("arrow-right", "icon arrow") %><%= string.Join("<span class=\"sep\">, </span>", columns.Select(c => ColumnLink(fk.PrimaryKeyTable, DocSite.ReferencedColumn(fk, c.Name)))) %></div>
+<div class="relation-meta"><code class="key-name"><%= H(fk.Name) %></code><%= DocSite.IsOneToOne(fk) ? Badge("one to one", "sky") : Badge("many to one", "fk") %><%= columns.Any(c => c.AllowDBNull) ? Badge("optional", "muted") : "" %></div>
+</li>
+<% } %>
+</ul>
+<% } %>
+</div>
+<div class="relation-group">
+<h3 class="subhead"><%= Icon("arrow-in") %>Referenced by <span class="count"><%= referencedBy.Count %></span></h3>
+<% if (referencedBy.Count == 0) { %>
+<p class="faint small">No other table refers to it.</p>
+<% } else { %>
+<ul class="relation-list">
+<% foreach (TableKeySchema fk in referencedBy) { %>
+<% var columns = fk.ForeignKeyMemberColumns.Cast<MemberColumnSchema>().ToList(); %>
+<li class="relation">
+<div class="relation-main"><%= string.Join("<span class=\"sep\">, </span>", columns.Select(c => ColumnLink(fk.ForeignKeyTable, c.Name))) %><%= Icon("arrow-right", "icon arrow") %><%= Names(fk.PrimaryKeyMemberColumns.Cast<MemberColumnSchema>()) %></div>
+<div class="relation-meta"><code class="key-name"><%= H(fk.Name) %></code><%= DocSite.IsOneToOne(fk) ? Badge("one to one", "sky") : Badge("one to many", "fk") %><%= columns.Any(c => c.AllowDBNull) ? Badge("optional", "muted") : "" %></div>
+</li>
+<% } %>
+</ul>
+<% } %>
+</div>
+</div>
+<% } %>
+</section>
+
+<section class="section">
+<%= Heading("indexes", "Indexes", indexes.Count) %>
+<% if (indexes.Count == 0) { %>
+<%= Empty("index", "The table has no indexes.") %>
+<% } else { %>
+<div class="card table-card"><div class="table-scroll">
+<table class="grid">
+<thead><tr><th>Index</th><th>Columns</th><th>Kind</th></tr></thead>
+<tbody>
+<% foreach (IndexSchema ix in indexes) { %>
+<tr>
+<td><code class="key-name"><%= H(ix.Name) %></code></td>
+<td><%= Names(ix.MemberColumns.Cast<MemberColumnSchema>()) %></td>
+<td class="badges"><%= ix.IsPrimaryKey ? Badge("Primary key", "pk") : "" %><%= ix.IsUnique && !ix.IsPrimaryKey ? Badge("Unique", "unique") : "" %><%= ix.IsClustered ? Badge("Clustered", "muted") : "" %><%= !ix.IsPrimaryKey && !ix.IsUnique && !ix.IsClustered ? Badge("Index", "muted") : "" %></td>
+</tr>
+<% } %>
+</tbody>
+</table>
+</div></div>
+<% } %>
+</section>
+
+<% if (usedBy.Count > 0) { %>
+<section class="section">
+<%= Heading("used-by", "Used by", usedBy.Count) %>
+<p class="section-lede">The views and procedures whose SQL reads or writes it.</p>
+<ul class="chips">
+<% foreach (var item in usedBy) { %>
+<li><a class="chip" href="<%= H(Href(item)) %>"><%= KindIcon(item) %><%= H(DocSite.Title(item)) %></a></li>
+<% } %>
+</ul>
+</section>
+<% } %>
+
+<% if (previous != null || next != null) { %>
+<nav class="pager" aria-label="Tables">
+<% if (previous != null) { %><a class="pager-link" href="<%= H(Href(previous)) %>" rel="prev"><span class="pager-label"><%= Icon("arrow-left") %>Previous</span><span class="pager-title"><%= H(DocSite.Title(previous)) %></span></a><% } else { %><span></span><% } %>
+<% if (next != null) { %><a class="pager-link pager-next" href="<%= H(Href(next)) %>" rel="next"><span class="pager-label">Next<%= Icon("arrow-right") %></span><span class="pager-title"><%= H(DocSite.Title(next)) %></span></a><% } %>
+</nav>
+<% } %>
+</article>
+<aside class="toc" aria-label="On this page">
+<p class="toc-title">On this page</p>
+<ul>
+<li><a href="#columns">Columns</a></li>
+<li><a href="#relationships">Relationships</a></li>
+<li><a href="#indexes">Indexes</a></li>
+<% if (usedBy.Count > 0) { %><li><a href="#used-by">Used by</a></li><% } %>
+</ul>
+</aside>
+</div>
+<%
+var footer = Create<FooterTemplate>();
+footer.RootPath = Root;
+OutputTemplate(footer);
+%>

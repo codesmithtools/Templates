@@ -22,5 +22,10 @@
     <propertySet name="Client" output="client/src/generated/petshop.ts" template="Client.cst">
       <property name="ApiName">PetShop</property>
     </propertySet>
+    <propertySet name="Ui" output="client/src/generated/ui/Files.txt" template="Ui.cst">
+      <property name="OutputDirectory">client/src/generated/ui</property>
+      <property name="Client">../petshop.ts</property>
+      <property name="App">../../app</property>
+    </propertySet>
   </propertySets>
 </codeSmith>

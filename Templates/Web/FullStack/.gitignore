@@ -1,0 +1,5 @@
+# Build output: the web UI (npm run build puts it in the API's wwwroot), packages, and .NET's bin and obj
+App/wwwroot/
+node_modules/
+bin/
+obj/

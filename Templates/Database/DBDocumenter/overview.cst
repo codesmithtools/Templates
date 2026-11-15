@@ -1,0 +1,177 @@
+<%--
+CodeSmith DBDocumenter Templates
+Author:  Jason Alexander, Eric J. Smith
+--%>
+<%@ CodeTemplate Language="C#" TargetLanguage="HTML" Src="DBDocumenterTemplate.cs" Inherits="DBDocumenterTemplate" Description="The overview (index.html): the database at a glance, its relationship diagram, and its tables, relationships, views and procedures." %>
+<%@ Property Name="SourceDatabase" Type="SchemaExplorer.DatabaseSchema" Category="Context" Description="The database." %>
+<%@ Property Name="ServerName" Type="System.String" Optional="True" Category="Output" Description="The server's name." %>
+<%@ Property Name="DocumentationTitle" Type="System.String" Default="Database Documentation" Category="Output" Description="The documentation's title." %>
+<%@ Register Name="HeaderTemplate" Template="header.cst" MergeProperties="False" %>
+<%@ Register Name="FooterTemplate" Template="footer.cst" MergeProperties="False" %>
+<%@ Assembly Name="SchemaExplorer" %>
+<%@ Assembly Name="System.Design" %>
+<%@ Assembly Src="Site.cs" %>
+<%@ Assembly Src="SqlHighlighter.cs" %>
+<%@ Assembly Src="ErDiagram.cs" %>
+<%@ Import Namespace="System.Linq" %>
+<%@ Import Namespace="SchemaExplorer" %>
+<%
+DocSite site = Site;
+var header = Create<HeaderTemplate>();
+header.Active = "overview";
+OutputTemplate(header);
+bool tableDescriptions = site.Tables.Any(t => DocSite.Description(t).Length > 0);
+bool viewDescriptions = site.Views.Any(v => DocSite.Description(v).Length > 0);
+bool commandDescriptions = site.Commands.Any(c => DocSite.Description(c).Length > 0);
+string description = DocSite.Description(SourceDatabase);
+%>
+<div class="page page-wide">
+<article class="doc">
+<header class="page-head hero">
+<div class="eyebrow"><span class="kind"><%= Icon("database") %><%= H(site.Product) %> database</span></div>
+<h1 class="page-title"><%= H(DocumentationTitle) %></h1>
+<p class="lede"><%= description.Length > 0 ? H(description) : "The tables, views and procedures of the <strong>" + H(SourceDatabase.Name) + "</strong> database: their columns, keys, indexes and SQL, and how the tables relate." %></p>
+<ul class="meta">
+<% if (!string.IsNullOrEmpty(ServerName)) { %>
+<li><%= Icon("server") %><span><%= H(ServerName) %></span></li>
+<% } %>
+<li><%= Icon("database") %><span><%= H(SourceDatabase.Name) %></span></li>
+</ul>
+</header>
+
+<section class="stats" aria-label="At a glance">
+<a class="stat" href="#tables"><span class="stat-icon"><%= Icon("table") %></span><span class="stat-value"><%= site.Tables.Count %></span><span class="stat-label">Tables</span></a>
+<a class="stat" href="<%= site.Views.Count > 0 ? "#views" : "#tables" %>"><span class="stat-icon"><%= Icon("view") %></span><span class="stat-value"><%= site.Views.Count %></span><span class="stat-label">Views</span></a>
+<a class="stat" href="<%= site.Commands.Count > 0 ? "#procedures" : "#tables" %>"><span class="stat-icon"><%= Icon("procedure") %></span><span class="stat-value"><%= site.Commands.Count %></span><span class="stat-label">Procedures</span></a>
+<a class="stat" href="#tables"><span class="stat-icon"><%= Icon("columns") %></span><span class="stat-value"><%= site.ColumnCount %></span><span class="stat-label">Columns</span></a>
+<a class="stat" href="#relationships"><span class="stat-icon"><%= Icon("link") %></span><span class="stat-value"><%= site.Relationships.Count %></span><span class="stat-label">Relationships</span></a>
+<a class="stat" href="#tables"><span class="stat-icon"><%= Icon("index") %></span><span class="stat-value"><%= site.IndexCount %></span><span class="stat-label">Indexes</span></a>
+</section>
+
+<% if (site.Tables.Count > 0) { %>
+<section class="section">
+<%= Heading("diagram", "Diagram") %>
+<p class="section-lede">Each table with its key columns. A line joins a foreign key to the key it refers to. Select a table to open it.</p>
+<div class="card er-card" data-er>
+<div class="er-toolbar">
+<div class="er-legend" aria-label="Legend">
+<span class="legend-item"><span class="legend-key"><%= Icon("key") %></span>Primary key</span>
+<span class="legend-item"><span class="legend-fk"><%= Icon("link") %></span>Foreign key</span>
+<span class="legend-item"><svg class="legend-line" viewBox="0 0 44 14" aria-hidden="true"><path d="M2 7H42M7 1V13M11 1V13M30 7L42 1M30 7L42 13"/><circle cx="25" cy="7" r="3"/></svg>One to many</span>
+<span class="legend-item"><svg class="legend-line" viewBox="0 0 44 14" aria-hidden="true"><path d="M2 7H42M7 1V13M37 1V13"/><circle cx="16" cy="7" r="3"/><circle cx="29" cy="7" r="3"/></svg>Optional</span>
+</div>
+<div class="er-actions" role="toolbar" aria-label="Zoom">
+<button type="button" class="icon-button" data-er-zoom="out" aria-label="Zoom out" title="Zoom out"><%= Icon("zoom-out") %></button>
+<output class="er-zoom" aria-live="polite">100%</output>
+<button type="button" class="icon-button" data-er-zoom="in" aria-label="Zoom in" title="Zoom in"><%= Icon("zoom-in") %></button>
+<button type="button" class="icon-button" data-er-zoom="fit" aria-label="Fit the diagram" title="Fit"><%= Icon("fit") %></button>
+<button type="button" class="icon-button" data-er-full aria-label="Full screen" title="Full screen"><%= Icon("expand", "icon icon-expand") %><%= Icon("shrink", "icon icon-shrink") %></button>
+</div>
+</div>
+<div class="er-viewport" tabindex="0" aria-label="Relationship diagram. Drag to pan; Ctrl and the mouse wheel zoom.">
+<%= ErDiagram.Database(site, Root, 1088, 680) %>
+</div>
+<div class="er-hint"><span>Drag to pan</span><span>Ctrl + scroll to zoom</span><span>Hover a table to trace its keys</span></div>
+</div>
+</section>
+<% } %>
+
+<section class="section">
+<%= Heading("tables", "Tables", site.Tables.Count) %>
+<% if (site.Tables.Count == 0) { %>
+<%= Empty("table", "The database has no tables.") %>
+<% } else { %>
+<div class="card table-card"><div class="table-scroll">
+<table class="grid">
+<thead><tr><th>Table</th><th class="num">Columns</th><th>Primary key</th><th>References</th><th>Referenced by</th><th class="num">Indexes</th><% if (tableDescriptions) { %><th>Description</th><% } %></tr></thead>
+<tbody>
+<% foreach (TableSchema table in site.Tables) { %>
+<%
+var parents = table.ForeignKeys.Cast<TableKeySchema>().Select(k => site.Find(k.PrimaryKeyTable)).Where(t => t != null).GroupBy(DocSite.Key).Select(g => g.First()).ToList();
+var children = site.ReferencedBy(table).Select(k => k.ForeignKeyTable).GroupBy(DocSite.Key).Select(g => g.First()).ToList();
+%>
+<tr>
+<td class="cell-object"><a class="object" href="<%= H(Href(table)) %>"><%= Icon("table") %><span><%= H(DocSite.Title(table)) %></span></a></td>
+<td class="num"><%= table.Columns.Count %></td>
+<td><%= table.HasPrimaryKey ? Names(table.PrimaryKey.MemberColumns.Cast<MemberColumnSchema>()) : "<span class=\"faint\">None</span>" %></td>
+<td><%= parents.Count == 0 ? "<span class=\"faint\">—</span>" : string.Join("<span class=\"sep\">, </span>", parents.Select(p => Link(p))) %></td>
+<td><%= children.Count == 0 ? "<span class=\"faint\">—</span>" : string.Join("<span class=\"sep\">, </span>", children.Select(c => Link(c))) %></td>
+<td class="num"><%= table.Indexes.Count %></td>
+<% if (tableDescriptions) { %><td class="desc"><%= H(DocSite.Description(table)) %></td><% } %>
+</tr>
+<% } %>
+</tbody>
+</table>
+</div></div>
+<% } %>
+</section>
+
+<% if (site.Relationships.Count > 0) { %>
+<section class="section">
+<%= Heading("relationships", "Relationships", site.Relationships.Count) %>
+<div class="card table-card"><div class="table-scroll">
+<table class="grid">
+<thead><tr><th>Foreign key</th><th>From</th><th class="arrow-col" aria-hidden="true"></th><th>To</th><th>Kind</th></tr></thead>
+<tbody>
+<% foreach (TableKeySchema key in site.Relationships) { %>
+<% var columns = key.ForeignKeyMemberColumns.Cast<MemberColumnSchema>().ToList(); %>
+<tr>
+<td><code class="key-name"><%= H(key.Name) %></code></td>
+<td><%= string.Join("<span class=\"sep\">, </span>", columns.Select(c => ColumnLink(key.ForeignKeyTable, c.Name))) %></td>
+<td class="arrow-col"><%= Icon("arrow-right", "icon arrow") %></td>
+<td><%= string.Join("<span class=\"sep\">, </span>", columns.Select(c => ColumnLink(key.PrimaryKeyTable, DocSite.ReferencedColumn(key, c.Name)))) %></td>
+<td><%= DocSite.IsOneToOne(key) ? Badge("one to one", "sky") : Badge("many to one", "fk") %><%= columns.Any(c => c.AllowDBNull) ? " " + Badge("optional", "muted") : "" %></td>
+</tr>
+<% } %>
+</tbody>
+</table>
+</div></div>
+</section>
+<% } %>
+
+<% if (site.Views.Count > 0) { %>
+<section class="section">
+<%= Heading("views", "Views", site.Views.Count) %>
+<div class="card table-card"><div class="table-scroll">
+<table class="grid">
+<thead><tr><th>View</th><th class="num">Columns</th><th>Uses</th><% if (viewDescriptions) { %><th>Description</th><% } %></tr></thead>
+<tbody>
+<% foreach (ViewSchema view in site.Views) { %>
+<% var uses = site.Uses(view); %>
+<tr>
+<td class="cell-object"><a class="object" href="<%= H(Href(view)) %>"><%= Icon("view") %><span><%= H(DocSite.Title(view)) %></span></a></td>
+<td class="num"><%= view.Columns.Count %></td>
+<td><%= uses.Count == 0 ? "<span class=\"faint\">—</span>" : string.Join("<span class=\"sep\">, </span>", uses.Select(u => Link(u))) %></td>
+<% if (viewDescriptions) { %><td class="desc"><%= H(DocSite.Description(view)) %></td><% } %>
+</tr>
+<% } %>
+</tbody>
+</table>
+</div></div>
+</section>
+<% } %>
+
+<% if (site.Commands.Count > 0) { %>
+<section class="section">
+<%= Heading("procedures", "Procedures", site.Commands.Count) %>
+<div class="card table-card"><div class="table-scroll">
+<table class="grid">
+<thead><tr><th>Procedure</th><th class="num">Parameters</th><th>Uses</th><% if (commandDescriptions) { %><th>Description</th><% } %></tr></thead>
+<tbody>
+<% foreach (CommandSchema command in site.Commands) { %>
+<% var uses = site.Uses(command); %>
+<tr>
+<td class="cell-object"><a class="object" href="<%= H(Href(command)) %>"><%= Icon("procedure") %><span><%= H(DocSite.Title(command)) %></span></a></td>
+<td class="num"><%= command.Parameters.Cast<ParameterSchema>().Count(p => p.Direction != System.Data.ParameterDirection.ReturnValue) %></td>
+<td><%= uses.Count == 0 ? "<span class=\"faint\">—</span>" : string.Join("<span class=\"sep\">, </span>", uses.Select(u => Link(u))) %></td>
+<% if (commandDescriptions) { %><td class="desc"><%= H(DocSite.Description(command)) %></td><% } %>
+</tr>
+<% } %>
+</tbody>
+</table>
+</div></div>
+</section>
+<% } %>
+</article>
+</div>
+<% OutputTemplate(Create<FooterTemplate>()); %>

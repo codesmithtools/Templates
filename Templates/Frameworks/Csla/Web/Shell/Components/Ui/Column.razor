@@ -1,0 +1,28 @@
+@* A list's column: a property of its read-only objects, how it reads, and a lookup for a foreign key. *@
+@typeparam TItem where TItem : class
+@implements IListColumn<TItem>
+
+@code {
+    [CascadingParameter] public ListView<TItem> Owner { get; set; } = default!;
+
+    [Parameter, EditorRequired] public string Title { get; set; } = "";
+    [Parameter, EditorRequired] public Func<TItem, object?> Value { get; set; } = default!;
+    [Parameter] public ValueKind Kind { get; set; } = ValueKind.Text;
+    [Parameter] public int Scale { get; set; }
+
+    /// <summary>A foreign key's names (Lookup.Of its name/value list): the name shows, and sorts.</summary>
+    [Parameter] public IReadOnlyDictionary<object, string>? Lookup { get; set; }
+
+    private IReadOnlyDictionary<object, string>? _lookup;
+
+    protected override void OnInitialized() => Owner.Add(this);
+
+    // a lookup that's just loaded: the list shows its names now
+    protected override void OnParametersSet()
+    {
+        if (ReferenceEquals(_lookup, Lookup))
+            return;
+        _lookup = Lookup;
+        Owner.Refresh();
+    }
+}

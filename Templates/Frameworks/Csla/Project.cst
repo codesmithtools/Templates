@@ -1,19 +1,25 @@
-<%@ CodeTemplate Language="C#" TargetLanguage="XML" Description="A project file for one of the three projects (Business, Dal, EfCore): written once, when it isn't there, and then yours." %>
-<%@ Property Name="Kind" Type="System.String" Default="Business" Description="Business, Dal or EfCore." %>
+<%@ CodeTemplate Language="C#" TargetLanguage="XML" Description="A project file for one of the four projects (Business, Dal, EfCore, Web): written once, when it isn't there, and then yours." %>
+<%@ Property Name="Kind" Type="System.String" Default="Business" Description="Business, Dal, EfCore or Web." %>
 <%@ Property Name="Namespace" Type="System.String" Default="MyApp" Description="The root namespace: the projects' names start with it." %>
 <%@ Property Name="TargetFramework" Type="System.String" Default="net10.0" Description="The projects' target framework." %>
 <%@ Property Name="CslaVersion" Type="System.String" Default="10.2.0" Description="The Csla package's version." %>
 <%@ Property Name="EfCoreVersion" Type="System.String" Default="10.0.15" Description="The EF Core packages' version." %>
+<%@ Property Name="Provider" Type="System.String" Default="Sqlite" Optional="True" Description="The web app's EF Core provider: Sqlite, SqlServer, PostgreSQL or MySql." %>
+<%@ Property Name="DatabaseFile" Type="System.String" Default="" Optional="True" Description="The web app's SQLite database, from its project's folder: copied beside it when it's built." %>
 <%@ Assembly Name="SchemaExplorer" %>
 <%@ Assembly Src="Names.cs" %>
 <%@ Assembly Src="Model.cs" %>
-<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="<%= Kind == "Web" ? "Microsoft.NET.Sdk.Web" : "Microsoft.NET.Sdk" %>">
 <% if (Kind == "Business") { %>
   <!-- The business objects: Generated/ is what Csla.csp generates (again whenever it runs), and your partial classes go
        beside it. It knows the DAL's interfaces, not EF Core. Csla.cst wrote this file once: it's yours. -->
 <% } else if (Kind == "Dal") { %>
   <!-- The DAL's interfaces and DTOs (Generated/): what the business objects ask of the database, and nothing of how.
        Csla.cst wrote this file once: it's yours. -->
+<% } else if (Kind == "Web") { %>
+  <!-- The web app: a page for each root (Generated/: its list and its editor, with its children's grids), on the business
+       objects and the EF Core DAL, interactive on the server. Components/ and wwwroot/ are the shell, the components and
+       the theme the pages use. Csla.cst wrote this file once: it's yours. -->
 <% } else { %>
   <!-- The DAL with EF Core (Generated/): the entities, the DbContext, each table's DAL and Add<%= Model.ServicesName(Namespace) %>Dal. The app picks
        the database's provider (UseSqlServer, UseNpgsql, UseSqlite, ...). Csla.cst wrote this file once: it's yours. -->
@@ -24,7 +30,22 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
-<% if (Kind != "Dal") { %>
+<% if (Kind == "Web") { %>
+  <ItemGroup>
+    <ProjectReference Include="../<%= Namespace %>.Business/<%= Namespace %>.Business.csproj" />
+    <ProjectReference Include="../<%= Namespace %>.Dal.EfCore/<%= Namespace %>.Dal.EfCore.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Csla.AspNetCore" Version="<%= CslaVersion %>" />
+    <PackageReference Include="Csla.Blazor" Version="<%= CslaVersion %>" />
+    <PackageReference Include="<%= ProviderPackage %>" Version="<%= ProviderVersion %>" />
+  </ItemGroup>
+<% if (DatabaseFile.Length > 0) { %>
+  <ItemGroup>
+    <None Include="<%= DatabaseFile.Replace('\\', '/') %>" Link="<%= System.IO.Path.GetFileName(DatabaseFile) %>" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+<% } %>
+<% } else if (Kind != "Dal") { %>
   <ItemGroup>
     <ProjectReference Include="../<%= Namespace %>.Dal/<%= Namespace %>.Dal.csproj" />
   </ItemGroup>
@@ -37,3 +58,20 @@
   </ItemGroup>
 <% } %>
 </Project>
+<script runat="template">
+// the web app's EF Core provider's package, and its version
+private string ProviderPackage => Provider switch
+{
+    "SqlServer" => "Microsoft.EntityFrameworkCore.SqlServer",
+    "PostgreSQL" => "Npgsql.EntityFrameworkCore.PostgreSQL",
+    "MySql" => "MySql.EntityFrameworkCore",
+    _ => "Microsoft.EntityFrameworkCore.Sqlite",
+};
+
+private string ProviderVersion => Provider switch
+{
+    "PostgreSQL" => "10.0.3",
+    "MySql" => "10.0.12",
+    _ => EfCoreVersion,
+};
+</script>

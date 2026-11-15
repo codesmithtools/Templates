@@ -1,0 +1,29 @@
+@* The toasts: what just happened, for a few seconds. *@
+@implements IDisposable
+@inject Toasts Toasts
+
+<div class="toasts" role="region" aria-label="Notifications" aria-live="polite">
+    @foreach (var toast in Toasts.Items)
+    {
+        string kind = toast.Kind.ToString().ToLowerInvariant();
+        <div @key="toast.Id" class="toast" role="@(toast.Kind == ToastKind.Error ? "alert" : "status")">
+            <Icon Name="@(toast.Kind switch { ToastKind.Success => "check-circle", ToastKind.Error => "alert", ToastKind.Warning => "alert-triangle", _ => "info" })" Size="18" Class="@kind" />
+            <div class="grow">
+                <strong>@toast.Title</strong>
+                @if (toast.Detail is { } detail)
+                {
+                    <p>@detail</p>
+                }
+            </div>
+            <button type="button" class="icon-btn sm" aria-label="Dismiss" @onclick="() => Toasts.Dismiss(toast)"><Icon Name="x" Size="14" /></button>
+        </div>
+    }
+</div>
+
+@code {
+    protected override void OnInitialized() => Toasts.Changed += Refresh;
+
+    private void Refresh() => _ = InvokeAsync(StateHasChanged);
+
+    public void Dispose() => Toasts.Changed -= Refresh;
+}

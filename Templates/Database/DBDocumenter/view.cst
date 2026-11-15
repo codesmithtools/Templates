@@ -1,0 +1,145 @@
+<%--
+CodeSmith DBDocumenter Templates
+Author:  Jason Alexander, Eric J. Smith
+--%>
+<%@ CodeTemplate Language="C#" TargetLanguage="HTML" Src="DBDocumenterTemplate.cs" Inherits="DBDocumenterTemplate" Description="A view's page: its columns, the tables and views it uses, and its SQL." %>
+<%@ Property Name="SourceDatabase" Type="SchemaExplorer.DatabaseSchema" Category="Context" Description="The database." %>
+<%@ Property Name="SourceView" Type="SchemaExplorer.ViewSchema" Category="Context" Description="The view." %>
+<%@ Property Name="ServerName" Type="System.String" Optional="True" Category="Output" Description="The server's name." %>
+<%@ Property Name="DocumentationTitle" Type="System.String" Default="Database Documentation" Category="Output" Description="The documentation's title." %>
+<%@ Register Name="HeaderTemplate" Template="header.cst" MergeProperties="False" %>
+<%@ Register Name="FooterTemplate" Template="footer.cst" MergeProperties="False" %>
+<%@ Assembly Name="SchemaExplorer" %>
+<%@ Assembly Name="System.Design" %>
+<%@ Assembly Src="Site.cs" %>
+<%@ Assembly Src="SqlHighlighter.cs" %>
+<%@ Assembly Src="ErDiagram.cs" %>
+<%@ Import Namespace="System.Linq" %>
+<%@ Import Namespace="SchemaExplorer" %>
+<script runat="template">
+protected override string Root => "../";
+</script>
+<%
+DocSite site = Site;
+ViewSchema view = SourceView;
+string title = DocSite.Title(view);
+string schema = DocSite.Schema(view);
+string description = DocSite.Description(view);
+string sql = DocSite.Sql(view);
+var uses = site.Uses(view);
+var usedBy = site.UsedBy(view);
+bool columnDescriptions = view.Columns.Cast<ViewColumnSchema>().Any(c => DocSite.Description(c).Length > 0);
+int index = site.Views.ToList().FindIndex(v => DocSite.Key(v) == DocSite.Key(view));
+var previous = index > 0 ? site.Views[index - 1] : null;
+var next = index >= 0 && index < site.Views.Count - 1 ? site.Views[index + 1] : null;
+
+var header = Create<HeaderTemplate>();
+header.RootPath = Root;
+header.PageTitle = title;
+header.Active = DocSite.Key(view);
+header.Crumbs = "<li><a href=\"../index.html#views\">Views</a></li><li><span aria-current=\"page\">" + H(title) + "</span></li>";
+OutputTemplate(header);
+%>
+<div class="page">
+<article class="doc">
+<header class="page-head">
+<div class="eyebrow"><span class="kind kind-view"><%= Icon("view") %>View</span><% if (schema.Length > 0) { %><span class="eyebrow-schema"><%= H(schema) %></span><% } %></div>
+<div class="title-row">
+<h1 class="page-title"><%= H(view.Name) %></h1>
+<button type="button" class="copy-button" data-copy="<%= H(view.FullName) %>" aria-label="Copy the view's name" title="Copy name"><%= Icon("copy") %><%= Icon("check", "icon icon-done") %></button>
+</div>
+<% if (description.Length > 0) { %>
+<p class="lede"><%= H(description) %></p>
+<% } %>
+<dl class="facts">
+<div class="fact"><dt>Columns</dt><dd><%= view.Columns.Count %></dd></div>
+<div class="fact"><dt>Uses</dt><dd><%= uses.Count %></dd></div>
+<div class="fact"><dt>Used by</dt><dd><%= usedBy.Count %></dd></div>
+<div class="fact"><dt>SQL</dt><dd><%= sql.Length > 0 ? Plural(SqlHighlighter.LineCount(SqlHighlighter.Layout(sql)), "line") : "<span class=\"faint\">None</span>" %></dd></div>
+</dl>
+</header>
+
+<section class="section">
+<%= Heading("columns", "Columns", view.Columns.Count) %>
+<div class="card table-card"><div class="table-scroll">
+<table class="grid columns">
+<thead><tr><th class="num ordinal">#</th><th>Column</th><th>Type</th><th>Null</th><% if (columnDescriptions) { %><th>Description</th><% } %></tr></thead>
+<tbody>
+<% int ordinal = 0; %>
+<% foreach (ViewColumnSchema column in view.Columns) { %>
+<% ordinal++; %>
+<tr id="<%= DocSite.Anchor(column.Name) %>">
+<td class="num ordinal"><%= ordinal %></td>
+<td class="cell-column"><div class="column-name"><code><%= H(column.Name) %></code></div></td>
+<td><code class="type"><%= H(DocSite.Type(column)) %></code></td>
+<td><%= column.AllowDBNull ? Badge("NULL", "muted", "Nullable") : "<span class=\"not-null\">NOT NULL</span>" %></td>
+<% if (columnDescriptions) { %><td class="desc"><%= H(DocSite.Description(column)) %></td><% } %>
+</tr>
+<% } %>
+</tbody>
+</table>
+</div></div>
+</section>
+
+<% if (uses.Count > 0 || usedBy.Count > 0) { %>
+<section class="section">
+<%= Heading("related", "Related", uses.Count + usedBy.Count) %>
+<div class="relations">
+<div class="relation-group">
+<h3 class="subhead"><%= Icon("arrow-out") %>Uses <span class="count"><%= uses.Count %></span></h3>
+<% if (uses.Count == 0) { %>
+<p class="faint small">Its SQL names no table or view of the database.</p>
+<% } else { %>
+<ul class="chips">
+<% foreach (var item in uses) { %>
+<li><a class="chip" href="<%= H(Href(item)) %>"><%= KindIcon(item) %><%= H(DocSite.Title(item)) %></a></li>
+<% } %>
+</ul>
+<% } %>
+</div>
+<div class="relation-group">
+<h3 class="subhead"><%= Icon("arrow-in") %>Used by <span class="count"><%= usedBy.Count %></span></h3>
+<% if (usedBy.Count == 0) { %>
+<p class="faint small">No view or procedure uses it.</p>
+<% } else { %>
+<ul class="chips">
+<% foreach (var item in usedBy) { %>
+<li><a class="chip" href="<%= H(Href(item)) %>"><%= KindIcon(item) %><%= H(DocSite.Title(item)) %></a></li>
+<% } %>
+</ul>
+<% } %>
+</div>
+</div>
+</section>
+<% } %>
+
+<section class="section">
+<%= Heading("definition", "Definition") %>
+<% if (sql.Length == 0) { %>
+<%= Empty("file-code", "The provider doesn't read this view's SQL.") %>
+<% } else { %>
+<%= CodeBlock(sql, title) %>
+<% } %>
+</section>
+
+<% if (previous != null || next != null) { %>
+<nav class="pager" aria-label="Views">
+<% if (previous != null) { %><a class="pager-link" href="<%= H(Href(previous)) %>" rel="prev"><span class="pager-label"><%= Icon("arrow-left") %>Previous</span><span class="pager-title"><%= H(DocSite.Title(previous)) %></span></a><% } else { %><span></span><% } %>
+<% if (next != null) { %><a class="pager-link pager-next" href="<%= H(Href(next)) %>" rel="next"><span class="pager-label">Next<%= Icon("arrow-right") %></span><span class="pager-title"><%= H(DocSite.Title(next)) %></span></a><% } %>
+</nav>
+<% } %>
+</article>
+<aside class="toc" aria-label="On this page">
+<p class="toc-title">On this page</p>
+<ul>
+<li><a href="#columns">Columns</a></li>
+<% if (uses.Count > 0 || usedBy.Count > 0) { %><li><a href="#related">Related</a></li><% } %>
+<li><a href="#definition">Definition</a></li>
+</ul>
+</aside>
+</div>
+<%
+var footer = Create<FooterTemplate>();
+footer.RootPath = Root;
+OutputTemplate(footer);
+%>

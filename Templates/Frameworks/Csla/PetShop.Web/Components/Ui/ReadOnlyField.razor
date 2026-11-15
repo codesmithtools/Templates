@@ -1,0 +1,52 @@
+@* A property the database sets (an identity, a computed column): shown, not edited. *@
+@inherits FieldBase
+
+@if (Compact)
+{
+    <span class="lock-cell" title="@(Pending ? PendingText : Hint)">
+        @if (Pending)
+        {
+            <span class="muted">—</span>
+        }
+        else
+        {
+            @Text
+        }
+    </span>
+}
+else
+{
+    <div class="field span-@Span">
+        <div class="field-label">
+            <label>@LabelText</label>
+            <span class="lock" title="@Hint"><Icon Name="lock" Size="12" /></span>
+        </div>
+        <div class="readonly-value @(Pending ? "pending" : Kind == ValueKind.Key ? "mono" : null)">@(Pending ? PendingText : Text)</div>
+    </div>
+}
+
+@code {
+    [Parameter] public ValueKind Kind { get; set; } = ValueKind.Text;
+    [Parameter] public int Scale { get; set; }
+
+    /// <summary>What a new object shows before the database sets it ("Assigned when saved").</summary>
+    [Parameter] public string? PendingText { get; set; }
+
+    [Parameter] public string Hint { get; set; } = "The database sets it.";
+
+    private object? Value => Info.Value;
+
+    private bool Pending => PendingText is not null && (Value is null || Value.Equals(Default));
+
+    private object? Default => Value?.GetType() is { IsValueType: true } type ? Activator.CreateInstance(type) : "";
+
+    private string Text => Kind switch
+    {
+        ValueKind.Money => Formats.Money(Value),
+        ValueKind.Number => Formats.Number(Value, Scale),
+        ValueKind.Date => Formats.Date(Value),
+        ValueKind.DateTime => Formats.DateTime(Value),
+        ValueKind.Bool => Value is true ? "Yes" : "No",
+        _ => Value?.ToString() ?? "",
+    };
+}

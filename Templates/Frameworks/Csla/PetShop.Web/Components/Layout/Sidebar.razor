@@ -1,0 +1,57 @@
+@* The sidebar: the app, the palette, and a link to each root's list with how many it has. *@
+@implements IDisposable
+@inject Counts Counts
+@inject Palette Palette
+
+<aside class="sidebar" aria-label="Navigation">
+    <a class="brand" href="" @onclick="OnNavigate">
+        <span class="brand-mark" aria-hidden="true">@Site.Name[..1]</span>
+        <span class="brand-name"><strong>@Site.Name</strong><small>CSLA .NET · Blazor</small></span>
+    </a>
+    <button type="button" class="search-trigger" @onclick="() => Palette.Open()">
+        <Icon Name="search" Size="15" />
+        <span>Go to…</span>
+        <kbd>Ctrl K</kbd>
+    </button>
+    <nav class="nav">
+        <NavLink class="nav-item" href="" Match="NavLinkMatch.All" @onclick="OnNavigate"><Icon Name="home" /><span>Home</span></NavLink>
+        <div class="nav-label">Records</div>
+        @foreach (var root in Site.Roots)
+        {
+            int? count = Counts[root];
+            <NavLink class="nav-item" href="@root.Href" @onclick="OnNavigate">
+                <Icon Name="@root.Icon" />
+                <span>@root.Title</span>
+                <span class="nav-count @(count is null ? "loading" : null)">@(count?.ToString("N0") ?? "0")</span>
+            </NavLink>
+        }
+    </nav>
+    <div class="sidebar-foot">
+        <div class="stack-chips">
+            <span class="stack-chip"><i></i>CSLA @CslaVersion</span>
+            <span class="stack-chip">.NET @Environment.Version.Major</span>
+            <span class="stack-chip">EF Core</span>
+        </div>
+        <button type="button" class="btn btn-ghost btn-sm shortcut-hint" style="justify-content: flex-start; padding: 0 4px" @onclick="() => Palette.Open(shortcuts: true)">
+            <Icon Name="keyboard" Size="14" /> Keyboard shortcuts <kbd>?</kbd>
+        </button>
+    </div>
+</aside>
+
+@code {
+    private static readonly string CslaVersion = typeof(Csla.ApplicationContext).Assembly.GetName().Version is { } v ? $"{v.Major}.{v.Minor}" : "";
+
+    [Parameter] public EventCallback OnNavigate { get; set; }
+
+    protected override void OnInitialized() => Counts.Changed += Refresh;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+            await Counts.LoadAsync();
+    }
+
+    private void Refresh() => _ = InvokeAsync(StateHasChanged);
+
+    public void Dispose() => Counts.Changed -= Refresh;
+}

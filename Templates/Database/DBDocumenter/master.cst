@@ -1,101 +1,114 @@
-<%-- 
+<%--
 CodeSmith DBDocumenter Templates
-Author:  Jason Alexander (jalexander@telligent.com), Eric J. Smith
+Author:  Jason Alexander, Eric J. Smith
 --%>
-<%@ CodeTemplate Language="C#" TargetLanguage="HTML" Src="DBDocumenterTemplate.cs" Inherits="DBDocumenterTemplate" Description="Generates a set of HTML-based database documentation." OutputType="None" %>
-<%@ Property Name="SourceDatabase" Type="SchemaExplorer.DatabaseSchema" Category="Context" Description="Database that the documentation should be based on." DeepLoad="True" %>
-<%@ Property Name="ServerName" Type="System.String" Category="Output" Description="The name of the actual database server that is being documented." %>
-<%@ Property Name="DocumentationTitle" Type="System.String" Default="Database Documentation" Category="Output" Description="Defines what the title of the HTML page that will be generated will be." %>
-<%@ Register Name="GeneralTemplate" Template="general.cst" %>
-<%@ Register Name="SprocsTemplate" Template="sprocs.cst" %>
-<%@ Register Name="TablesTemplate" Template="tables.cst" %>
-<%@ Register Name="ViewsTemplate" Template="views.cst" %>
+<%@ CodeTemplate Language="C#" TargetLanguage="HTML" Src="DBDocumenterTemplate.cs" Inherits="DBDocumenterTemplate" OutputType="None" Description="HTML documentation of a database: an overview with a relationship diagram, and a page for each table, view and procedure. Open index.html in the output folder." %>
+<%@ Property Name="SourceDatabase" Type="SchemaExplorer.DatabaseSchema" Category="Context" Description="The database to document." DeepLoad="True" %>
+<%@ Property Name="ServerName" Type="System.String" Optional="True" Category="Output" Description="The server's name, shown on the pages." %>
+<%@ Property Name="DocumentationTitle" Type="System.String" Default="Database Documentation" Category="Output" Description="The documentation's title, on every page." %>
+<%@ Register Name="OverviewTemplate" Template="overview.cst" MergeProperties="False" %>
+<%@ Register Name="TableTemplate" Template="table.cst" MergeProperties="False" %>
+<%@ Register Name="ViewTemplate" Template="view.cst" MergeProperties="False" %>
+<%@ Register Name="ProcedureTemplate" Template="procedure.cst" MergeProperties="False" %>
+<%@ Register Name="ServerTemplate" Template="server.cst" MergeProperties="False" %>
 <%@ Assembly Name="SchemaExplorer" %>
 <%@ Assembly Name="System.Design" %>
-<%@ Import NameSpace="System.IO" %>
+<%@ Assembly Src="Site.cs" %>
+<%@ Assembly Src="SqlHighlighter.cs" %>
+<%@ Assembly Src="ErDiagram.cs" %>
+<%@ Import Namespace="System.Collections.Generic" %>
+<%@ Import Namespace="System.IO" %>
+<%@ Import Namespace="System.Text" %>
+<%@ Import Namespace="SchemaExplorer" %>
+<%--
+The master: it renders each page's template to its file in OutputDirectory, and copies the stylesheet and script
+(assets/) beside them. The pages are index.html (overview.cst), tables/, views/ and procedures/ (table.cst, view.cst,
+procedure.cst), and server.html for SQL Server (server.cst). Each page renders header.cst and footer.cst around it.
+--%>
 <script runat="template">
-private int _currentStep = 0;
-// Override the Render method and have it output the sub-templates to file.
 public override void Render(TextWriter writer)
 {
-    this.Progress.MaximumValue = 375;
-    
-    DateTime startTime = DateTime.Now;
-    
-    if (!Directory.Exists(this.OutputDirectory))
+    DateTime start = DateTime.Now;
+    DocSite site = Site;
+    string output = Path.GetFullPath(OutputDirectory);
+    Progress.MaximumValue = site.Tables.Count + site.Views.Count + site.Commands.Count + 2;
+    Progress.Step = 1;
+
+    // the stylesheet and script, and the search's index of every object and column
+    string assets = Path.Combine(output, "assets");
+    foreach (string asset in new[] { "docs.css", "docs.js" })
+        Write(Path.Combine(assets, asset), File.ReadAllText(Path.Combine(CodeTemplateInfo.DirectoryName, "assets", asset)));
+    Write(Path.Combine(assets, "search-index.js"), site.SearchIndex());
+    Progress.PerformStep();
+
+    Page(Create<OverviewTemplate>(), Path.Combine(output, "index.html"));
+    if (site.IsSqlServer)
+        Page(Create<ServerTemplate>(), Path.Combine(output, "server.html"));
+    foreach (TableSchema table in site.Tables)
     {
-        // Create output directory.
-        Trace.WriteLine("Creating output directory...");
-        Directory.CreateDirectory(this.OutputDirectory);
+        var page = Create<TableTemplate>();
+        page.SourceTable = table;
+        Page(page, Path.Combine(output, site.File(table)));
     }
-    else
+    foreach (ViewSchema view in site.Views)
     {
-        // Clean up the existing output directory.
-        Trace.WriteLine("Cleaning up existing output directory...");
-        this.DeleteFiles(this.OutputDirectory, "*.html");
+        var page = Create<ViewTemplate>();
+        page.SourceView = view;
+        Page(page, Path.Combine(output, site.File(view)));
     }
-    this.Progress.Value = 25;
-    
-    if (String.Compare(Path.GetFullPath(this.OutputDirectory), this.CodeTemplateInfo.DirectoryName + "output\\", true) != 0)
+    foreach (CommandSchema command in site.Commands)
     {
-        // Copy static resources to output directory.
-        Trace.WriteLine("Copying static resources to output directory...");
-        
-        File.Copy(this.CodeTemplateInfo.DirectoryName + "output\\dbdocs.css", this.OutputDirectory + "dbdocs.css", true);
-        
-        if (!Directory.Exists(this.OutputDirectory + "images\\")) Directory.CreateDirectory(this.OutputDirectory + "images\\");
-        string[] imageFiles = Directory.GetFiles(this.CodeTemplateInfo.DirectoryName + "output\\images\\");
-        for (int i = 0; i < imageFiles.Length; i++)
-        {
-            FileInfo info = new FileInfo(imageFiles[i]);
-            File.Copy(info.FullName, this.OutputDirectory + "images\\" + info.Name, true);
-        }
+        var page = Create<ProcedureTemplate>();
+        page.SourceCommand = command;
+        Page(page, Path.Combine(output, site.File(command)));
     }
-    this.Progress.Value = 50;
-    
-    // General
-    Trace.WriteLine("Building general documentation (index.html)...");
-    GeneralTemplate generalTemplate = this.Create<GeneralTemplate>();
-    generalTemplate.Progress.OnProgress += new ProgressEventHandler(this.OnProgress);
-    this.CopyPropertiesTo(generalTemplate);
-    generalTemplate.RenderToFile(this.OutputDirectory + "index.html", true);
-    this.Progress.Value = 75;
-    
-    // Tables
-    Trace.WriteLine("Building table documentation (tables.html)...");
-    TablesTemplate tablesTemplate = this.Create<TablesTemplate>();
-    tablesTemplate.Progress.OnProgress += new ProgressEventHandler(this.OnProgress);
-    this.CopyPropertiesTo(tablesTemplate);
-    tablesTemplate.RenderToFile(this.OutputDirectory + "tables.html", true);
-    this.Progress.Value = 175;
-    _currentStep++;
-    
-    // Sprocs
-    Trace.WriteLine("Building stored procedures documentation (sprocs.html)...");
-    SprocsTemplate sprocsTemplate = this.Create<SprocsTemplate>();
-    sprocsTemplate.Progress.OnProgress += new ProgressEventHandler(this.OnProgress);
-    this.CopyPropertiesTo(sprocsTemplate);
-    sprocsTemplate.RenderToFile(this.OutputDirectory + "sprocs.html", true);
-    this.Progress.Value = 275;
-    _currentStep++;
-    
-    // Views
-    Trace.WriteLine("Building views documentation (views.html)...");
-    ViewsTemplate viewsTemplate = this.Create<ViewsTemplate>();
-    viewsTemplate.Progress.OnProgress += new ProgressEventHandler(this.OnProgress);
-    this.CopyPropertiesTo(viewsTemplate);
-    viewsTemplate.RenderToFile(this.OutputDirectory + "views.html", true);
-    this.Progress.Value = 375;
-    
-    Trace.WriteLine("Generation complete. Execution time: " + (DateTime.Now - startTime).ToString());
-    Trace.WriteLine("To view the output go here: " + this.OutputDirectory + "index.html");
+
+    // the last run's pages that this one didn't write (a table that's been dropped), and nothing else of the folder's
+    foreach (string folder in new[] { "", "tables", "views", "procedures" })
+        RemoveStale(Path.Combine(output, folder));
+
+    Trace.WriteLine("Documented " + SourceDatabase.Name + " in " + (DateTime.Now - start).TotalSeconds.ToString("0.0") + "s. Open " + Path.Combine(output, "index.html"));
 }
 
-public void OnProgress(object sender, ProgressEventArgs e)
+private readonly HashSet<string> _written = new HashSet<string>(StringComparer.Ordinal);
+
+// Renders a page to its file, with the master's properties (SourceDatabase, DocumentationTitle, ServerName...).
+private void Page(CodeTemplate page, string file)
 {
-    if (e.Value > 0)
+    CopyPropertiesTo(page);
+    page.RenderToFile(file, true);
+    _written.Add(Path.GetFullPath(file));
+    Progress.PerformStep();
+}
+
+// A file that isn't a template's output (an asset), raised as an output with its content first: cs check compares it
+// (and writes nothing), cs generate writes it.
+private void Write(string file, string content)
+{
+    var output = new OutputCancelEventArgs(new OutputFile(file)) { Content = content };
+    OnPreOutputWritten(output);
+    if (output.Cancel)
+        return;
+    Directory.CreateDirectory(Path.GetDirectoryName(file));
+    if (!File.Exists(file) || File.ReadAllText(file) != content)
+        File.WriteAllText(file, content, new UTF8Encoding(false));
+}
+
+// A page this run didn't write, raised as an output without content first: cs check counts it as a change (and
+// removes nothing), cs generate removes it.
+private void RemoveStale(string folder)
+{
+    if (!Directory.Exists(folder))
+        return;
+    foreach (string file in Directory.GetFiles(folder, "*.html"))
     {
-        this.Progress.Value = 75 + (_currentStep * 100) + (int)(((Double)e.Value / (Double)e.MaximumValue) * 100);
+        string path = Path.GetFullPath(file);
+        if (_written.Contains(path))
+            continue;
+        var output = new OutputCancelEventArgs(new OutputFile(path));
+        OnPreOutputWritten(output);
+        if (!output.Cancel)
+            File.Delete(path);
     }
 }
 </script>

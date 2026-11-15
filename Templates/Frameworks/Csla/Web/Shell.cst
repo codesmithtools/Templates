@@ -1,0 +1,4 @@
+<%@ CodeTemplate Language="C#" TargetLanguage="Text" Description="A file of the web app's shell (Web/Shell/: its layout, components and theme), as it's written once into {Namespace}.Web: with its namespace." %>
+<%@ Property Name="Source" Type="System.String" Description="The shell's file." %>
+<%@ Property Name="Namespace" Type="System.String" Default="MyApp" Description="The root namespace: PetShop.Web becomes {Namespace}.Web." %>
+<%= System.IO.File.ReadAllText(Source).Replace("PetShop.Web", Namespace + ".Web") %>
