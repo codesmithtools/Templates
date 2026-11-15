@@ -37,9 +37,5 @@
       <key>status</key>
       <value>status</value>
     </item>
-    <item>
-      <key>address</key>
-      <value>address</value>
-    </item>
   </map>
 </codeSmith>

@@ -258,7 +258,7 @@ public sealed class Model
     public static string ChildList(TableSchema table) => Names.Set(table) != Names.Entity(table) ? Names.Set(table) : Names.Entity(table) + "Collection";
 
     /// <summary>The parent's property that holds a child's list: the entity's navigation back, or the list's name where
-    /// that's singular (Plural-Overrides keeps "address" as it is).</summary>
+    /// that's singular (a Plural-Overrides entry that keeps a word as it is, as "status" is).</summary>
     public string ChildListProperty(TableSchema table) =>
         Names.Inverse(ParentKey(table)) == Names.Entity(table) ? ChildList(table) : Names.Inverse(ParentKey(table));
 
