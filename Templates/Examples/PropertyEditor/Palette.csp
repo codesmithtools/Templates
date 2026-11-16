@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<codeSmith xmlns="http://www.codesmithtools.com/schema/csp.xsd">
+  <propertySets>
+    <propertySet name="Brand" output="Generated/palette.css" template="Palette.cst">
+      <property name="Palette">
+        <color name="background" light="#ffffff" dark="#0d1117" />
+        <color name="surface" light="#f6f8fa" dark="#161b22" />
+        <color name="text" light="#1f2328" dark="#e6edf3" />
+        <color name="text-muted" light="#59636e" dark="#9198a1" />
+        <color name="primary" light="#0b5cad" dark="#4493f8" />
+        <color name="accent" light="#bf3989" dark="#db61a2" />
+        <color name="success" light="#1a7f37" dark="#3fb950" />
+        <color name="danger" light="#d1242f" dark="#f85149" />
+      </property>
+      <property name="Prefix">brand</property>
+    </propertySet>
+  </propertySets>
+</codeSmith>
