@@ -20,6 +20,7 @@ clone this repository.
 | --- | --- |
 | [ModernEntities](Templates/Database/ModernEntities) | EF Core entities, their configurations and a `DbContext`. |
 | [DapperRepositories](Templates/Database/DapperRepositories) | A record and an async Dapper repository for each table. |
+| [TestData](Templates/Database/TestData) | Test data builders (Bogus) and xUnit tests for each table's Dapper repository. |
 | [MarkdownDocs](Templates/Database/MarkdownDocs) | Markdown documentation of a database, with a Mermaid diagram of its tables. |
 | [DBDocumenter](Templates/Database/DBDocumenter) | HTML documentation of a database's tables, views and procedures. |
 | [ScriptTableData](Templates/Database/ScriptTableData) | An `INSERT` script of a table's rows. |
