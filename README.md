@@ -49,6 +49,7 @@ clone this repository.
 | [Maps](Templates/Examples/Maps) | Type maps (`<%@ Map %>`). |
 | [Snippets](Templates/Examples/Snippets) | Small templates: a table enum, table properties, an exception class. |
 | [ExtendedProperties](Templates/Examples/ExtendedProperties) | Everything a schema provider gives about a database. |
+| [Hosting](Templates/Examples/Hosting) | Generating from your own .NET program (`TemplateGenerator`), and on build (MSBuild). Replaces 8.x's API sample. |
 
 ## Also here
 

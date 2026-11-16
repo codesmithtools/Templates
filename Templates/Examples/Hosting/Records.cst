@@ -1,0 +1,21 @@
+<%@ CodeTemplate Language="C#" TargetLanguage="Text" Description="A C# record for each table of a database (Record.cst), a file each." %>
+<%@ Property Name="SourceDatabase" Type="SchemaExplorer.DatabaseSchema" Category="Source" Description="The database." %>
+<%@ Property Name="Namespace" Type="System.String" Default="MyApp.Data" Category="Output" Description="The records' namespace." %>
+<%@ Property Name="OutputDirectory" Type="System.String" Default="Generated" Category="Output" Description="Where the files go, relative to the project." %>
+<%@ Register Name="RecordTemplate" Template="Record.cst" MergeProperties="False" %>
+<%@ Assembly Name="SchemaExplorer" %>
+<%@ Import Namespace="SchemaExplorer" %>
+<%@ Import Namespace="System.IO" %>
+<%@ Import Namespace="System.Linq" %>
+<%-- The master: Record.cst for each table, its properties the table's columns (Orders: Order, with OrderId and the rest). --%>
+<% foreach (TableSchema table in SourceDatabase.Tables) {
+       string name = StringUtil.ToSingular(StringUtil.ToPascalCase(table.Name));
+       var record = Create<RecordTemplate>();
+       record.Namespace = Namespace;
+       record.Name = name;
+       record.Summary = "A row of " + table.Name + ".";
+       record.Properties = table.Columns.Cast<ColumnSchema>().Select(c => c.GetCSharpTypeName() + " " + StringUtil.ToPascalCase(c.Name)).ToList();
+       string file = Path.Combine(OutputDirectory, name + ".cs");
+       record.RenderToFile(file, true); %>
+<%= file %>
+<% } %>
