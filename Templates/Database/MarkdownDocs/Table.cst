@@ -47,8 +47,8 @@ No foreign key joins <%= Docs.Text(Docs.Title(Table)) %> to another table.
 <% } else { %>
 
 ```mermaid
-%%{init: {"er": {"layoutDirection": "LR", "fontSize": 14}}}%%
 erDiagram
+    direction LR
 <% foreach (string line in Docs.Neighborhood(Table)) { %>
     <%= line %>
 <% } %>

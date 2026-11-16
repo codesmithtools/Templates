@@ -20,8 +20,8 @@ Open `Generated/README.md`. GitHub and VS Code's Markdown preview draw the diagr
 - Each page starts with breadcrumbs and ends with links to the pages before and after it.
 - Descriptions are the database's own (`CS_Description`: SQL Server's `MS_Description`, Oracle's comments).
 
-The diagrams lay out left to right (`layoutDirection: LR`), so a database's groups of tables stack instead of
-shrinking side by side.
+The diagrams lay out left to right (`direction LR`), so a database's groups of tables stack instead of shrinking
+side by side. GitHub ignores Mermaid's older `layoutDirection` setting.
 
 | File | What it is |
 | --- | --- |
