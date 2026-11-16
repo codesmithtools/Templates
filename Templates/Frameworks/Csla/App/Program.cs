@@ -65,7 +65,8 @@ catch (Exception e) when (e.GetBaseException() is Csla.Security.SecurityExceptio
 provider.GetRequiredService<ApplicationContext>().User = new ClaimsPrincipal(new ClaimsIdentity([new Claim(ClaimTypes.Role, "Admin")], "demo"));
 again = await again.SaveAsync();
 var orders = await portals.GetPortal<OrderList>().FetchAsync();
-Console.WriteLine($"Deleted with its lines, as an Admin: {orders.Count} orders left");
+var counted = await portals.GetPortal<OrderListCount>().ExecuteAsync(); // the database counts them: nothing is fetched
+Console.WriteLine($"Deleted with its lines, as an Admin: {orders.Count} orders left, and the database counts {counted.Count}");
 
 // a child the Children setting made: a profile's accounts
 var profiles = await portals.GetPortal<ProfileList>().FetchAsync();

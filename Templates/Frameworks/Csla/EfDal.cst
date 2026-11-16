@@ -63,6 +63,9 @@ public partial class <%= name %>(<%= ContextName %> db) : <%= Model.DalInterface
 
     public async Task<List<<%= dto %>>> FetchAllAsync() =>
         await db.<%= set %>.AsNoTracking()<%= order %>.Select(AsDto).ToListAsync();
+
+    public async Task<int> CountAsync() =>
+        await db.<%= set %>.CountAsync();
 <% foreach (var c in model.ListCriteria(Table)) { %>
 
     public async Task<List<<%= dto %>>> Fetch<%= c.Name %>Async(<%= Model.Parameters(c.Columns) %>) =>

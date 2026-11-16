@@ -43,6 +43,9 @@ public partial interface <%= Model.DalInterface(Table) %>
 
     /// <summary>Every row, in key order.</summary>
     Task<List<<%= dto %>>> FetchAllAsync();
+
+    /// <summary>How many rows there are: the database counts them.</summary>
+    Task<int> CountAsync();
 <% foreach (var c in model.ListCriteria(Table)) { %>
 
     /// <summary>The rows of a <%= c.Key.PrimaryKeyTable.Name %> row (<%= c.Key.Name %>), in key order.</summary>

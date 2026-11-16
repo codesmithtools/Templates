@@ -264,6 +264,7 @@ public sealed class Model
 
     public static string InfoName(TableSchema table) => Class(table) + "Info";
     public static string ListName(TableSchema table) => Class(table) + "List";
+    public static string CountName(TableSchema table) => ListName(table) + "Count";
     public static string NameValueListName(TableSchema table) => Class(table) + "NameValueList";
     public static string Dto(TableSchema table) => Class(table) + "Dto";
     public static string DalInterface(TableSchema table) => "I" + Class(table) + "Dal";

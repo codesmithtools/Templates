@@ -181,8 +181,8 @@ public sealed class Palette
     }
 }
 
-/// <summary>How many rows each root has, for the sidebar and the home page: each root's read-only list, fetched once a
-/// circuit, and again after a save or a delete. (A table of millions wants a count of its own in the DAL.)</summary>
+/// <summary>How many rows each root has, for the sidebar and the home page: each root's count (OrderListCount, a
+/// command the database answers with a COUNT), once a circuit, and again after a save or a delete.</summary>
 public sealed class Counts(IDataPortalFactory portals)
 {
     private readonly Dictionary<RootPage, int> _counts = [];

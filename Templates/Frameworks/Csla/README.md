@@ -10,7 +10,7 @@ dotnet build PetShop.Web
 
 `App` shows them at work against a copy of the PetShop sample database (`PetShop.db3`, SQLite):
 
-- lookups and lists;
+- lookups and lists, and a count the database makes (`OrderListCount`);
 - a new order and its lines, with the rules from the schema and from code of its own;
 - the order saved in one transaction, then fetched, changed and saved again;
 - a key that can't change once saved, and a delete that only an Admin may do.
@@ -29,6 +29,7 @@ the other's are deleted (`ON DELETE CASCADE`), is that table's child. Every othe
 | --- | --- | --- |
 | Editable (`BusinessBase`) | `Order`: create, fetch by key, save (insert, update), delete | `LineItem`, in its order's `LineItems` (`BusinessListBase`) |
 | Read-only (`ReadOnlyListBase`) | `OrderList` of `OrderInfo`: every row, or a foreign key's rows (`ProductList` by `categoryId`) | |
+| Count (`CommandBase`) | `OrderListCount`: how many rows, counted by the database (its DAL's `CountAsync`), so nothing is fetched | |
 | Name/value (`NameValueListBase`) | `CategoryNameValueList`, where another table refers to it: its key and its name column | |
 
 `PetShop.Business/Generated/Model.md` lists what each table became, and why.
@@ -106,6 +107,8 @@ own copy of `PetShop.db3`, made at each start, and `DemoData.cs` adds a dozen or
 
 - Each root has a list (`/orders`): search, sort and pages, and a filter for each fetch by a foreign key
   (`/products?categoryId=FISH` is `ProductList.FetchAsync("FISH")`). A row opens its editor.
+- The sidebar and the home page show how many rows each root has: its count (`OrderListCount`), which the database
+  makes. They count again after a save or a delete.
 - Its editor (`/orders/new`, `/orders/3`) is CSLA's `ViewModel<T>`: each field is bound to a `PropertyInfo` (its
   friendly name, `ErrorText`, `WarningText`, `InformationText`, `CanRead`, `CanWrite`), so a broken rule shows at its
   field as you type, and in the list beside the form. A foreign key is a combobox of its table's name/value list.
@@ -164,6 +167,7 @@ The generated code builds from SQLite, SQL Server, PostgreSQL and MySQL; the tes
 | `Csla.cst` | The master: every template for every table, stale files removed, project files and the web app's shell written once, and `Model.md`. |
 | `Editable.cst`, `ChildList.cst` | An editable root or child, and a child's list. |
 | `Info.cst`, `List.cst`, `NameValueList.cst` | A root's read-only object and list, and its name/value list. |
+| `Count.cst` | A root's count: a command that asks the DAL how many rows there are. |
 | `Dal.cst`, `DalCommon.cst` | A table's DTO and DAL interface; the transactions and exceptions every table's DAL shares. |
 | `EfDal.cst`, `EfCommon.cst` | The EF Core DAL; its transactions, save and `AddPetShopDal`. |
 | `Entity.cst`, `Configuration.cst`, `Context.cst`, `Names.cs` | The entities, as ModernEntities has them. |

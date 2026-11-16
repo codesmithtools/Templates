@@ -37,7 +37,7 @@ public static class Site
 
 <% foreach (TableSchema table in roots) { %>
     public static RootPage <%= Web.SiteProperty(table) %> { get; } = new(<%= Model.Literal(Web.Title(table)) %>, <%= Model.Literal(Web.Singular(table)) %>, <%= Model.Literal(Web.Route(table)) %>, <%= Model.Literal(Web.Icon(table)) %>, "<%= Model.ListName(table) %>",
-        async portals => (await portals.GetPortal<<%= Model.ListName(table) %>>().FetchAsync()).Count);
+        async portals => (await portals.GetPortal<<%= Model.CountName(table) %>>().ExecuteAsync()).Count);
 
 <% } %>
     /// <summary>The sidebar's order.</summary>

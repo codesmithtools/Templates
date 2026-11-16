@@ -30,7 +30,7 @@ public sealed class DemoData(IServiceScopeFactory scopes) : IHostedService
         // an authorization number is an Admin's to set (Order.cs)
         scope.ServiceProvider.GetRequiredService<ApplicationContext>().User = DemoUsers.Admin.Principal;
         var portals = scope.ServiceProvider.GetRequiredService<IDataPortalFactory>();
-        if ((await portals.GetPortal<OrderList>().FetchAsync()).Count > 0)
+        if ((await portals.GetPortal<OrderListCount>().ExecuteAsync()).Count > 0)
             return;
 
         var items = (await portals.GetPortal<ItemList>().FetchAsync()).Where(i => i.ListPrice is not null).ToList();

@@ -13,6 +13,7 @@
 <%@ Register Name="ChildListTemplate" Template="ChildList.cst" MergeProperties="False" %>
 <%@ Register Name="InfoTemplate" Template="Info.cst" MergeProperties="False" %>
 <%@ Register Name="ListTemplate" Template="List.cst" MergeProperties="False" %>
+<%@ Register Name="CountTemplate" Template="Count.cst" MergeProperties="False" %>
 <%@ Register Name="NameValueListTemplate" Template="NameValueList.cst" MergeProperties="False" %>
 <%@ Register Name="DalTemplate" Template="Dal.cst" MergeProperties="False" %>
 <%@ Register Name="DalCommonTemplate" Template="DalCommon.cst" MergeProperties="False" %>
@@ -38,7 +39,7 @@
 <%@ Assembly Src="NameWords.cs" %>
 <%@ Assembly Src="Web/Web.cs" %>
 <%--
-The master: the business objects (Editable.cst, ChildList.cst, Info.cst, List.cst, NameValueList.cst), the DAL's
+The master: the business objects (Editable.cst, ChildList.cst, Info.cst, List.cst, Count.cst, NameValueList.cst), the DAL's
 interfaces (Dal.cst, DalCommon.cst), its EF Core implementation (Entity.cst, Configuration.cst, Context.cst, EfDal.cst,
 EfCommon.cst) and the web app's pages (Web/ListPage.cst, Web/EditPage.cst, Web/ChildGrid.cst, Web/Site.cst), each
 project's into its Generated folder. A file there that this run didn't write (a table that's gone, a page you replaced)
@@ -54,12 +55,13 @@ What each table of <%= SourceDatabase.Name %> became, and why, as `Csla.cst` gen
 ## Roots
 
 Editable roots (`BusinessBase`), saved with their children in one transaction; a read-only list (`ReadOnlyListBase`)
-of each; a name/value list (`NameValueListBase`) of those another table refers to.
+of each, and a command (`CommandBase`) that counts its rows; a name/value list (`NameValueListBase`) of those another
+table refers to.
 
-| Table | Editable | Children | Read-only list | Name/value list |
-| --- | --- | --- | --- | --- |
+| Table | Editable | Children | Read-only list | Count | Name/value list |
+| --- | --- | --- | --- | --- | --- |
 <% foreach (TableSchema table in model.Tables.Where(t => !model.IsChild(t))) { %>
-| <%= table.Name %> | `<%= Model.Class(table) %>` | <%= Model.And(model.ChildrenOf(table).Select(c => "`" + model.ChildListProperty(c) + "`")) %> | `<%= Model.ListName(table) %>` of `<%= Model.InfoName(table) %>`: all<%= string.Concat(model.ListCriteria(table).Select(c => ", by " + string.Join(" and ", c.Columns.Select(Model.Property)))) %> | <%= model.HasNameValueList(table) ? "`" + Model.NameValueListName(table) + "` (" + model.DisplayColumn(table).Name + ")" : "" %> |
+| <%= table.Name %> | `<%= Model.Class(table) %>` | <%= Model.And(model.ChildrenOf(table).Select(c => "`" + model.ChildListProperty(c) + "`")) %> | `<%= Model.ListName(table) %>` of `<%= Model.InfoName(table) %>`: all<%= string.Concat(model.ListCriteria(table).Select(c => ", by " + string.Join(" and ", c.Columns.Select(Model.Property)))) %> | `<%= Model.CountName(table) %>` | <%= model.HasNameValueList(table) ? "`" + Model.NameValueListName(table) + "` (" + model.DisplayColumn(table).Name + ")" : "" %> |
 <% } %>
 <% if (model.Tables.Any(model.IsChild)) { %>
 
@@ -128,6 +130,7 @@ private void Generate(Model model)
         {
             Render(Table<InfoTemplate>(table), business, Model.InfoName(table));
             Render(Table<ListTemplate>(table), business, Model.ListName(table));
+            Render(Table<CountTemplate>(table), business, Model.CountName(table));
             if (model.HasNameValueList(table))
                 Render(Table<NameValueListTemplate>(table), business, Model.NameValueListName(table));
         }
