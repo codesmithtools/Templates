@@ -23,7 +23,7 @@ from the database's schema.
 | `Configuration.cst` | One table's `IEntityTypeConfiguration<T>`: its table, key, columns and relationships. |
 | `Context.cst` | The `DbContext`: a primary constructor, a `DbSet` per table, and `OnModelCreating` applying the configurations. |
 | `Names.cs` | What the templates share (`<%@ Assembly Src="Names.cs" %>`): names, types and relationships. |
-| `codesmith.options.json` | `langVersion: "latest"` for the templates' own code; warnings reported. |
+| `codesmith.json` | `langVersion: "latest"` for the templates' own code; warnings reported. |
 | `Entities.csp` | Generates from the PetShop sample database in this folder (`PetShop.db3`, SQLite). |
 
 For IntelliSense in `Names.cs`, run `cs new code-project` here (an editor-only `CodeSmith.Templates.csproj`).

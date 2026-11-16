@@ -34,7 +34,7 @@ The files are a copy of the table's rows: generate them again when the rows chan
 | `Lookup.cs` | What the templates share (`<%@ Assembly Src="Lookup.cs" %>`): the columns, the rows, the names. |
 | `LookupEnums.csp` | Generates `Generated/Category.cs` and `Generated/category.ts` from `PetShop.db3`. |
 | `App/` | A console app that compiles the generated C#: it prints each category and parses a code back. |
-| `codesmith.options.json` | `langVersion: "latest"` for the templates' own code; warnings reported. |
+| `codesmith.json` | `langVersion: "latest"` for the templates' own code; warnings reported. |
 
 For another table, change `<table>` and `output` in both of `LookupEnums.csp`'s property sets, or, in VS Code, pick
 one for `SourceTable` in Template Properties.

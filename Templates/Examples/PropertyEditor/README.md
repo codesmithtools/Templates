@@ -25,7 +25,7 @@ each color, with its name, its light value and its dark value. Type a color or p
 | `Palette.cst` | The template: CSS custom properties from the palette, light by default and dark when the system's theme is dark (or `data-theme="dark"`). |
 | `ColorPalette.cs` | The type (`ColorPalette`, a list of `PaletteColor`), its converter and its serializer (`<%@ Assembly Src="ColorPalette.cs" %>`). |
 | `palette-editor.js` | The editor: a web component in an ES module. |
-| `codesmith.options.json` | Names the editor (`propertyEditors`), so the property grid loads it for the templates here. |
+| `codesmith.json` | Names the editor (`propertyEditors`), so the property grid loads it for the templates here. |
 | `Palette.csp` | A palette of eight colors, written to `Generated/palette.css`. |
 
 This replaces 8.x's CustomPropertiesSample (in `Legacy/Projects`). Its WinForms editors (`UITypeEditor`) don't run in
@@ -84,7 +84,7 @@ export function activate(grid) {
 
 ### Where the script lives, and how it's loaded
 
-Put the module beside the templates and name it in a `codesmith.options.json` there:
+Put the module beside the templates and name it in a `codesmith.json` there:
 
 ```json
 { "propertyEditors": ["palette-editor.js"] }

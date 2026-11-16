@@ -1,7 +1,7 @@
 // The Palette property's editor in VS Code's Template Properties: a row for each color, with its name, its light
 // value and its dark value, each picked or typed. It's a web component in an ES module, with no framework and no build.
 //
-// - Loaded: codesmith.options.json beside the template names it ("propertyEditors"), and the property grid loads it
+// - Loaded: codesmith.json beside the template names it ("propertyEditors"), and the property grid loads it
 //   in a trusted workspace and calls activate(grid), which registers it for ColorPalette properties.
 // - The value: the property's text, as ColorPalette's converter writes and reads it ("primary: #0b5cad / #4493f8; ...").
 //   The editor reads property.value and sets host.setValue(text). The template session checks what it sets

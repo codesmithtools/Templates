@@ -1,0 +1,4 @@
+{
+  "$schema": "https://raw.githubusercontent.com/codesmithtools/Generator/master/src/cs/schemas/codesmith.schema.json",
+  "propertyEditors": ["palette-editor.js"]
+}

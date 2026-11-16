@@ -1,0 +1,5 @@
+{
+  "$schema": "https://raw.githubusercontent.com/codesmithtools/Generator/master/src/cs/schemas/codesmith.schema.json",
+  "langVersion": "latest",
+  "warnings": "report"
+}

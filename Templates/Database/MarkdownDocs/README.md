@@ -29,7 +29,7 @@ side by side. GitHub ignores Mermaid's older `layoutDirection` setting.
 | `Readme.cst` | `README.md`: the counts, the diagram, and the lists. |
 | `Table.cst`, `View.cst`, `Procedure.cst` | A table's, a view's and a procedure's page. |
 | `Docs.cs` | What the templates share (`<%@ Assembly Src="Docs.cs" %>`): pages and links, Markdown text, keys both ways, the tables a view's SQL uses, the diagrams' names. |
-| `codesmith.options.json` | `langVersion: "latest"` for the templates' own code; warnings reported. |
+| `codesmith.json` | `langVersion: "latest"` for the templates' own code; warnings reported. |
 | `MarkdownDocs.csp` | Generates from the PetShop sample database in this folder (`PetShop.db3`, SQLite). |
 
 To document your own database, change the data source in `MarkdownDocs.csp` (or pick one in VS Code's Template

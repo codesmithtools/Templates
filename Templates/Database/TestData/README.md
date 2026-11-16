@@ -89,7 +89,7 @@ classes of your own that derive from `DatabaseTest`.
 | `RepositoryTests.cst` | A table's tests. |
 | `Fakes.cs` | What the test templates share (`<%@ Assembly Src="Fakes.cs" %>`): each column's rule, the foreign keys, and the names. |
 | `Repositories.cst`, `Record.cst`, `Repository.cst`, `Names.cs` | The [Dapper repositories](../DapperRepositories/README.md), as that sample has them. |
-| `codesmith.options.json` | `langVersion: "latest"` for the templates' own code; warnings reported. |
+| `codesmith.json` | `langVersion: "latest"` for the templates' own code; warnings reported. |
 | `TestData.csp` | Generates both from the PetShop sample database in this folder (`PetShop.db3`, SQLite). |
 | `global.json` | `dotnet test` runs xUnit v3 on Microsoft.Testing.Platform. |
 | `Tests/SqliteTypes.cs` | Dapper type handlers for what SQLite stores loosely (the Dapper sample's). |

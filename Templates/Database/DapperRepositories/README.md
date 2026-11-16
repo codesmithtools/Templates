@@ -25,7 +25,7 @@ dotnet run --project App
 | `Record.cst` | One table's record. |
 | `Repository.cst` | One table's repository, and its SQL. |
 | `Names.cs` | What the templates share (`<%@ Assembly Src="Names.cs" %>`): C# names, and SQL names quoted for the database. |
-| `codesmith.options.json` | `langVersion: "latest"` for the templates' own code; warnings reported. |
+| `codesmith.json` | `langVersion: "latest"` for the templates' own code; warnings reported. |
 | `Repositories.csp` | Generates from the PetShop sample database in this folder (`PetShop.db3`, SQLite). |
 | `App/` | A console app that compiles `Generated/` and runs it: it reads `PetShop.db3`, and writes to a copy in memory. |
 | `App/SqliteTypes.cs` | Dapper type handlers for what SQLite stores loosely: decimals (as `REAL` or `INTEGER`) and dates (as text). |
