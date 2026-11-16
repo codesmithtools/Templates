@@ -58,6 +58,11 @@ keys are a table's name in the UI (its route: `products`, `line-items`) and a fi
 
 For anything else, change the kit.
 
+A label is its column's name in words: `ShipAddr1` is "Ship address 1". A name all in one case, as PostgreSQL folds
+them (`listprice`, `productid`), has no capitals to split at. It's split at the words the schema knows (its tables'
+names, its other names' words) and a few common ones (`id`, `name`, `date`, `price`...): "List price", "Product ID".
+`tables` in `customize.tsx` changes one that comes out wrong.
+
 ## What FullStack.csp generates
 
 `FullStack.csp` has an output for each layer:
@@ -82,6 +87,7 @@ For anything else, change the kit.
 | `Client.cst` | The TypeScript client. |
 | `Ui.cst`, `UiTable.cst`, `UiIndex.cst` | The web UI: `UiTable.cst` for each table, and `UiIndex.cst` for the routes. |
 | `Ui.cs` | What the UI knows of a column and a table: labels, kinds of input, what a row is shown by, icons. |
+| `NameWords.cs` | The words of a name all in one case, for its label (`listprice`: List price). Csla has the same copy. |
 | `Web.cs` | What the API, the client and the UI share: routes, keys, requests, sorts, searches and filters, JSON names and TypeScript types. |
 | `App/` | The API's project and `Program.cs` (yours): the database, validation, OpenAPI, `MapPetShopApi()`, and the UI. |
 | `client/` | The client's and the UI's package (React, Zod, Vite, TypeScript), the UI's `index.html`, and what's yours in `src/`: `app/` and `example.ts`. |

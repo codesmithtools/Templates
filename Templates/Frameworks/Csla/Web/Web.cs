@@ -14,11 +14,11 @@ public static class Web
     /// <summary>A root's pages' address: its set's name in kebab case (Orders: orders, LineItems: line-items).</summary>
     public static string Route(TableSchema table) => Kebab(Names.Set(table));
 
-    /// <summary>A root's title: its set's name in words (Orders, Line items).</summary>
-    public static string Title(TableSchema table) => Words(Names.Set(table));
+    /// <summary>A root's title: its set's name in words (Orders, Line items; lineitem's too, NameWords.cs).</summary>
+    public static string Title(TableSchema table) => Words(NameWords.Set(table));
 
     /// <summary>One of them: Order, Line item.</summary>
-    public static string Singular(TableSchema table) => Words(Model.Class(table));
+    public static string Singular(TableSchema table) => Words(NameWords.Entity(table));
 
     public static string ListPage(TableSchema table) => Model.Class(table) + "ListPage";
     public static string EditPage(TableSchema table) => Model.Class(table) + "EditPage";

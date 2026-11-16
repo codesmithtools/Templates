@@ -37,20 +37,22 @@ public static class Ui
         return text.Length == 0 ? name : char.ToUpperInvariant(text[0]) + text.Substring(1);
     }
 
-    /// <summary>A table's name in the navigation and its pages' titles: its set in words (Line items).</summary>
-    public static string Title(TableSchema table) => Words(Names.Set(table));
+    /// <summary>A table's name in the navigation and its pages' titles: its set in words (Line items; lineitem's too,
+    /// NameWords.cs).</summary>
+    public static string Title(TableSchema table) => Words(NameWords.Set(table));
 
     /// <summary>One of its rows: its entity in words (Line item).</summary>
-    public static string Singular(TableSchema table) => Words(Names.Entity(table));
+    public static string Singular(TableSchema table) => Words(NameWords.Entity(table));
 
-    /// <summary>A column's label: its name in words; a foreign key's, the table it refers to (UniqueID refers to
-    /// Profiles: Profile), where it's the only one to it; a bool's without its Is (IsShoppingCart: Shopping cart).</summary>
+    /// <summary>A column's label: its name in words (listprice too: List price, NameWords.cs); a foreign key's, the table
+    /// it refers to (UniqueID refers to Profiles: Profile), where it's the only one to it; a bool's without its Is
+    /// (IsShoppingCart: Shopping cart).</summary>
     public static string Label(ColumnSchema column)
     {
         var key = Reference(column);
         if (key != null && column.Table.ForeignKeys.Cast<TableKeySchema>().Count(k => Same(k.PrimaryKeyTable, key.PrimaryKeyTable)) == 1)
             return Singular(key.PrimaryKeyTable);
-        string property = Names.Property(column);
+        string property = NameWords.Property(column);
         if (Names.Type(column).TrimEnd('?') == "bool" && Regex.IsMatch(property, "^(Is|Has)[A-Z0-9]"))
             property = property.Substring(property.StartsWith("Is") ? 2 : 3);
         return Words(property);
@@ -84,7 +86,7 @@ public static class Ui
         }
         if (native is "json" or "jsonb")
             return "json";
-        string words = " " + Words(name).ToLowerInvariant() + " ";
+        string words = " " + Words(NameWords.Property(column)).ToLowerInvariant() + " ";
         if (words.Contains("email") || words.Contains(" e mail "))
             return "email";
         if (Regex.IsMatch(words, " (phone|fax|telephone|tel) "))
@@ -257,7 +259,7 @@ public static class Ui
         int twice = Children(key.PrimaryKeyTable).Count(k => Same(k.ForeignKeyTable, key.ForeignKeyTable));
         if (twice <= 1)
             return Title(key.ForeignKeyTable);
-        string columns = string.Join(" and ", key.ForeignKeyMemberColumns.Cast<MemberColumnSchema>().Select(c => Words(Names.Property(key.ForeignKeyTable.Columns[c.Name])).ToLowerInvariant()));
+        string columns = string.Join(" and ", key.ForeignKeyMemberColumns.Cast<MemberColumnSchema>().Select(c => Words(NameWords.Property(key.ForeignKeyTable.Columns[c.Name])).ToLowerInvariant()));
         return Title(key.ForeignKeyTable) + " by " + columns;
     }
 
@@ -288,7 +290,7 @@ public static class Ui
     /// <summary>The table's icon in the navigation (user, receipt, package, tag, ...; table where none fits).</summary>
     public static string Icon(TableSchema table)
     {
-        var words = Words(Names.Entity(table)).ToLowerInvariant().Split(' ').Where(w => w.Length > 0).ToList();
+        var words = Words(NameWords.Entity(table)).ToLowerInvariant().Split(' ').Where(w => w.Length > 0).ToList();
         if (words.Contains("line"))
             return "list"; // an order's lines
         foreach (string word in Enumerable.Reverse(words).Take(1).Concat(words))

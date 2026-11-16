@@ -9,6 +9,7 @@
 <%@ Import Namespace="System.Linq" %>
 <%@ Assembly Src="../Names.cs" %>
 <%@ Assembly Src="../Model.cs" %>
+<%@ Assembly Src="../NameWords.cs" %>
 <%@ Assembly Src="Web.cs" %>
 <%
     var model = Model.Of(Table.Database, Exclude, Children);

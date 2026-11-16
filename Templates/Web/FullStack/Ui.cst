@@ -12,6 +12,7 @@
 <%@ Import Namespace="System.IO" %>
 <%@ Assembly Src="Names.cs" %>
 <%@ Assembly Src="Web.cs" %>
+<%@ Assembly Src="NameWords.cs" %>
 <%@ Assembly Src="Ui.cs" %>
 <%-- The master: UiTable.cst for each table into tables/, and UiIndex.cst. A table's file this run didn't write (a
 table that's gone, or one left out) is removed. --%>

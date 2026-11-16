@@ -35,6 +35,7 @@
 <%@ Import Namespace="System.Linq" %>
 <%@ Assembly Src="Names.cs" %>
 <%@ Assembly Src="Model.cs" %>
+<%@ Assembly Src="NameWords.cs" %>
 <%@ Assembly Src="Web/Web.cs" %>
 <%--
 The master: the business objects (Editable.cst, ChildList.cst, Info.cst, List.cst, NameValueList.cst), the DAL's

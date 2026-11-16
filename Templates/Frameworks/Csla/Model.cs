@@ -321,10 +321,11 @@ public sealed class Model
     /// <summary>Arguments for columns: "orderId, lineNum".</summary>
     public static string Arguments(IEnumerable<ColumnSchema> columns) => string.Join(", ", columns.Select(Parameter));
 
-    /// <summary>A property's display name: its words (ShipAddr1: "Ship addr 1", UniqueID: "Unique ID").</summary>
+    /// <summary>A property's display name: its words (ShipAddr1: "Ship addr 1", UniqueID: "Unique ID"; listprice too:
+    /// "List price", NameWords.cs).</summary>
     public static string Friendly(ColumnSchema column)
     {
-        var words = Regex.Split(Names.Property(column), "(?<=[a-z])(?=[A-Z0-9])|(?<=[A-Z])(?=[A-Z][a-z])|(?<=[0-9])(?=[A-Za-z])")
+        var words = Regex.Split(NameWords.Property(column), "(?<=[a-z])(?=[A-Z0-9])|(?<=[A-Z])(?=[A-Z][a-z])|(?<=[0-9])(?=[A-Za-z])")
             .Where(w => w.Length > 0).ToList();
         for (int i = 0; i < words.Count; i++)
             if (words[i] == "Id")

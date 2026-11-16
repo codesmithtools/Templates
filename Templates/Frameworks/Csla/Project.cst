@@ -9,6 +9,7 @@
 <%@ Assembly Name="SchemaExplorer" %>
 <%@ Assembly Src="Names.cs" %>
 <%@ Assembly Src="Model.cs" %>
+<%@ Assembly Src="NameWords.cs" %>
 <Project Sdk="<%= Kind == "Web" ? "Microsoft.NET.Sdk.Web" : "Microsoft.NET.Sdk" %>">
 <% if (Kind == "Business") { %>
   <!-- The business objects: Generated/ is what Csla.csp generates (again whenever it runs), and your partial classes go

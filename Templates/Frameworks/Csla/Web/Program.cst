@@ -5,6 +5,7 @@
 <%@ Assembly Name="SchemaExplorer" %>
 <%@ Assembly Src="../Names.cs" %>
 <%@ Assembly Src="../Model.cs" %>
+<%@ Assembly Src="../NameWords.cs" %>
 <%
     string dal = "Add" + Model.ServicesName(Namespace) + "Dal";
     string file = System.IO.Path.GetFileName(DatabaseFile);

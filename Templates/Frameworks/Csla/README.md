@@ -37,6 +37,9 @@ the other's are deleted (`ON DELETE CASCADE`), is that table's child. Every othe
   column is a `string` either way (`""` for data binding, saved as `NULL` where the column takes it).
 - The schema gives the rules: `[Required]`, `[StringLength(80)]`, and `[Range]` for a `decimal(10,2)`. CSLA checks them,
   with `[Display]` names in their messages ("The Ship city field is required.").
+- A `[Display]` name is the column's name in words. A name all in one case, as PostgreSQL folds them (`shipcity`), is
+  split at the words the schema knows (its tables' names, its other names' words) and a few common ones (`id`, `name`,
+  `date`, `price`...): "Ship city", "Product ID". The pages' labels and titles are split the same way.
 - The database's own columns (an identity, a computed column, a rowversion) are read-only, and saving loads them. A key
   the application sets can't change once it's saved (`CanWriteProperty`).
 - A root saves with its children, and theirs, in one transaction. Deleting a root deletes its children's rows first.
@@ -165,6 +168,7 @@ The generated code builds from SQLite, SQL Server, PostgreSQL and MySQL; the tes
 | `EfDal.cst`, `EfCommon.cst` | The EF Core DAL; its transactions, save and `AddPetShopDal`. |
 | `Entity.cst`, `Configuration.cst`, `Context.cst`, `Names.cs` | The entities, as ModernEntities has them. |
 | `Model.cs` | The object model the templates share: roots, children, lists, names, types and rules. |
+| `NameWords.cs` | The words of a name all in one case, for its labels (`listprice`: List price). FullStack has the same copy. |
 | `Project.cst` | A project's file, when there isn't one. |
 | `Web/ListPage.cst`, `Web/EditPage.cst`, `Web/ChildGrid.cst` | A root's list and editor, a child's grid. |
 | `Web/Site.cst`, `Web/Imports.cst` | The roots for the sidebar, home page and palette; the pages' namespace. |
