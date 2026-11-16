@@ -165,9 +165,3 @@ export function problemErrors(table: Table, errors: Record<string, string[]> | u
   }
   return { fields, other };
 }
-
-/** The field a database's message names (UNIQUE constraint failed: Category.CategoryId), if one does. */
-export function fieldInMessage(table: Table, message: string): Field | undefined {
-  const lower = message.toLowerCase();
-  return table.fields.find((field) => new RegExp(`[.'"\`\\[ (]${field.name.toLowerCase()}['"\`\\]) ,.]|[.'"\`\\[ (]${field.name.toLowerCase()}$`).test(lower));
-}

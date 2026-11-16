@@ -6,8 +6,8 @@ import { Value } from "./cells.tsx";
 import { appName, resolve, tableNamed } from "./config.ts";
 import { invalidateTable, useQuery } from "./data.ts";
 import { FormField } from "./fields.tsx";
-import { buildRequest, checkField, defaultFormValue, fieldInMessage, formFields, problemErrors, toFormValue } from "./form.ts";
-import { keyFromParams, keyOf, keyText, lower, rowLabel, rowPath, rowTitle } from "./format.ts";
+import { buildRequest, checkField, defaultFormValue, formFields, problemErrors, toFormValue } from "./form.ts";
+import { keyFromParams, keyOf, keyText, rowLabel, rowPath, rowTitle } from "./format.ts";
 import { Icon } from "./icons.tsx";
 import { deleteRow, errorText } from "./ListPage.tsx";
 import { confirm, toast } from "./overlays.tsx";
@@ -19,6 +19,8 @@ import { Badge, Button, ButtonLink, Card, Crumbs, EmptyState, Kbd, PageHeader, S
 interface Problem {
   title: string;
   detail?: string;
+  /** The database's own message: the API sends it in Development only. */
+  database?: string;
 }
 
 function Form({ table, row }: { table: Table; row?: Row }) {
@@ -94,16 +96,20 @@ function Form({ table, row }: { table: Table; row?: Row }) {
       await navigate(rowPath(table, saved), { force: true, replace: !editing });
     } catch (error) {
       setSaving(false);
-      const details = (error as { problem?: { title?: string; detail?: string; errors?: Record<string, string[]> }; status?: number }).problem;
+      const details = (error as { problem?: { title?: string; detail?: string; errors?: Record<string, string[]>; database?: string }; status?: number }).problem;
       const status = (error as { status?: number }).status;
-      if (details?.errors) {
+      if (status === 409 && details) {
+        // the database refused it (Api's SaveAsync): what it says goes beside the fields it names (a key that's taken,
+        // a row that isn't there), and above the form
+        const mapped = problemErrors(table, details.errors);
+        setServer(mapped.fields);
+        const first = fields.find((field) => mapped.fields[field.name]);
+        if (first) document.getElementById(`field-${table.name}-${first.name}`)?.focus();
+        setProblem({ title: details.title ?? "The database refused the change.", detail: details.detail, database: details.database });
+      } else if (details?.errors) {
         const mapped = problemErrors(table, details.errors);
         setServer(mapped.fields);
         setProblem({ title: details.title ?? "The API found problems.", detail: mapped.other.join(" ") || undefined });
-      } else if (status === 409 && details) {
-        const named = fieldInMessage(table, details.detail ?? "");
-        if (named && /unique|duplicate|primary key|already/i.test(details.detail ?? "")) setServer({ [named.name]: `Another ${table.singular.toLowerCase()} has this ${lower(named.label)}.` });
-        setProblem({ title: details.title ?? "The database refused the change.", detail: details.detail });
       } else {
         setProblem({ title: editing ? "Couldn't save the changes." : `Couldn't create the ${table.singular.toLowerCase()}.`, detail: errorText(error) });
       }
@@ -146,6 +152,7 @@ function Form({ table, row }: { table: Table; row?: Row }) {
           <div>
             <div className="banner__title">{problem.title}</div>
             {problem.detail && <div className="banner__detail">{problem.detail}</div>}
+            {problem.database && <div className="banner__detail is-mono">{problem.database}</div>}
           </div>
           <button type="button" className="banner__close" aria-label="Dismiss" onClick={() => setProblem(undefined)}><Icon name="x" size={14} /></button>
         </div>

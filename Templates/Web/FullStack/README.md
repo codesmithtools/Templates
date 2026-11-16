@@ -29,7 +29,8 @@ A React app over the generated client, built with Vite. It has:
   items), with links to all of them and a button to add one.
 - A form to make or change a row. Each column gets the input its type takes: text with a character count, a number, an
   amount, a date, a switch, or a searchable list of the rows a foreign key can refer to. The form checks what you type
-  before it sends it, and shows what the API finds wrong beside the field it names.
+  before it sends it, and shows what the API finds wrong beside the field it names: a value that isn't valid, or a key
+  another row already has. A delete the database refuses says why in its toast.
 - Delete (it asks first), toasts, light and dark themes, and a command palette (Ctrl+K or ⌘K) that finds rows in every
   table.
 - Keys: `/` searches, `N` makes a row, `J` and `K` move through a list, `Enter` opens a row, `E` edits it, `Ctrl+S`
@@ -73,9 +74,13 @@ names, its other names' words) and a few common ones (`id`, `name`, `date`, `pri
   `[MaxLength]` (minimal APIs' validation), and its endpoints at `/api/<table>`. The list is paged and sorted
   (`?sort=name&desc=true`). It searches text columns (`?search=bird`) and filters by a key's columns
   (`/api/items?productId=FI-01`), and it answers with the page's rows and how many there are in all. A row is read,
-  updated or deleted by its key (`/api/line-items/{orderId}/{lineNum}`). A change the database refuses (a key that's
-  taken, a row that others refer to) is a 409 with the database's message. `GET /api` says how many rows each table
+  updated or deleted by its key (`/api/line-items/{orderId}/{lineNum}`). `GET /api` says how many rows each table
   has. `PetShopApi.cs` maps them all (`app.MapPetShopApi()`).
+  - A change the database refuses is a 409 that says why, for people, and names the fields it's about: "Another
+    category already has this category ID." (`errors.categoryId`), "There's no such category.", or "Products refer to
+    this category. Delete or change them first." `refusal` says which: `unique`, `reference`, `referenced` or `other`.
+    SQLite, SQL Server, PostgreSQL and MySQL each say it with a code of their own, which the API reads.
+  - The database's own message (`database`) is there only in Development: it can name tables, columns and values.
 - **Client** (`client/src/generated/petshop.ts`): a Zod schema and a type for each table's rows and requests, and
   `createPetShopClient`, with a typed call per endpoint that checks what it sends and what comes back.
 - **Ui** (`client/src/generated/ui/`): the web UI's tables and routes.

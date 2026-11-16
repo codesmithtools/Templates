@@ -69,13 +69,16 @@ export type Update<%= entity %>Request = z.infer<typeof Update<%= entity %>Reque
 <% } %>
 
 /** A problem the API describes (RFC 9457): what went wrong, and for a request that isn't valid, what's wrong with
- * each of its fields. */
+ * each of its fields. A save the database refused (409) says why (refusal: unique, reference, referenced or other), and
+ * in Development the database's own message. */
 export const ProblemSchema = z.object({
   type: z.string().optional(),
   title: z.string().optional(),
   status: z.number().optional(),
   detail: z.string().optional(),
   errors: z.record(z.string(), z.array(z.string())).optional(),
+  refusal: z.string().optional(),
+  database: z.string().optional(),
 });
 export type Problem = z.infer<typeof ProblemSchema>;
 
