@@ -48,6 +48,7 @@ clone this repository.
 | [Maps](Templates/Examples/Maps) | Type maps (`<%@ Map %>`). |
 | [Snippets](Templates/Examples/Snippets) | Small templates: a table enum, table properties, an exception class. |
 | [ExtendedProperties](Templates/Examples/ExtendedProperties) | Everything a schema provider gives about a database. |
+| [PropertyEditor](Templates/Examples/PropertyEditor) | A property of your own type, with its own editor in VS Code's Template Properties. |
 
 ## Also here
 
