@@ -262,21 +262,14 @@ private (string Provider, string File) Database(string webProject)
     return ("Sqlite", Path.GetRelativePath(Path.GetFullPath(webProject), path));
 }
 
-// A generated file this run didn't write: its table (or column, or setting) is gone, or you've replaced its page. Raised
-// as an output without content first: cs check counts it as a change (and cancels), cs generate removes it.
+// A generated file this run didn't write: its table (or column, or setting) is gone, or you've replaced its page.
+// RemoveOutput: cs generate removes it, and cs check says it's out of date.
 private void RemoveStale(string directory, HashSet<string> written)
 {
     if (!Directory.Exists(directory))
         return;
     foreach (string file in Directory.GetFiles(directory, "*.g.cs").Concat(Directory.GetFiles(directory, "*.razor")))
-    {
-        string path = Path.GetFullPath(file);
-        if (written.Contains(path))
-            continue;
-        var output = new OutputCancelEventArgs(new OutputFile(path));
-        OnPreOutputWritten(output);
-        if (!output.Cancel)
-            File.Delete(path);
-    }
+        if (!written.Contains(Path.GetFullPath(file)))
+            RemoveOutput(file);
 }
 </script>

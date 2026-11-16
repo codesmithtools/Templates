@@ -44,17 +44,10 @@ private void Generate()
     index.RenderToFile(indexFile, true);
     Response.WriteLine(indexFile);
 
-    // a table's file this run didn't write: its table is gone (or left out). Raised as an output without content
-    // first: cs check counts it as a change (and cancels), cs generate removes it.
+    // a table's file this run didn't write: its table is gone (or left out). RemoveOutput: cs generate removes it, and
+    // cs check says it's out of date.
     foreach (string file in Directory.GetFiles(folder, "*.tsx"))
-    {
-        string path = Path.GetFullPath(file);
-        if (written.Contains(path))
-            continue;
-        var output = new OutputCancelEventArgs(new OutputFile(path));
-        OnPreOutputWritten(output);
-        if (!output.Cancel)
-            File.Delete(path);
-    }
+        if (!written.Contains(Path.GetFullPath(file)))
+            RemoveOutput(file);
 }
 </script>

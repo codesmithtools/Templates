@@ -22,7 +22,7 @@ Author:  Jason Alexander, Eric J. Smith
 <%@ Import Namespace="SchemaExplorer" %>
 <%--
 The master: it renders each page's template to its file in OutputDirectory, and copies the stylesheet and script
-(assets/) beside them. The pages are index.html (overview.cst), tables/, views/ and procedures/ (table.cst, view.cst,
+(assets/) beside them (WriteOutput). A page the last run wrote and this one doesn't is removed (RemoveOutput). The pages are index.html (overview.cst), tables/, views/ and procedures/ (table.cst, view.cst,
 procedure.cst), and server.html for SQL Server (server.cst). Each page renders header.cst and footer.cst around it.
 --%>
 <script runat="template">
@@ -37,8 +37,8 @@ public override void Render(TextWriter writer)
     // the stylesheet and script, and the search's index of every object and column
     string assets = Path.Combine(output, "assets");
     foreach (string asset in new[] { "docs.css", "docs.js" })
-        Write(Path.Combine(assets, asset), File.ReadAllText(Path.Combine(CodeTemplateInfo.DirectoryName, "assets", asset)));
-    Write(Path.Combine(assets, "search-index.js"), site.SearchIndex());
+        WriteOutput(Path.Combine(assets, asset), File.ReadAllText(Path.Combine(CodeTemplateInfo.DirectoryName, "assets", asset)));
+    WriteOutput(Path.Combine(assets, "search-index.js"), site.SearchIndex());
     Progress.PerformStep();
 
     Page(Create<OverviewTemplate>(), Path.Combine(output, "index.html"));
@@ -81,34 +81,13 @@ private void Page(CodeTemplate page, string file)
     Progress.PerformStep();
 }
 
-// A file that isn't a template's output (an asset), raised as an output with its content first: cs check compares it
-// (and writes nothing), cs generate writes it.
-private void Write(string file, string content)
-{
-    var output = new OutputCancelEventArgs(new OutputFile(file)) { Content = content };
-    OnPreOutputWritten(output);
-    if (output.Cancel)
-        return;
-    Directory.CreateDirectory(Path.GetDirectoryName(file));
-    if (!File.Exists(file) || File.ReadAllText(file) != content)
-        File.WriteAllText(file, content, new UTF8Encoding(false));
-}
-
-// A page this run didn't write, raised as an output without content first: cs check counts it as a change (and
-// removes nothing), cs generate removes it.
+// A page this run didn't write (RemoveOutput): cs generate removes it, and cs check says it's out of date.
 private void RemoveStale(string folder)
 {
     if (!Directory.Exists(folder))
         return;
     foreach (string file in Directory.GetFiles(folder, "*.html"))
-    {
-        string path = Path.GetFullPath(file);
-        if (_written.Contains(path))
-            continue;
-        var output = new OutputCancelEventArgs(new OutputFile(path));
-        OnPreOutputWritten(output);
-        if (!output.Cancel)
-            File.Delete(path);
-    }
+        if (!_written.Contains(Path.GetFullPath(file)))
+            RemoveOutput(file);
 }
 </script>
