@@ -20,6 +20,7 @@ clone this repository.
 | --- | --- |
 | [ModernEntities](Templates/Database/ModernEntities) | EF Core entities, their configurations and a `DbContext`. |
 | [DapperRepositories](Templates/Database/DapperRepositories) | A record and an async Dapper repository for each table. |
+| [TestData](Templates/Database/TestData) | Test data builders (Bogus) and xUnit tests for each table's Dapper repository. |
 | [MarkdownDocs](Templates/Database/MarkdownDocs) | Markdown documentation of a database, with a Mermaid diagram of its tables. |
 | [DBDocumenter](Templates/Database/DBDocumenter) | HTML documentation of a database's tables, views and procedures. |
 | [ScriptTableData](Templates/Database/ScriptTableData) | An `INSERT` script of a table's rows. |
@@ -49,6 +50,7 @@ clone this repository.
 | [Snippets](Templates/Examples/Snippets) | Small templates: a table enum, table properties, an exception class. |
 | [ExtendedProperties](Templates/Examples/ExtendedProperties) | Everything a schema provider gives about a database. |
 | [PropertyEditor](Templates/Examples/PropertyEditor) | A property of your own type, with its own editor in VS Code's Template Properties. |
+| [Hosting](Templates/Examples/Hosting) | Generating from your own .NET program (`TemplateGenerator`), and on build (MSBuild). Replaces 8.x's API sample. |
 
 ## Also here
 

@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <!-- CodeSmith's packages aren't on nuget.org yet: restore looks in the folder CODESMITH_PACKAGES names too -->
+    <RestoreAdditionalProjectSources>$(CODESMITH_PACKAGES)</RestoreAdditionalProjectSources>
+    <!-- run in the sample's folder: the paths in Program.cs are from there -->
+    <RunWorkingDirectory>$(MSBuildProjectDirectory)/..</RunWorkingDirectory>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- the engine's API to compile against; nothing is copied to the output (CodeSmithEngine.cs loads cs's) -->
+    <PackageReference Include="CodeSmith.Generator.Sdk" Version="9.0.0-*" PrivateAssets="all" />
+  </ItemGroup>
+
+</Project>

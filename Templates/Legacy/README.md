@@ -11,6 +11,6 @@ generate targets .NET Framework and Visual Studio 2010–2015 (and SQL Server, m
 | `Frameworks/PLINQO-EF-DbContext` | Entity Framework 6 code first. |
 | `Frameworks/PLINQO-NH` | NHibernate 3.2. |
 | `Database/StoredProcedures` | T-SQL CRUD stored procedures. |
-| `Projects` | 8.x's API sample and custom property editors (WinForms), .NET Framework. |
+| `Projects` | 8.x's API sample (replaced by [Hosting](../Examples/Hosting/README.md)) and custom property editors (WinForms), .NET Framework. |
 
 They aren't changed any more. For new work, start from the samples outside this folder.

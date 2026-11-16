@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <!-- CodeSmith's packages aren't on nuget.org yet: restore looks in the folder CODESMITH_PACKAGES names too -->
+    <RestoreAdditionalProjectSources>$(CODESMITH_PACKAGES)</RestoreAdditionalProjectSources>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- generate on build: cs generate Records.csp before the compiler, when the project or what it reads changed, and
+         what it writes (Generated/) compiles with the rest -->
+    <PackageReference Include="CodeSmith.Generator.MSBuild" Version="9.0.0-*" PrivateAssets="all" />
+    <CodeSmithProject Include="Records.csp" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,34 @@
+<%@ CodeTemplate Language="C#" TargetLanguage="Text" Description="A C# record and an async Dapper repository for each table of a database." %>
+<%@ Property Name="SourceDatabase" Type="SchemaExplorer.DatabaseSchema" Category="Source" Description="The database." %>
+<%@ Property Name="Namespace" Type="System.String" Default="MyApp.Data" Category="Output" Description="The namespace of the generated code." %>
+<%@ Property Name="OutputDirectory" Type="System.String" Default="Generated" Category="Output" Description="Where the files go, relative to the project." %>
+<%@ Register Name="RecordTemplate" Template="Record.cst" MergeProperties="False" %>
+<%@ Register Name="RepositoryTemplate" Template="Repository.cst" MergeProperties="False" %>
+<%@ Assembly Name="SchemaExplorer" %>
+<%@ Import Namespace="SchemaExplorer" %>
+<%@ Import Namespace="System.IO" %>
+<%@ Assembly Src="Names.cs" %>
+<%-- The master: for each table, its record (Record.cst) and its repository (Repository.cst), a file each. --%>
+<% Generate(); %>
+<script runat="template">
+private void Generate()
+{
+    Directory.CreateDirectory(OutputDirectory);
+    foreach (TableSchema table in SourceDatabase.Tables)
+    {
+        var record = Create<RecordTemplate>();
+        record.Table = table;
+        record.Namespace = Namespace;
+        string recordFile = Path.Combine(OutputDirectory, Names.Entity(table) + ".cs");
+        record.RenderToFile(recordFile, true);
+        Response.WriteLine(recordFile);
+
+        var repository = Create<RepositoryTemplate>();
+        repository.Table = table;
+        repository.Namespace = Namespace;
+        string repositoryFile = Path.Combine(OutputDirectory, Names.Repository(table) + ".cs");
+        repository.RenderToFile(repositoryFile, true);
+        Response.WriteLine(repositoryFile);
+    }
+}
+</script>
