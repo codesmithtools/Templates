@@ -127,7 +127,7 @@ public static class NameWords
         /// <summary>
         /// A word (lower-case letters) in the longest known words: the fewest letters that aren't in one, then the fewest
         /// words. One run of three letters or more may be unknown (listprice: list, price), where what follows it is
-        /// known and it's no longer than what is (candidate stays whole), or where an id-like suffix ends the word
+        /// known and it's shorter than what is (validate and candidate stay whole), or where an id-like suffix ends the word
         /// (suppid: supp, id). The word itself, as one, where it doesn't split so, or is known whole (status); a word
         /// never splits into itself, its singular or its plural.
         /// </summary>
@@ -203,7 +203,7 @@ public static class NameWords
                 if (split.Parts.Count < 2)
                     continue;
                 int unknown = split.Unknown, knownLetters = n - unknown;
-                if (unknown <= knownLetters || Suffixes.Contains(split.Parts[split.Parts.Count - 1].Part))
+                if (unknown < knownLetters || Suffixes.Contains(split.Parts[split.Parts.Count - 1].Part))
                     return split.Parts.Select(p => p.Part).ToList();
             }
             return null;
