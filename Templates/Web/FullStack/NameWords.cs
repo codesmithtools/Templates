@@ -133,11 +133,14 @@ public static class NameWords
         /// </summary>
         public List<string> Split(string word)
         {
-            if (Splits.TryGetValue(word, out var known))
-                return known;
-            var result = Find(word) ?? new List<string> { word };
-            Splits[word] = result;
-            return result;
+            lock (Splits) // a host may generate on several threads
+            {
+                if (Splits.TryGetValue(word, out var known))
+                    return known;
+                var result = Find(word) ?? new List<string> { word };
+                Splits[word] = result;
+                return result;
+            }
         }
 
         private List<string> Find(string word)
