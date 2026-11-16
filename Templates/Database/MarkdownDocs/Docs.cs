@@ -180,6 +180,8 @@ public static class Docs
     public static string Product(DatabaseSchema database)
     {
         string name = database.Provider?.Name ?? "";
+        if (name == "DdlSchemaProvider") // SQL scripts: their dialect (SqlServer, PostgreSQL, MySQL, SQLite)
+            name = Convert.ToString(database.ExtendedProperties["CS_Dialect"]?.Value) ?? name;
         foreach (var (word, product) in new[] { ("SQLite", "SQLite"), ("PostgreSQL", "PostgreSQL"), ("MySQL", "MySQL"), ("Oracle", "Oracle"), ("Sql", "SQL Server") })
             if (name.IndexOf(word, StringComparison.OrdinalIgnoreCase) >= 0)
                 return product;

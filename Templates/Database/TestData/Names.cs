@@ -71,11 +71,28 @@ public static class Names
 
     // ---------------------------------------------------------------- SQL
 
+    /// <summary>The database's provider, by name: for SQL scripts (DdlSchemaProvider), the provider of the scripts'
+    /// dialect (CS_Dialect), so the SQL fits the database the scripts make.</summary>
+    public static string ProviderName(DatabaseSchema database)
+    {
+        string name = database.Provider?.Name ?? "";
+        if (name != "DdlSchemaProvider")
+            return name;
+        return System.Convert.ToString(database.ExtendedProperties["CS_Dialect"]?.Value) switch
+        {
+            "SqlServer" => "SqlSchemaProvider",
+            "PostgreSQL" => "PostgreSQLSchemaProvider",
+            "MySQL" => "MySQLSchemaProvider",
+            "SQLite" => "SQLiteSchemaProvider",
+            _ => name,
+        };
+    }
+
     /// <summary>An identifier quoted for the database: [x] (SQL Server), "x" (PostgreSQL, SQLite), `x`
     /// (MySQL).</summary>
     public static string Quote(DatabaseSchema database, string name)
     {
-        switch (database.Provider.Name)
+        switch (ProviderName(database))
         {
             case "SqlSchemaProvider":
                 return "[" + name.Replace("]", "]]") + "]";
@@ -85,7 +102,7 @@ public static class Names
             case "SQLiteSchemaProvider":
                 return "\"" + name.Replace("\"", "\"\"") + "\"";
             default:
-                throw new NotSupportedException(database.Provider.Name +
+                throw new NotSupportedException(ProviderName(database) +
                     ": the templates write SQL for SQL Server, PostgreSQL, MySQL and SQLite.");
         }
     }
@@ -146,7 +163,7 @@ public static class Names
     public static string NewKey(ColumnSchema key)
     {
         string indent = new string(' ', 12);
-        switch (key.Table.Database.Provider.Name)
+        switch (ProviderName(key.Table.Database))
         {
             case "SqlSchemaProvider":
                 return ";" + Environment.NewLine + indent + "SELECT SCOPE_IDENTITY();";

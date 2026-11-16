@@ -44,7 +44,7 @@ export const routes: Route[] = [
 // the database's product, as people name it
 private string Provider()
 {
-    string name = SourceDatabase.Provider?.Name ?? "";
+    string name = Web.Provider(SourceDatabase);
     return name switch
     {
         "SqlSchemaProvider" => "SQL Server",

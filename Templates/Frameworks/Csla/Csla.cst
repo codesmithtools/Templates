@@ -252,6 +252,8 @@ private static bool Replaced(string webProject, string file) =>
 private (string Provider, string File) Database(string webProject)
 {
     string type = SourceDatabase.Provider.GetType().Name;
+    if (type == "DdlSchemaProvider") // SQL scripts: their dialect (SqlServer, PostgreSQL, MySQL, SQLite)
+        type = Convert.ToString(SourceDatabase.ExtendedProperties["CS_Dialect"]?.Value) ?? type;
     if (type.Contains("PostgreSQL"))
         return ("PostgreSQL", "");
     if (type.Contains("MySQL"))

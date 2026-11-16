@@ -71,6 +71,8 @@ public sealed class DocSite
         get
         {
             string name = Database.Provider?.Name ?? "";
+            if (name == "DdlSchemaProvider") // SQL scripts: their dialect (SqlServer, PostgreSQL, MySQL, SQLite)
+                name = Convert.ToString(Database.ExtendedProperties["CS_Dialect"]?.Value) ?? name;
             if (name.IndexOf("SQLite", StringComparison.OrdinalIgnoreCase) >= 0) return "SQLite";
             if (name.IndexOf("PostgreSQL", StringComparison.OrdinalIgnoreCase) >= 0 || name.IndexOf("Npgsql", StringComparison.OrdinalIgnoreCase) >= 0) return "PostgreSQL";
             if (name.IndexOf("MySQL", StringComparison.OrdinalIgnoreCase) >= 0) return "MySQL";

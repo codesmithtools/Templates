@@ -93,7 +93,7 @@ public static class Web
 
     // SQL Server's text, ntext and image: LIKE reads them, but nothing sorts or compares them
     private static bool Blob(ColumnSchema column) =>
-        Native(column) is "text" or "ntext" or "image" && column.Table.Database.Provider?.Name == "SqlSchemaProvider";
+        Native(column) is "text" or "ntext" or "image" && Provider(column.Table.Database) == "SqlSchemaProvider";
 
     /// <summary>Whether a list sorts by a column: a number, text, a date or time, a Guid, a bool (not bytes, JSON, XML,
     /// a spatial type, nor SQL Server's text and ntext).</summary>
@@ -138,7 +138,24 @@ public static class Web
     public static bool IsValueType(ColumnSchema column) => Names.Type(column).TrimEnd('?') is not ("string" or "byte[]" or "object");
 
     /// <summary>Whether the search lowers its text first (PostgreSQL's LIKE minds case).</summary>
-    public static bool SearchLowers(TableSchema table) => table.Database.Provider?.Name == "PostgreSQLSchemaProvider";
+    public static bool SearchLowers(TableSchema table) => Provider(table.Database) == "PostgreSQLSchemaProvider";
+
+    /// <summary>The database's provider, by name: for SQL scripts (DdlSchemaProvider), the provider of the scripts'
+    /// dialect (CS_Dialect).</summary>
+    public static string Provider(DatabaseSchema database)
+    {
+        string name = database.Provider?.Name ?? "";
+        if (name != "DdlSchemaProvider")
+            return name;
+        return Convert.ToString(database.ExtendedProperties["CS_Dialect"]?.Value) switch
+        {
+            "SqlServer" => "SqlSchemaProvider",
+            "PostgreSQL" => "PostgreSQLSchemaProvider",
+            "MySQL" => "MySQLSchemaProvider",
+            "SQLite" => "SQLiteSchemaProvider",
+            _ => name,
+        };
+    }
 
     /// <summary>A whole-number column of the key: a search that's a number finds its row by it.</summary>
     public static bool NumberKey(ColumnSchema column) =>
