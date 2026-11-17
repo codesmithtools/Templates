@@ -13,7 +13,7 @@ var usedBy = Docs.UsedBy(Table);
 bool defaults = columns.Any(c => Docs.Default(c).Length > 0);
 bool descriptions = columns.Any(c => Docs.Description(c).Length > 0);
 bool references = foreignKeys.Count > 0;
-string primaryKey = Table.HasPrimaryKey ? Docs.Code(string.Join(", ", Table.PrimaryKey.MemberColumns.Cast<MemberColumnSchema>().Select(c => c.Name))) : "none";
+string primaryKey = Table.HasPrimaryKey ? Docs.Code(string.Join(", ", Docs.PrimaryKeyColumns(Table))) : "none";
 %>
 <%= Docs.Breadcrumbs(Table) %>
 
@@ -86,7 +86,7 @@ No other table refers to it.
 | Index | Columns | Kind |
 | --- | --- | --- |
 <% foreach (IndexSchema index in indexes) { %>
-| <%= Docs.Code(index.Name) %> | <%= Docs.Code(string.Join(", ", index.MemberColumns.Cast<MemberColumnSchema>().Select(c => c.Name))) %> | <%= index.IsPrimaryKey ? "primary key" : index.IsUnique ? "unique" : "index" %><%= index.IsClustered ? ", clustered" : "" %> |
+| <%= Docs.Code(index.Name) %> | <%= Docs.Code(string.Join(", ", index.IsPrimaryKey && Table.HasPrimaryKey ? Docs.PrimaryKeyColumns(Table) : index.MemberColumns.Cast<MemberColumnSchema>().Select(c => c.Name))) %> | <%= index.IsPrimaryKey ? "primary key" : index.IsUnique ? "unique" : "index" %><%= index.IsClustered ? ", clustered" : "" %> |
 <% } %>
 <% } %>
 <% if (usedBy.Count > 0) { %>

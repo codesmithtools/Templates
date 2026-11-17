@@ -57,7 +57,7 @@ OutputTemplate(header);
 <% } %>
 <dl class="facts">
 <div class="fact"><dt>Columns</dt><dd><%= table.Columns.Count %></dd></div>
-<div class="fact"><dt>Primary key</dt><dd><%= table.HasPrimaryKey ? Names(table.PrimaryKey.MemberColumns.Cast<MemberColumnSchema>()) : "<span class=\"faint\">None</span>" %></dd></div>
+<div class="fact"><dt>Primary key</dt><dd><%= table.HasPrimaryKey ? Names(KeyColumns(table)) : "<span class=\"faint\">None</span>" %></dd></div>
 <div class="fact"><dt>References</dt><dd><%= foreignKeys.Count %></dd></div>
 <div class="fact"><dt>Referenced by</dt><dd><%= referencedBy.Count %></dd></div>
 <div class="fact"><dt>Indexes</dt><dd><%= indexes.Count %></dd></div>
@@ -153,7 +153,7 @@ string defaultValue = DocSite.Default(column);
 <% foreach (IndexSchema ix in indexes) { %>
 <tr>
 <td><code class="key-name"><%= H(ix.Name) %></code></td>
-<td><%= Names(ix.MemberColumns.Cast<MemberColumnSchema>()) %></td>
+<td><%= Names(ix.IsPrimaryKey && table.HasPrimaryKey ? KeyColumns(table) : ix.MemberColumns.Cast<MemberColumnSchema>()) %></td>
 <td class="badges"><%= ix.IsPrimaryKey ? Badge("Primary key", "pk") : "" %><%= ix.IsUnique && !ix.IsPrimaryKey ? Badge("Unique", "unique") : "" %><%= ix.IsClustered ? Badge("Clustered", "muted") : "" %><%= !ix.IsPrimaryKey && !ix.IsUnique && !ix.IsClustered ? Badge("Index", "muted") : "" %></td>
 </tr>
 <% } %>

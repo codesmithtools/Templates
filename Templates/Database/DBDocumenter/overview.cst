@@ -93,7 +93,7 @@ var children = site.ReferencedBy(table).Select(k => k.ForeignKeyTable).GroupBy(D
 <tr>
 <td class="cell-object"><a class="object" href="<%= H(Href(table)) %>"><%= Icon("table") %><span><%= H(DocSite.Title(table)) %></span></a></td>
 <td class="num"><%= table.Columns.Count %></td>
-<td><%= table.HasPrimaryKey ? Names(table.PrimaryKey.MemberColumns.Cast<MemberColumnSchema>()) : "<span class=\"faint\">None</span>" %></td>
+<td><%= table.HasPrimaryKey ? Names(KeyColumns(table)) : "<span class=\"faint\">None</span>" %></td>
 <td><%= parents.Count == 0 ? "<span class=\"faint\">—</span>" : string.Join("<span class=\"sep\">, </span>", parents.Select(p => Link(p))) %></td>
 <td><%= children.Count == 0 ? "<span class=\"faint\">—</span>" : string.Join("<span class=\"sep\">, </span>", children.Select(c => Link(c))) %></td>
 <td class="num"><%= table.Indexes.Count %></td>

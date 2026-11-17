@@ -74,6 +74,11 @@ public class DBDocumenterTemplate : CodeTemplate
     }
 
     /// <summary>A list of names: Name, Email, Phone.</summary>
+    /// <summary>A table's primary key columns, in the table's column order: a provider may give them in another (the
+    /// PostgreSQL providers give them by name).</summary>
+    public static IEnumerable<MemberColumnSchema> KeyColumns(TableSchema table) =>
+        table.PrimaryKey.MemberColumns.Cast<MemberColumnSchema>().OrderBy(c => table.Columns.IndexOf(table.Columns[c.Name]));
+
     public static string Names(IEnumerable<MemberColumnSchema> columns) =>
         string.Join("<span class=\"sep\">, </span>", columns.Select(c => "<code>" + H(c.Name) + "</code>"));
 

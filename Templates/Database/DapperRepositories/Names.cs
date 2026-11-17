@@ -144,10 +144,11 @@ public static class Names
     private static bool Flag(ColumnSchema column, string name) =>
         bool.TryParse(Convert.ToString(column.ExtendedProperties[name]?.Value), out bool value) && value;
 
-    /// <summary>The table's key columns (none without a primary key).</summary>
+    /// <summary>The table's key columns, in the table's column order (none without a primary key): a provider may give
+    /// them in another (the PostgreSQL providers give them by name), and they're the order of a method's parameters.</summary>
     public static List<ColumnSchema> Key(TableSchema table) =>
         table.HasPrimaryKey
-            ? table.PrimaryKey.MemberColumns.Cast<MemberColumnSchema>().Select(c => table.Columns[c.Name]).ToList()
+            ? table.PrimaryKey.MemberColumns.Cast<MemberColumnSchema>().Select(c => table.Columns[c.Name]).OrderBy(c => table.Columns.IndexOf(c)).ToList()
             : new List<ColumnSchema>();
 
     /// <summary>The key column the database numbers, which an insert returns: a one-column primary key that's an

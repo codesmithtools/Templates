@@ -168,6 +168,11 @@ public static class Docs
     public static string Cardinality(TableKeySchema key) =>
         (IsOneToOne(key) ? "one to one" : "many to one") + (key.ForeignKeyMemberColumns.Cast<MemberColumnSchema>().Any(c => c.AllowDBNull) ? ", optional" : "");
 
+    /// <summary>A table's primary key columns, in the table's column order: a provider may give them in another (the
+    /// PostgreSQL providers give them by name).</summary>
+    public static IEnumerable<string> PrimaryKeyColumns(TableSchema table) =>
+        table.PrimaryKey.MemberColumns.Cast<MemberColumnSchema>().OrderBy(c => table.Columns.IndexOf(table.Columns[c.Name])).Select(c => c.Name);
+
     /// <summary>The tables a table refers to, each once.</summary>
     public static List<TableSchema> Parents(TableSchema table) =>
         table.ForeignKeys.Cast<TableKeySchema>().Select(k => k.PrimaryKeyTable).GroupBy(t => t.FullName).Select(g => g.First()).ToList();

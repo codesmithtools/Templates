@@ -62,7 +62,7 @@ erDiagram
 var parents = Docs.Parents(table);
 var children = Docs.Children(table);
 %>
-| <%= Docs.Link(table) %> | <%= table.Columns.Count %> | <%= table.HasPrimaryKey ? Docs.Code(string.Join(", ", table.PrimaryKey.MemberColumns.Cast<MemberColumnSchema>().Select(c => c.Name))) : "none" %> | <%= parents.Count == 0 ? "—" : string.Join(", ", parents.Select(p => Docs.Link(p))) %> | <%= children.Count == 0 ? "—" : string.Join(", ", children.Select(c => Docs.Link(c))) %> |<%= tableDescriptions ? " " + Docs.Cell(Docs.Description(table)) + " |" : "" %>
+| <%= Docs.Link(table) %> | <%= table.Columns.Count %> | <%= table.HasPrimaryKey ? Docs.Code(string.Join(", ", Docs.PrimaryKeyColumns(table))) : "none" %> | <%= parents.Count == 0 ? "—" : string.Join(", ", parents.Select(p => Docs.Link(p))) %> | <%= children.Count == 0 ? "—" : string.Join(", ", children.Select(c => Docs.Link(c))) %> |<%= tableDescriptions ? " " + Docs.Cell(Docs.Description(table)) + " |" : "" %>
 <% } %>
 <% } %>
 <% if (relationships.Count > 0) { %>
