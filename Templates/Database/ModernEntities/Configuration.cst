@@ -23,7 +23,7 @@ public partial class <%= Names.Entity(Table) %>Configuration : IEntityTypeConfig
         entity.ToTable("<%= Table.Name %>");
 <% } %>
 <% if (Table.HasPrimaryKey) { %>
-        entity.HasKey(e => <%= Names.Members("e", Table, Table.PrimaryKey.MemberColumns) %>);
+        entity.HasKey(e => <%= Names.Members("e", Table, Names.KeyColumns(Table)) %>);
 <% } else { %>
         entity.HasNoKey();
 <% } %>

@@ -67,10 +67,15 @@ public static class Names
     public static string Required(ColumnSchema column) =>
         !column.AllowDBNull && !Type(column).EndsWith("?") && !column.GetClrType(TypeMapping.Modern).IsValueType ? "required " : "";
 
+    /// <summary>A table's primary key columns, in the table's column order: a provider may give them in another (the
+    /// PostgreSQL providers give them by name), and a composite foreign key's columns have to match the key's order.</summary>
+    public static IEnumerable<MemberColumnSchema> KeyColumns(TableSchema table) =>
+        table.PrimaryKey.MemberColumns.Cast<MemberColumnSchema>().OrderBy(c => table.Columns.IndexOf(table.Columns[c.Name])).ToList();
+
     /// <summary>Whether a key refers to its table's primary key (else HasPrincipalKey names the columns it refers to).</summary>
     public static bool RefersToPrimaryKey(TableKeySchema key) =>
         key.PrimaryKeyTable.HasPrimaryKey &&
-        key.PrimaryKeyMemberColumns.Select(c => c.Name).SequenceEqual(key.PrimaryKeyTable.PrimaryKey.MemberColumns.Select(c => c.Name));
+        key.PrimaryKeyMemberColumns.Select(c => c.Name).SequenceEqual(KeyColumns(key.PrimaryKeyTable).Select(c => c.Name));
 
     /// <summary>Whether a foreign key is a relationship in the model: EF Core needs a key on both of its tables.</summary>
     public static bool Related(TableKeySchema key) => key.ForeignKeyTable.HasPrimaryKey && key.PrimaryKeyTable.HasPrimaryKey;

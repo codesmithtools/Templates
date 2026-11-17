@@ -10,7 +10,7 @@ from the database's schema.
 - A foreign key's property has the type of the key it refers to (an SQLite `integer` key is a `long`, and so are the
   columns that refer to it).
 - Each entity's configuration (an `IEntityTypeConfiguration<T>`) maps it to its table (with its schema, unless it's
-  the database's default), its key (composite keys too; `HasNoKey` without one), its relationships
+  the database's default), its key (composite keys too, in the table's column order; `HasNoKey` without one), its relationships
   (`HasPrincipalKey` for one to a unique key that isn't the primary key), a key the application numbers
   (`ValueGeneratedNever`), a rowversion and a `jsonb` column. The context applies them all.
 - The partial classes take your own members, `ConfigurePartial` an entity's own mapping and `OnModelCreatingPartial`
