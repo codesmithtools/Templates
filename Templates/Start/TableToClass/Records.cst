@@ -6,12 +6,15 @@
 <%@ Assembly Name="SchemaExplorer" %>
 <%@ Import Namespace="SchemaExplorer" %>
 <%@ Import Namespace="System.IO" %>
+<%@ Import Namespace="System.Linq" %>
 <%-- The master template: it renders Record.cst (a sub-template) once per table, each to its own file. --%>
 <% foreach (TableSchema table in SourceDatabase.Tables) {
        var record = Create<RecordTemplate>();
        record.SourceTable = table;
        record.TargetNamespace = TargetNamespace;
-       string file = Path.Combine(OutputDirectory, StringUtil.ToPascalCase(table.Name) + ".cs");
+       // a file each: by the table's full name when another schema has a table of the same name (dbo.Person.cs, sales.Person.cs)
+       bool twice = SourceDatabase.Tables.Any(t => t != table && string.Equals(t.Name, table.Name, StringComparison.OrdinalIgnoreCase));
+       string file = Path.Combine(OutputDirectory, (twice ? table.FullName : StringUtil.ToPascalCase(table.Name)) + ".cs");
        record.RenderToFile(file, true); %>
 <%= file %>
 <% } %>
