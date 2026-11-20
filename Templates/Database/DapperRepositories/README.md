@@ -5,7 +5,8 @@ database. `Repositories.csp` reads the PetShop sample database (`PetShop.db3`, S
 the generated code against it.
 
 Databases: SQL Server, SQLite, PostgreSQL and MySQL (and SQL scripts in their dialects): the SQL is quoted and
-written for each. Not Oracle: generating from one stops and says so.
+written for each. Not Oracle: generating from one stops and says so. A SQL Server `hierarchyid`, `geometry` or
+`geography` column is an `object` property: reading it needs the `Microsoft.SqlServer.Types` package in your app.
 
 ```sh
 cs generate Repositories.csp
