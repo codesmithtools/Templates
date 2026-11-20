@@ -6,7 +6,8 @@ from the database's schema.
 - Entities are `partial` classes with `get; set;` properties: nullable reference types, `required` where a row must
   set a value, a navigation to each row a foreign key refers to, and a collection of the rows that refer to it.
 - Names are .NET's: `order_id` is `OrderId` (with `HasColumnName("order_id")`), `Orders` is `Order` in a `DbSet` named
-  `Orders`, and a table name that two schemas have gets its schema in front.
+  `Orders`, and a table name that two schemas have gets its schema in front. A table named like a type the generated
+  code uses (`Task`, `Guid`, `File`, `Type`) gets `Entity` after it: `TaskEntity`, in a `DbSet` named `Tasks`.
 - A foreign key's property has the type of the key it refers to (an SQLite `integer` key is a `long`, and so are the
   columns that refer to it).
 - Each entity's configuration (an `IEntityTypeConfiguration<T>`) maps it to its table (with its schema, unless it's

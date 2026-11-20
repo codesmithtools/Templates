@@ -11,16 +11,55 @@ public static class Names
     private static readonly string[] DefaultOwners = { "", "dbo", "public", "main" };
 
     /// <summary>The entity's class: the table's name in Pascal case, singular (Orders: Order); with its owner's in front
-    /// when another owner has a table that would have the same name.</summary>
+    /// when another owner has a table that would have the same name; with Entity after it when it's the name of a type
+    /// the generated code uses (Task: TaskEntity, Guid: GuidEntity).</summary>
     public static string Entity(TableSchema table)
+    {
+        string name = Name(table);
+        return Taken(name) ? name + "Entity" : name;
+    }
+
+    // The table's name for its class, before Entity() makes it one no type has.
+    private static string Name(TableSchema table)
     {
         string name = Identifier(StringUtil.ToSingular(StringUtil.ToPascalCase(table.Name)));
         bool twice = table.Database.Tables.Any(t => t != table && Identifier(StringUtil.ToSingular(StringUtil.ToPascalCase(t.Name))) == name);
         return twice ? Identifier(StringUtil.ToPascalCase(table.Owner)) + name : name;
     }
 
-    /// <summary>The DbSet: plural (Order: Orders).</summary>
-    public static string Set(TableSchema table) => StringUtil.ToPlural(Entity(table));
+    /// <summary>The DbSet: plural (Order: Orders; Task: Tasks).</summary>
+    public static string Set(TableSchema table) =>
+        Taken(StringUtil.ToPlural(Name(table))) ? StringUtil.ToPlural(Entity(table)) : StringUtil.ToPlural(Name(table));
+
+    // The types an entity's name mustn't be: in its own namespace it would hide one the generated code uses there
+    // (Task: async Task), and elsewhere it would be ambiguous with one a file imports (Guid, with ImplicitUsings).
+    // Those of the namespaces every generated project imports (System, System.IO, System.Linq, System.Threading.Tasks,
+    // ...), found by name, and the frameworks' the generated code uses (EF Core, ASP.NET Core, CSLA) or imports.
+    private static readonly string[] Imports = { "System", "System.Collections.Generic", "System.IO", "System.Linq", "System.Net.Http", "System.Threading", "System.Threading.Tasks" };
+    private static readonly string[] Assemblies = { "System.Private.CoreLib", "System.Runtime", "System.Collections", "System.Console", "System.Linq", "System.Net.Http", "System.Threading" };
+    private static readonly HashSet<string> Frameworks = new HashSet<string>
+    {
+        "DbContext", "DbContextOptions", "DbContextOptionsBuilder", "DbSet", "DbUpdateException", "DbUpdateConcurrencyException", "EF",
+        "EntityState", "EntityTypeBuilder", "ModelBuilder",
+        "Accepted", "Conflict", "Created", "Endpoint", "Host", "HttpContext", "Logger", "NoContent", "NotFound", "Ok", "Results", "Route",
+        "RouteData", "RouteGroupBuilder", "StatusCodes", "TypedResults", "WebApplication",
+        "ComponentBase", "Dispatcher", "EventCallback", "LayoutComponentBase", "MarkupString", "NavigationManager",
+        "ApplicationContext", "BusinessBase", "BusinessListBase", "BusinessRule", "BusinessRules", "CommandBase", "DataPortal", "PropertyInfo",
+        "ReadOnlyBase", "ReadOnlyListBase", "Rule", "Utilities", "ViewModel",
+        "Validator", "ValidationException",
+    };
+    private static readonly Dictionary<string, bool> Seen = new Dictionary<string, bool>();
+
+    private static bool Taken(string name)
+    {
+        lock (Seen)
+        {
+            if (!Seen.TryGetValue(name, out bool taken))
+                Seen[name] = taken = Frameworks.Contains(name) || Imports.Any(n => new[] { "", "`1", "`2", "`3" }.Any(arity =>
+                    Assemblies.Any(assembly => System.Type.GetType(n + "." + name + arity + ", " + assembly, false) is { IsPublic: true })));
+            return taken;
+        }
+    }
 
     /// <summary>The schema for ToTable, or null for a database's default (dbo, public, SQLite's, MySQL's database).</summary>
     public static string Schema(TableSchema table) =>

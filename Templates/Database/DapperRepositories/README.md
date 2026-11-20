@@ -10,7 +10,9 @@ dotnet run --project App
 ```
 
 - A record has an `init` property for each column, with its C# type (`column.GetCSharpTypeName()`), nullable where the
-  column is and `required` where a new row must set it. Names are .NET's: `Orders` is `Order`, `order_id` is `OrderId`.
+  column is and `required` where a new row must set it. Names are .NET's: `Orders` is `Order`, `order_id` is `OrderId`;
+  a table named like a type the generated code uses (`Task`, `Guid`, `File`, `Person`) is `TaskEntity`, with a
+  `TaskRepository`.
 - A repository takes a `DbConnection`, and has `GetAllAsync`, `GetAsync` by primary key (composite keys too),
   `InsertAsync`, `UpdateAsync` and `DeleteAsync`. A table without a primary key gets only `GetAllAsync`.
 - The SQL is the database's: parameterized, every identifier quoted (`[x]` for SQL Server, `"x"` for PostgreSQL and

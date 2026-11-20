@@ -25,16 +25,50 @@ public static class Names
     // ---------------------------------------------------------------- C#
 
     /// <summary>The record's name: the table's in Pascal case, singular (Orders: Order); with its owner's in front when
-    /// another owner has a table that would have the same name.</summary>
+    /// another owner has a table that would have the same name; with Entity after it when it's the name of a type the
+    /// generated code uses (Task: TaskEntity, Guid: GuidEntity).</summary>
     public static string Entity(TableSchema table)
+    {
+        string name = Name(table);
+        return Taken(name) ? name + "Entity" : name;
+    }
+
+    // The table's name for its record, before Entity() makes it one no type has.
+    private static string Name(TableSchema table)
     {
         string name = Identifier(StringUtil.ToSingular(StringUtil.ToPascalCase(table.Name)));
         bool twice = table.Database.Tables.Any(t => t != table && Identifier(StringUtil.ToSingular(StringUtil.ToPascalCase(t.Name))) == name);
         return twice ? Identifier(StringUtil.ToPascalCase(table.Owner)) + name : name;
     }
 
-    /// <summary>The repository's name: OrderRepository.</summary>
-    public static string Repository(TableSchema table) => Entity(table) + "Repository";
+    /// <summary>The repository's name: OrderRepository (Task: TaskRepository).</summary>
+    public static string Repository(TableSchema table) => Name(table) + "Repository";
+
+    // The types a record's name mustn't be: in its own namespace it would hide one the generated code uses there
+    // (Task: async Task), and elsewhere it would be ambiguous with one a file imports (Guid, with ImplicitUsings).
+    // Those of the namespaces every generated project imports (System, System.IO, System.Linq, System.Threading.Tasks,
+    // ...), found by name, and the libraries' the generated code uses (Dapper, ADO.NET, Bogus, xUnit) or imports.
+    private static readonly string[] Imports = { "System", "System.Collections.Generic", "System.IO", "System.Linq", "System.Net.Http", "System.Threading", "System.Threading.Tasks" };
+    private static readonly string[] Assemblies = { "System.Private.CoreLib", "System.Runtime", "System.Collections", "System.Console", "System.Linq", "System.Net.Http", "System.Threading" };
+    private static readonly HashSet<string> Libraries = new HashSet<string>
+    {
+        "CommandDefinition", "DbString", "DynamicParameters", "SqlMapper",
+        "DbCommand", "DbConnection", "DbDataReader", "DbException", "DbParameter", "DbTransaction", "Constraint", "Rule",
+        "Binder", "Chars", "Database", "Faker", "Hashids", "Person", "Randomizer", "Tokenizer", "Transliterater", "Trie", "Utils",
+        "Assert", "Fact", "Record", "Theory",
+    };
+    private static readonly Dictionary<string, bool> Seen = new Dictionary<string, bool>();
+
+    private static bool Taken(string name)
+    {
+        lock (Seen)
+        {
+            if (!Seen.TryGetValue(name, out bool taken))
+                Seen[name] = taken = Libraries.Contains(name) || Imports.Any(n => new[] { "", "`1", "`2", "`3" }.Any(arity =>
+                    Assemblies.Any(assembly => Type.GetType(n + "." + name + arity + ", " + assembly, false) is { IsPublic: true })));
+            return taken;
+        }
+    }
 
     /// <summary>A column's property: its name in Pascal case (order_id: OrderId), not the record's own name, and
     /// once.</summary>
