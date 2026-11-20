@@ -248,7 +248,8 @@ private static bool Replaced(string webProject, string file) =>
         .Select(f => Path.GetRelativePath(webProject, f).Replace('\\', '/'))
         .Any(f => !f.StartsWith("Generated/") && !f.StartsWith("bin/") && !f.StartsWith("obj/"));
 
-// The web app's EF Core provider, and a SQLite database's file from its project's folder.
+// The web app's EF Core provider, and a SQLite database's file from its project's folder. A database it isn't wired for
+// (Oracle's, another provider's) is the schema provider's name: Program.cs says to add its EF Core provider.
 private (string Provider, string File) Database(string webProject)
 {
     string type = SourceDatabase.Provider.GetType().Name;
@@ -258,8 +259,10 @@ private (string Provider, string File) Database(string webProject)
         return ("PostgreSQL", "");
     if (type.Contains("MySQL"))
         return ("MySql", "");
-    if (!type.Contains("SQLite"))
+    if (type == "SqlSchemaProvider" || type == "SqlServer")
         return ("SqlServer", "");
+    if (!type.Contains("SQLite"))
+        return (type, "");
     var builder = new System.Data.Common.DbConnectionStringBuilder { ConnectionString = SourceDatabase.ConnectionString };
     object source = builder.TryGetValue("Data Source", out var value) || builder.TryGetValue("DataSource", out value) ? value : null;
     string path = source == null ? null : Path.GetFullPath(Environment.ExpandEnvironmentVariables(source.ToString()));

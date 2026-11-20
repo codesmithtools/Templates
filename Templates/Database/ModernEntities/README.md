@@ -3,6 +3,9 @@
 EF Core entities and a `DbContext` for a database. An entity and its configuration per table, and the `DbContext`,
 from the database's schema.
 
+Databases: any `cs` reads (SQL Server, SQLite, PostgreSQL, MySQL, Oracle, and SQL scripts). The entities are EF
+Core's, for its provider for that database (`UseSqlServer`, `UseNpgsql`, `UseMySQL`, `UseOracle`, `UseSqlite`).
+
 - Entities are `partial` classes with `get; set;` properties: nullable reference types, `required` where a row must
   set a value, a navigation to each row a foreign key refers to, and a collection of the rows that refer to it.
 - Names are .NET's: `order_id` is `OrderId` (with `HasColumnName("order_id")`), `Orders` is `Order` in a `DbSet` named

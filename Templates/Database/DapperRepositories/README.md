@@ -4,6 +4,9 @@ A C# record and an async Dapper repository for each table. No ORM: the repositor
 database. `Repositories.csp` reads the PetShop sample database (`PetShop.db3`, SQLite) in this folder, and `App/` runs
 the generated code against it.
 
+Databases: SQL Server, SQLite, PostgreSQL and MySQL (and SQL scripts in their dialects): the SQL is quoted and
+written for each. Not Oracle: generating from one stops and says so.
+
 ```sh
 cs generate Repositories.csp
 dotnet run --project App

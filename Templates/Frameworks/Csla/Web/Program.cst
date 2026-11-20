@@ -1,6 +1,6 @@
 <%@ CodeTemplate Language="C#" TargetLanguage="C#" Description="The web app's Program.cs: Blazor, interactive on the server; CSLA; the database (a copy of a SQLite file, or a connection string); the shell's services. Written once, when it isn't there, and then yours." %>
 <%@ Property Name="Namespace" Type="System.String" Default="MyApp" Description="The root namespace." %>
-<%@ Property Name="Provider" Type="System.String" Default="Sqlite" Description="The EF Core provider: Sqlite, SqlServer, PostgreSQL or MySql." %>
+<%@ Property Name="Provider" Type="System.String" Default="Sqlite" Description="The EF Core provider: Sqlite, SqlServer, PostgreSQL or MySql; another's name for one it isn't wired for." %>
 <%@ Property Name="DatabaseFile" Type="System.String" Default="" Optional="True" Description="A SQLite database file, copied beside the app when it's built (the csproj links it)." %>
 <%@ Assembly Name="SchemaExplorer" %>
 <%@ Assembly Src="../Names.cs" %>
@@ -39,8 +39,11 @@ builder.Services.<%= dal %>(options => options.UseSqlServer(connection));
 builder.Services.<%= dal %>(options => options.UseNpgsql(connection));
 <% } else if (Provider == "MySql") { %>
 builder.Services.<%= dal %>(options => options.UseMySQL(connection));
-<% } else { %>
+<% } else if (Provider == "Sqlite") { %>
 builder.Services.<%= dal %>(options => options.UseSqlite(connection));
+<% } else { %>
+#warning The web app isn't wired for <%= Provider %>'s database (Csla.cst wires SQL Server, PostgreSQL, MySQL and SQLite): add its EF Core provider's package to the project, call its UseXxx here, and remove this line.
+builder.Services.<%= dal %>(options => throw new NotSupportedException("Program.cs: add the EF Core provider for <%= Provider %>'s database."));
 <% } %>
 <% } %>
 

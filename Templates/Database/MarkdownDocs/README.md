@@ -4,6 +4,8 @@ Markdown documentation of a database, with Mermaid diagrams of its tables. A pag
 procedure, to keep in a repository, where GitHub shows them. It documents the PetShop sample database (`PetShop.db3`,
 SQLite) in this folder.
 
+Databases: any `cs` reads (SQL Server, SQLite, PostgreSQL, MySQL, Oracle, and SQL scripts).
+
 ```sh
 cs generate MarkdownDocs.csp
 ```

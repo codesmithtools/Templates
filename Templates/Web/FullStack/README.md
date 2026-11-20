@@ -4,6 +4,10 @@ One database, four layers: EF Core entities, an ASP.NET Core minimal API, a Type
 edit every table. They're generated from the PetShop sample database (`PetShop.db3`, SQLite) in this folder, and stay in
 step when the schema changes: generate again.
 
+Databases: it generates from any database `cs` reads (SQL Server, SQLite, PostgreSQL, MySQL, Oracle, and SQL
+scripts). `App/Program.cs` opens `PetShop.db3` with `UseSqlite`: for another database, change it to your EF Core
+provider's (and its package in `App/PetShop.Api.csproj`).
+
 ```sh
 cs generate FullStack.csp
 dotnet build App

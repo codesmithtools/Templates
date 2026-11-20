@@ -5,6 +5,8 @@ table's, column's, view's, key's, index's, procedure's and parameter's. The quic
 (`CS_Default`, `CS_IsIdentity`, `CS_Description`, and a database's own). It reads the PetShop sample database
 (`PetShop.db3`, SQLite) in this folder.
 
+Databases: any `cs` reads (SQL Server, SQLite, PostgreSQL, MySQL, Oracle, and SQL scripts).
+
 ```sh
 cs generate ExtendedProperties.csp
 ```

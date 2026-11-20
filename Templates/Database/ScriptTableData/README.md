@@ -5,6 +5,8 @@ script is T-SQL, for SQL Server: it deletes the table's rows and inserts these, 
 `SET IDENTITY_INSERT` around a table with an identity column. It scripts the PetShop sample database's `Category`
 table (`PetShop.db3`, SQLite, in this folder).
 
+Databases: it reads the rows from any database `cs` reads, and writes T-SQL: the script runs on SQL Server.
+
 ```sh
 cs generate ScriptTableData.csp
 ```

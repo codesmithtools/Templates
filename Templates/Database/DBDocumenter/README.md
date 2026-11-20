@@ -20,8 +20,8 @@ Open `Docs/index.html` in a browser. The pages open straight from disk and work 
 - Light and dark themes (the system's, or the toggle's), a sidebar that becomes a drawer on a phone, and pages
   that print cleanly.
 
-It works with SQL Server, PostgreSQL, MySQL and SQLite. For SQL Server it adds a server page (version, edition,
-collation).
+Databases: any `cs` reads (SQL Server, SQLite, PostgreSQL, MySQL, Oracle, and SQL scripts). For SQL Server it adds a
+server page (version, edition, collation).
 
 To document your own database, change the data source in `Database.csp` (or pick one in VS Code's Template
 Properties), with:

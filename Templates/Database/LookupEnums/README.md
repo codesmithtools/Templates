@@ -3,6 +3,8 @@
 Enums from a lookup table's rows, so code says `Category.Fish`, not `"FISH"`. It reads the `Category` table of the
 PetShop sample database (`PetShop.db3`, SQLite, in this folder) and writes a C# enum and a TypeScript const.
 
+Databases: any `cs` reads (SQL Server, SQLite, PostgreSQL, MySQL, Oracle, and SQL scripts).
+
 ```sh
 cs generate LookupEnums.csp
 dotnet run --project App

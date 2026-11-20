@@ -4,7 +4,7 @@
 <%@ Property Name="TargetFramework" Type="System.String" Default="net10.0" Description="The projects' target framework." %>
 <%@ Property Name="CslaVersion" Type="System.String" Default="10.2.0" Description="The Csla package's version." %>
 <%@ Property Name="EfCoreVersion" Type="System.String" Default="10.0.15" Description="The EF Core packages' version." %>
-<%@ Property Name="Provider" Type="System.String" Default="Sqlite" Optional="True" Description="The web app's EF Core provider: Sqlite, SqlServer, PostgreSQL or MySql." %>
+<%@ Property Name="Provider" Type="System.String" Default="Sqlite" Optional="True" Description="The web app's EF Core provider: Sqlite, SqlServer, PostgreSQL or MySql; another's name for one it isn't wired for (SQLite's package, until you change it)." %>
 <%@ Property Name="DatabaseFile" Type="System.String" Default="" Optional="True" Description="The web app's SQLite database, from its project's folder: copied beside it when it's built." %>
 <%@ Assembly Name="SchemaExplorer" %>
 <%@ Assembly Src="Names.cs" %>

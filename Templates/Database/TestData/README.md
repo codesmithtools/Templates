@@ -4,6 +4,9 @@ Test data builders (Bogus) for each table, and xUnit integration tests for each 
 with the [Dapper repositories](../DapperRepositories/README.md) they test, from the PetShop sample database
 (`PetShop.db3`, SQLite) in this folder, and each test runs against a copy of it.
 
+Databases: those of the [Dapper repositories](../DapperRepositories/README.md): SQL Server, SQLite, PostgreSQL and
+MySQL (and SQL scripts in their dialects). Not Oracle: generating from one stops and says so.
+
 ```sh
 cs generate TestData.csp
 cs check TestData.csp

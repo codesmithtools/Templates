@@ -3,6 +3,8 @@
 A C# record for each table of a database: the most common thing to generate. It reads the PetShop sample database
 (`PetShop.db3`, SQLite) in this folder.
 
+Databases: any `cs` reads (SQL Server, SQLite, PostgreSQL, MySQL, Oracle, and SQL scripts).
+
 ```sh
 cs generate TableToClass.csp
 ```
