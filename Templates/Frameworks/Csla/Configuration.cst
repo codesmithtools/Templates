@@ -27,7 +27,7 @@ public partial class <%= Names.Entity(Table) %>Configuration : IEntityTypeConfig
 <% } else { %>
         entity.HasNoKey();
 <% } %>
-<% foreach (ColumnSchema column in Table.Columns) {
+<% foreach (ColumnSchema column in Names.Columns(Table)) {
        var settings = new System.Collections.Generic.List<string>();
        if (Names.Property(column) != column.Name) settings.Add("HasColumnName(\"" + Literal(column.Name) + "\")");
        if (Names.ColumnType(column) != null) settings.Add("HasColumnType(\"" + Literal(Names.ColumnType(column)) + "\")");

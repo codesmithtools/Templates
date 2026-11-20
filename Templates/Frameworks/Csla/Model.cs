@@ -162,9 +162,9 @@ public sealed class Model
     /// <summary>The model's own instance of a table (a key's tables are other instances of the same table).</summary>
     public TableSchema Table(TableSchema table) => Tables.FirstOrDefault(t => Same(t, table)) ?? table;
 
-    /// <summary>The columns a table's objects have: all but the excluded.</summary>
+    /// <summary>The columns a table's objects have: the entity's (one with a .NET type) but the excluded.</summary>
     public List<ColumnSchema> Columns(TableSchema table) =>
-        table.Columns.Cast<ColumnSchema>().Where(c => !Excluded(table.Name + "." + c.Name)).ToList();
+        Names.Columns(table).Where(c => !Excluded(table.Name + "." + c.Name)).ToList();
 
     /// <summary>The primary key's columns.</summary>
     public static List<ColumnSchema> Key(TableSchema table) =>

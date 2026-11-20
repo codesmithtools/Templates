@@ -16,7 +16,9 @@ namespace <%= Namespace %>;
 /// <summary>A row of <%= Table.Name %>.</summary>
 public partial class <%= Names.Entity(Table) %>
 {
-<% foreach (ColumnSchema column in Table.Columns) { %>
+<% foreach (ColumnSchema column in Table.Columns) { if (!Names.Mapped(column)) { %>
+    // <%= Names.Property(column) %> (<%= column.NativeType %>): no .NET type, so EF Core can't map it; map it in a partial class of your own
+<% continue; } %>
     public <%= Names.Required(column) %><%= Names.Type(column) %> <%= Names.Property(column) %> { get; set; }
 <% } %>
 <% foreach (TableKeySchema key in Table.ForeignKeys) { if (!Names.Related(key)) continue; %>

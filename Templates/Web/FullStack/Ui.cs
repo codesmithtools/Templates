@@ -195,7 +195,7 @@ public static class Ui
     /// the rest (not long text, bytes or JSON), six at most, in the table's order after the first two.</summary>
     public static List<ColumnSchema> Columns(TableSchema table, int most = 6)
     {
-        var all = table.Columns.Cast<ColumnSchema>().Where(c => !Names.IsRowVersion(c) && Kind(c) is not ("binary" or "json")).ToList();
+        var all = Names.Columns(table).Where(c => !Names.IsRowVersion(c) && Kind(c) is not ("binary" or "json")).ToList();
         var chosen = new List<ColumnSchema>();
         void Take(IEnumerable<ColumnSchema> columns)
         {

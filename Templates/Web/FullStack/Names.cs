@@ -65,6 +65,14 @@ public static class Names
     public static string Schema(TableSchema table) =>
         DefaultOwners.Contains(table.Owner ?? "") || table.Owner == table.Database.Name ? null : table.Owner;
 
+    /// <summary>The columns the entity has a property for: those with a .NET type. A column without one (SQL Server's
+    /// geography, hierarchyid or sql_variant, PostgreSQL's point) would be an object, which EF Core can't map: the whole
+    /// model would fail, so the entity leaves it out (EF Core's scaffolding does too).</summary>
+    public static List<ColumnSchema> Columns(TableSchema table) => table.Columns.Cast<ColumnSchema>().Where(Mapped).ToList();
+
+    /// <summary>Whether a column has a .NET type, so a property (see Columns).</summary>
+    public static bool Mapped(ColumnSchema column) => column.GetClrType(TypeMapping.Modern) != typeof(object);
+
     /// <summary>A column's property: its name in Pascal case (order_id: OrderId), not the class's own name, and once.</summary>
     public static string Property(ColumnSchema column)
     {

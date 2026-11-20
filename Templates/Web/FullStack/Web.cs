@@ -53,7 +53,7 @@ public static class Web
         bool.TryParse(Convert.ToString(column.ExtendedProperties["CS_IsIdentity"]?.Value), out bool identity) && identity;
 
     /// <summary>What a new row is given: every column the database doesn't fill in.</summary>
-    public static List<ColumnSchema> Creates(TableSchema table) => table.Columns.Cast<ColumnSchema>().Where(c => !Generated(c)).ToList();
+    public static List<ColumnSchema> Creates(TableSchema table) => Names.Columns(table).Where(c => !Generated(c)).ToList();
 
     /// <summary>What a change can set: the new row's columns but its key.</summary>
     public static List<ColumnSchema> Updates(TableSchema table) => Creates(table).Where(c => !c.IsPrimaryKeyMember).ToList();

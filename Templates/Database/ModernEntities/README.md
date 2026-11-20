@@ -10,6 +10,11 @@ from the database's schema.
   code uses (`Task`, `Guid`, `File`, `Type`) gets `Entity` after it: `TaskEntity`, in a `DbSet` named `Tasks`.
 - A foreign key's property has the type of the key it refers to (an SQLite `integer` key is a `long`, and so are the
   columns that refer to it).
+- A column with no .NET type (SQL Server's `geography`, `geometry`, `hierarchyid` or `sql_variant`, PostgreSQL's `point`
+  or a range) has no property, but a comment where it would be: EF Core can't map an `object`, and the whole model
+  would fail (its scaffolding leaves such columns out too). Map one in a partial class of your own (with
+  `Microsoft.SqlServer.Types` or NetTopologySuite, say). A PostgreSQL enum is a `string`: it reads, but Npgsql sends a
+  string as `text`, so writing one needs the enum mapped (Npgsql's `MapEnum`) in a partial class.
 - Each entity's configuration (an `IEntityTypeConfiguration<T>`) maps it to its table (with its schema, unless it's
   the database's default), its key (composite keys too, in the table's column order; `HasNoKey` without one), its relationships
   (`HasPrincipalKey` for one to a unique key that isn't the primary key), a key the application numbers

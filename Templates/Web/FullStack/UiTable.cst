@@ -51,7 +51,7 @@ export const <%= variable %> = defineTable<<%= types %>>({
   recent: <%= Ui.Ts(Web.Json(recent)) %>,
 <% } %>
   fields: [
-<% foreach (ColumnSchema column in Table.Columns) {
+<% foreach (ColumnSchema column in Names.Columns(Table)) {
        var parts = new System.Collections.Generic.List<string>
        {
            "name: " + Ui.Ts(Web.Json(column)),
