@@ -14,7 +14,7 @@ returned when the specified key does not exist. --%>
 <%-- This map directive uses one of the included maps called Sql-CSharp which translates SQL
 data types to C# data types.  You don't need to specify the extension for the map file src
 attribute and if you don't specify a path, it will search in the current directory for a file
-with the specified name and .csmap extension, then in the maps folder (Engine.CodeSmithMapsDirectory
+with the specified name and .csmap extension, then in the maps folder (mapsDirectory
 in cs config), then in the maps CodeSmith Generator comes with. --%>
 <%@ Map Name="SqlCSharp" Src="Sql-CSharp" Description="System to C# Type Map" %>
 

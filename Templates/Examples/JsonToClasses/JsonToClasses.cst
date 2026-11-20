@@ -16,7 +16,7 @@ using System.Collections.Generic;
 using System.Runtime.Serialization;
 <%
 if (!File.Exists(Path.Combine(this.CodeTemplateInfo.DirectoryName, JsonFile)))
-    throw new ApplicationException("Json file not found.");
+    throw new ApplicationException("Json file not found: " + Path.Combine(this.CodeTemplateInfo.DirectoryName, JsonFile) + " (JsonFile is relative to the template).");
 
 JObject root = JObject.Parse(File.ReadAllText(Path.Combine(this.CodeTemplateInfo.DirectoryName, JsonFile)));
 %>
