@@ -18,9 +18,9 @@ public partial class <%= Names.Entity(Table) %>Configuration : IEntityTypeConfig
     public void Configure(EntityTypeBuilder<<%= Names.Entity(Table) %>> entity)
     {
 <% if (Names.Schema(Table) != null) { %>
-        entity.ToTable("<%= Table.Name %>", "<%= Names.Schema(Table) %>");
+        entity.ToTable("<%= Literal(Table.Name) %>", "<%= Literal(Names.Schema(Table)) %>");
 <% } else { %>
-        entity.ToTable("<%= Table.Name %>");
+        entity.ToTable("<%= Literal(Table.Name) %>");
 <% } %>
 <% if (Table.HasPrimaryKey) { %>
         entity.HasKey(e => <%= Names.Members("e", Table, Names.KeyColumns(Table)) %>);
@@ -29,8 +29,8 @@ public partial class <%= Names.Entity(Table) %>Configuration : IEntityTypeConfig
 <% } %>
 <% foreach (ColumnSchema column in Table.Columns) {
        var settings = new System.Collections.Generic.List<string>();
-       if (Names.Property(column) != column.Name) settings.Add("HasColumnName(\"" + column.Name + "\")");
-       if (Names.ColumnType(column) != null) settings.Add("HasColumnType(\"" + Names.ColumnType(column) + "\")");
+       if (Names.Property(column) != column.Name) settings.Add("HasColumnName(\"" + Literal(column.Name) + "\")");
+       if (Names.ColumnType(column) != null) settings.Add("HasColumnType(\"" + Literal(Names.ColumnType(column)) + "\")");
        if (Names.NumberedByTheApplication(column)) settings.Add("ValueGeneratedNever()");
        if (Names.IsRowVersion(column)) settings.Add("IsRowVersion()");
        else if (Names.IsComputed(column)) settings.Add("HasComputedColumnSql()");
@@ -41,7 +41,7 @@ public partial class <%= Names.Entity(Table) %>Configuration : IEntityTypeConfig
         entity.HasOne(d => d.<%= Names.Navigation(key) %>).WithMany(p => p.<%= Names.Inverse(key) %>)
             .HasForeignKey(d => <%= Names.Members("d", Table, key.ForeignKeyMemberColumns) %>)<% if (!Names.RefersToPrimaryKey(key)) { %>
             .HasPrincipalKey(p => <%= Names.Members("p", key.PrimaryKeyTable, key.PrimaryKeyMemberColumns) %>)<% } %>
-            .HasConstraintName("<%= key.Name %>");
+            .HasConstraintName("<%= Literal(key.Name) %>");
 <% } %>
 
         ConfigurePartial(entity);
@@ -50,3 +50,7 @@ public partial class <%= Names.Entity(Table) %>Configuration : IEntityTypeConfig
     /// <summary>More of the mapping, in a partial class of your own.</summary>
     partial void ConfigurePartial(EntityTypeBuilder<<%= Names.Entity(Table) %>> entity);
 }
+<script runat="template">
+// A name in a C# string literal: a database's names can have quotes and backslashes (Dbl"Quote).
+private static string Literal(string text) => text.Replace("\\", "\\\\").Replace("\"", "\\\"");
+</script>
