@@ -17,7 +17,8 @@ dotnet run --project App
 - Names are made identifiers: `Back yard` is `BackYard`, `3D models` is `_3DModels`, a name twice gets a number
   (`Fish2`), and a row without one is named from its code. Rows are in value order.
 
-The files are a copy of the table's rows: generate them again when the rows change.
+The files are a copy of the table's rows: generate them again when the rows change. A table with no rows makes an
+enum with no members, with a `#warning` in the C# (and a comment in the TypeScript) that says so.
 
 | Property | What it is |
 | --- | --- |
