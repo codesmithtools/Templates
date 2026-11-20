@@ -147,15 +147,22 @@ public static class Fakes
 
     // ---------------------------------------------------------------- rules
 
+    // A PostgreSQL enum (CREATE TYPE ... AS ENUM): a string to .NET, of a user-defined type.
+    private static bool IsEnum(ColumnSchema column) =>
+        column.Table.Database.Provider?.GetType().Name == "PostgreSQLSchemaProvider" &&
+        System.Convert.ToString(column.ExtendedProperties["CS_SystemType"]?.Value) == "USER-DEFINED" &&
+        column.GetClrType(TypeMapping.Modern) == typeof(string);
+
     /// <summary>
     /// The Bogus rule for a column's value, as the C# after "f =>" (f is the Faker): a value that fits the column (its
     /// type, its length, its precision and scale), from its name where that says what it holds (Email, City, Phone),
     /// and one of its own where the column is in the primary key or a unique index. Null for a column the database
-    /// writes (an identity, a computed column, a rowversion), and for a type with no rule (Configure can give one).
+    /// writes (an identity, a computed column, a rowversion), and for a type with no rule (Configure can give one): a
+    /// PostgreSQL enum's too, a string whose values only the database knows.
     /// </summary>
     public static string Rule(ColumnSchema column)
     {
-        if (!Names.Written(column))
+        if (!Names.Written(column) || IsEnum(column))
             return null;
         string name = Plain(column.Name);
         bool unique = IsUnique(column);
