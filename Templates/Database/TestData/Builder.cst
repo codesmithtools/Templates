@@ -172,13 +172,17 @@ private string Rules()
 {
     string x = Fakes.Lambda(Table);
     var lines = new System.Text.StringBuilder();
+    bool comment = false;
     foreach (ColumnSchema column in Table.Columns.Cast<ColumnSchema>().Where(Names.Written))
     {
         string rule = Fakes.Rule(column);
+        comment = rule == null;
         lines.Append(Environment.NewLine).Append(' ', 12).Append(rule == null
             ? "// " + Names.Property(column) + ": no rule for " + column.NativeType + " (" + column.GetCSharpTypeName() + "); Configure can give one"
             : ".RuleFor(" + x + " => " + x + "." + Names.Property(column) + ", f => " + rule + ")");
     }
+    if (comment) // the statement's ; goes after the comment, not in it
+        lines.Append(Environment.NewLine).Append(' ', 12);
     return lines.ToString();
 }
 
