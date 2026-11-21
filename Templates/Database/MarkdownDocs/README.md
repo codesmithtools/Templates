@@ -20,7 +20,8 @@ Open `Generated/README.md`. GitHub and VS Code's Markdown preview draw the diagr
 - **A view's or procedure's page:** its columns or parameters, the tables it uses, and its SQL (GitHub highlights
   it). PetShop's SQLite database has neither, so there are none here.
 - Each page starts with breadcrumbs and ends with links to the pages before and after it.
-- Descriptions are the database's own (`CS_Description`: SQL Server's `MS_Description`, Oracle's comments).
+- Descriptions are the database's own (`CS_Description`: SQL Server's `MS_Description`, the comments of PostgreSQL,
+  MySQL and Oracle).
 
 The diagrams lay out left to right (`direction LR`), so a database's groups of tables stack instead of shrinking
 side by side. GitHub ignores Mermaid's older `layoutDirection` setting.
