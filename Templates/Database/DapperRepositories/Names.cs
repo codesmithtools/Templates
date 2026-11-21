@@ -36,10 +36,18 @@ public static class Names
     // The table's name for its record, before Entity() makes it one no type has.
     private static string Name(TableSchema table)
     {
-        string name = Identifier(StringUtil.ToSingular(StringUtil.ToPascalCase(table.Name)));
-        bool twice = table.Database.Tables.Any(t => t != table && Identifier(StringUtil.ToSingular(StringUtil.ToPascalCase(t.Name))) == name);
+        string name = Bare(table);
+        bool twice = BareNames.GetValue(table.Database.Tables, tables => tables.Cast<TableSchema>().GroupBy(Bare).ToDictionary(g => g.Key, g => g.Count()))
+            .TryGetValue(name, out int count) && count > 1;
         return twice ? Identifier(StringUtil.ToPascalCase(table.Owner)) + name : name;
     }
+
+    private static string Bare(TableSchema table) => Identifier(StringUtil.ToSingular(StringUtil.ToPascalCase(table.Name)));
+
+    // How many of a database's tables have each name, worked out once (Name asked every table each time: a database of
+    // 600 tables took minutes); a schema read again is a new collection.
+    private static readonly System.Runtime.CompilerServices.ConditionalWeakTable<TableSchemaCollection, Dictionary<string, int>> BareNames =
+        new System.Runtime.CompilerServices.ConditionalWeakTable<TableSchemaCollection, Dictionary<string, int>>();
 
     /// <summary>The repository's name: OrderRepository (Task: TaskRepository).</summary>
     public static string Repository(TableSchema table) => Name(table) + "Repository";

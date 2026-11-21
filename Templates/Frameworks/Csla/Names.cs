@@ -22,10 +22,18 @@ public static class Names
     // The table's name for its class, before Entity() makes it one no type has.
     private static string Name(TableSchema table)
     {
-        string name = Identifier(StringUtil.ToSingular(StringUtil.ToPascalCase(table.Name)));
-        bool twice = table.Database.Tables.Any(t => t != table && Identifier(StringUtil.ToSingular(StringUtil.ToPascalCase(t.Name))) == name);
+        string name = Bare(table);
+        bool twice = BareNames.GetValue(table.Database.Tables, tables => tables.Cast<TableSchema>().GroupBy(Bare).ToDictionary(g => g.Key, g => g.Count()))
+            .TryGetValue(name, out int count) && count > 1;
         return twice ? Identifier(StringUtil.ToPascalCase(table.Owner)) + name : name;
     }
+
+    private static string Bare(TableSchema table) => Identifier(StringUtil.ToSingular(StringUtil.ToPascalCase(table.Name)));
+
+    // How many of a database's tables have each name, worked out once (Name asked every table each time: a database of
+    // 600 tables took minutes); a schema read again is a new collection.
+    private static readonly System.Runtime.CompilerServices.ConditionalWeakTable<TableSchemaCollection, Dictionary<string, int>> BareNames =
+        new System.Runtime.CompilerServices.ConditionalWeakTable<TableSchemaCollection, Dictionary<string, int>>();
 
     /// <summary>The DbSet: plural (Order: Orders; Task: Tasks).</summary>
     public static string Set(TableSchema table) =>
@@ -161,8 +169,13 @@ public static class Names
     /// <summary>The foreign keys of the database's tables that refer to this one (and are relationships): its
     /// collections. Read from every table, as a provider's PrimaryKeys may not have them (SQLite's).</summary>
     public static IEnumerable<TableKeySchema> ReferencesTo(TableSchema table) =>
-        table.Database.Tables.Cast<TableSchema>().SelectMany(t => t.ForeignKeys.Cast<TableKeySchema>())
-            .Where(k => k.PrimaryKeyTable.Owner == table.Owner && k.PrimaryKeyTable.Name == table.Name && Related(k));
+        Referring.GetValue(table.Database.Tables, tables => tables.Cast<TableSchema>().SelectMany(t => t.ForeignKeys.Cast<TableKeySchema>())
+                .ToLookup(k => (k.PrimaryKeyTable.Owner, k.PrimaryKeyTable.Name)))[(table.Owner, table.Name)]
+            .Where(Related);
+
+    // A database's foreign keys by the table they refer to, gathered once (from every table's, each time, took minutes)
+    private static readonly System.Runtime.CompilerServices.ConditionalWeakTable<TableSchemaCollection, ILookup<(string, string), TableKeySchema>> Referring =
+        new System.Runtime.CompilerServices.ConditionalWeakTable<TableSchemaCollection, ILookup<(string, string), TableKeySchema>>();
 
     /// <summary>e.Id, or new { e.A, e.B } for several columns of the table.</summary>
     public static string Members(string parameter, TableSchema table, IEnumerable<MemberColumnSchema> columns)
