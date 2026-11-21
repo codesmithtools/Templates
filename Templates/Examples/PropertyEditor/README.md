@@ -67,8 +67,8 @@ export function activate(grid) {
 ```
 
 - **Which properties:** `types` matches the property's type (or a base type or interface) by its full name. A Property
-  directive can name an editor itself with `WebEditor="sample-palette-editor"`; `editorTypes` matches an `[Editor]`
-  type's name; `kinds` matches the built-in kinds.
+  directive can name an editor itself by its tag, `Editor="sample-palette-editor"`; `editorTypes` matches a .NET
+  editor's name (`Editor="Acme.PaletteEditor"`, or `[Editor]` in code); `kinds` matches the built-in kinds.
 - **Where:** `style` is `"inline"` (in the value cell), `"dropdown"` (below the row, as here) or `"dialog"`.
 - **What it gets:** the grid sets `property` (name, type, `value`, `isNull`, `readOnly`, `required`, `error`,
   `attributes`...) before it adds the element, and again whenever the values change. `host` has `setValue`,
