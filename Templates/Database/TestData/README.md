@@ -4,6 +4,9 @@ Test data builders (Bogus) for each table, and xUnit integration tests for each 
 with the [Dapper repositories](../DapperRepositories/README.md) they test, from the PetShop sample database
 (`PetShop.db3`, SQLite) in this folder, and each test runs against a copy of it.
 
+Databases: those of the [Dapper repositories](../DapperRepositories/README.md): SQL Server, SQLite, PostgreSQL and
+MySQL (and SQL scripts in their dialects). Not Oracle: generating from one stops and says so.
+
 ```sh
 cs generate TestData.csp
 cs check TestData.csp
@@ -21,9 +24,10 @@ var item = await Data.Items.CreateAsync(change: i => i with { Status = "P" }, ca
 var values = Data.Products.Build();                                         // not saved
 ```
 
-- **Each value fits its column:** its type, its length (`varchar(5)`), its precision and scale (`decimal(10,2)`) and
-  whether it can be null. A column's name picks the kind of value where it says what it holds: `Email`, `FirstName`,
-  `City`, `Zip`, `Phone`, `Image`, `Locale`. The rules are [Bogus](https://github.com/bchavez/Bogus) rules.
+- **Each value fits its column:** its type, its length (`varchar(5)`; a `char(5)` gets five characters, as the
+  database pads it), its precision and scale (`decimal(10,2)`) and whether it can be null. A column's name picks the
+  kind of value where it says what it holds: `Email`, `FirstName`, `City`, `Zip`, `Phone`, `Image`, `Locale`. The rules
+  are [Bogus](https://github.com/bchavez/Bogus) rules.
 - **Keys and unique columns are new each time:** a code for `CategoryId varchar(10)`, a random part in front of a
   username. The database numbers an identity (`AUTOINCREMENT`, `IDENTITY`, `serial`) itself.
 - **Foreign keys refer to rows that are there.** `CreateAsync` and `BuildAsync` make the rows a row refers to first
@@ -95,5 +99,19 @@ classes of your own that derive from `DatabaseTest`.
 | `Tests/SqliteTypes.cs` | Dapper type handlers for what SQLite stores loosely (the Dapper sample's). |
 
 To test your own database, change the data source in `TestData.csp`, the namespaces, and `DatabaseTest`, which says
-how a test gets its database: a copy of a SQLite file, or a database in a container, with a transaction per test that
-rolls back. The SQL is the database's, as the Dapper sample's is (SQL Server, PostgreSQL, MySQL, SQLite).
+how a test gets its database: a copy of a SQLite file, or a database in a container, with a `TransactionScope` per test
+(`TransactionScopeAsyncFlowOption.Enabled`, made before the connection opens) that it doesn't complete, so the test's
+rows go. Not `connection.BeginTransaction()`: the repositories take a connection, not a transaction, and SqlClient and
+MySqlConnector refuse a command outside the connection's transaction. Tests that share a database can deadlock side by
+side: run them one at a time (`dotnet test --project Tests -- --parallel none`). The SQL is the database's, as the
+Dapper sample's is (SQL Server, PostgreSQL, MySQL, SQLite).
+
+The test project needs the database's ADO.NET provider in place of `Microsoft.Data.Sqlite`: `Npgsql`, `MySqlConnector`,
+or for SQL Server `Microsoft.Data.SqlClient` with `System.Security.Cryptography.Pkcs` 10.0.14 or later beside it.
+SqlClient 7 brings a version of that package with known vulnerabilities, and the project treats NuGet's warning about
+them (NU1902, NU1903) as an error:
+
+```xml
+<PackageReference Include="Microsoft.Data.SqlClient" Version="7.0.2" />
+<PackageReference Include="System.Security.Cryptography.Pkcs" Version="10.0.14" />
+```

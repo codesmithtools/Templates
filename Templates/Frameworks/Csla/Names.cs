@@ -11,26 +11,87 @@ public static class Names
     private static readonly string[] DefaultOwners = { "", "dbo", "public", "main" };
 
     /// <summary>The entity's class: the table's name in Pascal case, singular (Orders: Order); with its owner's in front
-    /// when another owner has a table that would have the same name.</summary>
+    /// when another owner has a table that would have the same name; with Entity after it when it's the name of a type
+    /// the generated code uses (Task: TaskEntity, Guid: GuidEntity).</summary>
     public static string Entity(TableSchema table)
     {
-        string name = Identifier(StringUtil.ToSingular(StringUtil.ToPascalCase(table.Name)));
-        bool twice = table.Database.Tables.Any(t => t != table && Identifier(StringUtil.ToSingular(StringUtil.ToPascalCase(t.Name))) == name);
+        string name = Name(table);
+        return Taken(name) ? name + "Entity" : name;
+    }
+
+    // The table's name for its class, before Entity() makes it one no type has.
+    private static string Name(TableSchema table)
+    {
+        string name = Bare(table);
+        bool twice = BareNames.GetValue(table.Database.Tables, tables => tables.Cast<TableSchema>().GroupBy(Bare).ToDictionary(g => g.Key, g => g.Count()))
+            .TryGetValue(name, out int count) && count > 1;
         return twice ? Identifier(StringUtil.ToPascalCase(table.Owner)) + name : name;
     }
 
-    /// <summary>The DbSet: plural (Order: Orders).</summary>
-    public static string Set(TableSchema table) => StringUtil.ToPlural(Entity(table));
+    private static string Bare(TableSchema table) => Identifier(StringUtil.ToSingular(StringUtil.ToPascalCase(table.Name)));
+
+    // How many of a database's tables have each name, worked out once (Name asked every table each time: a database of
+    // 600 tables took minutes); a schema read again is a new collection.
+    private static readonly System.Runtime.CompilerServices.ConditionalWeakTable<TableSchemaCollection, Dictionary<string, int>> BareNames =
+        new System.Runtime.CompilerServices.ConditionalWeakTable<TableSchemaCollection, Dictionary<string, int>>();
+
+    /// <summary>The DbSet: plural (Order: Orders; Task: Tasks).</summary>
+    public static string Set(TableSchema table) =>
+        Taken(StringUtil.ToPlural(Name(table))) ? StringUtil.ToPlural(Entity(table)) : StringUtil.ToPlural(Name(table));
+
+    // The types an entity's name mustn't be: in its own namespace it would hide one the generated code uses there
+    // (Task: async Task), and elsewhere it would be ambiguous with one a file imports (Guid, with ImplicitUsings).
+    // Those of the namespaces every generated project imports (System, System.IO, System.Linq, System.Threading.Tasks,
+    // ...), found by name, and the frameworks' the generated code uses (EF Core, ASP.NET Core, CSLA) or imports.
+    private static readonly string[] Imports = { "System", "System.Collections.Generic", "System.IO", "System.Linq", "System.Net.Http", "System.Threading", "System.Threading.Tasks" };
+    private static readonly string[] Assemblies = { "System.Private.CoreLib", "System.Runtime", "System.Collections", "System.Console", "System.Linq", "System.Net.Http", "System.Threading" };
+    private static readonly HashSet<string> Frameworks = new HashSet<string>
+    {
+        "DbContext", "DbContextOptions", "DbContextOptionsBuilder", "DbSet", "DbUpdateException", "DbUpdateConcurrencyException", "EF",
+        "EntityState", "EntityTypeBuilder", "ModelBuilder",
+        "Accepted", "Conflict", "Created", "Endpoint", "Host", "HttpContext", "Logger", "NoContent", "NotFound", "Ok", "Results", "Route",
+        "RouteData", "RouteGroupBuilder", "StatusCodes", "TypedResults", "WebApplication",
+        "ComponentBase", "Dispatcher", "EventCallback", "LayoutComponentBase", "MarkupString", "NavigationManager",
+        "ApplicationContext", "BusinessBase", "BusinessListBase", "BusinessRule", "BusinessRules", "CommandBase", "DataPortal", "PropertyInfo",
+        "ReadOnlyBase", "ReadOnlyListBase", "Rule", "Utilities", "ViewModel",
+        "Validator", "ValidationException",
+    };
+    private static readonly Dictionary<string, bool> Seen = new Dictionary<string, bool>();
+
+    private static bool Taken(string name)
+    {
+        lock (Seen)
+        {
+            if (!Seen.TryGetValue(name, out bool taken))
+                Seen[name] = taken = Frameworks.Contains(name) || Imports.Any(n => new[] { "", "`1", "`2", "`3" }.Any(arity =>
+                    Assemblies.Any(assembly => System.Type.GetType(n + "." + name + arity + ", " + assembly, false) is { IsPublic: true })));
+            return taken;
+        }
+    }
 
     /// <summary>The schema for ToTable, or null for a database's default (dbo, public, SQLite's, MySQL's database).</summary>
     public static string Schema(TableSchema table) =>
         DefaultOwners.Contains(table.Owner ?? "") || table.Owner == table.Database.Name ? null : table.Owner;
 
-    /// <summary>A column's property: its name in Pascal case (order_id: OrderId), not the class's own name, and once.</summary>
+    /// <summary>The columns the entity has a property for: those with a .NET type. A column without one (SQL Server's
+    /// geography, hierarchyid or sql_variant, PostgreSQL's point) would be an object, which EF Core can't map: the whole
+    /// model would fail, so the entity leaves it out (EF Core's scaffolding does too).</summary>
+    public static List<ColumnSchema> Columns(TableSchema table) => table.Columns.Cast<ColumnSchema>().Where(Mapped).ToList();
+
+    /// <summary>Whether a column has a .NET type, so a property (see Columns).</summary>
+    public static bool Mapped(ColumnSchema column) => column.GetClrType(TypeMapping.Modern) != typeof(object);
+
+    // What a class has already, or a record (DTOs): a column of one's name (Equals) gets Value after it, as one of the
+    // class's own name does (a record's second Equals is CS0102; a class's hides object's)
+    private static readonly string[] Inherited =
+        { "Equals", "GetHashCode", "GetType", "ToString", "Finalize", "MemberwiseClone", "EqualityContract", "PrintMembers", "Deconstruct" };
+
+    /// <summary>A column's property: its name in Pascal case (order_id: OrderId), not the class's own name nor one it
+    /// has already (Equals: EqualsValue), and once.</summary>
     public static string Property(ColumnSchema column)
     {
         var names = new Dictionary<ColumnSchema, string>();
-        var taken = new HashSet<string> { Entity(column.Table) };
+        var taken = new HashSet<string>(Inherited) { Entity(column.Table) };
         foreach (ColumnSchema c in column.Table.Columns)
         {
             string name = Identifier(StringUtil.ToPascalCase(c.Name));
@@ -114,8 +175,13 @@ public static class Names
     /// <summary>The foreign keys of the database's tables that refer to this one (and are relationships): its
     /// collections. Read from every table, as a provider's PrimaryKeys may not have them (SQLite's).</summary>
     public static IEnumerable<TableKeySchema> ReferencesTo(TableSchema table) =>
-        table.Database.Tables.Cast<TableSchema>().SelectMany(t => t.ForeignKeys.Cast<TableKeySchema>())
-            .Where(k => k.PrimaryKeyTable.Owner == table.Owner && k.PrimaryKeyTable.Name == table.Name && Related(k));
+        Referring.GetValue(table.Database.Tables, tables => tables.Cast<TableSchema>().SelectMany(t => t.ForeignKeys.Cast<TableKeySchema>())
+                .ToLookup(k => (k.PrimaryKeyTable.Owner, k.PrimaryKeyTable.Name)))[(table.Owner, table.Name)]
+            .Where(Related);
+
+    // A database's foreign keys by the table they refer to, gathered once (from every table's, each time, took minutes)
+    private static readonly System.Runtime.CompilerServices.ConditionalWeakTable<TableSchemaCollection, ILookup<(string, string), TableKeySchema>> Referring =
+        new System.Runtime.CompilerServices.ConditionalWeakTable<TableSchemaCollection, ILookup<(string, string), TableKeySchema>>();
 
     /// <summary>e.Id, or new { e.A, e.B } for several columns of the table.</summary>
     public static string Members(string parameter, TableSchema table, IEnumerable<MemberColumnSchema> columns)

@@ -29,7 +29,11 @@ each color, with its name, its light value and its dark value. Type a color or p
 | `Palette.csp` | A palette of eight colors, written to `Generated/palette.css`. |
 
 This replaces 8.x's CustomPropertiesSample (in `Legacy/Projects`). Its WinForms editors (`UITypeEditor`) don't run in
-9.0: the property grid is a web page in VS Code, and its editors are web components.
+9.0: the property grid is a web page in VS Code, and its editors are web components. Its types still work without
+them: an empty one has **Create** (its parameterless constructor), then its properties are set in a dialog (for 8.x's
+modal editors), below the row (for drop-down ones) or as rows under it; a drop-down list's type (a list of `Values`
+and a `SelectedItem`) is a drop-down of its values. To edit one as a whole, give it a converter and a web editor, as
+this sample does.
 
 ## Writing your own editor
 
@@ -63,8 +67,8 @@ export function activate(grid) {
 ```
 
 - **Which properties:** `types` matches the property's type (or a base type or interface) by its full name. A Property
-  directive can name an editor itself with `WebEditor="sample-palette-editor"`; `editorTypes` matches an `[Editor]`
-  type's name; `kinds` matches the built-in kinds.
+  directive can name an editor itself by its tag, `Editor="sample-palette-editor"`; `editorTypes` matches a .NET
+  editor's name (`Editor="Acme.PaletteEditor"`, or `[Editor]` in code); `kinds` matches the built-in kinds.
 - **Where:** `style` is `"inline"` (in the value cell), `"dropdown"` (below the row, as here) or `"dialog"`.
 - **What it gets:** the grid sets `property` (name, type, `value`, `isNull`, `readOnly`, `required`, `error`,
   `attributes`...) before it adds the element, and again whenever the values change. `host` has `setValue`,

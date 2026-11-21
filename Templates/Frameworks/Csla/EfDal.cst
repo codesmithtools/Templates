@@ -84,7 +84,7 @@ public partial class <%= name %>(<%= ContextName %> db) : <%= Model.DalInterface
     {
         var entity = new <%= entity %>
         {
-<% foreach (ColumnSchema column in Table.Columns) { %>
+<% foreach (ColumnSchema column in Names.Columns(Table)) { %>
 <% if (included.Contains(column) && !Model.Generated(column)) { %>
             <%= Names.Property(column) %> = data.<%= Model.Property(column) %>,
 <% } else if (Names.Required(column) != "") { %>

@@ -3,6 +3,8 @@
 Enums from a lookup table's rows, so code says `Category.Fish`, not `"FISH"`. It reads the `Category` table of the
 PetShop sample database (`PetShop.db3`, SQLite, in this folder) and writes a C# enum and a TypeScript const.
 
+Databases: any `cs` reads (SQL Server, SQLite, PostgreSQL, MySQL, Oracle, and SQL scripts).
+
 ```sh
 cs generate LookupEnums.csp
 dotnet run --project App
@@ -17,7 +19,8 @@ dotnet run --project App
 - Names are made identifiers: `Back yard` is `BackYard`, `3D models` is `_3DModels`, a name twice gets a number
   (`Fish2`), and a row without one is named from its code. Rows are in value order.
 
-The files are a copy of the table's rows: generate them again when the rows change.
+The files are a copy of the table's rows: generate them again when the rows change. A table with no rows makes an
+enum with no members, with a `#warning` in the C# (and a comment in the TypeScript) that says so.
 
 | Property | What it is |
 | --- | --- |

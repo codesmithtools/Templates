@@ -69,13 +69,13 @@ namespace <%= Namespace %>;
 /// <summary>A row of <%= Table.Name %>, as the API returns it.</summary>
 public sealed record <%= entity %>Response
 {
-<% foreach (ColumnSchema column in Table.Columns) { %>
+<% foreach (ColumnSchema column in Names.Columns(Table)) { %>
     public required <%= Names.Type(column) %> <%= Names.Property(column) %> { get; init; }
 <% } %>
 
     public static <%= entity %>Response From(<%= entity %> entity) => new()
     {
-<% foreach (ColumnSchema column in Table.Columns) { %>
+<% foreach (ColumnSchema column in Names.Columns(Table)) { %>
         <%= Names.Property(column) %> = entity.<%= Names.Property(column) %>,
 <% } %>
     };
@@ -92,7 +92,7 @@ public sealed record Create<%= entity %>Request
 
     public <%= entity %> ToEntity() => new()
     {
-<% foreach (ColumnSchema column in Table.Columns) { %>
+<% foreach (ColumnSchema column in Names.Columns(Table)) { %>
 <% if (Web.Creates(Table).Contains(column)) { %>
         <%= Names.Property(column) %> = <%= Names.Property(column) %>,
 <% } else if (Names.Required(column) != "") { %>
