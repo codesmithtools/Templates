@@ -81,11 +81,17 @@ public static class Names
     /// <summary>Whether a column has a .NET type, so a property (see Columns).</summary>
     public static bool Mapped(ColumnSchema column) => column.GetClrType(TypeMapping.Modern) != typeof(object);
 
-    /// <summary>A column's property: its name in Pascal case (order_id: OrderId), not the class's own name, and once.</summary>
+    // What a class has already, or a record (DTOs): a column of one's name (Equals) gets Value after it, as one of the
+    // class's own name does (a record's second Equals is CS0102; a class's hides object's)
+    private static readonly string[] Inherited =
+        { "Equals", "GetHashCode", "GetType", "ToString", "Finalize", "MemberwiseClone", "EqualityContract", "PrintMembers", "Deconstruct" };
+
+    /// <summary>A column's property: its name in Pascal case (order_id: OrderId), not the class's own name nor one it
+    /// has already (Equals: EqualsValue), and once.</summary>
     public static string Property(ColumnSchema column)
     {
         var names = new Dictionary<ColumnSchema, string>();
-        var taken = new HashSet<string> { Entity(column.Table) };
+        var taken = new HashSet<string>(Inherited) { Entity(column.Table) };
         foreach (ColumnSchema c in column.Table.Columns)
         {
             string name = Identifier(StringUtil.ToPascalCase(c.Name));
