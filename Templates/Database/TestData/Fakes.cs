@@ -153,6 +153,11 @@ public static class Fakes
         System.Convert.ToString(column.ExtendedProperties["CS_SystemType"]?.Value) == "USER-DEFINED" &&
         column.GetClrType(TypeMapping.Modern) == typeof(string);
 
+    // char(n), nchar(n), PostgreSQL's character(n) (bpchar): text of n characters, padded with spaces
+    private static bool Fixed(ColumnSchema column) =>
+        column.Size > 0 && column.Size < 1000 &&
+        new[] { "char", "nchar", "bpchar", "character", "national character" }.Contains((column.NativeType ?? "").ToLowerInvariant());
+
     /// <summary>
     /// The Bogus rule for a column's value, as the C# after "f =>" (f is the Faker): a value that fits the column (its
     /// type, its length, its precision and scale), from its name where that says what it holds (Email, City, Phone),
@@ -169,6 +174,10 @@ public static class Fakes
         switch (column.GetCSharpTypeName().TrimEnd('?'))
         {
             case "string":
+                // a fixed-length column (char(32)) reads back padded to its length (SQL Server, PostgreSQL), so its text is
+                // that long: letters and digits
+                if (Fixed(column))
+                    return "Fake.Code(f, " + column.Size + ")";
                 return Text(name, Plain(column.Table.Name), column.Size, unique);
             case "char":
                 return "f.Random.Char('A', 'Z')";

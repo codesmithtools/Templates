@@ -24,9 +24,10 @@ var item = await Data.Items.CreateAsync(change: i => i with { Status = "P" }, ca
 var values = Data.Products.Build();                                         // not saved
 ```
 
-- **Each value fits its column:** its type, its length (`varchar(5)`), its precision and scale (`decimal(10,2)`) and
-  whether it can be null. A column's name picks the kind of value where it says what it holds: `Email`, `FirstName`,
-  `City`, `Zip`, `Phone`, `Image`, `Locale`. The rules are [Bogus](https://github.com/bchavez/Bogus) rules.
+- **Each value fits its column:** its type, its length (`varchar(5)`; a `char(5)` gets five characters, as the
+  database pads it), its precision and scale (`decimal(10,2)`) and whether it can be null. A column's name picks the
+  kind of value where it says what it holds: `Email`, `FirstName`, `City`, `Zip`, `Phone`, `Image`, `Locale`. The rules
+  are [Bogus](https://github.com/bchavez/Bogus) rules.
 - **Keys and unique columns are new each time:** a code for `CategoryId varchar(10)`, a random part in front of a
   username. The database numbers an identity (`AUTOINCREMENT`, `IDENTITY`, `serial`) itself.
 - **Foreign keys refer to rows that are there.** `CreateAsync` and `BuildAsync` make the rows a row refers to first
