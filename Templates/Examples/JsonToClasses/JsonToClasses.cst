@@ -9,8 +9,11 @@ Description: Generate C# classes from a JSON file.
 <%@ Property Category="1. Required" Name="JsonFile" Type="System.String" Default="sample.json" Optional="False" Description="The full path to the JSON file." Editor="System.Windows.Forms.Design.FileNameEditor, System.Design" %>
 <%@ Import Namespace="System.IO" %>
 <%@ Import Namespace="System.Collections.Generic" %>
-<%@ Import Namespace="CodeSmith.Engine.Json" %>
-<%@ Import Namespace="CodeSmith.Engine.Json.Linq" %>
+<%@ Import Namespace="System.Globalization" %>
+<%@ Import Namespace="System.Linq" %>
+<%@ Import Namespace="System.Text" %>
+<%@ Import Namespace="System.Text.Json" %>
+<%@ Import Namespace="System.Text.RegularExpressions" %>
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
@@ -18,7 +21,7 @@ using System.Runtime.Serialization;
 if (!File.Exists(Path.Combine(this.CodeTemplateInfo.DirectoryName, JsonFile)))
     throw new ApplicationException("Json file not found: " + Path.Combine(this.CodeTemplateInfo.DirectoryName, JsonFile) + " (JsonFile is relative to the template).");
 
-JObject root = JObject.Parse(File.ReadAllText(Path.Combine(this.CodeTemplateInfo.DirectoryName, JsonFile)));
+JsonElement root = ReadRoot(Path.Combine(this.CodeTemplateInfo.DirectoryName, JsonFile));
 %>
 
 namespace <%= TargetNamespace %>
@@ -26,108 +29,188 @@ namespace <%= TargetNamespace %>
     [DataContract]
     public class <%= RootClassName %>
     {
-<% RenderProperties(root); %>
+<% RenderProperties(RootClassName, root); %>
     }
 <%
-Dictionary<string, JObject> objects = GetObjects(root);
+Dictionary<string, JsonElement> objects = GetObjects(root);
 foreach (string name in objects.Keys) {
 %>
     
     [DataContract]
     public class <%= name %>
     {
-<% RenderProperties(objects[name]); %>
+<% RenderProperties(name, objects[name]); %>
     }
 <% } %>
 }
 <script runat="template">
-private void RenderProperties(JObject j)
+// The document's root object; for a root array, the first of its objects (the file is a list of the root class).
+// System.Text.Json reads a number of any size, which Json.NET (CodeSmith.Engine.Json) can't past a long.
+private JsonElement ReadRoot(string path)
 {
-    if (j == null)
-        return;
+    JsonElement document;
+    try
+    {
+        using (JsonDocument json = JsonDocument.Parse(File.ReadAllText(path), new JsonDocumentOptions { AllowTrailingCommas = true, CommentHandling = JsonCommentHandling.Skip }))
+            document = json.RootElement.Clone();
+    }
+    catch (JsonException e)
+    {
+        string message = Regex.Replace(e.Message, @"\s*LineNumber: \d+ \| BytePositionInLine: \d+\.?$", "");
+        throw new ApplicationException(JsonFile + " isn't JSON (line " + (e.LineNumber + 1) + ", position " + (e.BytePositionInLine + 1) + "): " + message);
+    }
+    if (document.ValueKind == JsonValueKind.Object)
+        return document;
+    if (document.ValueKind == JsonValueKind.Array && document.EnumerateArray().Any(e => e.ValueKind == JsonValueKind.Object))
+        return document.EnumerateArray().First(e => e.ValueKind == JsonValueKind.Object);
+    throw new ApplicationException(JsonFile + " is " + (document.ValueKind == JsonValueKind.Array ? "an array without objects" : "a single value") +
+        ": there's no object to make " + RootClassName + " from.");
+}
 
+// An object's members, each once: a name given twice is the last value, where the first one was (as Json.NET reads it).
+private static List<KeyValuePair<string, JsonElement>> Members(JsonElement j)
+{
+    var members = new List<KeyValuePair<string, JsonElement>>();
+    foreach (JsonProperty p in j.EnumerateObject())
+    {
+        int i = members.FindIndex(m => m.Key == p.Name);
+        if (i >= 0)
+            members[i] = new KeyValuePair<string, JsonElement>(p.Name, p.Value);
+        else
+            members.Add(new KeyValuePair<string, JsonElement>(p.Name, p.Value));
+    }
+    return members;
+}
+
+private void RenderProperties(string className, JsonElement j)
+{
     bool isFirst = true;
+    var taken = new HashSet<string>();
 
-    foreach (JProperty p in j.Properties())
+    foreach (var p in Members(j))
     {
         if (!isFirst)
             Response.WriteLine("        ");
         else
             isFirst = false;
 
-        Response.WriteLine("        [DataMember(Name=\"" + p.Name + "\")]");
-        Response.WriteLine("        public " + GetType(p.Value) + " " + StringUtil.ToPascalCase(p.Name) + " { get; set; }");
+        Response.WriteLine("        [DataMember(Name=\"" + p.Key.Replace("\\", "\\\\").Replace("\"", "\\\"") + "\")]");
+        Response.WriteLine("        public " + GetType(p.Value, p.Key, false) + " " + PropertyName(p.Key, className, taken) + " { get; set; }");
     }
 }
 
-private string GetType(JToken token)
+// A member's property: its name in Pascal case, made an identifier as cs new makes one (123abc: _123abc, "": _), not
+// its class's name (a class Item's Item is ItemValue), and once.
+private static string PropertyName(string name, string className, HashSet<string> taken)
 {
-    switch (token.Type)
+    string property = Identifier(StringUtil.ToPascalCase(name));
+    if (property == className)
+        property += "Value";
+    string first = property;
+    for (int i = 2; !taken.Add(property); i++)
+        property = first + i;
+    return property;
+}
+
+// An object member's class: its name in Pascal case and singular (items: Item), an identifier.
+private static string ClassName(string name) =>
+    Identifier(name.Length == 0 ? "" : StringUtil.ToPascalCase(StringUtil.ToSingular(name)));
+
+// Letters, digits and _ (another character makes the next one a capital), not starting with a digit.
+private static string Identifier(string name)
+{
+    var text = new StringBuilder();
+    bool upper = false;
+    foreach (char c in name ?? "")
     {
-        case JTokenType.Array:
-            if (token.HasValues)
-                return "List<" + GetType(token.First) + ">";
-            return "List<object>";
-        case JTokenType.Boolean:
+        if (char.IsLetterOrDigit(c) || c == '_')
+        {
+            text.Append(upper ? char.ToUpperInvariant(c) : c);
+            upper = false;
+        }
+        else
+        {
+            upper = text.Length > 0;
+        }
+    }
+    if (text.Length == 0 || char.IsDigit(text[0]))
+        text.Insert(0, '_');
+    return text.ToString();
+}
+
+// A value's type. name: the member it's the value of, which names an object's class (and the objects' of an array that
+// is the member's value; those of an array in an array are objects). Null for null, which says nothing.
+private string GetType(JsonElement token, string name, bool inArray)
+{
+    switch (token.ValueKind)
+    {
+        case JsonValueKind.Array:
+            return "List<" + ItemType(token.EnumerateArray().Select(item => GetType(item, inArray ? null : name, true))) + ">";
+        case JsonValueKind.True:
+        case JsonValueKind.False:
             return "bool";
-        case JTokenType.Date:
-            return "DateTime";
-        case JTokenType.Float:
-            return "float";
-        case JTokenType.Integer:
-            return "int";
-        case JTokenType.Object:
-            if (token.Parent == null)
-                return "object";
-            if (token.Parent.Type == JTokenType.Property)
-                return StringUtil.ToPascalCase(StringUtil.ToSingular(((JProperty)token.Parent).Name));
-            if (token.Parent.Type == JTokenType.Array && token.Parent.Parent != null && token.Parent.Parent.Type == JTokenType.Property)
-                return StringUtil.ToPascalCase(StringUtil.ToSingular(((JProperty)token.Parent.Parent).Name));
-            return "object";
-        case JTokenType.String:
+        case JsonValueKind.Number:
+            string number = token.GetRawText();
+            if (number.IndexOfAny(new[] { '.', 'e', 'E' }) >= 0)
+                return "float";
+            return int.TryParse(number, NumberStyles.Integer, CultureInfo.InvariantCulture, out _) ? "int"
+                : long.TryParse(number, NumberStyles.Integer, CultureInfo.InvariantCulture, out _) ? "long"
+                : decimal.TryParse(number, NumberStyles.Integer, CultureInfo.InvariantCulture, out _) ? "decimal"
+                : "double";
+        case JsonValueKind.Object:
+            return name == null ? "object" : ClassName(name);
+        case JsonValueKind.String:
             DateTime date;
-            return DateTime.TryParse(token.Value<string>(), out date) ? "DateTime" : "string";
+            return DateTime.TryParse(token.GetString(), out date) ? "DateTime" : "string";
+        case JsonValueKind.Null:
+            return inArray ? null : "object";
     }
 
     return "object";
 }
 
-private static string[] _intrinsicTypes = new[] { "object", "bool", "DateTime", "float", "int", "string" };
-private bool IsIntrinsicType(string type)
+// An array's item type: its items' (nulls aside), the widest where they're all numbers, object where they differ
+// ([1, "two"]) or there are none.
+private static readonly string[] Numbers = { "int", "long", "decimal", "double", "float" };
+
+private static string ItemType(IEnumerable<string> types)
 {
-    return _intrinsicTypes.Any(t => t.Equals(type));
+    var kinds = types.Where(t => t != null).Distinct().ToList();
+    if (kinds.Count == 1)
+        return kinds[0];
+    if (kinds.Count > 1 && kinds.All(Numbers.Contains))
+        return kinds.Contains("float") ? "float" : Numbers.Last(kinds.Contains);
+    return "object";
 }
 
-private Dictionary<string, JObject> GetObjects(JObject j)
+// The classes the objects in the document make, by name, in the order they're met (the first object of a name gives
+// its members): an object member's, and an array member's whose items are objects. The root class's name is taken.
+private Dictionary<string, JsonElement> GetObjects(JsonElement j)
 {
-    var objects = new Dictionary<string, JObject>();
-    GetObjects(j, objects);
+    var objects = new Dictionary<string, JsonElement>();
+    var taken = new HashSet<string> { RootClassName };
+    GetObjects(j, objects, taken);
     return objects;
 }
 
-private void GetObjects(JObject j, Dictionary<string, JObject> objects)
+private void GetObjects(JsonElement j, Dictionary<string, JsonElement> objects, HashSet<string> taken)
 {
-    if (j == null)
-        return;
-
-    if (objects == null)
-        objects = new Dictionary<string, JObject>();
-
-    foreach (JProperty p in j.Properties())
+    foreach (var p in Members(j))
     {
-        switch (p.Value.Type)
+        switch (p.Value.ValueKind)
         {
-            case JTokenType.Array:
-                if (!p.Value.HasValues)
-                    continue;
-                if (!objects.ContainsKey(StringUtil.ToPascalCase(StringUtil.ToSingular(p.Name))) && !IsIntrinsicType(GetType(p.Value.First)))
-                    objects.Add(StringUtil.ToPascalCase(StringUtil.ToSingular(p.Name)), p.Value.First as JObject);
-                GetObjects(p.Value.First as JObject, objects);
+            case JsonValueKind.Array:
+                if (GetType(p.Value, p.Key, false) != "List<" + ClassName(p.Key) + ">")
+                    continue; // not objects (numbers, a mix, arrays)
+                JsonElement first = p.Value.EnumerateArray().First(e => e.ValueKind == JsonValueKind.Object);
+                if (taken.Add(ClassName(p.Key)))
+                    objects.Add(ClassName(p.Key), first);
+                GetObjects(first, objects, taken);
                 break;
-            case JTokenType.Object:
-                if (!objects.ContainsKey(StringUtil.ToPascalCase(StringUtil.ToSingular(p.Name))))
-                    objects.Add(StringUtil.ToPascalCase(StringUtil.ToSingular(p.Name)), p.Value as JObject);
-                GetObjects(p.Value as JObject, objects);
+            case JsonValueKind.Object:
+                if (taken.Add(ClassName(p.Key)))
+                    objects.Add(ClassName(p.Key), p.Value);
+                GetObjects(p.Value, objects, taken);
                 break;
         }
     }
