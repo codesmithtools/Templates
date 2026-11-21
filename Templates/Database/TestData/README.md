@@ -105,3 +105,13 @@ rows go. Not `connection.BeginTransaction()`: the repositories take a connection
 MySqlConnector refuse a command outside the connection's transaction. Tests that share a database can deadlock side by
 side: run them one at a time (`dotnet test --project Tests -- --parallel none`). The SQL is the database's, as the
 Dapper sample's is (SQL Server, PostgreSQL, MySQL, SQLite).
+
+The test project needs the database's ADO.NET provider in place of `Microsoft.Data.Sqlite`: `Npgsql`, `MySqlConnector`,
+or for SQL Server `Microsoft.Data.SqlClient` with `System.Security.Cryptography.Pkcs` 10.0.14 or later beside it.
+SqlClient 7 brings a version of that package with known vulnerabilities, and the project treats NuGet's warning about
+them (NU1902, NU1903) as an error:
+
+```xml
+<PackageReference Include="Microsoft.Data.SqlClient" Version="7.0.2" />
+<PackageReference Include="System.Security.Cryptography.Pkcs" Version="10.0.14" />
+```
