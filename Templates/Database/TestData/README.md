@@ -99,5 +99,9 @@ classes of your own that derive from `DatabaseTest`.
 | `Tests/SqliteTypes.cs` | Dapper type handlers for what SQLite stores loosely (the Dapper sample's). |
 
 To test your own database, change the data source in `TestData.csp`, the namespaces, and `DatabaseTest`, which says
-how a test gets its database: a copy of a SQLite file, or a database in a container, with a transaction per test that
-rolls back. The SQL is the database's, as the Dapper sample's is (SQL Server, PostgreSQL, MySQL, SQLite).
+how a test gets its database: a copy of a SQLite file, or a database in a container, with a `TransactionScope` per test
+(`TransactionScopeAsyncFlowOption.Enabled`, made before the connection opens) that it doesn't complete, so the test's
+rows go. Not `connection.BeginTransaction()`: the repositories take a connection, not a transaction, and SqlClient and
+MySqlConnector refuse a command outside the connection's transaction. Tests that share a database can deadlock side by
+side: run them one at a time (`dotnet test --project Tests -- --parallel none`). The SQL is the database's, as the
+Dapper sample's is (SQL Server, PostgreSQL, MySQL, SQLite).
