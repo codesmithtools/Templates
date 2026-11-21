@@ -1,5 +1,6 @@
 <%@ CodeTemplate Language="C#" Debug="True" TargetLanguage="T-SQL" Description="Generates a script based on the data from a table." %>
 <%@ Property Name="SourceTable" Type="SchemaExplorer.TableSchema" Category="Context" Description="Table to get the data from." %>
+<%@ Property Name="OutputDirectory" Type="System.String" Default="Generated" Category="Output" Description="Where the script goes: the table's name, .sql." %>
 <%@ Assembly Name="SchemaExplorer" %>
 <%@ Assembly Name="CodeSmith.BaseTemplates" %>
 <%@ Assembly Name="CodeSmith.CustomProperties" %>
@@ -7,6 +8,7 @@
 <%@ Import Namespace="SchemaExplorer" %>
 <%@ Import Namespace="System.Data" %>
 <%@ Import Namespace="System.Globalization" %>
+<%@ Import Namespace="System.IO" %>
 <%@ Import Namespace="System.Linq" %>
 <%@ Import Namespace="System.Text" %>
 
@@ -117,14 +119,27 @@ public string PrepareValue(string value)
 	return value.Replace("'", "''").Replace("\r\n", "' + CHAR(13) + CHAR(10) + N'").Replace("\n", "' + CHAR(10) + N'");
 }
 
+// The script's file when a project names none: the table's, in OutputDirectory (Generated/Category.sql).
+public override string GetFileName()
+{
+	if (SourceTable == null)
+		return base.GetFileName();
+	string name = System.Text.RegularExpressions.Regex.Replace(SourceTable.Name, @"[\x00-\x1f<>:""/\\|?*]", "_").TrimEnd('.');
+	return Path.Combine(OutputDirectory ?? "", (name.Length > 0 ? name : "_") + ".sql");
+}
+
 public string GetTableOwner()
 {
     return GetTableOwner(true);
 }
 
+// A database's default schema, which SQL Server doesn't have: PostgreSQL's public, SQLite's main. The table is
+// scripted without it (dbo is SQL Server's own, and kept).
+private static readonly string[] DefaultOwners = { "public", "main" };
+
 public string GetTableOwner(bool includeDot)
 {
-    if (SourceTable.Owner.Length > 0)
+    if (SourceTable.Owner.Length > 0 && !DefaultOwners.Contains(SourceTable.Owner, StringComparer.OrdinalIgnoreCase))
     {
         return Quote(SourceTable.Owner) + ".";
     }
