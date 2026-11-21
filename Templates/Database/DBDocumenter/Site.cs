@@ -86,13 +86,33 @@ public sealed class DocSite
 
     // Pages
 
-    /// <summary>An object's key: its kind and full name (another TableSchema of the same table has the same key).</summary>
+    /// <summary>An object's key: its kind and full name (another TableSchema of the same table has the same key), and a
+    /// procedure's parameter types (PostgreSQL's overloads share a name).</summary>
     public static string Key(SchemaObjectBase item) =>
-        (item is TableSchema ? "table:" : item is ViewSchema ? "view:" : item is CommandSchema ? "procedure:" : "object:") + item.FullName;
+        (item is TableSchema ? "table:" : item is ViewSchema ? "view:" : item is CommandSchema ? "procedure:" : "object:") + item.FullName +
+        (item is CommandSchema command ? "(" + Signature(command) + ")" : "");
 
     /// <summary>The name a page shows: the object's, with its schema in front unless that's the default (dbo, public).</summary>
     public static string Title(SchemaObjectWithOwnerBase item) =>
-        IsDefaultOwner(item) ? item.Name : item.Owner + "." + item.Name;
+        IsDefaultOwner(item) ? Name(item) : item.Owner + "." + Name(item);
+
+    /// <summary>The object's name, and a procedure's parameter types where another has its name (PostgreSQL's
+    /// overloads: f(integer), f(text)).</summary>
+    public static string Name(SchemaObjectWithOwnerBase item) =>
+        item.Name + (item is CommandSchema command && Overloaded(command) ? "(" + Signature(command) + ")" : "");
+
+    // A procedure's parameter types, the return value's aside: integer, text.
+    private static readonly ConditionalWeakTable<CommandSchema, string> Signatures = new ConditionalWeakTable<CommandSchema, string>();
+
+    private static string Signature(CommandSchema command) => Signatures.GetValue(command, c =>
+        string.Join(", ", c.Parameters.Cast<ParameterSchema>().Where(p => p.Direction != ParameterDirection.ReturnValue).Select(Type)));
+
+    // Whether another procedure of the database has this one's schema and name (an overload).
+    private static readonly ConditionalWeakTable<DatabaseSchema, HashSet<string>> Overloads = new ConditionalWeakTable<DatabaseSchema, HashSet<string>>();
+
+    private static bool Overloaded(CommandSchema command) => Overloads.GetValue(command.Database, database =>
+        new HashSet<string>(database.Commands.Cast<CommandSchema>().GroupBy(c => c.FullName).Where(g => g.Count() > 1).Select(g => g.Key)))
+        .Contains(command.FullName);
 
     /// <summary>The schema to show beside a name: "" for the default one.</summary>
     public static string Schema(SchemaObjectWithOwnerBase item) => IsDefaultOwner(item) ? "" : item.Owner;

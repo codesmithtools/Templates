@@ -36,7 +36,7 @@ private void Group(string title, string anchor, IEnumerable<SchemaObjectWithOwne
         bool current = DocSite.Key(item) == Active;
         string schema = DocSite.Schema(item);
         Response.WriteLine("<li><a class=\"nav-item" + (current ? " is-active\" aria-current=\"page" : "") + "\" href=\"" + H(Href(item)) + "\" title=\"" + H(DocSite.Title(item)) + "\">" +
-            (schema.Length > 0 ? "<span class=\"nav-schema\">" + H(schema) + ".</span>" : "") + H(item.Name) + "</a></li>");
+            (schema.Length > 0 ? "<span class=\"nav-schema\">" + H(schema) + ".</span>" : "") + H(DocSite.Name(item)) + "</a></li>");
     }
     Response.WriteLine("</ul>");
     Response.WriteLine("</details>");
