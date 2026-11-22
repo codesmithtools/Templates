@@ -359,9 +359,6 @@ ALTER TABLE [dbo].[Audit] CHECK CONSTRAINT [FK_Audit_User]
 GO
 
 
-USE [Tracker]
-GO
-
 /****** Object:  Table [dbo].[Self]    Script Date: 06/21/2011 23:58:18 ******/
 SET ANSI_NULLS ON
 GO

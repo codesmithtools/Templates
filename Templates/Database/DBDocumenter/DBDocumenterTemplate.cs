@@ -61,7 +61,7 @@ public class DBDocumenterTemplate : CodeTemplate
     {
         string href = Href(item);
         string schema = DocSite.Schema(item);
-        string name = (schema.Length > 0 ? "<span class=\"ref-schema\">" + H(schema) + ".</span>" : "") + H(item.Name);
+        string name = (schema.Length > 0 ? "<span class=\"ref-schema\">" + H(schema) + ".</span>" : "") + H(DocSite.Name(item));
         return href == null ? "<span class=\"" + css + "\">" + name + "</span>" : "<a class=\"" + css + "\" href=\"" + H(href) + "\">" + name + "</a>";
     }
 

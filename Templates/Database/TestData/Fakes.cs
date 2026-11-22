@@ -147,21 +147,47 @@ public static class Fakes
 
     // ---------------------------------------------------------------- rules
 
+    // A PostgreSQL enum (CREATE TYPE ... AS ENUM): a string to .NET, of a user-defined type. A MySQL enum or set: its
+    // values are in CS_ColumnType, but in capitals, and the column reads back the value as it declares it.
+    private static bool IsEnum(ColumnSchema column) =>
+        column.GetClrType(TypeMapping.Modern) == typeof(string) && Names.ProviderName(column.Table.Database) switch
+        {
+            "PostgreSQLSchemaProvider" => System.Convert.ToString(column.ExtendedProperties["CS_SystemType"]?.Value) == "USER-DEFINED",
+            "MySQLSchemaProvider" => new[] { "enum", "set" }.Contains((column.NativeType ?? "").ToLowerInvariant()),
+            _ => false,
+        };
+
+    // JSON (MySQL's json, PostgreSQL's json and jsonb): a document, which other text isn't
+    private static bool IsJson(ColumnSchema column) => new[] { "json", "jsonb" }.Contains((column.NativeType ?? "").ToLowerInvariant());
+
+    // char(n), nchar(n), PostgreSQL's character(n) (bpchar): text of n characters, padded with spaces
+    private static bool Fixed(ColumnSchema column) =>
+        column.Size > 0 && column.Size < 1000 &&
+        new[] { "char", "nchar", "bpchar", "character", "national character" }.Contains((column.NativeType ?? "").ToLowerInvariant());
+
     /// <summary>
     /// The Bogus rule for a column's value, as the C# after "f =>" (f is the Faker): a value that fits the column (its
     /// type, its length, its precision and scale), from its name where that says what it holds (Email, City, Phone),
     /// and one of its own where the column is in the primary key or a unique index. Null for a column the database
-    /// writes (an identity, a computed column, a rowversion), and for a type with no rule (Configure can give one).
+    /// writes (an identity, a computed column, a rowversion), and for a type with no rule (Configure can give one): a
+    /// PostgreSQL or MySQL enum's too (and a MySQL set's), a string whose values only the database knows. A JSON
+    /// column's is a JSON string ("word"), which reads back as it was written.
     /// </summary>
     public static string Rule(ColumnSchema column)
     {
-        if (!Names.Written(column))
+        if (!Names.Written(column) || IsEnum(column))
             return null;
         string name = Plain(column.Name);
         bool unique = IsUnique(column);
         switch (column.GetCSharpTypeName().TrimEnd('?'))
         {
             case "string":
+                // a fixed-length column (char(32)) reads back padded to its length (SQL Server, PostgreSQL), so its text is
+                // that long: letters and digits
+                if (Fixed(column))
+                    return "Fake.Code(f, " + column.Size + ")";
+                if (IsJson(column))
+                    return "\"\\\"\" + f.Lorem.Word() + \"\\\"\"";
                 return Text(name, Plain(column.Table.Name), column.Size, unique);
             case "char":
                 return "f.Random.Char('A', 'Z')";

@@ -55,8 +55,9 @@ builds.
   skips the step (`dotnet build -v:n` says so).
 - A database's schema isn't a file it reads: after one changes, `dotnet build -p:CodeSmithForce=true`.
 - A template's error is a build error at the template's line (`Record.cst(12,5): error CS0103: ...`).
-- `CodeSmithCommand` says how to run `cs`: `cs` on the `PATH`, or `dotnet cs` where a `.config/dotnet-tools.json`
-  above the project has the `CodeSmith.Generator.Cli` tool. The package's README has the rest.
+- `CodeSmithCommand` says how to run `cs`: `cs` on the `PATH`, or `dotnet cs` where a tool manifest above the project
+  (`dotnet-tools.json` or `.config/dotnet-tools.json`) has the `CodeSmith.Generator.Cli` tool. The package's README
+  has the rest.
 
 ## Before the packages are on nuget.org
 

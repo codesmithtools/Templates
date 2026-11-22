@@ -2,6 +2,10 @@
 
 CSLA .NET business objects for each table, a DAL for them, its EF Core implementation and a Blazor web app over them.
 
+Databases: it generates from any database `cs` reads, and wires the web app (its `Program.cs` and project) for SQL
+Server, PostgreSQL, MySQL and SQLite. From another (Oracle), the business objects and DAL build as they are, and the
+web app's `Program.cs` has a `#warning` that says to add its EF Core provider.
+
 ```sh
 cs generate Csla.csp
 dotnet run --project App

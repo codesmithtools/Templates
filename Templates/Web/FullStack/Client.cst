@@ -38,7 +38,7 @@ export type RowCount = z.infer<typeof RowCountSchema>;
 
 /** A row of <%= table.Name %>. */
 export const <%= entity %>Schema = z.object({
-<% foreach (ColumnSchema column in table.Columns) { %>
+<% foreach (ColumnSchema column in Names.Columns(table)) { %>
   <%= Web.Json(column) %>: <%= Web.Zod(column, false) %>,
 <% } %>
 });

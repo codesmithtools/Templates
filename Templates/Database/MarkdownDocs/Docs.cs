@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using SchemaExplorer;
@@ -20,17 +21,19 @@ public static class Docs
     // Pages
 
     /// <summary>The name a page shows: the table's (or view's, or procedure's), with its schema in front unless that's
-    /// the database's default (dbo, public).</summary>
+    /// the database's default (dbo, public), and a procedure's parameter types where another has its name (PostgreSQL's
+    /// overloads: f(integer), f(text)).</summary>
     public static string Title(SchemaObjectWithOwnerBase item) =>
-        DefaultOwners.Contains(item.Owner ?? "") || item.Owner == item.Database.Name ? item.Name : item.Owner + "." + item.Name;
+        (DefaultOwners.Contains(item.Owner ?? "") || item.Owner == item.Database.Name ? item.Name : item.Owner + "." + item.Name) +
+        (item is CommandSchema command && Overloaded(command) ? "(" + Signature(command) + ")" : "");
 
     /// <summary>A page's path in the output folder: tables/Account.md, views/..., procedures/....</summary>
-    public static string Page(SchemaObjectWithOwnerBase item) => Folder(item) + "/" + Files(item)[item];
+    public static string Page(SchemaObjectWithOwnerBase item) => Folder(item) + "/" + Files(item)[Key(item)];
 
     /// <summary>A Markdown link to a page: from the README, or from a page in the same folder.</summary>
     public static string Link(SchemaObjectWithOwnerBase item, bool sameFolder = false)
     {
-        if (!Files(item).TryGetValue(item, out string file))
+        if (!Files(item).TryGetValue(Key(item), out string file))
             return Text(Title(item)); // not one of the database's (no page)
         return "[" + Text(Title(item)) + "](" + (sameFolder ? "" : Folder(item) + "/") + Uri.EscapeDataString(file) + ")";
     }
@@ -40,7 +43,7 @@ public static class Docs
     {
         if (from == null)
             return Link(item);
-        if (!Files(item).TryGetValue(item, out string file))
+        if (!Files(item).TryGetValue(Key(item), out string file))
             return Text(Title(item));
         string path = Folder(item) == Folder(from) ? "" : "../" + Folder(item) + "/";
         return "[" + Text(Title(item)) + "](" + path + Uri.EscapeDataString(file) + ")";
@@ -60,8 +63,8 @@ public static class Docs
     /// <summary>The links to the pages before and after a page (its kind's, in the database's order), and the README.</summary>
     public static string Pager(SchemaObjectWithOwnerBase item)
     {
-        var items = Files(item).Keys.ToList();
-        int i = items.FindIndex(each => each.FullName == item.FullName);
+        var items = Objects(item);
+        int i = items.FindIndex(each => Key(each) == Key(item));
         var parts = new List<string>();
         if (i > 0)
             parts.Add("← " + Link(items[i - 1], true));
@@ -71,15 +74,38 @@ public static class Docs
         return string.Join(" · ", parts);
     }
 
-    // The files of a folder's pages: each title, without what a file name can't have, once (case aside, as on Windows).
-    private static Dictionary<SchemaObjectWithOwnerBase, string> Files(SchemaObjectWithOwnerBase item)
+    // The objects of a page's folder, in the database's order.
+    private static List<SchemaObjectWithOwnerBase> Objects(SchemaObjectWithOwnerBase item)
     {
         DatabaseSchema database = item.Database;
-        IEnumerable<SchemaObjectWithOwnerBase> items = item is TableSchema ? database.Tables.Cast<SchemaObjectWithOwnerBase>()
-            : item is ViewSchema ? database.Views.Cast<SchemaObjectWithOwnerBase>() : database.Commands.Cast<SchemaObjectWithOwnerBase>();
-        var files = new Dictionary<SchemaObjectWithOwnerBase, string>();
+        return (item is TableSchema ? database.Tables.Cast<SchemaObjectWithOwnerBase>()
+            : item is ViewSchema ? database.Views.Cast<SchemaObjectWithOwnerBase>() : database.Commands.Cast<SchemaObjectWithOwnerBase>()).ToList();
+    }
+
+    // An object as its page and the diagram know it: its schema and name as they're spelled (two objects whose names
+    // differ only in case are two pages; SchemaObjectBase.Equals ignores case), and a procedure's parameter types.
+    private static string Key(SchemaObjectWithOwnerBase item) =>
+        item.Owner + "." + item.Name + (item is CommandSchema command ? "(" + Signature(command) + ")" : "");
+
+    // A procedure's parameter types, the return value's aside: integer, text.
+    private static readonly ConditionalWeakTable<CommandSchema, string> Signatures = new ConditionalWeakTable<CommandSchema, string>();
+
+    private static string Signature(CommandSchema command) => Signatures.GetValue(command, c =>
+        string.Join(", ", c.Parameters.Cast<ParameterSchema>().Where(p => p.Direction != ParameterDirection.ReturnValue).Select(Type)));
+
+    // Whether another procedure of the database has this one's schema and name (an overload).
+    private static readonly ConditionalWeakTable<DatabaseSchema, HashSet<string>> Overloads = new ConditionalWeakTable<DatabaseSchema, HashSet<string>>();
+
+    private static bool Overloaded(CommandSchema command) => Overloads.GetValue(command.Database, database =>
+        new HashSet<string>(database.Commands.Cast<CommandSchema>().GroupBy(c => c.Owner + "." + c.Name).Where(g => g.Count() > 1).Select(g => g.Key)))
+        .Contains(command.Owner + "." + command.Name);
+
+    // The files of a folder's pages: each title, without what a file name can't have, once (case aside, as on Windows).
+    private static Dictionary<string, string> Files(SchemaObjectWithOwnerBase item)
+    {
+        var files = new Dictionary<string, string>(StringComparer.Ordinal);
         var taken = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-        foreach (SchemaObjectWithOwnerBase each in items)
+        foreach (SchemaObjectWithOwnerBase each in Objects(item))
         {
             string name = Regex.Replace(Title(each), @"[\x00-\x1f<>:""/\\|?*\s]", "_").TrimEnd('.');
             if (name.Length == 0)
@@ -87,7 +113,7 @@ public static class Docs
             string file = name + ".md";
             for (int i = 2; !taken.Add(file); i++)
                 file = name + "-" + i + ".md";
-            files[each] = file;
+            files[Key(each)] = file;
         }
         return files;
     }
@@ -325,7 +351,7 @@ public static class Docs
         { "erdiagram", "style", "classdef", "class", "subgraph", "end", "direction", "one", "only", "zero", "many", "to", "optionally" };
 
     /// <summary>A table's entity: a word to Mermaid (letters, digits and _, from a letter), once in the diagram.</summary>
-    public static string Entity(TableSchema table) => Entities(table.Database)[table];
+    public static string Entity(TableSchema table) => Entities(table.Database)[Key(table)];
 
     /// <summary>The entity's declaration: its title as an alias where the name had to change (Order_Details["Order Details"]).</summary>
     public static string EntityDeclaration(TableSchema table)
@@ -334,9 +360,9 @@ public static class Docs
         return entity == title ? entity : entity + "[\"" + Regex.Replace(title, @"[""%\\]", "'") + "\"]"; // an alias can't have " % \
     }
 
-    private static Dictionary<TableSchema, string> Entities(DatabaseSchema database)
+    private static Dictionary<string, string> Entities(DatabaseSchema database)
     {
-        var entities = new Dictionary<TableSchema, string>();
+        var entities = new Dictionary<string, string>(StringComparer.Ordinal);
         var taken = new HashSet<string>();
         foreach (TableSchema table in database.Tables)
         {
@@ -346,7 +372,7 @@ public static class Docs
             string entity = name;
             for (int i = 2; !taken.Add(entity); i++)
                 entity = name + "_" + i;
-            entities[table] = entity;
+            entities[Key(table)] = entity;
         }
         return entities;
     }
@@ -367,7 +393,7 @@ public static class Docs
     {
         var entities = Entities(database);
         return database.Tables.Cast<TableSchema>().SelectMany(t => t.ForeignKeys.Cast<TableKeySchema>())
-            .Where(k => entities.ContainsKey(k.PrimaryKeyTable) && entities.ContainsKey(k.ForeignKeyTable));
+            .Where(k => entities.ContainsKey(Key(k.PrimaryKeyTable)) && entities.ContainsKey(Key(k.ForeignKeyTable)));
     }
 
     /// <summary>A foreign key as a relationship: one row of the table it refers to (||), or none where its columns can
@@ -392,7 +418,7 @@ public static class Docs
     public static IEnumerable<string> Neighborhood(TableSchema table)
     {
         var keys = table.ForeignKeys.Cast<TableKeySchema>().Concat(ReferencedBy(table))
-            .Where(k => Entities(table.Database).ContainsKey(k.PrimaryKeyTable) && Entities(table.Database).ContainsKey(k.ForeignKeyTable))
+            .Where(k => Entities(table.Database).ContainsKey(Key(k.PrimaryKeyTable)) && Entities(table.Database).ContainsKey(Key(k.ForeignKeyTable)))
             .GroupBy(k => k.ForeignKeyTable.FullName + "/" + k.Name).Select(g => g.First()).ToList();
         var tables = new List<TableSchema> { table };
         foreach (var key in keys)

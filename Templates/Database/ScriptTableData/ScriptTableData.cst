@@ -1,33 +1,47 @@
 <%@ CodeTemplate Language="C#" Debug="True" TargetLanguage="T-SQL" Description="Generates a script based on the data from a table." %>
 <%@ Property Name="SourceTable" Type="SchemaExplorer.TableSchema" Category="Context" Description="Table to get the data from." %>
+<%@ Property Name="OutputDirectory" Type="System.String" Default="Generated" Category="Output" Description="Where the script goes: the table's name, .sql." %>
 <%@ Assembly Name="SchemaExplorer" %>
 <%@ Assembly Name="CodeSmith.BaseTemplates" %>
 <%@ Assembly Name="CodeSmith.CustomProperties" %>
 <%@ Assembly Name="System.Data" %>
 <%@ Import Namespace="SchemaExplorer" %>
 <%@ Import Namespace="System.Data" %>
+<%@ Import Namespace="System.Globalization" %>
+<%@ Import Namespace="System.IO" %>
+<%@ Import Namespace="System.Linq" %>
 <%@ Import Namespace="System.Text" %>
 
-USE <%= SourceTable.Database.Name %>
+USE <%= Quote(SourceTable.Database.Name) %>
 GO
 
--- The rows of <%= SourceTable.FullName %>, scripted by CodeSmith Generator.
-TRUNCATE TABLE <%= GetTableOwner() %>[<%= SourceTable.Name %>]
+-- The rows of <%= SourceTable.FullName %>, scripted by CodeSmith Generator. In one transaction: if a row can't be
+-- inserted, the table keeps the rows it had.
+SET XACT_ABORT ON
+BEGIN TRANSACTION
 
-DBCC CHECKIDENT ('<%= GetTableOwner() %>[<%= SourceTable.Name %>]', RESEED, 1)
+DELETE FROM <%= TableName %>
+<% if (HasIdentity) { %>
 
-SET IDENTITY_INSERT <%= GetTableOwner() %>[<%= SourceTable.Name %>] ON
+SET IDENTITY_INSERT <%= TableName %> ON
+<% } %>
+<% if (SourceTableData.Rows.Count > 0) { %>
 
-INSERT INTO <%= GetTableOwner() %>[<%= SourceTable.Name %>] (
-	<% for (int i = 0; i < SourceTable.Columns.Count; i++) { %>
-	[<%= SourceTable.Columns[i].Name %>]<% if (i < SourceTable.Columns.Count - 1) { %>,<% } %>
+INSERT INTO <%= TableName %> (
+	<% for (int i = 0; i < Columns.Count; i++) { %>
+	<%= Quote(Columns[i].Name) %><% if (i < Columns.Count - 1) { %>,<% } %>
 	<% } %>
 )
 	<% for (int i = 0; i < SourceTableData.Rows.Count; i++) { %>
-	SELECT <%= GetTableRowValues(SourceTableData.Rows[i]) %><% if (i < SourceTableData.Rows.Count - 1) { %> UNION<% } %>
+	SELECT <%= GetTableRowValues(SourceTableData.Rows[i]) %><% if (i < SourceTableData.Rows.Count - 1) { %> UNION ALL<% } %>
 	<% } %>
+<% } %>
+<% if (HasIdentity) { %>
 
-SET IDENTITY_INSERT <%= GetTableOwner() %>[<%= SourceTable.Name %>] OFF
+SET IDENTITY_INSERT <%= TableName %> OFF
+<% } %>
+
+COMMIT TRANSACTION
 <script runat="template">
 private DataTable _sourceTableData;
 
@@ -44,74 +58,74 @@ private DataTable SourceTableData
 	}
 }
 
+// The columns a script can insert into: not a computed column or a rowversion, which the database writes.
+private System.Collections.Generic.List<ColumnSchema> Columns =>
+	SourceTable.Columns.Cast<ColumnSchema>().Where(c => !Flag(c, "CS_IsComputed") && !IsRowVersion(c)).ToList();
+
+private bool HasIdentity => Columns.Any(c => Flag(c, "CS_IsIdentity"));
+
+private string TableName => GetTableOwner() + Quote(SourceTable.Name);
+
+private static bool Flag(ColumnSchema column, string name) =>
+	bool.TryParse(Convert.ToString(column.ExtendedProperties[name]?.Value), out bool value) && value;
+
+private static bool IsRowVersion(ColumnSchema column) =>
+	column.NativeType.Equals("timestamp", StringComparison.OrdinalIgnoreCase) || column.NativeType.Equals("rowversion", StringComparison.OrdinalIgnoreCase);
+
+// A name in T-SQL: [Order], [Bracket]]Name]
+public static string Quote(string name)
+{
+	return "[" + name.Replace("]", "]]") + "]";
+}
+
 public string GetTableRowValues(DataRow row)
 {
-	StringBuilder rowBuilder = new StringBuilder();
-	
-	for (int i = 0; i < SourceTable.Columns.Count; i++)
+	var values = new System.Collections.Generic.List<string>();
+	foreach (ColumnSchema column in Columns)
 	{
-		ColumnSchema column = SourceTable.Columns[i];
-		
-		if (IsNumericType(column))
-		{
-			if (row[i] == DBNull.Value)
-			{
-				rowBuilder.Append("NULL, ");
-			}
-			else
-			{
-				rowBuilder.Append(row[i].ToString());
-				rowBuilder.Append(", ");
-			}
-		}
-		else
-		{
-			if (row[i] == DBNull.Value)
-			{
-				rowBuilder.Append("NULL, ");
-			}
-			else if (row[i] is DateTime)
-			{
-				rowBuilder.Append("'");
-				rowBuilder.Append(((DateTime)row[i]).ToString("MM-dd-yyyy HH:mm:ss.fff"));
-				rowBuilder.Append("'");
-				rowBuilder.Append(", ");
-			}
-			else
-			{
-				rowBuilder.Append("'");
-				rowBuilder.Append(PrepareValue(row[i].ToString()));
-				rowBuilder.Append("'");
-				rowBuilder.Append(", ");
-			}
-		}
+		values.Add(Literal(row[column.Name]));
 	}
-	
-	return rowBuilder.ToString().Substring(0, rowBuilder.ToString().Length - 2);
+	return string.Join(", ", values);
+}
+
+// A value as a T-SQL literal, the same in any culture: 12.34, N'it''s', 1 (a bit), 0x0A0B, '2026-11-20T09:30:00.000'.
+public string Literal(object value)
+{
+	switch (value)
+	{
+		case null:
+		case DBNull _:
+			return "NULL";
+		case bool b:
+			return b ? "1" : "0";
+		case byte[] bytes:
+			return "0x" + Convert.ToHexString(bytes);
+		case DateTime dateTime:
+			return "'" + dateTime.ToString("yyyy-MM-dd'T'HH:mm:ss.fff", CultureInfo.InvariantCulture) + "'";
+		case DateTimeOffset offset:
+			return "'" + offset.ToString("yyyy-MM-dd HH:mm:ss.fffffff zzz", CultureInfo.InvariantCulture) + "'";
+		case TimeSpan time:
+			return "'" + time.ToString("c", CultureInfo.InvariantCulture) + "'";
+		case sbyte _: case byte _: case short _: case ushort _: case int _: case uint _: case long _: case ulong _:
+		case decimal _: case double _: case float _:
+			return Convert.ToString(value, CultureInfo.InvariantCulture);
+		default:
+			return "N'" + PrepareValue(Convert.ToString(value, CultureInfo.InvariantCulture)) + "'";
+	}
 }
 
 public string PrepareValue(string value)
 {
-	return value.Replace("'", "''").Replace("\r\n", "' + CHAR(13) + CHAR(10) + '").Replace("\n", "' + CHAR(10) + '");
+	return value.Replace("'", "''").Replace("\r\n", "' + CHAR(13) + CHAR(10) + N'").Replace("\n", "' + CHAR(10) + N'");
 }
 
-public bool IsNumericType(ColumnSchema column)
+// The script's file when a project names none: the table's, in OutputDirectory (Generated/Category.sql).
+public override string GetFileName()
 {
-	switch (column.NativeType.ToLower())
-	{
-		case "bigint":
-		case "bit":
-		case "decimal":
-		case "float":
-		case "int":
-		case "money":
-		case "numeric":
-		case "real":
-		case "smallint":
-		case "smallmoney":
-		case "tinyint": return true;
-		default: return false;
-	}
+	if (SourceTable == null)
+		return base.GetFileName();
+	string name = System.Text.RegularExpressions.Regex.Replace(SourceTable.Name, @"[\x00-\x1f<>:""/\\|?*]", "_").TrimEnd('.');
+	return Path.Combine(OutputDirectory ?? "", (name.Length > 0 ? name : "_") + ".sql");
 }
 
 public string GetTableOwner()
@@ -119,11 +133,15 @@ public string GetTableOwner()
     return GetTableOwner(true);
 }
 
+// A database's default schema, which SQL Server doesn't have: PostgreSQL's public, SQLite's main. The table is
+// scripted without it (dbo is SQL Server's own, and kept).
+private static readonly string[] DefaultOwners = { "public", "main" };
+
 public string GetTableOwner(bool includeDot)
 {
-    if (SourceTable.Owner.Length > 0)
+    if (SourceTable.Owner.Length > 0 && !DefaultOwners.Contains(SourceTable.Owner, StringComparer.OrdinalIgnoreCase))
     {
-        return "[" + SourceTable.Owner + "].";
+        return Quote(SourceTable.Owner) + ".";
     }
     else
     {

@@ -2,6 +2,10 @@
 
 Small templates for code you'd otherwise type by hand. 8.x ran them as ActiveSnippets in Visual Studio's editor.
 
+Databases: any `cs` reads (SQL Server, SQLite, PostgreSQL, MySQL, Oracle, and SQL scripts). On Oracle a database's
+name is its server and user (`host:1521/FREEPDB1 (PETSHOP)`), which `TableEnum.cst`'s enum name doesn't make a name
+of: rename the enum it writes.
+
 | Template | What it writes |
 | --- | --- |
 | `TableEnum.cst` | An enum with a member for each table of a database. |

@@ -4,7 +4,8 @@ Templates whose input is an XML document, typed by its schema (`<%@ XmlProperty 
 
 - `PurchaseOrder.cst` reads `SamplePurchaseOrder.xml` (`PurchaseOrder.xsd`).
 - `EntityMaster.cst` renders `Entity.cst` once for each entity of `NorthwindMap.xml` (`EntityMap.xsd`), a file each.
-- `GenerateEntityMap.cst` writes such a map from a database.
+- `GenerateEntityMap.cst` writes such a map from a database (C# only): `cs render GenerateEntityMap.cst
+  -p:SourceDatabase=<data source> -p:TargetNamespace=Acme`, with a data source from `cs datasource list`.
 
 ```sh
 cd CSharp

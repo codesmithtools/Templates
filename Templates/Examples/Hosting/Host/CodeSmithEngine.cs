@@ -5,6 +5,7 @@
 // A module initializer runs it before any code here uses the engine's types.
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using System.Runtime.Loader;
 using System.Text.Json;
 
@@ -18,12 +19,14 @@ internal static class CodeSmithEngine
     {
         Folder = Find() ?? Fail();
         // the engine's assemblies (CodeSmith.Engine, SchemaExplorer, the schema providers, Roslyn, the database
-        // drivers) load into the default load context, where the engine expects them
+        // drivers) load into the default load context, where the engine expects them. cs.dll's dependency file says
+        // which file each one, and each native library, is on this machine: a .NET tool install keeps the
+        // platform-specific ones (SQL Server's client, SQLite's native library) under runtimes/.
+        var resolver = new AssemblyDependencyResolver(Path.Combine(Folder, "cs.dll"));
         AssemblyLoadContext.Default.Resolving += (context, name) =>
-        {
-            string path = Path.Combine(Folder, name.Name + ".dll");
-            return File.Exists(path) ? context.LoadFromAssemblyPath(path) : null;
-        };
+            resolver.ResolveAssemblyToPath(name) is string path ? context.LoadFromAssemblyPath(path) : null;
+        AssemblyLoadContext.Default.ResolvingUnmanagedDll += (assembly, name) =>
+            resolver.ResolveUnmanagedDllToPath(name) is string path ? NativeLibrary.Load(path) : IntPtr.Zero;
     }
 
     private static string? Find()
@@ -45,7 +48,7 @@ internal static class CodeSmithEngine
         }
     }
 
-    private static bool IsEngine(string? folder) => folder != null && File.Exists(Path.Combine(folder, "CodeSmith.Engine.dll"));
+    private static bool IsEngine(string? folder) => folder != null && File.Exists(Path.Combine(folder, "CodeSmith.Engine.dll")) && File.Exists(Path.Combine(folder, "cs.dll"));
 
     private static string Fail()
     {

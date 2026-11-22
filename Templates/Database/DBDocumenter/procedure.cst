@@ -49,7 +49,7 @@ OutputTemplate(header);
 <header class="page-head">
 <div class="eyebrow"><span class="kind kind-procedure"><%= Icon("procedure") %>Procedure</span><% if (schema.Length > 0) { %><span class="eyebrow-schema"><%= H(schema) %></span><% } %></div>
 <div class="title-row">
-<h1 class="page-title"><%= H(command.Name) %></h1>
+<h1 class="page-title"><%= H(DocSite.Name(command)) %></h1>
 <button type="button" class="copy-button" data-copy="<%= H(command.FullName) %>" aria-label="Copy the procedure's name" title="Copy name"><%= Icon("copy") %><%= Icon("check", "icon icon-done") %></button>
 </div>
 <% if (description.Length > 0) { %>

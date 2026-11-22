@@ -28,8 +28,8 @@
 // a file of your own: public partial class <%= name %> { ... } (see the partial methods below).
 // </auto-generated>
 #nullable enable
-<% if (model.Columns(Table).Any(c => Model.NotNull(c) != "")) { %>
-// GetProperty(...)! for a string, which CSLA keeps non-null (as CSLA's own source generator writes it; CSLA0007 doesn't
+<% if (model.Columns(Table).Any(c => Model.NotNull(c) != "") || children.Count > 0) { %>
+// GetProperty(...)! for a <%= model.Columns(Table).Any(c => Model.NotNull(c) != "") ? "string" : "child list" %>, which CSLA keeps non-null (as CSLA's own source generator writes it; CSLA0007 doesn't
 // know the operator)
 #pragma warning disable CSLA0007
 <% } %>
