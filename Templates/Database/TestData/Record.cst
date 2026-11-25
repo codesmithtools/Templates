@@ -18,3 +18,8 @@ public sealed record <%= Names.Entity(Table) %>
     public <%= Names.Required(column) %><%= column.GetCSharpTypeName() %> <%= Names.Property(column) %> { get; init; }
 <% } %>
 }
+<script runat="template">
+// The record's file, as Repositories.cst names it (Customer.cs).
+public override string GetFileName() =>
+    Table == null ? base.GetFileName() : Names.Entity(Table) + ".cs";
+</script>

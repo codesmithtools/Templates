@@ -56,3 +56,8 @@ public static class <%= name %>Extensions
     }
 }
 <% } %>
+<script runat="template">
+// The enum's file, as LookupEnums.csp names it (Category.cs).
+public override string GetFileName() =>
+    SourceTable == null ? base.GetFileName() : Lookup.Name(SourceTable, EnumName) + ".cs";
+</script>

@@ -53,4 +53,8 @@ public partial class <%= Names.Entity(Table) %>Configuration : IEntityTypeConfig
 <script runat="template">
 // A name in a C# string literal: a database's names can have quotes and backslashes (Dbl"Quote).
 private static string Literal(string text) => text.Replace("\\", "\\\\").Replace("\"", "\\\"");
+
+// The configuration's file, as Entities.cst names it (CustomerConfiguration.cs).
+public override string GetFileName() =>
+    Table == null ? base.GetFileName() : Names.Entity(Table) + "Configuration.cs";
 </script>

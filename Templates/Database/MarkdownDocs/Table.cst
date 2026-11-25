@@ -103,3 +103,8 @@ The views and procedures whose SQL reads or writes it.
 ---
 
 <%= Docs.Pager(Table) %>
+<script runat="template">
+// The page's file, as MarkdownDocs.cst names it (Customer.md, in its tables folder).
+public override string GetFileName() =>
+    Table == null ? base.GetFileName() : System.IO.Path.GetFileName(Docs.Page(Table));
+</script>

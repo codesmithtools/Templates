@@ -96,3 +96,8 @@ var children = Docs.Children(table);
 | <%= Docs.Link(command) %> | <%= command.Parameters.Cast<ParameterSchema>().Count(p => p.Direction != System.Data.ParameterDirection.ReturnValue) %> | <%= Docs.Uses(command).Count == 0 ? "—" : string.Join(", ", Docs.Uses(command).Select(u => Docs.Link(u))) %> | <%= Docs.Cell(Docs.Description(command)) %> |
 <% } %>
 <% } %>
+<script runat="template">
+// The file MarkdownDocs.cst writes it to.
+public override string GetFileName() =>
+    "README.md";
+</script>

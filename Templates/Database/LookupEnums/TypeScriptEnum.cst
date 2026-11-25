@@ -29,3 +29,13 @@ export const <%= char.ToLowerInvariant(name[0]) + name.Substring(1) %>Names: Rea
   [<%= name %>.<%= member.Name %>]: <%= Lookup.Quote(member.Text) %>,
 <% } %>
 };
+<script runat="template">
+// The module's file, as LookupEnums.csp names it (category.ts).
+public override string GetFileName()
+{
+    if (SourceTable == null)
+        return base.GetFileName();
+    string name = Lookup.Name(SourceTable, EnumName);
+    return char.ToLowerInvariant(name[0]) + name.Substring(1) + ".ts";
+}
+</script>

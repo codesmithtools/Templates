@@ -21,12 +21,17 @@ public sealed class Lookup
         Table = table ?? throw new ArgumentNullException(nameof(table));
         ValueColumn = string.IsNullOrWhiteSpace(valueColumn) ? PrimaryKey(table) : Column(table, valueColumn);
         NameColumn = string.IsNullOrWhiteSpace(nameColumn) ? FirstText(table, ValueColumn) : Column(table, nameColumn);
-        EnumName = string.IsNullOrWhiteSpace(enumName)
-            ? Identifier(StringUtil.ToSingular(StringUtil.ToPascalCase(table.Name))) ?? "Lookup"
-            : enumName.Trim();
+        EnumName = Name(table, enumName);
         IsInteger = IsWholeNumber(ValueColumn);
         Members = Read();
     }
+
+    /// <summary>The enum's name: enumName, else the table's, singular, in Pascal case (for a template's GetFileName too,
+    /// without reading the table).</summary>
+    public static string Name(TableSchema table, string enumName) =>
+        string.IsNullOrWhiteSpace(enumName)
+            ? Identifier(StringUtil.ToSingular(StringUtil.ToPascalCase(table.Name))) ?? "Lookup"
+            : enumName.Trim();
 
     public TableSchema Table { get; }
 

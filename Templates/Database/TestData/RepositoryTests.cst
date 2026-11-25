@@ -119,3 +119,8 @@ public sealed partial class <%= Fakes.Tests(Table) %> : <%= TestBase %>
     }
 }
 <% } %>
+<script runat="template">
+// The tests' file, as TestData.cst names it (CustomerRepositoryTests.cs).
+public override string GetFileName() =>
+    Table == null ? base.GetFileName() : Fakes.Tests(Table) + ".cs";
+</script>

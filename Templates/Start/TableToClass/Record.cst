@@ -25,4 +25,8 @@ public static string RecordName(TableSchema table) =>
     table.Database.Tables.Any(t => t != table && string.Equals(t.Name, table.Name, StringComparison.OrdinalIgnoreCase))
         ? StringUtil.ToPascalCase(table.Owner) + StringUtil.ToPascalCase(table.Name)
         : StringUtil.ToPascalCase(table.Name);
+
+// The record's file: its name (Customer.cs).
+public override string GetFileName() =>
+    SourceTable == null ? base.GetFileName() : RecordName(SourceTable) + ".cs";
 </script>
