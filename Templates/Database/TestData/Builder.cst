@@ -191,4 +191,8 @@ private static string Made(Fakes.Parent parent) =>
     Taken(parent) ? "one that's there" + (parent.Nullable ? ", or none" : "") :
     parent.OnePerParent ? "a new one" :
     "a new one, or with ReuseParents one that's there";
+
+// The builder's file, as TestData.cst names it (CustomerBuilder.cs).
+public override string GetFileName() =>
+    Table == null ? base.GetFileName() : Fakes.Builder(Table) + ".cs";
 </script>

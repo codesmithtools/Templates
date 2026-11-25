@@ -105,3 +105,8 @@ public sealed partial class <%= Names.Repository(Table) %>(DbConnection connecti
     }
 <% } %>
 }
+<script runat="template">
+// The repository's file, as Repositories.cst names it (CustomerRepository.cs).
+public override string GetFileName() =>
+    Table == null ? base.GetFileName() : Names.Repository(Table) + ".cs";
+</script>

@@ -54,3 +54,8 @@ Used by <%= string.Join(", ", usedBy.Select(u => Docs.Link(u, View))) %>.
 ---
 
 <%= Docs.Pager(View) %>
+<script runat="template">
+// The page's file, as MarkdownDocs.cst names it (in its views folder).
+public override string GetFileName() =>
+    View == null ? base.GetFileName() : System.IO.Path.GetFileName(Docs.Page(View));
+</script>

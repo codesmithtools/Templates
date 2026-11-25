@@ -29,3 +29,8 @@ public partial class <%= ContextName %>(DbContextOptions<<%= ContextName %>> opt
     /// <summary>More of the model, in a partial class of your own.</summary>
     partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
 }
+<script runat="template">
+// The context's file, as Entities.cst names it (AppDbContext.cs).
+public override string GetFileName() =>
+    string.IsNullOrWhiteSpace(ContextName) ? base.GetFileName() : ContextName.Trim() + ".cs";
+</script>

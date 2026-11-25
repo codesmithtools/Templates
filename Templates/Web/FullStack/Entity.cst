@@ -36,3 +36,8 @@ public partial class <%= Names.Entity(Table) %>
     public virtual ICollection<<%= Names.Entity(key.ForeignKeyTable) %>> <%= Names.Inverse(key) %> { get; set; } = new List<<%= Names.Entity(key.ForeignKeyTable) %>>();
 <% } %>
 }
+<script runat="template">
+// The entity's file, as Entities.cst names it (Customer.cs).
+public override string GetFileName() =>
+    Table == null ? base.GetFileName() : Names.Entity(Table) + ".cs";
+</script>

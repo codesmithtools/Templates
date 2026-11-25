@@ -54,3 +54,8 @@ It takes none.
 ---
 
 <%= Docs.Pager(Command) %>
+<script runat="template">
+// The page's file, as MarkdownDocs.cst names it (in its procedures folder).
+public override string GetFileName() =>
+    Command == null ? base.GetFileName() : System.IO.Path.GetFileName(Docs.Page(Command));
+</script>
