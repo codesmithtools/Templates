@@ -5,9 +5,13 @@
 <%@ Register Name="RecordTemplate" Template="Record.cst" MergeProperties="False" %>
 <%@ Assembly Name="SchemaExplorer" %>
 <%@ Import Namespace="SchemaExplorer" %>
+<%@ Import Namespace="System.Collections.Generic" %>
 <%@ Import Namespace="System.IO" %>
 <%@ Import Namespace="System.Linq" %>
-<%-- The master template: it renders Record.cst (a sub-template) once per table, each to its own file. --%>
+<%-- The master template: it renders Record.cst (a sub-template) once per table, each to its own file, and lists the
+files (its output, Generated/Files.txt). A file the last run listed that this one doesn't write is a table that's gone:
+RemoveOutput removes it, and cs check says it's out of date. --%>
+<% var written = new HashSet<string>(); %>
 <% foreach (TableSchema table in SourceDatabase.Tables) {
        var record = Create<RecordTemplate>();
        record.SourceTable = table;
@@ -15,6 +19,24 @@
        // a file each: by the table's full name when another schema has a table of the same name (dbo.Person.cs, sales.Person.cs)
        bool twice = SourceDatabase.Tables.Any(t => t != table && string.Equals(t.Name, table.Name, StringComparison.OrdinalIgnoreCase));
        string file = Path.Combine(OutputDirectory, (twice ? table.FullName : StringUtil.ToPascalCase(table.Name)) + ".cs");
-       record.RenderToFile(file, true); %>
+       record.RenderToFile(file, true);
+       written.Add(Path.GetFullPath(file)); %>
 <%= file %>
 <% } %>
+<% RemoveGone(written); %>
+<script runat="template">
+// The files the last run listed (Files.txt, beside them) that this one didn't write: their tables are gone.
+private void RemoveGone(HashSet<string> written)
+{
+    string list = Path.Combine(OutputDirectory, "Files.txt");
+    string folder = Path.GetFullPath(OutputDirectory) + Path.DirectorySeparatorChar;
+    if (!File.Exists(list))
+        return;
+    foreach (string line in File.ReadAllLines(list))
+    {
+        string file = line.Trim();
+        if (file.EndsWith(".cs", StringComparison.OrdinalIgnoreCase) && Path.GetFullPath(file).StartsWith(folder) && !written.Contains(Path.GetFullPath(file)))
+            RemoveOutput(file);
+    }
+}
+</script>
