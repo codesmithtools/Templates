@@ -28,7 +28,9 @@ CSLA 10 (9 too: set `CslaVersion`), .NET 10, nullable.
 ## What each table becomes
 
 The keys say. A table whose key starts with another's (`LineItem`'s key is `OrderId, LineNum`), or whose rows go when
-the other's are deleted (`ON DELETE CASCADE`), is that table's child. Every other table is a root.
+the other's are deleted (`ON DELETE CASCADE`), is that table's child. Every other table is a root. "Starts with" is the
+key's first columns, in the table's order: a junction table `GroupMember (GroupId, CustomerId)` is `Group`'s child,
+not `Customer`'s, from any database (a database gives its foreign keys in an order of its own).
 
 | | Roots | Children |
 | --- | --- | --- |
@@ -41,6 +43,12 @@ the other's are deleted (`ON DELETE CASCADE`), is that table's child. Every othe
 
 - Properties are CSLA's `RegisterProperty`, `GetProperty` and `SetProperty`, nullable where the column is. A text
   column is a `string` either way (`""` for data binding, saved as `NULL` where the column takes it).
+- An array column (PostgreSQL's `text[]`, `int[]`) is an `IReadOnlyList<T>`, never null (no items for `NULL`, saved as
+  `NULL` where the column takes it): CSLA keeps it as a `MobileList<T>`, which its n-level undo can copy. Set it to a
+  new list. A bit string (`bit(8)`) is a `string` of 0s and 1s, with a rule that says how many.
+- A name a table has wins: the types made for another table give way to it (a `ProductInfo` table's object is
+  `ProductInfo`, and `Product`'s read-only object is `ProductReadOnlyInfo`; its EF Core configuration is
+  `ProductEntityConfiguration` next to a `ProductConfiguration` table). Generating says when one does.
 - The schema gives the rules: `[Required]`, `[StringLength(80)]`, and `[Range]` for a `decimal(10,2)`. CSLA checks them,
   with `[Display]` names in their messages ("The Ship city field is required.").
 - A `[Display]` name is the column's name in words. A name all in one case, as PostgreSQL folds them (`shipcity`), is
@@ -100,7 +108,7 @@ There are others:
 
 | Setting | What it does |
 | --- | --- |
-| `Exclude` | Tables (`AuditLog`) and columns (`*.RowGuid`, `Orders.Notes`) to leave out; `*` and `?` match. |
+| `Exclude` | Tables (`AuditLog`) and columns (`*.RowGuid`, `Orders.Notes`) to leave out; `*` and `?` match. An excluded table has no EF Core entity either. The default leaves out `sysdiagrams` and EF Core's `__EFMigrationsHistory`. |
 | `Children` | Children the keys don't make: `Profiles: Account, Cart` here, as `Account` has its own identity key. |
 | `Namespace`, `ContextName` | `PetShop`: the namespaces, the projects' names and `AddPetShopDal`; the `DbContext`'s name. |
 | `CslaVersion`, `EfCoreVersion`, `TargetFramework` | Used when a project file is written (one that isn't there). |
@@ -123,6 +131,11 @@ own copy of `PetShop.db3`, made at each start, and `DemoData.cs` adds a dozen or
   says what happened. Leaving with unsaved changes asks too.
 - Who you are is the top bar's switcher (Admin or Clerk): it sets CSLA's `ApplicationContext.User`, and the pages ask
   CSLA again. As Clerk, an order has no Delete, and its authorization number is read-only.
+- An enum column (MySQL's `ENUM`, a PostgreSQL enum) is a select of its values, and a MySQL `SET` a check box for each.
+  An array is a text area, one item a line.
+- A page that fails says why: a row that isn't there, a key another row has, a row other rows refer to, a value the
+  database won't take. The exception is in the log (`ILogger`, the page's type as its category), and in Development
+  its own words are on the page too.
 - Ctrl+K goes anywhere, `/` searches, `N` is new, Esc cancels. Light and dark, and a phone's width.
 
 `Program.cs` sets it up: `AddCsla(options => options.AddAspNetCore().AddServerSideBlazor())`, and `AddPetShopDal`.
@@ -158,12 +171,40 @@ cs sample new csla MyShop
 cd MyShop
 ```
 
-In `Csla.csp`, set the data source (or pick one in the editor's property grid), `Namespace` (`MyShop`) and
-`ContextName`, and delete `PetShop.Business/Order.cs`, `LineItem.cs` and `LineItems.cs`, and `PetShop.Web`: they belong
-to PetShop. Then run `cs generate Csla.csp`. It writes `MyShop.Business`, `MyShop.Dal`, `MyShop.Dal.EfCore` and
-`MyShop.Web`, each with its project file, and `App` is a start for yours (`AddMyShopDal` and the provider's package).
-`MyShop.Web` copies a SQLite database as `PetShop.Web` does; another database's connection string is
-`ConnectionStrings:MyShop` (its package is in the project file).
+1. Delete what's PetShop's: `PetShop.Business/`, `PetShop.Dal/`, `PetShop.Dal.EfCore/`, `PetShop.Web/`,
+   `PetShop.slnx` and `PetShop.db3`; and `App/`, PetShop's demo (or keep it as a start for yours: change its project
+   references to `MyShop.Business` and `MyShop.Dal.EfCore`, its EF Core package and `UseSqlite`, and `Program.cs`'s
+   PetShop code).
+2. In `Csla.csp`, set the data source (or pick one in the editor's property grid), `Namespace` (`MyShop`) and
+   `ContextName` (`MyShopContext`), and delete the `Children` setting, which names PetShop's tables.
+3. `cs generate Csla.csp`. It writes `MyShop.Business`, `MyShop.Dal`, `MyShop.Dal.EfCore` and `MyShop.Web`, each with
+   its project file. `MyShop.Web` is wired for the database's EF Core provider: its connection string is
+   `ConnectionStrings:MyShop` (`dotnet user-secrets`, `appsettings.json` or `ConnectionStrings__MyShop` in the
+   environment). From SQLite, it copies the database file as `PetShop.Web` does.
+4. `dotnet run --project MyShop.Web`. A solution file, if you want one: `dotnet new sln -n MyShop` and
+   `dotnet sln add MyShop.*/*.csproj`.
+
+What generating warns about is what your schema has that the app does differently (below), and `Model.md` says what
+each table became.
+
+### Supported, and not
+
+| In your schema | In the app |
+| --- | --- |
+| Composite keys, keys the database numbers, keys the app sets, a rowversion | Supported. |
+| MySQL's unsigned keys (`BIGINT UNSIGNED`), `DateOnly` and other keys a route has no type for | Supported: the page parses the address, and another address is a row that isn't there. |
+| A junction table (`GroupMember`), a table whose rows go with another's (`ON DELETE CASCADE`) | A child of the table its key starts with, or whose deletes cascade to it. |
+| A key of a table to itself (`ParentId`) | A lookup of the same table. |
+| PostgreSQL enums, MySQL `ENUM` and `SET` | A select, or check boxes for a `SET`. |
+| PostgreSQL arrays (`text[]`, `int[]`) | A list, one item a line. A two-dimensional array's value can't be read (Npgsql reads `string[]`): its table's list and pages fail. |
+| `bit(n)`, `bit(1)` | A string of 0s and 1s; a yes or no. |
+| `timestamp`, `timestamptz`, MySQL's `DATE` and `TIME` | Supported (`timestamptz` is written as UTC). |
+| A table with no primary key | Left out: no objects or pages (its EF Core entity is there). Generating warns. |
+| A view | Left out: no objects or pages. Generating warns. |
+| A table named like a type the code makes for another (`ProductInfo`, `ProductConfiguration`) | The type that's made gives way (`ProductReadOnlyInfo`). Generating warns. |
+| A table named like a type of the web app's shell (`Issue`, `Problem`, `Lookup`) | Its pages don't build: rename the shell's type (it's yours), or exclude the table. |
+| Bytes, a `uuid`, a column with no .NET type (`geography`) | Not on the forms (a save keeps the value); the last has no property. Generating warns. |
+| Two foreign keys of a table with the same types | One fetch by them (the data portal tells fetches apart by type). Generating warns. |
 
 The generated code builds from SQLite, SQL Server, PostgreSQL and MySQL; the tests build it from each one's PetShop.
 

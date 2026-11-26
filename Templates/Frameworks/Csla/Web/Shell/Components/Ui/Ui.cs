@@ -255,13 +255,20 @@ public static class Formats
         singular.EndsWith('s') || singular.EndsWith('x') || singular.EndsWith("ch") || singular.EndsWith("sh") ? singular + "es" : singular + "s";
 }
 
-/// <summary>What went wrong, in words for whoever was using the page; the exception's own words as its detail.</summary>
-public sealed record Problem(string Title, string Message, string? Detail = null, bool CanReload = false)
+/// <summary>
+/// What went wrong, in words for whoever was using the page. Its detail is the exception's own words, in Development
+/// (a database's can name tables, columns and values); Unexpected says it's a fault to look into (EditPage logs it as
+/// an error), not something the user can put right (a row that's gone, a key that's taken).
+/// </summary>
+public sealed record Problem(string Title, string Message, string? Detail = null, bool CanReload = false, bool Unexpected = false)
 {
-    /// <summary>What went wrong loading (done null), or saving or deleting (done "saved", "deleted") a what.</summary>
-    public static Problem From(Exception exception, string what, string? done = null)
+    /// <summary>What went wrong loading (done null), or saving or deleting (done "saved", "deleted") a what. The database's
+    /// refusals by why, as FullStack's API has them: a unique key another row has, a reference to a row that isn't there,
+    /// rows that refer to the one deleted, or something else.</summary>
+    public static Problem From(Exception exception, string what, string? done = null, bool development = false)
     {
         var all = Unwrap(exception).ToList();
+        string? detail = development ? all.Last().Message : null;
         if (all.OfType<ConcurrencyException>().FirstOrDefault() is { } concurrency)
             return new Problem("Someone else changed it", $"This {what} changed (or was deleted) since you opened it. Reload it to see what's there now; your changes aren't saved.", concurrency.Message, CanReload: true);
         if (all.OfType<DataNotFoundException>().FirstOrDefault() is { } missing)
@@ -272,12 +279,36 @@ public sealed record Problem(string Title, string Message, string? Detail = null
             return new Problem("You can't do that", security.Message);
         if (all.OfType<Csla.Rules.ValidationException>().FirstOrDefault() is { } invalid)
             return new Problem("It isn't valid yet", invalid.Message);
-        if (all.FirstOrDefault(e => e is DbUpdateException or System.Data.Common.DbException) is { } database)
-            return new Problem("The database said no", done == "deleted"
-                ? $"The {what} wasn't deleted: other rows refer to it."
-                : $"The {what} wasn't {done ?? "loaded"}: a key that's taken, a row that isn't there, or a value the database won't take.",
-                all.Last().Message);
-        return new Problem("Something went wrong", $"The {what} wasn't {done ?? "loaded"}.", all.Last().Message);
+        if (all.Any(e => e is DbUpdateException or System.Data.Common.DbException))
+        {
+            string not = $"The {what} wasn't {done ?? "loaded"}";
+            return Refusal(all, done) switch
+            {
+                SaveRefusal.Unique => new Problem("The database said no", $"{not}: another {what} has the same key, or a value only one may have.", detail),
+                SaveRefusal.Reference => new Problem("The database said no", $"{not}: it refers to a row that isn't there.", detail),
+                SaveRefusal.Referenced => new Problem("The database said no", $"{not}: other rows refer to it. Delete or change them first.", detail),
+                _ => new Problem("The database said no", done is null ? $"{not}: the database couldn't give it." : $"{not}: the database won't take one of its values.", detail, Unexpected: true),
+            };
+        }
+        return new Problem("Something went wrong", $"The {what} wasn't {done ?? "loaded"}.", detail, Unexpected: true);
+    }
+
+    /// <summary>Why the database refused a save, by each provider's code: PostgreSQL's SQLSTATE, SQL Server's and MySQL's
+    /// error numbers, SQLite's extended result code. A reference that fails while a row is deleted is to that row.</summary>
+    public static SaveRefusal Refusal(IEnumerable<Exception> exceptions, string? done)
+    {
+        foreach (var error in exceptions.OfType<System.Data.Common.DbException>())
+        {
+            string? state = error.SqlState;
+            int number = error.GetType().GetProperty("Number")?.GetValue(error) is int n ? n : 0;
+            int sqlite = error.GetType().GetProperty("SqliteExtendedErrorCode")?.GetValue(error) is int s ? s : 0;
+            if (state == "23505" || number is 2627 or 2601 or 1062 || sqlite is 2067 or 1555)
+                return SaveRefusal.Unique;
+            // SQL Server's 547 is a CHECK constraint's too
+            if (state == "23503" || number is 1451 or 1452 || number == 547 && !error.Message.Contains("CHECK") || sqlite == 787)
+                return done == "deleted" || number == 1451 ? SaveRefusal.Referenced : SaveRefusal.Reference;
+        }
+        return SaveRefusal.Other;
     }
 
     private static IEnumerable<Exception> Unwrap(Exception exception)
@@ -291,6 +322,10 @@ public sealed record Problem(string Title, string Message, string? Detail = null
         }
     }
 }
+
+/// <summary>Why the database refused a save: a unique key another row has, a reference to a row that isn't there, rows
+/// that refer to the one deleted, or something else (a check, a value it won't take).</summary>
+public enum SaveRefusal { Other, Unique, Reference, Referenced }
 
 /// <summary>How a value reads in a list, or in a field the database sets.</summary>
 public enum ValueKind { Text, LongText, Key, Number, Money, Date, DateTime, Bool }
