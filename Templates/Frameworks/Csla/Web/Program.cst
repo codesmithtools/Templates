@@ -42,6 +42,8 @@ builder.Services.<%= dal %>(options => options.UseMySQL(connection));
 <% } else if (Provider == "Sqlite") { %>
 builder.Services.<%= dal %>(options => options.UseSqlite(connection));
 <% } else { %>
+<%-- for whoever generates it, now; the #warning is for whoever builds it, until they wire it --%>
+<% Warning("The web app isn't wired for " + Provider + "'s database (Csla.cst wires SQL Server, PostgreSQL, MySQL and SQLite): add its EF Core provider to its project (which has SQLite's) and to Program.cs, where its #warning is."); %>
 #warning The web app isn't wired for <%= Provider %>'s database (Csla.cst wires SQL Server, PostgreSQL, MySQL and SQLite): add its EF Core provider's package to the project, call its UseXxx here, and remove this line.
 builder.Services.<%= dal %>(options => throw new NotSupportedException("Program.cs: add the EF Core provider for <%= Provider %>'s database."));
 <% } %>
