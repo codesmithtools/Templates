@@ -6,7 +6,7 @@ import { Value } from "./cells.tsx";
 import { appName, resolve, tableNamed } from "./config.ts";
 import { invalidateTable, useQuery } from "./data.ts";
 import { FormField } from "./fields.tsx";
-import { buildRequest, checkField, defaultFormValue, formFields, problemErrors, toFormValue } from "./form.ts";
+import { buildRequest, checkField, defaultFormValue, fieldEntry, formFields, problemErrors, toFormValue } from "./form.ts";
 import { keyFromParams, keyOf, keyText, rowLabel, rowPath, rowTitle } from "./format.ts";
 import { Icon } from "./icons.tsx";
 import { deleteRow, errorText } from "./ListPage.tsx";
@@ -44,7 +44,7 @@ function Form({ table, row }: { table: Table; row?: Row }) {
 
   const dirty = fields.some((field) => values[field.name] !== initial[field.name]);
   const checks = useMemo(() => Object.fromEntries(fields.map((field) => [field.name, checkField(field, values[field.name] ?? null)])), [fields, values]);
-  const errorOf = (field: Field) => server[field.name] ?? (tried || touched[field.name] ? checks[field.name] : undefined);
+  const errorOf = (field: Field) => fieldEntry(server, field.name) ?? (tried || fieldEntry(touched, field.name) ? checks[field.name] : undefined);
   const wrong = fields.filter((field) => errorOf(field)).length;
   const required = fields.filter((field) => field.required);
   const filled = required.filter((field) => {
@@ -66,7 +66,7 @@ function Form({ table, row }: { table: Table; row?: Row }) {
 
   const change = (field: Field, value: FormValue) => {
     setValues((current) => ({ ...current, [field.name]: value }));
-    if (server[field.name]) setServer(({ [field.name]: _, ...rest }) => rest);
+    if (fieldEntry(server, field.name)) setServer(({ [field.name]: _, ...rest }) => rest);
   };
 
   const back = row ? rowPath(table, row) : `/${table.name}`;
@@ -78,7 +78,7 @@ function Form({ table, row }: { table: Table; row?: Row }) {
     setProblem(undefined);
     const built = buildRequest(table, editing, values);
     if (!built.request) {
-      const first = fields.find((field) => built.errors[field.name]);
+      const first = fields.find((field) => fieldEntry(built.errors, field.name));
       if (first) document.getElementById(`field-${table.name}-${first.name}`)?.focus();
       return;
     }
@@ -103,7 +103,7 @@ function Form({ table, row }: { table: Table; row?: Row }) {
         // a row that isn't there), and above the form
         const mapped = problemErrors(table, details.errors);
         setServer(mapped.fields);
-        const first = fields.find((field) => mapped.fields[field.name]);
+        const first = fields.find((field) => fieldEntry(mapped.fields, field.name));
         if (first) document.getElementById(`field-${table.name}-${first.name}`)?.focus();
         setProblem({ title: details.title ?? "The database refused the change.", detail: details.detail, database: details.database });
       } else if (details?.errors) {
@@ -161,7 +161,7 @@ function Form({ table, row }: { table: Table; row?: Row }) {
       <div className="form-layout">
         <form className="form" onSubmit={submit} noValidate onBlur={(event) => {
           const name = (event.target as HTMLElement).id?.replace(`field-${table.name}-`, "");
-          if (name && fields.some((field) => field.name === name)) setTouched((current) => (current[name] ? current : { ...current, [name]: true }));
+          if (name && fields.some((field) => field.name === name)) setTouched((current) => (fieldEntry(current, name) ? current : { ...current, [name]: true }));
         }}>
           {keyFields.length > 0 && (
             <Card title="Key" icon="key" className="form-section">

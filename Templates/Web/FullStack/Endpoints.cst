@@ -14,6 +14,11 @@
 <%
     string entity = Names.Entity(Table);
     string set = Names.Set(Table);
+    // the records, and the response's factory: their own names unless a column has them (Web.cs)
+    string response = Web.Response(Table);
+    string create = Web.CreateRequest(Table);
+    string update = Web.UpdateRequest(Table);
+    string fromEntity = Web.From(Table);
     var key = Web.Key(Table);
     // the key as parameters, arguments and a route ("string productId", "productId", "/{productId}")
     string keyParameters = string.Join(", ", key.Select(c => Names.Type(c).TrimEnd('?') + " " + Web.Parameter(c)));
@@ -67,13 +72,13 @@ using <%= DataNamespace %>;
 namespace <%= Namespace %>;
 
 /// <summary>A row of <%= Table.Name %>, as the API returns it.</summary>
-public sealed record <%= entity %>Response
+public sealed record <%= response %>
 {
 <% foreach (ColumnSchema column in Names.Columns(Table)) { %>
     public required <%= Names.Type(column) %> <%= Names.Property(column) %> { get; init; }
 <% } %>
 
-    public static <%= entity %>Response From(<%= entity %> entity) => new()
+    public static <%= response %> <%= fromEntity %>(<%= entity %> entity) => new()
     {
 <% foreach (ColumnSchema column in Names.Columns(Table)) { %>
         <%= Names.Property(column) %> = entity.<%= Names.Property(column) %>,
@@ -82,7 +87,7 @@ public sealed record <%= entity %>Response
 }
 
 /// <summary>A new row of <%= Table.Name %>.</summary>
-public sealed record Create<%= entity %>Request
+public sealed record <%= create %>
 {
 <% foreach (ColumnSchema column in Web.Creates(Table)) { if (Web.Validation(column) != null) { %>
     <%= Web.Validation(column) %>
@@ -90,7 +95,7 @@ public sealed record Create<%= entity %>Request
     public <%= Names.Required(column) %><%= Names.Type(column) %> <%= Names.Property(column) %> { get; init; }
 <% } %>
 
-    public <%= entity %> ToEntity() => new()
+    public <%= entity %> <%= Web.ToEntity(Table) %>() => new()
     {
 <% foreach (ColumnSchema column in Names.Columns(Table)) { %>
 <% if (Web.Creates(Table).Contains(column)) { %>
@@ -103,7 +108,7 @@ public sealed record Create<%= entity %>Request
 }
 
 /// <summary>Changes to a row of <%= Table.Name %>: everything but its key.</summary>
-public sealed record Update<%= entity %>Request
+public sealed record <%= update %>
 {
 <% foreach (ColumnSchema column in Web.Updates(Table)) { if (Web.Validation(column) != null) { %>
     <%= Web.Validation(column) %>
@@ -111,7 +116,7 @@ public sealed record Update<%= entity %>Request
     public <%= Names.Required(column) %><%= Names.Type(column) %> <%= Names.Property(column) %> { get; init; }
 <% } %>
 
-    public void ApplyTo(<%= entity %> entity)
+    public void <%= Web.ApplyTo(Table) %>(<%= entity %> entity)
     {
 <% foreach (ColumnSchema column in Web.Updates(Table)) { %>
         entity.<%= Names.Property(column) %> = <%= Names.Property(column) %>;
@@ -167,30 +172,30 @@ public static class <%= entity %>Endpoints
             };
 <% } %>
             var items = await rows.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
-            return TypedResults.Ok(new PagedList<<%= entity %>Response>(items.Select(<%= entity %>Response.From).ToList(), total, page, pageSize));
+            return TypedResults.Ok(new PagedList<<%= response %>>(items.Select(<%= response %>.<%= fromEntity %>).ToList(), total, page, pageSize));
         }).WithName("List<%= set %>");
 <% if (key.Count > 0) { %>
 
-        group.MapGet("/<%= Web.KeyRoute(Table) %>", async Task<Results<Ok<<%= entity %>Response>, NotFound>> (<%= keyParameters %>, <%= ContextName %> db) =>
+        group.MapGet("/<%= Web.KeyRoute(Table) %>", async Task<Results<Ok<<%= response %>>, NotFound>> (<%= keyParameters %>, <%= ContextName %> db) =>
             await db.<%= set %>.FindAsync(<%= keyArguments %>) is { } entity
-                ? TypedResults.Ok(<%= entity %>Response.From(entity))
+                ? TypedResults.Ok(<%= response %>.<%= fromEntity %>(entity))
                 : TypedResults.NotFound())
             .WithName("Get<%= entity %>");
 
-        group.MapPost("/", async Task<Results<Created<<%= entity %>Response>, ProblemHttpResult>> (Create<%= entity %>Request request, <%= ContextName %> db, IHostEnvironment environment) =>
+        group.MapPost("/", async Task<Results<Created<<%= response %>>, ProblemHttpResult>> (<%= create %> request, <%= ContextName %> db, IHostEnvironment environment) =>
         {
-            var entity = request.ToEntity();
+            var entity = request.<%= Web.ToEntity(Table) %>();
             db.<%= set %>.Add(entity);
             if (await <%= ApiName %>Api.SaveAsync(db, environment<%= explain %>) is { } problem)
                 return problem;
-            return TypedResults.Created($"<%= location %>", <%= entity %>Response.From(entity));
+            return TypedResults.Created($"<%= location %>", <%= response %>.<%= fromEntity %>(entity));
         }).WithName("Create<%= entity %>").ProducesProblem(StatusCodes.Status409Conflict);
 
-        group.MapPut("/<%= Web.KeyRoute(Table) %>", async Task<Results<NoContent, NotFound, ProblemHttpResult>> (<%= keyParameters %>, Update<%= entity %>Request request, <%= ContextName %> db, IHostEnvironment environment) =>
+        group.MapPut("/<%= Web.KeyRoute(Table) %>", async Task<Results<NoContent, NotFound, ProblemHttpResult>> (<%= keyParameters %>, <%= update %> request, <%= ContextName %> db, IHostEnvironment environment) =>
         {
             if (await db.<%= set %>.FindAsync(<%= keyArguments %>) is not { } entity)
                 return TypedResults.NotFound();
-            request.ApplyTo(entity);
+            request.<%= Web.ApplyTo(Table) %>(entity);
             if (await <%= ApiName %>Api.SaveAsync(db, environment<%= explain %>) is { } problem)
                 return problem;
             return TypedResults.NoContent();

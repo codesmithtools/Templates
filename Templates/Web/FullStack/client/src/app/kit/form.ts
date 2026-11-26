@@ -7,6 +7,10 @@ import type { Field, FormValue, Row, Table } from "./types.ts";
 
 const pad = (n: number) => String(n).padStart(2, "0");
 
+/** A field's entry in a map of the form's (its errors, what's been touched): its own, not one every object has (a
+ * field named constructor or valueOf). */
+export const fieldEntry = <T,>(map: Record<string, T>, name: string): T | undefined => (Object.hasOwn(map, name) ? map[name] : undefined);
+
 /** Now, as a date, a datetime-local or a time input has it. */
 function now(kind: Field["kind"]): string {
   const date = new Date();
@@ -145,7 +149,7 @@ export function buildRequest(table: Table, editing: boolean, values: Record<stri
     if (!parsed.success)
       for (const issue of parsed.error.issues) {
         const name = String(issue.path[0] ?? "");
-        if (name && !errors[name]) errors[name] = issue.message;
+        if (name && fieldEntry(errors, name) === undefined) errors[name] = issue.message;
       }
   }
   return Object.keys(errors).length ? { errors } : { request, errors };

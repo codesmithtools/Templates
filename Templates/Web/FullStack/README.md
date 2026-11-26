@@ -85,6 +85,11 @@ names, its other names' words) and a few common ones (`id`, `name`, `date`, `pri
     this category. Delete or change them first." `refusal` says which: `unique`, `reference`, `referenced` or `other`.
     SQLite, SQL Server, PostgreSQL and MySQL each say it with a code of their own, which the API reads.
   - The database's own message (`database`) is there only in Development: it can name tables, columns and values.
+  - Any column's name works. A column keeps its name in the entity, the records and the JSON; where it's named like
+    a member a record has (`From`, `ToEntity`, `ApplyTo`, or the record itself), the member gives way (`FromEntity`,
+    `CreateEntity`, `ApplyToEntity`, `TripResponseRecord`). A key's or a filter's parameter named like a C# or
+    TypeScript keyword, or like one the code around it has (`db`, `request`, `row`; a list's `page`, `sort`, `items`,
+    the UI's `q`), gets `Value` after it (a filter: `Filter`): `classValue`, `dbValue`, `?pageFilter=2`.
 - **Client** (`client/src/generated/petshop.ts`): a Zod schema and a type for each table's rows and requests, and
   `createPetShopClient`, with a typed call per endpoint that checks what it sends and what comes back.
 - **Ui** (`client/src/generated/ui/`): the web UI's tables and routes.
