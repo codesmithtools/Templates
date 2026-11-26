@@ -173,6 +173,11 @@
         DbmlGenerator generator = new DbmlGenerator(settings);
         generator.SchemaItemProcessed += new EventHandler<SchemaItemProcessedEventArgs>(OnSchemaItemProcessed);
         Database db = generator.Create(SourceDatabase);
+
+        // 9.0: the dbml with the default values the next run reads it with (the generator fills them in only for a dbml
+        // it read), so a new project's first run writes what every run after it does: 8.x added Mode="ConnectionString"
+        // and DeleteOnNull="false" on the second run.
+        Dbml.ToFile(Dbml.CopyWithNulledOutDefaults(Dbml.CopyWithFilledInDefaults(db)), filePath);
         
         OutputFile dbmlOutputFile = new OutputFile(this.DbmlFile);
         dbmlOutputFile.Metadata.Add("CustomTool", string.Empty);
