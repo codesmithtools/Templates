@@ -15,6 +15,11 @@ generate targets .NET Framework and Visual Studio 2010–2015 (and SQL Server, m
 
 They aren't changed any more. For new work, start from the samples outside this folder.
 
+PLINQO's entity files (`Product.cs`, `Product.vb`: the partial class whose `Metadata` class keeps the attributes you add)
+can use today's C# and VB: `=>` members, file-scoped namespaces, `init`, nullable annotations, and `nameof`,
+interpolated and raw strings in the attributes; in VB, auto-implemented properties, attributes on their own line
+without ` _`, and `NameOf`. Entities.cst copies each attribute as written. 8.x read these files as C# 3 and VB 9 only.
+
 `Database/StoredProcedures` writes what 8.x wrote, mistakes too: for a table whose last column is a `rowversion`
 (`timestamp`), a procedure's parameters end with a comma before `AS`; a table whose columns are all its key gets an
 update with an empty `SET`; and names with quotes aren't escaped. Fix those procedures by hand, or generate them with
