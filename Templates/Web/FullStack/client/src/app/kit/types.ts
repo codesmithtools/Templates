@@ -3,10 +3,12 @@
 import type { ComponentType } from "react";
 import type { z } from "zod";
 
-/** How a field is shown and edited. */
+/** How a field is shown and edited: a list is an array (PostgreSQL's text[]), bits a bit string of 0s and 1s, an enum
+ * one of its options and a set some of them (MySQL's SET: "a,b"). */
 export type FieldKind =
   | "text" | "multiline" | "email" | "phone" | "url" | "uuid" | "json" | "binary"
-  | "integer" | "decimal" | "money" | "boolean" | "date" | "datetime" | "time";
+  | "integer" | "decimal" | "money" | "boolean" | "date" | "datetime" | "time"
+  | "list" | "bits" | "enum" | "set";
 
 /** A row, as the API returns it. */
 export type Row = Record<string, unknown>;
@@ -21,17 +23,28 @@ export interface Field<R = Row> {
   nullable?: boolean;
   /** A new row must have it: it can't be null, and the database has no default for it. */
   required?: boolean;
+  /** The database has a default for it: a new row may leave it out, and gets the default. */
+  defaulted?: boolean;
   /** Part of the primary key: set when the row's made, never changed. */
   key?: boolean;
   /** The database fills it in (an identity, a computed column): never edited. */
   generated?: boolean;
   maxLength?: number;
+  /** A bit string's bits, where it has just so many (PostgreSQL's bit(8)). */
+  minLength?: number;
   min?: number;
   max?: number;
   precision?: number;
   scale?: number;
-  /** A new row's value ("now" for the time). */
-  default?: string | number | boolean;
+  /** A new row's value ("now" for the time; a list's items). */
+  default?: string | number | boolean | readonly (string | number | null)[];
+  /** An enum's values (and a set's, and a list's of an enum): its input picks from them. */
+  options?: string[];
+  /** A list's items' kind: text, integer, decimal, boolean... */
+  items?: FieldKind;
+  /** A date and time with a time zone (timestamptz, datetimeoffset): the API has it in UTC (or with an offset), the
+   * form in the browser's time. */
+  zoned?: boolean;
   sortable?: boolean;
   /** The list's filter by it (its query parameter), where there's one. */
   filter?: string;
@@ -136,8 +149,8 @@ export interface Database {
   provider: string;
 }
 
-/** A form's value of a field: text as the input has it, a bool, or null. */
-export type FormValue = string | boolean | null;
+/** A form's value of a field: text as the input has it, a bool, a list's items (as text), or null. */
+export type FormValue = string | boolean | string[] | null;
 
 /** What a field's input gets (customize.tsx's inputs). */
 export interface InputProps {

@@ -4,6 +4,7 @@
 <%@ Property Name="DataNamespace" Type="System.String" Default="MyApp.Data" Description="The entities' namespace." %>
 <%@ Property Name="ContextName" Type="System.String" Default="AppDbContext" Description="The DbContext's class name." %>
 <%@ Property Name="ApiName" Type="System.String" Default="App" Description="The class that maps every endpoint ({ApiName}Api): its SaveAsync saves the changes." %>
+<%@ Property Name="Exclude" Type="System.String" Default="" Optional="True" Description="Tables the app leaves out (Api.cst's): the endpoints don't refer to them." %>
 <%@ Assembly Name="SchemaExplorer" %>
 <%@ Import Namespace="SchemaExplorer" %>
 <%@ Import Namespace="System.Linq" %>
@@ -13,6 +14,11 @@
 <%@ Assembly Src="Ui.cs" %>
 <%
     string entity = Names.Entity(Table);
+    // the entity, by its namespace: a record of the API's may have its name (a table named SaveProblem)
+    string entityType = "global::" + DataNamespace + "." + entity;
+    string api = ApiName + "Api";
+    string saveProblem = Web.Own(Table.Database, "SaveProblem");
+    string saveRefusal = Web.Own(Table.Database, "SaveRefusal");
     string set = Names.Set(Table);
     // the records, and the response's factory: their own names unless a column has them (Web.cs)
     string response = Web.Response(Table);
@@ -23,7 +29,7 @@
     // the key as parameters, arguments and a route ("string productId", "productId", "/{productId}")
     string keyParameters = string.Join(", ", key.Select(c => Names.Type(c).TrimEnd('?') + " " + Web.Parameter(c)));
     string keyArguments = string.Join(", ", key.Select(c => Web.Parameter(c)));
-    string location = Web.Route(Table) + string.Concat(key.Select(c => "/{entity." + Names.Property(c) + "}"));
+    string location = Web.Route(Table) + string.Concat(key.Select(c => "/" + Web.Location(c, "entity." + Names.Property(c))));
     var filters = Web.Filters(Table);
     var searches = Web.Searches(Table);
     var numbers = key.Where(Web.NumberKey).ToList();
@@ -49,8 +55,8 @@
             !uniques.Any(u => u.Select(c => c.Name).OrderBy(n => n).SequenceEqual(columns.Select(c => c.Name).OrderBy(n => n))))
             uniques.Add(columns);
     }
-    var references = Table.ForeignKeys.Cast<TableKeySchema>().Where(Names.Related).ToList();
-    var referring = Names.ReferencesTo(Table)
+    var references = Table.ForeignKeys.Cast<TableKeySchema>().Where(k => Web.Related(k, Exclude)).ToList();
+    var referring = Web.ReferencesTo(Table, Exclude)
         .Where(k => !(bool.TryParse(System.Convert.ToString(k.ExtendedProperties["CS_CascadeDelete"]?.Value), out bool cascades) && cascades)).ToList();
     string Same(string left, System.Collections.Generic.IEnumerable<ColumnSchema> columns) =>
         string.Join(" && ", columns.Select(c => left + "." + Names.Property(c) + " == entity." + Names.Property(c)));
@@ -75,51 +81,67 @@ namespace <%= Namespace %>;
 public sealed record <%= response %>
 {
 <% foreach (ColumnSchema column in Names.Columns(Table)) { %>
-    public required <%= Names.Type(column) %> <%= Names.Property(column) %> { get; init; }
+    public required <%= Web.ApiType(column) %> <%= Names.Property(column) %> { get; init; }
 <% } %>
 
-    public static <%= response %> <%= fromEntity %>(<%= entity %> entity) => new()
+    public static <%= response %> <%= fromEntity %>(<%= entityType %> entity) => new()
     {
 <% foreach (ColumnSchema column in Names.Columns(Table)) { %>
-        <%= Names.Property(column) %> = entity.<%= Names.Property(column) %>,
+        <%= Names.Property(column) %> = <%= Web.FromEntity(column, "entity." + Names.Property(column), api) %>,
 <% } %>
     };
 }
 
-/// <summary>A new row of <%= Table.Name %>.</summary>
+/// <summary>A new row of <%= Table.Name %>: a column with a default may be left out, and the database gives it.</summary>
 public sealed record <%= create %>
 {
-<% foreach (ColumnSchema column in Web.Creates(Table)) { if (Web.Validation(column) != null) { %>
-    <%= Web.Validation(column) %>
+<% foreach (ColumnSchema column in Web.Creates(Table)) { foreach (string check in Web.Checks(column, true)) { %>
+    <%= check %>
 <% } %>
-    public <%= Names.Required(column) %><%= Names.Type(column) %> <%= Names.Property(column) %> { get; init; }
+    public <%= Web.CreateRequired(column) %><%= Web.CreateType(column) %> <%= Names.Property(column) %> { get; init; }
 <% } %>
 
-    public <%= entity %> <%= Web.ToEntity(Table) %>() => new()
+    public <%= entityType %> <%= Web.ToEntity(Table) %>()
     {
-<% foreach (ColumnSchema column in Names.Columns(Table)) { %>
-<% if (Web.Creates(Table).Contains(column)) { %>
-        <%= Names.Property(column) %> = <%= Names.Property(column) %>,
+        var entity = new <%= entityType %>
+        {
+<% foreach (ColumnSchema column in Names.Columns(Table)) { string property = Names.Property(column); %>
+<% if (!Web.Creates(Table).Contains(column)) { if (Names.Required(column) != "") { %>
+            <%= property %> = null!, // the database's
+<% } } else if (!Web.Optional(column)) { %>
+            <%= property %> = <%= Web.EntityValue(column, property, api) %>,
+<% } else if (Names.Required(column) != "" && Web.IsArray(column)) { %>
+            <%= property %> = <%= property %> ?? <%= Web.ArrayDefault(column) %>, // the database's default: EF Core never leaves a required list to it
 <% } else if (Names.Required(column) != "") { %>
-        <%= Names.Property(column) %> = null!, // the database's
+            <%= property %> = <%= Web.EntityValue(column, property, api) %>!, // null: the database's default
 <% } %>
 <% } %>
-    };
+        };
+<% foreach (ColumnSchema column in Web.Creates(Table).Where(c => Web.Optional(c) && Names.Required(c) == "")) { string property = Names.Property(column); string sentinel = Web.Sentinel(column); %>
+<% if (sentinel != null) { // where it's left out, its default: EF Core then leaves it out of the insert, and the database writes it %>
+        entity.<%= property %> = <%= Web.BitString(column) == "ulong" ? api + ".BitNumber(" + property + ")" : property %> ?? <%= sentinel %>;
+<% } else { %>
+        if (<%= property %> != null)
+            entity.<%= property %> = <%= Web.EntityValue(column, property + (Web.BitString(column) == null && Web.IsValueType(column) ? ".Value" : ""), api) %>;
+<% } %>
+<% } %>
+        return entity;
+    }
 }
 
 /// <summary>Changes to a row of <%= Table.Name %>: everything but its key.</summary>
 public sealed record <%= update %>
 {
-<% foreach (ColumnSchema column in Web.Updates(Table)) { if (Web.Validation(column) != null) { %>
-    <%= Web.Validation(column) %>
+<% foreach (ColumnSchema column in Web.Updates(Table)) { foreach (string check in Web.Checks(column, false)) { %>
+    <%= check %>
 <% } %>
-    public <%= Names.Required(column) %><%= Names.Type(column) %> <%= Names.Property(column) %> { get; init; }
+    public <%= Web.Required(column) %><%= Web.ApiType(column) %> <%= Names.Property(column) %> { get; init; }
 <% } %>
 
-    public void <%= Web.ApplyTo(Table) %>(<%= entity %> entity)
+    public void <%= Web.ApplyTo(Table) %>(<%= entityType %> entity)
     {
 <% foreach (ColumnSchema column in Web.Updates(Table)) { %>
-        entity.<%= Names.Property(column) %> = <%= Names.Property(column) %>;
+        entity.<%= Names.Property(column) %> = <%= Web.EntityValue(column, Names.Property(column), api) %>;
 <% } %>
     }
 }
@@ -136,7 +158,7 @@ public static class <%= entity %>Endpoints
         {
             pageSize = Math.Clamp(pageSize, 1, 500);
             page = Math.Max(page, 1);
-            IQueryable<<%= entity %>> rows = db.<%= set %>.AsNoTracking();
+            IQueryable<<%= entityType %>> rows = db.<%= set %>.AsNoTracking();
 <% foreach (ColumnSchema column in filters) { string filter = Web.Filter(column); string property = "e." + Names.Property(column); %>
             if (<%= filter %> is { Length: > 0 })
 <% if (!column.AllowDBNull) { %>
@@ -148,13 +170,13 @@ public static class <%= entity %>Endpoints
 <% if (searches.Count > 0 || numbers.Count > 0) { %>
             if (!string.IsNullOrWhiteSpace(search))
             {
-                // LIKE '%text%', its wildcards escaped<%= Web.SearchLowers(Table) ? ", in lower case (PostgreSQL's LIKE minds case)" : "" %>
-                string pattern = "%" + search.Trim()<%= Web.SearchLowers(Table) ? ".ToLowerInvariant()" : "" %>.Replace("\\", "\\\\").Replace("%", "\\%").Replace("_", "\\_") + "%";
+                // LIKE '%text%', its wildcards escaped with !<%= Web.SearchLowers(Table) ? ", in lower case (PostgreSQL's LIKE minds case)" : "" %>
+                string pattern = "%" + search.Trim()<%= Web.SearchLowers(Table) ? ".ToLowerInvariant()" : "" %><%= Web.LikeEscapes(Table) %> + "%";
 <% if (numbers.Count > 0) { %>
                 bool isNumber = long.TryParse(search.Trim(), out long number);
 <% } %>
                 rows = rows.Where(e =>
-<% var terms = searches.Select(c => "EF.Functions.Like(e." + Names.Property(c) + (Web.SearchLowers(Table) ? "!.ToLower()" : "") + ", pattern, \"\\\\\")")
+<% var terms = searches.Select(c => "EF.Functions.Like(e." + Names.Property(c) + (Web.SearchLowers(Table) ? "!.ToLower()" : "") + ", pattern, \"!\")")
        .Concat(numbers.Select(c => "(isNumber && e." + Names.Property(c) + " == number)")).ToList();
    for (int i = 0; i < terms.Count; i++) { %>
                     <%= terms[i] %><%= i < terms.Count - 1 ? " ||" : ");" %>
@@ -186,7 +208,7 @@ public static class <%= entity %>Endpoints
         {
             var entity = request.<%= Web.ToEntity(Table) %>();
             db.<%= set %>.Add(entity);
-            if (await <%= ApiName %>Api.SaveAsync(db, environment<%= explain %>) is { } problem)
+            if (await <%= api %>.SaveAsync(db, environment<%= explain %>) is { } problem)
                 return problem;
             return TypedResults.Created($"<%= location %>", <%= response %>.<%= fromEntity %>(entity));
         }).WithName("Create<%= entity %>").ProducesProblem(StatusCodes.Status409Conflict);
@@ -196,7 +218,7 @@ public static class <%= entity %>Endpoints
             if (await db.<%= set %>.FindAsync(<%= keyArguments %>) is not { } entity)
                 return TypedResults.NotFound();
             request.<%= Web.ApplyTo(Table) %>(entity);
-            if (await <%= ApiName %>Api.SaveAsync(db, environment<%= explain %>) is { } problem)
+            if (await <%= api %>.SaveAsync(db, environment<%= explain %>) is { } problem)
                 return problem;
             return TypedResults.NoContent();
         }).WithName("Update<%= entity %>").ProducesProblem(StatusCodes.Status409Conflict);
@@ -206,7 +228,7 @@ public static class <%= entity %>Endpoints
             if (await db.<%= set %>.FindAsync(<%= keyArguments %>) is not { } entity)
                 return TypedResults.NotFound();
             db.<%= set %>.Remove(entity);
-            if (await <%= ApiName %>Api.SaveAsync(db, environment<%= explain %>) is { } problem)
+            if (await <%= api %>.SaveAsync(db, environment<%= explain %>) is { } problem)
                 return problem;
             return TypedResults.NoContent();
         }).WithName("Delete<%= entity %>").ProducesProblem(StatusCodes.Status409Conflict);
@@ -216,28 +238,28 @@ public static class <%= entity %>Endpoints
     }
 <% if (explains) { %>
 
-    // Why the database refused to save a row, for people (<%= ApiName %>Api.SaveAsync says it): the key another row has, the
+    // Why the database refused to save a row, for people (<%= api %>.SaveAsync says it): the key another row has, the
     // row a reference is to that isn't there, or the rows that refer to it. Null where none of them is found.
-    private static async Task<SaveProblem?> ExplainAsync(<%= ContextName %> db, <%= entity %> entity, SaveRefusal refusal)
+    private static async Task<<%= saveProblem %>?> ExplainAsync(<%= ContextName %> db, <%= entityType %> entity, <%= saveRefusal %> refusal)
     {
         switch (refusal)
         {
-            case SaveRefusal.Unique:
+            case <%= saveRefusal %>.Unique:
 <% foreach (var columns in uniques) { bool isKey = columns == key; %>
                 if (<%= isKey ? "db.Entry(entity).State == EntityState.Added && " : NotNull(columns) %>await db.<%= set %>.AnyAsync(e => <%= Same("e", columns) %><%= isKey ? "" : " && !(" + Same("e", key) + ")" %>))
-                    return SaveProblem.About(<%= Ui.Ts("Another " + row + " already has this " + Labels(columns) + ".") %>, <%= Fields(columns) %>);
+                    return <%= saveProblem %>.About(<%= Ui.Ts("Another " + row + " already has this " + Labels(columns) + ".") %>, <%= Fields(columns) %>);
 <% } %>
                 break;
-            case SaveRefusal.Reference:
+            case <%= saveRefusal %>.Reference:
 <% foreach (var reference in references) {
        var columns = reference.ForeignKeyMemberColumns.Cast<MemberColumnSchema>().Select(c => Table.Columns[c.Name]).ToList();
        var principal = reference.PrimaryKeyMemberColumns.Cast<MemberColumnSchema>().Select(c => reference.PrimaryKeyTable.Columns[c.Name]).ToList();
        string match = string.Join(" && ", principal.Select((c, i) => "p." + Names.Property(c) + " == entity." + Names.Property(columns[i]))); %>
                 if (<%= NotNull(columns) %>!await db.<%= Names.Set(reference.PrimaryKeyTable) %>.AnyAsync(p => <%= match %>))
-                    return SaveProblem.About(<%= Ui.Ts("There's no such " + Lower(Ui.Singular(reference.PrimaryKeyTable)) + ".") %>, <%= Fields(columns) %>);
+                    return <%= saveProblem %>.About(<%= Ui.Ts("There's no such " + Lower(Ui.Singular(reference.PrimaryKeyTable)) + ".") %>, <%= Fields(columns) %>);
 <% } %>
                 break;
-            case SaveRefusal.Referenced:
+            case <%= saveRefusal %>.Referenced:
 <% if (referring.Count > 0) { %>
                 var referring = new List<string>();
 <% foreach (var reference in referring) {
@@ -247,7 +269,7 @@ public static class <%= entity %>Endpoints
                 if (await db.<%= Names.Set(reference.ForeignKeyTable) %>.AnyAsync(c => <%= match %>))
                     referring.Add(<%= Ui.Ts(Lower(Ui.Title(reference.ForeignKeyTable))) %>);
 <% } %>
-                return SaveProblem.Referred(referring.Distinct().ToList(), <%= Ui.Ts(row) %>);
+                return <%= saveProblem %>.Referred(referring.Distinct().ToList(), <%= Ui.Ts(row) %>);
 <% } else { %>
                 break;
 <% } %>

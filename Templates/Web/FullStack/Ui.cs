@@ -13,29 +13,9 @@ public static class Ui
 {
     // ---- labels ----
 
-    // words a column's name shortens, spelled out
-    private static readonly Dictionary<string, string> Spelled = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
-    {
-        ["descn"] = "description", ["desc"] = "description", ["addr"] = "address", ["qty"] = "quantity", ["num"] = "number",
-        ["amt"] = "amount", ["id"] = "ID", ["url"] = "URL", ["uri"] = "URI", ["ip"] = "IP", ["pin"] = "PIN", ["sku"] = "SKU",
-        ["guid"] = "GUID", ["uuid"] = "UUID", ["api"] = "API",
-    };
-
-    /// <summary>A name in words, in sentence case: ShipAddr1 is "Ship address 1", ProductId "Product ID".</summary>
-    public static string Words(string name)
-    {
-        var words = Regex.Split(name ?? "", "(?<=[a-z])(?=[A-Z0-9])|(?<=[A-Z])(?=[A-Z][a-z])|(?<=[0-9])(?=[A-Za-z])|_+")
-            .Where(w => w.Length > 0).ToList();
-        for (int i = 0; i < words.Count; i++)
-        {
-            if (Spelled.TryGetValue(words[i], out string spelled))
-                words[i] = spelled;
-            else if (i > 0 && words[i].Any(char.IsLower))
-                words[i] = words[i].ToLowerInvariant();
-        }
-        string text = string.Join(" ", words);
-        return text.Length == 0 ? name : char.ToUpperInvariant(text[0]) + text.Substring(1);
-    }
+    /// <summary>A name in words, in sentence case: ShipAddr1 is "Ship address 1", ProductId "Product ID" (NameWords.Label,
+    /// which Csla's labels use too).</summary>
+    public static string Words(string name) => NameWords.Label(name);
 
     /// <summary>A table's name in the navigation and its pages' titles: its set in words (Line items; lineitem's too,
     /// NameWords.cs).</summary>
@@ -44,18 +24,36 @@ public static class Ui
     /// <summary>One of its rows: its entity in words (Line item).</summary>
     public static string Singular(TableSchema table) => Words(NameWords.Entity(table));
 
-    /// <summary>A column's label: its name in words (listprice too: List price, NameWords.cs); a foreign key's, the table
-    /// it refers to (UniqueID refers to Profiles: Profile), where it's the only one to it; a bool's without its Is
-    /// (IsShoppingCart: Shopping cart).</summary>
+    /// <summary>A column's label: its name in words (listprice too: List price, NameWords.cs); a bool's without its Is
+    /// (IsShoppingCart: Shopping cart). A foreign key's is the table it refers to (UniqueID refers to Profiles:
+    /// Profile), where its column is named for it (ProductId, GroupId to Group's Id) and it's the only one to it;
+    /// else its column's, without its ID (ParentId: Parent, ReferredBy: Referred by).</summary>
     public static string Label(ColumnSchema column)
     {
         var key = Reference(column);
-        if (key != null && column.Table.ForeignKeys.Cast<TableKeySchema>().Count(k => Same(k.PrimaryKeyTable, key.PrimaryKeyTable)) == 1)
-            return Singular(key.PrimaryKeyTable);
-        string property = NameWords.Property(column);
-        if (Names.Type(column).TrimEnd('?') == "bool" && Regex.IsMatch(property, "^(Is|Has)[A-Z0-9]"))
-            property = property.Substring(property.StartsWith("Is") ? 2 : 3);
-        return Words(property);
+        if (key != null)
+        {
+            if (NamedFor(column, key) && column.Table.ForeignKeys.Cast<TableKeySchema>().Count(k => Same(k.PrimaryKeyTable, key.PrimaryKeyTable)) == 1)
+                return Singular(key.PrimaryKeyTable);
+            string words = NameWords.Label(column);
+            return words.EndsWith(" ID", StringComparison.Ordinal) && words.Length > 3 ? words.Substring(0, words.Length - 3) : words;
+        }
+        return NameWords.Label(column);
+    }
+
+    // Whether a foreign key's column is named for the table it refers to: as the column it refers to (ProductId), or
+    // the table's name and that column's or an ID (GroupId to Group's Id; CategoryCode to Category's Code).
+    private static bool NamedFor(ColumnSchema column, TableKeySchema key)
+    {
+        string Plain(string name) => Regex.Replace(name ?? "", "[^A-Za-z0-9]", "").ToLowerInvariant();
+        string own = Plain(column.Name), referred = Plain(key.PrimaryKeyMemberColumns[0].Name);
+        if (own == referred)
+            return true;
+        foreach (string table in new[] { Plain(NameWords.Entity(key.PrimaryKeyTable)), Plain(key.PrimaryKeyTable.Name), Plain(Names.Entity(key.PrimaryKeyTable)) })
+            if (own.StartsWith(table, StringComparison.Ordinal) && own.Substring(table.Length) is var rest &&
+                (rest == referred || rest is "id" or "key" or "code" or "no" or "num"))
+                return true;
+        return false;
     }
 
     // ---- kinds of input ----
@@ -64,12 +62,21 @@ public static class Ui
     private static readonly Regex LongText = new Regex("(desc|descn|description|comment|comments|note|notes|body|details|summary|bio|about|message|content|text|remarks)$", RegexOptions.IgnoreCase);
 
     /// <summary>How a column is shown and edited: text, multiline, email, phone, url, integer, decimal, money, boolean,
-    /// date, datetime, time, uuid, binary or json.</summary>
+    /// date, datetime, time, uuid, binary, json, bits, list, enum or set.</summary>
     public static string Kind(ColumnSchema column)
     {
         string type = Names.Type(column).TrimEnd('?');
         string native = Web.Native(column);
         string name = Names.Property(column);
+        // bit strings (text of 0s and 1s), arrays (a list), enums (a select) and MySQL's SETs (some of its values)
+        if (Web.BitString(column) != null)
+            return "bits";
+        if (Web.IsArray(column))
+            return "list";
+        if (Web.IsSet(column))
+            return "set";
+        if (Web.EnumValues(column) != null)
+            return "enum";
         switch (type)
         {
             case "bool": return "boolean";
@@ -99,14 +106,50 @@ public static class Ui
         return "text";
     }
 
-    /// <summary>A column whose few values read as a badge: a short Status, Type, Kind, Level, Priority or Stage.</summary>
+    /// <summary>A column whose few values read as a badge: an enum's, or a short Status, Type, Kind, Level, Priority or
+    /// Stage.</summary>
     public static bool Badge(ColumnSchema column) =>
-        Names.Type(column).TrimEnd('?') == "string" && column.Size > 0 && column.Size <= 20 &&
+        Kind(column) == "enum" ||
+        Names.Type(column).TrimEnd('?') == "string" && column.Size > 0 && column.Size <= 20 && Kind(column) is not ("set" or "list") &&
         Regex.IsMatch(Names.Property(column), "(Status|Type|Kind|Level|Priority|Stage|Category|Role)$") && !column.IsPrimaryKeyMember && !column.IsForeignKeyMember;
 
-    /// <summary>A column that reads better in a monospaced font: a key's, a GUID, bytes, JSON.</summary>
+    /// <summary>The element's kind of a list (an array): text, integer, decimal, boolean, uuid, date, datetime or time.</summary>
+    public static string Items(ColumnSchema column)
+    {
+        switch (Web.Element(column))
+        {
+            case "bool": return "boolean";
+            case "byte": case "sbyte": case "short": case "ushort": case "int": case "uint": case "long": case "ulong": return "integer";
+            case "float": case "double": case "decimal": return "decimal";
+            case "Guid": return "uuid";
+            case "DateOnly": return "date";
+            case "DateTime": case "DateTimeOffset": return "datetime";
+            case "TimeOnly": case "TimeSpan": return "time";
+            default: return "text";
+        }
+    }
+
+    /// <summary>A date and time that's an instant (PostgreSQL's timestamptz, MySQL's TIMESTAMP, SQL Server's
+    /// datetimeoffset): the API sends it in UTC (or with its offset), and the form shows and sends it in the browser's
+    /// time.</summary>
+    public static bool Zoned(ColumnSchema column) =>
+        Kind(column) == "datetime" && (Names.Type(column).TrimEnd('?') == "DateTimeOffset" || Web.Native(column) is "timestamptz" or "timestamp with time zone" ||
+            Web.Native(column) == "timestamp" && Web.Provider(column.Table.Database) == "MySQLSchemaProvider");
+
+    /// <summary>The type a field shows: the database's, with its size (varchar(80), numeric(10,2)); an enum's or a SET's
+    /// as enum or set (MySQL's) or its own name (PostgreSQL's).</summary>
+    public static string Type(ColumnSchema column)
+    {
+        if (Web.EnumValues(column) != null && Web.Native(column) is "enum" or "set")
+            return Web.Native(column);
+        if (Web.BitString(column) != null)
+            return Web.Native(column) + (Web.BitLength(column) > 0 ? "(" + Web.BitLength(column) + ")" : "");
+        return column.NativeType + (Web.Validation(column) != null ? "(" + column.Size + ")" : Exact(column) && Web.Native(column) is "decimal" or "numeric" ? "(" + column.Precision + "," + column.Scale + ")" : "");
+    }
+
+    /// <summary>A column that reads better in a monospaced font: a key's, a GUID, bytes, JSON, bits.</summary>
     public static bool Mono(ColumnSchema column) =>
-        column.IsPrimaryKeyMember || column.IsForeignKeyMember || Kind(column) is "uuid" or "binary" or "json";
+        column.IsPrimaryKeyMember || column.IsForeignKeyMember || Kind(column) is "uuid" or "binary" or "json" or "bits";
 
     /// <summary>Whether a column is a decimal with a precision and scale the database keeps to (numeric(10,2); SQL
     /// Server's money is (19,4)), which the form checks.</summary>
@@ -129,29 +172,41 @@ public static class Ui
         }
     }
 
-    /// <summary>What a new row starts with: the column's default, where it's a value (a number, text, true or false) or
-    /// the time ("now"); null otherwise.</summary>
+    /// <summary>What a new row starts with: the column's default, where it's a value (a number, text, true or false,
+    /// an enum's value, a list) or the time ("now"); null otherwise (the database gives a new row the rest).</summary>
     public static string Default(ColumnSchema column)
     {
-        string text = Convert.ToString(column.ExtendedProperties["CS_Default"]?.Value, CultureInfo.InvariantCulture)?.Trim();
-        if (string.IsNullOrEmpty(text) || Web.Generated(column))
+        string text = Web.Default(column);
+        if (text == null || Web.Generated(column))
             return null;
         while (text.Length > 1 && text[0] == '(' && text[text.Length - 1] == ')')
             text = text.Substring(1, text.Length - 2).Trim();
-        text = Regex.Replace(text, @"::[\w\s]+(\[\])?$", "").Trim(); // PostgreSQL's 'en-US'::character varying
+        text = Regex.Replace(text, @"::[\w\s""-]+(\[\])?$", "").Trim(); // PostgreSQL's 'en-US'::character varying
         string kind = Kind(column);
         string lower = text.ToLowerInvariant();
         if (kind is "date" or "datetime" or "time" &&
-            Regex.IsMatch(lower, @"^(getdate|getutcdate|sysdatetime|sysutcdatetime|sysdatetimeoffset|now|current_timestamp|current_date|current_time|localtimestamp|localtime|datetime\('now'\)|date\('now'\))(\(\))?$"))
+            Regex.IsMatch(lower, @"^(getdate|getutcdate|sysdatetime|sysutcdatetime|sysdatetimeoffset|now|current_timestamp|current_date|current_time|localtimestamp|localtime|datetime\('now'\)|date\('now'\))(\(\d*\))?$"))
             return "\"now\"";
+        // MySQL's literal default is as it is (free, 1, 0.00); an expression is DEFAULT_GENERATED (uuid())
+        if (Web.Provider(column.Table.Database) == "MySQLSchemaProvider" && !text.StartsWith("'") &&
+            (Convert.ToString(column.ExtendedProperties["CS_ColumnExtra"]?.Value) ?? "").IndexOf("DEFAULT_GENERATED", StringComparison.OrdinalIgnoreCase) < 0)
+            text = "'" + text.Replace("'", "''") + "'";
+        if (text.StartsWith("N'") || text.StartsWith("E'"))
+            text = text.Substring(1); // SQL Server's N'text', PostgreSQL's E'text'
         if (text.Length >= 2 && text[0] == '\'' && text[text.Length - 1] == '\'')
         {
             string value = text.Substring(1, text.Length - 2).Replace("''", "'");
-            if (kind == "boolean")
-                return value is "1" or "true" or "t" ? "true" : value is "0" or "false" or "f" ? "false" : null;
-            if (kind is "integer" or "decimal" or "money")
-                return decimal.TryParse(value, NumberStyles.Number, CultureInfo.InvariantCulture, out decimal quoted) ? quoted.ToString(CultureInfo.InvariantCulture) : null;
-            return kind is "text" or "multiline" or "email" or "phone" or "url" ? Ts(value) : null;
+            switch (kind)
+            {
+                case "boolean": return value is "1" or "true" or "t" or "b'1'" ? "true" : value is "0" or "false" or "f" or "b'0'" ? "false" : null;
+                case "integer": case "decimal": case "money":
+                    return decimal.TryParse(value, NumberStyles.Number, CultureInfo.InvariantCulture, out decimal quoted) ? quoted.ToString(CultureInfo.InvariantCulture) : null;
+                case "text": case "multiline": case "email": case "phone": case "url": case "bits": return Ts(value);
+                case "enum": return Web.EnumValues(column).Contains(value) ? Ts(value) : null;
+                case "set": return value.Split(',').All(Web.EnumValues(column).Contains) || value == "" ? Ts(value) : null;
+                case "list": return Web.ArrayDefault(column);
+                default: return null;
+            }
         }
         if (kind == "boolean")
             return lower is "1" or "true" or "b'1'" ? "true" : lower is "0" or "false" or "b'0'" ? "false" : null;
@@ -161,15 +216,15 @@ public static class Ui
     }
 
     /// <summary>Whether a new row must be given a column: one that can't be null, the database doesn't fill in, and
-    /// has no default.</summary>
-    public static bool Required(ColumnSchema column) => !column.AllowDBNull && !Web.Generated(column) && Default(column) == null;
+    /// has no default (of any kind: now() too).</summary>
+    public static bool Required(ColumnSchema column) => !column.AllowDBNull && !Web.Generated(column) && !Web.Optional(column);
 
     // ---- rows ----
 
     private static readonly string[] DisplayNames = { "name", "title", "display_name", "displayname", "label", "user_name", "username", "login", "full_name", "fullname" };
 
-    /// <summary>The columns a row is shown by: a Name or a Title (or the like), a first and last name, an Email; none
-    /// for a row that's best shown by its key (an order: #1001).</summary>
+    /// <summary>The columns a row is shown by: a Name or a Title (or the like), a first and last name, an Email, a
+    /// unique text column (a Key, a Code); none for a row that's best shown by its key (an order: #1001).</summary>
     public static List<ColumnSchema> Display(TableSchema table)
     {
         var text = table.Columns.Cast<ColumnSchema>()
@@ -188,7 +243,14 @@ public static class Ui
         if (own != null)
             return new List<ColumnSchema> { own };
         var email = text.FirstOrDefault(c => Kind(c) == "email");
-        return email != null ? new List<ColumnSchema> { email } : new List<ColumnSchema>();
+        if (email != null)
+            return new List<ColumnSchema> { email };
+        // a unique text column (Group's Key), as Csla's lists show it: a Key, a Code or the like, else the first
+        var unique = text.Where(c => Kind(c) is "text" or "email" or "url" or "phone" && table.Indexes.Cast<IndexSchema>()
+            .Any(i => i.IsUnique && i.MemberColumns.Count == 1 && i.MemberColumns[0].Name == c.Name)).ToList();
+        var shown = unique.FirstOrDefault(c => Regex.IsMatch(c.Name, "^(key|code|slug|handle|sku|number|ref|reference|login|email)$", RegexOptions.IgnoreCase))
+            ?? unique.FirstOrDefault();
+        return shown != null ? new List<ColumnSchema> { shown } : new List<ColumnSchema>();
     }
 
     /// <summary>A list's columns: the key, what the row is shown by, then the foreign keys, badges, money and dates, and
@@ -303,28 +365,7 @@ public static class Ui
     // ---- TypeScript ----
 
     /// <summary>A TypeScript string literal: "text", escaped.</summary>
-    public static string Ts(string text)
-    {
-        var builder = new StringBuilder("\"");
-        foreach (char c in text ?? "")
-        {
-            switch (c)
-            {
-                case '"': builder.Append("\\\""); break;
-                case '\\': builder.Append("\\\\"); break;
-                case '\n': builder.Append("\\n"); break;
-                case '\r': builder.Append("\\r"); break;
-                case '\t': builder.Append("\\t"); break;
-                default:
-                    if (c < ' ' || c == (char)0x2028 || c == (char)0x2029)
-                        builder.Append("\\u").Append(((int)c).ToString("x4"));
-                    else
-                        builder.Append(c);
-                    break;
-            }
-        }
-        return builder.Append('"').ToString();
-    }
+    public static string Ts(string text) => Web.Ts(text);
 
     /// <summary>A list of names as TypeScript: ["productId", "name"].</summary>
     public static string Ts(IEnumerable<string> names) => "[" + string.Join(", ", names.Select(Ts)) + "]";
@@ -341,16 +382,10 @@ public static class Ui
             or "const" or "enum" or "in" or "case" or "switch" or "with" or "yield" or "await" or "package" or "interface"
             or "public" or "private" or "protected" or "static" or "super" or "typeof" or "void" or "while" or "do" or "for"
             or "if" or "else" or "return" or "throw" or "try" or "catch" or "finally" or "break" or "continue" or "debugger"
-            or "extends" or "implements" or "instanceof" or "null" or "true" or "false" or "api" ? name + "Table" : name;
+            or "extends" or "implements" or "instanceof" or "null" or "true" or "false" or "api" or "kit" or "database" or "tables" or "routes"
+            ? name + "Table" : name;
     }
 
-    /// <summary>Whether a table's name matches one of a list's patterns (aspnet_*, sysdiagrams), as its owner and name
-    /// or its name alone; * and ? match any characters.</summary>
-    public static bool Excluded(TableSchema table, string patterns) =>
-        (patterns ?? "").Split(new[] { ',', ';' }, StringSplitOptions.RemoveEmptyEntries).Select(p => p.Trim()).Where(p => p.Length > 0)
-            .Any(p =>
-            {
-                var regex = new Regex("^" + Regex.Escape(p).Replace("\\*", ".*").Replace("\\?", ".") + "$", RegexOptions.IgnoreCase);
-                return regex.IsMatch(table.Name) || regex.IsMatch(table.Owner + "." + table.Name);
-            });
+    /// <summary>Whether a table is left out (Exclude: aspnet_*, sysdiagrams): Web.Excluded.</summary>
+    public static bool Excluded(TableSchema table, string patterns) => Web.Excluded(table, patterns);
 }

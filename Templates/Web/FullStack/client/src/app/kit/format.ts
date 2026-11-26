@@ -58,6 +58,7 @@ export function formatRelative(date: Date, now = new Date()): string {
 /** A field's value as text: "" for nothing. */
 export function formatValue(field: Field, value: unknown): string {
   if (value === null || value === undefined || value === "") return "";
+  if (Array.isArray(value)) return value.map((item) => (item === null || item === undefined ? "∅" : String(item))).join(", ");
   switch (field.kind) {
     case "integer":
       return typeof value === "number" ? formatInteger(value, !field.mono) : String(value);
@@ -74,6 +75,8 @@ export function formatValue(field: Field, value: unknown): string {
     }
     case "binary":
       return typeof value === "string" ? `${formatInteger(Math.floor((value.length * 3) / 4))} bytes` : "";
+    case "set":
+      return String(value).split(",").join(", ");
     default:
       return String(value);
   }
@@ -142,6 +145,10 @@ export function describeField(field: Field): string {
     case "time": return "A time of day";
     case "json": return "JSON";
     case "binary": return "Base64";
+    case "bits": return field.minLength !== undefined && field.minLength === field.maxLength ? `${field.minLength} bits, 0 or 1` : field.maxLength !== undefined ? `Up to ${field.maxLength} bits, 0 or 1` : "Bits, 0 or 1";
+    case "enum": return "One of its values";
+    case "set": return "Any of its values";
+    case "list": return field.options ? "Any of its values" : field.items === "integer" ? "Whole numbers: Enter or a comma adds one" : field.items === "decimal" ? "Numbers: Enter or a comma adds one" : "Enter adds an item";
     default: return "";
   }
 }

@@ -4,7 +4,8 @@ import { useEffect, useMemo, useRef, useState, type KeyboardEvent } from "react"
 import { tables } from "./config.ts";
 import { keyText, rowLabel, rowPath } from "./format.ts";
 import { Icon } from "./icons.tsx";
-import { Modal } from "./overlays.tsx";
+import { errorText } from "./ListPage.tsx";
+import { Modal, toast } from "./overlays.tsx";
 import { navigate } from "./router.tsx";
 import type { Row, Table } from "./types.ts";
 import { Kbd, Spinner, cx, modKey } from "./ui.tsx";
@@ -36,14 +37,21 @@ export function CommandPalette({ onClose, extra = [] }: { onClose: () => void; e
     let current = true;
     setSearching(true);
     const timer = window.setTimeout(async () => {
+      const failed: { table: Table; error: unknown }[] = [];
       const results = await Promise.all(tables().filter((table) => table.search).map(async (table) => {
         try {
           return { table, rows: (await table.api.list({ search: text.trim(), pageSize: 3 })).items };
-        } catch {
+        } catch (error) {
+          failed.push({ table, error });
           return { table, rows: [] };
         }
       }));
       if (!current) return;
+      // a table whose search failed: said once, for all of them
+      if (failed.length) {
+        const names = failed.map((f) => f.table.title.toLowerCase());
+        toast.error(`Couldn't search ${names.length === 1 ? names[0] : names.slice(0, -1).join(", ") + " and " + names[names.length - 1]}`, errorText(failed[0].error));
+      }
       setFound(results.filter((result) => result.rows.length > 0));
       setSearching(false);
     }, 200);
