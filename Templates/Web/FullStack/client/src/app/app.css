@@ -2136,6 +2136,121 @@ input[type="time"]::-webkit-calendar-picker-indicator {
   box-shadow: var(--shadow-sm), 0 0 0 1px var(--border);
 }
 
+/* an enum's input: a select in the input's frame */
+.input--select {
+  padding-right: 8px;
+}
+
+.input select {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  outline: none;
+  background: none;
+  color: inherit;
+  font-size: var(--text-sm);
+  appearance: none;
+  cursor: pointer;
+}
+
+/* a set's values and an enum list's: the options, each on or off */
+.choices {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.choice {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  height: 28px;
+  padding: 0 10px;
+  border: 1px solid var(--border-strong);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--text-2);
+  font-size: var(--text-sm);
+}
+
+.choice:hover:not(:disabled) {
+  color: var(--text);
+}
+
+.choice.is-on {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  color: var(--text);
+}
+
+/* a list's items: chips, and a box to add one */
+.input--chips {
+  flex-wrap: wrap;
+  height: auto;
+  min-height: 36px;
+  padding: 4px 6px;
+  gap: 4px;
+}
+
+.input--chips input {
+  height: 26px;
+  min-width: 90px;
+  padding: 0 4px;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  max-width: 100%;
+  height: 24px;
+  padding: 0 2px 0 8px;
+  border-radius: 6px;
+  background: var(--surface-3);
+  color: var(--text);
+  font-size: var(--text-sm);
+}
+
+.chip__text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.chip__text.is-none {
+  color: var(--text-3);
+  font-style: italic;
+}
+
+.chip__remove {
+  display: grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  border: 0;
+  border-radius: 4px;
+  background: none;
+  color: var(--text-3);
+}
+
+.chip__remove:hover {
+  background: var(--surface-2);
+  color: var(--text);
+}
+
+/* a list's or a set's value in a list or on a row's page */
+.value-chips {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.value-chips .chip {
+  padding-right: 8px;
+}
+
 .banner {
   display: flex;
   align-items: flex-start;

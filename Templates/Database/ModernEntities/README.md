@@ -58,7 +58,9 @@ Run it from this folder:
 cs generate Entities.csp
 ```
 
-The files go to `Generated/`. To use your own database, change the data source in `Entities.csp` (or pick one in the
+The files go to `Generated/`, listed in `Generated/Files.txt` (the output). A table that's gone takes its entity and
+configuration with it: a file the last run listed and this one doesn't write is removed (`RemoveOutput`; `cs check`
+says it's out of date). To use your own database, change the data source in `Entities.csp` (or pick one in the
 editor's property grid), and `Namespace` and `ContextName`.
 
 The generated project needs the EF Core package for the database (`Microsoft.EntityFrameworkCore.Sqlite`,

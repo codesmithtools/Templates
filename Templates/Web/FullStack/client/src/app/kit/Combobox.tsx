@@ -5,6 +5,7 @@ import { useQuery, useReferenced } from "./data.ts";
 import { fieldNamed } from "./config.ts";
 import { keyText, lower, rowLabel } from "./format.ts";
 import { Icon } from "./icons.tsx";
+import { errorText } from "./ListPage.tsx";
 import type { InputProps, Paged, Row, Table } from "./types.ts";
 import { Spinner, cx } from "./ui.tsx";
 
@@ -31,7 +32,7 @@ export function Combobox({ id, field, target, column, value, onChange, invalid, 
   const listId = useId();
 
   // the row the value names, to show it by its name
-  const selected = value === null || value === "" ? undefined : value;
+  const selected = typeof value === "string" ? (value === "" ? undefined : value) : typeof value === "boolean" ? value : undefined;
   const find = useReferenced(target, [column], selected === undefined ? [] : [[cast(target, column, selected)]]);
   const chosen = selected === undefined ? undefined : find([cast(target, column, selected)]);
 
@@ -139,7 +140,10 @@ export function Combobox({ id, field, target, column, value, onChange, invalid, 
           {result.loading && !result.shown && Array.from({ length: 4 }, (_, i) => (
             <li key={i} className="combobox__option combobox__option--skeleton" aria-hidden="true"><span className="skeleton" style={{ width: 90 + ((i * 37) % 80), height: 10 }} /></li>
           ))}
-          {!(result.loading && !result.shown) && rows.length === 0 && (
+          {result.error !== undefined && !result.fetching && (
+            <li className="combobox__empty" role="alert">Couldn't search {target.title.toLowerCase()}: {errorText(result.error)}</li>
+          )}
+          {!(result.loading && !result.shown) && rows.length === 0 && result.error === undefined && (
             <li className="combobox__empty">{query ? <>No {target.title.toLowerCase()} match “{query}”</> : <>No {target.title.toLowerCase()} yet</>}</li>
           )}
           {rows.map((row, i) => {

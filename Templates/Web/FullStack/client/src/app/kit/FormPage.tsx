@@ -6,7 +6,7 @@ import { Value } from "./cells.tsx";
 import { appName, resolve, tableNamed } from "./config.ts";
 import { invalidateTable, useQuery } from "./data.ts";
 import { FormField } from "./fields.tsx";
-import { buildRequest, checkField, defaultFormValue, fieldEntry, formFields, problemErrors, toFormValue } from "./form.ts";
+import { buildRequest, checkField, defaultFormValue, emptyValue, fieldEntry, formFields, problemErrors, sameValue, toFormValue } from "./form.ts";
 import { keyFromParams, keyOf, keyText, rowLabel, rowPath, rowTitle } from "./format.ts";
 import { Icon } from "./icons.tsx";
 import { deleteRow, errorText } from "./ListPage.tsx";
@@ -42,15 +42,12 @@ function Form({ table, row }: { table: Table; row?: Row }) {
   const [problem, setProblem] = useState<Problem>();
   const [saving, setSaving] = useState(false);
 
-  const dirty = fields.some((field) => values[field.name] !== initial[field.name]);
-  const checks = useMemo(() => Object.fromEntries(fields.map((field) => [field.name, checkField(field, values[field.name] ?? null)])), [fields, values]);
+  const dirty = fields.some((field) => !sameValue(values[field.name], initial[field.name]));
+  const checks = useMemo(() => Object.fromEntries(fields.map((field) => [field.name, checkField(field, values[field.name] ?? null, !editing)])), [fields, values, editing]);
   const errorOf = (field: Field) => fieldEntry(server, field.name) ?? (tried || fieldEntry(touched, field.name) ? checks[field.name] : undefined);
   const wrong = fields.filter((field) => errorOf(field)).length;
   const required = fields.filter((field) => field.required);
-  const filled = required.filter((field) => {
-    const value = values[field.name];
-    return value !== null && value !== "" && value !== undefined;
-  }).length;
+  const filled = required.filter((field) => !emptyValue(values[field.name]) || field.kind === "list").length;
 
   // leaving with changes that aren't saved: asks (in the app), or the browser does (closing, reloading)
   useEffect(() => {
@@ -133,7 +130,7 @@ function Form({ table, row }: { table: Table; row?: Row }) {
   const title = row ? rowTitle(table, row) : "";
   const render = (field: Field) => (
     <FormField key={field.name} table={table} field={field} value={values[field.name] ?? null} values={values}
-      onChange={(value) => change(field, value)} error={errorOf(field)} disabled={saving} reference={referenceOf(field)} />
+      onChange={(value) => change(field, value)} error={errorOf(field)} disabled={saving} reference={referenceOf(field)} creating={!editing} />
   );
 
   return (

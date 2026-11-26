@@ -3,7 +3,7 @@
 // the API says is wrong (a ProblemDetails) goes back to the fields it names.
 import type { z } from "zod";
 import { formatDecimal, formatInteger, formatMoney } from "./format.ts";
-import type { Field, FormValue, Row, Table } from "./types.ts";
+import type { Field, FieldKind, FormValue, Row, Table } from "./types.ts";
 
 const pad = (n: number) => String(n).padStart(2, "0");
 
@@ -11,23 +11,42 @@ const pad = (n: number) => String(n).padStart(2, "0");
  * field named constructor or valueOf). */
 export const fieldEntry = <T,>(map: Record<string, T>, name: string): T | undefined => (Object.hasOwn(map, name) ? map[name] : undefined);
 
-/** Now, as a date, a datetime-local or a time input has it. */
-function now(kind: Field["kind"]): string {
-  const date = new Date();
+/** A date as a date, a datetime-local or a time input has it, in the browser's time. */
+function local(date: Date, kind: FieldKind): string {
   const day = `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
   const time = `${pad(date.getHours())}:${pad(date.getMinutes())}`;
   return kind === "date" ? day : kind === "time" ? time + ":00" : `${day}T${time}`;
 }
 
-/** A field's value in its input: the API's value as text (a date as its input has it), a bool, or null. */
+/** Now, as a date, a datetime-local or a time input has it. */
+const now = (kind: FieldKind): string => local(new Date(), kind);
+
+/** Whether two form values are the same (a list's items too). */
+export const sameValue = (a: FormValue | undefined, b: FormValue | undefined): boolean =>
+  Array.isArray(a) || Array.isArray(b) ? JSON.stringify(a) === JSON.stringify(b) : a === b;
+
+/** Whether a form value is nothing: null, "" (a list's: no items). */
+export const emptyValue = (value: FormValue | undefined): boolean =>
+  value === null || value === undefined || value === "" || (Array.isArray(value) && value.length === 0);
+
+/** A field's value in its input: the API's value as text (a date as its input has it, a zoned one in the browser's
+ * time), a bool, a list's items as text, or null. */
 export function toFormValue(field: Field, value: unknown): FormValue {
   if (field.kind === "boolean") return value === null || value === undefined ? (field.nullable ? null : false) : Boolean(value);
+  if (field.kind === "list") return Array.isArray(value) ? value.map((item) => (item === null || item === undefined ? "" : String(item))) : value === null || value === undefined || value === "" ? [] : [String(value)];
   if (value === null || value === undefined) return "";
   if (typeof value === "number" && (field.kind === "money" || field.kind === "decimal") && field.scale !== undefined) return value.toFixed(field.scale);
   const text = String(value);
   switch (field.kind) {
     case "date": return text.slice(0, 10);
-    case "datetime": return text.replace(" ", "T").slice(0, 16);
+    case "datetime": {
+      // with a time zone (Z, +02:00): in the browser's time
+      if (field.zoned && /(Z|[+-]\d{2}:?\d{2})$/i.test(text)) {
+        const date = new Date(text);
+        if (!Number.isNaN(date.getTime())) return local(date, "datetime");
+      }
+      return text.replace(" ", "T").slice(0, 16);
+    }
     case "time": return text.slice(0, 8);
     case "json": {
       try {
@@ -47,18 +66,33 @@ export function defaultFormValue(field: Field): FormValue {
   return toFormValue(field, null);
 }
 
-const empty = (value: FormValue) => value === null || value === "";
+const numeric = (kind: FieldKind | undefined) => kind === "integer" || kind === "decimal" || kind === "money";
 
-/** A field's input as the API takes it: a number, a bool, text, or null for nothing. */
-export function fromFormValue(field: Field, value: FormValue): unknown {
+/** A field's input as the API takes it: a number, a bool, text, a list, or null for nothing; undefined to leave it
+ * out (a new row's column the database has a default for: it gives it). */
+export function fromFormValue(field: Field, value: FormValue, creating = false): unknown {
   if (field.kind === "boolean") return value;
-  if (empty(value)) return field.nullable ? null : field.kind === "integer" || field.kind === "decimal" || field.kind === "money" ? undefined : "";
+  if (emptyValue(value) && creating && field.defaulted) return undefined;
+  if (field.kind === "list") {
+    const items = Array.isArray(value) ? value : [];
+    if (items.length === 0 && field.nullable) return null;
+    return items.map((item) => (item === "" && field.items !== "text" ? null : numeric(field.items) ? Number(item.trim().replace(/[,\s]/g, "")) : item));
+  }
+  if (emptyValue(value)) return field.nullable ? null : numeric(field.kind) || field.kind === "enum" ? undefined : "";
   const text = String(value);
   switch (field.kind) {
     case "integer":
     case "decimal":
     case "money": return Number(text.trim().replace(/[,\s]/g, ""));
-    case "datetime": return text.length === 16 ? text + ":00" : text;
+    case "datetime": {
+      const full = text.length === 16 ? text + ":00" : text;
+      // with a time zone: the instant, in UTC
+      if (field.zoned) {
+        const date = new Date(full);
+        if (!Number.isNaN(date.getTime())) return date.toISOString();
+      }
+      return full;
+    }
     case "time": return text.length === 5 ? text + ":00" : text;
     case "json": {
       try {
@@ -74,14 +108,43 @@ export function fromFormValue(field: Field, value: FormValue): unknown {
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const uuidPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
-/** What's wrong with a field's value (undefined: nothing). */
-export function checkField(field: Field, value: FormValue): string | undefined {
+/** What's wrong with a list's item (undefined: nothing). */
+function checkItem(field: Field, item: string): string | undefined {
+  if (field.options) return field.options.includes(item) ? undefined : "isn't one of its values.";
+  const clean = item.trim().replace(/[,\s]/g, "");
+  switch (field.items) {
+    case "integer": return /^[-+]?\d+$/.test(clean) ? undefined : "isn't a whole number.";
+    case "decimal": return /^[-+]?(\d+\.?\d*|\.\d+)$/.test(clean) ? undefined : "isn't a number.";
+    case "uuid": return uuidPattern.test(item.trim()) ? undefined : "isn't a GUID.";
+    default: return undefined;
+  }
+}
+
+/** What's wrong with a field's value (undefined: nothing). A new row may leave out what the database has a default
+ * for. */
+export function checkField(field: Field, value: FormValue, creating = false): string | undefined {
   if (field.kind === "boolean") return !field.nullable && value === null ? "Choose yes or no." : undefined;
+  if (field.kind === "list") {
+    const items = Array.isArray(value) ? value : [];
+    const wrong = items.findIndex((item) => checkItem(field, item) !== undefined);
+    return wrong < 0 ? undefined : `Item ${wrong + 1}, “${items[wrong]}”, ${checkItem(field, items[wrong])}`;
+  }
   const text = typeof value === "string" ? value : "";
-  if (text.trim() === "") return field.required || (!field.nullable && field.kind !== "text" && field.kind !== "multiline") ? "Required." : undefined;
+  if (text.trim() === "") {
+    if (creating && field.defaulted) return undefined;
+    return field.required || (!field.nullable && field.kind !== "text" && field.kind !== "multiline" && field.kind !== "set") ? "Required." : undefined;
+  }
+  if (field.kind === "bits") {
+    if (!/^[01]+$/.test(text)) return "Enter 0s and 1s, like 1010.";
+    if (field.minLength !== undefined && field.minLength === field.maxLength && text.length !== field.minLength) return `Enter ${formatInteger(field.minLength)} bits.`;
+    if (field.maxLength !== undefined && text.length > field.maxLength) return `At most ${formatInteger(field.maxLength)} bits.`;
+    return undefined;
+  }
   if (field.maxLength !== undefined && text.length > field.maxLength)
     return `${formatInteger(text.length - field.maxLength)} character${text.length - field.maxLength === 1 ? "" : "s"} too long (at most ${formatInteger(field.maxLength)}).`;
   switch (field.kind) {
+    case "enum": return field.options && !field.options.includes(text) ? "Choose one of its values." : undefined;
+    case "set": return field.options && text.split(",").some((item) => !field.options!.includes(item)) ? "Choose from its values." : undefined;
     case "integer": {
       const clean = text.trim().replace(/[,\s]/g, "");
       if (!/^[-+]?\d+$/.test(clean)) return "Enter a whole number.";
@@ -138,9 +201,9 @@ export function buildRequest(table: Table, editing: boolean, values: Record<stri
   const errors: Record<string, string> = {};
   const request: Row = {};
   for (const field of formFields(table, editing)) {
-    const problem = checkField(field, values[field.name] ?? null);
+    const problem = checkField(field, values[field.name] ?? null, !editing);
     if (problem) errors[field.name] = problem;
-    const value = fromFormValue(field, values[field.name] ?? null);
+    const value = fromFormValue(field, values[field.name] ?? null, !editing);
     if (value !== undefined) request[field.name] = value;
   }
   const schema: z.ZodType | undefined = editing ? table.update : table.create;
@@ -161,7 +224,7 @@ export function problemErrors(table: Table, errors: Record<string, string[]> | u
   const fields: Record<string, string> = {};
   const other: string[] = [];
   for (const [key, messages] of Object.entries(errors ?? {})) {
-    const name = key.split(".").pop()!.replace(/^\$\.?/, "").toLowerCase();
+    const name = key.split(".").pop()!.replace(/^\$\.?/, "").replace(/\[\d+\]$/, "").toLowerCase();
     const field = table.fields.find((f) => f.name.toLowerCase() === name);
     const text = messages.join(" ");
     if (field) fields[field.name] = text;

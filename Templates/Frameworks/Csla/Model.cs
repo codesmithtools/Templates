@@ -385,19 +385,9 @@ public sealed class Model
     /// <summary>Arguments for columns: "orderId, lineNum".</summary>
     public static string Arguments(IEnumerable<ColumnSchema> columns) => string.Join(", ", columns.Select(Parameter));
 
-    /// <summary>A property's display name: its words (ShipAddr1: "Ship addr 1", UniqueID: "Unique ID"; listprice too:
-    /// "List price", NameWords.cs).</summary>
-    public static string Friendly(ColumnSchema column)
-    {
-        var words = Regex.Split(NameWords.Property(column), "(?<=[a-z])(?=[A-Z0-9])|(?<=[A-Z])(?=[A-Z][a-z])|(?<=[0-9])(?=[A-Za-z])")
-            .Where(w => w.Length > 0).ToList();
-        for (int i = 0; i < words.Count; i++)
-            if (words[i] == "Id")
-                words[i] = "ID";
-            else if (i > 0 && words[i].Any(char.IsLower))
-                words[i] = words[i].ToLowerInvariant();
-        return string.Join(" ", words);
-    }
+    /// <summary>A property's display name: its words, as FullStack labels it (NameWords.Label: ShipAddr1 is "Ship
+    /// address 1", UniqueID "Unique ID", IsVip "VIP"; listprice too: "List price").</summary>
+    public static string Friendly(ColumnSchema column) => NameWords.Label(column);
 
     /// <summary>A property's attributes: its display name, and the rules its column gives (Required, StringLength,
     /// Range for a decimal's precision). CSLA makes rules of them.</summary>

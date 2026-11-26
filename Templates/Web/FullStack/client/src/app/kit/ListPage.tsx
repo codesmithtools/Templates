@@ -81,6 +81,12 @@ export function ListPage(props: PageProps & { table: Table }) {
   const columns = table.columns.map((name) => fieldNamed(table, name)).filter((field): field is Field => !!field);
   const references = useReferences(table, rows);
 
+  // a read that fails while the last one's rows show (a search the database refused): says so, once each time
+  useEffect(() => {
+    if (query.error !== undefined && query.shown)
+      toast.error(search ? `Couldn't search ${table.title.toLowerCase()}` : `Couldn't read ${table.title.toLowerCase()}`, errorText(query.error));
+  }, [query.error]);
+
   // the filters' rows, by name: "Product: Pelican"
   const filterRow = useMemo(() => Object.fromEntries(filtering.map((field) => [field.name, castFilter(field, location.search.get(field.filter!) ?? "")])), [location.href]);
   const filterReferences = useReferences(table, filtering.length ? [filterRow] : []);

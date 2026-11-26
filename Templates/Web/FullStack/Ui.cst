@@ -3,7 +3,7 @@
 <%@ Property Name="OutputDirectory" Type="System.String" Default="client/src/generated/ui" Category="Output" Description="Where the files go: index.ts, and a file per table in tables/." %>
 <%@ Property Name="Client" Type="System.String" Default="../petshop.ts" Category="Output" Description="The generated client (Client.cst's output), as index.ts would import it: relative to OutputDirectory." %>
 <%@ Property Name="App" Type="System.String" Default="../../app" Category="Output" Description="Your app's folder (api.ts, the client it calls; kit/, the components), relative to OutputDirectory." %>
-<%@ Property Name="Exclude" Type="System.String" Default="sysdiagrams, __EFMigrationsHistory" Optional="True" Category="Model" Description="Tables to leave out of the UI (the API still has them), separated by commas; * and ? match any characters (aspnet_*)." %>
+<%@ Property Name="Exclude" Type="System.String" Default="sysdiagrams, __EFMigrationsHistory" Optional="True" Category="Model" Description="Tables to leave out (FullStack.csp gives every output the same), separated by commas; * and ? match any characters (aspnet_*)." %>
 <%@ Register Name="TableTemplate" Template="UiTable.cst" MergeProperties="False" %>
 <%@ Register Name="IndexTemplate" Template="UiIndex.cst" MergeProperties="False" %>
 <%@ Assembly Name="SchemaExplorer" %>

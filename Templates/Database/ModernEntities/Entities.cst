@@ -9,15 +9,19 @@
 <%@ Register Name="ContextTemplate" Template="Context.cst" MergeProperties="False" %>
 <%@ Assembly Name="SchemaExplorer" %>
 <%@ Import Namespace="SchemaExplorer" %>
+<%@ Import Namespace="System.Collections.Generic" %>
 <%@ Import Namespace="System.IO" %>
 <%@ Assembly Src="Names.cs" %>
 <%-- The master: for each table its entity (Entity.cst) and configuration (Configuration.cst), and the DbContext
-(Context.cst). Names.cs is what they share. --%>
+(Context.cst), and the list of the files (its output, Files.txt). Names.cs is what they share. A file the last run
+listed that this one doesn't write is a table that's gone (or left out): RemoveOutput removes it, and cs check says
+it's out of date. --%>
 <% Generate(); %>
 <script runat="template">
 private void Generate()
 {
     Directory.CreateDirectory(OutputDirectory);
+    var written = new HashSet<string>();
     foreach (TableSchema table in Names.Tables(SourceDatabase, Exclude))
     {
         var entity = Create<EntityTemplate>();
@@ -26,6 +30,7 @@ private void Generate()
         entity.Exclude = Exclude;
         string file = Path.Combine(OutputDirectory, Names.Entity(table) + ".cs");
         entity.RenderToFile(file, true);
+        written.Add(Path.GetFullPath(file));
         Response.WriteLine(file);
         var configuration = Create<ConfigurationTemplate>();
         configuration.Table = table;
@@ -33,6 +38,7 @@ private void Generate()
         configuration.Exclude = Exclude;
         string configurationFile = Path.Combine(OutputDirectory, Names.Configuration(table) + ".cs");
         configuration.RenderToFile(configurationFile, true);
+        written.Add(Path.GetFullPath(configurationFile));
         Response.WriteLine(configurationFile);
     }
     var context = Create<ContextTemplate>();
@@ -42,6 +48,18 @@ private void Generate()
     context.Exclude = Exclude;
     string contextFile = Path.Combine(OutputDirectory, ContextName + ".cs");
     context.RenderToFile(contextFile, true);
+    written.Add(Path.GetFullPath(contextFile));
     Response.WriteLine(contextFile);
+
+    // the files the last run listed (Files.txt, beside them) that this one didn't write: their tables are gone
+    string list = Path.Combine(OutputDirectory, "Files.txt");
+    string folder = Path.GetFullPath(OutputDirectory) + Path.DirectorySeparatorChar;
+    if (File.Exists(list))
+        foreach (string line in File.ReadAllLines(list))
+        {
+            string file = line.Trim();
+            if (file.EndsWith(".cs", StringComparison.OrdinalIgnoreCase) && Path.GetFullPath(file).StartsWith(folder) && !written.Contains(Path.GetFullPath(file)))
+                RemoveOutput(file);
+        }
 }
 </script>

@@ -1,6 +1,6 @@
 // A form's fields: a label above the input (with a mark where it's required), the input its kind takes, what it
 // takes or what's wrong with it, and how many characters are left. customize.tsx's inputs replace an input.
-import { useLayoutEffect, useRef, type ReactNode } from "react";
+import { useLayoutEffect, useRef, useState, type ReactNode } from "react";
 import { Combobox } from "./Combobox.tsx";
 import { customize, tableNamed } from "./config.ts";
 import { describeField, formatInteger } from "./format.ts";
@@ -25,7 +25,67 @@ function TextArea({ id, value, onChange, invalid, disabled, mono, describedBy }:
   );
 }
 
-/** A field's input, by its kind: a reference's combobox, a switch, a number, a date, text. */
+/** Some of the options, each on or off: a set's values ("a,b") or a list's of an enum (["a", "b"]), in the options'
+ * order. */
+function Choices({ id, options, chosen, onChange, disabled, describedBy }: { id: string; options: string[]; chosen: string[]; onChange: (chosen: string[]) => void; disabled?: boolean; describedBy?: string }) {
+  return (
+    <div className="choices" role="group" aria-labelledby={id + "-label"} aria-describedby={describedBy}>
+      {options.map((option, i) => {
+        const on = chosen.includes(option);
+        return (
+          <button key={option} id={i === 0 ? id : undefined} type="button" className={cx("choice", on && "is-on")} aria-pressed={on} disabled={disabled}
+            onClick={() => onChange(on ? chosen.filter((item) => item !== option) : options.filter((item) => item === option || chosen.includes(item)))}>
+            {on && <Icon name="check" size={13} />}
+            {option === "" ? <em>empty</em> : option}
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
+/** A list's items as chips, and a box that adds one (Enter, or a comma); Backspace in the empty box takes the last. */
+function ListInput({ id, field, items, onChange, invalid, disabled, describedBy }: { id: string; field: Field; items: string[]; onChange: (items: string[]) => void; invalid: boolean; disabled?: boolean; describedBy?: string }) {
+  const [text, setText] = useState("");
+  const add = () => {
+    if (text.trim() === "") return;
+    onChange([...items, field.items === "text" ? text : text.trim()]);
+    setText("");
+  };
+  return (
+    <div className={cx("input", "input--chips", invalid && "is-invalid", disabled && "is-disabled")}>
+      {items.map((item, i) => (
+        <span key={i} className="chip">
+          <span className={cx("chip__text", item === "" && "is-none")}>{item === "" ? (field.items === "text" ? "empty" : "none") : item}</span>
+          <button type="button" className="chip__remove" aria-label={`Remove ${item || "this item"}`} disabled={disabled} onClick={() => onChange(items.filter((_, j) => j !== i))}>
+            <Icon name="x" size={12} />
+          </button>
+        </span>
+      ))}
+      <input id={id} type="text" value={text} placeholder={items.length ? "Add another" : "Add an item"} disabled={disabled} autoComplete="off"
+        inputMode={field.items === "integer" ? "numeric" : field.items === "decimal" ? "decimal" : undefined}
+        aria-invalid={invalid || undefined} aria-describedby={describedBy}
+        onChange={(event) => {
+          // a comma adds what's before it (a list of numbers or GUIDs; text may have commas, so only Enter adds it)
+          const typed = event.target.value;
+          if (field.items !== "text" && typed.includes(",")) {
+            const parts = typed.split(",");
+            onChange([...items, ...parts.slice(0, -1).map((part) => part.trim()).filter((part) => part !== "")]);
+            setText(parts[parts.length - 1]);
+          } else setText(typed);
+        }}
+        onKeyDown={(event) => {
+          if (event.key === "Enter") {
+            event.preventDefault();
+            add();
+          } else if (event.key === "Backspace" && text === "" && items.length) onChange(items.slice(0, -1));
+        }}
+        onBlur={add} />
+    </div>
+  );
+}
+
+/** A field's input, by its kind: a reference's combobox, a switch, a number, a date, a select, chips, text. */
 export function FieldInput(props: InputProps & { describedBy?: string; reference?: { table: string; column: string } }) {
   const { id, table, field, value, onChange, invalid, disabled, reference, describedBy } = props;
   const Custom = customize().inputs?.[`${table.name}.${field.name}`];
@@ -36,6 +96,23 @@ export function FieldInput(props: InputProps & { describedBy?: string; reference
 
   const text = typeof value === "string" ? value : "";
   switch (field.kind) {
+    case "enum":
+      return (
+        <div className={cx("input", "input--select", invalid && "is-invalid", disabled && "is-disabled")}>
+          <select id={id} value={text} onChange={(event) => onChange(event.target.value)} disabled={disabled} aria-invalid={invalid || undefined} aria-describedby={describedBy}>
+            {(field.nullable || field.defaulted || !field.options?.includes(text)) && <option value="">{field.nullable ? "Not set" : field.defaulted ? "The database's default" : "Choose…"}</option>}
+            {(field.options ?? []).map((option) => <option key={option} value={option}>{option === "" ? "(empty)" : option}</option>)}
+          </select>
+          <Icon name="chevron-down" size={15} className="input__chevron" />
+        </div>
+      );
+    case "set":
+      return <Choices id={id} options={field.options ?? []} chosen={text === "" ? [] : text.split(",")} onChange={(chosen) => onChange(chosen.join(","))} disabled={disabled} describedBy={describedBy} />;
+    case "list": {
+      const items = Array.isArray(value) ? value : [];
+      if (field.options) return <Choices id={id} options={field.options} chosen={items} onChange={onChange} disabled={disabled} describedBy={describedBy} />;
+      return <ListInput id={id} field={field} items={items} onChange={onChange} invalid={invalid} disabled={disabled} describedBy={describedBy} />;
+    }
     case "boolean":
       if (field.nullable)
         return (
@@ -72,10 +149,11 @@ export function FieldInput(props: InputProps & { describedBy?: string; reference
             value={text}
             onChange={(event) => onChange(event.target.value)}
             disabled={disabled}
-            inputMode={field.kind === "integer" ? "numeric" : numeric ? "decimal" : undefined}
+            inputMode={field.kind === "integer" || field.kind === "bits" ? "numeric" : numeric ? "decimal" : undefined}
             step={field.kind === "time" ? 1 : undefined}
             autoComplete="off"
             spellCheck={field.kind === "text" && !field.mono}
+            maxLength={field.kind === "bits" ? field.maxLength : undefined}
             className={cx(field.mono && "is-mono")}
             aria-invalid={invalid || undefined}
             aria-describedby={describedBy}
@@ -117,15 +195,18 @@ export interface FormFieldProps {
   /** Shown instead of the input (a key that can't change). */
   readOnly?: ReactNode;
   reference?: { table: string; column: string; label: string };
+  /** A new row's form: a field the database has a default for may be left empty. */
+  creating?: boolean;
 }
 
 /** A field of a form: its label, input, help or error, and counter. */
-export function FormField({ table, field, value, values, onChange, error, disabled, readOnly, reference }: FormFieldProps) {
+export function FormField({ table, field, value, values, onChange, error, disabled, readOnly, reference, creating }: FormFieldProps) {
   const id = `field-${table.name}-${field.name}`;
   const text = typeof value === "string" ? value : "";
   const counted = field.maxLength !== undefined && !readOnly && !reference;
   const ratio = counted ? text.length / field.maxLength! : 0;
-  const help = field.help ?? (reference ? `Refers to ${tableNamed(reference.table)?.singular.toLowerCase() ?? reference.table}` : describeField(field));
+  const described = field.help ?? (reference ? `Refers to ${tableNamed(reference.table)?.singular.toLowerCase() ?? reference.table}` : describeField(field));
+  const help = creating && field.defaulted && field.kind !== "boolean" ? (described ? described + " · " : "") + "empty: the database's default" : described;
   const wide = field.kind === "multiline" || field.kind === "json" || field.kind === "binary";
   return (
     <div className={cx("field", wide && "field--wide", error && "has-error")}>
