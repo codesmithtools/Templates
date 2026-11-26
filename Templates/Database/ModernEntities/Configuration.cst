@@ -1,6 +1,7 @@
 <%@ CodeTemplate Language="C#" TargetLanguage="C#" Description="A table's EF Core configuration: its table, key, columns and relationships." %>
 <%@ Property Name="Table" Type="SchemaExplorer.TableSchema" Description="The table." %>
 <%@ Property Name="Namespace" Type="System.String" Default="MyApp.Data" %>
+<%@ Property Name="Exclude" Type="System.String" Default="" Optional="True" Description="Tables left out (the master's Exclude): no relationship to them." %>
 <%@ Assembly Name="SchemaExplorer" %>
 <%@ Import Namespace="SchemaExplorer" %>
 <%@ Assembly Src="Names.cs" %>
@@ -9,12 +10,19 @@
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+<% var converters = Names.Converters(Names.Columns(Table)); if (converters.Count > 0) { %>
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+<% } %>
 
 namespace <%= Namespace %>;
 
 /// <summary>How <%= Names.Entity(Table) %> maps to <%= Table.Name %>.</summary>
-public partial class <%= Names.Entity(Table) %>Configuration : IEntityTypeConfiguration<<%= Names.Entity(Table) %>>
+public partial class <%= Names.Configuration(Table) %> : IEntityTypeConfiguration<<%= Names.Entity(Table) %>>
 {
+<% foreach (string converter in converters) { %>
+    <%= converter %>
+
+<% } %>
     public void Configure(EntityTypeBuilder<<%= Names.Entity(Table) %>> entity)
     {
 <% if (Names.Schema(Table) != null) { %>
@@ -31,14 +39,17 @@ public partial class <%= Names.Entity(Table) %>Configuration : IEntityTypeConfig
        var settings = new System.Collections.Generic.List<string>();
        if (Names.Property(column) != column.Name) settings.Add("HasColumnName(\"" + Literal(column.Name) + "\")");
        if (Names.ColumnType(column) != null) settings.Add("HasColumnType(\"" + Literal(Names.ColumnType(column)) + "\")");
+       if (Names.Converter(column) != null) settings.Add("HasConversion(" + Names.Converter(column) + ")");
        if (Names.NumberedByTheApplication(column)) settings.Add("ValueGeneratedNever()");
        if (Names.IsRowVersion(column)) settings.Add("IsRowVersion()");
        else if (Names.IsComputed(column)) settings.Add("HasComputedColumnSql()");
+       settings.AddRange(Names.Default(column));
+       if (Names.StoreTypeString(column)) settings.Add("Metadata.SetTypeMapping(new StoreTypeStringMapping(\"" + Literal(column.NativeType) + "\"))");
        if (settings.Count == 0) continue; %>
         entity.Property(e => e.<%= Names.Property(column) %>).<%= string.Join(".", settings) %>;
 <% } %>
-<% foreach (TableKeySchema key in Table.ForeignKeys) { if (!Names.Related(key)) continue; %>
-        entity.HasOne(d => d.<%= Names.Navigation(key) %>).WithMany(p => p.<%= Names.Inverse(key) %>)
+<% foreach (TableKeySchema key in Table.ForeignKeys) { if (!Names.Related(key, Exclude)) continue; %>
+        entity.HasOne(d => d.<%= Names.Navigation(key, Exclude) %>).WithMany(p => p.<%= Names.Inverse(key, Exclude) %>)
             .HasForeignKey(d => <%= Names.Members("d", Table, key.ForeignKeyMemberColumns) %>)<% if (!Names.RefersToPrimaryKey(key)) { %>
             .HasPrincipalKey(p => <%= Names.Members("p", key.PrimaryKeyTable, key.PrimaryKeyMemberColumns) %>)<% } %>
             .HasConstraintName("<%= Literal(key.Name) %>");

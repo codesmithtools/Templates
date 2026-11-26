@@ -20,7 +20,7 @@
 // </auto-generated>
 #nullable enable
 <% if (model.Columns(Table).Any(c => Model.NotNull(c) != "")) { %>
-// GetProperty(...)! for a string, which CSLA keeps non-null (as CSLA's own source generator writes it; CSLA0007 doesn't
+// GetProperty(...)! for a string<%= model.Columns(Table).Any(Model.IsList) ? " or a list" : "" %>, which CSLA keeps non-null (as CSLA's own source generator writes it; CSLA0007 doesn't
 // know the operator)
 #pragma warning disable CSLA0007
 <% } %>
@@ -35,12 +35,12 @@ namespace <%= Namespace %>.Business;
 public partial class <%= name %> : ReadOnlyBase<<%= name %>>
 {
 <% foreach (ColumnSchema column in model.Columns(Table)) { %>
-    public static readonly PropertyInfo<<%= Model.Type(column) %>> <%= Model.Info(column) %> = RegisterProperty<<%= Model.Type(column) %>>(nameof(<%= Model.Property(column) %>));
+    public static readonly PropertyInfo<<%= Model.FieldType(column) %>> <%= Model.Info(column) %> = RegisterProperty<<%= Model.FieldType(column) %>>(nameof(<%= Model.Property(column) %>));
     [Display(Name = "<%= Model.Friendly(column) %>")]
     public <%= Model.Type(column) %> <%= Model.Property(column) %>
     {
         get => GetProperty(<%= Model.Info(column) %>)<%= Model.NotNull(column) %>;
-        private set => LoadProperty(<%= Model.Info(column) %>, value);
+        private set => LoadProperty(<%= Model.Info(column) %>, <%= Model.ToField(column, "value") %>);
     }
 
 <% } %>

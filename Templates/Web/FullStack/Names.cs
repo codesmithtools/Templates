@@ -1,7 +1,10 @@
 // What the templates share: the names and types the generated code uses for tables, columns and relationships, as EF
 // Core's scaffolding would write them.
+using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
+using System.Text.RegularExpressions;
 using CodeSmith.Engine;
 using SchemaExplorer;
 
@@ -9,6 +12,49 @@ public static class Names
 {
     // a database's default schemas: ToTable leaves them out
     private static readonly string[] DefaultOwners = { "", "dbo", "public", "main" };
+
+    /// <summary>Whether a table is left out (Exclude: tables separated by commas, sysdiagrams, aspnet_*), by its name or
+    /// its schema and name (dbo.sysdiagrams); * and ? match any characters, in any case.</summary>
+    public static bool Excluded(TableSchema table, string exclude) =>
+        Globs(exclude).Any(glob => glob.IsMatch(table.Name) || glob.IsMatch(table.Owner + "." + table.Name));
+
+    // An Exclude's patterns, made once (every relationship asks)
+    private static Regex[] Globs(string exclude)
+    {
+        lock (GlobsOf)
+        {
+            if (!GlobsOf.TryGetValue(exclude ?? "", out var globs))
+                GlobsOf[exclude ?? ""] = globs = (exclude ?? "").Split(new[] { ',', ';', '\n' }, StringSplitOptions.RemoveEmptyEntries)
+                    .Select(p => p.Trim()).Where(p => p.Length > 0)
+                    .Select(p => new Regex("^" + Regex.Escape(p).Replace("\\*", ".*").Replace("\\?", ".") + "$", RegexOptions.IgnoreCase))
+                    .ToArray();
+            return globs;
+        }
+    }
+
+    private static readonly Dictionary<string, Regex[]> GlobsOf = new Dictionary<string, Regex[]>();
+
+    /// <summary>A database's tables, but those excluded: the ones with an entity.</summary>
+    public static List<TableSchema> Tables(DatabaseSchema database, string exclude) =>
+        database.Tables.Cast<TableSchema>().Where(t => !Excluded(t, exclude)).ToList();
+
+    /// <summary>The database's dialect: SqlServer, PostgreSQL, MySQL or SQLite (SQL scripts': theirs; a schema snapshot's:
+    /// the provider's it was taken with), or another provider's name.</summary>
+    public static string Dialect(DatabaseSchema database)
+    {
+        string provider = database.Provider?.Name ?? "";
+        if (provider == "DdlSchemaProvider")
+            provider = System.Convert.ToString(database.ExtendedProperties["CS_Dialect"]?.Value) ?? provider;
+        if (provider.Contains("PostgreSQL"))
+            return "PostgreSQL";
+        if (provider.Contains("MySQL"))
+            return "MySQL";
+        if (provider.Contains("SQLite"))
+            return "SQLite";
+        if (provider == "SqlSchemaProvider" || provider == "SqlServer")
+            return "SqlServer";
+        return provider;
+    }
 
     /// <summary>The entity's class: the table's name in Pascal case, singular (Orders: Order); with its owner's in front
     /// when another owner has a table that would have the same name; with Entity after it when it's the name of a type
@@ -38,6 +84,23 @@ public static class Names
     /// <summary>The DbSet: plural (Order: Orders; Task: Tasks).</summary>
     public static string Set(TableSchema table) =>
         Taken(StringUtil.ToPlural(Name(table))) ? StringUtil.ToPlural(Entity(table)) : StringUtil.ToPlural(Name(table));
+
+    /// <summary>The entity's configuration class: OrderConfiguration, or OrderEntityConfiguration where a table's entity
+    /// has that name (a ProductConfiguration table: Product's is ProductEntityConfiguration).</summary>
+    public static string Configuration(TableSchema table)
+    {
+        var entities = EntityNames.GetValue(table.Database.Tables, tables => new HashSet<string>(tables.Cast<TableSchema>().Select(Entity)));
+        string name = Entity(table) + "Configuration";
+        if (entities.Contains(name))
+            name = Entity(table) + "EntityConfiguration";
+        for (int i = 2; entities.Contains(name); i++)
+            name = Entity(table) + "Configuration" + i;
+        return name;
+    }
+
+    // The entities' names, worked out once for a database
+    private static readonly System.Runtime.CompilerServices.ConditionalWeakTable<TableSchemaCollection, HashSet<string>> EntityNames =
+        new System.Runtime.CompilerServices.ConditionalWeakTable<TableSchemaCollection, HashSet<string>>();
 
     // The types an entity's name mustn't be: in its own namespace it would hide one the generated code uses there
     // (Task: async Task), and elsewhere it would be ambiguous with one a file imports (Guid, with ImplicitUsings).
@@ -141,16 +204,28 @@ public static class Names
     /// <summary>Whether a foreign key is a relationship in the model: EF Core needs a key on both of its tables.</summary>
     public static bool Related(TableKeySchema key) => key.ForeignKeyTable.HasPrimaryKey && key.PrimaryKeyTable.HasPrimaryKey;
 
-    /// <summary>A foreign key's navigation, on its table: the table it refers to, unless a column or another navigation
-    /// has that name.</summary>
-    public static string Navigation(TableKeySchema key) => Navigations(key.ForeignKeyTable)[(key, false)];
+    /// <summary>Whether a foreign key is a relationship in the model, with tables excluded: neither of its tables is.</summary>
+    public static bool Related(TableKeySchema key, string exclude) =>
+        Related(key) && !Excluded(key.ForeignKeyTable, exclude) && !Excluded(key.PrimaryKeyTable, exclude);
 
-    /// <summary>The navigation back, on the table referred to: the referring table's set (LineItems), unless taken.</summary>
-    public static string Inverse(TableKeySchema key) => Navigations(key.PrimaryKeyTable)[(key, true)];
+    /// <summary>A foreign key's navigation, on its table: the table it refers to, unless a column or another navigation
+    /// has that name. A key of a table to itself is named for its column, as EF Core's scaffolding names it: ParentId's
+    /// is Parent, and ReferredBy's ReferredByNavigation (the column has that name).</summary>
+    public static string Navigation(TableKeySchema key) => Navigation(key, "");
+
+    /// <summary>A foreign key's navigation, with tables excluded (which have none).</summary>
+    public static string Navigation(TableKeySchema key, string exclude) => Navigations(key.ForeignKeyTable, exclude)[(key, false)];
+
+    /// <summary>The navigation back, on the table referred to: the referring table's set (LineItems), unless taken; for a
+    /// key of a table to itself, Inverse and its navigation (InverseParent), as EF Core's scaffolding names it.</summary>
+    public static string Inverse(TableKeySchema key) => Inverse(key, "");
+
+    /// <summary>The navigation back, with tables excluded (which have none).</summary>
+    public static string Inverse(TableKeySchema key, string exclude) => Navigations(key.PrimaryKeyTable, exclude)[(key, true)];
 
     // A table's navigation names, to the tables its keys refer to and back from the tables that refer to it (a key of
     // the table to itself has both), each once.
-    private static Dictionary<(TableKeySchema Key, bool Back), string> Navigations(TableSchema table)
+    private static Dictionary<(TableKeySchema Key, bool Back), string> Navigations(TableSchema table, string exclude)
     {
         var taken = new HashSet<string>(table.Columns.Cast<ColumnSchema>().Select(Property)) { Entity(table) };
         var names = new Dictionary<(TableKeySchema, bool), string>();
@@ -165,19 +240,50 @@ public static class Names
                 by = name + i;
             return by;
         }
-        foreach (TableKeySchema key in table.ForeignKeys.Cast<TableKeySchema>().Where(Related))
-            taken.Add(names[(key, false)] = Unique(Entity(key.PrimaryKeyTable), key));
-        foreach (TableKeySchema key in ReferencesTo(table))
-            taken.Add(names[(key, true)] = Unique(Set(key.ForeignKeyTable), key));
+        foreach (TableKeySchema key in table.ForeignKeys.Cast<TableKeySchema>().Where(k => Related(k, exclude)))
+            taken.Add(names[(key, false)] = Unique(SelfReference(key) ? ColumnsName(key) ?? Entity(key.PrimaryKeyTable) : Entity(key.PrimaryKeyTable), key));
+        foreach (TableKeySchema key in ReferencesTo(table, exclude))
+            taken.Add(names[(key, true)] = Unique(SelfReference(key) ? "Inverse" + names[(key, false)] : Set(key.ForeignKeyTable), key));
         return names;
+    }
+
+    private static bool SelfReference(TableKeySchema key) =>
+        key.ForeignKeyTable.Owner == key.PrimaryKeyTable.Owner && key.ForeignKeyTable.Name == key.PrimaryKeyTable.Name;
+
+    // A key's navigation by its columns, as EF Core's scaffolding has it: their properties' common start, without an Id
+    // (or Guid) at its end (ParentId: Parent; ReferredBy: ReferredBy); null where they have none.
+    private static string ColumnsName(TableKeySchema key)
+    {
+        var properties = key.ForeignKeyMemberColumns.Cast<MemberColumnSchema>().Select(c => Property(key.ForeignKeyTable.Columns[c.Name])).ToList();
+        string name = properties[0];
+        foreach (string property in properties.Skip(1))
+        {
+            int i = 0;
+            while (i < name.Length && i < property.Length && name[i] == property[i])
+                i++;
+            name = name.Substring(0, i);
+        }
+        if (name.Length >= 3 && name.EndsWith("id", StringComparison.OrdinalIgnoreCase))
+        {
+            int strip = name.Length > 4 && name.EndsWith("guid", StringComparison.OrdinalIgnoreCase) ? 4 : 2;
+            int end = name.Length - strip - 1;
+            while (end >= 0 && !char.IsLetterOrDigit(name[end]))
+                end--;
+            if (end != 0)
+                name = name.Substring(0, end + 1);
+        }
+        return name.Length == 0 ? null : name;
     }
 
     /// <summary>The foreign keys of the database's tables that refer to this one (and are relationships): its
     /// collections. Read from every table, as a provider's PrimaryKeys may not have them (SQLite's).</summary>
-    public static IEnumerable<TableKeySchema> ReferencesTo(TableSchema table) =>
+    public static IEnumerable<TableKeySchema> ReferencesTo(TableSchema table) => ReferencesTo(table, "");
+
+    /// <summary>The foreign keys that refer to a table, with tables excluded (whose keys aren't relationships).</summary>
+    public static IEnumerable<TableKeySchema> ReferencesTo(TableSchema table, string exclude) =>
         Referring.GetValue(table.Database.Tables, tables => tables.Cast<TableSchema>().SelectMany(t => t.ForeignKeys.Cast<TableKeySchema>())
                 .ToLookup(k => (k.PrimaryKeyTable.Owner, k.PrimaryKeyTable.Name)))[(table.Owner, table.Name)]
-            .Where(Related);
+            .Where(k => Related(k, exclude));
 
     // A database's foreign keys by the table they refer to, gathered once (from every table's, each time, took minutes)
     private static readonly System.Runtime.CompilerServices.ConditionalWeakTable<TableSchemaCollection, ILookup<(string, string), TableKeySchema>> Referring =
@@ -207,9 +313,170 @@ public static class Names
     public static bool IsComputed(ColumnSchema column) =>
         bool.TryParse(System.Convert.ToString(column.ExtendedProperties["CS_IsComputed"]?.Value), out bool computed) && computed;
 
-    /// <summary>A column type EF Core has to be told (PostgreSQL's jsonb, which a string would otherwise be sent as text).</summary>
-    public static string ColumnType(ColumnSchema column) =>
-        column.NativeType == "json" || column.NativeType == "jsonb" ? column.NativeType : null;
+    /// <summary>A column type EF Core has to be told, where its provider's own for the property's type isn't the column's:
+    /// json and jsonb (a string would be sent as text); and PostgreSQL's timestamp (Npgsql's DateTime is timestamptz),
+    /// bit(n) (a bool is boolean, a BitArray bit varying) and an enum or another type of its own (a string is text).</summary>
+    public static string ColumnType(ColumnSchema column)
+    {
+        if (column.NativeType == "json" || column.NativeType == "jsonb")
+            return column.NativeType;
+        if (Dialect(column.Table.Database) != "PostgreSQL")
+            return null;
+        var type = column.GetClrType(TypeMapping.Modern);
+        if ((column.NativeType == "timestamp" || column.NativeType == "timestamp without time zone") && type == typeof(DateTime))
+            return "timestamp without time zone";
+        if (column.NativeType == "bit")
+            return "bit(" + Math.Max(1, column.Size) + ")";
+        if (StoreTypeString(column))
+            return column.NativeType;
+        return null;
+    }
+
+    /// <summary>A string column of a PostgreSQL type of the database's own (an enum, citext): Npgsql sends a string as
+    /// text, which the column won't take, so its parameters have its type (Context.cst's StoreTypeStringMapping).</summary>
+    public static bool StoreTypeString(ColumnSchema column) =>
+        Dialect(column.Table.Database) == "PostgreSQL" && column.GetClrType(TypeMapping.Modern) == typeof(string) &&
+        System.Convert.ToString(column.ExtendedProperties["CS_SystemType"]?.Value) == "USER-DEFINED";
+
+    /// <summary>The converter a column's property needs, where its provider can't read or write its type as it is: its
+    /// field in the configuration (Converters has them), or null. PostgreSQL's timestamptz takes UTC (Utc), a bit(1) is a
+    /// bool (Bit); MySql.EntityFrameworkCore reads a DATE as a DateTime (Date) and a TIME as a TimeSpan (Time).</summary>
+    public static string Converter(ColumnSchema column)
+    {
+        string dialect = Dialect(column.Table.Database);
+        var type = column.GetClrType(TypeMapping.Modern);
+        if (dialect == "PostgreSQL" && type == typeof(DateTime) && (column.NativeType == "timestamptz" || column.NativeType == "timestamp with time zone"))
+            return "Utc";
+        if (dialect == "PostgreSQL" && type == typeof(bool) && column.NativeType == "bit")
+            return "Bit";
+        if (dialect == "MySQL" && type == typeof(DateOnly))
+            return "Date";
+        if (dialect == "MySQL" && type == typeof(TimeOnly))
+            return "Time";
+        return null;
+    }
+
+    /// <summary>The converters' fields, for a configuration's columns: each one's declaration, with what it's for.</summary>
+    public static List<string> Converters(IEnumerable<ColumnSchema> columns)
+    {
+        var used = new HashSet<string>(columns.Select(Converter).Where(c => c != null));
+        var fields = new List<string>();
+        if (used.Contains("Utc"))
+            fields.Add("// timestamptz takes UTC: a local time is made UTC, and one of no kind is taken as UTC; it reads as UTC\n" +
+                "    private static readonly ValueConverter<System.DateTime, System.DateTime> Utc = new(\n" +
+                "        v => v.Kind == System.DateTimeKind.Local ? v.ToUniversalTime() : System.DateTime.SpecifyKind(v, System.DateTimeKind.Utc),\n" +
+                "        v => System.DateTime.SpecifyKind(v, System.DateTimeKind.Utc));");
+        if (used.Contains("Bit"))
+            fields.Add("// bit(1): Npgsql's is a BitArray\n" +
+                "    private static readonly ValueConverter<bool, System.Collections.BitArray> Bit = new(v => new System.Collections.BitArray(new[] { v }), v => v[0]);");
+        if (used.Contains("Date"))
+            fields.Add("// a DATE: MySql.EntityFrameworkCore reads a DateTime\n" +
+                "    private static readonly ValueConverter<System.DateOnly, System.DateTime> Date = new(v => v.ToDateTime(System.TimeOnly.MinValue), v => System.DateOnly.FromDateTime(v));");
+        if (used.Contains("Time"))
+            fields.Add("// a TIME: MySql.EntityFrameworkCore reads a TimeSpan\n" +
+                "    private static readonly ValueConverter<System.TimeOnly, System.TimeSpan> Time = new(v => v.ToTimeSpan(), v => System.TimeOnly.FromTimeSpan(v));");
+        return fields;
+    }
+
+    /// <summary>
+    /// A column's default, as EF Core's scaffolding writes it: HasDefaultValue(5) for a literal of the property's type
+    /// (not .NET's own default: 0, false), HasDefaultValueSql("now()") for anything else, and nothing for an identity, a
+    /// computed column or a rowversion. EF Core then leaves a property at its sentinel (.NET's default) out of an insert,
+    /// and the database's default is written. A value type's literal default is its sentinel too (HasSentinel), so that
+    /// .NET's default can still be written (false, where the default is true).
+    /// </summary>
+    public static List<string> Default(ColumnSchema column)
+    {
+        var settings = new List<string>();
+        string text = (System.Convert.ToString(column.ExtendedProperties["CS_Default"]?.Value, CultureInfo.InvariantCulture) ?? "").Trim();
+        string dialect = Dialect(column.Table.Database);
+        // MySQL's default is its value, unquoted ('' too: CS_ColumnDefaultIsNull tells it from none), unless
+        // DEFAULT_GENERATED says it's an expression (CURRENT_TIMESTAMP, (curdate()))
+        bool value = dialect == "MySQL" &&
+            !(System.Convert.ToString(column.ExtendedProperties["CS_ColumnExtra"]?.Value) ?? "").ToUpperInvariant().Contains("DEFAULT_GENERATED") &&
+            !Regex.IsMatch(text, @"^current_timestamp(\(\d*\))?$", RegexOptions.IgnoreCase);
+        bool none = text.Length == 0 && !(value && Flag(column, "CS_ColumnDefaultIsNull") == false);
+        if (none || IsRowVersion(column) || IsComputed(column) || Flag(column, "CS_IsIdentity") == true)
+            return settings;
+        var type = column.GetClrType(TypeMapping.Modern);
+        var (literal, clrDefault) = DefaultLiteral(value ? text : Unwrap(text), type, value);
+        if (literal == null)
+            settings.Add("HasDefaultValueSql(" + CSharpString(value ? "'" + text.Replace("'", "''") + "'" : text) + ")");
+        else if (!clrDefault) // .NET's default (0, false): the scaffolding writes none
+        {
+            settings.Add("HasDefaultValue(" + literal + ")");
+            if (type.IsValueType && !Type(column).EndsWith("?"))
+                settings.Add("HasSentinel(" + literal + ")");
+        }
+        return settings;
+    }
+
+    private static bool? Flag(ColumnSchema column, string name) =>
+        bool.TryParse(System.Convert.ToString(column.ExtendedProperties[name]?.Value), out bool flag) ? flag : null;
+
+    // A default without the parentheses SQL Server keeps around it: ((0)), (N'x'), (getdate())
+    private static string Unwrap(string text)
+    {
+        while (text.Length > 1 && text[0] == '(' && text[text.Length - 1] == ')' && Balanced(text.Substring(1, text.Length - 2)))
+            text = text.Substring(1, text.Length - 2).Trim();
+        return text;
+    }
+
+    private static bool Balanced(string text)
+    {
+        int depth = 0;
+        foreach (char c in text)
+            if (c == '(')
+                depth++;
+            else if (c == ')' && --depth < 0)
+                return false;
+        return depth == 0;
+    }
+
+    // A default as a C# literal of the property's type, and whether it's .NET's default for it: a number, true or false,
+    // a string ('x', N'x'; MySQL's unquoted). Null for anything else: an expression, a cast ('x'::character varying), a date.
+    private static (string Literal, bool ClrDefault) DefaultLiteral(string text, Type type, bool value)
+    {
+        var invariant = CultureInfo.InvariantCulture;
+        if (type == typeof(string))
+        {
+            if (value)
+                return (CSharpString(text), false);
+            var quoted = Regex.Match(text, @"^N?'((?:[^']|'')*)'$");
+            return (quoted.Success ? CSharpString(quoted.Groups[1].Value.Replace("''", "'")) : null, false);
+        }
+        if (type == typeof(bool))
+        {
+            var bit = Regex.Match(text, @"^(?:[Bb]?'([01])'(?:::""?bit""?)?|([01]))$");
+            string truth = bit.Success ? (bit.Groups[1].Value + bit.Groups[2].Value == "1" ? "true" : "false")
+                : text.Equals("true", StringComparison.OrdinalIgnoreCase) ? "true" : text.Equals("false", StringComparison.OrdinalIgnoreCase) ? "false" : null;
+            return (truth, truth == "false");
+        }
+        // MySQL's bit(n) as a number: b'101'
+        var bits = Regex.Match(text, @"^[Bb]'([01]+)'$");
+        if (bits.Success)
+            text = System.Convert.ToUInt64(bits.Groups[1].Value, 2).ToString(invariant);
+        if (!Regex.IsMatch(text, @"^-?\d+(\.\d+)?$") || !decimal.TryParse(text, NumberStyles.Number, invariant, out decimal number))
+            return (null, false);
+        bool whole = number == decimal.Truncate(number) && !text.Contains(".");
+        string literal =
+            type == typeof(int) && whole && int.TryParse(text, NumberStyles.AllowLeadingSign, invariant, out _) ? text :
+            type == typeof(long) && whole && long.TryParse(text, NumberStyles.AllowLeadingSign, invariant, out _) ? text + "L" :
+            type == typeof(short) && whole && short.TryParse(text, NumberStyles.AllowLeadingSign, invariant, out _) ? "(short)" + text :
+            type == typeof(byte) && whole && byte.TryParse(text, NumberStyles.None, invariant, out _) ? "(byte)" + text :
+            type == typeof(sbyte) && whole && sbyte.TryParse(text, NumberStyles.AllowLeadingSign, invariant, out _) ? "(sbyte)" + text :
+            type == typeof(ushort) && whole && ushort.TryParse(text, NumberStyles.None, invariant, out _) ? "(ushort)" + text :
+            type == typeof(uint) && whole && uint.TryParse(text, NumberStyles.None, invariant, out _) ? text + "u" :
+            type == typeof(ulong) && whole && ulong.TryParse(text, NumberStyles.None, invariant, out _) ? text + "ul" :
+            type == typeof(decimal) ? text + "m" :
+            type == typeof(double) ? text + "d" :
+            type == typeof(float) ? text + "f" : null;
+        return (literal, literal != null && number == 0);
+    }
+
+    // A C# string literal (a database's names and defaults can have quotes, backslashes and line breaks)
+    private static string CSharpString(string text) =>
+        "\"" + text.Replace("\\", "\\\\").Replace("\"", "\\\"").Replace("\r", "\\r").Replace("\n", "\\n").Replace("\t", "\\t") + "\"";
 
     // A C# identifier: a name that starts with a digit gets an underscore; other characters go.
     private static string Identifier(string name)

@@ -9,6 +9,8 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Components.Routing;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Microsoft.JSInterop;
 
 namespace PetShop.Web.Components.Ui;
@@ -103,6 +105,7 @@ public abstract class EditPage<T> : ComponentBase, IEditorPage, IDisposable wher
     private bool _edited;
     private bool _leaving;
     private bool _deleting;
+    private ILogger? _logger;
 
     [Inject] protected Csla.ApplicationContext ApplicationContext { get; set; } = default!;
     [Inject] protected Csla.IDataPortalFactory Portals { get; set; } = default!;
@@ -111,6 +114,8 @@ public abstract class EditPage<T> : ComponentBase, IEditorPage, IDisposable wher
     [Inject] protected Confirmations Confirmations { get; set; } = default!;
     [Inject] protected Counts Counts { get; set; } = default!;
     [Inject] protected IJSRuntime JS { get; set; } = default!;
+    [Inject] protected ILoggerFactory LoggerFactory { get; set; } = default!;
+    [Inject] protected IHostEnvironment Environment { get; set; } = default!;
 
     /// <summary>CSLA's view model: the object, whether it's busy, its permissions and what went wrong.</summary>
     [Inject] protected EditorModel<T> Vm { get; set; } = default!;
@@ -187,7 +192,7 @@ public abstract class EditPage<T> : ComponentBase, IEditorPage, IDisposable wher
         ResetMessages();
         await Vm.RefreshAsync(async () => await LoadAsync());
         if (Vm.Exception is { } e)
-            LoadProblem = Problem.From(e, Root.Singular.ToLowerInvariant());
+            LoadProblem = Log(Problem.From(e, Root.Singular.ToLowerInvariant(), development: Environment.IsDevelopment()), e, "Loading");
         else
             await OnLoadedAsync();
         _edited = false;
@@ -358,7 +363,7 @@ public abstract class EditPage<T> : ComponentBase, IEditorPage, IDisposable wher
         await Vm.SaveAsync(); // a copy's saved and merged back (CSLA's GraphMerger): the page keeps its object
         if (Vm.Exception is { } e)
         {
-            SaveProblem = Problem.From(e, Root.Singular.ToLowerInvariant(), "saved");
+            SaveProblem = Log(Problem.From(e, Root.Singular.ToLowerInvariant(), "saved", Environment.IsDevelopment()), e, "Saving");
             Toasts.Error(SaveProblem.Title, SaveProblem.Message);
             return;
         }
@@ -403,7 +408,7 @@ public abstract class EditPage<T> : ComponentBase, IEditorPage, IDisposable wher
         }
         catch (Exception e)
         {
-            SaveProblem = Problem.From(e, Root.Singular.ToLowerInvariant(), "deleted");
+            SaveProblem = Log(Problem.From(e, Root.Singular.ToLowerInvariant(), "deleted", Environment.IsDevelopment()), e, "Deleting");
             Toasts.Error("It wasn't deleted", SaveProblem.Message);
             return;
         }
@@ -431,6 +436,16 @@ public abstract class EditPage<T> : ComponentBase, IEditorPage, IDisposable wher
     }
 
     public void DismissProblem() => SaveProblem = null;
+
+    // What went wrong, in the log with its exception: an error where it's a fault (the database's, or another), a warning
+    // where it's the user's to put right (a row that's gone, a key that's taken, a rule)
+    private Problem Log(Problem problem, Exception exception, string doing)
+    {
+        _logger ??= LoggerFactory.CreateLogger(GetType());
+        _logger.Log(problem.Unexpected ? LogLevel.Error : LogLevel.Warning, exception, "{Doing} {Path} failed: {Title}. {Message}",
+            doing, CurrentPath(), problem.Title, problem.Message);
+        return problem;
+    }
 
     public void Dispose()
     {

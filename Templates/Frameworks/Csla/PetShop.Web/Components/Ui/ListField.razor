@@ -1,0 +1,82 @@
+@* A list property (an array column, PostgreSQL's text[] or int[]): a text area, one item a line (blank lines are left
+   out). Each keystroke sets the property, unless a line isn't one of the list's type (a number), which it says first;
+   CSLA then checks its rules. Csla.cst wrote this file once: it's yours. *@
+@inherits FieldBase
+@using System.ComponentModel
+@using System.Globalization
+
+<FieldFrame Field="this">
+    <textarea id="@Id" class="input @(Mono ? "mono" : null)" rows="@Rows" value="@_text" @oninput="OnInput" @onblur="Touch"
+              readonly="@(!CanWrite)" placeholder="@(Placeholder ?? "One a line")" spellcheck="false"
+              aria-label="@(Compact ? LabelText : null)" aria-invalid="@(Invalid ? "true" : null)"
+              aria-describedby="@MessageId" aria-required="@(Required ? "true" : null)"></textarea>
+</FieldFrame>
+
+@code {
+    private string _text = "";
+    private object? _shown;
+
+    /// <summary>Codes or keys: monospaced.</summary>
+    [Parameter] public bool Mono { get; set; }
+
+    private int Rows => Math.Clamp(_text.Split('\n').Length, 2, 8);
+
+    // the list's items' type: the property's IReadOnlyList<T>
+    private Type ItemType
+    {
+        get
+        {
+            var type = Info.GetPropertyInfo()?.PropertyType ?? Info.Value?.GetType() ?? typeof(IReadOnlyList<string>);
+            var list = type.IsGenericType && type.GetGenericTypeDefinition() == typeof(IReadOnlyList<>) ? type
+                : type.GetInterfaces().FirstOrDefault(t => t.IsGenericType && t.GetGenericTypeDefinition() == typeof(IReadOnlyList<>));
+            return list?.GetGenericArguments()[0] ?? typeof(string);
+        }
+    }
+
+    protected override void OnParametersSet()
+    {
+        // the items, a line each: again when the list changes elsewhere (Discard), not while it's typed
+        if (!ReferenceEquals(Info.Value, _shown))
+        {
+            _shown = Info.Value;
+            _text = string.Join("\n", ((Info.Value as System.Collections.IEnumerable) ?? Array.Empty<object>()).Cast<object?>()
+                .Select(item => Convert.ToString(item, CultureInfo.CurrentCulture) ?? ""));
+            InputError = null;
+        }
+    }
+
+    private void OnInput(ChangeEventArgs e)
+    {
+        _text = e.Value as string ?? "";
+        var type = ItemType;
+        var converter = TypeDescriptor.GetConverter(type);
+        var lines = _text.Split('\n').Select(line => line.TrimEnd('\r')).Where(line => line.Trim().Length > 0).ToList();
+        var items = Array.CreateInstance(type, lines.Count);
+        for (int i = 0; i < lines.Count; i++)
+        {
+            try
+            {
+                items.SetValue(type == typeof(string) ? lines[i] : converter.ConvertFromString(null, CultureInfo.CurrentCulture, lines[i].Trim()), i);
+            }
+            catch (Exception)
+            {
+                InputError = $"\"{lines[i].Trim()}\" isn't {Article(type)}.";
+                Touch();
+                return;
+            }
+        }
+        InputError = null;
+        Info.Value = items;
+        _shown = Info.Value;
+        Touch();
+    }
+
+    private static string Article(Type type) => Type.GetTypeCode(type) switch
+    {
+        TypeCode.Byte or TypeCode.SByte or TypeCode.Int16 or TypeCode.UInt16 or TypeCode.Int32 or TypeCode.UInt32 or TypeCode.Int64 or TypeCode.UInt64 => "a whole number",
+        TypeCode.Decimal or TypeCode.Double or TypeCode.Single => "a number",
+        TypeCode.Boolean => "true or false",
+        TypeCode.DateTime => "a date",
+        _ => "a " + Formats.Words(type.Name).ToLowerInvariant(),
+    };
+}

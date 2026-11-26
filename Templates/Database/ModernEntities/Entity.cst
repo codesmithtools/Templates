@@ -1,6 +1,7 @@
 <%@ CodeTemplate Language="C#" TargetLanguage="C#" Description="An EF Core entity for a table, as EF Core's scaffolding writes one: a partial class, nullable where the column is." %>
 <%@ Property Name="Table" Type="SchemaExplorer.TableSchema" Description="The table." %>
 <%@ Property Name="Namespace" Type="System.String" Default="MyApp.Data" %>
+<%@ Property Name="Exclude" Type="System.String" Default="" Optional="True" Description="Tables left out (the master's Exclude): no navigation to them." %>
 <%@ Assembly Name="SchemaExplorer" %>
 <%@ Import Namespace="SchemaExplorer" %>
 <%@ Import Namespace="System.Linq" %>
@@ -21,18 +22,18 @@ public partial class <%= Names.Entity(Table) %>
 <% continue; } %>
     public <%= Names.Required(column) %><%= Names.Type(column) %> <%= Names.Property(column) %> { get; set; }
 <% } %>
-<% foreach (TableKeySchema key in Table.ForeignKeys) { if (!Names.Related(key)) continue; %>
+<% foreach (TableKeySchema key in Table.ForeignKeys) { if (!Names.Related(key, Exclude)) continue; %>
 
     /// <summary>The <%= key.PrimaryKeyTable.Name %> it refers to (<%= key.Name %>).</summary>
 <% if (key.ForeignKeyMemberColumns.Cast<MemberColumnSchema>().All(c => !c.AllowDBNull)) { %>
-    public virtual <%= Names.Entity(key.PrimaryKeyTable) %> <%= Names.Navigation(key) %> { get; set; } = null!;
+    public virtual <%= Names.Entity(key.PrimaryKeyTable) %> <%= Names.Navigation(key, Exclude) %> { get; set; } = null!;
 <% } else { %>
-    public virtual <%= Names.Entity(key.PrimaryKeyTable) %>? <%= Names.Navigation(key) %> { get; set; }
+    public virtual <%= Names.Entity(key.PrimaryKeyTable) %>? <%= Names.Navigation(key, Exclude) %> { get; set; }
 <% } %>
 <% } %>
-<% foreach (TableKeySchema key in Names.ReferencesTo(Table)) { %>
+<% foreach (TableKeySchema key in Names.ReferencesTo(Table, Exclude)) { %>
 
     /// <summary>The <%= key.ForeignKeyTable.Name %> rows that refer to it (<%= key.Name %>).</summary>
-    public virtual ICollection<<%= Names.Entity(key.ForeignKeyTable) %>> <%= Names.Inverse(key) %> { get; set; } = new List<<%= Names.Entity(key.ForeignKeyTable) %>>();
+    public virtual ICollection<<%= Names.Entity(key.ForeignKeyTable) %>> <%= Names.Inverse(key, Exclude) %> { get; set; } = new List<<%= Names.Entity(key.ForeignKeyTable) %>>();
 <% } %>
 }

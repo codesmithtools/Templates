@@ -4,8 +4,8 @@ Author:  Jason Alexander, Eric J. Smith
 --%>
 <%@ CodeTemplate Language="C#" TargetLanguage="HTML" Src="DBDocumenterTemplate.cs" Inherits="DBDocumenterTemplate" OutputType="None" Description="HTML documentation of a database: an overview with a relationship diagram, and a page for each table, view and procedure. Open index.html in the output folder." %>
 <%@ Property Name="SourceDatabase" Type="SchemaExplorer.DatabaseSchema" Category="Context" Description="The database to document." DeepLoad="True" %>
-<%@ Property Name="ServerName" Type="System.String" Optional="True" Category="Output" Description="The server's name, shown on the pages." %>
-<%@ Property Name="DocumentationTitle" Type="System.String" Default="Database Documentation" Category="Output" Description="The documentation's title, on every page." %>
+<%@ Property Name="ServerName" Type="System.String" Optional="True" Category="Output" Description="The server's name, shown on the pages: the connection's server (or its file) where it's empty." %>
+<%@ Property Name="DocumentationTitle" Type="System.String" Optional="True" Category="Output" Description="The documentation's title, on every page: the database's name where it's empty." %>
 <%@ Register Name="OverviewTemplate" Template="overview.cst" MergeProperties="False" %>
 <%@ Register Name="TableTemplate" Template="table.cst" MergeProperties="False" %>
 <%@ Register Name="ViewTemplate" Template="view.cst" MergeProperties="False" %>
@@ -72,13 +72,41 @@ public override void Render(TextWriter writer)
 
 private readonly HashSet<string> _written = new HashSet<string>(StringComparer.Ordinal);
 
-// Renders a page to its file, with the master's properties (SourceDatabase, DocumentationTitle, ServerName...).
+// Renders a page to its file, with the master's properties (SourceDatabase, DocumentationTitle, ServerName...), and
+// the database's name and server where they're empty.
 private void Page(CodeTemplate page, string file)
 {
     CopyPropertiesTo(page);
+    page.SetProperty("DocumentationTitle", string.IsNullOrWhiteSpace(DocumentationTitle) ? SourceDatabase.Name : DocumentationTitle);
+    page.SetProperty("ServerName", string.IsNullOrWhiteSpace(ServerName) ? Server() : ServerName);
     page.RenderToFile(file, true);
     _written.Add(Path.GetFullPath(file));
     Progress.PerformStep();
+}
+
+// The server the connection string names (Server, Host, Data Source; with its Port), or the file it opens (SQLite's
+// database, SQL scripts, a schema snapshot): never more of it, as it may have a password.
+private string Server()
+{
+    var builder = new System.Data.Common.DbConnectionStringBuilder();
+    try
+    {
+        builder.ConnectionString = SourceDatabase.ConnectionString ?? "";
+    }
+    catch (ArgumentException)
+    {
+        return null;
+    }
+    foreach (string key in new[] { "Server", "Host", "Data Source", "DataSource", "Address", "Path", "File" })
+    {
+        if (!builder.TryGetValue(key, out object value) || !(value is string text) || text.Trim().Length == 0 || text.TrimStart().StartsWith("("))
+            continue;
+        text = text.Trim();
+        if (text.IndexOfAny(new[] { '/', '\\' }) >= 0 || File.Exists(text))
+            return Path.GetFileName(text.TrimEnd('/', '\\'));
+        return builder.TryGetValue("Port", out object port) && port is string p && p.Length > 0 ? text + ":" + p : text;
+    }
+    return null;
 }
 
 // A page this run didn't write (RemoveOutput): cs generate removes it, and cs check says it's out of date.

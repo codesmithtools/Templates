@@ -1,0 +1,69 @@
+@* An enum column (MySQL's ENUM, a PostgreSQL enum): a select of its values. A MySQL SET (Multiple): a check box for
+   each, its value the ones checked, in the type's order, separated by commas. A value the type doesn't have (one added
+   since the page was generated) is kept, as an option of its own. Csla.cst wrote this file once: it's yours. *@
+@inherits FieldBase
+
+@if (Multiple)
+{
+    <FieldFrame Field="this" NoStateIcon>
+        <div id="@Id" role="group" aria-label="@LabelText" aria-describedby="@MessageId"
+             style="display: flex; flex-wrap: wrap; gap: 4px 14px; padding: 7px 0;">
+            @foreach (var choice in Options)
+            {
+                <label style="display: inline-flex; align-items: center; gap: 6px;">
+                    <input type="checkbox" checked="@Picked.Contains(choice)" disabled="@(!CanWrite)" @onchange="e => Toggle(choice, e.Value is true)" />
+                    @choice
+                </label>
+            }
+        </div>
+    </FieldFrame>
+}
+else
+{
+    <FieldFrame Field="this">
+        <select id="@Id" class="input" value="@Text" @onchange="OnChange" @onblur="Touch" disabled="@(!CanWrite)"
+                aria-label="@(Compact ? LabelText : null)" aria-invalid="@(Invalid ? "true" : null)"
+                aria-describedby="@MessageId" aria-required="@(Required ? "true" : null)">
+            @if (!Required || Text.Length == 0)
+            {
+                <option value="">@(Required ? "Choose…" : "None")</option>
+            }
+            @foreach (var choice in Options)
+            {
+                <option value="@choice">@choice</option>
+            }
+        </select>
+    </FieldFrame>
+}
+
+@code {
+    /// <summary>The type's values, in its order.</summary>
+    [Parameter, EditorRequired] public IReadOnlyList<string> Choices { get; set; } = [];
+
+    /// <summary>A SET: any of them, not one.</summary>
+    [Parameter] public bool Multiple { get; set; }
+
+    private string Text => Info.Value as string ?? "";
+
+    private HashSet<string> Picked => Multiple ? Text.Split(',', StringSplitOptions.RemoveEmptyEntries).ToHashSet() : [Text];
+
+    // the type's values, and the property's where the type hasn't it
+    private IEnumerable<string> Options => Choices.Concat(Picked.Where(p => p.Length > 0 && !Choices.Contains(p)));
+
+    private void OnChange(ChangeEventArgs e)
+    {
+        Info.Value = e.Value as string ?? "";
+        Touch();
+    }
+
+    private void Toggle(string choice, bool on)
+    {
+        var picked = Picked;
+        if (on)
+            picked.Add(choice);
+        else
+            picked.Remove(choice);
+        Info.Value = string.Join(",", Options.Where(picked.Contains));
+        Touch();
+    }
+}

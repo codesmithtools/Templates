@@ -63,6 +63,9 @@
 <% foreach (TableSchema lookup in lookups) { %>
     private IReadOnlyDictionary<object, string>? <%= Web.LookupField(lookup) %>;
 <% } %>
+<% foreach (string field in Web.ChoicesFields(model, columns)) { %>
+    <%= field %>
+<% } %>
     public override string Title => "<%= Web.Title(Table) %>";
     public override string Singular => "<%= Web.Singular(Table).ToLowerInvariant() %>";
     public override string Icon => "<%= Web.Icon(Table) %>";

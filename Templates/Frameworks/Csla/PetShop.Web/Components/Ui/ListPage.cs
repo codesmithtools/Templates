@@ -4,6 +4,8 @@
 using Csla.Rules;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 
 namespace PetShop.Web.Components.Ui;
 
@@ -17,6 +19,8 @@ public abstract class ListPage<TItem> : ComponentBase where TItem : class
     [Inject] protected NavigationManager Navigation { get; set; } = default!;
     [Inject] protected Csla.ApplicationContext ApplicationContext { get; set; } = default!;
     [Inject] protected Counts Counts { get; set; } = default!;
+    [Inject] protected ILoggerFactory LoggerFactory { get; set; } = default!;
+    [Inject] protected IHostEnvironment Environment { get; set; } = default!;
 
     [CascadingParameter] protected Task<AuthenticationState>? Authentication { get; set; }
 
@@ -86,7 +90,9 @@ public abstract class ListPage<TItem> : ComponentBase where TItem : class
         }
         catch (Exception e)
         {
-            Problem = Problem.From(e, Root.Title.ToLowerInvariant() + " list");
+            Problem = Problem.From(e, Root.Title.ToLowerInvariant() + " list", development: Environment.IsDevelopment());
+            LoggerFactory.CreateLogger(GetType()).Log(Problem.Unexpected ? LogLevel.Error : LogLevel.Warning, e, "Loading {Path} failed: {Title}. {Message}",
+                Navigation.ToBaseRelativePath(Navigation.Uri), Problem.Title, Problem.Message);
             Rows ??= [];
         }
         Refreshing = false;

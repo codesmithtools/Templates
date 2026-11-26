@@ -24,11 +24,12 @@ Databases: any `cs` reads (SQL Server, SQLite, PostgreSQL, MySQL, Oracle, and SQ
 server page (version, edition, collation).
 
 To document your own database, change the data source in `Database.csp` (or pick one in VS Code's Template
-Properties), with:
+Properties). Optional:
 
 - `OutputDirectory`: where the pages go (default: a `Docs` folder beside the template).
-- `ServerName`: the server's name, shown on the pages.
-- `DocumentationTitle`: the documentation's title.
+- `DocumentationTitle`: the documentation's title (default: the database's name).
+- `ServerName`: the server's name, shown on the pages (default: the server the connection string names, with its
+  port, or the file it opens: `PetShop.db3`).
 
 Descriptions are the database's own (`CS_Description`: SQL Server's `MS_Description`, the comments of PostgreSQL,
 MySQL and Oracle).
