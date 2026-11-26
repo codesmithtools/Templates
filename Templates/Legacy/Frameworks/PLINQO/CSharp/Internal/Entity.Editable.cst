@@ -42,6 +42,20 @@
 <%@ Map Name="CSharpAlias"
     Src="System-CSharpAlias.csmap" Reverse="False"
     Description="Convert system data types to c# alias" %>
+<script runat="template">
+// 9.0: a member of the file's Metadata class as written, at this class's indentation: its attributes (with the #if lines
+// around them and the comments between them) and its declaration (?, init, required, an initializer), so a file with
+// nullable annotations builds as it did. 8.x wrote its attributes and a declaration of its own.
+public void WriteMemberAsWritten(ICSharpCode.NRefactory.Ast.PropertyDeclaration property)
+{
+    ICSharpCode.NRefactory.Location start = property.Attributes.Count > 0
+        ? property.Attributes[0].StartLocation
+        : new ICSharpCode.NRefactory.Location(1, property.StartLocation.Line);
+    ICSharpCode.NRefactory.Location end = property.BodyEnd.IsEmpty ? property.EndLocation : property.BodyEnd;
+    Response.WriteLine(ExistingFile.GetSection(start, end, "            "));
+    Response.WriteLine();
+}
+</script>
 using System;
 using System.Linq;
 using System.Data.Linq;
@@ -68,7 +82,7 @@ namespace <%= Database.EntityNamespace %>
         internal class Metadata
 <% } %>
         {
-             // WARNING: Only attributes inside of this class will be preserved.
+            // WARNING: Only attributes inside of this class will be preserved.
 
 <%          AttributeSectionVisitor sourceAttributes = new AttributeSectionVisitor();
             if(ExistingFile!=null)
@@ -100,10 +114,8 @@ namespace <%= Database.EntityNamespace %>
                 
                 if(sourceAttributes.PropertyMap.ContainsKey(column.Member))
                 {
-                    foreach (ICSharpCode.NRefactory.Ast.AttributeSection attributeSection in sourceAttributes.PropertyMap[column.Member].Attributes)
-                    { %>
-            <%= ExistingFile.GetSection(attributeSection.StartLocation, attributeSection.EndLocation) %>
-<%                  } // for each attribute
+                    WriteMemberAsWritten(sourceAttributes.PropertyMap[column.Member]);
+                    continue;
                 } // if property
                 else
                 {
@@ -155,10 +167,8 @@ namespace <%= Database.EntityNamespace %>
             {
                 if(sourceAttributes.PropertyMap.ContainsKey(association.Member))
                 {
-                    foreach (ICSharpCode.NRefactory.Ast.AttributeSection attributeSection in sourceAttributes.PropertyMap[association.Member].Attributes)
-                    { %>
-            <%= ExistingFile.GetSection(attributeSection.StartLocation, attributeSection.EndLocation) %>
-<%                    }
+                    WriteMemberAsWritten(sourceAttributes.PropertyMap[association.Member]);
+                    continue;
                 } %>
             public <%= CSharpAlias[association.Type] %> <%=association.Member%> { get; set; }
 
@@ -168,10 +178,8 @@ namespace <%= Database.EntityNamespace %>
             {
                 if(sourceAttributes.PropertyMap.ContainsKey(association.Member))
                 {
-                    foreach (ICSharpCode.NRefactory.Ast.AttributeSection attributeSection in sourceAttributes.PropertyMap[association.Member].Attributes)
-                    { %>
-            <%= ExistingFile.GetSection(attributeSection.StartLocation, attributeSection.EndLocation) %>
-<%                    }
+                    WriteMemberAsWritten(sourceAttributes.PropertyMap[association.Member]);
+                    continue;
                 } %>
             public EntitySet<<%= CSharpAlias[association.Type] %>> <%=association.Member%> { get; set; }
 
