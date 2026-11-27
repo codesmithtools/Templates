@@ -89,7 +89,8 @@ at. It's split at the words the schema knows (its tables' names, its other names
   rows and how many there are in all. A row is read, updated or deleted by its key
   (`/api/line-items/{orderId}/{lineNum}`); a key's last column of text takes the rest of the path, so a key with a `/`
   works (`/api/settings/a%20b/c`). A new row may leave out a column the database has a default for (`CreatedAt
-  DEFAULT now()`): the database gives it. A PostgreSQL array is a list in JSON, and a bit string (`bit(8)`, MySQL's
+  DEFAULT now()`): the database gives it. It gives it too to a new row that sends `null` for a nullable one (EF Core
+  can't tell `null` from left out): an update sets it to `null` after. A PostgreSQL array is a list in JSON, and a bit string (`bit(8)`, MySQL's
   `BIT(8)`) text of 0s and 1s. `GET /api` says how many rows each table has. `PetShopApi.cs` maps them all
   (`app.MapPetShopApi()`).
   - A change the database refuses is a 409 that says why, for people, and names the fields it's about: "Another
@@ -174,7 +175,7 @@ What the app does with what a schema has. `cs generate` warns of each of these i
 | An enum (MySQL's `ENUM`, PostgreSQL's), MySQL's `SET` | A select (a SET: its values to pick from); the API checks the value (400). |
 | A PostgreSQL array (`text[]`, `int[]`, an enum's) | A list in JSON, and a list's input. An array of two dimensions isn't: one such row makes its table's list fail. |
 | A bit string (PostgreSQL's `bit(n)`, `bit varying`; MySQL's `BIT(n)`) | Text of 0s and 1s. `BIT(1)` and PostgreSQL's `bit(1)` are a bool. |
-| A column with a default (`DEFAULT now()`, `DEFAULT 'low'`) | A new row may leave it out, and the database gives it; the form starts with it where it's a value. |
+| A column with a default (`DEFAULT now()`, `DEFAULT 'low'`) | A new row may leave it out, and the database gives it; the form starts with it where it's a value. A nullable one gets it even when a new row sends `null` (EF Core can't tell the two apart): an update sets it to `null` after. |
 | A `timestamptz` (MySQL's `TIMESTAMP`, SQL Server's `datetimeoffset`) | Sent in UTC (or with its offset); the form shows and sends it in the browser's time. |
 | A column without a .NET type (PostgreSQL's `point`, SQL Server's `geography`) | Leaves it out of the entity, the API and the UI. |
 | A column of a type the API and the UI don't know (PostgreSQL's `inet`, a range) | Takes it as text: check it reads and saves. |
