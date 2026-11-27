@@ -20,7 +20,8 @@ dotnet run --project App
   (`Fish2`), and a row without one is named from its code. Rows are in value order.
 
 The files are a copy of the table's rows: generate them again when the rows change. A table with no rows makes an
-enum with no members, with a `#warning` in the C# (and a comment in the TypeScript) that says so.
+enum with no members: generating says so, as a warning (`CSG0007`, at the template's line, so in VS Code's Problems
+too), and so does a comment in each file.
 
 | Property | What it is |
 | --- | --- |

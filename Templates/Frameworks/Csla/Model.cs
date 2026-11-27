@@ -26,6 +26,7 @@ public sealed class Model
         }
     }
 
+    private readonly string _exclude;
     private readonly List<Regex> _excluded;
     private readonly Dictionary<TableSchema, TableKeySchema> _parentKeys = new();
     private readonly Dictionary<TableSchema, string> _why = new();
@@ -38,6 +39,7 @@ public sealed class Model
 
     private Model(DatabaseSchema database, string exclude, string children)
     {
+        _exclude = exclude;
         _excluded = exclude.Split(new[] { ',', ';', '\n' }, StringSplitOptions.RemoveEmptyEntries)
             .Select(glob => glob.Trim()).Where(glob => glob.Length > 0)
             .Select(glob => new Regex("^" + Regex.Escape(glob).Replace("\\*", ".*").Replace("\\?", ".") + "$", RegexOptions.IgnoreCase))
@@ -46,7 +48,7 @@ public sealed class Model
         Tables = new List<TableSchema>();
         foreach (TableSchema table in database.Tables)
         {
-            if (Excluded(table.Name))
+            if (Names.Excluded(table, exclude))
                 Notes.Add($"`{table.Name}` is excluded (Exclude).");
             else if (!table.HasPrimaryKey)
                 Notes.Add($"`{table.Name}` has no primary key: a business object couldn't save it.");
@@ -71,7 +73,7 @@ public sealed class Model
             foreach (string name in parts[1].Split(',').Select(n => n.Trim()).Where(n => n.Length > 0))
             {
                 TableSchema child = Find(name, "Children");
-                var key = child.ForeignKeys.Cast<TableKeySchema>().FirstOrDefault(k => Same(k.PrimaryKeyTable, parent) && Names.RefersToPrimaryKey(k))
+                var key = ForeignKeys(child).FirstOrDefault(k => Same(k.PrimaryKeyTable, parent) && Names.RefersToPrimaryKey(k))
                     ?? throw new ArgumentException($"Children: {child.Name} has no foreign key to the primary key of {parent.Name}.");
                 if (Same(child, parent) || AncestorsOf(parent).Any(t => Same(t, child)))
                     throw new ArgumentException($"Children: {child.Name} can't be a child of {parent.Name}, which is its own child.");
@@ -81,12 +83,15 @@ public sealed class Model
         }
         foreach (TableSchema table in Tables.Where(t => !_parentKeys.ContainsKey(t)))
         {
-            // a child's key starts with its parent's (identifying), or its parent's deletes cascade to it
-            var candidates = table.ForeignKeys.Cast<TableKeySchema>()
+            // a child's key starts with its parent's (identifying: the longest such key, OrderLine's before Order's), or
+            // its parent's deletes cascade to it; in the table's column order, the same from every provider (theirs
+            // differ: by the keys' names, or as they were made)
+            var candidates = ForeignKeys(table)
                 .Where(k => !Same(k.PrimaryKeyTable, table) && Tables.Any(t => Same(t, k.PrimaryKeyTable)) && Names.RefersToPrimaryKey(k))
                 .Select(k => (Key: k, Identifying: Identifying(k), Cascades: Cascades(k)))
                 .Where(c => c.Identifying || c.Cascades)
-                .OrderBy(c => c.Identifying ? 0 : 1);
+                .OrderBy(c => c.Identifying ? 0 : 1)
+                .ThenByDescending(c => c.Identifying ? c.Key.ForeignKeyMemberColumns.Count : 0);
             foreach (var candidate in candidates)
             {
                 if (AncestorsOf(candidate.Key.PrimaryKeyTable).Any(t => Same(t, table)))
@@ -106,10 +111,23 @@ public sealed class Model
 
     private static bool Same(TableSchema a, TableSchema b) => a.Owner == b.Owner && a.Name == b.Name;
 
-    // A key of the table's primary key's columns, and not all of them (all of them is a one-to-one extension).
-    private static bool Identifying(TableKeySchema key) =>
-        key.ForeignKeyMemberColumns.Cast<MemberColumnSchema>().All(c => c.IsPrimaryKeyMember) &&
-        key.ForeignKeyTable.PrimaryKey.MemberColumns.Count > key.ForeignKeyMemberColumns.Count;
+    // A key of the primary key's first columns, in the table's order (GroupMember's GroupId of GroupId, CustomerId; not
+    // its CustomerId), and not all of them (all of them is a one-to-one extension).
+    private static bool Identifying(TableKeySchema key)
+    {
+        var primary = Names.KeyColumns(key.ForeignKeyTable).Select(c => c.Name).ToList();
+        var columns = key.ForeignKeyMemberColumns.Cast<MemberColumnSchema>().Select(c => c.Name).ToList();
+        return columns.Count < primary.Count && new HashSet<string>(columns).SetEquals(primary.Take(columns.Count));
+    }
+
+    /// <summary>A table's foreign keys in the order of their columns in the table (then their names): a provider gives
+    /// them in its own order (PostgreSQL's by name, MySQL's as they were made), which would change which is a child's
+    /// parent and which fetch a list has.</summary>
+    public static List<TableKeySchema> ForeignKeys(TableSchema table) =>
+        table.ForeignKeys.Cast<TableKeySchema>()
+            .OrderBy(k => string.Join(",", k.ForeignKeyMemberColumns.Cast<MemberColumnSchema>().Select(c => table.Columns.IndexOf(table.Columns[c.Name]).ToString("D4"))), StringComparer.Ordinal)
+            .ThenBy(k => k.Name, StringComparer.Ordinal)
+            .ToList();
 
     private static bool Cascades(TableKeySchema key) =>
         bool.TryParse(Convert.ToString(key.ExtendedProperties["CS_CascadeDelete"]?.Value), out bool cascades) && cascades;
@@ -214,7 +232,7 @@ public sealed class Model
         var criteria = new List<Criteria>();
         var signatures = new HashSet<string> { "" };
         var included = Columns(table);
-        foreach (TableKeySchema key in table.ForeignKeys)
+        foreach (TableKeySchema key in ForeignKeys(table))
         {
             var columns = key.ForeignKeyMemberColumns.Cast<MemberColumnSchema>().Select(c => table.Columns[c.Name]).ToList();
             if (columns.Any(c => !included.Contains(c)))
@@ -255,20 +273,38 @@ public sealed class Model
     public static string Class(TableSchema table) => Names.Entity(table);
 
     /// <summary>A child's list: plural (LineItem: LineItems).</summary>
-    public static string ChildList(TableSchema table) => Names.Set(table) != Names.Entity(table) ? Names.Set(table) : Names.Entity(table) + "Collection";
+    public static string ChildList(TableSchema table) =>
+        GiveWay(table, Names.Set(table) != Names.Entity(table) ? Names.Set(table) : Names.Entity(table) + "Collection", Names.Entity(table) + "Collection");
 
     /// <summary>The parent's property that holds a child's list: the entity's navigation back, or the list's name where
     /// that's singular (a Plural-Overrides entry that keeps a word as it is, as "status" is).</summary>
     public string ChildListProperty(TableSchema table) =>
-        Names.Inverse(ParentKey(table)) == Names.Entity(table) ? ChildList(table) : Names.Inverse(ParentKey(table));
+        Names.Inverse(ParentKey(table), _exclude) == Names.Entity(table) ? ChildList(table) : Names.Inverse(ParentKey(table), _exclude);
 
-    public static string InfoName(TableSchema table) => Class(table) + "Info";
-    public static string ListName(TableSchema table) => Class(table) + "List";
-    public static string CountName(TableSchema table) => ListName(table) + "Count";
-    public static string NameValueListName(TableSchema table) => Class(table) + "NameValueList";
-    public static string Dto(TableSchema table) => Class(table) + "Dto";
-    public static string DalInterface(TableSchema table) => "I" + Class(table) + "Dal";
-    public static string Dal(TableSchema table) => Class(table) + "Dal";
+    // The names of the types each object has (OrderInfo, OrderList, OrderDto, ...) give way to a table's: a ProductInfo
+    // table's object is ProductInfo, and Product's read-only object is ProductReadOnlyInfo. A name taken twice would be
+    // one file written twice, and a type the other's code can't tell from its own.
+    public static string InfoName(TableSchema table) => GiveWay(table, Class(table) + "Info", Class(table) + "ReadOnlyInfo");
+    public static string ListName(TableSchema table) => GiveWay(table, Class(table) + "List", Class(table) + "ReadOnlyList");
+    public static string CountName(TableSchema table) => GiveWay(table, ListName(table) + "Count", Class(table) + "RowCount");
+    public static string NameValueListName(TableSchema table) => GiveWay(table, Class(table) + "NameValueList", Class(table) + "Lookup");
+    public static string Dto(TableSchema table) => GiveWay(table, Class(table) + "Dto", Class(table) + "RowDto");
+    public static string DalInterface(TableSchema table) => GiveWay(table, "I" + Class(table) + "Dal", "I" + Class(table) + "DataAccess");
+    public static string Dal(TableSchema table) => GiveWay(table, Class(table) + "Dal", Class(table) + "EfDal");
+
+    /// <summary>A type's name, or another where a table's class (its entity's) has it: the table's name wins.</summary>
+    public static string GiveWay(TableSchema table, string name, string instead)
+    {
+        var classes = Classes.GetValue(table.Database.Tables, tables => new HashSet<string>(tables.Cast<TableSchema>().Select(Names.Entity)));
+        if (name == Class(table) || !classes.Contains(name))
+            return name;
+        string other = instead;
+        for (int i = 2; classes.Contains(other); i++)
+            other = instead + i;
+        return other;
+    }
+
+    private static readonly ConditionalWeakTable<TableSchemaCollection, HashSet<string>> Classes = new();
 
     // CSLA's own members, which a property can't be
     private static readonly HashSet<string> Reserved = new()
@@ -289,15 +325,42 @@ public sealed class Model
     public static string Info(ColumnSchema column) => Property(column) + "Property";
 
     /// <summary>A property's type: the entity's, but a text column's is a string either way (CSLA's default is "",
-    /// for data binding; "" saves as null where the column takes it), and bytes may be null.</summary>
+    /// for data binding; "" saves as null where the column takes it), and bytes may be null. An array (PostgreSQL's
+    /// text[], int[]) is a read-only list, never null (CSLA keeps it as a MobileList, which its n-level undo can copy; an
+    /// array it can't); and a bit string (bit(8)), a string of 0s and 1s.</summary>
     public static string Type(ColumnSchema column)
     {
+        if (IsList(column))
+            return "IReadOnlyList<" + ElementType(column) + ">";
+        if (IsBits(column))
+            return "string";
         string type = Names.Type(column);
         return type == "string?" ? "string" : type == "byte[]" ? "byte[]?" : type;
     }
 
-    /// <summary>What GetProperty and ReadProperty need after them: "!" for a string (CSLA's P? is never null for one).</summary>
-    public static string NotNull(ColumnSchema column) => Type(column) == "string" ? "!" : "";
+    /// <summary>The PropertyInfo's type: the property's, but a list's is CSLA's MobileList.</summary>
+    public static string FieldType(ColumnSchema column) => IsList(column) ? "Csla.Core.MobileList<" + ElementType(column) + ">" : Type(column);
+
+    /// <summary>A property's value as its field has it: a list's as a MobileList.</summary>
+    public static string ToField(ColumnSchema column, string value) => IsList(column) ? "new " + FieldType(column) + "(" + value + ")" : value;
+
+    /// <summary>An array column (PostgreSQL's), but bytes.</summary>
+    public static bool IsList(ColumnSchema column) =>
+        column.GetClrType(TypeMapping.Modern) is { IsArray: true } type && type != typeof(byte[]);
+
+    /// <summary>A bit string of more than one bit (PostgreSQL's bit(8), varbit): EF Core's BitArray.</summary>
+    public static bool IsBits(ColumnSchema column) => column.GetClrType(TypeMapping.Modern) == typeof(System.Collections.BitArray);
+
+    /// <summary>An array's item type: string, int, ...</summary>
+    public static string ElementType(ColumnSchema column)
+    {
+        string type = Names.Type(column).TrimEnd('?');
+        return type.EndsWith("[]") ? type.Substring(0, type.Length - 2) : type;
+    }
+
+    /// <summary>What GetProperty and ReadProperty need after them: "!" for a string or a list (CSLA's P? is never null
+    /// for one).</summary>
+    public static string NotNull(ColumnSchema column) => Type(column) == "string" || IsList(column) ? "!" : "";
 
     /// <summary>ReadProperty(OrderIdProperty), for the data portal's operations (no authorization rule hides it).</summary>
     public static string Read(ColumnSchema column) => "ReadProperty(" + Info(column) + ")" + NotNull(column);
@@ -322,19 +385,9 @@ public sealed class Model
     /// <summary>Arguments for columns: "orderId, lineNum".</summary>
     public static string Arguments(IEnumerable<ColumnSchema> columns) => string.Join(", ", columns.Select(Parameter));
 
-    /// <summary>A property's display name: its words (ShipAddr1: "Ship addr 1", UniqueID: "Unique ID"; listprice too:
-    /// "List price", NameWords.cs).</summary>
-    public static string Friendly(ColumnSchema column)
-    {
-        var words = Regex.Split(NameWords.Property(column), "(?<=[a-z])(?=[A-Z0-9])|(?<=[A-Z])(?=[A-Z][a-z])|(?<=[0-9])(?=[A-Za-z])")
-            .Where(w => w.Length > 0).ToList();
-        for (int i = 0; i < words.Count; i++)
-            if (words[i] == "Id")
-                words[i] = "ID";
-            else if (i > 0 && words[i].Any(char.IsLower))
-                words[i] = words[i].ToLowerInvariant();
-        return string.Join(" ", words);
-    }
+    /// <summary>A property's display name: its words, as FullStack labels it (NameWords.Label: ShipAddr1 is "Ship
+    /// address 1", UniqueID "Unique ID", IsVip "VIP"; listprice too: "List price").</summary>
+    public static string Friendly(ColumnSchema column) => NameWords.Label(column);
 
     /// <summary>A property's attributes: its display name, and the rules its column gives (Required, StringLength,
     /// Range for a decimal's precision). CSLA makes rules of them.</summary>
@@ -344,6 +397,16 @@ public sealed class Model
         if (!Settable(column))
             return attributes;
         string type = Names.Type(column).TrimEnd('?');
+        if (IsBits(column))
+        {
+            // bit(8) takes 8 of them, varbit(8) up to 8
+            string count = column.NativeType == "bit" ? "{" + Math.Max(1, column.Size) + "}" : column.Size > 0 ? "{0," + column.Size + "}" : "*";
+            string what = column.NativeType == "bit" ? Math.Max(1, column.Size) + " bits" : column.Size > 0 ? "up to " + column.Size + " bits" : "bits";
+            if (!column.AllowDBNull)
+                attributes.Add("Required");
+            attributes.Add($"RegularExpression(\"^([01]{count})?$\", ErrorMessage = \"{{0}} is {what}: 0s and 1s.\")");
+            return attributes;
+        }
         if (type == "string" && !column.AllowDBNull)
             attributes.Add("Required");
         if (type == "string" && column.Size > 0 && column.Size < 1_000_000)
@@ -356,10 +419,15 @@ public sealed class Model
         return attributes;
     }
 
-    /// <summary>What a DTO's property is given from the object: a text column that takes null gets null for "".</summary>
+    /// <summary>What a DTO's property is given from the object: a text column that takes null gets null for "", and a
+    /// list or bit string that does, null for none; a list is an array, a bit string a BitArray.</summary>
     public static string ToDto(ColumnSchema column, string value)
     {
         string type = Names.Type(column);
+        if (IsList(column))
+            return column.AllowDBNull ? $"{value}.Count == 0 ? null : {value}.ToArray()" : $"{value}.ToArray()";
+        if (IsBits(column))
+            return (column.AllowDBNull ? $"{value} is \"\" ? null : " : "") + $"new System.Collections.BitArray({value}.Select(bit => bit == '1').ToArray())";
         if (type == "string?")
             return $"{value} is \"\" ? null : {value}";
         if (type == "byte[]")
@@ -367,8 +435,16 @@ public sealed class Model
         return value;
     }
 
-    /// <summary>What a property loads from a DTO's: "" for a text column's null.</summary>
-    public static string FromDto(ColumnSchema column, string value) => Names.Type(column) == "string?" ? value + " ?? \"\"" : value;
+    /// <summary>What a property loads from a DTO's: "" for a text column's null, no items for a list's, and a bit
+    /// string's 0s and 1s.</summary>
+    public static string FromDto(ColumnSchema column, string value)
+    {
+        if (IsList(column))
+            return column.AllowDBNull ? value + " ?? []" : value;
+        if (IsBits(column))
+            return (column.AllowDBNull ? $"{value} is null ? \"\" : " : "") + $"string.Concat({value}.Cast<bool>().Select(bit => bit ? '1' : '0'))";
+        return Names.Type(column) == "string?" ? value + " ?? \"\"" : value;
+    }
 
     private static readonly HashSet<string> Keywords = new()
     {

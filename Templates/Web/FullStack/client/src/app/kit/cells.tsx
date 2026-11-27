@@ -36,7 +36,7 @@ export function Value({ table, field, row, referred, full }: ValueProps) {
   const value = row[field.name];
   const Custom = customize().cells?.[`${table.name}.${field.name}`];
   if (Custom) return <Custom table={table} field={field} row={row} value={value} />;
-  if (value === null || value === undefined || value === "") return <span className="value-none" aria-label="None">—</span>;
+  if (value === null || value === undefined || value === "" || (Array.isArray(value) && value.length === 0)) return <span className="value-none" aria-label="None">—</span>;
 
   if (referred) {
     if (referred.row === undefined) return <span className="ref-chip ref-chip--loading"><Skeleton width={72} height={10} /></span>;
@@ -52,6 +52,15 @@ export function Value({ table, field, row, referred, full }: ValueProps) {
 
   const text = formatValue(field, value);
   switch (field.kind) {
+    case "list":
+    case "set": {
+      const items = Array.isArray(value) ? value : String(value).split(",");
+      return (
+        <span className="value-chips" title={text}>
+          {items.map((item, i) => <span key={i} className="chip"><span className={cx("chip__text", (item === null || item === "") && "is-none")}>{item === null ? "null" : item === "" ? "empty" : String(item)}</span></span>)}
+        </span>
+      );
+    }
     case "boolean":
       return value
         ? <span className="value-bool value-bool--yes"><Icon name="check" size={14} strokeWidth={2.25} />Yes</span>

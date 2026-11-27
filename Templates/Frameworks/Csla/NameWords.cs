@@ -2,7 +2,8 @@
 // keeps them (PRODUCTID): there's no capital or underscore to split them at. The words come from the schema itself
 // (its tables' names, its other names' parts where they have case, its columns of one word) and a few common ones
 // (id, name, date, price...). A name is split into the longest of them: productid is Product ID, listprice List price.
-// A name with case of its own (ProductId) or underscores (product_id) keeps its words. The Csla and FullStack samples
+// A name with case of its own (ProductId) or underscores (product_id) keeps its words. Label puts a name's words in
+// sentence case for people (Ship address 1, Product ID, VIP), the same in both samples: the Csla and FullStack samples
 // have the same copy of this file.
 using System;
 using System.Collections.Generic;
@@ -52,6 +53,49 @@ public static class NameWords
 
     /// <summary>A column's property for its label: its name's words (productid: ProductId), else Names.Property's.</summary>
     public static string Property(ColumnSchema column) => Pascal(column.Name, column.Table.Database) ?? Names.Property(column);
+
+    // ---- labels ----
+
+    // words a name shortens, spelled out (not desc: it's as often a sort's direction as a description)
+    private static readonly Dictionary<string, string> Spelled = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+    {
+        ["descn"] = "description", ["addr"] = "address", ["qty"] = "quantity", ["num"] = "number", ["amt"] = "amount",
+    };
+
+    // words that are acronyms, in capitals
+    private static readonly HashSet<string> Acronyms = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+    {
+        "id", "ids", "url", "uri", "ip", "pin", "sku", "vip", "guid", "uuid", "api", "utc", "json", "xml", "html", "csv", "pdf", "sms", "ssn", "isbn",
+    };
+
+    /// <summary>A name in words, in sentence case, its acronyms in capitals: ShipAddr1 is "Ship address 1", ProductId
+    /// "Product ID", IsVip "Is VIP". The Csla and FullStack samples label with it.</summary>
+    public static string Label(string name)
+    {
+        var words = Regex.Split(name ?? "", "(?<=[a-z])(?=[A-Z0-9])|(?<=[A-Z])(?=[A-Z][a-z])|(?<=[0-9])(?=[A-Za-z])|[_\\s]+")
+            .Where(w => w.Length > 0).ToList();
+        for (int i = 0; i < words.Count; i++)
+        {
+            if (Acronyms.Contains(words[i]))
+                words[i] = words[i].ToLowerInvariant() == "ids" ? "IDs" : words[i].ToUpperInvariant();
+            else if (Spelled.TryGetValue(words[i], out string spelled))
+                words[i] = spelled;
+            else if (i > 0 && words[i].Any(char.IsLower))
+                words[i] = words[i].ToLowerInvariant();
+        }
+        string text = string.Join(" ", words);
+        return text.Length == 0 ? name : char.ToUpperInvariant(text[0]) + text.Substring(1);
+    }
+
+    /// <summary>A column's label: its name's words (listprice too: List price); a bool's without its Is or Has
+    /// (IsVip: VIP, HasStock: Stock).</summary>
+    public static string Label(ColumnSchema column)
+    {
+        string property = Property(column);
+        if (Names.Type(column).TrimEnd('?') == "bool" && Regex.IsMatch(property, "^(Is|Has)[A-Z0-9]"))
+            property = property.Substring(property.StartsWith("Is", StringComparison.Ordinal) ? 2 : 3);
+        return Label(property);
+    }
 
     /// <summary>A table's entity for its labels: its name's words, singular (lineitem: LineItem), else Names.Entity's.</summary>
     public static string Entity(TableSchema table)

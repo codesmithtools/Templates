@@ -51,6 +51,9 @@
 <% foreach (TableSchema lookup in lookups) { %>
     private IReadOnlyDictionary<object, string>? <%= Web.LookupField(lookup) %>;
 <% } %>
+<% foreach (string field in Web.ChoicesFields(model, Web.FormColumns(model, Table))) { %>
+    <%= field %>
+<% } %>
 
     public override RootPage Root => Site.<%= Web.SiteProperty(Table) %>;
 
@@ -60,9 +63,23 @@
         <%= Web.LookupField(lookup) %> ??= Lookup.Of(await Portals.GetPortal<<%= Model.NameValueListName(lookup) %>>().FetchAsync());
 <% } %>
         var portal = Portals.GetPortal<<%= name %>>();
+<% if (key.Any(Web.ParsesRoute)) { %>
+        if (<%= Model.Property(key[0]) %> is null)
+            return await portal.CreateAsync();
+        // the address's key as its type (Blazor's routes have none for it): another address is a row that isn't there
+<% foreach (ColumnSchema column in key) { if (Web.ParsesRoute(column)) { %>
+        if (!<%= Model.ParameterType(column) %>.TryParse(<%= Model.Property(column) %>, System.Globalization.CultureInfo.InvariantCulture, out var <%= Model.Parameter(column) %>))
+            throw new DataNotFoundException(<%= Model.Literal(Table.Name) %>, <%= string.Join(", ", key.Select(c => Model.Property(c))) %>);
+<% } else { %>
+        if (<%= Model.Property(column) %> is not <%= Web.RouteParameter(column).Type.TrimEnd('?') %> <%= Model.Parameter(column) %>)
+            throw new DataNotFoundException(<%= Model.Literal(Table.Name) %>, <%= string.Join(", ", key.Select(c => Model.Property(c))) %>);
+<% } } %>
+        return await portal.FetchAsync(<%= string.Join(", ", key.Select(c => Web.RouteParameter(c).Cast + Model.Parameter(c))) %>);
+<% } else { %>
         return <%= string.Join(" && ", key.Select(c => Model.Property(c) + " is " + Web.RouteParameter(c).Type.TrimEnd('?') + " " + Model.Parameter(c))) %>
             ? await portal.FetchAsync(<%= string.Join(", ", key.Select(c => Web.RouteParameter(c).Cast + Model.Parameter(c))) %>)
             : await portal.CreateAsync();
+<% } %>
     }
 
     protected override Task DeleteAsync(<%= name %> model) => Portals.GetPortal<<%= name %>>().DeleteAsync(<%= string.Join(", ", key.Select(c => "model." + Model.Property(c))) %>);

@@ -3,7 +3,7 @@
 <%@ Property Name="Namespace" Type="System.String" Default="MyApp" Category="Output" Description="The root namespace and the projects' names: {Namespace}.Business, {Namespace}.Dal, {Namespace}.Dal.EfCore and {Namespace}.Web." %>
 <%@ Property Name="ContextName" Type="System.String" Default="AppDbContext" Category="Output" Description="The DbContext's class name." %>
 <%@ Property Name="OutputDirectory" Type="System.String" Default="." Category="Output" Description="The folder of the four projects: each one's generated files go to its Generated folder." %>
-<%@ Property Name="Exclude" Type="System.String" Default="sysdiagrams, __EFMigrationsHistory" Optional="True" Category="Model" Description="Tables (Orders) and columns (Orders.Notes) to leave out, separated by commas; * and ? match any characters." %>
+<%@ Property Name="Exclude" Type="System.String" Default="sysdiagrams, __EFMigrationsHistory" Optional="True" Category="Model" Description="Tables (Orders) and columns (Orders.Notes) to leave out, separated by commas; * and ? match any characters. An excluded table has no EF Core entity either." %>
 <%@ Property Name="Children" Type="System.String" Default="" Optional="True" Category="Model" Description="Tables to make children of another, besides those the keys say (Parent: Child, Child; Parent: Child)." %>
 <%@ Property Name="TargetFramework" Type="System.String" Default="net10.0" Category="Projects" Description="A project file's target framework, where it writes one (a project that isn't there)." %>
 <%@ Property Name="CslaVersion" Type="System.String" Default="10.2.0" Category="Projects" Description="The Csla package's version, where it writes the business objects' project (9.x works too)." %>
@@ -171,22 +171,26 @@ private void Generate(Model model)
     dalCommon.Namespace = Namespace;
     Render(dalCommon, dal, "Dal");
 
-    // the entities: every table's (the DbContext has them all), as the ModernEntities sample generates them
-    foreach (TableSchema table in SourceDatabase.Tables)
+    // the entities: every table's but those excluded (the DbContext has them all, a table without a key too), as the
+    // ModernEntities sample generates them
+    foreach (TableSchema table in Names.Tables(SourceDatabase, Exclude))
     {
         var entity = Create<EntityTemplate>();
         entity.Table = table;
         entity.Namespace = Namespace + ".Dal.EfCore";
+        entity.Exclude = Exclude;
         Render(entity, efCore, Names.Entity(table));
         var configuration = Create<ConfigurationTemplate>();
         configuration.Table = table;
         configuration.Namespace = Namespace + ".Dal.EfCore";
-        Render(configuration, efCore, Names.Entity(table) + "Configuration");
+        configuration.Exclude = Exclude;
+        Render(configuration, efCore, Names.Configuration(table));
     }
     var context = Create<ContextTemplate>();
     context.SourceDatabase = SourceDatabase;
     context.Namespace = Namespace + ".Dal.EfCore";
     context.ContextName = ContextName;
+    context.Exclude = Exclude;
     Render(context, efCore, ContextName);
 
     var efCommon = Create<EfCommonTemplate>();
@@ -199,6 +203,8 @@ private void Generate(Model model)
 
     foreach (string directory in new[] { business, dal, efCore, web })
         RemoveStale(directory, written);
+
+    Warn(model);
 
     // a project file for each, where there isn't one yet: a new database's projects build as they are
     var (provider, database) = Database(webProject);
@@ -241,6 +247,56 @@ private void Generate(Model model)
     }
 }
 
+// What the schema has that the app can't do as it is, and what it does instead: a warning each (CSG0007; VS Code's
+// Problems), as Model.md lists them too.
+private void Warn(Model model)
+{
+    var keyless = SourceDatabase.Tables.Cast<TableSchema>().Where(t => !t.HasPrimaryKey && !Names.Excluded(t, Exclude)).Select(t => t.Name).ToList();
+    if (keyless.Count > 0)
+        Warning(Model.And(keyless) + (keyless.Count == 1 ? " has" : " have") + " no primary key: no business objects or pages, as an object couldn't save a row (its EF Core entity is there, keyless).");
+    var views = SourceDatabase.Views.Cast<ViewSchema>().Select(v => v.Name).ToList();
+    if (views.Count > 0)
+        Warning("The " + (views.Count == 1 ? "view " : "views ") + Model.And(views) + (views.Count == 1 ? " has" : " have") + " no business objects or pages: Csla.cst generates from tables (a read-only list of a view is yours to add).");
+    // a type that gave way to a table's of its name
+    var renamed = new List<string>();
+    foreach (TableSchema table in model.Tables)
+    {
+        string name = Model.Class(table);
+        foreach (var (type, usual, what) in new[]
+        {
+            (Model.InfoName(table), name + "Info", "read-only object"), (Model.ListName(table), name + "List", "read-only list"),
+            (Model.Dto(table), name + "Dto", "DTO"), (Model.Dal(table), name + "Dal", "DAL"), (Names.Configuration(table), name + "Configuration", "EF Core configuration"),
+        })
+            if (type != usual)
+                renamed.Add($"{Model.Possessive(name)} {what} is {type}: {usual} is another table's");
+        if (name.EndsWith("Entity") && !CodeSmith.Engine.StringUtil.ToPascalCase(table.Name).EndsWith("Entity"))
+            renamed.Add($"{Model.Possessive(table.Name)} object is {name}: {name.Substring(0, name.Length - "Entity".Length)} is a type the generated code uses");
+    }
+    foreach (string clash in renamed)
+        Warning("A name gives way: " + clash + ".");
+    // an object named like a type of the web app's shell (Issue, Problem, Lookup): the pages import both
+    string shell = Path.Combine(CodeTemplateInfo.DirectoryName, "Web", "Shell");
+    var shellTypes = new HashSet<string>(Directory.GetFiles(shell, "*.cs", SearchOption.AllDirectories)
+        .SelectMany(f => System.Text.RegularExpressions.Regex.Matches(File.ReadAllText(f), @"^\s*(?:public |internal )?(?:sealed |static |abstract )*(?:partial )?(?:class|record|struct|enum|interface) (\w+)", System.Text.RegularExpressions.RegexOptions.Multiline)
+            .Cast<System.Text.RegularExpressions.Match>().Select(m => m.Groups[1].Value))
+        .Concat(Directory.GetFiles(shell, "*.razor", SearchOption.AllDirectories).Select(Path.GetFileNameWithoutExtension))) { "Site" };
+    foreach (TableSchema table in model.Tables)
+        foreach (string type in new[] { Model.Class(table), model.IsChild(table) ? Model.ChildList(table) : Model.InfoName(table) }.Where(shellTypes.Contains))
+            Warning($"{Model.Possessive(table.Name)} {type} has the name of a type of the web app's shell (Components/): its pages won't build until you rename the shell's {type}, or exclude the table.");
+    // the columns a form can't edit: kept as they are when a row's saved
+    var unmapped = model.Tables.SelectMany(t => t.Columns.Cast<ColumnSchema>().Where(c => !Names.Mapped(c)).Select(c => $"{t.Name}.{c.Name} ({c.NativeType})")).ToList();
+    if (unmapped.Count > 0)
+        Warning(Model.And(unmapped) + (unmapped.Count == 1 ? " has" : " have") + " no .NET type: no property, as EF Core can't map one (map it in a partial class of your own); a save leaves it as it is.");
+    var notOnForm = model.Tables.SelectMany(t => model.Columns(t).Where(c => model.Settable(c) && Web.KindOf(model, c) == Web.Kind.Unsupported)
+        .Select(c => $"{t.Name}.{c.Name} ({c.NativeType})")).ToList();
+    if (notOnForm.Count > 0)
+        Warning(Model.And(notOnForm) + (notOnForm.Count == 1 ? " isn't" : " aren't") + " on the forms: the pages have no input for " + (notOnForm.Count == 1 ? "its" : "their") + " type; the objects have " + (notOnForm.Count == 1 ? "it" : "them") + ", and a save keeps the value.");
+    foreach (TableSchema table in model.Tables.Where(t => !model.IsChild(t)))
+        model.ListCriteria(table);
+    foreach (string note in model.Notes.Distinct().Where(n => n.Contains(" has no fetch ")))
+        Warning(note.Replace("`", ""));
+}
+
 // A page you've written: a .razor of the generated page's name in the web project, outside Generated/ (Pages/OrderEditPage.razor).
 private static bool Replaced(string webProject, string file) =>
     Directory.Exists(webProject) &&
@@ -249,10 +305,11 @@ private static bool Replaced(string webProject, string file) =>
         .Any(f => !f.StartsWith("Generated/") && !f.StartsWith("bin/") && !f.StartsWith("obj/"));
 
 // The web app's EF Core provider, and a SQLite database's file from its project's folder. A database it isn't wired for
-// (Oracle's, another provider's) is the schema provider's name: Program.cs says to add its EF Core provider.
+// (Oracle's, another provider's) is the schema provider's name: Program.cs says to add its EF Core provider. The name, not
+// the type: a schema snapshot's provider has the name of the one it was taken with.
 private (string Provider, string File) Database(string webProject)
 {
-    string type = SourceDatabase.Provider.GetType().Name;
+    string type = SourceDatabase.Provider.Name;
     if (type == "DdlSchemaProvider") // SQL scripts: their dialect (SqlServer, PostgreSQL, MySQL, SQLite)
         type = Convert.ToString(SourceDatabase.ExtendedProperties["CS_Dialect"]?.Value) ?? type;
     if (type.Contains("PostgreSQL"))

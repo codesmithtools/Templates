@@ -20,9 +20,9 @@ public static class Web
     /// <summary>One of them: Order, Line item.</summary>
     public static string Singular(TableSchema table) => Words(NameWords.Entity(table));
 
-    public static string ListPage(TableSchema table) => Model.Class(table) + "ListPage";
-    public static string EditPage(TableSchema table) => Model.Class(table) + "EditPage";
-    public static string Grid(TableSchema table) => Model.ChildList(table) + "Grid";
+    public static string ListPage(TableSchema table) => Model.GiveWay(table, Model.Class(table) + "ListPage", Model.Class(table) + "RowsPage");
+    public static string EditPage(TableSchema table) => Model.GiveWay(table, Model.Class(table) + "EditPage", Model.Class(table) + "EditorPage");
+    public static string Grid(TableSchema table) => Model.GiveWay(table, Model.ChildList(table) + "Grid", Model.ChildList(table) + "RowsGrid");
 
     /// <summary>The root's RootPage in Site.g.cs: Site.Orders.</summary>
     public static string SiteProperty(TableSchema table)
@@ -65,13 +65,17 @@ public static class Web
 
     // ---- fields ----
 
-    public enum Kind { Text, LongText, Integer, Decimal, Money, Date, DateTime, Time, Bool, Lookup, Unsupported }
+    public enum Kind { Text, LongText, Integer, Decimal, Money, Date, DateTime, Time, Bool, Lookup, List, Choice, Unsupported }
 
     /// <summary>How a column's edited: its type, its size, its name.</summary>
     public static Kind KindOf(Model model, ColumnSchema column)
     {
         if (LookupOf(model, column) != null)
             return Kind.Lookup;
+        if (Model.IsList(column))
+            return Kind.List; // an array: one item a line
+        if (Choices(column) != null && Model.Type(column) == "string")
+            return Kind.Choice; // an enum's values (a SET's, any of them)
         string type = Model.Type(column).TrimEnd('?');
         switch (type)
         {
@@ -95,6 +99,28 @@ public static class Web
                 return Kind.Unsupported; // bytes, a Guid, ...: not on the form
         }
     }
+
+    /// <summary>An enum column's values (MySQL's ENUM and SET, a PostgreSQL enum), in the type's order and case: the
+    /// provider's CS_EnumValues ('system','user','it''s'); null for another column.</summary>
+    public static List<string> Choices(ColumnSchema column)
+    {
+        string values = Convert.ToString(column.ExtendedProperties["CS_EnumValues"]?.Value);
+        if (string.IsNullOrEmpty(values))
+            return null;
+        return Regex.Matches(values, "'((?:[^']|'')*)'").Cast<Match>().Select(m => m.Groups[1].Value.Replace("''", "'")).ToList();
+    }
+
+    /// <summary>A MySQL SET: any of its values, separated by commas.</summary>
+    public static bool ChoiceSet(ColumnSchema column) => string.Equals(column.NativeType, "set", StringComparison.OrdinalIgnoreCase);
+
+    /// <summary>A page's field with a column's values: _typeChoices.</summary>
+    public static string ChoicesField(ColumnSchema column) => "_" + Camel(Model.Property(column)) + "Choices";
+
+    /// <summary>The page's fields with its columns' values (their ChoiceFields'): private static readonly string[] ....</summary>
+    public static List<string> ChoicesFields(Model model, IEnumerable<ColumnSchema> columns) =>
+        columns.Where(c => KindOf(model, c) == Kind.Choice && model.Settable(c))
+            .Select(c => "private static readonly string[] " + ChoicesField(c) + " = [" + string.Join(", ", Choices(c).Select(Model.Literal)) + "];")
+            .ToList();
 
     private static bool Money(ColumnSchema column) =>
         column.Scale == 2 && Regex.IsMatch(column.Name, "price|cost|total|amount|balance|salary|fee|tax|payment|charge", RegexOptions.IgnoreCase);
@@ -187,11 +213,11 @@ public static class Web
         return "folder";
     }
 
-    /// <summary>A list's columns: the key, then the table's own (not a group's, a second address line, nor more than one
-    /// long text), seven at most.</summary>
+    /// <summary>A list's columns: the key, then the table's own (not a group's, a second address line, more than one
+    /// long text, nor an array), seven at most.</summary>
     public static List<ColumnSchema> ListColumns(Model model, TableSchema table)
     {
-        var all = model.Columns(table).Where(c => KindOf(model, c) != Kind.Unsupported).ToList();
+        var all = model.Columns(table).Where(c => KindOf(model, c) is not (Kind.Unsupported or Kind.List)).ToList();
         var grouped = Groups(model, table).SelectMany(g => g.Value).ToList();
         var columns = new List<ColumnSchema>();
         columns.AddRange(all.Where(c => c.IsPrimaryKeyMember));
@@ -283,12 +309,19 @@ public static class Web
                 return "<DateField " + string.Join(" ", attributes) + " />";
             case Web.Kind.Bool:
                 return "<SwitchField " + string.Join(" ", attributes) + " />";
+            case Web.Kind.List:
+                return "<ListField " + string.Join(" ", attributes) + " />";
+            case Web.Kind.Choice:
+                attributes.Add("Choices=\"" + ChoicesField(column) + "\"");
+                if (ChoiceSet(column))
+                    attributes.Add("Multiple");
+                return "<ChoiceField " + string.Join(" ", attributes) + " />";
             default:
                 if (column.Size > 0 && column.Size < 1_000_000)
                     attributes.Add("MaxLength=\"" + column.Size + "\"");
                 if (kind == Web.Kind.LongText)
                     attributes.Add("Multiline");
-                else if (Web.Mono(column))
+                else if (Web.Mono(column) || Model.IsBits(column))
                     attributes.Add("Mono");
                 if (Web.TextType(column) != "text")
                     attributes.Add("Type=\"" + Web.TextType(column) + "\"");
@@ -298,7 +331,9 @@ public static class Web
 
     // ---- keys in addresses ----
 
-    /// <summary>A key column's route parameter: its constraint and its property's type (nullable: a new object has none).</summary>
+    /// <summary>A key column's route parameter: its constraint and its property's type (nullable: a new object has none).
+    /// A type Blazor's routes have no constraint for (MySQL's unsigned ushort, uint and ulong; DateOnly, TimeOnly, ...) is
+    /// a string, which the page parses (ParsesRoute).</summary>
     public static (string Constraint, string Type, string Cast) RouteParameter(ColumnSchema column)
     {
         switch (Model.ParameterType(column))
@@ -316,6 +351,11 @@ public static class Web
             default: return ("", "string?", "");
         }
     }
+
+    /// <summary>Whether a key's route parameter is a string the page parses to the key's type: one of a type with no
+    /// route constraint, which isn't a string.</summary>
+    public static bool ParsesRoute(ColumnSchema column) =>
+        RouteParameter(column).Type == "string?" && Model.ParameterType(column) != "string";
 
     /// <summary>A key's route: {OrderId:long}/{LineNum:int}.</summary>
     public static string RouteTemplate(IEnumerable<ColumnSchema> key) =>

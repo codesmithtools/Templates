@@ -29,7 +29,7 @@
 // </auto-generated>
 #nullable enable
 <% if (model.Columns(Table).Any(c => Model.NotNull(c) != "") || children.Count > 0) { %>
-// GetProperty(...)! for a <%= model.Columns(Table).Any(c => Model.NotNull(c) != "") ? "string" : "child list" %>, which CSLA keeps non-null (as CSLA's own source generator writes it; CSLA0007 doesn't
+// GetProperty(...)! for a <%= model.Columns(Table).Any(c => Model.NotNull(c) != "") ? (model.Columns(Table).Any(Model.IsList) ? "string or a list" : "string") : "child list" %>, which CSLA keeps non-null (as CSLA's own source generator writes it; CSLA0007 doesn't
 // know the operator)
 #pragma warning disable CSLA0007
 <% } %>
@@ -53,7 +53,7 @@ namespace <%= Namespace %>.Business;
 public partial class <%= name %> : BusinessBase<<%= name %>>
 {
 <% foreach (ColumnSchema column in columns) { %>
-    public static readonly PropertyInfo<<%= Model.Type(column) %>> <%= Model.Info(column) %> = RegisterProperty<<%= Model.Type(column) %>>(nameof(<%= Model.Property(column) %>));
+    public static readonly PropertyInfo<<%= Model.FieldType(column) %>> <%= Model.Info(column) %> = RegisterProperty<<%= Model.FieldType(column) %>>(nameof(<%= Model.Property(column) %>));
 <% if (Model.Generated(column)) { %>
     /// <summary><%= Model.Identity(column) ? "The database numbers it when it's saved." : "The database sets it." %></summary>
 <% } else if (model.FromParent(column)) { %>
@@ -66,9 +66,9 @@ public partial class <%= name %> : BusinessBase<<%= name %>>
     {
         get => GetProperty(<%= Model.Info(column) %>)<%= Model.NotNull(column) %>;
 <% if (model.Settable(column)) { %>
-        set => SetProperty(<%= Model.Info(column) %>, value);
+        set => SetProperty(<%= Model.Info(column) %>, <%= Model.ToField(column, "value") %>);
 <% } else { %>
-        private set => LoadProperty(<%= Model.Info(column) %>, value);
+        private set => LoadProperty(<%= Model.Info(column) %>, <%= Model.ToField(column, "value") %>);
 <% } %>
     }
 
@@ -243,7 +243,7 @@ public partial class <%= name %> : BusinessBase<<%= name %>>
     private void Load(<%= dto %> data)
     {
 <% foreach (ColumnSchema column in columns) { %>
-        LoadProperty(<%= Model.Info(column) %>, <%= Model.FromDto(column, "data." + Model.Property(column)) %>);
+        LoadProperty(<%= Model.Info(column) %>, <%= Model.ToField(column, Model.FromDto(column, "data." + Model.Property(column))) %>);
 <% } %>
     }
 

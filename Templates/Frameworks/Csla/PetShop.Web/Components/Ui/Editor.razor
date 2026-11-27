@@ -36,6 +36,10 @@ else if (Page.LoadProblem is { } problem)
             <span class="art"><Icon Name="alert-triangle" Size="24" /></span>
             <h2>@problem.Title</h2>
             <p>@problem.Message</p>
+            @if (problem.Detail is { } detail)
+            {
+                <p class="mono" style="font-size: 12px">@detail</p>
+            }
             <div class="actions">
                 <a class="btn" href="@Page.Root.Href"><Icon Name="arrow-left" Size="15" /> All @Page.Root.Title.ToLowerInvariant()</a>
                 <button type="button" class="btn btn-ghost" @onclick="Page.ReloadAsync"><Icon Name="refresh" Size="15" /> Try again</button>

@@ -3,41 +3,63 @@
 <%@ Property Name="Namespace" Type="System.String" Default="MyApp.Data" Category="Output" Description="The namespace of the generated code." %>
 <%@ Property Name="ContextName" Type="System.String" Default="AppDbContext" Category="Output" Description="The DbContext's class name." %>
 <%@ Property Name="OutputDirectory" Type="System.String" Default="Generated" Category="Output" Description="Where the files go, relative to the project." %>
+<%@ Property Name="Exclude" Type="System.String" Default="sysdiagrams, __EFMigrationsHistory" Optional="True" Category="Model" Description="Tables to leave out (no entity, configuration or DbSet, and no navigation to them), separated by commas; * and ? match any characters. EF Core's scaffolding leaves out the same two." %>
 <%@ Register Name="EntityTemplate" Template="Entity.cst" MergeProperties="False" %>
 <%@ Register Name="ConfigurationTemplate" Template="Configuration.cst" MergeProperties="False" %>
 <%@ Register Name="ContextTemplate" Template="Context.cst" MergeProperties="False" %>
 <%@ Assembly Name="SchemaExplorer" %>
 <%@ Import Namespace="SchemaExplorer" %>
+<%@ Import Namespace="System.Collections.Generic" %>
 <%@ Import Namespace="System.IO" %>
 <%@ Assembly Src="Names.cs" %>
 <%-- The master: for each table its entity (Entity.cst) and configuration (Configuration.cst), and the DbContext
-(Context.cst). Names.cs is what they share. --%>
+(Context.cst), and the list of the files (its output, Files.txt). Names.cs is what they share. A file the last run
+listed that this one doesn't write is a table that's gone (or left out): RemoveOutput removes it, and cs check says
+it's out of date. --%>
 <% Generate(); %>
 <script runat="template">
 private void Generate()
 {
     Directory.CreateDirectory(OutputDirectory);
-    foreach (TableSchema table in SourceDatabase.Tables)
+    var written = new HashSet<string>();
+    foreach (TableSchema table in Names.Tables(SourceDatabase, Exclude))
     {
         var entity = Create<EntityTemplate>();
         entity.Table = table;
         entity.Namespace = Namespace;
+        entity.Exclude = Exclude;
         string file = Path.Combine(OutputDirectory, Names.Entity(table) + ".cs");
         entity.RenderToFile(file, true);
+        written.Add(Path.GetFullPath(file));
         Response.WriteLine(file);
         var configuration = Create<ConfigurationTemplate>();
         configuration.Table = table;
         configuration.Namespace = Namespace;
-        string configurationFile = Path.Combine(OutputDirectory, Names.Entity(table) + "Configuration.cs");
+        configuration.Exclude = Exclude;
+        string configurationFile = Path.Combine(OutputDirectory, Names.Configuration(table) + ".cs");
         configuration.RenderToFile(configurationFile, true);
+        written.Add(Path.GetFullPath(configurationFile));
         Response.WriteLine(configurationFile);
     }
     var context = Create<ContextTemplate>();
     context.SourceDatabase = SourceDatabase;
     context.Namespace = Namespace;
     context.ContextName = ContextName;
+    context.Exclude = Exclude;
     string contextFile = Path.Combine(OutputDirectory, ContextName + ".cs");
     context.RenderToFile(contextFile, true);
+    written.Add(Path.GetFullPath(contextFile));
     Response.WriteLine(contextFile);
+
+    // the files the last run listed (Files.txt, beside them) that this one didn't write: their tables are gone
+    string list = Path.Combine(OutputDirectory, "Files.txt");
+    string folder = Path.GetFullPath(OutputDirectory) + Path.DirectorySeparatorChar;
+    if (File.Exists(list))
+        foreach (string line in File.ReadAllLines(list))
+        {
+            string file = line.Trim();
+            if (file.EndsWith(".cs", StringComparison.OrdinalIgnoreCase) && Path.GetFullPath(file).StartsWith(folder) && !written.Contains(Path.GetFullPath(file)))
+                RemoveOutput(file);
+        }
 }
 </script>

@@ -5,6 +5,8 @@
       <connectionString>Data Source=PetShop.db3;Read Only=True</connectionString>
       <providerType>SchemaExplorer.SQLiteSchemaProvider,SchemaExplorer.SQLiteSchemaProvider</providerType>
     </property>
+    <!-- the tables every output leaves out: no entity, endpoints, client calls or pages (* and ? match any characters) -->
+    <property name="Exclude">sysdiagrams, __EFMigrationsHistory</property>
   </defaultProperties>
   <propertySets>
     <propertySet name="Entities" output="Generated/Data/Files.txt" template="Entities.cst">

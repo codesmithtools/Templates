@@ -12,12 +12,6 @@
       <property name="EntityNaming">Singular</property>
       <property name="RelationshipNaming">Plural</property>
       <property name="ContextNaming">Plural</property>
-      <property name="IgnoreList">
-        <stringList>
-      <string>sysdiagrams$</string>
-    </stringList>
-      </property>
-      <property name="InclusionMode">False</property>
       <property name="CleanExpressions">
         <stringList>
       <string>^(sp|tbl|udf|vw)_</string>

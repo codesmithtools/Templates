@@ -191,6 +191,11 @@ Public Sub Generate()
     AddHandler generator.SchemaItemProcessed, AddressOf OnSchemaItemProcessed
     Dim db As Database = generator.Create(SourceDatabase)
 
+    ' 9.0: the dbml with the default values the next run reads it with (the generator fills them in only for a dbml
+    ' it read), so a new project's first run writes what every run after it does: 8.x added Mode="ConnectionString"
+    ' and DeleteOnNull="false" on the second run.
+    Dbml.ToFile(Dbml.CopyWithNulledOutDefaults(Dbml.CopyWithFilledInDefaults(db)), filePath)
+
     Dim outputFile As New OutputFile(Me.DbmlFile)
     outputFile.Metadata.Add("CustomTool", String.Empty)
     Me.RegisterOutput(outputFile)
